@@ -45,8 +45,8 @@ typedef struct _query_string_param_t {
   char* name;     /* for EZGET */
   long offset;    /* for EZGET */
   long count;     /* for EZGET */
-  long width;
-  long height;
+  int width;
+  int height;
 } query_string_param_t;
 
 /*----------------------------------------------------------------------------*/
@@ -625,12 +625,12 @@ chxj_fixup_size(MagickWand* magick_wand,
       {
         if (qsp->width != 0)
         {
-          ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert width=[%d --> %ld]", neww, qsp->width);
+          ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert width=[%d --> %d]", neww, qsp->width);
           neww = qsp->width;
         }
         if (qsp->height != 0)
         {
-          ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert heigh=[%d --> %ld]", newh, qsp->height);
+          ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert heigh=[%d --> %d]", newh, qsp->height);
           newh = qsp->height;
         }
       }
@@ -1103,11 +1103,11 @@ chxj_create_workfile(
     fname = apr_psprintf(r->pool, "%s.%s", r->filename, user_agent);
     if (qsp->width != 0)
     {
-      fname = apr_psprintf(r->pool, "%s.w%ld", fname, qsp->width);
+      fname = apr_psprintf(r->pool, "%s.w%d", fname, qsp->width);
     }
     if (qsp->height != 0)
     {
-      fname = apr_psprintf(r->pool, "%s.h%ld", fname, qsp->height);
+      fname = apr_psprintf(r->pool, "%s.h%d", fname, qsp->height);
     }
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "mode=normal [%s]", fname);
     break;
