@@ -18,13 +18,6 @@
 #include "mod_chxj.h"
 #include "chxj_load_emoji_data.h"
 
-#define DEBUG_OUT(X,Y) do {\
-        FILE* fp = fopen("/tmp/load_emoji.log", "a"); \
-        fprintf(fp,X,Y); \
-        fclose(fp); \
-} while(0)
-
-
 static char* load_emoji_set_tag( Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node);
 static char* set_emoji_data( Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node);
 static char* load_emoji_emoji_tag( Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node);
@@ -54,27 +47,6 @@ chxj_load_emoji_data(
     return rtn;
   }
 
-#if 0
-  do {
-  emoji_t* ee;
-  for (ee = conf->emoji; ee; ee = ee->next)
-  {
-    DEBUG_OUT("no[%d]", ee->no);
-    DEBUG_OUT("hex1byte[%x]",   0xFF & ee->imode->hex1byte);
-    DEBUG_OUT("hex2byte[%x]",   0xFF & ee->imode->hex2byte);
-    DEBUG_OUT("string[%s]",     ee->imode->string);
-    DEBUG_OUT("description[%s]",ee->imode->description);
-    DEBUG_OUT("typeA[%s]",ee->ezweb->typeA);
-    DEBUG_OUT("typeB[%s]",ee->ezweb->typeB);
-    DEBUG_OUT("typeC[%s]",ee->ezweb->typeC);
-    DEBUG_OUT("typeD[%s]",ee->ezweb->typeD);
-    DEBUG_OUT("jphone[%s]",ee->jphone->string);
-    DEBUG_OUT("%s", "\n");
-  }
-  break;
-  }
-  while(0);
-#endif
   return NULL;
 }
 

@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#define DEBUG_PRINT {FILE* fp = fopen("/tmp/deubg.log","a"); fprintf(fp, "%s:%d\n",__FILE__,__LINE__);fclose(fp); }
 #include <unistd.h>
 #include "httpd.h"
 #include "http_config.h"
@@ -240,6 +239,7 @@ chxj_input_exchange(request_rec *r, const char** src, apr_size_t* len)
   /* _chxj_dmy */
   /* _chxj_c_ */
   /* _chxj_r_ */
+  /* _chxj_s_ */
   for (;;) 
   {
     pair = apr_strtok(s, "&", &pstate);
@@ -261,7 +261,8 @@ chxj_input_exchange(request_rec *r, const char** src, apr_size_t* len)
     }
     else
     if (strncasecmp(name, "_chxj_c_", 8) == 0 
-    ||  strncasecmp(name, "_chxj_r_", 8) == 0)
+    ||  strncasecmp(name, "_chxj_r_", 8) == 0
+    ||  strncasecmp(name, "_chxj_s_", 8) == 0)
     {
       if (value == NULL)
       {
@@ -601,10 +602,9 @@ chxj_init_module_kill(void *data)
 }
 
 static mod_chxj_global_config*
-chxj_global_config_create(server_rec* s)
+chxj_global_config_create(apr_pool_t* pool, server_rec* s)
 {
   apr_status_t    sts;
-  apr_pool_t      *pool = s->process->pool;
   void*           shm_segment;
   apr_size_t      shm_segsize;
   int*            shm;
@@ -620,7 +620,7 @@ chxj_global_config_create(server_rec* s)
 
   apr_pool_cleanup_register(pool, s,
                                chxj_init_module_kill,
-                               chxj_init_module_kill);
+                               apr_pool_cleanup_null);
   if (conf)
   {
     /*------------------------------------------------------------------------*/
@@ -704,8 +704,6 @@ chxj_init_module(apr_pool_t *p,
   ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, s,
                   "start chxj_init_module()");
 
-  conf = chxj_global_config_create(s);
-
   ap_add_version_component(p, CHXJ_VERSION_PREFIX CHXJ_VERSION);
 
   ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, s,
@@ -723,7 +721,7 @@ chxj_config_server_create(apr_pool_t *p, server_rec *s)
 {
   mod_chxj_global_config *gc;
 
-  gc = chxj_global_config_create(s);
+  gc = chxj_global_config_create(p, s);
 
   return gc;
 }
@@ -839,13 +837,13 @@ cmd_load_emoji_data(cmd_parms *parms, void *mconfig, const char* arg)
 
 static const command_rec cmds[] = {
   AP_INIT_TAKE1(
-    "LoadDeviceData",
+    "ChxjLoadDeviceData",
     cmd_load_device_data,
     NULL,
     OR_ALL,
     "Load Device Data"),
   AP_INIT_TAKE1(
-    "LoadEmojiData",
+    "ChxjLoadEmojiData",
     cmd_load_emoji_data,
     NULL,
     OR_ALL,
