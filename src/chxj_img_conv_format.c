@@ -28,7 +28,6 @@
     ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r,"%s %s %d %s\n",__FILE__,(__func__),__LINE__,description); \
     description=(char *) MagickRelinquishMemory(description); \
     DestroyMagickWand(magick_wand); \
-    return HTTP_NOT_FOUND; \
   }while(1) 
 
 typedef enum img_conv_mode_t {
@@ -93,6 +92,16 @@ static apr_status_t chxj_create_cache_file(request_rec* r,
 static apr_status_t chxj_send_cache_file(request_rec* r, const char* tmpfile);
 static query_string_param_t* chxj_get_query_string_param(request_rec *r);
 static unsigned short chxj_add_crc(const char* writedata, apr_size_t witebyte);
+static MagickWand* chxj_fixup_size(MagickWand* magick_wand, 
+                request_rec* r, device_table* spec, img_conv_mode_t mode);
+static MagickWand* chxj_fixup_color(MagickWand* magick_wand, 
+                request_rec* r, device_table* spec, img_conv_mode_t mode);
+static MagickWand* chxj_fixup_depth(MagickWand* magick_wand, 
+                request_rec* r, device_table* spec);
+static MagickWand* chxj_img_down_sizing(MagickWand* magick_wand, 
+                request_rec* r, device_table* spec);
+
+static MagickWand* chxj_add_copyright(MagickWand* magick_wand, request_rec* r, device_table* spec);
 
 
 int
@@ -182,11 +191,6 @@ static apr_status_t
 chxj_create_cache_file(request_rec* r, const char* tmpfile, device_table* spec, apr_finfo_t* st, img_conv_mode_t mode)
 {
   apr_status_t       rv;
-  int                neww;
-  int                newh;
-  int                oldw;
-  int                oldh;
-
   apr_size_t         readbyte;
   apr_size_t         writebyte;
   unsigned short     crc;
@@ -199,8 +203,6 @@ chxj_create_cache_file(request_rec* r, const char* tmpfile, device_table* spec, 
 
   MagickBooleanType  status;
   MagickWand*        magick_wand;
-
-
 
   rv = apr_file_open(&fin, 
                   r->filename, 
@@ -231,132 +233,45 @@ chxj_create_cache_file(request_rec* r, const char* tmpfile, device_table* spec, 
   if (status == MagickFalse)
   {
     EXIT_MAGICK_ERROR();
+    return HTTP_NOT_FOUND;
   }
 
-  oldw = MagickGetImageWidth(magick_wand);
-  oldh = MagickGetImageHeight(magick_wand);
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"detect width=[%d]", oldw);
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"detect heigh=[%d]", oldh);
-  neww = oldw;
-  newh = oldh;
-
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"detect spec width=[%d]", spec->width);
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"detect spec heigh=[%d]", spec->heigh);
-
-  if (mode == IMG_CONV_MODE_NORMAL)
+  /*--------------------------------------------------------------------------*/
+  /* The size of the image is changed.                                        */
+  /*--------------------------------------------------------------------------*/
+  magick_wand = chxj_fixup_size(magick_wand, r, spec, mode);
+  if (magick_wand == NULL)
   {
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"**** detect normal mode ****");
-    if (neww > spec->width)
-    {
-      newh = (int)((double)newh * (double)((double)spec->width / (double)neww));
-      neww = (int)((double)neww * (double)((double)spec->width / (double)neww));
-    }
-    if (newh > spec->heigh)
-    {
-      neww = (int)((double)neww * (double)((double)spec->heigh / (double)newh));
-      newh = (int)((double)newh * (double)((double)spec->heigh / (double)newh));
-    }
-  }
-  else
-  if (mode == IMG_CONV_MODE_THUMBNAIL)
-  {
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"**** detect thumbnail mode ****");
-    if (neww > spec->width)
-    {
-      newh = (int)((double)newh * (double)((double)spec->width / (double)neww));
-      neww = (int)((double)neww * (double)((double)spec->width / (double)neww));
-    }
-    if (newh > spec->heigh)
-    {
-      neww = (int)((double)neww * (double)((double)spec->heigh / (double)newh));
-      newh = (int)((double)newh * (double)((double)spec->heigh / (double)newh));
-    }
-
-    neww = (int)((double)(neww / 3) * 0.8);
-    newh = (int)((double)(newh / 3) * 0.8);
-  }
-  else
-  if (mode == IMG_CONV_MODE_WALLPAPER)
-  {
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"**** detect wallpaper mode ****");
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"calc new width and height");
-    if (neww > newh)
-    {
-      newh = (int)((double)newh * (double)((double)spec->width / (double)neww));
-      neww = (int)((double)neww * (double)((double)spec->width / (double)neww));
-    }
-    else
-    {
-      neww = (int)((double)neww * (double)((double)spec->heigh / (double)newh));
-      newh = (int)((double)newh * (double)((double)spec->heigh / (double)newh));
-    }
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"newh = [%d] neww = [%d]", newh, neww);
-  }
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert width=[%d --> %d]", oldw, neww);
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert heigh=[%d --> %d]", oldh, newh);
-
-  MagickResetIterator(magick_wand);
-  while (MagickNextImage(magick_wand) != MagickFalse)
-  {
-    if (mode == IMG_CONV_MODE_WALLPAPER)
-    {
-      status = MagickResizeImage(magick_wand,neww,newh,LanczosFilter,1.0);
-      if (status == MagickFalse)
-      {
-        EXIT_MAGICK_ERROR();
-      }
-      status = MagickCropImage(magick_wand, 
-                      (unsigned long)spec->width, 
-                      (unsigned long)spec->heigh,
-                      (long)((neww - spec->width) / 2),
-                      (long)((newh - spec->heigh) / 2));
-      if (status == MagickFalse)
-      {
-        EXIT_MAGICK_ERROR();
-      }
-    }
-    else
-    {
-      status = MagickResizeImage(magick_wand,neww,newh,LanczosFilter,1.0);
-      if (status == MagickFalse)
-      {
-        EXIT_MAGICK_ERROR();
-      }
-    }
-    status = MagickSetImageResolution(magick_wand,(double)spec->width, (double)spec->heigh);
-    if (status == MagickFalse)
-    {
-      EXIT_MAGICK_ERROR();
-    }
-
+    return HTTP_NOT_FOUND;
   }
 
-  if (spec->color >= 256)
+  /*--------------------------------------------------------------------------*/
+  /* The colors of the image is changed.                                      */
+  /*--------------------------------------------------------------------------*/
+  magick_wand = chxj_fixup_color(magick_wand, r,spec, mode);
+  if (magick_wand == NULL)
   {
-    status = MagickQuantizeImage(magick_wand,
-                               spec->color,
-                               RGBColorspace,
-                               0,
-                               1,
-                               0);
-    if (status == MagickFalse)
-    {
-      EXIT_MAGICK_ERROR();
-    }
+    return HTTP_NOT_FOUND;
   }
-  else 
+
+  /*--------------------------------------------------------------------------*/
+  /* DEPTH of the image is changed.                                           */
+  /*--------------------------------------------------------------------------*/
+  magick_wand = chxj_fixup_depth(magick_wand, r, spec);
+  if (magick_wand == NULL)
   {
-    status = MagickQuantizeImage(magick_wand,
-                               spec->color,
-                               GRAYColorspace,
-                               0,
-                               1,
-                               0);
-    if (status == MagickFalse)
-    {
-      EXIT_MAGICK_ERROR();
-    }
+    return HTTP_NOT_FOUND;
   }
+
+  /*--------------------------------------------------------------------------*/
+  /* Add Comment (Copyright and so on.)                                       */
+  /*--------------------------------------------------------------------------*/
+  magick_wand = chxj_add_copyright(magick_wand, r, spec);
+  if (magick_wand == NULL)
+  {
+    return HTTP_NOT_FOUND;
+  }
+
 
   if (spec->available_jpeg == 1)
   {
@@ -364,19 +279,23 @@ chxj_create_cache_file(request_rec* r, const char* tmpfile, device_table* spec, 
     if (status == MagickFalse)
     {
       EXIT_MAGICK_ERROR();
-    }
-    status = MagickSetImageCompressionQuality(magick_wand, 100);
-    if (status == MagickFalse)
-    {
-      EXIT_MAGICK_ERROR();
+      return HTTP_NOT_FOUND;
     }
     status = MagickSetImageFormat(magick_wand, "jpg");
     if (status == MagickFalse)
     {
       EXIT_MAGICK_ERROR();
+      return HTTP_NOT_FOUND;
     }
-    writedata=MagickGetImageBlob(magick_wand, &writebyte);
+
+    magick_wand = chxj_img_down_sizing(magick_wand, r, spec);
+    if (magick_wand == NULL)
+    {
+      return HTTP_NOT_FOUND;
+    }
+
     r->content_type = apr_psprintf(r->pool, "image/jpeg");
+    writedata=MagickGetImageBlob(magick_wand, &writebyte);
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert to jpg");
   }
   else
@@ -386,43 +305,48 @@ chxj_create_cache_file(request_rec* r, const char* tmpfile, device_table* spec, 
     if (status == MagickFalse)
     {
       EXIT_MAGICK_ERROR();
-    }
-    status = MagickSetImageCompressionQuality(magick_wand, 100);
-    if (status == MagickFalse)
-    {
-      EXIT_MAGICK_ERROR();
+      return HTTP_NOT_FOUND;
     }
     status = MagickSetImageFormat(magick_wand, "png");
     if (status == MagickFalse)
     {
       EXIT_MAGICK_ERROR();
+      return HTTP_NOT_FOUND;
     }
-    writedata=MagickGetImageBlob(magick_wand, &writebyte);
+    magick_wand = chxj_img_down_sizing(magick_wand, r, spec);
+    if (magick_wand == NULL)
+    {
+      return HTTP_NOT_FOUND;
+    }
+
+    writedata = MagickGetImageBlob(magick_wand, &writebyte);
+
     r->content_type = apr_psprintf(r->pool, "image/png");
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert to png");
   }
   else
   if (spec->available_gif == 1)
   {
-#ifdef USE_LZW_COMPRESSION
     status = MagickSetImageCompression(magick_wand,LZWCompression);
-#else
-    status = MagickSetImageCompression(magick_wand,NoCompression);
-#endif
     if (status == MagickFalse)
     {
       EXIT_MAGICK_ERROR();
+      return HTTP_NOT_FOUND;
     }
-    status = MagickSetImageCompressionQuality(magick_wand, 100);
-    if (status == MagickFalse)
-    {
-      EXIT_MAGICK_ERROR();
-    }
+
     status = MagickSetImageFormat(magick_wand, "gif");
     if (status == MagickFalse)
     {
       EXIT_MAGICK_ERROR();
+      return HTTP_NOT_FOUND;
     }
+
+    magick_wand = chxj_img_down_sizing(magick_wand, r, spec);
+    if (magick_wand == NULL)
+    {
+      return HTTP_NOT_FOUND;
+    }
+
     writedata=MagickGetImageBlob(magick_wand, &writebyte);
     r->content_type = apr_psprintf(r->pool, "image/gif");
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert to gif");
@@ -434,17 +358,21 @@ chxj_create_cache_file(request_rec* r, const char* tmpfile, device_table* spec, 
     if (status == MagickFalse)
     {
       EXIT_MAGICK_ERROR();
-    }
-    status = MagickSetImageCompressionQuality(magick_wand, 100);
-    if (status == MagickFalse)
-    {
-      EXIT_MAGICK_ERROR();
+      return HTTP_NOT_FOUND;
     }
     status = MagickSetImageFormat(magick_wand, "bmp");
     if (status == MagickFalse)
     {
       EXIT_MAGICK_ERROR();
+      return HTTP_NOT_FOUND;
     }
+
+    magick_wand = chxj_img_down_sizing(magick_wand, r, spec);
+    if (magick_wand == NULL)
+    {
+      return HTTP_NOT_FOUND;
+    }
+
     writedata=MagickGetImageBlob(magick_wand, &writebyte);
 
     r->content_type = apr_psprintf(r->pool, "image/bmp");
@@ -504,6 +432,393 @@ chxj_create_cache_file(request_rec* r, const char* tmpfile, device_table* spec, 
   }
 
   return OK;
+}
+
+static MagickWand* 
+chxj_fixup_size(MagickWand* magick_wand, request_rec* r, device_table* spec, img_conv_mode_t mode)
+{
+  MagickBooleanType  status;
+  int oldw;
+  int oldh;
+  int neww;
+  int newh;
+  int c_width;
+  int c_heigh;
+
+  oldw = MagickGetImageWidth(magick_wand);
+  oldh = MagickGetImageHeight(magick_wand);
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"detect width=[%d]", oldw);
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"detect heigh=[%d]", oldh);
+  neww = oldw;
+  newh = oldh;
+
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"detect spec width=[%d]", spec->width);
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"detect spec heigh=[%d]", spec->heigh);
+
+  c_width = spec->width;
+  c_heigh = spec->heigh;
+
+  if (mode == IMG_CONV_MODE_THUMBNAIL)
+  {
+    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"**** detect thumbnail mode ****");
+    if (neww > c_width)
+    {
+      newh = (int)((double)newh * (double)((double)c_width / (double)neww));
+      neww = (int)((double)neww * (double)((double)c_width / (double)neww));
+    }
+    if (newh > c_heigh)
+    {
+      neww = (int)((double)neww * (double)((double)c_heigh / (double)newh));
+      newh = (int)((double)newh * (double)((double)c_heigh / (double)newh));
+    }
+
+    neww = (int)((double)(neww / 3) * 0.8);
+    newh = (int)((double)(newh / 3) * 0.8);
+  }
+  else
+  if (mode == IMG_CONV_MODE_WALLPAPER)
+  {
+    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"**** detect wallpaper mode ****");
+
+    if (spec->wp_width != 0 && spec->wp_heigh != 0)
+    {
+      c_width = spec->wp_width;
+      c_heigh = spec->wp_heigh;
+    }
+    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"calc new width and height");
+    if (neww > newh)
+    {
+      newh = (int)((double)newh * (double)((double)c_width / (double)neww));
+      neww = (int)((double)neww * (double)((double)c_width / (double)neww));
+    }
+    else
+    {
+      neww = (int)((double)neww * (double)((double)c_heigh / (double)newh));
+      newh = (int)((double)newh * (double)((double)c_heigh / (double)newh));
+    }
+    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"newh = [%d] neww = [%d]", newh, neww);
+  }
+  else
+  {
+    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"**** detect normal mode ****");
+    if (neww > c_width)
+    {
+      newh = (int)((double)newh * (double)((double)c_width / (double)neww));
+      neww = (int)((double)neww * (double)((double)c_width / (double)neww));
+    }
+    if (newh > c_heigh)
+    {
+      neww = (int)((double)neww * (double)((double)c_heigh / (double)newh));
+      newh = (int)((double)newh * (double)((double)c_heigh / (double)newh));
+    }
+  }
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert width=[%d --> %d]", oldw, neww);
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert heigh=[%d --> %d]", oldh, newh);
+
+  MagickResetIterator(magick_wand);
+  while (MagickNextImage(magick_wand) != MagickFalse)
+  {
+    if (mode == IMG_CONV_MODE_WALLPAPER)
+    {
+      status = MagickResizeImage(magick_wand,neww,newh,LanczosFilter,1.0);
+      if (status == MagickFalse)
+      {
+        EXIT_MAGICK_ERROR();
+        return NULL;
+      }
+      status = MagickCropImage(magick_wand, 
+                      (unsigned long)c_width, 
+                      (unsigned long)c_heigh,
+                      (long)((neww - c_width) / 2),
+                      (long)((newh - c_heigh) / 2));
+      if (status == MagickFalse)
+      {
+        EXIT_MAGICK_ERROR();
+        return NULL;
+      }
+    }
+    else
+    {
+      status = MagickResizeImage(magick_wand,neww,newh,LanczosFilter,1.0);
+      if (status == MagickFalse)
+      {
+        EXIT_MAGICK_ERROR();
+        return NULL;
+      }
+    }
+    status = MagickSetImageResolution(magick_wand,(double)spec->dpi_width, (double)spec->dpi_heigh);
+    if (status == MagickFalse)
+    {
+      EXIT_MAGICK_ERROR();
+      return NULL;
+    }
+
+  }
+
+  return magick_wand;
+}
+static MagickWand*
+chxj_fixup_color(MagickWand* magick_wand, request_rec* r, device_table* spec, img_conv_mode_t mode)
+{
+  MagickBooleanType  status;
+
+  if (spec->color >= 256)
+  {
+    status = MagickQuantizeImage(magick_wand,
+                               spec->color,
+                               RGBColorspace,
+                               0,
+                               1,
+                               0);
+    if (status == MagickFalse)
+    {
+      EXIT_MAGICK_ERROR();
+      return NULL;
+    }
+  }
+  else 
+  {
+    status = MagickQuantizeImage(magick_wand,
+                               spec->color,
+                               GRAYColorspace,
+                               0,
+                               1,
+                               0);
+    if (status == MagickFalse)
+    {
+      EXIT_MAGICK_ERROR();
+      return NULL;
+    }
+  }
+  return magick_wand;
+}
+static MagickWand*
+chxj_fixup_depth(MagickWand* magick_wand, request_rec* r, device_table* spec)
+{
+  MagickBooleanType  status;
+
+  if (spec->color == 15680000)
+  {
+    status = MagickSetImageDepth(magick_wand, 24);
+    if (status == MagickFalse)
+    {
+      EXIT_MAGICK_ERROR();
+      return NULL;
+    }
+  }
+  else
+  if (spec->color == 262144)
+  {
+    status = MagickSetImageDepth(magick_wand, 18);
+    if (status == MagickFalse)
+    {
+      EXIT_MAGICK_ERROR();
+      return NULL;
+    }
+  }
+  else
+  if (spec->color == 65536)
+  {
+    status = MagickSetImageDepth(magick_wand, 16);
+    if (status == MagickFalse)
+    {
+      EXIT_MAGICK_ERROR();
+      return NULL;
+    }
+  }
+  else
+  if (spec->color == 4096)
+  {
+    status = MagickSetImageDepth(magick_wand, 12);
+    if (status == MagickFalse)
+    {
+      EXIT_MAGICK_ERROR();
+      return NULL;
+    }
+  }
+  else
+  if (spec->color == 256)
+  {
+    status = MagickSetImageDepth(magick_wand, 8);
+    if (status == MagickFalse)
+    {
+      EXIT_MAGICK_ERROR();
+      return NULL;
+    }
+  }
+  else
+  if (spec->color == 4)
+  {
+    status = MagickSetImageDepth(magick_wand, 2);
+    if (status == MagickFalse)
+    {
+      EXIT_MAGICK_ERROR();
+      return NULL;
+    }
+  }
+  else
+  if (spec->color == 2)
+  {
+    status = MagickSetImageDepth(magick_wand, 1);
+    if (status == MagickFalse)
+    {
+      EXIT_MAGICK_ERROR();
+      return NULL;
+    }
+  }
+  return magick_wand;
+}
+
+static MagickWand*
+chxj_add_copyright(MagickWand* magick_wand, request_rec* r, device_table* spec)
+{
+  MagickBooleanType  status;
+  mod_chxj_config* conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  if (conf->image_copyright != NULL)
+  {
+    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "Add COPYRIGHT [%s]", conf->image_copyright);
+    if (spec->html_spec_type == CHXJ_SPEC_Jhtml)
+    {
+      apr_table_setn(r->headers_out, "x-jphone-copyright", "no-transfer");
+      status = MagickCommentImage(magick_wand, apr_psprintf(r->pool, "Copyright(C) %s", conf->image_copyright));
+      if (status == MagickFalse)
+      {
+        EXIT_MAGICK_ERROR();
+        return NULL;
+      }
+    }
+    else
+    if (spec->html_spec_type == CHXJ_SPEC_XHtml_Mobile_1_0
+    ||  spec->html_spec_type == CHXJ_SPEC_Hdml)
+    {
+      status = MagickCommentImage(magick_wand, apr_psprintf(r->pool, "kddi_copyright=on,%s", conf->image_copyright));
+      if (status == MagickFalse)
+      {
+        EXIT_MAGICK_ERROR();
+        return NULL;
+      }
+    }
+    else
+    {
+      status = MagickCommentImage(magick_wand, apr_psprintf(r->pool, "copy=\"NO\",%s", conf->image_copyright));
+      if (status == MagickFalse)
+      {
+        EXIT_MAGICK_ERROR();
+        return NULL;
+      }
+    }
+  }
+  else
+  {
+    status = MagickCommentImage(magick_wand, "mod_chxj");
+    if (status == MagickFalse)
+    {
+      EXIT_MAGICK_ERROR();
+      return NULL;
+    }
+  }
+  return magick_wand;
+}
+
+static MagickWand*
+chxj_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table* spec)
+{
+  MagickBooleanType  status;
+  unsigned long quality = 70;
+  apr_size_t    writebyte = 0;
+  char*         writedata;
+
+  do {
+    status = MagickSetImageCompressionQuality(magick_wand, quality);
+    if (status == MagickFalse)
+    {
+      EXIT_MAGICK_ERROR();
+      return NULL;
+    }
+    writedata = MagickGetImageBlob(magick_wand, &writebyte);
+
+    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "quality=[%ld] size=[%d]", (long)quality, writebyte);
+
+    if (spec->cache == 0)
+    {
+      break;
+    }
+    if (writebyte <= spec->cache)
+    {
+      break;
+    }
+    quality -= 10;
+    if (quality == 0 || quality > 100)
+    {
+      break;
+    }
+  }
+  while (1);
+
+  if (spec->cache > 0 
+  &&  writebyte   > spec->cache)
+  {
+    unsigned long now_color = spec->color;
+    unsigned long depth     = 0;
+    do {
+      switch(now_color) 
+      {
+      case 2:      depth = 1; break;
+      case 4:      now_color = 2;        depth = 1;  break;
+      case 256:    now_color = 4;        depth = 2;  break;
+      case 4096:   now_color = 256;      depth = 8;  break;
+      case 65536:  now_color = 4096;     depth = 12; break;
+      case 262144: now_color = 65536;    depth = 16; break;
+      case 15680000: now_color = 262144; depth = 18; break;
+      default:
+        now_color = 2;
+        break;
+      }
+      if (now_color <= 2)
+      {
+        break;
+      }
+      if (now_color >= 256)
+      {
+        status = MagickQuantizeImage(magick_wand,
+                             now_color,
+                             RGBColorspace,
+                             0,
+                             1,
+                             0);
+      }
+      else
+      {
+        status = MagickQuantizeImage(magick_wand,
+                             now_color,
+                             GRAYColorspace,
+                             0,
+                             1,
+                             0);
+      }
+      if (status == MagickFalse)
+      {
+        EXIT_MAGICK_ERROR();
+        return NULL;
+      }
+      status = MagickSetImageDepth(magick_wand, depth);
+      if (status == MagickFalse)
+      {
+        EXIT_MAGICK_ERROR();
+        return NULL;
+      }
+      writedata=MagickGetImageBlob(magick_wand, &writebyte);
+
+      ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "now_color=[%ld] size=[%d]", (long)now_color, writebyte);
+
+      if (writebyte <= spec->cache)
+      {
+        break;
+      }
+    }
+    while(now_color > 2);
+  }
+  return magick_wand;
 }
 
 static apr_status_t 
@@ -756,5 +1071,5 @@ chxj_get_query_string_param(request_rec *r)
   return param;
 }
 /*
- * vim:ts=4 et
+ * vim:ts=2 et
  */

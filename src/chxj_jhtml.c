@@ -98,7 +98,7 @@ chxj_exchange_jhtml(
 #ifdef DUMP_LOG
   chxj_dump_out("[src] CHTML -> JHTML", ss, srclen);
 #endif
-  qs_parse_string(&doc,ss);
+  qs_parse_string(&doc,ss,strlen(ss));
 
   /*--------------------------------------------------------------------------*/
   /* It converts it from CHTML to JHTML.                                      */

@@ -24,6 +24,12 @@
 QS_EXPORT void
 qs_init_malloc(Doc* doc) {
   int ii;
+  doc->alloc_size = 0;
+  doc->pointer_table = (Pointer_Table*)malloc(sizeof(Pointer_Table)* QX_ALLOC_MAX);
+  if (doc->pointer_table == NULL)
+  {
+    QX_LOGGER_FATAL("Out Of Memory");
+  }
   for (ii=0; ii<QX_ALLOC_MAX; ii++) {
     doc->pointer_table[ii].address = 0;
     doc->pointer_table[ii].size    = 0;
@@ -52,6 +58,7 @@ qs_malloc(Doc* doc, int size, const char* fname, int line) {
   sprintf(buffer,"malloc Address:[0x%x]", src);
   qs_log(doc,QX_LOG_DEBUG,fname,line,buffer);
 #endif
+#if 0
   for (ii=0; ii<QX_ALLOC_MAX; ii++) {
     if (doc->pointer_table[ii].address == (unsigned int)src) {
       QX_LOGGER_DEBUG("use old space");
@@ -61,15 +68,14 @@ qs_malloc(Doc* doc, int size, const char* fname, int line) {
       break;
     }
   }
-  if (ii == QX_ALLOC_MAX)  {
-    for (ii=0; ii<QX_ALLOC_MAX; ii++) {
-      if (doc->pointer_table[ii].address == 0) {
-        doc->pointer_table[ii].address = (unsigned int)src;
-        doc->pointer_table[ii].size = size;
-        doc->alloc_size += size;
-        QX_LOGGER_DEBUG("use new space");
-        break;
-      }
+#endif
+  for (ii=0; ii<QX_ALLOC_MAX; ii++) {
+    if (doc->pointer_table[ii].address == 0) {
+      doc->pointer_table[ii].address = (unsigned int)src;
+      doc->pointer_table[ii].size = size;
+      doc->alloc_size += size;
+      QX_LOGGER_DEBUG("use new space");
+      break;
     }
   }
   if (ii == QX_ALLOC_MAX) {
@@ -105,12 +111,20 @@ QS_EXPORT void
 qs_all_free(Doc* doc, const char* fname, int line) {
   int ii;
   if (doc->do_init_flag) {
-    for (ii=0; ii<QX_ALLOC_MAX; ii++) {
-      if (doc->pointer_table[ii].address != 0) {
-        qs_free(doc, (void*)doc->pointer_table[ii].address,fname, line);
+    for (ii=0; ii < QX_ALLOC_MAX; ii++) {
+      if (doc->pointer_table != NULL 
+      &&  doc->pointer_table[ii].address != 0) {
+        free((void*)(doc->pointer_table[ii].address));
+        doc->pointer_table[ii].address = 0;
+        doc->alloc_size -= doc->pointer_table[ii].size;
+        doc->pointer_table[ii].size =0;
       }
     }
+    free(doc->pointer_table);
+    doc->pointer_table = NULL;
   }
+
+  doc->do_init_flag = 0;
 }
 /*
  * vim:ts=2 et

@@ -711,6 +711,9 @@ chxj_create_per_dir_config(apr_pool_t *p, char *arg)
   conf->emoji_data_file  = NULL;
   conf->image_uri        = NULL;
   conf->image_cache_dir  = apr_psprintf(p, "%s",DEFAULT_IMAGE_CACHE_DIR);
+
+  /* Default is copyleft */
+  conf->image_copyright = NULL; 
   return conf;
 }
 
@@ -809,6 +812,23 @@ cmd_set_image_cache_dir(cmd_parms *parms, void *mconfig, const char* arg)
   return NULL;
 }
 
+static const char* 
+cmd_set_image_copyright(cmd_parms *parms, void *mconfig, const char* arg) 
+{
+  mod_chxj_config* conf;
+  Doc doc;
+
+  doc.r = NULL;
+  if (strlen(arg) > 256) 
+  {
+    return "Copyright Flag is too long.";
+  }
+
+  conf = (mod_chxj_config*)mconfig;
+  conf->image_copyright = apr_pstrdup(parms->pool, arg);
+  return NULL;
+}
+
 static const command_rec cmds[] = {
   AP_INIT_TAKE1(
     "ChxjLoadDeviceData",
@@ -827,13 +847,19 @@ static const command_rec cmds[] = {
     cmd_set_image_uri,
     NULL,
     OR_ALL,
-    "Load Device Data"),
+    "Convert Target URI"),
   AP_INIT_TAKE1(
     "ChxjImageCacheDir",
     cmd_set_image_cache_dir,
     NULL,
     OR_ALL,
-    "Load Device Data"),
+    "Image Cache Directory"),
+  AP_INIT_TAKE1(
+    "ChxjImageCopyright",
+    cmd_set_image_copyright,
+    NULL,
+    OR_ALL,
+    "Copyright Flag"),
   { NULL },
 };
 

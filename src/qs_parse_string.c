@@ -26,9 +26,8 @@ static int s_cut_text(const char* s, int len) ;
 
 
 QS_EXPORT Node*
-qs_parse_string(Doc* doc, const char* src) {
+qs_parse_string(Doc* doc, const char* src, int srclen) {
   int ii;
-  int srclen = strlen(src);
 
 #ifdef DEBUG
   QX_LOGGER_DEBUG("parse_string start");
@@ -48,16 +47,29 @@ qs_parse_string(Doc* doc, const char* src) {
     }
     if ((unsigned char)'<' == src[ii]) {
       int endpoint = s_cut_tag(&src[ii], srclen - ii);
-      Node* node   = qs_parse_tag(doc, &src[ii], endpoint);
+      Node* node   = NULL;
+#ifdef DEBUG
+  QX_LOGGER_DEBUG("call qs_parse_tag()");
+#endif
+      node = qs_parse_tag(doc, &src[ii], endpoint);
+#ifdef DEBUG
+  QX_LOGGER_DEBUG("return from qs_parse_tag()");
+#endif
+
       ii += endpoint;
-      if (node->name[0] == '/' ) {
-        if (has_child(node->name)) {
+      if (node->name[0] == '/' ) 
+      {
+        if (has_child(node->name)) 
+        {
 #ifdef DEBUG
          {char buf[256]; sprintf(buf, "[%s]->[%s]", 
                          doc->now_parent_node->name, 
                          doc->now_parent_node->parent->name); QX_LOGGER_DEBUG(buf);}
 #endif
-          doc->now_parent_node = doc->now_parent_node->parent;
+          if (doc->root_node != doc->now_parent_node)
+          {
+            doc->now_parent_node = doc->now_parent_node->parent;
+          }
         }
         qs_free_node(doc,node);
         continue;
@@ -67,7 +79,13 @@ qs_parse_string(Doc* doc, const char* src) {
         qs_free_node(doc, node);
         continue;
       }
+#ifdef DEBUG
+  QX_LOGGER_DEBUG("call qs_add_child_node()");
+#endif
       qs_add_child_node(doc,node);
+#ifdef DEBUG
+  QX_LOGGER_DEBUG("return from qs_add_child_node()");
+#endif
       if (has_child(node->name)) {
 #ifdef DEBUG
         {char buf[256]; sprintf(buf, "[%s]->[%s]", doc->now_parent_node->name, node->name); QX_LOGGER_DEBUG(buf);}
@@ -210,7 +228,10 @@ qs_add_child_node(Doc* doc,Node* node)
 
 
 QS_EXPORT void
-qs_free_node(Doc* doc, Node* node) {
+qs_free_node(Doc* doc, Node* node) 
+{
+  QX_LOGGER_DEBUG("start qs_free_node()");
+
   qs_free(doc,node->name, QX_LOGMARK);
   Attr* attr;
   Attr* nattr;
@@ -223,6 +244,7 @@ qs_free_node(Doc* doc, Node* node) {
   }
 
   qs_free(doc,node, QX_LOGMARK);
+  QX_LOGGER_DEBUG("end qs_free_node()");
 }
 
 

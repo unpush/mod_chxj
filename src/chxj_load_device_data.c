@@ -146,7 +146,20 @@ set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node)
   device_table* dt;
 
   dt = apr_pcalloc(p, sizeof(device_table));
-  dt->next = NULL;
+  dt->next           = NULL;
+  dt->device_id      = NULL;
+  dt->device_name    = NULL;
+  dt->html_spec_type = CHXJ_SPEC_Chtml_3_0;
+  dt->width          = 0;
+  dt->heigh          = 0;
+  dt->wp_width       = 0;
+  dt->wp_heigh       = 0;
+  dt->cache          = 5;
+  dt->emoji_type     = NULL;
+  dt->color          = 256;
+  dt->dpi_width      = 96;
+  dt->dpi_heigh      = 96;
+
   for (child = qs_get_child_node(doc,node); 
        child ;
        child = qs_get_next_node(doc,child)) 
@@ -386,6 +399,136 @@ set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node)
       if (ch != NULL && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) 
       {
         dt->emoji_type = apr_pstrdup(p, qs_get_node_value(doc, ch));
+      }
+    }
+    else 
+    if (strcasecmp(name, "wp_width") == 0) 
+    {
+      Node* ch = qs_get_child_node(doc, child);
+      if (ch != NULL && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) 
+      {
+        char *vv = qs_get_node_value(doc,ch);
+        int ii;
+        for (ii=0; ii<strlen(vv); ii++) 
+        {
+          if ((vv[ii] >= '1' && vv[ii] <= '9') || vv[ii] == '0') 
+          {
+            continue;
+          }
+          break;
+        }
+        if (ii == strlen(vv)) 
+        {
+          dt->wp_width = atoi(qs_get_node_value(doc,ch));
+        }
+        else 
+        {
+          dt->wp_width = 0;
+        }
+      }
+    }
+    else
+    if (strcasecmp(name, "wp_heigh") == 0) 
+    {
+      Node* ch = qs_get_child_node(doc, child);
+      if (ch != NULL && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) 
+      {
+        char *vv = qs_get_node_value(doc,ch);
+        int ii;
+        for (ii=0; ii<strlen(vv); ii++) 
+        {
+          if ((vv[ii] >= '1' && vv[ii] <= '9') || vv[ii] == '0') 
+          {
+            continue;
+          }
+          break;
+        }
+        if (ii == strlen(vv)) 
+        {
+          dt->wp_heigh = atoi(qs_get_node_value(doc,ch));
+        }
+        else 
+        {
+          dt->wp_heigh = 0;
+        }
+      }
+    }
+    else
+    if (strcasecmp(name, "cache") == 0) 
+    {
+      Node* ch = qs_get_child_node(doc, child);
+      if (ch != NULL && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) 
+      {
+        char *vv = qs_get_node_value(doc,ch);
+        int ii;
+        for (ii=0; ii<strlen(vv); ii++) 
+        {
+          if ((vv[ii] >= '1' && vv[ii] <= '9') || vv[ii] == '0') 
+          {
+            continue;
+          }
+          break;
+        }
+        if (ii == strlen(vv)) 
+        {
+          dt->cache = atoi(qs_get_node_value(doc,ch));
+        }
+        else 
+        {
+          dt->cache = 0;
+        }
+      }
+    }
+    else
+    if (strcasecmp(name, "dpi_width") == 0) 
+    {
+      Node* ch = qs_get_child_node(doc, child);
+      if (ch != NULL && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) 
+      {
+        char *vv = qs_get_node_value(doc,ch);
+        int ii;
+        for (ii=0; ii<strlen(vv); ii++) 
+        {
+          if ((vv[ii] >= '1' && vv[ii] <= '9') || vv[ii] == '0') 
+          {
+            continue;
+          }
+          break;
+        }
+        if (ii == strlen(vv)) 
+        {
+          dt->dpi_width = atoi(qs_get_node_value(doc,ch));
+        }
+        else 
+        {
+          dt->dpi_width = 0;
+        }
+      }
+    }
+    else
+    if (strcasecmp(name, "dpi_heigh") == 0) 
+    {
+      Node* ch = qs_get_child_node(doc, child);
+      if (ch != NULL && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) 
+      {
+        char *vv = qs_get_node_value(doc,ch);
+        int ii;
+        for (ii=0; ii<strlen(vv); ii++) 
+        {
+          if ((vv[ii] >= '1' && vv[ii] <= '9') || vv[ii] == '0') 
+          {
+            continue;
+          }
+          break;
+        }
+        if (ii == strlen(vv)) 
+        {
+          dt->dpi_heigh = atoi(qs_get_node_value(doc,ch));
+        }
+        else 
+        {
+          dt->dpi_heigh = 0;
+        }
       }
     }
   }

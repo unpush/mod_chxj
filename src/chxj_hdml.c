@@ -145,7 +145,7 @@ chxj_exchange_hdml(request_rec* r,
     qs_init_malloc(&doc); 
     qs_init_root_node(&doc);
     ss[srclen] = '\0';
-    qs_parse_string(&doc,ss);
+    qs_parse_string(&doc,ss, strlen(ss));
 
     /*------------------------------------------------------------------------*/
     /* The number of radiobuttons is counted.                                 */

@@ -1,4 +1,4 @@
-<?xml encoding="Shift_JIS" ?>
+<?xml encoding="EUC-JP" ?>
 <devices>
   <!--=======================================================================-->
   <!-- AU                                                                    -->
@@ -21,6 +21,11 @@
       <bmp4>false</bmp4>
       <color>4096</color>
       <emoji_type>C</emoji_type>
+      <wp_width>120</wp_width>
+      <wp_heigh>116</wp_heigh>
+      <cache>9740</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <!-- C3002K -->
     <device>
@@ -36,6 +41,11 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type>C</emoji_type>
+      <wp_width>128</wp_width>
+      <wp_heigh>120</wp_heigh>
+      <cache>9740</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
   
     <!-- C3003P -->
@@ -52,6 +62,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>144</wp_heigh>
+      <cache>9740</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <!--======================================================================-->
     <!-- W series                                                             -->
@@ -70,6 +86,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>98303</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>KC31</device_id>
@@ -84,6 +106,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>98303</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>HI32</device_id>
@@ -98,6 +126,12 @@
       <bmp4>false</bmp4>
       <color>15680000</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>176</wp_heigh>
+      <cache>33499</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>SA31</device_id>
@@ -112,6 +146,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>131072</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>SN31</device_id>
@@ -126,6 +166,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>131072</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>KC32</device_id>
@@ -140,6 +186,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>131072</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>TS31</device_id>
@@ -154,13 +206,19 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>131071</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>CA31</device_id>
       <device_name>W21CA</device_name>
       <html_spec_type>XHTML_MOBILE_1_0</html_spec_type>
-      <width>240</width>
-      <heigh>400</heigh>
+      <width>230</width>
+      <heigh>346</heigh>
       <gif>true</gif>
       <jpeg>true</jpeg>
       <png>true</png>
@@ -168,6 +226,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>400</wp_heigh>
+      <cache>131072</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>HI33</device_id>
@@ -182,6 +246,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>131072</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>SA32</device_id>
@@ -196,6 +266,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>131072</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <!--=====================================================================-->
     <!-- A5000 series                                                        -->
@@ -214,6 +290,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>144</wp_width>
+      <wp_heigh>176</wp_heigh>
+      <cache>33000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>CA22</device_id>
@@ -228,6 +310,12 @@
       <bmp4>true</bmp4>
       <color>15680000</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>163</wp_heigh>
+      <cache>33000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>HI23</device_id>
@@ -242,6 +330,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>176</wp_heigh>
+      <cache>33000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>HI24</device_id>
@@ -256,6 +350,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>176</wp_heigh>
+      <cache>33000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>TS24</device_id>
@@ -270,6 +370,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>144</wp_width>
+      <wp_heigh>176</wp_heigh>
+      <cache>33000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>KC22</device_id>
@@ -284,6 +390,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>144</wp_width>
+      <wp_heigh>176</wp_heigh>
+      <cache>33000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>ST21</device_id>
@@ -298,6 +410,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>176</wp_heigh>
+      <cache>33000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>ST22</device_id>
@@ -312,6 +430,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>176</wp_heigh>
+      <cache>33000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>CA23</device_id>
@@ -326,6 +450,12 @@
       <bmp4>false</bmp4>
       <color>15680000</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>176</wp_heigh>
+      <cache>33000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>SN24</device_id>
@@ -340,6 +470,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>160</wp_heigh>
+      <cache>33000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>CA24</device_id>
@@ -354,6 +490,12 @@
       <bmp4>false</bmp4>
       <color>15680000</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>49151</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>SN25</device_id>
@@ -368,6 +510,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>49151</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>ST23</device_id>
@@ -382,6 +530,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>176</wp_heigh>
+      <cache>33499</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>CA25</device_id>
@@ -396,6 +550,12 @@
       <bmp4>false</bmp4>
       <color>15680000</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>49151</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>CA26</device_id>
@@ -410,6 +570,12 @@
       <bmp4>false</bmp4>
       <color>15680000</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>49151</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>TS26</device_id>
@@ -424,6 +590,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>49151</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>KC24</device_id>
@@ -438,6 +610,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>49151</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>KC25</device_id>
@@ -452,6 +630,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>49151</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>SA26</device_id>
@@ -466,6 +650,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>49151</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>TS27</device_id>
@@ -480,6 +670,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>49151</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>TS28</device_id>
@@ -494,6 +690,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>49151</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>ST24</device_id>
@@ -508,6 +710,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>49152</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>ST25</device_id>
@@ -522,6 +730,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>49152</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <!--======================================================================-->
     <!-- C5000 series                                                         -->
@@ -539,6 +753,12 @@
       <bmp4>false</bmp4>
       <color>4096</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>144</wp_width>
+      <wp_heigh>135</wp_heigh>
+      <cache>65036</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <!--======================================================================-->
     <!-- A3000 series                                                         -->
@@ -557,6 +777,12 @@
       <bmp4>true</bmp4>
       <color>65536</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>144</wp_heigh>
+      <cache>9740</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>CA21</device_id>
@@ -571,6 +797,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>147</wp_heigh>
+      <cache>9740</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>TS22</device_id>
@@ -585,6 +817,12 @@
       <bmp4>true</bmp4>
       <color>65536</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>144</wp_width>
+      <wp_heigh>115</wp_heigh>
+      <cache>9740</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>SN21</device_id>
@@ -599,6 +837,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>123</wp_heigh>
+      <cache>9740</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>SA22</device_id>
@@ -613,6 +857,12 @@
       <bmp4>true</bmp4>
       <color>262144</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>176</wp_heigh>
+      <cache>9740</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <!--======================================================================-->
     <!-- A1400 series                                                         -->
@@ -631,6 +881,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>176</wp_heigh>
+      <cache>33000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>SN26</device_id>
@@ -645,6 +901,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>49151</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>SN27</device_id>
@@ -659,6 +921,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>49151</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>SN28</device_id>
@@ -673,6 +941,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>49152</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>SN29</device_id>
@@ -687,6 +961,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>49152</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>KC26</device_id>
@@ -701,6 +981,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>49151</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <!--======================================================================-->
     <!-- A1300 series                                                         -->
@@ -718,6 +1004,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>123</wp_heigh>
+      <cache>33000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>SA24</device_id>
@@ -732,6 +1024,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>124</wp_width>
+      <wp_heigh>144</wp_heigh>
+      <cache>33000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>SA25</device_id>
@@ -746,6 +1044,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>122</wp_width>
+      <wp_heigh>143</wp_heigh>
+      <cache>33000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>TS25</device_id>
@@ -760,6 +1064,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>140</wp_width>
+      <wp_heigh>140</wp_heigh>
+      <cache>33000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>SA28</device_id>
@@ -774,6 +1084,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>122</wp_width>
+      <wp_heigh>142</wp_heigh>
+      <cache>33000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <!--======================================================================-->
     <!-- A1100 series                                                         -->
@@ -791,6 +1107,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>123</wp_heigh>
+      <cache>9000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
 
     <!--======================================================================-->
@@ -809,6 +1131,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>9000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
   </user_agent>
   <user_agent pattern="UP.Browser/[^\-]+-([^     ]+) .+">
@@ -825,6 +1153,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type>C</emoji_type><!-- XXX -->
+
+      <wp_width>120</wp_width>
+      <wp_heigh>126</wp_heigh>
+      <cache>5000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <!--======================================================================-->
     <!-- A1000 series                                                         -->
@@ -842,6 +1176,12 @@
       <bmp4>true</bmp4>
       <color>65536</color>
       <emoji_type>C</emoji_type><!-- XXX -->
+
+      <wp_width>120</wp_width>
+      <wp_heigh>126</wp_heigh>
+      <cache>8000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>KC14</device_id>
@@ -856,6 +1196,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type>C</emoji_type><!-- XXX -->
+
+      <wp_width>120</wp_width>
+      <wp_heigh>126</wp_heigh>
+      <cache>8000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>KC15</device_id>
@@ -870,6 +1216,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>126</wp_heigh>
+      <cache>8000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>ST14</device_id>
@@ -884,6 +1236,12 @@
       <bmp4>true</bmp4>
       <color>65536</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>126</wp_heigh>
+      <cache>8000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <!--======================================================================-->
     <!-- C1000 series                                                         -->
@@ -901,6 +1259,12 @@
       <bmp4>true</bmp4>
       <color>65536</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>128</wp_heigh>
+      <cache>8000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>SN17</device_id>
@@ -915,6 +1279,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>112</wp_heigh>
+      <cache>8000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <!--======================================================================-->
     <!-- C400 series                                                          -->
@@ -932,6 +1302,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>128</wp_heigh>
+      <cache>8000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
 
     <device>
@@ -947,6 +1323,12 @@
       <bmp4>true</bmp4>
       <color>256</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>112</wp_heigh>
+      <cache>8000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>ST11</device_id>
@@ -961,6 +1343,12 @@
       <bmp4>true</bmp4>
       <color>256</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>108</wp_heigh>
+      <cache>8000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>SN12</device_id>
@@ -975,6 +1363,12 @@
       <bmp4>true</bmp4>
       <color>256</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>120</wp_heigh>
+      <cache>8000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>SN14</device_id>
@@ -989,6 +1383,12 @@
       <bmp4>true</bmp4>
       <color>256</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>120</wp_heigh>
+      <cache>8000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>SY13</device_id>
@@ -1003,6 +1403,12 @@
       <bmp4>true</bmp4>
       <color>4</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>96</wp_heigh>
+      <cache>8000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>SN13</device_id>
@@ -1017,6 +1423,12 @@
       <bmp4>true</bmp4>
       <color>256</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>120</wp_heigh>
+      <cache>8000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>HI13</device_id>
@@ -1031,6 +1443,12 @@
       <bmp4>true</bmp4>
       <color>256</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>112</wp_heigh>
+      <cache>8000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>MA13</device_id>
@@ -1045,6 +1463,12 @@
       <bmp4>true</bmp4>
       <color>256</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>115</wp_heigh>
+      <cache>8000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>CA13</device_id>
@@ -1059,6 +1483,12 @@
       <bmp4>true</bmp4>
       <color>256</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>96</wp_heigh>
+      <cache>8000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>TS13</device_id>
@@ -1073,6 +1503,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>112</wp_heigh>
+      <cache>8000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>ST12</device_id>
@@ -1087,6 +1523,12 @@
       <bmp4>true</bmp4>
       <color>256</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>104</wp_heigh>
+      <cache>8000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>SY14</device_id>
@@ -1101,6 +1543,12 @@
       <bmp4>true</bmp4>
       <color>256</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>128</wp_heigh>
+      <cache>8000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>SN16</device_id>
@@ -1115,6 +1563,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>120</wp_heigh>
+      <cache>8000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>SN15</device_id>
@@ -1129,6 +1583,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>120</wp_heigh>
+      <cache>8000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>KC13</device_id>
@@ -1143,6 +1603,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>120</wp_heigh>
+      <cache>8000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>TS14</device_id>
@@ -1157,6 +1623,12 @@
       <bmp4>false</bmp4>
       <color>4096</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>112</wp_heigh>
+      <cache>8000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>HI14</device_id>
@@ -1171,6 +1643,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>112</wp_heigh>
+      <cache>8000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>CA14</device_id>
@@ -1185,6 +1663,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>109</wp_heigh>
+      <cache>8000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <!--======================================================================-->
     <!-- C300 series                                                          -->
@@ -1202,6 +1686,12 @@
       <bmp4>false</bmp4>
       <color>0</color>
       <emoji_type>B</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>84</wp_heigh>
+      <cache>1492</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>HI11</device_id>
@@ -1216,6 +1706,12 @@
       <bmp4>false</bmp4>
       <color>0</color>
       <emoji_type>B</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>75</wp_heigh>
+      <cache>1492</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>CA11</device_id>
@@ -1228,8 +1724,14 @@
       <png>false</png>
       <bmp2>false</bmp2>
       <bmp4>false</bmp4>
-      <color>0</color>
+      <color>2</color>
       <emoji_type>B</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>91</wp_heigh>
+      <cache>1492</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>SY11</device_id>
@@ -1244,13 +1746,19 @@
       <bmp4>true</bmp4>
       <color>4</color>
       <emoji_type>B</emoji_type>
+
+      <wp_width>128</wp_width>
+      <wp_heigh>96</wp_heigh>
+      <cache>1400</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>SN11</device_id>
       <device_name>C305S</device_name>
       <html_spec_type>HDML</html_spec_type>
       <width>120</width>
-      <heigh>098</heigh>
+      <heigh>98</heigh>
       <gif>false</gif>
       <jpeg>false</jpeg>
       <png>false</png>
@@ -1258,13 +1766,19 @@
       <bmp4>true</bmp4>
       <color>4</color>
       <emoji_type>B</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>96</wp_heigh>
+      <cache>1400</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>MA11</device_id>
       <device_name>C308P(C308P_A)</device_name>
       <html_spec_type>HDML</html_spec_type>
       <width>122</width>
-      <heigh>078</heigh>
+      <heigh>78</heigh>
       <gif>false</gif>
       <jpeg>false</jpeg>
       <png>false</png>
@@ -1272,13 +1786,19 @@
       <bmp4>true</bmp4>
       <color>4</color>
       <emoji_type>B</emoji_type>
+
+      <wp_width>122</wp_width>
+      <wp_heigh>78</wp_heigh>
+      <cache>1400</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>MA12</device_id>
       <device_name>C308P(C308P_B)</device_name>
       <html_spec_type>HTML</html_spec_type>
       <width>122</width>
-      <heigh>078</heigh>
+      <heigh>78</heigh>
       <gif>false</gif>
       <jpeg>false</jpeg>
       <png>false</png>
@@ -1286,6 +1806,12 @@
       <bmp4>true</bmp4>
       <color>4</color>
       <emoji_type>B</emoji_type>
+
+      <wp_width>122</wp_width>
+      <wp_heigh>78</wp_heigh>
+      <cache>1400</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>HI12</device_id>
@@ -1300,13 +1826,19 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type>B</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>96</wp_heigh>
+      <cache>8220</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>TS12</device_id>
       <device_name>C310T</device_name>
       <html_spec_type>HDML</html_spec_type>
-      <width>96×</width>
-      <heigh>8</heigh>
+      <width>96</width>
+      <heigh>112</heigh>
       <gif>false</gif>
       <jpeg>false</jpeg>
       <png>true</png>
@@ -1314,6 +1846,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type>B</emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>112</wp_heigh>
+      <cache>8220</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>CA12</device_id>
@@ -1328,13 +1866,19 @@
       <bmp4>true</bmp4>
       <color>4</color>
       <emoji_type>B</emoji_type>
+
+      <wp_width>127</wp_width>
+      <wp_heigh>93</wp_heigh>
+      <cache>1400</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>KC12</device_id>
       <device_name>C313K</device_name>
       <html_spec_type>HDML</html_spec_type>
       <width>120</width>
-      <heigh>090</heigh>
+      <heigh>90</heigh>
       <gif>false</gif>
       <jpeg>false</jpeg>
       <png>true</png>
@@ -1342,6 +1886,12 @@
       <bmp4>true</bmp4>
       <color>256</color>
       <emoji_type>B</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>111</wp_heigh>
+      <cache>8220</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <!--======================================================================-->
     <!-- C200 series                                                          -->
@@ -1359,6 +1909,12 @@
       <bmp4>false</bmp4>
       <color>0</color>
       <emoji_type>A</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>51</wp_heigh>
+      <cache>1492</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>HI02</device_id>
@@ -1373,13 +1929,19 @@
       <bmp4>false</bmp4>
       <color>0</color>
       <emoji_type>A</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>51</wp_heigh>
+      <cache>1492</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>DN01</device_id>
       <device_name>C202DE</device_name>
       <html_spec_type>HDML</html_spec_type>
       <width>108</width>
-      <heigh>039</heigh>
+      <heigh>39</heigh>
       <gif>false</gif>
       <jpeg>false</jpeg>
       <png>false</png>
@@ -1387,6 +1949,12 @@
       <bmp4>false</bmp4>
       <color>0</color>
       <emoji_type>A</emoji_type>
+
+      <wp_width>108</wp_width>
+      <wp_heigh>39</wp_heigh>
+      <cache>1492</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <!--======================================================================-->
     <!-- Digital series                                                       -->
@@ -1404,6 +1972,7 @@
       <bmp4>false</bmp4>
       <color>0</color>
       <emoji_type>A</emoji_type>
+
     </device>
     <device>
       <device_id>TSC1</device_id>
@@ -1418,6 +1987,7 @@
       <bmp4>true</bmp4>
       <color>4</color>
       <emoji_type>A</emoji_type>
+
     </device>
     <device>
       <device_id>TSI1</device_id>
@@ -1594,6 +2164,12 @@
       <bmp4>false</bmp4>
       <color>0</color>
       <emoji_type>A</emoji_type>
+
+      <wp_width>128</wp_width>
+      <wp_heigh>96</wp_heigh>
+      <cache>1492</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>TST1</device_id>
@@ -1608,6 +2184,12 @@
       <bmp4>false</bmp4>
       <color>0</color>
       <emoji_type>A</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>84</wp_heigh>
+      <cache>1492</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>KCT1</device_id>
@@ -1622,6 +2204,12 @@
       <bmp4>false</bmp4>
       <color>0</color>
       <emoji_type>A</emoji_type>
+
+      <wp_width>121</wp_width>
+      <wp_heigh>94</wp_heigh>
+      <cache>1492</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>KCT2</device_id>
@@ -1636,6 +2224,12 @@
       <bmp4>false</bmp4>
       <color>0</color>
       <emoji_type>A</emoji_type>
+
+      <wp_width>121</wp_width>
+      <wp_heigh>94</wp_heigh>
+      <cache>1492</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>KCT3</device_id>
@@ -1650,6 +2244,12 @@
       <bmp4>false</bmp4>
       <color>0</color>
       <emoji_type>A</emoji_type>
+
+      <wp_width>121</wp_width>
+      <wp_heigh>94</wp_heigh>
+      <cache>1492</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>TST2</device_id>
@@ -1664,6 +2264,12 @@
       <bmp4>true</bmp4>
       <color>4</color>
       <emoji_type>A</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>98</wp_heigh>
+      <cache>1492</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>MAT1</device_id>
@@ -1678,6 +2284,12 @@
       <bmp4>true</bmp4>
       <color>4</color>
       <emoji_type>A</emoji_type>
+
+      <wp_width>128</wp_width>
+      <wp_heigh>78</wp_heigh>
+      <cache>1492</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>MAT2</device_id>
@@ -1692,6 +2304,12 @@
       <bmp4>true</bmp4>
       <color>4</color>
       <emoji_type>A</emoji_type>
+
+      <wp_width>128</wp_width>
+      <wp_heigh>78</wp_heigh>
+      <cache>1492</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>SYT2</device_id>
@@ -1706,6 +2324,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type>B</emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>92</wp_heigh>
+      <cache>8220</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>KCT4</device_id>
@@ -1720,6 +2344,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type>B</emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>104</wp_heigh>
+      <cache>8220</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>KCT5</device_id>
@@ -1734,6 +2364,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type>B</emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>104</wp_heigh>
+      <cache>8220</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>TST3</device_id>
@@ -1748,6 +2384,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type>B</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>128</wp_heigh>
+      <cache>8220</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>KCT6</device_id>
@@ -1762,6 +2404,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type>B</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>128</wp_heigh>
+      <cache>8220</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>MAT3</device_id>
@@ -1776,6 +2424,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>108</wp_heigh>
+      <cache>8220</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>MIT1</device_id>
@@ -1790,6 +2444,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>117</wp_heigh>
+      <cache>8220</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>KCT7</device_id>
@@ -1804,6 +2464,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type>B</emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>104</wp_heigh>
+      <cache>8220</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>SYT3</device_id>
@@ -1818,6 +2484,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>128</wp_heigh>
+      <cache>8220</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>KCT8</device_id>
@@ -1832,6 +2504,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>137</wp_heigh>
+      <cache>8220</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>TST4</device_id>
@@ -1846,6 +2524,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>143</wp_heigh>
+      <cache>8220</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>TST5</device_id>
@@ -1860,6 +2544,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>144</wp_width>
+      <wp_heigh>133</wp_heigh>
+      <cache>8220</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>KCT9</device_id>
@@ -1874,6 +2564,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>122</wp_width>
+      <wp_heigh>136</wp_heigh>
+      <cache>8220</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>TST6</device_id>
@@ -1888,6 +2584,12 @@
       <bmp4>true</bmp4>
       <color>65536</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>144</wp_width>
+      <wp_heigh>176</wp_heigh>
+      <cache>8220</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>KCTA</device_id>
@@ -1902,6 +2604,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>121</wp_width>
+      <wp_heigh>137</wp_heigh>
+      <cache>8220</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>KCTB</device_id>
@@ -1916,6 +2624,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>137</wp_heigh>
+      <cache>8220</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>SYT4</device_id>
@@ -1930,6 +2644,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>112</wp_heigh>
+      <cache>8220</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>KCTC</device_id>
@@ -1944,6 +2664,12 @@
       <bmp4>true</bmp4>
       <color>65536</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>137</wp_heigh>
+      <cache>8220</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>TST7</device_id>
@@ -1958,6 +2684,12 @@
       <bmp4>true</bmp4>
       <color>65536</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>144</wp_width>
+      <wp_heigh>176</wp_heigh>
+      <cache>8220</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>TST8</device_id>
@@ -1972,6 +2704,12 @@
       <bmp4>true</bmp4>
       <color>65536</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>144</wp_width>
+      <wp_heigh>176</wp_heigh>
+      <cache>8220</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>KCTD</device_id>
@@ -1986,6 +2724,12 @@
       <bmp4>true</bmp4>
       <color>65536</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>137</wp_heigh>
+      <cache>8220</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>SYT5</device_id>
@@ -2000,6 +2744,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type>C</emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>144</wp_heigh>
+      <cache>8220</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>KCU1</device_id>
@@ -2014,6 +2764,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type>D</emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>137</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>UNKNOWN</device_id>
@@ -2028,6 +2784,12 @@
       <bmp4>false</bmp4>
       <color>0</color>
       <emoji_type>A</emoji_type>
+
+      <wp_width>114</wp_width>
+      <wp_heigh>137</wp_heigh>
+      <cache>1000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
   </user_agent>
   <!--=======================================================================-->
@@ -2048,6 +2810,12 @@
       <bmp4>false</bmp4>
       <color>2</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>72</wp_heigh>
+      <cache>5000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>F501i</device_id>
@@ -2062,6 +2830,12 @@
       <bmp4>false</bmp4>
       <color>2</color>
       <emoji_type></emoji_type>
+
+      <wp_width>112</wp_width>
+      <wp_heigh>84</wp_heigh>
+      <cache>5000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>N501i</device_id>
@@ -2076,6 +2850,12 @@
       <bmp4>false</bmp4>
       <color>2</color>
       <emoji_type></emoji_type>
+
+      <wp_width>118</wp_width>
+      <wp_heigh>128</wp_heigh>
+      <cache>5000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>P501i</device_id>
@@ -2090,6 +2870,12 @@
       <bmp4>false</bmp4>
       <color>2</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>95</wp_heigh>
+      <cache>5000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
 
     <device>
@@ -2105,6 +2891,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>78</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>D502i</device_id>
@@ -2119,6 +2911,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>90</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>N502i</device_id>
@@ -2133,6 +2931,12 @@
       <bmp4>false</bmp4>
       <color>4</color>
       <emoji_type></emoji_type>
+
+      <wp_width>118</wp_width>
+      <wp_heigh>114</wp_heigh>
+      <cache>5000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>P502i</device_id>
@@ -2147,6 +2951,12 @@
       <bmp4>false</bmp4>
       <color>4</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>95</wp_heigh>
+      <cache>5000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>NM502i</device_id>
@@ -2161,6 +2971,12 @@
       <bmp4>false</bmp4>
       <color>2</color>
       <emoji_type></emoji_type>
+
+      <wp_width>95</wp_width>
+      <wp_heigh>76</wp_heigh>
+      <cache>5000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>SO502i</device_id>
@@ -2175,6 +2991,12 @@
       <bmp4>false</bmp4>
       <color>4</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>72</wp_heigh>
+      <cache>5000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>F502it</device_id>
@@ -2189,6 +3011,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>78</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>N502it</device_id>
@@ -2203,6 +3031,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>118</wp_width>
+      <wp_heigh>114</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>SH821i</device_id>
@@ -2217,6 +3051,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>78</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>N821i</device_id>
@@ -2231,6 +3071,12 @@
       <bmp4>false</bmp4>
       <color>4</color>
       <emoji_type></emoji_type>
+
+      <wp_width>118</wp_width>
+      <wp_heigh>114</wp_heigh>
+      <cache>5000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>P821i</device_id>
@@ -2245,6 +3091,12 @@
       <bmp4>false</bmp4>
       <color>4</color>
       <emoji_type></emoji_type>
+
+      <wp_width>118</wp_width>
+      <wp_heigh>114</wp_heigh>
+      <cache>5000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
 
     <device>
@@ -2260,6 +3112,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>120</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>N209i</device_id>
@@ -2274,6 +3132,12 @@
       <bmp4>false</bmp4>
       <color>4</color>
       <emoji_type></emoji_type>
+
+      <wp_width>108</wp_width>
+      <wp_heigh>82</wp_heigh>
+      <cache>5000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>P209i</device_id>
@@ -2288,6 +3152,12 @@
       <bmp4>false</bmp4>
       <color>4</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>91</wp_heigh>
+      <cache>5000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>D209i</device_id>
@@ -2302,6 +3172,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>120</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>P209iS</device_id>
@@ -2316,6 +3192,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>91</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>ER209i</device_id>
@@ -2330,6 +3212,12 @@
       <bmp4>false</bmp4>
       <color>2</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>72</wp_heigh>
+      <cache>5000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>R209i</device_id>
@@ -2344,6 +3232,12 @@
       <bmp4>false</bmp4>
       <color>4</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>72</wp_heigh>
+      <cache>5000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>KO209i</device_id>
@@ -2358,6 +3252,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>96</wp_heigh>
+      <cache>5000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>R691i</device_id>
@@ -2372,6 +3272,12 @@
       <bmp4>false</bmp4>
       <color>4</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>72</wp_heigh>
+      <cache>5000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>N210i</device_id>
@@ -2386,6 +3292,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>127</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>P210i</device_id>
@@ -2400,6 +3312,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>91</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>KO210i</device_id>
@@ -2414,6 +3332,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>96</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
   </user_agent>
   <user_agent pattern="DoCoMo/1.0/([^   /]+)/c[0-9][0-9]$">
@@ -2430,6 +3354,12 @@
       <bmp4>false</bmp4>
       <color>4096</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>72</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>F502i</device_id>
@@ -2444,6 +3374,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>72</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>D502i</device_id>
@@ -2458,6 +3394,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>90</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>N502i</device_id>
@@ -2472,6 +3414,12 @@
       <bmp4>false</bmp4>
       <color>4</color>
       <emoji_type></emoji_type>
+
+      <wp_width>118</wp_width>
+      <wp_heigh>114</wp_heigh>
+      <cache>5000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>P502i</device_id>
@@ -2486,6 +3434,12 @@
       <bmp4>false</bmp4>
       <color>4</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>95</wp_heigh>
+      <cache>5000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>NM502i</device_id>
@@ -2500,6 +3454,12 @@
       <bmp4>false</bmp4>
       <color>2</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>76</wp_heigh>
+      <cache>5000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>F502it</device_id>
@@ -2514,6 +3474,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>78</wp_heigh>
+      <cache>5000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>N502it</device_id>
@@ -2528,6 +3494,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>118</wp_width>
+      <wp_heigh>114</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>SO502iWM</device_id>
@@ -2542,6 +3514,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>120</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
 
     <device>
@@ -2557,6 +3535,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>78</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>P821i</device_id>
@@ -2571,6 +3555,12 @@
       <bmp4>false</bmp4>
       <color>4</color>
       <emoji_type></emoji_type>
+
+      <wp_width>118</wp_width>
+      <wp_heigh>114</wp_heigh>
+      <cache>5000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>N821i</device_id>
@@ -2585,6 +3575,12 @@
       <bmp4>false</bmp4>
       <color>4</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>78</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>F209i</device_id>
@@ -2599,6 +3595,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>78</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>N209i</device_id>
@@ -2613,6 +3615,12 @@
       <bmp4>false</bmp4>
       <color>4</color>
       <emoji_type></emoji_type>
+
+      <wp_width>108</wp_width>
+      <wp_heigh>82</wp_heigh>
+      <cache>5000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>P209i</device_id>
@@ -2627,6 +3635,12 @@
       <bmp4>false</bmp4>
       <color>4</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>91</wp_heigh>
+      <cache>5000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>D209i</device_id>
@@ -2641,6 +3655,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>120</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>P209iS</device_id>
@@ -2655,6 +3675,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>91</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>ER209i</device_id>
@@ -2669,6 +3695,12 @@
       <bmp4>false</bmp4>
       <color>2</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>72</wp_heigh>
+      <cache>5000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>R691i</device_id>
@@ -2683,6 +3715,12 @@
       <bmp4>false</bmp4>
       <color>4</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>72</wp_heigh>
+      <cache>5000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>N210i</device_id>
@@ -2697,6 +3735,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>127</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>F210i</device_id>
@@ -2711,6 +3755,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>113</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>P210i</device_id>
@@ -2725,6 +3775,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>91</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>KO210i</device_id>
@@ -2739,6 +3795,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>96</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>D210i</device_id>
@@ -2753,6 +3815,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>120</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>SO210i</device_id>
@@ -2767,6 +3835,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>96</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>F671i</device_id>
@@ -2781,6 +3855,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>120</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>F503i</device_id>
@@ -2795,6 +3875,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>130</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
 
     <device>
@@ -2810,6 +3896,12 @@
       <bmp4>false</bmp4>
       <color>4096</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>130</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>P503i</device_id>
@@ -2824,6 +3916,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>115</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>P503iS</device_id>
@@ -2838,6 +3936,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>115</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>N503i</device_id>
@@ -2852,6 +3956,12 @@
       <bmp4>false</bmp4>
       <color>4096</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>130</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>N503iS</device_id>
@@ -2866,6 +3976,12 @@
       <bmp4>false</bmp4>
       <color>4096</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>130</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>SO503i</device_id>
@@ -2880,6 +3996,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>120</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>SO503iS</device_id>
@@ -2894,6 +4016,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>120</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>D503i</device_id>
@@ -2908,6 +4036,12 @@
       <bmp4>false</bmp4>
       <color>4096</color>
       <emoji_type></emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>142</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>D503iS</device_id>
@@ -2922,6 +4056,12 @@
       <bmp4>false</bmp4>
       <color>4096</color>
       <emoji_type></emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>142</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
 
     <device>
@@ -2937,6 +4077,12 @@
       <bmp4>false</bmp4>
       <color>4096</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>113</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>D211i</device_id>
@@ -2951,6 +4097,12 @@
       <bmp4>false</bmp4>
       <color>4096</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>120</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>N211i</device_id>
@@ -2965,6 +4117,12 @@
       <bmp4>false</bmp4>
       <color>4096</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>145</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>P211i</device_id>
@@ -2979,6 +4137,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>130</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>R211i</device_id>
@@ -2993,6 +4157,12 @@
       <bmp4>false</bmp4>
       <color>4096</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>113</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>SO211i</device_id>
@@ -3007,6 +4177,12 @@
       <bmp4>false</bmp4>
       <color>4096</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>120</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>N211iS</device_id>
@@ -3021,6 +4197,12 @@
       <bmp4>false</bmp4>
       <color>4096</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>145</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>P211iS</device_id>
@@ -3035,6 +4217,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>130</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>R692i</device_id>
@@ -3049,10 +4237,16 @@
       <bmp4>false</bmp4>
       <color>4096</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>113</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>D504i</device_id>
-      <device_name>R692i</device_name>
+      <device_name>D504i</device_name>
       <html_spec_type>CHTML_4_0</html_spec_type>
       <width>132</width>
       <heigh>144</heigh>
@@ -3063,6 +4257,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>144</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
   </user_agent>
   <user_agent pattern="DoCoMo/2.0[  ]+([^( ]+)\(.+\)$">
@@ -3079,6 +4279,12 @@
       <bmp4>false</bmp4>
       <color>4096</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>130</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>N2002</device_id>
@@ -3093,6 +4299,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>119</wp_width>
+      <wp_heigh>129</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>P2002</device_id>
@@ -3107,6 +4319,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>119</wp_width>
+      <wp_heigh>129</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
 
     <device>
@@ -3122,6 +4340,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>176</wp_width>
+      <wp_heigh>164</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>D2101V</device_id>
@@ -3136,6 +4360,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>130</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>MST_v_SH2101V</device_id>
@@ -3150,6 +4380,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>320</wp_width>
+      <wp_heigh>240</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>T2101V</device_id>
@@ -3164,6 +4400,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>176</wp_width>
+      <wp_heigh>144</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>F2051</device_id>
@@ -3178,6 +4420,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>176</wp_width>
+      <wp_heigh>144</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>N2051</device_id>
@@ -3192,6 +4440,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>176</wp_width>
+      <wp_heigh>198</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>P2102V</device_id>
@@ -3206,6 +4460,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>176</wp_width>
+      <wp_heigh>198</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>F2102V</device_id>
@@ -3220,6 +4480,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>176</wp_width>
+      <wp_heigh>198</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>N2102V</device_id>
@@ -3234,6 +4500,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>176</wp_width>
+      <wp_heigh>198</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>N2701</device_id>
@@ -3248,6 +4520,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>176</wp_width>
+      <wp_heigh>198</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>F880iES</device_id>
@@ -3262,6 +4540,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>F900i</device_id>
@@ -3276,6 +4560,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>N900i</device_id>
@@ -3290,6 +4580,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>269</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>P900i</device_id>
@@ -3304,6 +4600,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>269</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>SH900i</device_id>
@@ -3318,6 +4620,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>D900i</device_id>
@@ -3332,6 +4640,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>P900iV</device_id>
@@ -3346,6 +4660,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>266</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>N900iS</device_id>
@@ -3360,6 +4680,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>269</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>F900iT</device_id>
@@ -3374,6 +4700,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>F900iC</device_id>
@@ -3388,6 +4720,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>N900iL</device_id>
@@ -3402,6 +4740,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>N900iG</device_id>
@@ -3416,6 +4760,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>SH901iC</device_id>
@@ -3430,6 +4780,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>F901iC</device_id>
@@ -3444,6 +4800,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>N901iC</device_id>
@@ -3458,6 +4820,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>D901i</device_id>
@@ -3472,6 +4840,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>P901i</device_id>
@@ -3486,6 +4860,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
   </user_agent>
   <user_agent pattern="DoCoMo/1.0/([^   /]+)/c[0-9][0-9]/TB$">
@@ -3502,6 +4882,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>136</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>F504iS</device_id>
@@ -3516,6 +4902,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>176</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>N504i</device_id>
@@ -3530,6 +4922,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>160</wp_width>
+      <wp_heigh>200</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>N504iS</device_id>
@@ -3544,6 +4942,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>160</wp_width>
+      <wp_heigh>198</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>SO504i</device_id>
@@ -3558,7 +4962,14 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>128</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
+
     <device>
       <device_id>P504i</device_id>
       <device_name>P504i</device_name>
@@ -3572,6 +4983,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>144</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>P504iS</device_id>
@@ -3586,6 +5003,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>144</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>SH251i</device_id>
@@ -3600,6 +5023,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>160</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>SH251iS</device_id>
@@ -3614,6 +5043,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>176</wp_width>
+      <wp_heigh>220</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>D251i</device_id>
@@ -3628,6 +5063,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>160</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>D251iS</device_id>
@@ -3642,6 +5083,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>160</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>F251i</device_id>
@@ -3656,6 +5103,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>156</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>N251i</device_id>
@@ -3670,6 +5123,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>159</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>N251iS</device_id>
@@ -3684,6 +5143,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>158</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>P251iS</device_id>
@@ -3698,6 +5163,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>176</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>F671iS</device_id>
@@ -3712,6 +5183,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>160</wp_width>
+      <wp_heigh>120</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>SO212i</device_id>
@@ -3726,6 +5203,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>128</wp_width>
+      <wp_heigh>128</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>F212i</device_id>
@@ -3740,6 +5223,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>156</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>F661i</device_id>
@@ -3754,6 +5243,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>156</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>F672i</device_id>
@@ -3768,6 +5263,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>160</wp_width>
+      <wp_heigh>120</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>SO213i</device_id>
@@ -3782,6 +5283,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>128</wp_width>
+      <wp_heigh>128</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>SO213iS</device_id>
@@ -3796,6 +5303,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>128</wp_width>
+      <wp_heigh>128</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>N2701</device_id>
@@ -3809,6 +5322,12 @@
       <bmp2>false</bmp2>
       <bmp4>false</bmp4>
       <emoji_type></emoji_type>
+
+      <wp_width>176</wp_width>
+      <wp_heigh>198</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
   </user_agent>
   <user_agent pattern="DoCoMo/1.0/([^   /]+)/c[0-9][0-9]/TB/W[0-9][0-9]H[0-9][0-9]$$">
@@ -3824,6 +5343,12 @@
       <bmp2>false</bmp2>
       <bmp4>false</bmp4>
       <emoji_type></emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>176</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>D505i</device_id>
@@ -3838,6 +5363,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>20000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>D505iS</device_id>
@@ -3852,6 +5383,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>20000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>SO505i</device_id>
@@ -3866,6 +5403,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>256</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>20000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>SO505iS</device_id>
@@ -3880,6 +5423,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>20000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>SH505i</device_id>
@@ -3894,6 +5443,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>20000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>SH505iS</device_id>
@@ -3908,6 +5463,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>20000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>N505i</device_id>
@@ -3922,6 +5483,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>270</wp_heigh>
+      <cache>20000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>N505iS</device_id>
@@ -3936,6 +5503,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>270</wp_heigh>
+      <cache>20000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>F505i</device_id>
@@ -3950,6 +5523,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>268</wp_heigh>
+      <cache>20000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>F505iGPS</device_id>
@@ -3964,6 +5543,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>268</wp_heigh>
+      <cache>20000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>P505i</device_id>
@@ -3978,6 +5563,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>20000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>P505iS</device_id>
@@ -3992,6 +5583,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>20000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>D252i</device_id>
@@ -4006,6 +5603,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>176</wp_width>
+      <wp_heigh>240</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>SH252i</device_id>
@@ -4020,6 +5623,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>P252i</device_id>
@@ -4034,6 +5643,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>176</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>N252i</device_id>
@@ -4048,6 +5663,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>158</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>P252iS</device_id>
@@ -4062,6 +5683,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>176</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>D253i</device_id>
@@ -4076,6 +5703,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>176</wp_width>
+      <wp_heigh>240</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>N253i</device_id>
@@ -4090,6 +5723,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>160</wp_width>
+      <wp_heigh>198</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>P253i</device_id>
@@ -4104,6 +5743,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>176</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>D253iWM</device_id>
@@ -4118,6 +5763,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>220</wp_width>
+      <wp_heigh>176</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>P253iS</device_id>
@@ -4132,6 +5783,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>176</wp_heigh>
+      <cache>10000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>D506i</device_id>
@@ -4146,6 +5803,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>20000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>F506i</device_id>
@@ -4160,6 +5823,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>268</wp_heigh>
+      <cache>20000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>N506i</device_id>
@@ -4174,6 +5843,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>20000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>P506iC</device_id>
@@ -4188,6 +5863,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>20000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>SH506iC</device_id>
@@ -4202,6 +5883,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>20000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>SO506iC</device_id>
@@ -4216,6 +5903,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>20000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>N506iS</device_id>
@@ -4230,6 +5923,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>20000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>SO506i</device_id>
@@ -4244,6 +5943,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>20000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
   </user_agent>
 
@@ -4265,6 +5970,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>84</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-DN02</device_id>
@@ -4279,6 +5990,12 @@
       <bmp4>false</bmp4>
       <color>4</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>94</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-P02</device_id>
@@ -4293,6 +6010,12 @@
       <bmp4>false</bmp4>
       <color>4</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>78</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-SA02</device_id>
@@ -4307,6 +6030,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>80</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-SH03</device_id>
@@ -4321,6 +6050,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>84</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-T04</device_id>
@@ -4335,6 +6070,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>90</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-P03</device_id>
@@ -4349,6 +6090,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>95</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <!-- C3 -->
     <device>
@@ -4364,6 +6111,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>110</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-K03S</device_id>
@@ -4378,6 +6131,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>110</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-D03</device_id>
@@ -4392,6 +6151,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>130</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-D03S</device_id>
@@ -4406,6 +6171,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>130</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-PE03</device_id>
@@ -4420,6 +6191,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>126</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-PE03S</device_id>
@@ -4434,6 +6211,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>126</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-SH04</device_id>
@@ -4448,6 +6231,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>130</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-SH04S</device_id>
@@ -4462,6 +6251,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>130</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-SH04B</device_id>
@@ -4476,6 +6271,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>130</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-SH04BS</device_id>
@@ -4490,6 +6291,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>130</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-SH05</device_id>
@@ -4504,6 +6311,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>160</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-SH05S</device_id>
@@ -4518,6 +6331,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>160</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-N03</device_id>
@@ -4532,6 +6351,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>126</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-N03S</device_id>
@@ -4546,6 +6371,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>126</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-T05</device_id>
@@ -4560,6 +6391,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>128</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-K04</device_id>
@@ -4574,6 +6411,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>110</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-D04</device_id>
@@ -4588,6 +6431,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>130</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-PE03II</device_id>
@@ -4602,6 +6451,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>126</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-SH06</device_id>
@@ -4616,6 +6471,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>130</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-SA03</device_id>
@@ -4630,6 +6491,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>128</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-DN03</device_id>
@@ -4644,6 +6511,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>130</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-NM01</device_id>
@@ -4658,6 +6531,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>128</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-N03II</device_id>
@@ -4672,6 +6551,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>126</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-D31</device_id>
@@ -4686,6 +6571,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>117</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-SA04</device_id>
@@ -4700,6 +6591,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>120</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-K05</device_id>
@@ -4714,6 +6611,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>110</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-NM02</device_id>
@@ -4728,6 +6631,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>128</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-SA05</device_id>
@@ -4742,6 +6651,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>112</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-T07</device_id>
@@ -4756,6 +6671,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>144</wp_width>
+      <wp_heigh>176</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-T09</device_id>
@@ -4770,6 +6691,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>144</wp_width>
+      <wp_heigh>176</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-SA06</device_id>
@@ -4784,6 +6711,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>176</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>V301T</device_id>
@@ -4798,6 +6731,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>V301D</device_id>
@@ -4812,13 +6751,19 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>153</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
-      <device_id>V301T</device_id>
-      <device_name>V301T</device_name>
+      <device_id>V302T</device_id>
+      <device_name>V302T</device_name>
       <html_spec_type>JHTML</html_spec_type>
       <width>144</width>
-      <heigh>144</heigh>
+      <heigh>140</heigh>
       <gif>false</gif>
       <jpeg>true</jpeg>
       <png>true</png>
@@ -4826,6 +6771,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>144</wp_width>
+      <wp_heigh>176</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>KOTO</device_id>
@@ -4840,6 +6791,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>V303T</device_id>
@@ -4854,6 +6811,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
 
     <!-- C4 -->
@@ -4870,6 +6833,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>160</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>J-T06</device_id>
@@ -4884,6 +6853,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>143</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>J-D05</device_id>
@@ -4898,6 +6873,12 @@
       <bmp4>false</bmp4>
       <color>4096</color>
       <emoji_type></emoji_type>
+
+      <wp_width>140</wp_width>
+      <wp_heigh>132</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>J-D06</device_id>
@@ -4912,6 +6893,12 @@
       <bmp4>false</bmp4>
       <color>4096</color>
       <emoji_type></emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>137</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>J-N04</device_id>
@@ -4926,6 +6913,12 @@
       <bmp4>false</bmp4>
       <color>4096</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>126</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>J-N05</device_id>
@@ -4940,6 +6933,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>159</wp_width>
+      <wp_heigh>179</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>J-SH08</device_id>
@@ -4954,6 +6953,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>160</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>J-SH09</device_id>
@@ -4968,6 +6973,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>160</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>J-T08</device_id>
@@ -4982,9 +6993,14 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
-      <!-- J-SH010のUser-Agentは、J-SH10となっている -->
       <device_id>J-SH10</device_id>
       <device_name>J-SH010</device_name>
       <html_spec_type>JHTML</html_spec_type>
@@ -4997,6 +7013,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>J-D08</device_id>
@@ -5011,9 +7033,14 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>136</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
-      <!-- J-T010のUser-Agentは、J-T10となっている -->
       <device_id>J-T10</device_id>
       <device_name>J-T010</device_name>
       <html_spec_type>JHTML</html_spec_type>
@@ -5026,6 +7053,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>V401SH</device_id>
@@ -5040,6 +7073,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
   </user_agent>
   <user_agent pattern="J-PHONE/[^/ ]+/([^/_]+)_.+$">
@@ -5057,6 +7096,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>84</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-DN02</device_id>
@@ -5071,6 +7116,12 @@
       <bmp4>false</bmp4>
       <color>4</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>94</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-P02</device_id>
@@ -5085,6 +7136,12 @@
       <bmp4>false</bmp4>
       <color>4</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>78</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-SA02</device_id>
@@ -5099,6 +7156,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>80</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-SH03</device_id>
@@ -5113,6 +7176,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>84</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-T04</device_id>
@@ -5127,6 +7196,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>90</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-P03</device_id>
@@ -5141,6 +7216,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>95</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-SA04</device_id>
@@ -5154,6 +7235,12 @@
       <bmp2>false</bmp2>
       <bmp4>false</bmp4>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>120</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <!-- C3 -->
     <device>
@@ -5169,6 +7256,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>110</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-K03S</device_id>
@@ -5183,6 +7276,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>110</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-D03</device_id>
@@ -5197,6 +7296,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>130</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-D03S</device_id>
@@ -5211,6 +7316,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>130</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-PE03</device_id>
@@ -5225,6 +7336,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>126</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-PE03S</device_id>
@@ -5239,6 +7356,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>126</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-SH04</device_id>
@@ -5253,6 +7376,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>130</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-SH04S</device_id>
@@ -5267,6 +7396,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>130</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-SH04B</device_id>
@@ -5281,6 +7416,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>130</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-SH04BS</device_id>
@@ -5295,6 +7436,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>130</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-SH05</device_id>
@@ -5309,6 +7456,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>160</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-SH05S</device_id>
@@ -5323,6 +7476,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>160</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-N03</device_id>
@@ -5337,6 +7496,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>126</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-N03S</device_id>
@@ -5351,6 +7516,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>126</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-T05</device_id>
@@ -5365,6 +7536,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>128</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-K04</device_id>
@@ -5379,6 +7556,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>110</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-D04</device_id>
@@ -5393,6 +7576,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>130</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-PE03II</device_id>
@@ -5407,6 +7596,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>126</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-SH06</device_id>
@@ -5421,6 +7616,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>96</wp_width>
+      <wp_heigh>130</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-SA03</device_id>
@@ -5435,6 +7636,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>128</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-DN03</device_id>
@@ -5449,6 +7656,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>130</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-NM01</device_id>
@@ -5463,13 +7676,19 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>128</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-N03II</device_id>
       <device_name>J-N03II</device_name>
       <html_spec_type>JHTML</html_spec_type>
-      <width>120</width>
-      <heigh>126</heigh>
+      <width>118</width>
+      <heigh>124</heigh>
       <gif>false</gif>
       <jpeg>true</jpeg>
       <png>true</png>
@@ -5477,6 +7696,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>118</wp_width>
+      <wp_heigh>124</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-D31</device_id>
@@ -5491,6 +7716,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>117</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-SA04</device_id>
@@ -5505,6 +7736,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>120</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-K05</device_id>
@@ -5519,6 +7756,12 @@
       <bmp4>false</bmp4>
       <color>256</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>110</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-NM02</device_id>
@@ -5533,6 +7776,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>128</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-SA05</device_id>
@@ -5547,6 +7796,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>112</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-T07</device_id>
@@ -5561,6 +7816,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>144</wp_width>
+      <wp_heigh>176</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>J-T09</device_id>
@@ -5575,6 +7836,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>144</wp_width>
+      <wp_heigh>176</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>J-SA06</device_id>
@@ -5589,6 +7856,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>176</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>V301T</device_id>
@@ -5603,6 +7876,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>V301D</device_id>
@@ -5617,13 +7896,19 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>153</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
-      <device_id>V301T</device_id>
+      <device_id>V302T</device_id>
       <device_name>V301T</device_name>
       <html_spec_type>JHTML</html_spec_type>
       <width>144</width>
-      <heigh>144</heigh>
+      <heigh>140</heigh>
       <gif>false</gif>
       <jpeg>true</jpeg>
       <png>true</png>
@@ -5631,6 +7916,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>144</wp_width>
+      <wp_heigh>176</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>KOTO</device_id>
@@ -5645,6 +7936,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>V303T</device_id>
@@ -5659,6 +7956,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
 
     <!-- C4 -->
@@ -5675,6 +7978,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>160</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-T06</device_id>
@@ -5689,6 +7998,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>143</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-D05</device_id>
@@ -5703,6 +8018,12 @@
       <bmp4>false</bmp4>
       <color>4096</color>
       <emoji_type></emoji_type>
+
+      <wp_width>140</wp_width>
+      <wp_heigh>132</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-D06</device_id>
@@ -5717,6 +8038,12 @@
       <bmp4>false</bmp4>
       <color>4096</color>
       <emoji_type></emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>137</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-N04</device_id>
@@ -5731,6 +8058,12 @@
       <bmp4>false</bmp4>
       <color>4096</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>126</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-N05</device_id>
@@ -5745,6 +8078,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>159</wp_width>
+      <wp_heigh>179</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-SH08</device_id>
@@ -5759,6 +8098,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>160</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>J-SH09</device_id>
@@ -5773,6 +8118,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>160</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>J-T08</device_id>
@@ -5787,9 +8138,14 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
-      <!-- J-SH010のUser-Agentは、J-SH10となっている -->
       <device_id>J-SH10</device_id>
       <device_name>J-SH010</device_name>
       <html_spec_type>JHTML</html_spec_type>
@@ -5802,6 +8158,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>J-D08</device_id>
@@ -5816,9 +8178,14 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>136</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
-      <!-- J-T010のUser-Agentは、J-T10となっている -->
       <device_id>J-T10</device_id>
       <device_name>J-T010</device_name>
       <html_spec_type>JHTML</html_spec_type>
@@ -5831,6 +8198,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>V401SH</device_id>
@@ -5845,6 +8218,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>6000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
   </user_agent>
 
@@ -5864,6 +8243,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>130</wp_heigh>
+      <cache>12000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-K51</device_id>
@@ -5878,6 +8263,12 @@
       <bmp4>false</bmp4>
       <color>4096</color>
       <emoji_type></emoji_type>
+
+      <wp_width>128</wp_width>
+      <wp_heigh>160</wp_heigh>
+      <cache>12000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-T51</device_id>
@@ -5892,6 +8283,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>144</wp_width>
+      <wp_heigh>176</wp_heigh>
+      <cache>12000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-P51</device_id>
@@ -5906,6 +8303,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>160</wp_heigh>
+      <cache>12000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-SA51</device_id>
@@ -5920,10 +8323,16 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>132</wp_width>
+      <wp_heigh>144</wp_heigh>
+      <cache>12000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
-      <device_id>J-SA52</device_id>
-      <device_name>J-SA52</device_name>
+      <device_id>J-SH52</device_id>
+      <device_name>J-SH52</device_name>
       <html_spec_type>JHTML</html_spec_type>
       <width>120</width>
       <heigh>130</heigh>
@@ -5934,6 +8343,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>120</wp_width>
+      <wp_heigh>160</wp_heigh>
+      <cache>12000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
     </device>
     <device>
       <device_id>J-N51</device_id>
@@ -5948,6 +8363,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>160</wp_width>
+      <wp_heigh>180</wp_heigh>
+      <cache>12000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>V601N</device_id>
@@ -5962,6 +8383,12 @@
       <bmp4>false</bmp4>
       <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>160</wp_width>
+      <wp_heigh>180</wp_heigh>
+      <cache>12000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <!-- P5 -->
     <device>
@@ -5977,6 +8404,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>12000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>V601SH</device_id>
@@ -5991,6 +8424,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>12000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <!-- W -->
     <device>
@@ -6006,6 +8445,12 @@
       <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>200000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
   </user_agent>
   <user_agent pattern="Vodafone/[^/ ]+/([^/ _]+?)[/ _].+?$">
@@ -6013,15 +8458,21 @@
       <device_id>V702NK</device_id>
       <device_name>V702NK</device_name>
       <html_spec_type>JHTML</html_spec_type>
-      <width>176</width>
-      <heigh>208</heigh>
+      <width>208</width>
+      <heigh>176</heigh>
       <gif>false</gif>
       <jpeg>true</jpeg>
       <png>true</png>
       <bmp2>false</bmp2>
       <bmp4>false</bmp4>
-      <color>262144</color>
+      <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>208</wp_width>
+      <wp_heigh>176</wp_heigh>
+      <cache>300000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>V802SE</device_id>
@@ -6034,8 +8485,56 @@
       <png>true</png>
       <bmp2>false</bmp2>
       <bmp4>false</bmp4>
+      <color>65536</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>176</wp_width>
+      <wp_heigh>208</wp_heigh>
+      <cache>200000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <device>
+      <device_id>V802SH</device_id>
+      <device_name>V802SH</device_name>
+      <html_spec_type>JHTML</html_spec_type>
+      <width>176</width>
+      <heigh>220</heigh>
+      <gif>false</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
       <color>262144</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>200000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <device>
+      <device_id>V802N</device_id>
+      <device_name>V802N</device_name>
+      <html_spec_type>JHTML</html_spec_type>
+      <width>176</width>
+      <heigh>220</heigh>
+      <gif>false</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>65536</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>200000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
   </user_agent>
   <user_agent pattern="MOT-([^/ ]+?)/.+?$">
@@ -6050,8 +8549,14 @@
       <png>true</png>
       <bmp2>false</bmp2>
       <bmp4>false</bmp4>
-      <color>262144</color>
+      <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>300000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
       <device_id>V980</device_id>
@@ -6064,8 +8569,14 @@
       <png>true</png>
       <bmp2>false</bmp2>
       <bmp4>false</bmp4>
-      <color>262144</color>
+      <color>65536</color>
       <emoji_type></emoji_type>
+
+      <wp_width>176</wp_width>
+      <wp_heigh>220</wp_heigh>
+      <cache>300000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
     </device>
   </user_agent>
   <!--=======================================================================-->

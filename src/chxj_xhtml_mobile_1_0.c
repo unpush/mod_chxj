@@ -85,6 +85,7 @@ chxj_exchange_xhtml_mobile_1_0(
   /*--------------------------------------------------------------------------*/
   /* The XHTML structure is initialized.                                      */
   /*--------------------------------------------------------------------------*/
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"start chxj_exchange_xhtml_mobile_1_0()");
   chxj_init_xhtml(&xhtml, &doc, r, spec);
 
   /*--------------------------------------------------------------------------*/
@@ -100,7 +101,9 @@ chxj_exchange_xhtml_mobile_1_0(
 #ifdef DUMP_LOG
   chxj_dump_out("[src] CHTML->XHTML", ss, srclen);
 #endif
-  qs_parse_string(&doc,ss);
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"start parse");
+  qs_parse_string(&doc,ss, strlen(ss));
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"end parse");
 
   /*--------------------------------------------------------------------------*/
   /* It converts it from CHTML to XHTML.                                      */
@@ -121,6 +124,7 @@ chxj_exchange_xhtml_mobile_1_0(
 #ifdef DUMP_LOG
   chxj_dump_out("[dst] CHTML->XHTML", dst, *dstlen);
 #endif
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"end chxj_exchange_xhtml_mobile_1_0()");
   return dst;
 }
 

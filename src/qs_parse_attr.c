@@ -41,7 +41,6 @@ qs_parse_attr(Doc* doc, const char*s, int len, int *pos) {
 
   /* get attr name */
   for (;ii<len; ii++) {
-    QX_LOGGER_DEBUG((char*)&s[ii]);
     if (is_white_space(s[ii])) {
       break;
     }
@@ -60,7 +59,6 @@ qs_parse_attr(Doc* doc, const char*s, int len, int *pos) {
   name = (char*)qs_malloc(doc, size+1, QX_LOGMARK);
   memset(name, 0, size+1);
   memcpy(name, &s[start_pos], size);
-  QX_LOGGER_DEBUG((char*)&s[start_pos]);
   QX_LOGGER_DEBUG((char*)name);
 
   novalue = 0;
@@ -123,7 +121,6 @@ qs_parse_attr(Doc* doc, const char*s, int len, int *pos) {
     }
     size = ii - start_pos;
     QX_LOGGER_DEBUG_INT("size",size);
-    QX_LOGGER_DEBUG((char*)&s[start_pos]);
   }
 
   value = (char*)qs_malloc(doc, size+1, QX_LOGMARK);

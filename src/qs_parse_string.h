@@ -20,7 +20,8 @@
 /**
  * Max of memory allocation times.
  */
-#define QX_ALLOC_MAX   (4096)
+/* #define QX_ALLOC_MAX   (4096) */
+#define QX_ALLOC_MAX   (100*1024)
 
 /**
  * It is judged whether it is the first byte of Japanese Shift_JIS "ZENKAKU KANJI". 
@@ -114,7 +115,7 @@ typedef struct _doc {
   int           do_init_flag;
   unsigned int  alloc_size;
 
-  Pointer_Table pointer_table[QX_ALLOC_MAX];
+  Pointer_Table* pointer_table;
 
 #ifndef __NON_MOD_CHXJ__
   request_rec* r;
@@ -137,7 +138,7 @@ QS_EXPORT Node* qs_init_root_node(Doc* doc);
 QS_EXPORT void qs_add_child_node(Doc* doc, Node*);
 QS_EXPORT void qs_free_node(Doc* doc, Node*);
 QS_EXPORT Node* qs_get_root(Doc* doc) ;
-QS_EXPORT Node* qs_parse_string(Doc* doc, const char*);
+QS_EXPORT Node* qs_parse_string(Doc* doc, const char* ss, int len);
 QS_EXPORT char* qs_get_node_value(Doc* doc,Node* node);
 QS_EXPORT char* qs_get_node_name(Doc* doc, Node* node) ;
 QS_EXPORT int qs_get_node_size(Doc* doc, Node* node) ;

@@ -99,7 +99,7 @@ chxj_exchange_chtml10(
   chxj_dump_out("[src] CHTML -> CHTML1.0", ss, srclen);
 #endif
 
-  qs_parse_string(&doc,ss);
+  qs_parse_string(&doc,ss, strlen(ss));
 
   /*--------------------------------------------------------------------------*/
   /* It converts it from CHTML to CHTML.                                      */
