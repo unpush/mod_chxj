@@ -14,10 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#define DEBUG_PRINT {FILE* fp = fopen("/tmp/deubg.log","a"); fprintf(fp, "%s:%d\n",__FILE__,__LINE__);fclose(fp); }
+#include <stdio.h>  // for gd
 #include <unistd.h>
 #include "httpd.h"
 #include "http_config.h"
+#include "http_core.h"
 #include "http_protocol.h"
 #include "http_log.h"
 #include "ap_config.h"
@@ -29,6 +30,7 @@
 #include "apr_dso.h"
 #include "apr_general.h"
 #include "apr_pools.h"
+#include "ap_regex.h"
 #include <string.h>
 #include "mod_chxj.h"
 #include <qs_ignore_sp.h>
@@ -48,6 +50,8 @@
 #include "chxj_chtml20.h"
 #include "chxj_chtml30.h"
 #include "chxj_jhtml.h"
+
+#include <gd.h>
 
 #ifdef PACKAGE_NAME
 #undef PACKAGE_NAME
@@ -72,11 +76,12 @@
 
 
 #define DEF_SHMEM_SIZE  (4)
+#define DEFAULT_IMAGE_CACHE_DIR "/tmp"
 
 static long shmem_size  = DEF_SHMEM_SIZE;
 
 static const char* HTTP_USER_AGENT = "User-Agent";
-
+static char* chxj_create_workfile(request_rec* r, mod_chxj_config* conf);
 
 /**
  * It converts it from CHTML into ML corresponding to each model. 
@@ -569,7 +574,6 @@ chxj_init_module_kill(void *data)
 {
   server_rec *base_server = (server_rec *)data;
   mod_chxj_global_config* conf;
-  void*                   param;
 
   ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, base_server, 
                   "start chxj_init_module_kill()");
@@ -727,15 +731,322 @@ chxj_config_server_create(apr_pool_t *p, server_rec *s)
 
 static int chxj_convert_images(request_rec *r)
 {
+  apr_file_t *fp;
+  apr_status_t rv;
+  apr_finfo_t st;
+  apr_size_t byte;
+  char*      user_agent;
+  device_table* spec;
+  char*      tmpfile;
+  char*      contentLength;
+
+  gdImagePtr im_in;
+  gdImagePtr im_out;
+
+  FILE *fout;
+  FILE *fin;
+
+  char*      tmpext;
+  int neww, newh;
+
+
+  mod_chxj_config* conf;
+
+
+  conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "chxj_convert_images Yahoo!![%s]", r->the_request);
 
-  if (strcasecmp(r->handler, "keitai-picture"))
+  if (strcasecmp(r->handler, "chxj-picture"))
   {
     return DECLINED;
   }
-  return DECLINED;
+
+  if (r->header_only) 
+  {
+    return DECLINED;
+  }
+
+  /* User-AgentからSpecを取得します */
+  user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
+  spec = chxj_specified_device(r, user_agent);
+
+  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "found device_name=[%s]", spec->device_name);
+  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "User-Agent=[%s]", user_agent);
+
+  /* ワークファイル名を生成 */
+  tmpfile = chxj_create_workfile(r, conf);
+  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "workfile=[%s]", tmpfile);
+
+  rv = apr_stat(&st, r->filename, APR_FINFO_MIN, r->pool);
+  if (rv != APR_SUCCESS)
+  {
+    return HTTP_NOT_FOUND;
+  }
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"found [%s]", r->filename);
+
+  fin = fopen(r->filename, "rb");
+  if (fin == NULL)
+  {
+    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,"file open failed.[%s]", r->filename);
+    return HTTP_INTERNAL_SERVER_ERROR;
+  }
+
+  tmpext = strrchr(r->filename, '.');
+  if(tmpext)
+  {
+    if (strcasecmp(tmpext, ".jpeg") == 0 
+    ||  strcasecmp(tmpext, ".jpg") == 0)
+    {
+      im_in = gdImageCreateFromJpeg(fin);
+    }
+    else
+    if (strcasecmp(tmpext, ".png") == 0)
+    {
+      im_in = gdImageCreateFromPng(fin);
+    }
+    else
+    if (strcasecmp(tmpext, ".gif") == 0)
+    {
+      im_in = gdImageCreateFromGif(fin);
+    }
+  }
+  fclose(fin);
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"detect width=[%d]", im_in->sx);
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"detect heigh=[%d]", im_in->sy);
+
+  newh = im_in->sy;
+  neww = im_in->sx;
+
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"detect spec width=[%d]", spec->width);
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"detect spec heigh=[%d]", spec->heigh);
+
+  if (neww > spec->width)
+  {
+    newh = (int)((double)newh * (double)((double)spec->width / (double)neww));
+    neww = (int)((double)neww * (double)((double)spec->width / (double)neww));
+  }
+  if (newh > spec->heigh)
+  {
+    neww = (int)((double)neww * (double)((double)spec->heigh / (double)newh));
+    newh = (int)((double)newh * (double)((double)spec->heigh / (double)newh));
+  }
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert width=[%d]", neww);
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert heigh=[%d]", newh);
+
+  /* サイズ変更 */
+  if (spec->color > 256)
+  {
+    im_out = gdImageCreateTrueColor(neww,newh);
+  }
+  else 
+  {
+    im_out = gdImageCreate(neww,newh);
+  }
+  gdImageCopyResized(im_out, im_in, 0, 0, 0, 0, im_out->sx, im_out->sy, im_in->sx, im_in->sy) ;
+
+  if (spec->color <= 256)
+  {
+    gdImageTrueColorToPalette(im_out, 0, spec->color); 
+  }
+  else
+  if (spec->color == 4096)
+  {
+  }
+  else
+  if (spec->color == 65536)
+  {
+  }
+  else
+  if (spec->color == 262144)
+  {
+  }
+  else
+  if (spec->color == 15680000)
+  {
+  }
+
+  fout = fopen(tmpfile,"wb");
+  if (fout == NULL)
+  {
+    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,"file open error.[%s]", tmpfile);
+    return HTTP_INTERNAL_SERVER_ERROR;
+  }
+
+  if (spec->available_jpeg == 1)
+  {
+    gdImageJpeg(im_out, fout, -1);
+    r->content_type = apr_psprintf(r->pool, "image/jpeg");
+    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert to jpg");
+  }
+  else
+  if (spec->available_png == 1)
+  {
+    gdImagePngEx(im_out, fout, 9);
+    r->content_type = apr_psprintf(r->pool, "image/png");
+    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert to png");
+  }
+  else
+  if (spec->available_gif == 1)
+  {
+    gdImageGif(im_out, fout);
+    r->content_type = apr_psprintf(r->pool, "image/gif");
+    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert to gif");
+  }
+  else
+  if (spec->available_bmp2 == 1 || spec->available_bmp4 == 1)
+  {
+    r->content_type = apr_psprintf(r->pool, "image/bmp");
+    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert to bmp(unsupported)");
+  }
+  fclose(fout);
+
+
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"color=[%d]", spec->color);
+
+  rv = apr_stat(&st, tmpfile, APR_FINFO_MIN, r->pool);
+  if (rv != APR_SUCCESS)
+  {
+    return HTTP_NOT_FOUND;
+  }
+  contentLength = apr_psprintf(r->pool, "%d", (int)st.size);
+  apr_table_setn(r->headers_out, "Content-Length", (const char*)contentLength);
+
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"Content-Length:[%d]", (int)st.size);
+
+  rv = apr_file_open(&fp, tmpfile, 
+    APR_READ | APR_BINARY, APR_OS_DEFAULT, r->pool);
+  if (rv != APR_SUCCESS) 
+  {
+    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"tmpfile open failed[%s]", tmpfile);
+    return HTTP_NOT_FOUND;
+  }
+  ap_send_fd(fp, r, 0, st.size, &byte);
+  apr_file_close(fp);
+  ap_rflush(r);
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"send file data[%d]byte", byte);
+
+  return OK;
+
 }
 
+static char*
+chxj_create_workfile(request_rec* r, mod_chxj_config* conf)
+{
+  int ii;
+  int jj;
+  int len;
+  char* w = apr_palloc(r->pool, 256);
+  char* user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
+  char* fname;
+
+  memset(w, 0, 256);
+  fname = apr_psprintf(r->pool, "%s.%s", r->filename, user_agent);
+
+  len = strlen(fname);
+  jj=0;
+  for  (ii=0; ii<len; ii++) 
+  {
+    if (fname[ii] == '/' || fname[ii] == ' ' || fname[ii] == '-')
+    {
+      w[jj++] = '_';
+    }
+    else
+    {
+      w[jj++] = fname[ii];
+    }
+  }
+
+  return apr_psprintf(r->pool, "%s/%s", conf->image_cache_dir,w);
+}
+
+static int
+chxj_translate_name(request_rec *r)
+{
+  const char* ccp;
+  char* docroot;
+  int len;
+  ap_regex_t *regexp;
+  ap_regmatch_t match[10];
+  apr_finfo_t st;
+  apr_status_t rv;
+  mod_chxj_config* conf;
+  int rtn;
+  int ii;
+  char*      ext[4] = {
+          "jpg",
+          "png",
+          "bmp",
+          "gif",
+  };
+  char*    fname;
+
+  conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+
+  regexp = ap_pregcomp(r->pool, (const char*)conf->image_uri, AP_REG_EXTENDED|AP_REG_ICASE);
+  if (regexp == NULL)
+  {
+    return DECLINED;
+  }
+
+  rtn = ap_regexec(regexp, r->uri, regexp->re_nsub + 1, match, 0);
+  if (rtn != 0)
+  {
+    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "Not match URI[%s]", r->uri);
+    return DECLINED;
+  }
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "Match URI[%s]", r->uri);
+
+  if (r->filename == NULL) 
+  {
+    r->filename = apr_pstrdup(r->pool, r->uri);
+  }
+
+  ccp = ap_document_root(r);
+  if (ccp == NULL)
+  {
+    return HTTP_INTERNAL_SERVER_ERROR;
+  }
+  docroot = apr_pstrdup(r->pool, ccp);
+  len = strlen(docroot);
+
+  if (docroot[len-1] == '/') 
+  {
+    docroot[len-1] = '\0';
+  }
+  if (r->server->path 
+  &&  strncmp(r->filename, r->server->path, r->server->pathlen) == 0) 
+  {
+    r->filename = apr_pstrcat(r->pool, docroot, (r->filename + r->server->pathlen), NULL);
+  }
+  else 
+  {
+    r->filename = apr_pstrcat(r->pool, docroot, r->filename, NULL);
+  }
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "URI[%s]", r->filename);
+
+  for (ii=0; ii<4; ii++) 
+  {
+    fname = apr_psprintf(r->pool, "%s.%s", r->filename, ext[ii]);
+    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "search [%s]", fname);
+
+    rv = apr_stat(&st, fname, APR_FINFO_MIN, r->pool);
+    if (rv == APR_SUCCESS)
+    {
+      break;
+    }
+    fname = NULL;
+  }
+  if (fname == NULL)
+  {
+    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "NotFound [%s]", r->filename);
+    return HTTP_NOT_FOUND;
+  }
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "Found [%s]", fname);
+  r->filename = apr_psprintf(r->pool, "%s", fname);
+  r->handler = apr_psprintf(r->pool, "chxj-picture");
+  return OK;
+}
 /**
  * The hook is registered.
  *
@@ -759,6 +1070,7 @@ chxj_register_hooks(apr_pool_t *p)
                       NULL, 
                       AP_FTYPE_RESOURCE);
   ap_hook_handler(chxj_convert_images, NULL, NULL, APR_HOOK_MIDDLE);
+  ap_hook_translate_name(chxj_translate_name, NULL, NULL, APR_HOOK_MIDDLE);
 }
 
 /**
@@ -774,8 +1086,9 @@ chxj_create_per_dir_config(apr_pool_t *p, char *arg)
 
   conf = apr_pcalloc(p, sizeof(mod_chxj_config));
   conf->device_data_file = NULL;
-
-
+  conf->emoji_data_file  = NULL;
+  conf->image_uri        = NULL;
+  conf->image_cache_dir  = apr_psprintf(p, "%s",DEFAULT_IMAGE_CACHE_DIR);
   return conf;
 }
 
@@ -842,19 +1155,63 @@ cmd_load_emoji_data(cmd_parms *parms, void *mconfig, const char* arg)
   return rtn;
 }
 
+static const char* 
+cmd_set_image_uri(cmd_parms *parms, void *mconfig, const char* arg) 
+{
+  mod_chxj_config* conf;
+  Doc doc;
+  doc.r = NULL;
+  if (strlen(arg) > 256) 
+  {
+    return "image uri is too long.";
+  }
+
+  conf = (mod_chxj_config*)mconfig;
+  conf->image_uri = apr_pstrdup(parms->pool, arg);
+  return NULL;
+}
+
+static const char* 
+cmd_set_image_cache_dir(cmd_parms *parms, void *mconfig, const char* arg) 
+{
+  mod_chxj_config* conf;
+  Doc doc;
+  doc.r = NULL;
+  if (strlen(arg) > 256) 
+  {
+    return "cache dir name is too long.";
+  }
+
+  conf = (mod_chxj_config*)mconfig;
+  conf->image_cache_dir = apr_pstrdup(parms->pool, arg);
+  return NULL;
+}
+
 static const command_rec cmds[] = {
   AP_INIT_TAKE1(
-    "LoadDeviceData",
+    "ChxjLoadDeviceData",
     cmd_load_device_data,
     NULL,
     OR_ALL,
     "Load Device Data"),
   AP_INIT_TAKE1(
-    "LoadEmojiData",
+    "ChxjLoadEmojiData",
     cmd_load_emoji_data,
     NULL,
     OR_ALL,
     "Load Emoji Data"),
+  AP_INIT_TAKE1(
+    "ChxjImageUri",
+    cmd_set_image_uri,
+    NULL,
+    OR_ALL,
+    "Load Device Data"),
+  AP_INIT_TAKE1(
+    "ChxjImageCacheDir",
+    cmd_set_image_cache_dir,
+    NULL,
+    OR_ALL,
+    "Load Device Data"),
   { NULL },
 };
 

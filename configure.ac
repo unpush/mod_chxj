@@ -61,12 +61,6 @@ else
 fi
 
 
-AC_SUBST(with_apache_header)
-AC_SUBST(with_apr_header)
-AC_SUBST(CC)
-AC_SUBST(QDEFS)
-AC_SUBST(DDEFS)
-AC_SUBST(LIBS)
 
 AC_PATH_PROG(APXS, apxs, no,
     /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/usr/local/apache/bin)
@@ -79,6 +73,23 @@ AC_PATH_PROG(LIBTOOL, libtool, no,
 if test "x$LIBTOOL" = "xno"; then
     AC_MSG_ERROR([libtool not found.])
 fi
+
+AC_PATH_PROG(GDLIB_CONFIG, gdlib-config, no
+   /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
+if text "x$GDLIB_CONFIG" = "xno" ; then
+    AC_MSG_ERROR([gdlib-config not found.])
+fi
+
+LIBS="${LIBS} `${GDLIB_CONFIG} --libs` -lgd"
+CFLAGS="${CFLAGS} `${GDLIB_CONFIG} --cflags`"
+
+AC_SUBST(with_apache_header)
+AC_SUBST(with_apr_header)
+AC_SUBST(CC)
+AC_SUBST(QDEFS)
+AC_SUBST(DDEFS)
+AC_SUBST(LIBS)
+AC_SUBST(CFLAGS)
 
 # Checks for header files.
 AC_HEADER_STDC

@@ -812,6 +812,20 @@
     </device>
   </user_agent>
   <user_agent pattern="UP.Browser/[^\-]+-([^     ]+) .+">
+    <device>
+      <device_id>OPWV</device_id>
+      <device_name>OPWV</device_name>
+      <html_spec_type>HDML</html_spec_type>
+      <width>120</width>
+      <heigh>126</heigh>
+      <gif>false</gif>
+      <jpeg>false</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>256</color>
+      <emoji_type>C</emoji_type><!-- XXX -->
+    </device>
     <!--======================================================================-->
     <!-- A1000 series                                                         -->
     <!--======================================================================-->
