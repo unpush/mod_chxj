@@ -99,7 +99,7 @@ chxj_exchange_chtml20(
   chxj_dump_out("[src] CHTML -> CHTML2.0", ss, srclen);
 #endif
 
-  qs_parse_string(&doc,ss);
+  qs_parse_string(&doc,ss, srclen);
 
   /*--------------------------------------------------------------------------*/
   /* It converts it from CHTML to CHTML.                                      */
@@ -143,7 +143,7 @@ chxj_init_chtml20(Chtml20* chtml20, Doc* doc, request_rec* r, device_table* spec
   chtml20->doc  = doc;
   chtml20->spec = spec;
   chtml20->out  = qs_alloc_zero_byte_string(r);
-  chtml20->conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  chtml20->doc->parse_mode = PARSE_MODE_NO_PARSE;
 }
 
 /**

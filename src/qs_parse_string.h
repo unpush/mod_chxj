@@ -17,10 +17,14 @@
 #ifndef __QS_PARSE_STRING_H__
 #define __QS_PARSE_STRING_H__
 #include <httpd.h>
+/*
+#define DEBUG
+#define USE_LOG
+*/
 /**
  * Max of memory allocation times.
  */
-#define QX_ALLOC_MAX   (4096)
+#define QX_ALLOC_MAX   (100*1024)
 
 /**
  * It is judged whether it is the first byte of Japanese Shift_JIS "ZENKAKU KANJI". 
@@ -72,6 +76,16 @@
                         &&  (strcasecmp(c, "p"        ) != 0) \
                         &&  (strcasecmp(c, "plaintext") != 0) \
                         &&  (strcasecmp(c, "?xml"     ) != 0) \
+                        &&  (strcasecmp(c, "!doctype" ) != 0) \
+                        &&  (strcasecmp(c, "!--"      ) != 0))
+
+/**
+ * It is judged whether the tag of the object has the child element. 
+ * The "<option>" tag has the child. Please write </ option >. 
+ */
+#define has_child_hdml(c)  ((strcasecmp(c, "center"     ) != 0) \
+                        &&  (strcasecmp(c, "br"         ) != 0) \
+                        &&  (strcasecmp(c, "action"     ) != 0) \
                         &&  (strcasecmp(c, "!--"      ) != 0))
 
 /**
@@ -102,49 +116,51 @@ typedef struct _node {
 
 typedef struct pointer_table_t {
   unsigned int address;
-  unsigned int size;
+  unsigned long size;
+  struct pointer_table_t* next;
 } Pointer_Table;
 
 
+typedef enum chxj_parse_mode_t {
+  PARSE_MODE_CHTML=0,
+  PARSE_MODE_NO_PARSE,
+} ParseMode_t;
 
 typedef struct _doc {
   Node*         now_parent_node;
   Node*         root_node;
 
   int           do_init_flag;
-  unsigned int  alloc_size;
+  unsigned long alloc_size;
 
-  Pointer_Table pointer_table[QX_ALLOC_MAX];
+  Pointer_Table* pointer_table;
+  Pointer_Table* free_list_head;
+  Pointer_Table* free_list_tail;
+  Pointer_Table* allocated_list_head;
+  Pointer_Table* allocated_list_tail;
+
+  ParseMode_t    parse_mode;
 
 #ifndef __NON_MOD_CHXJ__
   request_rec* r;
 #endif
 } Doc;
 
-#ifdef __NON_MOD_CHXJ__
-#define QS_EXPORT 
-#else
-/*
-#define QS_EXPORT static
-*/
-#define QS_EXPORT
-#endif
-
 /*
  * Prototype Declare
  */
-QS_EXPORT Node* qs_init_root_node(Doc* doc);
-QS_EXPORT void qs_add_child_node(Doc* doc, Node*);
-QS_EXPORT void qs_free_node(Doc* doc, Node*);
-QS_EXPORT Node* qs_get_root(Doc* doc) ;
-QS_EXPORT Node* qs_parse_string(Doc* doc, const char*);
-QS_EXPORT char* qs_get_node_value(Doc* doc,Node* node);
-QS_EXPORT char* qs_get_node_name(Doc* doc, Node* node) ;
-QS_EXPORT int qs_get_node_size(Doc* doc, Node* node) ;
-QS_EXPORT Node* qs_get_child_node(Doc* doc, Node* node) ;
-QS_EXPORT Node* qs_get_next_node(Doc* doc, Node* node) ;
-QS_EXPORT Attr* qs_get_attr(Doc* doc, Node* node) ;
-QS_EXPORT Attr* qs_get_next_attr(Doc* doc, Attr* attr) ;
-QS_EXPORT char* qs_get_attr_name(Doc* doc, Attr* attr) ;
-QS_EXPORT char* qs_get_attr_value(Doc* doc, Attr* attr) ;
+Node* qs_init_root_node(Doc* doc);
+void qs_add_child_node(Doc* doc, Node*);
+void qs_free_node(Doc* doc, Node*);
+Node* qs_get_root(Doc* doc) ;
+Node* qs_parse_string(Doc* doc, const char* ss, int len);
+char* qs_get_node_value(Doc* doc,Node* node);
+char* qs_get_node_name(Doc* doc, Node* node) ;
+int qs_get_node_size(Doc* doc, Node* node) ;
+Node* qs_get_child_node(Doc* doc, Node* node) ;
+Node* qs_get_next_node(Doc* doc, Node* node) ;
+Attr* qs_get_attr(Doc* doc, Node* node) ;
+Attr* qs_get_next_attr(Doc* doc, Attr* attr) ;
+char* qs_get_attr_name(Doc* doc, Attr* attr) ;
+char* qs_get_attr_value(Doc* doc, Attr* attr) ;
 #endif

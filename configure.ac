@@ -89,7 +89,7 @@ AC_C_CONST
 
 # Checks for library functions.
 AC_FUNC_MALLOC
-AC_CHECK_FUNCS([memset memcpy strcasecmp strncasecmp strstr])
+AC_CHECK_FUNCS([open close mmap memset memcpy strcasecmp strncasecmp strstr])
 
 AC_CONFIG_FILES([Makefile src/Makefile])
 AC_OUTPUT

@@ -99,7 +99,7 @@ chxj_exchange_chtml10(
   chxj_dump_out("[src] CHTML -> CHTML1.0", ss, srclen);
 #endif
 
-  qs_parse_string(&doc,ss);
+  qs_parse_string(&doc,ss,srclen);
 
   /*--------------------------------------------------------------------------*/
   /* It converts it from CHTML to CHTML.                                      */
@@ -144,6 +144,7 @@ chxj_init_chtml10(Chtml10* chtml10, Doc* doc, request_rec* r, device_table* spec
   chtml10->spec = spec;
   chtml10->out  = qs_alloc_zero_byte_string(r);
   chtml10->conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  chtml10->doc->parse_mode = PARSE_MODE_NO_PARSE;
 }
 
 /**

@@ -144,7 +144,7 @@ chxj_exchange_hdml(request_rec* r,
     qs_init_malloc(&doc); 
     qs_init_root_node(&doc);
     ss[srclen] = '\0';
-    qs_parse_string(&doc,ss);
+    qs_parse_string(&doc,ss,srclen);
 
     /*------------------------------------------------------------------------*/
     /* The number of radiobuttons is counted.                                 */
@@ -206,6 +206,7 @@ chxj_init_hdml(Hdml* hdml, Doc* doc, request_rec* r, device_table* spec)
   hdml->card     = qs_alloc_zero_byte_string(r);
   hdml->spec     = spec;
   hdml->conf     = ap_get_module_config(r->per_dir_config, &chxj_module);
+  hdml->doc->parse_mode = PARSE_MODE_NO_PARSE;
 
   for (ii=0; ii<MAX_FORM_COUNT; ii++) 
   {

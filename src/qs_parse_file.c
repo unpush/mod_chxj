@@ -16,40 +16,56 @@
  */
 #include <stdio.h>
 #include <strings.h>
+
+#include <fcntl.h>
+#include <sys/types.h> 
+#include <sys/stat.h> 
+#include <sys/mman.h>
+#include <unistd.h> 
+
 #include "qs_malloc.h"
 #include "qs_parse_string.h"
 #include "qs_parse_file.h"
 #include "qs_parse_tag.h"
 #include "qs_log.h"
 
-QS_EXPORT Node*
-qs_parse_file(Doc* doc, const char* filename) {
-  FILE* fp;
-  char buffer[256];
+Node*
+qs_parse_file(Doc* doc, const char* filename) 
+{
   char *tgt = NULL;
-  char *tmp = NULL;
+  Node* return_value = NULL;
+  struct stat st;
+  int rtn;
+  int fd;
 
-  fp = fopen(filename, "r");
-  if (fp == NULL) {
-    return NULL;
+
+  memset(&st, 0, sizeof(struct stat));
+
+  rtn = stat(filename, &st); 
+  if (rtn != 0)
+  {
+    return return_value;
+  }
+  fd = open(filename, O_RDONLY);
+  if (fd == -1)
+  {
+    return return_value;
   }
 
-  tgt = (char*)qs_malloc(doc, 1, QX_LOGMARK);
-  tgt[0] = 0;
-  while((fgets(buffer, 256, fp)) != NULL) {
-    tmp = (char*)qs_malloc(doc,strlen(tgt)+1, QX_LOGMARK);
-    memset(tmp, 0, strlen(tgt)+1);
-    memcpy(tmp, tgt, strlen(tgt));
-    qs_free(doc,tgt, QX_LOGMARK);
-    tgt = (char*)qs_malloc(doc,strlen(tmp)+ strlen(buffer)+1, QX_LOGMARK);
-    memset(tgt, 0, strlen(tmp)+strlen(buffer)+1);
-    memcpy(tgt, tmp,strlen(tmp));
-    memcpy(&tgt[strlen(tmp)], buffer, strlen(buffer));
-    qs_free(doc,tmp, QX_LOGMARK);
+  tgt = (char*)mmap(0, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
+  if ((int)tgt == -1)
+  {
+    close(fd);
+    return return_value;
   }
-  fclose(fp);
 
-  return qs_parse_string(doc, tgt);
+  doc->parse_mode = PARSE_MODE_CHTML;
+  return_value = qs_parse_string(doc, tgt, st.st_size);
+
+  munmap(tgt,st.st_size);
+  close(fd);
+
+  return return_value;
 }
 /*
  * vim:ts=2 et

@@ -18,9 +18,9 @@
 #define __QS_PARSE_TAG_H__
 #include "qs_parse_string.h"
 
-QS_EXPORT Node* qs_parse_tag(Doc* doc, const char* s, int len) ;
-QS_EXPORT Node* qs_new_tag(Doc* doc);
-QS_EXPORT Node* qs_add_attr(Doc* doc, Node* node, Attr* attr);
+Node* qs_parse_tag(Doc* doc, const char* s, int len) ;
+Node* qs_new_tag(Doc* doc);
+Node* qs_add_attr(Doc* doc, Node* node, Attr* attr);
 #endif
 /*
  * vim:ts=2 et

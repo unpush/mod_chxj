@@ -21,5 +21,5 @@
 /*
  * Prototype Declare
  */
-QS_EXPORT Node* qs_parse_file(Doc* doc, const char* filename) ;
+Node* qs_parse_file(Doc* doc, const char* filename) ;
 #endif

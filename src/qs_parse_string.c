@@ -16,6 +16,8 @@
  */
 #include <stdio.h>
 #include <strings.h>
+#include "httpd.h"
+#include "http_log.h"
 #include "qs_malloc.h"
 #include "qs_parse_string.h"
 #include "qs_parse_tag.h"
@@ -23,55 +25,73 @@
 
 static int s_cut_tag (const char* s, int len) ;
 static int s_cut_text(const char* s, int len) ;
+static void qs_dump_node(Doc* doc, Node* node, int indent);
 
 
-QS_EXPORT Node*
-qs_parse_string(Doc* doc, const char* src) {
+Node*
+qs_parse_string(Doc* doc, const char* src, int srclen) 
+{
   int ii;
-  int srclen = strlen(src);
 
-#ifdef DEBUG
-  QX_LOGGER_DEBUG("parse_string start");
-#endif
   doc->now_parent_node = qs_init_root_node(doc);
 
-#ifdef DEBUG
-  QX_LOGGER_DEBUG("root_node init end");
-#endif
-
-  for (ii=0; ii<srclen; ii++) {
-    if (is_white_space(src[ii])) {
-#ifdef DEBUG
-      QX_LOGGER_DEBUG("white_space");
-#endif
+  for (ii=0; ii<srclen; ii++) 
+  {
+    if (doc->parse_mode != PARSE_MODE_NO_PARSE && is_white_space(src[ii])) 
+    {
       continue;
     }
-    if ((unsigned char)'<' == src[ii]) {
+    if ((unsigned char)'<' == src[ii]) 
+    {
       int endpoint = s_cut_tag(&src[ii], srclen - ii);
-      Node* node   = qs_parse_tag(doc, &src[ii], endpoint);
+      Node* node   = NULL;
+      node = qs_parse_tag(doc, &src[ii], endpoint);
+
       ii += endpoint;
-      if (node->name[0] == '/' ) {
-        if (has_child(node->name)) {
-#ifdef DEBUG
-         {char buf[256]; sprintf(buf, "[%s]->[%s]", 
-                         doc->now_parent_node->name, 
-                         doc->now_parent_node->parent->name); QX_LOGGER_DEBUG(buf);}
-#endif
-          doc->now_parent_node = doc->now_parent_node->parent;
+      if (node->name[0] == '/' ) 
+      {
+
+        if ((doc->parse_mode == PARSE_MODE_CHTML && has_child(&(node->name[1])))
+        ||  (doc->parse_mode == PARSE_MODE_NO_PARSE && strcasecmp(&node->name[1], "chxj:if") == 0)) 
+        {
+          if (doc->now_parent_node->parent != NULL)
+          {
+            doc->now_parent_node = doc->now_parent_node->parent;
+            doc->parse_mode = PARSE_MODE_CHTML;
+          }
         }
-        qs_free_node(doc,node);
-        continue;
+
+        if (doc->parse_mode != PARSE_MODE_NO_PARSE)
+        {
+          qs_free_node(doc,node);
+          continue;
+        }
       }
-      if (strncmp(node->name, "!--", 3) == 0) {
+      if (strncmp(node->name, "!--", 3) == 0) 
+      {
         /* comment tag */
         qs_free_node(doc, node);
         continue;
       }
       qs_add_child_node(doc,node);
-      if (has_child(node->name)) {
+
+      if (doc->parse_mode == PARSE_MODE_NO_PARSE)
+      {
+        if (node->name[0] == '/')
+        {
+          continue;
+        }
+      }
 #ifdef DEBUG
-        {char buf[256]; sprintf(buf, "[%s]->[%s]", doc->now_parent_node->name, node->name); QX_LOGGER_DEBUG(buf);}
+  QX_LOGGER_DEBUG("return from qs_add_child_node()");
 #endif
+      if (doc->parse_mode == PARSE_MODE_CHTML && strcasecmp(node->name, "chxj:if") == 0)
+      {
+        doc->parse_mode = PARSE_MODE_NO_PARSE;
+        doc->now_parent_node = node;
+      }
+      if (doc->parse_mode == PARSE_MODE_CHTML && has_child(node->name)) 
+      {
         doc->now_parent_node = node;
       }
     }
@@ -97,8 +117,40 @@ qs_parse_string(Doc* doc, const char* src) {
 #ifdef DEBUG
   QX_LOGGER_DEBUG("parse_string end");
 #endif
+#ifdef DEBUG
+  if (doc->r != NULL)
+  {
+    qs_dump_node(doc, doc->root_node, 0);
+  }
+#endif
 
   return doc->root_node;
+}
+
+static void
+qs_dump_node(Doc* doc, Node* node, int indent) {
+  Node* p = (Node*)qs_get_child_node(doc,node);
+
+  for (;p;p = (Node*)qs_get_next_node(doc,p)) {
+    Attr* attr;
+    if ((char*)qs_get_node_value(doc,p) != NULL) {
+      ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0, doc->r,
+        "%*.*sNode:[%s][%s]\n", indent,indent," ",
+                      (char*)qs_get_node_name(doc,p),
+                      (char*)qs_get_node_value(doc,p));
+    }
+    else {
+      ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0, doc->r,
+        "%*.*sNode:[%s]\n", indent,indent," ", qs_get_node_name(doc,p));
+    }
+    for (attr = (Attr*)qs_get_attr(doc,p); attr; attr = (Attr*)qs_get_next_attr(doc,attr)) {
+      ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0, doc->r,
+        "%*.*s  ATTR:[%s]\n", indent,indent," ", (char *)qs_get_attr_name(doc,attr));
+      ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0, doc->r,
+        "%*.*s  VAL :[%s]\n", indent,indent," ", (char *)qs_get_attr_value(doc,attr));
+    }
+    qs_dump_node(doc,p, indent+4);
+  }
 }
 
 
@@ -162,7 +214,7 @@ s_cut_text(const char* s, int len) {
 }
 
 
-QS_EXPORT Node*
+Node*
 qs_init_root_node(Doc* doc) {
   doc->root_node = (Node*)qs_malloc(doc,sizeof(struct _node),QX_LOGMARK);
   if (doc->root_node == NULL) {
@@ -185,7 +237,7 @@ qs_init_root_node(Doc* doc) {
 
 
 
-QS_EXPORT void
+void
 qs_add_child_node(Doc* doc,Node* node) 
 {
   node->next       = NULL;
@@ -209,8 +261,11 @@ qs_add_child_node(Doc* doc,Node* node)
 
 
 
-QS_EXPORT void
-qs_free_node(Doc* doc, Node* node) {
+void
+qs_free_node(Doc* doc, Node* node) 
+{
+  QX_LOGGER_DEBUG("start qs_free_node()");
+
   qs_free(doc,node->name, QX_LOGMARK);
   Attr* attr;
   Attr* nattr;
@@ -223,12 +278,13 @@ qs_free_node(Doc* doc, Node* node) {
   }
 
   qs_free(doc,node, QX_LOGMARK);
+  QX_LOGGER_DEBUG("end qs_free_node()");
 }
 
 
 
 
-QS_EXPORT Node*
+Node*
 qs_get_root(Doc* doc) {
   return doc->root_node;
 }
@@ -236,7 +292,7 @@ qs_get_root(Doc* doc) {
 
 
 
-QS_EXPORT char* 
+char* 
 qs_get_node_value(Doc* doc, Node* node) {
   return node->value;
 }
@@ -244,14 +300,14 @@ qs_get_node_value(Doc* doc, Node* node) {
 
 
 
-QS_EXPORT char*
+char*
 qs_get_node_name(Doc* doc, Node* node) {
   return node->name;
 }
 
 
 
-QS_EXPORT Node*
+Node*
 qs_get_child_node(Doc* doc, Node* node) {
   return node->child;
 }
@@ -259,14 +315,14 @@ qs_get_child_node(Doc* doc, Node* node) {
 
 
 
-QS_EXPORT Node*
+Node*
 qs_get_next_node(Doc* doc, Node* node) {
   return node->next;
 }
 
 
 
-QS_EXPORT Attr*
+Attr*
 qs_get_attr(Doc* doc, Node* node) {
   return node->attr;
 }
@@ -274,26 +330,26 @@ qs_get_attr(Doc* doc, Node* node) {
 
 
 
-QS_EXPORT Attr*
+Attr*
 qs_get_next_attr(Doc* doc, Attr* attr) {
   return attr->next;
 }
 
 
 
-QS_EXPORT char*
+char*
 qs_get_attr_name(Doc* doc, Attr* attr) {
   return attr->name;
 }
 
 
 
-QS_EXPORT char*
+char*
 qs_get_attr_value(Doc* doc, Attr* attr) {
   return attr->value;
 }
 
-QS_EXPORT int 
+int 
 qs_get_node_size(Doc* doc, Node* node) {
   return node->size;
 }

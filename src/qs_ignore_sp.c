@@ -19,28 +19,30 @@
 /**
  * ignore space
  */
-QS_EXPORT int
-qs_ignore_sp(Doc* doc, const char* s, int len) {
+int
+qs_ignore_sp(Doc* doc, const char* s, int len) 
+{
   int ii;
   char* sp = (char*)s;
 
   for(ii=0;
       *sp && is_white_space(*sp) && ii<len;
-      ii++, sp++) {
-  }
+      ii++, sp++)
+          ;
 
   return (sp - s);
 }
 
-QS_EXPORT int
-qs_ignore_sp_and_quote(Doc* doc, const char* s, int len) {
+int
+qs_ignore_sp_and_quote(Doc* doc, const char* s, int len) 
+{
   int ii;
   char* sp = (char*)s;
 
   for(ii=0;
       *sp && (is_white_space(*sp) || is_quote(*sp)) && ii<len;
-      ii++, sp++) {
-  }
+      ii++, sp++) 
+          ;
 
   return (sp - s);
 }
