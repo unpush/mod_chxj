@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 #include <unistd.h>
+#include <string.h>
+
 #include "httpd.h"
 #include "http_config.h"
 #include "http_core.h"
@@ -30,15 +32,15 @@
 #include "apr_general.h"
 #include "apr_pools.h"
 #include "ap_regex.h"
-#include <string.h>
+
 #include "mod_chxj.h"
-#include <qs_ignore_sp.h>
-#include <qs_log.h>
-#include <qs_malloc.h>
-#include <qs_parse_attr.h>
-#include <qs_parse_file.h>
-#include <qs_parse_string.h>
-#include <qs_parse_tag.h>
+#include "qs_ignore_sp.h"
+#include "qs_log.h"
+#include "qs_malloc.h"
+#include "qs_parse_attr.h"
+#include "qs_parse_file.h"
+#include "qs_parse_string.h"
+#include "qs_parse_tag.h"
 #include "chxj_load_device_data.h"
 #include "chxj_load_emoji_data.h"
 #include "chxj_specified_device.h"

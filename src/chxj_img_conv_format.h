@@ -24,6 +24,7 @@
 int chxj_img_conv_format(request_rec *r);
 int chxj_trans_name(request_rec *r);
 
+
 #endif
 /*
  * vim:ts=4 et

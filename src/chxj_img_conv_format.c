@@ -291,13 +291,6 @@ chxj_create_cache_file(request_rec* r, const char* tmpfile, device_table* spec, 
       newh = (int)((double)newh * (double)((double)spec->heigh / (double)newh));
     }
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"newh = [%d] neww = [%d]", newh, neww);
-#if 0
-    if (newh < spec->heigh)
-    {
-      neww = (int)((double)neww * (double)((double)spec->heigh / (double)newh));
-      newh = (int)((double)newh * (double)((double)spec->heigh / (double)newh));
-    }
-#endif
   }
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert width=[%d --> %d]", oldw, neww);
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert heigh=[%d --> %d]", oldh, newh);

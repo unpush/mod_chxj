@@ -17,6 +17,8 @@
 #ifndef __MOD_CHXJ_H__
 #define __MOD_CHXJ_H__
 
+#include <string.h>
+
 #include "httpd.h"
 #include "http_config.h"
 #include "http_protocol.h"
@@ -24,21 +26,21 @@
 #include "http_log.h"
 #include "ap_config.h"
 #include "apr_strings.h"
-#include "util_filter.h"
 #include "apr_buckets.h"
 #include "apr_lib.h"
 #include "apr_tables.h"
 #include "apr_dso.h"
 #include "apr_general.h"
 #include "apr_pools.h"
-#include <string.h>
-#include <qs_ignore_sp.h>
-#include <qs_log.h>
-#include <qs_malloc.h>
-#include <qs_parse_attr.h>
-#include <qs_parse_file.h>
-#include <qs_parse_string.h>
-#include <qs_parse_tag.h>
+#include "util_filter.h"
+
+#include "qs_ignore_sp.h"
+#include "qs_log.h"
+#include "qs_malloc.h"
+#include "qs_parse_attr.h"
+#include "qs_parse_file.h"
+#include "qs_parse_string.h"
+#include "qs_parse_tag.h"
 
 #include "chxj_specified_device.h"
 
