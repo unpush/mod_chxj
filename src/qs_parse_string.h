@@ -24,7 +24,6 @@
 /**
  * Max of memory allocation times.
  */
-/* #define QX_ALLOC_MAX   (4096) */
 #define QX_ALLOC_MAX   (100*1024)
 
 /**
@@ -117,7 +116,7 @@ typedef struct _node {
 
 typedef struct pointer_table_t {
   unsigned int address;
-  unsigned int size;
+  unsigned long size;
   struct pointer_table_t* next;
 } Pointer_Table;
 
@@ -132,10 +131,13 @@ typedef struct _doc {
   Node*         root_node;
 
   int           do_init_flag;
-  unsigned int  alloc_size;
+  unsigned long alloc_size;
 
   Pointer_Table* pointer_table;
-  Pointer_Table* free_list;
+  Pointer_Table* free_list_head;
+  Pointer_Table* free_list_tail;
+  Pointer_Table* allocated_list_head;
+  Pointer_Table* allocated_list_tail;
 
   ParseMode_t    parse_mode;
 

@@ -18,7 +18,7 @@
 #define __QS_MALLOC_H__
 #include "qs_parse_string.h"
 
-#define QX_ALLOC_MAX_SIZE (1024*1024)
+#define QX_ALLOC_MAX_SIZE (1024*1024*5)
 
 void* qs_malloc(Doc* doc, int size, const char* fname, int line);
 void qs_init_malloc(Doc* doc);
