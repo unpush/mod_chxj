@@ -144,7 +144,7 @@ chxj_init_chtml10(Chtml10* chtml10, Doc* doc, request_rec* r, device_table* spec
   chtml10->spec = spec;
   chtml10->out  = qs_alloc_zero_byte_string(r);
   chtml10->conf = ap_get_module_config(r->per_dir_config, &chxj_module);
-  chtml10->doc->parse_mode = PARSE_MODE_NO_PARSE;
+  chtml10->doc->parse_mode = PARSE_MODE_CHTML;
 }
 
 /**

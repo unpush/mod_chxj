@@ -143,7 +143,7 @@ chxj_init_jhtml(Jhtml* jhtml, Doc* doc, request_rec* r, device_table* spec)
   jhtml->spec = spec;
   jhtml->out  = qs_alloc_zero_byte_string(r);
   jhtml->conf = ap_get_module_config(r->per_dir_config, &chxj_module);
-  jhtml->doc->parse_mode = PARSE_MODE_NO_PARSE;
+  jhtml->doc->parse_mode = PARSE_MODE_CHTML;
 }
 
 /**

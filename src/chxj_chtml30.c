@@ -145,7 +145,7 @@ chxj_init_chtml30(Chtml30* chtml30, Doc* doc, request_rec* r, device_table* spec
   chtml30->spec = spec;
   chtml30->out  = qs_alloc_zero_byte_string(r);
   chtml30->conf = ap_get_module_config(r->per_dir_config, &chxj_module);
-  chtml30->doc->parse_mode = PARSE_MODE_NO_PARSE;
+  chtml30->doc->parse_mode = PARSE_MODE_CHTML;
 }
 
 /**

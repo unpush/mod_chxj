@@ -20,6 +20,7 @@
 #include <unistd.h>
 #include "chxj_img_conv.h"
 #include "chxj_dump.h"
+
 #define CHECK_BOX_PREFIX     "_chxj_c_"
 #define RADIO_BUTTON_PREFIX  "_chxj_r_"
 #define SUBMIT_BUTTON_PREFIX "_chxj_s_"
@@ -141,10 +142,12 @@ chxj_exchange_hdml(request_rec* r,
     /* Here, the parsing of the received character string is done             */
     /*------------------------------------------------------------------------*/
     char *ss = apr_pstrdup(r->pool, src);
+    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
+                    "input srclen=[%d]\n", srclen);
     qs_init_malloc(&doc); 
     qs_init_root_node(&doc);
     ss[srclen] = '\0';
-    qs_parse_string(&doc,ss,srclen);
+    qs_parse_string(&doc, ss, srclen);
 
     /*------------------------------------------------------------------------*/
     /* The number of radiobuttons is counted.                                 */
@@ -206,7 +209,7 @@ chxj_init_hdml(Hdml* hdml, Doc* doc, request_rec* r, device_table* spec)
   hdml->card     = qs_alloc_zero_byte_string(r);
   hdml->spec     = spec;
   hdml->conf     = ap_get_module_config(r->per_dir_config, &chxj_module);
-  hdml->doc->parse_mode = PARSE_MODE_NO_PARSE;
+  hdml->doc->parse_mode = PARSE_MODE_CHTML;
 
   for (ii=0; ii<MAX_FORM_COUNT; ii++) 
   {
@@ -1342,7 +1345,7 @@ hdml_do_input_text_tag(Hdml* hdml, Node* tag)
   hdml->card_cnt++;
   qs_output_to_hdml_out(hdml, 
                   apr_psprintf(r->pool,
-                          "<A TASK=GOSUB LABEL=“ü—Í DEST=#D%d "
+                          "<A TASK=GOSUB LABEL=\x93\xfc\x97\xcd DEST=#D%d "
                           "VARS=\"V=$%s%02d\" RECEIVE=%s%02d>",
                           hdml->card_cnt,
                           qs_get_form_no(r, hdml),
@@ -1450,7 +1453,7 @@ hdml_do_input_password_tag(Hdml* hdml, Node* tag)
   hdml_tag_output_upper_half(hdml, tag);
 
   hdml->card_cnt++;
-  qs_output_to_hdml_out(hdml, "<A TASK=GOSUB LABEL=“ü—Í DEST="              );
+  qs_output_to_hdml_out(hdml, "<A TASK=GOSUB LABEL=\"\x93\xfc\x97\xcd\" DEST=");
   qs_output_to_hdml_out(hdml, apr_psprintf(r->pool, "#D%d ", hdml->card_cnt));
   qs_output_to_hdml_out(hdml, 
                   apr_psprintf(r->pool, "VARS=\"V=$%s%02d\" ", 
@@ -1461,7 +1464,10 @@ hdml_do_input_password_tag(Hdml* hdml, Node* tag)
                   apr_psprintf(r->pool, "RECEIVE=%s%02d>"  , 
                           qs_get_form_no(r, hdml),
                           hdml->var_cnt[hdml->pure_form_cnt]));
-  qs_output_to_hdml_out(hdml, "[****]</A>\n"          );
+  qs_output_to_hdml_out(hdml, 
+                  apr_psprintf(r->pool, "[$%s%02d]</A>\n"  , 
+                          qs_get_form_no(r, hdml),
+                          hdml->var_cnt[hdml->pure_form_cnt]));
 
   qs_output_to_hdml_card(hdml, "<ENTRY NAME="                               );
   qs_output_to_hdml_card(hdml, apr_psprintf(r->pool, "D%d ", hdml->card_cnt));
@@ -1668,7 +1674,7 @@ hdml_do_input_radio_tag(Hdml* hdml, Node* tag)
   qs_output_to_hdml_out(hdml, 
                   apr_psprintf(r->pool, 
                           "<A TASK=GOSUB "
-                          "LABEL=\"“ü—Í\" "
+                          "LABEL=\"\x93\xfc\x97\xcd\" "
                           "DEST=#R%d VARS=\"VAL=%s\" "
                           "RECEIVE=\"%s;", 
                           ii, 
@@ -1854,7 +1860,7 @@ hdml_do_input_checkbox_tag(Hdml* hdml, Node* tag)
     nm   = qs_alloc_zero_byte_string(r);
   }
   qs_output_to_hdml_out(hdml, apr_psprintf(r->pool, 
-                                "<A TASK=GOSUB LABEL=\"Áª¯¸\" "
+                                "<A TASK=GOSUB LABEL=\"a\xaf\xb8\" "
                                    "DEST=\"#$%s%02d\" "
                                    "VARS=\"V=%s\" "
                                    "RECEIVE=\"%s%02d;%s%02d;%s%02d\">"
@@ -2031,7 +2037,7 @@ hdml_1_0_start_hr_tag(Hdml* hdml, Node* node)
     }
   }
 
-  qs_output_to_hdml_out(hdml, "<CENTER>„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ<BR>\n");
+  qs_output_to_hdml_out(hdml, "<CENTER>\x81\x7c\x81\x7c\x81\x7c\x81\x7c\x81\x7c\x81\x7c\x81\x7c\x81\x7c\x81\x7c<BR>\n");
 
   hdml->hdml_br_flag = 1;
 
@@ -2171,7 +2177,7 @@ hdml_1_0_start_select_tag(Hdml* hdml, Node* node)
   hdml->card_cnt++;
 
   qs_output_to_hdml_out(hdml, apr_psprintf(r->pool, 
-                                   "<A TASK=GOSUB LABEL=‘I‘ð "
+                                   "<A TASK=GOSUB LABEL=\x91\x49\x91\xf0 "
                                    "VARS=\"V=$%s%02d\" DEST=#D%d "
                                    "RECEIVE=\"%s%02d;%s%02d\">"
                                    "$%s%02d</A>\n",

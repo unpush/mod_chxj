@@ -143,7 +143,7 @@ chxj_init_chtml20(Chtml20* chtml20, Doc* doc, request_rec* r, device_table* spec
   chtml20->doc  = doc;
   chtml20->spec = spec;
   chtml20->out  = qs_alloc_zero_byte_string(r);
-  chtml20->doc->parse_mode = PARSE_MODE_NO_PARSE;
+  chtml20->doc->parse_mode = PARSE_MODE_CHTML;
 }
 
 /**
