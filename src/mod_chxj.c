@@ -829,6 +829,7 @@ cmd_set_image_copyright(cmd_parms *parms, void *mconfig, const char* arg)
   return NULL;
 }
 
+
 static const command_rec cmds[] = {
   AP_INIT_TAKE1(
     "ChxjLoadDeviceData",

@@ -87,7 +87,7 @@ AC_SUBST(CFLAGS)
 
 # Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADERS([string.h strings.h unistd.h fcntl.h sys/types.h sys/stat.h sys/mman.h])
+AC_CHECK_HEADERS([string.h strings.h unistd.h fcntl.h sys/types.h sys/stat.h sys/mman.h libgen.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
