@@ -102,14 +102,14 @@ AC_SUBST(CFLAGS)
 
 # Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADERS([string.h strings.h unistd.h])
+AC_CHECK_HEADERS([string.h strings.h unistd.h fcntl.h sys/types.h sys/stat.h sys/mman.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 
 # Checks for library functions.
 AC_FUNC_MALLOC
-AC_CHECK_FUNCS([memset memcpy strcasecmp strncasecmp strstr])
+AC_CHECK_FUNCS([open mmap close memset memcpy strcasecmp strncasecmp strstr])
 
 
 AC_CONFIG_FILES([Makefile src/Makefile])
