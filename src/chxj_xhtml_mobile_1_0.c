@@ -87,6 +87,7 @@ chxj_exchange_xhtml_mobile_1_0(
   /*--------------------------------------------------------------------------*/
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"start chxj_exchange_xhtml_mobile_1_0()");
   chxj_init_xhtml(&xhtml, &doc, r, spec);
+  ap_set_content_type(r, "text/html; charset=Windows-31J");
 
   /*--------------------------------------------------------------------------*/
   /* The character string of the input is analyzed.                           */
@@ -351,6 +352,11 @@ xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent)
       ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag found");
       if (chxj_chxjif_is_mine(xhtml->spec, doc, child))
       {
+        char* destlang = qs_get_destlang_attr(doc, child, r);
+        if (destlang != NULL && strcasecmp(destlang, "hdml") == 0)
+        {
+          ap_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
+        }
         ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag is mine");
         xhtml_1_0_chxjif_tag(xhtml, child);
       }

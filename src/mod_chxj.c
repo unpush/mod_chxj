@@ -118,6 +118,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
       dst = chxj_exchange_chtml10(r, spec, *src, *len, len);
       *len = strlen(dst);
       ap_set_content_type(r, "text/html; charset=Windows-31J");
+
     }
     else
     if (spec->html_spec_type == CHXJ_SPEC_Chtml_2_0) 
@@ -172,7 +173,6 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
       ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "select XHTML Mobile 1.0");
       dst = chxj_exchange_xhtml_mobile_1_0(r, spec, *src, *len, len);
       *len = strlen(dst);
-      ap_set_content_type(r, "text/html; charset=Windows-31J");
     }
     else
     if (spec->html_spec_type == CHXJ_SPEC_Hdml) 

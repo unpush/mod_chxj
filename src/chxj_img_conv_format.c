@@ -14,9 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include <libgen.h>
 #include "mod_chxj.h"
 #include "chxj_img_conv_format.h"
 #include "chxj_specified_device.h"
+#include "chxj_str_util.h"
 
 #include "http_core.h"
 #include <wand/magick_wand.h>
@@ -34,11 +36,15 @@ typedef enum img_conv_mode_t {
   IMG_CONV_MODE_NORMAL = 0,
   IMG_CONV_MODE_THUMBNAIL,
   IMG_CONV_MODE_WALLPAPER,
+  IMG_CONV_MODE_EZGET,
 } img_conv_mode_t;
 
 typedef struct _query_string_param_t {
   img_conv_mode_t   mode;
-  char *user_agent;
+  char* user_agent;
+  char* name;     /* for EZGET */
+  long offset;    /* for EZGET */
+  long count;     /* for EZGET */
 } query_string_param_t;
 
 /*----------------------------------------------------------------------------*/
@@ -79,7 +85,28 @@ static unsigned short  AU_CRC_TBL[256] = {
   0x6E17,0x7E36,0x4E55,0x5E74,0x2E93,0x3EB2,0x0ED1,0x1EF0 
 };
 
+static const char* HDML_FIRST_PAGE = 
+  "<HDML VERSION=3.0 TTL=0 PUBLIC=TRUE>\r\n"
+  "  <NODISPLAY>\r\n"
+  "    <ACTION TYPE=ACCEPT TASK=GOSUB DEST=\"device:data/dnld?url=%s&name=%s%s&size=%ld&disposition=%s&title=%s\">\r\n"
+  "  </NODISPLAY>\r\n"
+  "</HDML>\r\n";
 
+static const char* HDML_SUCCESS_PAGE =
+  "<HDML VERSION=3.0 TTL=0 PUBLIC=TRUE>\r\n"
+  "  <DISPLAY>\r\n"
+  "    <ACTION TYPE=ACCEPT TASK=RETURN>\r\n"
+  "    \x83\x5f\x83\x45\x83\x93\x83\x8d\x81\x5b\x83\x68\x82\xc9\x90\xac\x8c\xf7\x82\xb5\x82\xdc\x82\xb5\x82\xbd\r\n"
+  "  </DISPLAY>\r\n"
+  "<HDML>\r\n";
+
+static const char* HDML_FAIL_PAGE =
+  "<HDML VERSION=3.0 TTL=0 PUBLIC=TRUE>\r\n"
+  "  <DISPLAY>\r\n"
+  "    <ACTION TYPE=ACCEPT TASK=RETURN>\r\n"
+  "    \x83\x5f\x83\x45\x83\x93\x83\x8d\x81\x5b\x83\x68\x82\xc9\x8e\xb8\x94\x73\x82\xb5\x82\xdc\x82\xb5\x82\xbd\r\n"
+  "  </DISPLAY>\r\n"
+  "<HDML>\r\n";
 
 static char* chxj_create_workfile(request_rec* r, 
                                   mod_chxj_config* conf, 
@@ -90,7 +117,7 @@ static apr_status_t chxj_create_cache_file(request_rec* r,
                                            device_table* spec,
                                            apr_finfo_t* st,
                                            img_conv_mode_t mode);
-static apr_status_t chxj_send_cache_file(request_rec* r, const char* tmpfile);
+static apr_status_t chxj_send_cache_file(query_string_param_t* query_string, request_rec* r, const char* tmpfile);
 static query_string_param_t* chxj_get_query_string_param(request_rec *r);
 static unsigned short chxj_add_crc(const char* writedata, apr_size_t witebyte);
 static MagickWand* chxj_fixup_size(MagickWand* magick_wand, 
@@ -182,7 +209,7 @@ chxj_img_conv_format(request_rec *r)
     }
   }
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"color=[%d]", spec->color);
-  rv = chxj_send_cache_file(r, tmpfile);
+  rv = chxj_send_cache_file(qsp,r, tmpfile);
   if (rv != OK)
   {
     return rv;
@@ -481,7 +508,7 @@ chxj_fixup_size(MagickWand* magick_wand, request_rec* r, device_table* spec, img
     newh = (int)((double)(newh / 3) * 0.8);
   }
   else
-  if (mode == IMG_CONV_MODE_WALLPAPER)
+  if (mode == IMG_CONV_MODE_WALLPAPER || mode == IMG_CONV_MODE_EZGET)
   {
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"**** detect wallpaper mode ****");
 
@@ -528,7 +555,7 @@ chxj_fixup_size(MagickWand* magick_wand, request_rec* r, device_table* spec, img
   MagickResetIterator(magick_wand);
   while (MagickNextImage(magick_wand) != MagickFalse)
   {
-    if (mode == IMG_CONV_MODE_WALLPAPER)
+    if (mode == IMG_CONV_MODE_WALLPAPER || mode == IMG_CONV_MODE_EZGET)
     {
       status = MagickResizeImage(magick_wand,neww,newh,LanczosFilter,1.0);
       if (status == MagickFalse)
@@ -832,7 +859,7 @@ chxj_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table* spec
 }
 
 static apr_status_t 
-chxj_send_cache_file(request_rec* r, const char* tmpfile)
+chxj_send_cache_file(query_string_param_t* query_string, request_rec* r, const char* tmpfile)
 {
   apr_status_t rv;
   apr_finfo_t  st;
@@ -845,22 +872,101 @@ chxj_send_cache_file(request_rec* r, const char* tmpfile)
   {
     return HTTP_NOT_FOUND;
   }
-  contentLength = apr_psprintf(r->pool, "%d", (int)st.size);
-  apr_table_setn(r->headers_out, "Content-Length", (const char*)contentLength);
 
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"Content-Length:[%d]", (int)st.size);
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"mode:[%d]", query_string->mode);
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"name:[%s]", query_string->name);
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"offset:[%ld]", query_string->offset);
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"count:[%ld]", query_string->count);
 
-  rv = apr_file_open(&fout, tmpfile, 
-    APR_READ | APR_BINARY, APR_OS_DEFAULT, r->pool);
-  if (rv != APR_SUCCESS) 
+  if (query_string->mode != IMG_CONV_MODE_EZGET && query_string->name == NULL)
   {
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"tmpfile open failed[%s]", tmpfile);
-    return HTTP_NOT_FOUND;
+    contentLength = apr_psprintf(r->pool, "%d", (int)st.size);
+    apr_table_setn(r->headers_out, "Content-Length", (const char*)contentLength);
+  
+    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"Content-Length:[%d]", (int)st.size);
+
+    rv = apr_file_open(&fout, tmpfile, 
+      APR_READ | APR_BINARY, APR_OS_DEFAULT, r->pool);
+    if (rv != APR_SUCCESS) 
+    {
+      ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"tmpfile open failed[%s]", tmpfile);
+      return HTTP_NOT_FOUND;
+    }
+
+    ap_send_fd(fout, r, 0, st.size, &sendbyte);
+    apr_file_close(fout);
+    ap_rflush(r);
+    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"send file data[%d]byte", sendbyte);
   }
-  ap_send_fd(fout, r, 0, st.size, &sendbyte);
-  apr_file_close(fout);
-  ap_rflush(r);
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"send file data[%d]byte", sendbyte);
+  else
+  if (query_string->mode == IMG_CONV_MODE_EZGET)
+  {
+    char* name = apr_pstrdup(r->pool, basename(r->filename));
+    name[strlen(name)-4] = 0;
+    if (strcasecmp(r->content_type, "image/jpeg") == 0)
+    {
+
+      ap_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
+      ap_rprintf(r, HDML_FIRST_PAGE, r->uri, name, ".jpg", (long)st.size, "devjaww", name);
+    }
+    else
+    if (strcasecmp(r->content_type, "image/bmp") == 0)
+    {
+      ap_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
+      ap_rprintf(r, HDML_FIRST_PAGE, r->uri, name, ".bmp", (long)st.size, "devabm", name);
+    }
+    else
+    if (strcasecmp(r->content_type, "image/png") == 0)
+    {
+      ap_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
+      ap_rprintf(r, HDML_FIRST_PAGE, r->uri, name, ".png", (long)st.size, "dev8aww", name);
+    }
+    else
+    if (strcasecmp(r->content_type, "image/gif") == 0)
+    {
+      ap_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
+      ap_rprintf(r, HDML_FIRST_PAGE, r->uri, name, ".gif", (long)st.size, "devgi0z", name);
+    }
+  }
+  else
+  if (query_string->mode == IMG_CONV_MODE_WALLPAPER && query_string->name != NULL)
+  {
+    if (query_string->count == -1 && query_string->offset == -1)
+    {
+      ap_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
+      ap_rprintf(r, HDML_SUCCESS_PAGE);
+      ap_rflush(r);
+    }
+    else
+    if (query_string->count == -2 && query_string->offset == -1)
+    {
+      ap_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
+      ap_rprintf(r, HDML_FAIL_PAGE);
+      ap_rflush(r);
+    }
+    else
+    { 
+      ap_set_content_type(r, "application/x-up-download");
+      contentLength = apr_psprintf(r->pool, "%ld", query_string->count);
+      apr_table_setn(r->headers_out, "Content-Length", (const char*)contentLength);
+  
+      ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"Content-Length:[%d]", (int)st.size);
+
+      rv = apr_file_open(&fout, tmpfile, 
+        APR_READ | APR_BINARY, APR_OS_DEFAULT, r->pool);
+      if (rv != APR_SUCCESS) 
+      {
+        ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"tmpfile open failed[%s]", tmpfile);
+        return HTTP_NOT_FOUND;
+      }
+
+      ap_send_fd(fout, r, query_string->offset, query_string->count, &sendbyte);
+      apr_file_close(fout);
+      ap_rflush(r);
+      ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"send file data[%d]byte", sendbyte);
+    }
+  }
+  
   return OK;
 }
 
@@ -882,6 +988,7 @@ chxj_create_workfile(request_rec* r, mod_chxj_config* conf, const char* user_age
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "mode=thumbnail [%s]", fname);
     break;
   case IMG_CONV_MODE_WALLPAPER:
+  case IMG_CONV_MODE_EZGET:
     fname = apr_psprintf(r->pool, "%s.%s.wallpaper", r->filename, user_agent);
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "mode=WallPaper [%s]", fname);
     break;
@@ -1037,6 +1144,9 @@ chxj_get_query_string_param(request_rec *r)
   param = apr_palloc(r->pool, sizeof(query_string_param_t));
   param->mode       = IMG_CONV_MODE_NORMAL;
   param->user_agent = NULL;
+  param->name       = NULL;
+  param->offset     = 0;
+  param->count      = 0;
 
   ap_log_rerror(APLOG_MARK,
                 APLOG_DEBUG,
@@ -1070,6 +1180,11 @@ chxj_get_query_string_param(request_rec *r)
       {
         param->mode = IMG_CONV_MODE_WALLPAPER;
       }
+      else
+      if (strcasecmp(value, "EZGET") == 0)
+      {
+        param->mode = IMG_CONV_MODE_EZGET;
+      }
     }
     else
     if (strcasecmp(name, "user-agent") == 0 && value != NULL)
@@ -1077,6 +1192,32 @@ chxj_get_query_string_param(request_rec *r)
       ap_unescape_url(value);
       param->user_agent = apr_pstrdup(r->pool, value);
     }
+    else
+    if (strcasecmp(name, "name") == 0 && value != NULL)
+    {
+      param->name = apr_pstrdup(r->pool, value);
+    }
+    else
+    if (strcasecmp(name, "offset") == 0 && value != NULL)
+    {
+      if (chxj_chk_numeric(value) == 0)
+      {
+        param->offset = chxj_atoi(value);
+      }
+    }
+    else
+    if (strcasecmp(name, "count") == 0 && value != NULL)
+    {
+      if (chxj_chk_numeric(value) == 0)
+      {
+        param->count = chxj_atoi(value);
+      }
+    }
+  }
+
+  if (param->mode == IMG_CONV_MODE_NORMAL && param->name != NULL)
+  {
+    param->mode = IMG_CONV_MODE_WALLPAPER;
   }
   return param;
 }

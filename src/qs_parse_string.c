@@ -37,7 +37,7 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
 
   for (ii=0; ii<srclen; ii++) 
   {
-    if (is_white_space(src[ii])) 
+    if (doc->parse_mode != PARSE_MODE_NO_PARSE && is_white_space(src[ii])) 
     {
       continue;
     }

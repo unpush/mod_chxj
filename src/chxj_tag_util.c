@@ -548,6 +548,38 @@ chxj_chxjif_is_mine(device_table* spec, Doc* doc, Node* tag)
   return 0;
 }
 
+/**
+ * The value of the DESTLANG attribute is acquired from the tag node of the
+ * object.
+ *
+ * @param doc  [i] The pointer to the Doc structure at the output
+ *                 destination is specified.
+ * @param tag  [i] The tag node to want to acquire the DESTLANG attribute
+ *                 is specified.
+ * @param r    [i] To use POOL, the pointer to request_rec is specified.
+ * @return The value of the DESTLANG attribute is returned. NULL is
+ *         returned when not is.
+ */
+char*
+qs_get_destlang_attr(Doc* doc, Node* tag, request_rec* r)
+{
+  Attr*        attr;
+
+  for (attr = qs_get_attr(doc,tag);
+       attr != NULL; 
+       attr = qs_get_next_attr(doc,attr))
+  {
+    char* name  = qs_get_attr_name(doc,attr);
+    char* value = qs_get_attr_value(doc,attr);
+
+    if (strcasecmp(name, "destlang") == 0)
+    {
+      return apr_pstrdup(r->pool, value);
+    }
+  }
+  return NULL;
+}
+
 /*
  * vim:ts=2 et
  */
