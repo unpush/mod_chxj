@@ -1,0 +1,55 @@
+<project name="" default="build" basedir=".">
+
+    <property file="build.properties"/>
+    <property file="${user.home}/build.properties"/>
+
+    <property name="app.name" value="chxjfilter" />
+    <property name="app.version" value="0.0.1" />
+
+    <property name="catalina.home" value="/usr/local/tomcat" /> <!-- UPDATE THIS! -->
+
+    <property name="src.home" value="src" />
+    <property name="lib.home" value="lib" />
+
+    <property name="build.home" value="build" />
+    <property name="dist.home" value="dist" />
+
+    <property name="encoding" value="Shift_JIS" />
+
+    <path id="compile.classpath">
+        <!-- Include all elements that Tomcat exposes to applications -->
+	<pathelement location="${catalina.home}/common/classes" />
+        <fileset dir="${catalina.home}/common/endorsed">
+            <include name="*.jar" />
+        </fileset>
+        <fileset dir="${catalina.home}/common/lib">
+            <include name="*.jar" />
+        </fileset>
+        <pathelement location="${catalina.home}/shared/classes" />
+        <fileset dir="${catalina.home}/shared/lib">
+            <include name="*.jar" />
+        </fileset>
+    </path>
+
+    <target name="build">
+        <mkdir dir="${build.home}" />
+        <javac srcdir="${src.home}"
+            destdir="${build.home}"
+            encoding="${encoding}"
+            debug="on">
+            <classpath refid="compile.classpath" />
+        </javac>
+    </target>
+
+    <target name="dist" depends="build">
+        <mkdir dir="${dist.home}" />
+        <jar jarfile="${dist.home}/${app.name}-${app.version}.jar"
+            basedir="${build.home}" />
+    </target>
+
+    <target name="clean">
+        <delete dir="${dist.home}" />
+        <delete dir="${build.home}" />
+    </target>
+
+</project>

@@ -1,0 +1,409 @@
+/*
+ * Copyright (C) 2005 QSDN,Inc. All rights reserved.
+ * Copyright (C) 2005 Atsushi Konno All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+#include "mod_chxj.h"
+#include <qs_ignore_sp.h>
+#include <qs_log.h>
+#include <qs_malloc.h>
+#include <qs_parse_attr.h>
+#include <qs_parse_file.h>
+#include <qs_parse_string.h>
+#include <qs_parse_tag.h>
+#include "chxj_load_device_data.h"
+#include "chxj_str_util.h"
+
+
+static void set_devices_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node) ;
+static void set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node) ;
+static void set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node) ;
+/**
+ * load device_data.xml
+ */
+void
+chxj_load_device_data(Doc* doc, apr_pool_t *p, mod_chxj_config* conf) 
+{
+  conf->devices = NULL;
+  set_devices_data(doc, p, conf,qs_get_root(doc));
+#if 0
+  do {
+    FILE* fp = fopen("/tmp/load_device.log", "a");
+    device_table_list* ll = conf->devices;
+    for (;ll; ll= ll->next)
+    {
+      device_table* dt;
+      fprintf(fp, "user_agent:[%s]\n", ll->pattern);
+      for (dt = ll->table; dt; dt = dt->next)
+      {
+        fprintf(fp, "device_id:[%s] ", dt->device_id);
+        fprintf(fp, "device_name:[%s] ", dt->device_name);
+        fprintf(fp, "html_spec_type:[%d] ", dt->html_spec_type);
+        fprintf(fp, "width:[%d] ", dt->width);
+        fprintf(fp, "heigh:[%d] ", dt->heigh);
+        fprintf(fp, "color:[%d] ", dt->color);
+        fprintf(fp, "\n");
+      }
+    }
+    fclose(fp);
+    break;
+  } while(0);
+#endif
+}
+
+/**
+ * <devices>
+ */
+static void
+set_devices_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node) 
+{
+  Node* child;
+  for (child = qs_get_child_node(doc,node); 
+       child ; 
+       child = qs_get_next_node(doc,child)) 
+  {
+    char* name = qs_get_node_name(doc,child);
+    if (strcasecmp(name, "devices") == 0) 
+    {
+      set_user_agent_data(doc, p, conf, child);
+    }
+  }
+}
+
+/**
+ * <user_agent>
+ */
+static void
+set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node) 
+{
+  Node* child;
+  device_table_list* t;
+
+  for (child = qs_get_child_node(doc,node);
+       child ;
+       child = qs_get_next_node(doc,child)) 
+  {
+    char* name = qs_get_node_name(doc,child);
+
+    if (strcasecmp(name, "user_agent") == 0 ) 
+    {
+      Attr* attr;
+      device_table_list* dtl;
+
+      if (conf->devices == NULL) 
+      {
+        conf->devices = apr_pcalloc(p, sizeof(device_table_list));
+        conf->devices->next    = NULL;
+        conf->devices->pattern = NULL;
+        conf->devices->table   = NULL;
+        conf->devices->tail    = NULL;
+        dtl = conf->devices;
+      }
+      else 
+      {
+        for (t = conf->devices; t ; t = t->next) 
+        {
+          if (t->next == NULL) 
+          {
+            break;
+          }
+        }
+        t->next = apr_pcalloc(p, sizeof(device_table_list));
+        t->next->next = NULL;
+        t->next->pattern = NULL;
+        t->next->table = NULL;
+        t->next->tail = NULL;
+        dtl = t->next;
+      }
+
+      for (attr = qs_get_attr(doc,child); attr ; attr = qs_get_next_attr(doc,attr)) 
+      {
+        if (strcasecmp(qs_get_attr_name(doc,attr), "pattern") == 0) 
+        {
+            dtl->pattern = apr_pstrdup(p, qs_get_attr_value(doc,attr));
+        }
+      }
+      set_device_data(doc, p, dtl, child);
+    }
+  }
+}
+
+static void
+set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node) 
+{
+  Node* child;
+  device_table* dt;
+
+  dt = apr_pcalloc(p, sizeof(device_table));
+  dt->next = NULL;
+  for (child = qs_get_child_node(doc,node); 
+       child ;
+       child = qs_get_next_node(doc,child)) 
+  {
+    char* name = qs_get_node_name(doc,child);
+    if (strcasecmp(name, "device") == 0) 
+    {
+      set_device_data(doc,p, dtl, child);
+    }
+    else
+    if (strcasecmp(name, "device_id") == 0) 
+    {
+      Node* ch = qs_get_child_node(doc, child);
+      if (ch != NULL 
+      &&  strcasecmp(qs_get_node_name(doc,ch), "text") == 0) 
+      {
+        dt->device_id = apr_pstrdup(p, qs_get_node_value(doc, ch));
+      }
+    }
+    else
+    if (strcasecmp(name, "device_name") == 0) 
+    {
+      Node* ch = qs_get_child_node(doc, child);
+      if (ch != NULL 
+      &&  strcasecmp(qs_get_node_name(doc,ch), "text") == 0) 
+      {
+        dt->device_name = apr_pstrdup(p, qs_get_node_value(doc, ch));
+      }
+    }
+    else
+    if (strcasecmp(name, "html_spec_type") == 0) 
+    {
+      Node* ch = qs_get_child_node(doc, child);
+      if (ch != NULL 
+      &&  strcasecmp(qs_get_node_name(doc,ch), "text") == 0) 
+      {
+        char* vv = qs_get_node_value(doc, ch);
+        if (strcasecmp(vv, "xhtml_mobile_1_0") == 0) 
+        {
+          dt->html_spec_type = CHXJ_SPEC_XHtml_Mobile_1_0;
+        }
+        else
+        if (strcasecmp(vv, "chtml_1_0") == 0) 
+        {
+          dt->html_spec_type = CHXJ_SPEC_Chtml_1_0;
+        }
+        else
+        if (strcasecmp(vv, "chtml_2_0") == 0) 
+        {
+          dt->html_spec_type = CHXJ_SPEC_Chtml_2_0;
+        }
+        else
+        if (strcasecmp(vv, "chtml_3_0") == 0) 
+        {
+          dt->html_spec_type = CHXJ_SPEC_Chtml_3_0;
+        }
+        else
+        if (strcasecmp(vv, "chtml_4_0") == 0) 
+        {
+          dt->html_spec_type = CHXJ_SPEC_Chtml_4_0;
+        }
+        else
+        if (strcasecmp(vv, "chtml_5_0") == 0) 
+        {
+          dt->html_spec_type = CHXJ_SPEC_Chtml_5_0;
+        }
+        else
+        if (strcasecmp(vv, "hdml") == 0) 
+        {
+          dt->html_spec_type = CHXJ_SPEC_Hdml;
+        }
+        else
+        if (strcasecmp(vv, "jhtml") == 0) 
+        {
+          dt->html_spec_type = CHXJ_SPEC_Jhtml;
+        }
+      }
+    }
+    else 
+    if (strcasecmp(name, "width") == 0) 
+    {
+      Node* ch = qs_get_child_node(doc, child);
+      if (ch != NULL && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) 
+      {
+        char *vv = qs_get_node_value(doc,ch);
+        int ii;
+        for (ii=0; ii<strlen(vv); ii++) 
+        {
+          if ((vv[ii] >= '1' && vv[ii] <= '9') || vv[ii] == '0') 
+          {
+            continue;
+          }
+          break;
+        }
+        if (ii == strlen(vv)) 
+        {
+          dt->width = atoi(qs_get_node_value(doc,ch));
+        }
+        else 
+        {
+          dt->width = 0;
+        }
+      }
+    }
+    else
+    if (strcasecmp(name, "heigh") == 0) 
+    {
+      Node* ch = qs_get_child_node(doc, child);
+      if (ch != NULL && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) 
+      {
+        char *vv = qs_get_node_value(doc,ch);
+        int ii;
+        for (ii=0; ii<strlen(vv); ii++) 
+        {
+          if ((vv[ii] >= '1' && vv[ii] <= '9') || vv[ii] == '0') 
+          {
+            continue;
+          }
+          break;
+        }
+        if (ii == strlen(vv)) 
+        {
+          dt->heigh = atoi(qs_get_node_value(doc,ch));
+        }
+        else 
+        {
+          dt->heigh = 0;
+        }
+      }
+    }
+    else
+    if (strcasecmp(name, "gif") == 0) 
+    {
+      Node* ch = qs_get_child_node(doc, child);
+      if (ch != NULL && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) 
+      {
+        char *vv = qs_get_node_value(doc,ch);
+        if (strcasecmp(vv, "true") == 0) 
+        {
+          dt->available_gif = 1;
+        }
+        else
+        {
+          dt->available_gif = 0;
+        }
+      }
+    }
+    else
+    if (strcasecmp(name, "jpeg") == 0 || strcasecmp(name, "jpg") == 0) 
+    {
+      Node* ch = qs_get_child_node(doc, child);
+      if (ch != NULL && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) 
+      {
+        char *vv = qs_get_node_value(doc,ch);
+        if (strcasecmp(vv, "true") == 0) 
+        {
+          dt->available_jpeg = 1;
+        }
+        else 
+        {
+          dt->available_jpeg = 0;
+        }
+      }
+    }
+    else
+    if (strcasecmp(name, "png") == 0) 
+    {
+      Node* ch = qs_get_child_node(doc, child);
+      if (ch != NULL && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) 
+      {
+        char *vv = qs_get_node_value(doc,ch);
+        if (strcasecmp(vv, "true") == 0) 
+        {
+          dt->available_png = 1;
+        }
+        else
+        {
+          dt->available_png = 0;
+        }
+      }
+    }
+    else
+    if (strcasecmp(name, "bmp2") == 0) 
+    {
+      Node* ch = qs_get_child_node(doc, child);
+      if (ch != NULL && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) 
+      {
+        char *vv = qs_get_node_value(doc,ch);
+        if (strcasecmp(vv, "true") == 0) 
+        {
+          dt->available_bmp2 = 1;
+        }
+        else
+        {
+          dt->available_bmp2 = 0;
+        }
+      }
+    }
+    else
+    if (strcasecmp(name, "bmp4") == 0) 
+    {
+      Node* ch = qs_get_child_node(doc, child);
+      if (ch != NULL && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) 
+      {
+        char *vv = qs_get_node_value(doc,ch);
+        if (strcasecmp(vv, "true") == 0) 
+        {
+          dt->available_bmp4 = 1;
+        }
+        else
+        {
+          dt->available_bmp4 = 0;
+        }
+      }
+    }
+    else
+    if (strcasecmp(name, "color") == 0) 
+    {
+      Node* ch = qs_get_child_node(doc, child);
+      if (ch != NULL && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) 
+      {
+        char *vv = qs_get_node_value(doc,ch);
+        if (chxj_chk_numeric(vv) != 0)
+        {
+          dt->color = 0;
+        }
+        else 
+        {
+          dt->color = chxj_atoi(vv);
+        }
+      }
+    }
+    else
+    if (strcasecmp(name, "emoji_type") == 0) 
+    {
+      Node* ch = qs_get_child_node(doc, child);
+      if (ch != NULL && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) 
+      {
+        dt->emoji_type = apr_pstrdup(p, qs_get_node_value(doc, ch));
+      }
+    }
+  }
+
+  if (dt->device_id != NULL) 
+  {
+    if (dtl->table == NULL) 
+    {
+      dtl->table = dt;
+      dtl->tail = dt;
+    }
+    else 
+    {
+      dtl->tail->next = dt;
+      dtl->tail = dt;
+    }
+  }
+}
+/*
+ * vim:ts=2 et
+ */
