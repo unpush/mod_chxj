@@ -569,6 +569,7 @@ chxj_init_module_kill(void *data)
 {
   server_rec *base_server = (server_rec *)data;
   mod_chxj_global_config* conf;
+  void*                   param;
 
   ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, base_server, 
                   "start chxj_init_module_kill()");
@@ -603,10 +604,9 @@ chxj_init_module_kill(void *data)
 }
 
 static mod_chxj_global_config*
-chxj_global_config_create(server_rec* s)
+chxj_global_config_create(apr_pool_t* pool, server_rec* s)
 {
   apr_status_t    sts;
-  apr_pool_t      *pool = s->process->pool;
   void*           shm_segment;
   apr_size_t      shm_segsize;
   int*            shm;
@@ -619,10 +619,9 @@ chxj_global_config_create(server_rec* s)
 
   apr_pool_userdata_get(&param, CHXJ_MOD_CONFIG_KEY, pool);
   conf = (mod_chxj_global_config*)param;
-
   apr_pool_cleanup_register(pool, s,
                                chxj_init_module_kill,
-                               chxj_init_module_kill);
+                               apr_pool_cleanup_null);
   if (conf)
   {
     /*------------------------------------------------------------------------*/
@@ -701,12 +700,8 @@ chxj_init_module(apr_pool_t *p,
                   apr_pool_t *ptemp, 
                   server_rec *s)
 {
-  mod_chxj_global_config* conf;
-
   ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, s,
                   "start chxj_init_module()");
-
-  conf = chxj_global_config_create(s);
 
   ap_add_version_component(p, CHXJ_VERSION_PREFIX CHXJ_VERSION);
 
@@ -725,9 +720,20 @@ chxj_config_server_create(apr_pool_t *p, server_rec *s)
 {
   mod_chxj_global_config *gc;
 
-  gc = chxj_global_config_create(s);
+  gc = chxj_global_config_create(p,s);
 
   return gc;
+}
+
+static int chxj_convert_images(request_rec *r)
+{
+  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "chxj_convert_images Yahoo!![%s]", r->the_request);
+
+  if (strcasecmp(r->handler, "keitai-picture"))
+  {
+    return DECLINED;
+  }
+  return DECLINED;
 }
 
 /**
@@ -752,10 +758,7 @@ chxj_register_hooks(apr_pool_t *p)
                       chxj_input_filter, 
                       NULL, 
                       AP_FTYPE_RESOURCE);
-#if 0
-                      AP_FTYPE_CONNECTION);
-                      AP_FTYPE_PROTOCOL);
-#endif
+  ap_hook_handler(chxj_convert_images, NULL, NULL, APR_HOOK_MIDDLE);
 }
 
 /**
