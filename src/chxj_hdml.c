@@ -20,8 +20,9 @@
 #include <unistd.h>
 #include "chxj_img_conv.h"
 #include "chxj_dump.h"
-#define CHECK_BOX_PREFIX "_chxj_c_"
-#define RADIO_BUTTON_PREFIX "_chxj_r_"
+#define CHECK_BOX_PREFIX     "_chxj_c_"
+#define RADIO_BUTTON_PREFIX  "_chxj_r_"
+#define SUBMIT_BUTTON_PREFIX "_chxj_s_"
 
 static void chxj_init_hdml(Hdml* hdml, Doc* doc, request_rec* r, device_table* spec);
 static char* hdml_1_0_node_exchange   (Hdml* doc, Node* node, int indent);
@@ -242,6 +243,11 @@ chxj_init_hdml(Hdml* hdml, Doc* doc, request_rec* r, device_table* spec)
     hdml->radio_name_list[ii] = NULL;
     hdml->radio_out_cnt[ii] = 0;
     hdml->radio_checked_value[ii] = NULL;
+  }
+
+  for (ii=0; ii<MAX_SUBMIT_BUTTON_COUNT; ii++)
+  {
+    hdml->submit_button[ii] = NULL;
   }
   hdml->init_vars      = qs_alloc_zero_byte_string(r);
 
@@ -1587,7 +1593,9 @@ hdml_do_input_submit_tag(Hdml* hdml, Node* tag)
                             ap_escape_uri(r->pool,val)));
     if (strstr(hdml->postdata[hdml->pure_form_cnt], nm) == NULL) 
     {
-      qs_output_to_postdata(hdml, apr_psprintf(r->pool,"%s=$%s", nm, nm));
+      qs_output_to_postdata(hdml, 
+                      apr_psprintf(r->pool,"%s%s=$%s", 
+                              SUBMIT_BUTTON_PREFIX, nm, nm));
     }
   }
   qs_output_to_hdml_out(hdml, ">"         );

@@ -88,7 +88,8 @@ public class CHXJRequestWrapper
       String key = token.substring(0, p);
       String val = token.substring(p + 1);
       if (key.startsWith("_chxj_c_")
-      ||  key.startsWith("_chxj_r_")) 
+      ||  key.startsWith("_chxj_r_")
+      ||  key.startsWith("_chxj_s_")) 
       {
         key = key.substring(8);
         if (key.length() == 0 ||  val.length() == 0)
@@ -205,7 +206,8 @@ public class CHXJRequestWrapper
         }
 
         if (key.startsWith("_chxj_c_")
-        ||  key.startsWith("_chxj_r_"))
+        ||  key.startsWith("_chxj_r_")
+        ||  key.startsWith("_chxj_s_"))
         {
           if (key.substring(8).length() == 0)
           {
