@@ -38,7 +38,7 @@ typedef struct Hdml_t {
   int     in_center;
   char*   card;
   int     card_cnt;
-  int     form_cnt;
+  apr_time_t   form_cnt;
 
   /*--------------------------------------------------------------------------*/
   /* If the title tag is found, it becomes ``1''.                             */
