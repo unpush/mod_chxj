@@ -60,8 +60,8 @@ Installing mod_chxj...
      <Location /chxj>
        SetOutputFilter chxj_output_filter
        SetInputFilter  chxj_input_filter
-       LoadDeviceData  /etc/apache2/chxj/device_data.xml
-       LoadEmojiData   /etc/apache2/chxj/emoji.xml
+       ChxjLoadDeviceData  /etc/apache2/chxj/device_data.xml
+       ChxjLoadEmojiData   /etc/apache2/chxj/emoji.xml
      </Location>
 
   2) apacheの再起動。
@@ -73,8 +73,8 @@ Installing mod_chxj...
      <Location /chxj>
        SetOutputFilter chxj_output_filter
        SetInputFilter  chxj_input_filter
-       LoadDeviceData  /etc/apache2/chxj/device_data.xml
-       LoadEmojiData   /etc/apache2/chxj/emoji.xml
+       ChxjLoadDeviceData  /etc/apache2/chxj/device_data.xml
+       ChxjLoadEmojiData   /etc/apache2/chxj/emoji.xml
      </Location>
 
   2) apacheの再起動。
@@ -86,8 +86,8 @@ Installing mod_chxj...
      LoadModule chxj_module /usr/lib/apache2/modules/mod_chxj.so
      <Location /chxj>
        SetOutputFilter chxj_output_filter
-       LoadDeviceData  /etc/apache2/chxj/device_data.xml
-       LoadEmojiData   /etc/apache2/chxj/emoji.xml
+       ChxjLoadDeviceData  /etc/apache2/chxj/device_data.xml
+       ChxjLoadEmojiData   /etc/apache2/chxj/emoji.xml
      </Location>
 
    2) chxjfilter-0.0.1.jarを生成します。
