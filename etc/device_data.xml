@@ -8605,6 +8605,34 @@
   <!--=======================================================================-->
   <!-- AirH"                                                                 -->
   <!--=======================================================================-->
+  <user_agent pattern="Mozilla/.+DDIPOCKET;.+/([^/]+)/.+">
+<!--
+PC Mode
+Mozilla/4.0 (compatible; MSIE 6.0; KYOCERA/AH-K3001V/1.4.1.67.000000/0.1) Opera 7.0  [ja]
+-->
+    <device>
+      <device_id>AH-K3001V</device_id>
+      <device_name>AH-K3001V</device_name>
+      <html_spec_type>CHTML_5_0</html_spec_type>
+      <width>240</width>
+      <heigh>290</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>true</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>300000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+  </user_agent>
+
+
 </devices>
 <!--
 vim:ts=2 et

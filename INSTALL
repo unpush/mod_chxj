@@ -5,6 +5,7 @@ Installing mod_chxj...
   2) apache2.0用のapxsを用意する。
   3) apr(Apache Portable Runtime)ライブラリとそのヘッダファイル郡を用意する。
   4) automake、autoconf、libtoolを用意する。（動作する状態にする）
+  5) ImageMagick
 
 2. mod_chxjインストール手順
 ※ "$"はプロンプトをあらわします。
