@@ -117,3 +117,55 @@ Installing mod_chxj...
 
 
   <<画像自動変換機能を使用する場合>>
+  1) httpd.confに以下を追加します。
+
+    ChxjImageUri
+    ChxjImageCacheDir
+    ChxjImageCopyright
+
+    1-1) ChxjImageUri
+      mod_chxjの画像変換ハンドラを起動させたいリクエストＵＲＬのパターンを指定します。
+      パターンのルールは、REGEXに基づきます。
+ 
+      ex)
+        ChxjImageUri ^/img/*
+
+      URLが /img/ で始まっているリクエストに対してハンドラが起動されます。
+
+
+    1-2) ChxjImageCacheDir
+      mod_chxj画像変換ハンドラが使用する変換後の画像をおいておくディレクトリを指定します。
+      デフォルトは/tmp。
+
+      ex)
+        ChxjImageCacheDir /tmp
+
+      mod_chxjに画像変換キャッシュとして/tmpを使用するよう指示します。
+
+
+    1-3) ChxjImageCopyright
+      mod_chxjの画像変換ハンドラに、転送禁止設定を行うよう指示します。
+      パラメータとして任意の文字列をとります。
+      ChxjImageCopyrightディレクティブで指定された文字列は、それぞれのイメージの
+      コメント部に埋め込まれます。
+
+      ex)
+        ChxjImageCopyright "A.Konno"
+
+       mod_chxjに転送禁止設定を行うよう指示しています。
+       変換後イメージのコメント部分には、キャリア毎に以下の文字列を埋め込みます。
+
+       AU の場合
+       kddi_copyright=on,A.Konno
+
+       DoCoMoの場合
+       copy="NO",A.Konno
+
+       Vodafoneの場合は、レスポンスヘッダに
+
+         x-jphone-copyright:no-transfer
+
+       を埋め込みます。
+
+       ※Vodafoneの場合は、リクエストＵＲＬの最後が.pnzか、.jpzで終わるようにダミーを
+       付けなければなりません。
