@@ -1,4 +1,4 @@
-<?xml encoding="EUC-JP" ?>
+<?xml version="1.0" ?>
 <devices>
   <!--=======================================================================-->
   <!-- AU                                                                    -->
@@ -95,7 +95,7 @@
     </device>
     <device>
       <device_id>KC31</device_id>
-      <device_name>W11K</device_id>
+      <device_name>W11K</device_name>
       <html_spec_type>XHTML_MOBILE_1_0</html_spec_type>
       <width>233</width>
       <heigh>268</heigh>
