@@ -16,6 +16,7 @@
  */
 #include "mod_chxj.h"
 #include "ap_regex.h"
+
 static device_table  UNKNOWN_DEVICE      = {
     NULL, "","UNKNOWN", CHXJ_SPEC_UNKNOWN,  0,  0,0,0,0,0,0,0, ""};
 
