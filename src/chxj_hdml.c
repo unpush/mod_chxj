@@ -209,6 +209,7 @@ chxj_init_hdml(Hdml* hdml, Doc* doc, request_rec* r, device_table* spec)
   hdml->card     = qs_alloc_zero_byte_string(r);
   hdml->spec     = spec;
   hdml->conf     = ap_get_module_config(r->per_dir_config, &chxj_module);
+  hdml->doc->parse_mode = PARSE_MODE_CHTML;
 
   for (ii=0; ii<MAX_FORM_COUNT; ii++) 
   {

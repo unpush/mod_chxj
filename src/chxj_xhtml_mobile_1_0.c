@@ -149,6 +149,7 @@ chxj_init_xhtml(Xhtml* xhtml, Doc* doc, request_rec* r, device_table* spec)
   xhtml->spec = spec;
   xhtml->out  = qs_alloc_zero_byte_string(r);
   xhtml->conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  xhtml->doc->parse_mode = PARSE_MODE_CHTML;
 }
 
 /**

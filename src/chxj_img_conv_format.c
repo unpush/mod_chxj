@@ -80,6 +80,7 @@ static unsigned short  AU_CRC_TBL[256] = {
 };
 
 
+
 static char* chxj_create_workfile(request_rec* r, 
                                   mod_chxj_config* conf, 
                                   const char* user_agent, 
@@ -149,6 +150,10 @@ chxj_img_conv_format(request_rec *r)
                   spec->device_name);
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "User-Agent=[%s]", 
                   user_agent);
+  if (spec->width == 0 || spec->heigh == 0)
+  {
+    return HTTP_NOT_FOUND;
+  }
 
   /*--------------------------------------------------------------------------*/
   /* Create Workfile Name                                                     */
@@ -486,6 +491,7 @@ chxj_fixup_size(MagickWand* magick_wand, request_rec* r, device_table* spec, img
       c_heigh = spec->wp_heigh;
     }
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"calc new width and height");
+#if 0
     if (neww > newh)
     {
       newh = (int)((double)newh * (double)((double)c_width / (double)neww));
@@ -496,6 +502,10 @@ chxj_fixup_size(MagickWand* magick_wand, request_rec* r, device_table* spec, img
       neww = (int)((double)neww * (double)((double)c_heigh / (double)newh));
       newh = (int)((double)newh * (double)((double)c_heigh / (double)newh));
     }
+#else
+    neww = (int)((double)neww * (double)((double)c_heigh / (double)newh));
+    newh = (int)((double)newh * (double)((double)c_heigh / (double)newh));
+#endif
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"newh = [%d] neww = [%d]", newh, neww);
   }
   else

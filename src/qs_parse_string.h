@@ -81,6 +81,15 @@
                         &&  (strcasecmp(c, "!--"      ) != 0))
 
 /**
+ * It is judged whether the tag of the object has the child element. 
+ * The "<option>" tag has the child. Please write </ option >. 
+ */
+#define has_child_hdml(c)  ((strcasecmp(c, "center"     ) != 0) \
+                        &&  (strcasecmp(c, "br"         ) != 0) \
+                        &&  (strcasecmp(c, "action"     ) != 0) \
+                        &&  (strcasecmp(c, "!--"      ) != 0))
+
+/**
  * The structure of the attribute is defined.
  */
 typedef struct _attr {
@@ -112,6 +121,10 @@ typedef struct pointer_table_t {
 } Pointer_Table;
 
 
+typedef enum chxj_parse_mode_t {
+  PARSE_MODE_CHTML=0,
+  PARSE_MODE_NO_PARSE,
+} ParseMode_t;
 
 typedef struct _doc {
   Node*         now_parent_node;
@@ -121,6 +134,7 @@ typedef struct _doc {
   unsigned int  alloc_size;
 
   Pointer_Table* pointer_table;
+  ParseMode_t    parse_mode;
 
 #ifndef __NON_MOD_CHXJ__
   request_rec* r;

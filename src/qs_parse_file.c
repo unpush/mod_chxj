@@ -57,6 +57,8 @@ qs_parse_file(Doc* doc, const char* filename) {
     close(fd);
     return return_value;
   }
+
+  doc->parse_mode = PARSE_MODE_CHTML;
   return_value = qs_parse_string(doc, tgt, st.st_size);
 
   munmap(tgt,st.st_size);
