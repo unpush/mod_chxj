@@ -29,20 +29,7 @@ Please specify the --with-apache-header option. And, please specify the place of
 
 ])
 fi
-AC_ARG_WITH(apr-header, [  --with-apr-header=ARG    The directory with the header file of apr library is specified. ]) 
-if test "x$with_apr_header" = "x"; then
-    AC_MSG_ERROR([
-Please specify the --with-apr-header option.
-])
-fi
-if test "x$with_apr_header" = "xyes"; then
-    AC_MSG_ERROR([
-Please specify the --with-apr-header option. And, please specify the place of the header file. 
 
-])
-fi
-
-AC_ARG_WITH(apr-header,   [  --with-apr-header=ARG    The directory with the header file of apr library is specified. ]) 
 AC_ARG_ENABLE(img-conv-f, [  --enable-img-conv-f      Please specify it when you change the file name of the image being written in the 
 source by the automatic operation.])
 if test "x$enable_img_conv_f" = "xyes"; then
@@ -75,25 +62,23 @@ if test "x$LIBTOOL" = "xno"; then
 fi
 
 
-#AC_PATH_PROG(GDLIB_CONFIG, gdlib-config, no
-#   /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
-#if text "x$GDLIB_CONFIG" = "xno" ; then
-#    AC_MSG_ERROR([gdlib-config not found.])
-#fi
-AC_PATH_PROG(WAND_CONFIG, Wand-config, no
+AC_PATH_PROG(WAND_CONFIG, Wand-config, no,
    /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
-if text "x$WAND_CONFIG" = "xno" ; then
+if test "x$WAND_CONFIG" = "xno" ; then
     AC_MSG_ERROR([wand-config not found.])
 fi
 
+AC_PATH_PROG(APR_CONFIG, apr-config, no,
+   /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
+if test "x$APR_CONFIG" = "xno" ; then
+    AC_MSG_ERROR([apr-config not found.])
+fi
 
-#LIBS="${LIBS} `${GDLIB_CONFIG} --libs` -lgd"
-#CFLAGS="${CFLAGS} `${GDLIB_CONFIG} --cflags`"
-#
-LIBS="${LIBS} `${WAND_CONFIG} --ldflags` `${WAND_CONFIG} --libs` -lgd"
+LIBS="${LIBS} `${WAND_CONFIG} --ldflags` `${WAND_CONFIG} --libs` "
+LIBS="${LIBS} `${APR_CONFIG} --ldflags` `${APR_CONFIG} --libs` "
 CFLAGS="${CFLAGS} `${WAND_CONFIG} --cppflags` `${WAND_CONFIG} --cflags`"
+CFLAGS="${CFLAGS} -I`${APR_CONFIG} --includedir` `${APR_CONFIG} --cflags` `${APR_CONFIG} --cppflags`"
 AC_SUBST(with_apache_header)
-AC_SUBST(with_apr_header)
 AC_SUBST(CC)
 AC_SUBST(QDEFS)
 AC_SUBST(DDEFS)
