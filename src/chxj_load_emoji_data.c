@@ -28,6 +28,7 @@ static char* load_emoji_ezweb_tag( Doc* doc, apr_pool_t* p, emoji_t* em, Node* n
 static char* load_emoji_jphone_tag( Doc* doc, apr_pool_t* p, emoji_t* em, Node* node);
 static char hexstring_to_byte(char* s);
 
+
 /**
  * load emoji.xml
  */
