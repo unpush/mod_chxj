@@ -847,11 +847,12 @@ static int chxj_convert_images(request_rec *r)
 
   if (spec->color <= 256)
   {
-    gdImageTrueColorToPalette(im_out, 0, spec->color); 
+    gdImageTrueColorToPalette(im_out, 1, spec->color); 
   }
   else
   if (spec->color == 4096)
   {
+    gdImageTrueColorToPalette(im_out, 1, 256); 
   }
   else
   if (spec->color == 65536)
@@ -869,6 +870,8 @@ static int chxj_convert_images(request_rec *r)
   fout = fopen(tmpfile,"wb");
   if (fout == NULL)
   {
+    gdImageDestroy(im_in);
+    gdImageDestroy(im_out);
     ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,"file open error.[%s]", tmpfile);
     return HTTP_INTERNAL_SERVER_ERROR;
   }
@@ -900,6 +903,8 @@ static int chxj_convert_images(request_rec *r)
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert to bmp(unsupported)");
   }
   fclose(fout);
+  gdImageDestroy(im_in);
+  gdImageDestroy(im_out);
 
 
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"color=[%d]", spec->color);
