@@ -95,9 +95,6 @@ chxj_exchange_hdml(request_rec* r,
   char*     buf = NULL;
   Doc       doc;
   Hdml      hdml;
-  void*     shm_segment;
-  int*      shm;
-  mod_chxj_global_config* gconf;
 
   /*--------------------------------------------------------------------------*/
   /* initialize hdml structure                                                */
@@ -179,21 +176,6 @@ chxj_exchange_hdml(request_rec* r,
   *dstlen = hdml.out_len;
 
   /*--------------------------------------------------------------------------*/
-  /* for HDML Counter                                                         */
-  /*--------------------------------------------------------------------------*/
-  gconf = ap_get_module_config(r->server->module_config, &chxj_module);
-
-  apr_global_mutex_lock(gconf->client_lock);
-  shm_segment = apr_shm_baseaddr_get(gconf->client_shm);
-  shm = (int*)shm_segment;
-  hdml.form_cnt = *shm;
-  *shm = hdml.form_cnt + hdml.pure_form_cnt + 1;
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
-                  "form_cnt[%d] -> [%d]", hdml.form_cnt,
-                                          *shm);
-  apr_global_mutex_unlock(gconf->client_lock); 
-
-  /*--------------------------------------------------------------------------*/
   /* Null is set at the end of the character string to make sure.             */
   /*--------------------------------------------------------------------------*/
   dst[hdml.out_len] = 0;
@@ -215,9 +197,6 @@ chxj_init_hdml(Hdml* hdml, Doc* doc, request_rec* r, device_table* spec)
 {
   int     ii;
   int     jj;
-  void*   shm_segment;
-  int*    shm;
-  mod_chxj_global_config* gconf;
 
   /*--------------------------------------------------------------------------*/
   /* init hdml structure value                                                */
@@ -253,16 +232,7 @@ chxj_init_hdml(Hdml* hdml, Doc* doc, request_rec* r, device_table* spec)
 
   doc->r               = r;
 
-  /*--------------------------------------------------------------------------*/
-  /* for HDML Counter                                                         */
-  /*--------------------------------------------------------------------------*/
-  gconf = ap_get_module_config(r->server->module_config, &chxj_module);
-  apr_global_mutex_lock(gconf->client_lock);
-  shm_segment = apr_shm_baseaddr_get(gconf->client_shm);
-  shm = (int*)shm_segment;
-  hdml->form_cnt = *shm;
-  apr_global_mutex_unlock(gconf->client_lock); 
-
+  hdml->form_cnt = apr_time_now();
   hdml->out = qs_alloc_zero_byte_string(r);
 }
 
@@ -2473,14 +2443,17 @@ static char*
 qs_get_form_no(request_rec* r, Hdml* hdml) 
 {
   char *result;
-  int  fc = hdml->form_cnt + hdml->pure_form_cnt;
+  apr_time_exp_t tm;
+  unsigned long fc = hdml->form_cnt;
 
-  result = apr_pcalloc(r->pool, 4);
-  memset(result, 0, 4);
+  apr_time_exp_tz(&tm, hdml->form_cnt, 0);
 
-  result[0] = 'A' + ((fc / 100) % 26);
+  result = apr_psprintf(r->pool, "%c",(int)('A' + ((fc / 100) % 26)));
   result = apr_pstrcat(r->pool, result, 
-                  apr_psprintf(r->pool, "%02d", (fc % 100)), NULL);
+                  apr_psprintf(r->pool, "%02d%02d%02d", 
+                          tm.tm_hour,
+                          tm.tm_min,
+                          tm.tm_sec), NULL);
   return result;
 }
 

@@ -74,11 +74,7 @@
 #define CHXJ_VERSION_PREFIX PACKAGE_NAME "/"
 #define CHXJ_VERSION        PACKAGE_VERSION
 
-
-#define DEF_SHMEM_SIZE  (4)
 #define DEFAULT_IMAGE_CACHE_DIR "/tmp"
-
-static long shmem_size  = DEF_SHMEM_SIZE;
 
 static const char* HTTP_USER_AGENT = "User-Agent";
 static char* chxj_create_workfile(request_rec* r, mod_chxj_config* conf);
@@ -583,25 +579,6 @@ chxj_init_module_kill(void *data)
   /*--------------------------------------------------------------------------*/
   conf = ap_get_module_config(base_server->module_config, &chxj_module);
 
-  /*--------------------------------------------------------------------------*/
-  /* The shared memory is liberated.                                          */
-  /*--------------------------------------------------------------------------*/
-  if (conf != NULL&& conf->client_shm != NULL) 
-  {
-    apr_shm_destroy(conf->client_shm);
-    conf->client_shm = NULL;
-    ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, base_server, 
-                  "destroy shared memory.");
-  }
-
-  if (conf != NULL && conf->client_lock != NULL)
-  {
-    apr_global_mutex_destroy(conf->client_lock);
-    conf->client_lock = NULL;
-    ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, base_server, 
-                  "destroy mutex.");
-  }
-
   ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, base_server, 
                   "end chxj_init_module_kill()");
   return APR_SUCCESS;
@@ -610,10 +587,6 @@ chxj_init_module_kill(void *data)
 static mod_chxj_global_config*
 chxj_global_config_create(apr_pool_t* pool, server_rec* s)
 {
-  apr_status_t    sts;
-  void*           shm_segment;
-  apr_size_t      shm_segsize;
-  int*            shm;
   mod_chxj_global_config* conf;
   void*           param;
 
@@ -645,48 +618,6 @@ chxj_global_config_create(apr_pool_t* pool, server_rec* s)
   conf->client_lock = NULL;
   memset(conf->client_lock_file_name, 0, sizeof(conf->client_lock_file_name));
 
-  /*--------------------------------------------------------------------------*/
-  /* Let us cleanup on restarts and exists                                    */
-  /*--------------------------------------------------------------------------*/
-
-
-  sts = apr_shm_create(&conf->client_shm, shmem_size, tmpnam(NULL), pool);
-  if (sts != APR_SUCCESS) 
-  {
-    ap_log_error(APLOG_MARK, APLOG_ERR, 0, s, 
-                   "chxj_init_module Shared memory securing failure");
-    _exit(1);
-  }
-
-  shm_segment = apr_shm_baseaddr_get(conf->client_shm);
-  shm_segsize = apr_shm_size_get(conf->client_shm);
-
-  ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, s,
-                 "chxj_init_module allocated %" APR_SIZE_T_FMT
-                 " bytes of shared memory",
-                 shm_segsize);
-
-  ap_log_error(APLOG_MARK, APLOG_INFO, 0, s,
-                 "Shared memory hdml counter initialised");
-
-  shm = (int*)shm_segment;
-  *shm = 0;
-
-  ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, s, "shm:[%d]", *shm);
-
-  sts = apr_global_mutex_create(&conf->client_lock, 
-                  tmpnam(conf->client_lock_file_name), 
-                  APR_LOCK_DEFAULT, pool);
-  ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, s, "mutex create end [%s]", conf->client_lock_file_name);
-  if (sts != APR_SUCCESS) 
-  {
-    ap_log_error(APLOG_MARK, APLOG_ERR, 0, s,
-                    "chxj_init_module Lock initialization failure");
-    chxj_init_module_kill((void*)s);
-    _exit(1);
-  }
-  ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, s,
-                  "lock file:[%s]", conf->client_lock_file_name);
 
   apr_pool_userdata_set(conf, CHXJ_MOD_CONFIG_KEY,
                               apr_pool_cleanup_null,
@@ -740,8 +671,8 @@ static int chxj_convert_images(request_rec *r)
   char*      tmpfile;
   char*      contentLength;
 
-  gdImagePtr im_in;
-  gdImagePtr im_out;
+  gdImagePtr im_in   = NULL;
+  gdImagePtr im_out  = NULL;
 
   FILE *fout;
   FILE *fin;
@@ -812,6 +743,11 @@ static int chxj_convert_images(request_rec *r)
     }
   }
   fclose(fin);
+  if (im_in == NULL)
+  {
+    return HTTP_NOT_FOUND;
+  }
+
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"detect width=[%d]", im_in->sx);
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"detect heigh=[%d]", im_in->sy);
 
@@ -987,6 +923,10 @@ chxj_translate_name(request_rec *r)
   char*    fname;
 
   conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  if (conf->image_uri == NULL)
+  {
+    return DECLINED;
+  }
 
   regexp = ap_pregcomp(r->pool, (const char*)conf->image_uri, AP_REG_EXTENDED|AP_REG_ICASE);
   if (regexp == NULL)
