@@ -776,8 +776,10 @@ chxj_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table* spec
     {
       break;
     }
+
   }
   while (1);
+  
 
   if (spec->cache > 0 
   &&  writebyte   > spec->cache)
