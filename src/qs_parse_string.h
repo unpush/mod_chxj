@@ -17,6 +17,10 @@
 #ifndef __QS_PARSE_STRING_H__
 #define __QS_PARSE_STRING_H__
 #include <httpd.h>
+/*
+#define DEBUG
+#define USE_LOG
+*/
 /**
  * Max of memory allocation times.
  */
@@ -73,6 +77,7 @@
                         &&  (strcasecmp(c, "p"        ) != 0) \
                         &&  (strcasecmp(c, "plaintext") != 0) \
                         &&  (strcasecmp(c, "?xml"     ) != 0) \
+                        &&  (strcasecmp(c, "!doctype" ) != 0) \
                         &&  (strcasecmp(c, "!--"      ) != 0))
 
 /**

@@ -26,7 +26,8 @@ static char* s_get_tag_name(Doc* doc, const char* s, int len) ;
 
 
 QS_EXPORT Node*
-qs_parse_tag(Doc* doc, const char* s, int len) {
+qs_parse_tag(Doc* doc, const char* s, int len) 
+{
   Node* node;
   char *tag_name;
   char *sp = (char*)s;

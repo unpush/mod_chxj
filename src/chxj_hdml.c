@@ -142,10 +142,12 @@ chxj_exchange_hdml(request_rec* r,
     /* Here, the parsing of the received character string is done             */
     /*------------------------------------------------------------------------*/
     char *ss = apr_pstrdup(r->pool, src);
+    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
+                    "input srclen=[%d]\n", srclen);
     qs_init_malloc(&doc); 
     qs_init_root_node(&doc);
     ss[srclen] = '\0';
-    qs_parse_string(&doc,ss, strlen(ss));
+    qs_parse_string(&doc, ss, srclen);
 
     /*------------------------------------------------------------------------*/
     /* The number of radiobuttons is counted.                                 */

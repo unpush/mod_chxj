@@ -81,6 +81,7 @@ typedef struct _mod_chxj_config_t
   device_table_list*  devices;
   emoji_t*            emoji;
   emoji_t*            emoji_tail;
+
 } mod_chxj_config;
 
 typedef struct _mod_chxj_global_config_t

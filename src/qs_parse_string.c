@@ -16,6 +16,8 @@
  */
 #include <stdio.h>
 #include <strings.h>
+#include "httpd.h"
+#include "http_log.h"
 #include "qs_malloc.h"
 #include "qs_parse_string.h"
 #include "qs_parse_tag.h"
@@ -23,6 +25,7 @@
 
 static int s_cut_tag (const char* s, int len) ;
 static int s_cut_text(const char* s, int len) ;
+static void qs_dump_node(Doc* doc, Node* node, int indent);
 
 
 QS_EXPORT Node*
@@ -61,13 +64,13 @@ qs_parse_string(Doc* doc, const char* src, int srclen) {
       {
         if (has_child(node->name)) 
         {
+          if (doc->now_parent_node->parent != NULL)
+          {
 #ifdef DEBUG
          {char buf[256]; sprintf(buf, "[%s]->[%s]", 
                          doc->now_parent_node->name, 
                          doc->now_parent_node->parent->name); QX_LOGGER_DEBUG(buf);}
 #endif
-          if (doc->root_node != doc->now_parent_node)
-          {
             doc->now_parent_node = doc->now_parent_node->parent;
           }
         }
@@ -116,7 +119,40 @@ qs_parse_string(Doc* doc, const char* src, int srclen) {
   QX_LOGGER_DEBUG("parse_string end");
 #endif
 
+#ifdef DEBUG
+  if (doc->r != NULL)
+  {
+    qs_dump_node(doc, doc->root_node, 0);
+  }
+#endif
+
   return doc->root_node;
+}
+
+static void
+qs_dump_node(Doc* doc, Node* node, int indent) {
+  Node* p = (Node*)qs_get_child_node(doc,node);
+
+  for (;p;p = (Node*)qs_get_next_node(doc,p)) {
+    Attr* attr;
+    if ((char*)qs_get_node_value(doc,p) != NULL) {
+      ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0, doc->r,
+        "%*.*sNode:[%s][%s]\n", indent,indent," ",
+                      (char*)qs_get_node_name(doc,p),
+                      (char*)qs_get_node_value(doc,p));
+    }
+    else {
+      ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0, doc->r,
+        "%*.*sNode:[%s]\n", indent,indent," ", qs_get_node_name(doc,p));
+    }
+    for (attr = (Attr*)qs_get_attr(doc,p); attr; attr = (Attr*)qs_get_next_attr(doc,attr)) {
+      ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0, doc->r,
+        "%*.*s  ATTR:[%s]\n", indent,indent," ", (char *)qs_get_attr_name(doc,attr));
+      ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0, doc->r,
+        "%*.*s  VAL :[%s]\n", indent,indent," ", (char *)qs_get_attr_value(doc,attr));
+    }
+    qs_dump_node(doc,p, indent+4);
+  }
 }
 
 
