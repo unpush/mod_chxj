@@ -708,7 +708,10 @@ chxj_create_per_dir_config(apr_pool_t *p, char *arg)
 
   conf = apr_pcalloc(p, sizeof(mod_chxj_config));
   conf->device_data_file = NULL;
+  conf->devices          = NULL;
   conf->emoji_data_file  = NULL;
+  conf->emoji            = NULL;
+  conf->emoji_tail       = NULL;
   conf->image_uri        = NULL;
   conf->image_cache_dir  = apr_psprintf(p, "%s",DEFAULT_IMAGE_CACHE_DIR);
 
@@ -716,7 +719,77 @@ chxj_create_per_dir_config(apr_pool_t *p, char *arg)
   conf->image_copyright = NULL; 
   return conf;
 }
+/*
+ *  Merge per-directory CHXJ configurations
+ */
+static void*
+chxj_merge_per_dir_config(apr_pool_t *p, void *basev, void *addv)
+{
+  mod_chxj_config *base = (mod_chxj_config*)basev;
+  mod_chxj_config *add  = (mod_chxj_config*)addv;
+  mod_chxj_config *mrg  = (mod_chxj_config*)apr_palloc(p, sizeof(mod_chxj_config));
 
+  mrg->device_data_file = NULL;
+  mrg->devices          = NULL;
+  mrg->emoji_data_file  = NULL;
+  mrg->image_uri        = NULL;
+  mrg->image_cache_dir  = NULL;
+  mrg->image_copyright  = NULL;
+  mrg->emoji            = NULL;
+  mrg->emoji_tail       = NULL;
+  if (add->device_data_file == NULL)
+  {
+    mrg->devices = base->devices;
+    mrg->device_data_file = apr_pstrdup(p, base->device_data_file);
+  }
+  else
+  {
+    mrg->devices = add->devices;
+    mrg->device_data_file = apr_pstrdup(p, add->device_data_file);
+  }
+
+  if (add->emoji_data_file == NULL)
+  {
+    mrg->emoji = base->emoji;
+    mrg->emoji_tail = base->emoji_tail;
+    mrg->emoji_data_file = apr_pstrdup(p, base->emoji_data_file);
+  }
+  else
+  {
+    mrg->emoji = add->emoji;
+    mrg->emoji_tail = add->emoji_tail;
+    mrg->emoji_data_file = apr_pstrdup(p, add->emoji_data_file);
+  }
+
+  if (add->image_uri == NULL)
+  {
+    mrg->image_uri = apr_pstrdup(p, base->image_uri);
+  }
+  else
+  {
+    mrg->image_uri = apr_pstrdup(p, add->image_uri);
+  }
+
+  if (strcasecmp(add->image_cache_dir ,DEFAULT_IMAGE_CACHE_DIR)==0)
+  {
+    mrg->image_cache_dir = apr_pstrdup(p, base->image_cache_dir);
+  }
+  else
+  {
+    mrg->image_cache_dir = apr_pstrdup(p, add->image_cache_dir);
+  }
+
+  if (add->image_copyright == NULL && base->image_copyright != NULL)
+  {
+    mrg->image_copyright = apr_pstrdup(p, base->image_copyright);
+  }
+  else
+  if (add->image_copyright != NULL)
+  {
+    mrg->image_copyright = apr_pstrdup(p, add->image_copyright);
+  }
+  return mrg;
+}
 /**
  * The device definition file is loaded. 
  *
@@ -872,7 +945,7 @@ module AP_MODULE_DECLARE_DATA chxj_module =
 {
   STANDARD20_MODULE_STUFF, 
   chxj_create_per_dir_config,          /* create per-dir    config structures */
-  NULL,                                /* merge  per-dir    config structures */
+  chxj_merge_per_dir_config,           /* merge  per-dir    config structures */
   chxj_config_server_create,           /* create per-server config structures */
   NULL,                                /* merge  per-server config structures */
   cmds,                                /* table of config file commands       */
