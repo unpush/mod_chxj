@@ -21,12 +21,12 @@
 static char* load_emoji_set_tag( Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node);
 static char* set_emoji_data( Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node);
 static char* load_emoji_emoji_tag( Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node);
-static void emoji_add_to_tail( mod_chxj_config* conf, emoji_t* emoji);
+static void  emoji_add_to_tail( mod_chxj_config* conf, emoji_t* emoji);
 static char* load_emoji_no_tag( Doc* doc, apr_pool_t* p, emoji_t* em, Node* node);
 static char* load_emoji_imode_tag( Doc* doc, apr_pool_t* p, emoji_t* em, Node* node);
 static char* load_emoji_ezweb_tag( Doc* doc, apr_pool_t* p, emoji_t* em, Node* node);
 static char* load_emoji_jphone_tag( Doc* doc, apr_pool_t* p, emoji_t* em, Node* node);
-static char hexstring_to_byte(char* s);
+static char  hexstring_to_byte(char* s);
 
 /**
  * load emoji.xml
