@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <stdio.h>  // for gd
 #include <unistd.h>
 #include "httpd.h"
 #include "http_config.h"
@@ -51,7 +50,8 @@
 #include "chxj_chtml30.h"
 #include "chxj_jhtml.h"
 
-#include <gd.h>
+#include "chxj_img_conv_format.h"
+
 
 #ifdef PACKAGE_NAME
 #undef PACKAGE_NAME
@@ -73,11 +73,6 @@
 
 #define CHXJ_VERSION_PREFIX PACKAGE_NAME "/"
 #define CHXJ_VERSION        PACKAGE_VERSION
-
-#define DEFAULT_IMAGE_CACHE_DIR "/tmp"
-
-static const char* HTTP_USER_AGENT = "User-Agent";
-static char* chxj_create_workfile(request_rec* r, mod_chxj_config* conf);
 
 /**
  * It converts it from CHTML into ML corresponding to each model. 
@@ -489,7 +484,7 @@ chxj_input_filter(ap_filter_t*        f,
   char*               data_bucket;
   char*               data_brigade;
 
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "start of chxj_input_fileter()");
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "start of chxj_input_filter()");
 
   data_brigade = qs_alloc_zero_byte_string(r);
 
@@ -537,7 +532,7 @@ chxj_input_filter(ap_filter_t*        f,
   {
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, rv, r,
                     "data_brigade length is 0");
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "end of chxj_input_fileter()");
+    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "end of chxj_input_filter()");
     ap_remove_input_filter(f);
     return ap_get_brigade(f->next, bb, mode, block, readbytes);
   }
@@ -554,7 +549,7 @@ chxj_input_filter(ap_filter_t*        f,
     APR_BRIGADE_INSERT_TAIL(obb, eos);
     APR_BRIGADE_CONCAT(bb, obb);
   }
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "end of chxj_input_fileter()");
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "end of chxj_input_filter()");
   return APR_SUCCESS;
 }
 
@@ -662,365 +657,16 @@ chxj_config_server_create(apr_pool_t *p, server_rec *s)
 
 static int chxj_convert_images(request_rec *r)
 {
-  apr_file_t *fp;
-  apr_status_t rv;
-  apr_finfo_t st;
-  apr_size_t byte;
-  char*      user_agent;
-  device_table* spec;
-  char*      tmpfile;
-  char*      contentLength;
-
-  gdImagePtr im_in   = NULL;
-  gdImagePtr im_out  = NULL;
-
-  apr_file_t *fout;
-  apr_file_t *fin;
-
-  char*      tmpext;
-  char*      readdata = NULL;
-  apr_size_t readbyte;
-  char*      writedata = NULL;
-  apr_size_t writebyte;
-  int neww, newh;
-
-
-  mod_chxj_config* conf;
-
-
-  conf = ap_get_module_config(r->per_dir_config, &chxj_module);
-
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "chxj_convert_images Yahoo!![%s]", r->the_request);
-
-  if (strcasecmp(r->handler, "chxj-picture"))
-  {
-    return DECLINED;
-  }
-
-  if (r->header_only) 
-  {
-    return DECLINED;
-  }
-
-  /* User-AgentからSpecを取得します */
-  user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
-  spec = chxj_specified_device(r, user_agent);
-
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "found device_name=[%s]", spec->device_name);
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "User-Agent=[%s]", user_agent);
-
-  /* ワークファイル名を生成 */
-  tmpfile = chxj_create_workfile(r, conf);
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "workfile=[%s]", tmpfile);
-
-  rv = apr_stat(&st, r->filename, APR_FINFO_MIN, r->pool);
-  if (rv != APR_SUCCESS)
-  {
-    return HTTP_NOT_FOUND;
-  }
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"found [%s]", r->filename);
-
-  rv = apr_file_open(&fin, r->filename, APR_READ | APR_BINARY ,APR_OS_DEFAULT, r->pool);
-  if (rv != APR_SUCCESS)
-  {
-    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,"file open failed.[%s]", r->filename);
-    return HTTP_NOT_FOUND;
-  }
-
-  readdata = apr_palloc(r->pool, st.size);
-  rv = apr_file_read_full(fin, (void*)readdata, st.size, &readbyte);
-  if (rv != APR_SUCCESS || readbyte != st.size)
-  {
-    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,"file read failed.[%s]", r->filename);
-    apr_file_close(fin);
-    return HTTP_NOT_FOUND;
-  }
-
-  tmpext = strrchr(r->filename, '.');
-  if(tmpext)
-  {
-    if (strcasecmp(tmpext, ".jpeg") == 0 
-    ||  strcasecmp(tmpext, ".jpg") == 0)
-    {
-      im_in = gdImageCreateFromJpegPtr(st.size, (void*)readdata);
-    }
-    else
-    if (strcasecmp(tmpext, ".png") == 0)
-    {
-      im_in = gdImageCreateFromPngPtr(st.size, (void*)readdata);
-    }
-    else
-    if (strcasecmp(tmpext, ".gif") == 0)
-    {
-      im_in = gdImageCreateFromGifPtr(st.size, (void*)readdata);
-    }
-  }
-  if (im_in == NULL)
-  {
-    return HTTP_NOT_FOUND;
-  }
-
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"detect width=[%d]", im_in->sx);
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"detect heigh=[%d]", im_in->sy);
-
-  newh = im_in->sy;
-  neww = im_in->sx;
-
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"detect spec width=[%d]", spec->width);
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"detect spec heigh=[%d]", spec->heigh);
-
-  if (neww > spec->width)
-  {
-    newh = (int)((double)newh * (double)((double)spec->width / (double)neww));
-    neww = (int)((double)neww * (double)((double)spec->width / (double)neww));
-  }
-  if (newh > spec->heigh)
-  {
-    neww = (int)((double)neww * (double)((double)spec->heigh / (double)newh));
-    newh = (int)((double)newh * (double)((double)spec->heigh / (double)newh));
-  }
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert width=[%d]", neww);
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert heigh=[%d]", newh);
-
-  /* サイズ変更 */
-  if (spec->color > 256)
-  {
-    im_out = gdImageCreateTrueColor(neww,newh);
-  }
-  else 
-  {
-    im_out = gdImageCreate(neww,newh);
-  }
-  gdImageCopyResized(im_out, im_in, 0, 0, 0, 0, im_out->sx, im_out->sy, im_in->sx, im_in->sy) ;
-
-  if (spec->color <= 256)
-  {
-    gdImageTrueColorToPalette(im_out, 1, spec->color); 
-  }
-  else
-  if (spec->color == 4096)
-  {
-    gdImageTrueColorToPalette(im_out, 1, 256); 
-  }
-  else
-  if (spec->color == 65536)
-  {
-  }
-  else
-  if (spec->color == 262144)
-  {
-  }
-  else
-  if (spec->color == 15680000)
-  {
-  }
-
-  gdImageDestroy(im_in);
-
-  if (spec->available_jpeg == 1)
-  {
-    writedata = gdImageJpegPtr (im_out, &writebyte, -1);
-    r->content_type = apr_psprintf(r->pool, "image/jpeg");
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert to jpg");
-  }
-  else
-  if (spec->available_png == 1)
-  {
-    writedata = gdImagePngPtrEx (im_out, &writebyte, 9);
-    r->content_type = apr_psprintf(r->pool, "image/png");
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert to png");
-  }
-  else
-  if (spec->available_gif == 1)
-  {
-    writedata = gdImageGifPtr(im_out, &writebyte);
-    r->content_type = apr_psprintf(r->pool, "image/gif");
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert to gif");
-  }
-  else
-  if (spec->available_bmp2 == 1 || spec->available_bmp4 == 1)
-  {
-    gdImageDestroy(im_out);
-    r->content_type = apr_psprintf(r->pool, "image/bmp");
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert to bmp(unsupported)");
-    return HTTP_NOT_FOUND;
-  }
-  gdImageDestroy(im_out);
-  if (writebyte == 0 || writedata == NULL)
-  {
-    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,"convert failure to Jpeg [%s]", tmpfile);
-    return HTTP_INTERNAL_SERVER_ERROR;
-  }
-
-  /* to cache */
-  rv = apr_file_open(&fout, tmpfile,
-                  APR_WRITE| APR_CREATE | APR_BINARY | APR_SHARELOCK ,APR_OS_DEFAULT,
-                  r->pool);
-  if (rv != APR_SUCCESS)
-  {
-    gdFree(writedata);
-    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,"file open error.[%s]", tmpfile);
-    return HTTP_INTERNAL_SERVER_ERROR;
-  }
-  rv = apr_file_write(fout, (void*)writedata, &writebyte);
-  gdFree(writedata);
-  apr_file_close(fout);
-  if (rv != APR_SUCCESS)
-  {
-    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,"file write error.[%s]", tmpfile);
-    return HTTP_INTERNAL_SERVER_ERROR;
-  }
-
-
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"color=[%d]", spec->color);
-
-  rv = apr_stat(&st, tmpfile, APR_FINFO_MIN, r->pool);
-  if (rv != APR_SUCCESS)
-  {
-    return HTTP_NOT_FOUND;
-  }
-  contentLength = apr_psprintf(r->pool, "%d", (int)st.size);
-  apr_table_setn(r->headers_out, "Content-Length", (const char*)contentLength);
-
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"Content-Length:[%d]", (int)st.size);
-
-  rv = apr_file_open(&fp, tmpfile, 
-    APR_READ | APR_BINARY, APR_OS_DEFAULT, r->pool);
-  if (rv != APR_SUCCESS) 
-  {
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"tmpfile open failed[%s]", tmpfile);
-    return HTTP_NOT_FOUND;
-  }
-  ap_send_fd(fp, r, 0, st.size, &byte);
-  apr_file_close(fp);
-  ap_rflush(r);
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"send file data[%d]byte", byte);
-
-  return OK;
-
+  return chxj_img_conv_format(r);
 }
 
-static char*
-chxj_create_workfile(request_rec* r, mod_chxj_config* conf)
-{
-  int ii;
-  int jj;
-  int len;
-  char* w = apr_palloc(r->pool, 256);
-  char* user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
-  char* fname;
-
-  memset(w, 0, 256);
-  fname = apr_psprintf(r->pool, "%s.%s", r->filename, user_agent);
-
-  len = strlen(fname);
-  jj=0;
-  for  (ii=0; ii<len; ii++) 
-  {
-    if (fname[ii] == '/' || fname[ii] == ' ' || fname[ii] == '-')
-    {
-      w[jj++] = '_';
-    }
-    else
-    {
-      w[jj++] = fname[ii];
-    }
-  }
-
-  return apr_psprintf(r->pool, "%s/%s", conf->image_cache_dir,w);
-}
 
 static int
 chxj_translate_name(request_rec *r)
 {
-  const char* ccp;
-  char* docroot;
-  int len;
-  ap_regex_t *regexp;
-  ap_regmatch_t match[10];
-  apr_finfo_t st;
-  apr_status_t rv;
-  mod_chxj_config* conf;
-  int rtn;
-  int ii;
-  char*      ext[4] = {
-          "jpg",
-          "png",
-          "bmp",
-          "gif",
-  };
-  char*    fname;
-
-  conf = ap_get_module_config(r->per_dir_config, &chxj_module);
-  if (conf->image_uri == NULL)
-  {
-    return DECLINED;
-  }
-
-  regexp = ap_pregcomp(r->pool, (const char*)conf->image_uri, AP_REG_EXTENDED|AP_REG_ICASE);
-  if (regexp == NULL)
-  {
-    return DECLINED;
-  }
-
-  rtn = ap_regexec(regexp, r->uri, regexp->re_nsub + 1, match, 0);
-  if (rtn != 0)
-  {
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "Not match URI[%s]", r->uri);
-    return DECLINED;
-  }
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "Match URI[%s]", r->uri);
-
-  if (r->filename == NULL) 
-  {
-    r->filename = apr_pstrdup(r->pool, r->uri);
-  }
-
-  ccp = ap_document_root(r);
-  if (ccp == NULL)
-  {
-    return HTTP_INTERNAL_SERVER_ERROR;
-  }
-  docroot = apr_pstrdup(r->pool, ccp);
-  len = strlen(docroot);
-
-  if (docroot[len-1] == '/') 
-  {
-    docroot[len-1] = '\0';
-  }
-  if (r->server->path 
-  &&  strncmp(r->filename, r->server->path, r->server->pathlen) == 0) 
-  {
-    r->filename = apr_pstrcat(r->pool, docroot, (r->filename + r->server->pathlen), NULL);
-  }
-  else 
-  {
-    r->filename = apr_pstrcat(r->pool, docroot, r->filename, NULL);
-  }
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "URI[%s]", r->filename);
-
-  for (ii=0; ii<4; ii++) 
-  {
-    fname = apr_psprintf(r->pool, "%s.%s", r->filename, ext[ii]);
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "search [%s]", fname);
-
-    rv = apr_stat(&st, fname, APR_FINFO_MIN, r->pool);
-    if (rv == APR_SUCCESS)
-    {
-      break;
-    }
-    fname = NULL;
-  }
-  if (fname == NULL)
-  {
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "NotFound [%s]", r->filename);
-    return HTTP_NOT_FOUND;
-  }
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "Found [%s]", fname);
-  r->filename = apr_psprintf(r->pool, "%s", fname);
-  r->handler = apr_psprintf(r->pool, "chxj-picture");
-  return OK;
+  return chxj_trans_name(r);
 }
+
 /**
  * The hook is registered.
  *

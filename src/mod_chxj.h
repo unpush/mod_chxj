@@ -100,6 +100,8 @@ typedef struct _mod_chxj_ctx_t
 
 #define CHXJ_MOD_CONFIG_KEY   "chxj_module"
 
+#define HTTP_USER_AGENT       "User-Agent"
+
 module AP_MODULE_DECLARE_DATA chxj_module;
 
 

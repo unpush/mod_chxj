@@ -20,10 +20,11 @@ libmod_chxj_la_SOURCES = mod_chxj.c \
     chxj_jhtml.c \
     chxj_str_util.c  \
     chxj_img_conv.c  \
-    chxj_dump.c
+    chxj_dump.c \
+	chxj_img_conv_format.c
 
 libmod_chxj_la_CFLAGS = -Wall -O2 -prefer-pic @QDEFS@ @DDEFS@ -I. -I@with_apache_header@ -I@with_apr_header@
-CFLAGS = -Wall -O2 -prefer-pic @QDEFS@ @DDEFS@ -I. -I@with_apache_header@ -I@with_apr_header@
+CFLAGS = @CFLAGS@ -Wall -O2 -prefer-pic @QDEFS@ @DDEFS@ -I. -I@with_apache_header@ -I@with_apr_header@
 
 lib_LTLIBRARIES = libmod_chxj.la
 

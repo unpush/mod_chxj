@@ -74,15 +74,24 @@ if test "x$LIBTOOL" = "xno"; then
     AC_MSG_ERROR([libtool not found.])
 fi
 
-AC_PATH_PROG(GDLIB_CONFIG, gdlib-config, no
+
+#AC_PATH_PROG(GDLIB_CONFIG, gdlib-config, no
+#   /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
+#if text "x$GDLIB_CONFIG" = "xno" ; then
+#    AC_MSG_ERROR([gdlib-config not found.])
+#fi
+AC_PATH_PROG(WAND_CONFIG, Wand-config, no
    /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
-if text "x$GDLIB_CONFIG" = "xno" ; then
-    AC_MSG_ERROR([gdlib-config not found.])
+if text "x$WAND_CONFIG" = "xno" ; then
+    AC_MSG_ERROR([wand-config not found.])
 fi
 
-LIBS="${LIBS} `${GDLIB_CONFIG} --libs` -lgd"
-CFLAGS="${CFLAGS} `${GDLIB_CONFIG} --cflags`"
 
+#LIBS="${LIBS} `${GDLIB_CONFIG} --libs` -lgd"
+#CFLAGS="${CFLAGS} `${GDLIB_CONFIG} --cflags`"
+#
+LIBS="${LIBS} `${WAND_CONFIG} --ldflags` `${WAND_CONFIG} --libs` -lgd"
+CFLAGS="${CFLAGS} `${WAND_CONFIG} --cppflags` `${WAND_CONFIG} --cflags`"
 AC_SUBST(with_apache_header)
 AC_SUBST(with_apr_header)
 AC_SUBST(CC)
