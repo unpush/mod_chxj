@@ -214,7 +214,7 @@ s_cut_text(const char* s, int len) {
 }
 
 
-QS_EXPORT Node*
+Node*
 qs_init_root_node(Doc* doc) {
   doc->root_node = (Node*)qs_malloc(doc,sizeof(struct _node),QX_LOGMARK);
   if (doc->root_node == NULL) {
@@ -237,7 +237,7 @@ qs_init_root_node(Doc* doc) {
 
 
 
-QS_EXPORT void
+void
 qs_add_child_node(Doc* doc,Node* node) 
 {
   node->next       = NULL;
@@ -261,7 +261,7 @@ qs_add_child_node(Doc* doc,Node* node)
 
 
 
-QS_EXPORT void
+void
 qs_free_node(Doc* doc, Node* node) 
 {
   QX_LOGGER_DEBUG("start qs_free_node()");
@@ -284,7 +284,7 @@ qs_free_node(Doc* doc, Node* node)
 
 
 
-QS_EXPORT Node*
+Node*
 qs_get_root(Doc* doc) {
   return doc->root_node;
 }
@@ -292,7 +292,7 @@ qs_get_root(Doc* doc) {
 
 
 
-QS_EXPORT char* 
+char* 
 qs_get_node_value(Doc* doc, Node* node) {
   return node->value;
 }
@@ -300,14 +300,14 @@ qs_get_node_value(Doc* doc, Node* node) {
 
 
 
-QS_EXPORT char*
+char*
 qs_get_node_name(Doc* doc, Node* node) {
   return node->name;
 }
 
 
 
-QS_EXPORT Node*
+Node*
 qs_get_child_node(Doc* doc, Node* node) {
   return node->child;
 }
@@ -315,14 +315,14 @@ qs_get_child_node(Doc* doc, Node* node) {
 
 
 
-QS_EXPORT Node*
+Node*
 qs_get_next_node(Doc* doc, Node* node) {
   return node->next;
 }
 
 
 
-QS_EXPORT Attr*
+Attr*
 qs_get_attr(Doc* doc, Node* node) {
   return node->attr;
 }
@@ -330,26 +330,26 @@ qs_get_attr(Doc* doc, Node* node) {
 
 
 
-QS_EXPORT Attr*
+Attr*
 qs_get_next_attr(Doc* doc, Attr* attr) {
   return attr->next;
 }
 
 
 
-QS_EXPORT char*
+char*
 qs_get_attr_name(Doc* doc, Attr* attr) {
   return attr->name;
 }
 
 
 
-QS_EXPORT char*
+char*
 qs_get_attr_value(Doc* doc, Attr* attr) {
   return attr->value;
 }
 
-QS_EXPORT int 
+int 
 qs_get_node_size(Doc* doc, Node* node) {
   return node->size;
 }

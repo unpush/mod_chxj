@@ -21,8 +21,9 @@
 /**
  * Init
  */
-QS_EXPORT void
-qs_init_malloc(Doc* doc) {
+void
+qs_init_malloc(Doc* doc) 
+{
   int ii;
   doc->alloc_size = 0;
   doc->pointer_table = (Pointer_Table*)malloc(sizeof(Pointer_Table)* QX_ALLOC_MAX);
@@ -40,17 +41,23 @@ qs_init_malloc(Doc* doc) {
 /**
  *it is a wrapper of "malloc()" function. 
  */
-QS_EXPORT void*
-qs_malloc(Doc* doc, int size, const char* fname, int line) {
+void*
+qs_malloc(Doc* doc, int size, const char* fname, int line) 
+{
   int ii;
-  if (doc->do_init_flag == 0) {
+
+  if (doc->do_init_flag == 0) 
+  {
     qs_init_malloc(doc);
   }
-  if (doc->alloc_size + size >= QX_ALLOC_MAX_SIZE) {
+
+  if (doc->alloc_size + size >= QX_ALLOC_MAX_SIZE) 
+  {
     QX_LOGGER_FATAL("Out Of Memory");
   }
   void* src = (void*)malloc(size);
-  if (src == NULL) {
+  if (src == NULL) 
+  {
     QX_LOGGER_FATAL("Out Of Memory");
   }
 #ifdef MALLOC_TRACE
@@ -58,19 +65,10 @@ qs_malloc(Doc* doc, int size, const char* fname, int line) {
   sprintf(buffer,"malloc Address:[0x%x]", src);
   qs_log(doc,QX_LOG_DEBUG,fname,line,buffer);
 #endif
-#if 0
-  for (ii=0; ii<QX_ALLOC_MAX; ii++) {
-    if (doc->pointer_table[ii].address == (unsigned int)src) {
-      QX_LOGGER_DEBUG("use old space");
-      doc->alloc_size -= doc->pointer_table[ii].size;
-      doc->pointer_table[ii].size = size;
-      doc->alloc_size += doc->pointer_table[ii].size;
-      break;
-    }
-  }
-#endif
-  for (ii=0; ii<QX_ALLOC_MAX; ii++) {
-    if (doc->pointer_table[ii].address == 0) {
+  for (ii=0; ii<QX_ALLOC_MAX; ii++) 
+  {
+    if (doc->pointer_table[ii].address == 0) 
+    {
       doc->pointer_table[ii].address = (unsigned int)src;
       doc->pointer_table[ii].size = size;
       doc->alloc_size += size;
@@ -78,7 +76,8 @@ qs_malloc(Doc* doc, int size, const char* fname, int line) {
       break;
     }
   }
-  if (ii == QX_ALLOC_MAX) {
+  if (ii == QX_ALLOC_MAX) 
+  {
     QX_LOGGER_FATAL("Out Of Memory");
   }
   QX_LOGGER_DEBUG_INT("allocated memory size",doc->alloc_size);
@@ -88,16 +87,19 @@ qs_malloc(Doc* doc, int size, const char* fname, int line) {
 /**
  *it is a wrapper of "free()" function. 
  */
-QS_EXPORT void
-qs_free(Doc* doc, void *s, const char* fname, int line) {
+void
+qs_free(Doc* doc, void *s, const char* fname, int line) 
+{
   int ii;
 #ifdef MALLOC_TRACE
   char buffer[BUFSIZ];
   sprintf(buffer,"free Address:[0x%x]", s);
   qs_log(doc,QX_LOG_DEBUG,fname,line,buffer);
 #endif
-  for (ii=0; ii<QX_ALLOC_MAX; ii++) {
-    if (doc->pointer_table[ii].address == (unsigned int)s) {
+  for (ii=0; ii<QX_ALLOC_MAX; ii++) 
+  {
+    if (doc->pointer_table[ii].address == (unsigned int)s) 
+    {
       doc->pointer_table[ii].address = 0;
       doc->alloc_size -= doc->pointer_table[ii].size;
       doc->pointer_table[ii].size = 0;
@@ -107,13 +109,18 @@ qs_free(Doc* doc, void *s, const char* fname, int line) {
 }
 
 
-QS_EXPORT void
-qs_all_free(Doc* doc, const char* fname, int line) {
+void
+qs_all_free(Doc* doc, const char* fname, int line) 
+{
   int ii;
-  if (doc->do_init_flag) {
-    for (ii=0; ii < QX_ALLOC_MAX; ii++) {
+
+  if (doc->do_init_flag) 
+  {
+    for (ii=0; ii < QX_ALLOC_MAX; ii++) 
+    {
       if (doc->pointer_table != NULL 
-      &&  doc->pointer_table[ii].address != 0) {
+      &&  doc->pointer_table[ii].address != 0) 
+      {
         free((void*)(doc->pointer_table[ii].address));
         doc->pointer_table[ii].address = 0;
         doc->alloc_size -= doc->pointer_table[ii].size;

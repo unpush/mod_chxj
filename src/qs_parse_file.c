@@ -29,8 +29,9 @@
 #include "qs_parse_tag.h"
 #include "qs_log.h"
 
-QS_EXPORT Node*
-qs_parse_file(Doc* doc, const char* filename) {
+Node*
+qs_parse_file(Doc* doc, const char* filename) 
+{
   char *tgt = NULL;
   Node* return_value = NULL;
   struct stat st;

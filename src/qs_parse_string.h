@@ -118,6 +118,7 @@ typedef struct _node {
 typedef struct pointer_table_t {
   unsigned int address;
   unsigned int size;
+  struct pointer_table_t* next;
 } Pointer_Table;
 
 
@@ -134,6 +135,8 @@ typedef struct _doc {
   unsigned int  alloc_size;
 
   Pointer_Table* pointer_table;
+  Pointer_Table* free_list;
+
   ParseMode_t    parse_mode;
 
 #ifndef __NON_MOD_CHXJ__
@@ -141,30 +144,21 @@ typedef struct _doc {
 #endif
 } Doc;
 
-#ifdef __NON_MOD_CHXJ__
-#define QS_EXPORT 
-#else
-/*
-#define QS_EXPORT static
-*/
-#define QS_EXPORT
-#endif
-
 /*
  * Prototype Declare
  */
-QS_EXPORT Node* qs_init_root_node(Doc* doc);
-QS_EXPORT void qs_add_child_node(Doc* doc, Node*);
-QS_EXPORT void qs_free_node(Doc* doc, Node*);
-QS_EXPORT Node* qs_get_root(Doc* doc) ;
-QS_EXPORT Node* qs_parse_string(Doc* doc, const char* ss, int len);
-QS_EXPORT char* qs_get_node_value(Doc* doc,Node* node);
-QS_EXPORT char* qs_get_node_name(Doc* doc, Node* node) ;
-QS_EXPORT int qs_get_node_size(Doc* doc, Node* node) ;
-QS_EXPORT Node* qs_get_child_node(Doc* doc, Node* node) ;
-QS_EXPORT Node* qs_get_next_node(Doc* doc, Node* node) ;
-QS_EXPORT Attr* qs_get_attr(Doc* doc, Node* node) ;
-QS_EXPORT Attr* qs_get_next_attr(Doc* doc, Attr* attr) ;
-QS_EXPORT char* qs_get_attr_name(Doc* doc, Attr* attr) ;
-QS_EXPORT char* qs_get_attr_value(Doc* doc, Attr* attr) ;
+Node* qs_init_root_node(Doc* doc);
+void qs_add_child_node(Doc* doc, Node*);
+void qs_free_node(Doc* doc, Node*);
+Node* qs_get_root(Doc* doc) ;
+Node* qs_parse_string(Doc* doc, const char* ss, int len);
+char* qs_get_node_value(Doc* doc,Node* node);
+char* qs_get_node_name(Doc* doc, Node* node) ;
+int qs_get_node_size(Doc* doc, Node* node) ;
+Node* qs_get_child_node(Doc* doc, Node* node) ;
+Node* qs_get_next_node(Doc* doc, Node* node) ;
+Attr* qs_get_attr(Doc* doc, Node* node) ;
+Attr* qs_get_next_attr(Doc* doc, Attr* attr) ;
+char* qs_get_attr_name(Doc* doc, Attr* attr) ;
+char* qs_get_attr_value(Doc* doc, Attr* attr) ;
 #endif

@@ -20,11 +20,8 @@
 
 #define QX_ALLOC_MAX_SIZE (1024*1024)
 
-/**
- * Not return NULL;
- */
-QS_EXPORT void* qs_malloc(Doc* doc, int size, const char* fname, int line) ;
-QS_EXPORT void qs_init_malloc(Doc* doc);
-QS_EXPORT void qs_free(Doc* doc,void *s, const char* fname, int line) ;
-QS_EXPORT void qs_all_free(Doc* doc, const char* fname, int line);
+void* qs_malloc(Doc* doc, int size, const char* fname, int line);
+void qs_init_malloc(Doc* doc);
+void qs_free(Doc* doc,void *s, const char* fname, int line) ;
+void qs_all_free(Doc* doc, const char* fname, int line);
 #endif

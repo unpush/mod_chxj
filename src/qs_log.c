@@ -28,7 +28,7 @@
 
 extern apr_status_t chxj_init_module_kill(void *data);
 
-QS_EXPORT void
+void
 qs_log(Doc* doc, int log_level,const char* f, int l, char* msg) 
 {
   switch(log_level) {

@@ -25,7 +25,7 @@ static char* s_get_tag_name(Doc* doc, const char* s, int len) ;
 
 
 
-QS_EXPORT Node*
+Node*
 qs_parse_tag(Doc* doc, const char* s, int len) 
 {
   Node* node;
@@ -40,6 +40,7 @@ qs_parse_tag(Doc* doc, const char* s, int len)
   /* s[0] == '<' && s[len-1] == '>' */
   tag_name = (char *)s_get_tag_name(doc, ++s, --ll);
   QX_LOGGER_DEBUG_INT("ll",ll);
+
   node = (Node*)qs_new_tag(doc);
   node->name = tag_name;
   node->otext = qs_malloc(doc,len+2, QX_LOGMARK);
@@ -51,9 +52,11 @@ qs_parse_tag(Doc* doc, const char* s, int len)
   ll -= (strlen(tag_name));
   QX_LOGGER_DEBUG_INT("ll",ll);
   sp += (strlen(tag_name)+1);
-  for (;;) {
+  for (;;) 
+  {
     Attr* attr = qs_parse_attr(doc,sp, ll, &next_point);
-    if (attr == NULL) {
+    if (attr == NULL) 
+    {
       QX_LOGGER_DEBUG("End of QS_PARSE_ATTR()");
       break;
     }
@@ -73,22 +76,27 @@ qs_parse_tag(Doc* doc, const char* s, int len)
 
 
 static char* 
-s_get_tag_name(Doc* doc, const char* s, int len)  {
+s_get_tag_name(Doc* doc, const char* s, int len)  
+{
   int ii;
   int sp;
   int size;
   char* return_value = NULL;
 
   /* ignore space. */
-  for (ii = 0; ii < len; ii++) {
-    if (is_white_space(s[ii])) {
+  for (ii = 0; ii < len; ii++) 
+  {
+    if (is_white_space(s[ii])) 
+    {
       continue;
     }
     break;
   }
   sp = ii;
-  for (;ii<len; ii++) {
-    if (is_white_space(s[ii])) {
+  for (;ii<len; ii++) 
+  {
+    if (is_white_space(s[ii])) 
+    {
       break;
     }
   }
@@ -106,8 +114,9 @@ s_get_tag_name(Doc* doc, const char* s, int len)  {
 
 
 
-QS_EXPORT Node*
-qs_new_tag(Doc* doc) {
+Node*
+qs_new_tag(Doc* doc) 
+{
   Node* node      = (Node*)qs_malloc(doc, sizeof(Node), QX_LOGMARK);
   node->next      = NULL;
   node->parent    = NULL;
@@ -124,8 +133,9 @@ qs_new_tag(Doc* doc) {
 
 
 
-QS_EXPORT Node*
-qs_add_attr(Doc* doc, Node* node, Attr* attr) {
+Node*
+qs_add_attr(Doc* doc, Node* node, Attr* attr) 
+{
   if (node == NULL) 
   {
     QX_LOGGER_FATAL("qs_add_attr() node is null");
