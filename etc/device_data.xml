@@ -1160,6 +1160,26 @@
       <dpi_width>72</dpi_width>
       <dpi_heigh>72</dpi_heigh>
     </device>
+    <device>
+      <device_id>UPG1</device_id>
+      <device_name>UPG1</device_name>
+      <html_spec_type>HDML</html_spec_type>
+      <width>120</width>
+      <heigh>126</heigh>
+      <gif>false</gif>
+      <jpeg>false</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>256</color>
+      <emoji_type>C</emoji_type><!-- XXX -->
+
+      <wp_width>120</wp_width>
+      <wp_heigh>126</wp_heigh>
+      <cache>5000</cache>
+      <dpi_width>72</dpi_width>
+      <dpi_heigh>72</dpi_heigh>
+    </device>
     <!--======================================================================-->
     <!-- A1000 series                                                         -->
     <!--======================================================================-->
