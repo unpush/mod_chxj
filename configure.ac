@@ -111,5 +111,6 @@ AC_C_CONST
 AC_FUNC_MALLOC
 AC_CHECK_FUNCS([memset memcpy strcasecmp strncasecmp strstr])
 
+
 AC_CONFIG_FILES([Makefile src/Makefile])
 AC_OUTPUT
