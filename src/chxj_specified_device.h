@@ -17,15 +17,19 @@
 #ifndef __CHXJ_SPECIFIED_DEVICE_H__
 #define __CHXJ_SPECIFIED_DEVICE_H__
 
-#define CHXJ_SPEC_UNKNOWN          (0x00)
-#define CHXJ_SPEC_Chtml_1_0        (0x11)
-#define CHXJ_SPEC_Chtml_2_0        (0x12)
-#define CHXJ_SPEC_Chtml_3_0        (0x13)
-#define CHXJ_SPEC_Chtml_4_0        (0x14)
-#define CHXJ_SPEC_Chtml_5_0        (0x15)
-#define CHXJ_SPEC_XHtml_Mobile_1_0 (0x20)
-#define CHXJ_SPEC_Hdml             (0x30)
-#define CHXJ_SPEC_Jhtml            (0x40)
+typedef enum _spec_type_t {
+  CHXJ_SPEC_UNKNOWN=0,
+  CHXJ_SPEC_Chtml_1_0,
+  CHXJ_SPEC_Chtml_2_0,
+  CHXJ_SPEC_Chtml_3_0,
+  CHXJ_SPEC_Chtml_4_0,
+  CHXJ_SPEC_Chtml_5_0,
+  CHXJ_SPEC_XHtml_Mobile_1_0,
+  CHXJ_SPEC_Hdml,
+  CHXJ_SPEC_Jhtml,
+  CHXJ_SPEC_HTML,
+} spec_type_t;
+
 #define CHXJ_PIC_OK                (0x01)
 #define CHXJ_PIC_NG                (0x00)
 
@@ -34,7 +38,7 @@ typedef struct device_table_t {
   struct device_table_t* next;
   const char* device_id;
   const char* device_name;
-  int html_spec_type;
+  spec_type_t html_spec_type;
   int width;
   int heigh;
   /*--------------------------------------------------------------------------*/

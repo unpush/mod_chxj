@@ -271,6 +271,8 @@ chxj_create_cache_file(request_rec* r, const char* tmpfile, device_table* spec, 
   /*--------------------------------------------------------------------------*/
   /* The size of the image is changed.                                        */
   /*--------------------------------------------------------------------------*/
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
+                    "call chxj_fixup_size()");
   magick_wand = chxj_fixup_size(magick_wand, r, spec, mode);
   if (magick_wand == NULL)
   {
@@ -280,6 +282,8 @@ chxj_create_cache_file(request_rec* r, const char* tmpfile, device_table* spec, 
   /*--------------------------------------------------------------------------*/
   /* The colors of the image is changed.                                      */
   /*--------------------------------------------------------------------------*/
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
+                    "call chxj_fixup_color()");
   magick_wand = chxj_fixup_color(magick_wand, r,spec, mode);
   if (magick_wand == NULL)
   {
@@ -289,22 +293,18 @@ chxj_create_cache_file(request_rec* r, const char* tmpfile, device_table* spec, 
   /*--------------------------------------------------------------------------*/
   /* DEPTH of the image is changed.                                           */
   /*--------------------------------------------------------------------------*/
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
+                    "call chxj_fixup_depth()");
   magick_wand = chxj_fixup_depth(magick_wand, r, spec);
   if (magick_wand == NULL)
   {
     return HTTP_NOT_FOUND;
   }
 
-  /*--------------------------------------------------------------------------*/
-  /* Add Comment (Copyright and so on.)                                       */
-  /*--------------------------------------------------------------------------*/
-  magick_wand = chxj_add_copyright(magick_wand, r, spec);
-  if (magick_wand == NULL)
-  {
-    return HTTP_NOT_FOUND;
-  }
 
 
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
+                    "start convert and compression");
   if (spec->available_jpeg == 1)
   {
     status = MagickSetImageCompression(magick_wand,JPEGCompression);
@@ -319,6 +319,12 @@ chxj_create_cache_file(request_rec* r, const char* tmpfile, device_table* spec, 
       EXIT_MAGICK_ERROR();
       return HTTP_NOT_FOUND;
     }
+    status = MagickStripImage(magick_wand);
+    if (status == MagickFalse)
+    {
+      EXIT_MAGICK_ERROR();
+      return HTTP_NOT_FOUND;
+    }
 
     magick_wand = chxj_img_down_sizing(magick_wand, r, spec);
     if (magick_wand == NULL)
@@ -327,7 +333,6 @@ chxj_create_cache_file(request_rec* r, const char* tmpfile, device_table* spec, 
     }
 
     r->content_type = apr_psprintf(r->pool, "image/jpeg");
-    writedata=MagickGetImageBlob(magick_wand, &writebyte);
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert to jpg");
   }
   else
@@ -345,13 +350,18 @@ chxj_create_cache_file(request_rec* r, const char* tmpfile, device_table* spec, 
       EXIT_MAGICK_ERROR();
       return HTTP_NOT_FOUND;
     }
+
+    status = MagickStripImage(magick_wand);
+    if (status == MagickFalse)
+    {
+      EXIT_MAGICK_ERROR();
+      return HTTP_NOT_FOUND;
+    }
     magick_wand = chxj_img_down_sizing(magick_wand, r, spec);
     if (magick_wand == NULL)
     {
       return HTTP_NOT_FOUND;
     }
-
-    writedata = MagickGetImageBlob(magick_wand, &writebyte);
 
     r->content_type = apr_psprintf(r->pool, "image/png");
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert to png");
@@ -372,6 +382,12 @@ chxj_create_cache_file(request_rec* r, const char* tmpfile, device_table* spec, 
       EXIT_MAGICK_ERROR();
       return HTTP_NOT_FOUND;
     }
+    status = MagickStripImage(magick_wand);
+    if (status == MagickFalse)
+    {
+      EXIT_MAGICK_ERROR();
+      return HTTP_NOT_FOUND;
+    }
 
     magick_wand = chxj_img_down_sizing(magick_wand, r, spec);
     if (magick_wand == NULL)
@@ -379,7 +395,6 @@ chxj_create_cache_file(request_rec* r, const char* tmpfile, device_table* spec, 
       return HTTP_NOT_FOUND;
     }
 
-    writedata=MagickGetImageBlob(magick_wand, &writebyte);
     r->content_type = apr_psprintf(r->pool, "image/gif");
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert to gif");
   }
@@ -398,6 +413,12 @@ chxj_create_cache_file(request_rec* r, const char* tmpfile, device_table* spec, 
       EXIT_MAGICK_ERROR();
       return HTTP_NOT_FOUND;
     }
+    status = MagickStripImage(magick_wand);
+    if (status == MagickFalse)
+    {
+      EXIT_MAGICK_ERROR();
+      return HTTP_NOT_FOUND;
+    }
 
     magick_wand = chxj_img_down_sizing(magick_wand, r, spec);
     if (magick_wand == NULL)
@@ -405,17 +426,31 @@ chxj_create_cache_file(request_rec* r, const char* tmpfile, device_table* spec, 
       return HTTP_NOT_FOUND;
     }
 
-    writedata=MagickGetImageBlob(magick_wand, &writebyte);
-
     r->content_type = apr_psprintf(r->pool, "image/bmp");
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert to bmp(unsupported)");
   }
+  /*--------------------------------------------------------------------------*/
+  /* Add Comment (Copyright and so on.)                                       */
+  /*--------------------------------------------------------------------------*/
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
+                    "call chxj_add_copyright()");
+  magick_wand = chxj_add_copyright(magick_wand, r, spec);
+  if (magick_wand == NULL)
+  {
+    return HTTP_NOT_FOUND;
+  }
+
+  writedata=MagickGetImageBlob(magick_wand, &writebyte);
+
   if (writebyte == 0 || writedata == NULL)
   {
     DestroyMagickWand(magick_wand);
     ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,"convert failure to Jpeg [%s]", tmpfile);
     return HTTP_INTERNAL_SERVER_ERROR;
   }
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
+                    "end convert and compression");
+
 
   
   /* to cache */
@@ -570,13 +605,24 @@ chxj_fixup_size(MagickWand* magick_wand, request_rec* r, device_table* spec, img
         return NULL;
       }
     }
+    status = MagickSetImageUnits(magick_wand, PixelsPerInchResolution);
+    if (status == MagickFalse)
+    {
+      EXIT_MAGICK_ERROR();
+      return NULL;
+    }
     status = MagickSetImageResolution(magick_wand,(double)spec->dpi_width, (double)spec->dpi_heigh);
     if (status == MagickFalse)
     {
       EXIT_MAGICK_ERROR();
       return NULL;
     }
-
+    status = MagickSetImageDispose(magick_wand, BackgroundDispose);
+    if (status == MagickFalse)
+    {
+      EXIT_MAGICK_ERROR();
+      return NULL;
+    }
   }
 
   return magick_wand;
@@ -585,9 +631,11 @@ static MagickWand*
 chxj_fixup_color(MagickWand* magick_wand, request_rec* r, device_table* spec, img_conv_mode_t mode)
 {
   MagickBooleanType  status;
+  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,r,"start chxj_fixup_clor()");
 
   if (spec->color >= 256)
   {
+    ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,r,"call MagickQuantizeImage() spec->color=[%d]",spec->color);
     status = MagickQuantizeImage(magick_wand,
                                spec->color,
                                RGBColorspace,
@@ -599,9 +647,11 @@ chxj_fixup_color(MagickWand* magick_wand, request_rec* r, device_table* spec, im
       EXIT_MAGICK_ERROR();
       return NULL;
     }
+    ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,r,"call end MagickQuantizeImage() spec->color=[%d]",spec->color);
   }
   else 
   {
+    ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,r,"call MagickQuantizeImage() spec->color=[%d]",spec->color);
     status = MagickQuantizeImage(magick_wand,
                                spec->color,
                                GRAYColorspace,
@@ -613,7 +663,9 @@ chxj_fixup_color(MagickWand* magick_wand, request_rec* r, device_table* spec, im
       EXIT_MAGICK_ERROR();
       return NULL;
     }
+    ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,r,"call end MagickQuantizeImage() spec->color=[%d]",spec->color);
   }
+  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,r,"end chxj_fixup_clor()");
   return magick_wand;
 }
 static MagickWand*
@@ -751,6 +803,11 @@ chxj_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table* spec
   unsigned long quality = 70;
   apr_size_t    writebyte = 0;
   char*         writedata;
+  apr_size_t    prev_size = 0;
+  int           revers_flag = 0;
+
+  writedata = MagickGetImageBlob(magick_wand, &writebyte);
+  prev_size = writebyte;
 
   do {
     status = MagickSetImageCompressionQuality(magick_wand, quality);
@@ -760,6 +817,24 @@ chxj_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table* spec
       return NULL;
     }
     writedata = MagickGetImageBlob(magick_wand, &writebyte);
+    if (writebyte >= prev_size || revers_flag == 1)
+    {
+      ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "quality=[%ld] size=[%d]", (long)quality, writebyte);
+      revers_flag = 1;
+      quality += 10;
+      if (quality > 100)
+      {
+        status = MagickSetImageCompression(magick_wand,NoCompression);
+        if (status == MagickFalse)
+        {
+          EXIT_MAGICK_ERROR();
+          return NULL;
+        }
+        break;
+      }
+      prev_size = writebyte;
+      continue;
+    }
 
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "quality=[%ld] size=[%d]", (long)quality, writebyte);
 
@@ -779,7 +854,7 @@ chxj_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table* spec
 
   }
   while (1);
-  
+
 
   if (spec->cache > 0 
   &&  writebyte   > spec->cache)
@@ -791,7 +866,9 @@ chxj_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table* spec
       {
       case 2:      depth = 1; break;
       case 4:      now_color = 2;        depth = 1;  break;
-      case 256:    now_color = 4;        depth = 2;  break;
+      case 8:      now_color = 4;        depth = 2;  break;
+      case 16:     now_color = 8;        depth = 3;  break;
+      case 256:    now_color = 16;       depth = 4;  break;
       case 4096:   now_color = 256;      depth = 8;  break;
       case 65536:  now_color = 4096;     depth = 12; break;
       case 262144: now_color = 65536;    depth = 16; break;
@@ -804,7 +881,7 @@ chxj_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table* spec
       {
         break;
       }
-      if (now_color >= 256)
+      if (now_color >= 8)
       {
         status = MagickQuantizeImage(magick_wand,
                              now_color,
@@ -821,6 +898,7 @@ chxj_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table* spec
                              0,
                              1,
                              0);
+        MagickSetImageType(magick_wand, GrayscaleType);
       }
       if (status == MagickFalse)
       {
@@ -837,13 +915,12 @@ chxj_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table* spec
 
       ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "now_color=[%ld] size=[%d]", (long)now_color, writebyte);
 
-      if (writebyte <= spec->cache)
-      {
-        break;
-      }
+      /* Once per request */
+      break;
     }
     while(now_color > 2);
   }
+
   return magick_wand;
 }
 
