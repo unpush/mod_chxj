@@ -45,6 +45,8 @@ typedef struct _query_string_param_t {
   char* name;     /* for EZGET */
   long offset;    /* for EZGET */
   long count;     /* for EZGET */
+  long width;
+  long height;
 } query_string_param_t;
 
 /*----------------------------------------------------------------------------*/
@@ -108,28 +110,40 @@ static const char* HDML_FAIL_PAGE =
   "  </DISPLAY>\r\n"
   "<HDML>\r\n";
 
-static char* chxj_create_workfile(request_rec* r, 
-                                  mod_chxj_config* conf, 
-                                  const char* user_agent, 
-                                  img_conv_mode_t mode);
-static apr_status_t chxj_create_cache_file(request_rec* r, 
-                                           const char* tmpfile, 
-                                           device_table* spec,
-                                           apr_finfo_t* st,
-                                           img_conv_mode_t mode);
-static apr_status_t chxj_send_cache_file(query_string_param_t* query_string, request_rec* r, const char* tmpfile);
+static char* chxj_create_workfile(
+                request_rec* r, 
+                mod_chxj_config* conf, 
+                const char* user_agent, 
+                query_string_param_t *qsp);
+static apr_status_t chxj_create_cache_file(
+                request_rec* r, 
+                const char* tmpfile, 
+                device_table* spec,
+                apr_finfo_t* st,
+                query_string_param_t *qsp);
+static apr_status_t chxj_send_cache_file(
+                query_string_param_t* query_string,
+                request_rec* r,
+                const char* tmpfile);
 static query_string_param_t* chxj_get_query_string_param(request_rec *r);
-static unsigned short chxj_add_crc(const char* writedata, apr_size_t witebyte);
-static MagickWand* chxj_fixup_size(MagickWand* magick_wand, 
-                request_rec* r, device_table* spec, img_conv_mode_t mode);
+static unsigned short chxj_add_crc(
+                const char* writedata, 
+                apr_size_t witebyte);
+static MagickWand* chxj_fixup_size(
+                MagickWand* magick_wand, 
+                request_rec* r, 
+                device_table* spec, 
+                query_string_param_t *qsp);
 static MagickWand* chxj_fixup_color(MagickWand* magick_wand, 
                 request_rec* r, device_table* spec, img_conv_mode_t mode);
 static MagickWand* chxj_fixup_depth(MagickWand* magick_wand, 
                 request_rec* r, device_table* spec);
 static MagickWand* chxj_img_down_sizing(MagickWand* magick_wand, 
                 request_rec* r, device_table* spec);
-
-static MagickWand* chxj_add_copyright(MagickWand* magick_wand, request_rec* r, device_table* spec);
+static MagickWand* chxj_add_copyright(
+                MagickWand* magick_wand,
+                request_rec* r,
+                device_table* spec);
 
 
 int
@@ -186,7 +200,7 @@ chxj_img_conv_format(request_rec *r)
   /* Create Workfile Name                                                     */
   /*--------------------------------------------------------------------------*/
   conf = ap_get_module_config(r->per_dir_config, &chxj_module);
-  tmpfile = chxj_create_workfile(r, conf, user_agent, qsp->mode);
+  tmpfile = chxj_create_workfile(r, conf, user_agent, qsp);
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "workfile=[%s]", tmpfile);
 
   rv = apr_stat(&st, r->filename, APR_FINFO_MIN, r->pool);
@@ -202,7 +216,7 @@ chxj_img_conv_format(request_rec *r)
     /* It tries to make the cash file when it doesn't exist or there is       */
     /* change time later since the making time of the cash file.              */
     /*------------------------------------------------------------------------*/
-    rv = chxj_create_cache_file(r,tmpfile, spec, &st, qsp->mode);
+    rv = chxj_create_cache_file(r,tmpfile, spec, &st, qsp);
     if (rv != OK)
     {
       return rv;
@@ -220,12 +234,17 @@ chxj_img_conv_format(request_rec *r)
 }
 
 static apr_status_t
-chxj_create_cache_file(request_rec* r, const char* tmpfile, device_table* spec, apr_finfo_t* st, img_conv_mode_t mode)
+chxj_create_cache_file(request_rec* r, 
+                       const char* tmpfile, 
+                       device_table* spec, 
+                       apr_finfo_t* st, 
+                       query_string_param_t *qsp)
 {
   apr_status_t       rv;
   apr_size_t         readbyte;
   apr_size_t         writebyte;
   unsigned short     crc;
+  img_conv_mode_t    mode = qsp->mode;
 
   char*              writedata = NULL;
   char*              readdata = NULL;
@@ -273,7 +292,7 @@ chxj_create_cache_file(request_rec* r, const char* tmpfile, device_table* spec, 
   /*--------------------------------------------------------------------------*/
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
                     "call chxj_fixup_size()");
-  magick_wand = chxj_fixup_size(magick_wand, r, spec, mode);
+  magick_wand = chxj_fixup_size(magick_wand, r, spec, qsp);
   if (magick_wand == NULL)
   {
     return HTTP_NOT_FOUND;
@@ -502,9 +521,13 @@ chxj_create_cache_file(request_rec* r, const char* tmpfile, device_table* spec, 
 }
 
 static MagickWand* 
-chxj_fixup_size(MagickWand* magick_wand, request_rec* r, device_table* spec, img_conv_mode_t mode)
+chxj_fixup_size(MagickWand* magick_wand, 
+                request_rec* r, 
+                device_table* spec, 
+                query_string_param_t *qsp)
 {
   MagickBooleanType  status;
+  img_conv_mode_t mode = qsp->mode;
   int oldw;
   int oldh;
   int neww;
@@ -598,6 +621,19 @@ chxj_fixup_size(MagickWand* magick_wand, request_rec* r, device_table* spec, img
     }
     else
     {
+      if (mode == IMG_CONV_MODE_NORMAL)
+      {
+        if (qsp->width != 0)
+        {
+          ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert width=[%d --> %ld]", neww, qsp->width);
+          neww = qsp->width;
+        }
+        if (qsp->height != 0)
+        {
+          ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert heigh=[%d --> %ld]", newh, qsp->height);
+          newh = qsp->height;
+        }
+      }
       status = MagickResizeImage(magick_wand,neww,newh,LanczosFilter,1.0);
       if (status == MagickFalse)
       {
@@ -1039,7 +1075,11 @@ chxj_send_cache_file(query_string_param_t* query_string, request_rec* r, const c
 
 
 static char*
-chxj_create_workfile(request_rec* r, mod_chxj_config* conf, const char* user_agent, img_conv_mode_t mode)
+chxj_create_workfile(
+                request_rec*          r, 
+                mod_chxj_config*      conf, 
+                const char*           user_agent, 
+                query_string_param_t *qsp)
 {
   int ii;
   int jj;
@@ -1048,7 +1088,7 @@ chxj_create_workfile(request_rec* r, mod_chxj_config* conf, const char* user_age
   char* fname;
 
   memset(w, 0, 256);
-  switch (mode) {
+  switch (qsp->mode) {
   case IMG_CONV_MODE_THUMBNAIL:
     fname = apr_psprintf(r->pool, "%s.%s.thumbnail", r->filename, user_agent);
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "mode=thumbnail [%s]", fname);
@@ -1061,6 +1101,14 @@ chxj_create_workfile(request_rec* r, mod_chxj_config* conf, const char* user_age
   case IMG_CONV_MODE_NORMAL:
   default:
     fname = apr_psprintf(r->pool, "%s.%s", r->filename, user_agent);
+    if (qsp->width != 0)
+    {
+      fname = apr_psprintf(r->pool, "%s.w%ld", fname, qsp->width);
+    }
+    if (qsp->height != 0)
+    {
+      fname = apr_psprintf(r->pool, "%s.h%ld", fname, qsp->height);
+    }
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "mode=normal [%s]", fname);
     break;
   }
@@ -1217,6 +1265,8 @@ chxj_get_query_string_param(request_rec *r)
   param->name       = NULL;
   param->offset     = 0;
   param->count      = 0;
+  param->width      = 0;
+  param->height     = 0;
 
   ap_log_rerror(APLOG_MARK,
                 APLOG_DEBUG,
@@ -1281,6 +1331,22 @@ chxj_get_query_string_param(request_rec *r)
       if (chxj_chk_numeric(value) == 0)
       {
         param->count = chxj_atoi(value);
+      }
+    }
+    else
+    if (strcasecmp(name, "w") == 0 && value != NULL)
+    {
+      if (chxj_chk_numeric(value) == 0)
+      {
+        param->width = chxj_atoi(value);
+      }
+    }
+    else
+    if (strcasecmp(name, "h") == 0 && value != NULL)
+    {
+      if (chxj_chk_numeric(value) == 0)
+      {
+        param->height = chxj_atoi(value);
       }
     }
   }
