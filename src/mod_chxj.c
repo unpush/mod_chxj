@@ -240,6 +240,7 @@ chxj_input_exchange(request_rec *r, const char** src, apr_size_t* len)
   /* _chxj_dmy */
   /* _chxj_c_ */
   /* _chxj_r_ */
+  /* _chxj_s_ */
   for (;;) 
   {
     pair = apr_strtok(s, "&", &pstate);
@@ -261,7 +262,8 @@ chxj_input_exchange(request_rec *r, const char** src, apr_size_t* len)
     }
     else
     if (strncasecmp(name, "_chxj_c_", 8) == 0 
-    ||  strncasecmp(name, "_chxj_r_", 8) == 0)
+    ||  strncasecmp(name, "_chxj_r_", 8) == 0
+    ||  strncasecmp(name, "_chxj_s_", 8) == 0)
     {
       if (value == NULL)
       {

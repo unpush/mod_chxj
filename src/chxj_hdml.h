@@ -23,6 +23,7 @@
 #define MAX_FORM_COUNT  (10)
 #define MAX_RADIO_COUNT (10)
 #define MAX_RADIO_VALUE_COUNT (100)
+#define MAX_SUBMIT_BUTTON_COUNT (10)
 #define END_LINE        "\0"
 
 #include "mod_chxj.h"
@@ -57,6 +58,11 @@ typedef struct Hdml_t {
   char*   radio_name_list[MAX_RADIO_COUNT];
   int     radio_out_cnt[MAX_RADIO_COUNT];
   char*   radio_checked_value[MAX_RADIO_COUNT];
+  /*---------------------------------*/
+  /* for <input type="submit"> tag   */
+  /*---------------------------------*/
+  char*   submit_button[MAX_SUBMIT_BUTTON_COUNT];
+
   /*---------------------------------*/
   /* for <input type="checkbox"> tag */
   /*---------------------------------*/
