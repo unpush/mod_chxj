@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 #include "mod_chxj.h"
+#include "ap_regex.h"
 static device_table  UNKNOWN_DEVICE      = {
     NULL, "","UNKNOWN", CHXJ_SPEC_UNKNOWN,  0,  0,0,0,0,0,0,0, ""};
 
@@ -27,8 +28,8 @@ static device_table  UNKNOWN_DEVICE      = {
 device_table*
 chxj_specified_device(request_rec* r, const char* user_agent) 
 {
-  regex_t *regexp;
-  regmatch_t match[10];
+  ap_regex_t *regexp;
+  ap_regmatch_t match[10];
   device_table *returnType = &UNKNOWN_DEVICE;
   device_table_list* dtl;
   device_table* dt;
@@ -43,7 +44,7 @@ chxj_specified_device(request_rec* r, const char* user_agent)
     {
       continue;
     }
-    regexp = ap_pregcomp(r->pool, (const char*)dtl->pattern, REG_EXTENDED|REG_ICASE);
+    regexp = ap_pregcomp(r->pool, (const char*)dtl->pattern, AP_REG_EXTENDED|AP_REG_ICASE);
     if (regexp == NULL) 
     {
       return returnType;

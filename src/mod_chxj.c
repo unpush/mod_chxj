@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#define DEBUG_PRINT {FILE* fp = fopen("/tmp/deubg.log","a"); fprintf(fp, "%s:%d\n",__FILE__,__LINE__);fclose(fp); }
 #include <unistd.h>
 #include "httpd.h"
 #include "http_config.h"
@@ -69,11 +68,6 @@
 
 #define CHXJ_VERSION_PREFIX PACKAGE_NAME "/"
 #define CHXJ_VERSION        PACKAGE_VERSION
-
-
-#define DEF_SHMEM_SIZE  (4)
-
-static long shmem_size  = DEF_SHMEM_SIZE;
 
 static const char* HTTP_USER_AGENT = "User-Agent";
 
@@ -240,6 +234,7 @@ chxj_input_exchange(request_rec *r, const char** src, apr_size_t* len)
   /* _chxj_dmy */
   /* _chxj_c_ */
   /* _chxj_r_ */
+  /* _chxj_s_ */
   for (;;) 
   {
     pair = apr_strtok(s, "&", &pstate);
@@ -261,7 +256,8 @@ chxj_input_exchange(request_rec *r, const char** src, apr_size_t* len)
     }
     else
     if (strncasecmp(name, "_chxj_c_", 8) == 0 
-    ||  strncasecmp(name, "_chxj_r_", 8) == 0)
+    ||  strncasecmp(name, "_chxj_r_", 8) == 0
+    ||  strncasecmp(name, "_chxj_s_", 8) == 0)
     {
       if (value == NULL)
       {
@@ -576,38 +572,14 @@ chxj_init_module_kill(void *data)
   /*--------------------------------------------------------------------------*/
   conf = ap_get_module_config(base_server->module_config, &chxj_module);
 
-  /*--------------------------------------------------------------------------*/
-  /* The shared memory is liberated.                                          */
-  /*--------------------------------------------------------------------------*/
-  if (conf != NULL&& conf->client_shm != NULL) 
-  {
-    apr_shm_destroy(conf->client_shm);
-    conf->client_shm = NULL;
-    ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, base_server, 
-                  "destroy shared memory.");
-  }
-
-  if (conf != NULL && conf->client_lock != NULL)
-  {
-    apr_global_mutex_destroy(conf->client_lock);
-    conf->client_lock = NULL;
-    ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, base_server, 
-                  "destroy mutex.");
-  }
-
   ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, base_server, 
                   "end chxj_init_module_kill()");
   return APR_SUCCESS;
 }
 
 static mod_chxj_global_config*
-chxj_global_config_create(server_rec* s)
+chxj_global_config_create(apr_pool_t* pool, server_rec* s)
 {
-  apr_status_t    sts;
-  apr_pool_t      *pool = s->process->pool;
-  void*           shm_segment;
-  apr_size_t      shm_segsize;
-  int*            shm;
   mod_chxj_global_config* conf;
   void*           param;
 
@@ -620,7 +592,7 @@ chxj_global_config_create(server_rec* s)
 
   apr_pool_cleanup_register(pool, s,
                                chxj_init_module_kill,
-                               chxj_init_module_kill);
+                               apr_pool_cleanup_null);
   if (conf)
   {
     /*------------------------------------------------------------------------*/
@@ -640,48 +612,6 @@ chxj_global_config_create(server_rec* s)
   conf->client_lock = NULL;
   memset(conf->client_lock_file_name, 0, sizeof(conf->client_lock_file_name));
 
-  /*--------------------------------------------------------------------------*/
-  /* Let us cleanup on restarts and exists                                    */
-  /*--------------------------------------------------------------------------*/
-
-
-  sts = apr_shm_create(&conf->client_shm, shmem_size, tmpnam(NULL), pool);
-  if (sts != APR_SUCCESS) 
-  {
-    ap_log_error(APLOG_MARK, APLOG_ERR, 0, s, 
-                   "chxj_init_module Shared memory securing failure");
-    _exit(1);
-  }
-
-  shm_segment = apr_shm_baseaddr_get(conf->client_shm);
-  shm_segsize = apr_shm_size_get(conf->client_shm);
-
-  ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, s,
-                 "chxj_init_module allocated %" APR_SIZE_T_FMT
-                 " bytes of shared memory",
-                 shm_segsize);
-
-  ap_log_error(APLOG_MARK, APLOG_INFO, 0, s,
-                 "Shared memory hdml counter initialised");
-
-  shm = (int*)shm_segment;
-  *shm = 0;
-
-  ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, s, "shm:[%d]", *shm);
-
-  sts = apr_global_mutex_create(&conf->client_lock, 
-                  tmpnam(conf->client_lock_file_name), 
-                  APR_LOCK_DEFAULT, pool);
-  ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, s, "mutex create end [%s]", conf->client_lock_file_name);
-  if (sts != APR_SUCCESS) 
-  {
-    ap_log_error(APLOG_MARK, APLOG_ERR, 0, s,
-                    "chxj_init_module Lock initialization failure");
-    chxj_init_module_kill((void*)s);
-    _exit(1);
-  }
-  ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, s,
-                  "lock file:[%s]", conf->client_lock_file_name);
 
   apr_pool_userdata_set(conf, CHXJ_MOD_CONFIG_KEY,
                               apr_pool_cleanup_null,
@@ -699,12 +629,8 @@ chxj_init_module(apr_pool_t *p,
                   apr_pool_t *ptemp, 
                   server_rec *s)
 {
-  mod_chxj_global_config* conf;
-
   ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, s,
                   "start chxj_init_module()");
-
-  conf = chxj_global_config_create(s);
 
   ap_add_version_component(p, CHXJ_VERSION_PREFIX CHXJ_VERSION);
 
@@ -723,7 +649,7 @@ chxj_config_server_create(apr_pool_t *p, server_rec *s)
 {
   mod_chxj_global_config *gc;
 
-  gc = chxj_global_config_create(s);
+  gc = chxj_global_config_create(p, s);
 
   return gc;
 }
@@ -839,13 +765,13 @@ cmd_load_emoji_data(cmd_parms *parms, void *mconfig, const char* arg)
 
 static const command_rec cmds[] = {
   AP_INIT_TAKE1(
-    "LoadDeviceData",
+    "ChxjLoadDeviceData",
     cmd_load_device_data,
     NULL,
     OR_ALL,
     "Load Device Data"),
   AP_INIT_TAKE1(
-    "LoadEmojiData",
+    "ChxjLoadEmojiData",
     cmd_load_emoji_data,
     NULL,
     OR_ALL,
