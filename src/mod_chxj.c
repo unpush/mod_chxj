@@ -674,10 +674,14 @@ static int chxj_convert_images(request_rec *r)
   gdImagePtr im_in   = NULL;
   gdImagePtr im_out  = NULL;
 
-  FILE *fout;
-  FILE *fin;
+  apr_file_t *fout;
+  apr_file_t *fin;
 
   char*      tmpext;
+  char*      readdata = NULL;
+  apr_size_t readbyte;
+  char*      writedata = NULL;
+  apr_size_t writebyte;
   int neww, newh;
 
 
@@ -716,11 +720,20 @@ static int chxj_convert_images(request_rec *r)
   }
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"found [%s]", r->filename);
 
-  fin = fopen(r->filename, "rb");
-  if (fin == NULL)
+  rv = apr_file_open(&fin, r->filename, APR_READ | APR_BINARY ,APR_OS_DEFAULT, r->pool);
+  if (rv != APR_SUCCESS)
   {
     ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,"file open failed.[%s]", r->filename);
-    return HTTP_INTERNAL_SERVER_ERROR;
+    return HTTP_NOT_FOUND;
+  }
+
+  readdata = apr_palloc(r->pool, st.size);
+  rv = apr_file_read_full(fin, (void*)readdata, st.size, &readbyte);
+  if (rv != APR_SUCCESS || readbyte != st.size)
+  {
+    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,"file read failed.[%s]", r->filename);
+    apr_file_close(fin);
+    return HTTP_NOT_FOUND;
   }
 
   tmpext = strrchr(r->filename, '.');
@@ -729,20 +742,19 @@ static int chxj_convert_images(request_rec *r)
     if (strcasecmp(tmpext, ".jpeg") == 0 
     ||  strcasecmp(tmpext, ".jpg") == 0)
     {
-      im_in = gdImageCreateFromJpeg(fin);
+      im_in = gdImageCreateFromJpegPtr(st.size, (void*)readdata);
     }
     else
     if (strcasecmp(tmpext, ".png") == 0)
     {
-      im_in = gdImageCreateFromPng(fin);
+      im_in = gdImageCreateFromPngPtr(st.size, (void*)readdata);
     }
     else
     if (strcasecmp(tmpext, ".gif") == 0)
     {
-      im_in = gdImageCreateFromGif(fin);
+      im_in = gdImageCreateFromGifPtr(st.size, (void*)readdata);
     }
   }
-  fclose(fin);
   if (im_in == NULL)
   {
     return HTTP_NOT_FOUND;
@@ -803,44 +815,61 @@ static int chxj_convert_images(request_rec *r)
   {
   }
 
-  fout = fopen(tmpfile,"wb");
-  if (fout == NULL)
-  {
-    gdImageDestroy(im_in);
-    gdImageDestroy(im_out);
-    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,"file open error.[%s]", tmpfile);
-    return HTTP_INTERNAL_SERVER_ERROR;
-  }
+  gdImageDestroy(im_in);
 
   if (spec->available_jpeg == 1)
   {
-    gdImageJpeg(im_out, fout, -1);
+    writedata = gdImageJpegPtr (im_out, &writebyte, -1);
     r->content_type = apr_psprintf(r->pool, "image/jpeg");
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert to jpg");
   }
   else
   if (spec->available_png == 1)
   {
-    gdImagePngEx(im_out, fout, 9);
+    writedata = gdImagePngPtrEx (im_out, &writebyte, 9);
     r->content_type = apr_psprintf(r->pool, "image/png");
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert to png");
   }
   else
   if (spec->available_gif == 1)
   {
-    gdImageGif(im_out, fout);
+    writedata = gdImageGifPtr(im_out, &writebyte);
     r->content_type = apr_psprintf(r->pool, "image/gif");
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert to gif");
   }
   else
   if (spec->available_bmp2 == 1 || spec->available_bmp4 == 1)
   {
+    gdImageDestroy(im_out);
     r->content_type = apr_psprintf(r->pool, "image/bmp");
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert to bmp(unsupported)");
+    return HTTP_NOT_FOUND;
   }
-  fclose(fout);
-  gdImageDestroy(im_in);
   gdImageDestroy(im_out);
+  if (writebyte == 0 || writedata == NULL)
+  {
+    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,"convert failure to Jpeg [%s]", tmpfile);
+    return HTTP_INTERNAL_SERVER_ERROR;
+  }
+
+  /* to cache */
+  rv = apr_file_open(&fout, tmpfile,
+                  APR_WRITE| APR_CREATE | APR_BINARY | APR_SHARELOCK ,APR_OS_DEFAULT,
+                  r->pool);
+  if (rv != APR_SUCCESS)
+  {
+    gdFree(writedata);
+    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,"file open error.[%s]", tmpfile);
+    return HTTP_INTERNAL_SERVER_ERROR;
+  }
+  rv = apr_file_write(fout, (void*)writedata, &writebyte);
+  gdFree(writedata);
+  apr_file_close(fout);
+  if (rv != APR_SUCCESS)
+  {
+    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,"file write error.[%s]", tmpfile);
+    return HTTP_INTERNAL_SERVER_ERROR;
+  }
 
 
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"color=[%d]", spec->color);
