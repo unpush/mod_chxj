@@ -269,16 +269,7 @@ chxj_create_cache_file(request_rec* r,
   MagickBooleanType  status;
   MagickWand*        magick_wand;
 
-  char*              ext;
-
-  ext = strrchr(r->filename, '.');
-  if (ext == NULL || strlen(ext) < 3)
-  {
-    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,
-                    "unsupport file.[%s]", r->filename);
-    return HTTP_NOT_FOUND;
-  }
-  if (strcasecmp(ext, ".qrc") == 0)
+  if (strcasecmp(r->handler, "chxj-qrcode") == 0)
   {
     /*------------------------------------------------------------------------*/
     /* QRCODE用のファイルの場合                                               */
@@ -1283,6 +1274,7 @@ chxj_trans_name(request_rec *r)
   }
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "URI[%s]", r->filename);
 
+
   for (ii=0; ii<5; ii++) 
   {
     fname = apr_psprintf(r->pool, "%s.%s", r->filename, ext[ii]);
@@ -1295,22 +1287,25 @@ chxj_trans_name(request_rec *r)
     }
     fname = NULL;
   }
-  if (fname == NULL)
+  if (r->handler == NULL || strcasecmp(r->handler, "chxj-qrcode") != 0)
   {
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "NotFound [%s]", r->filename);
-    return HTTP_NOT_FOUND;
-  }
-
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "Found [%s]", fname);
-  r->filename = apr_psprintf(r->pool, "%s", fname);
-
-  if (strcasecmp("qrc", ext[ii]) == 0)
-  {
-    r->handler = apr_psprintf(r->pool, "chxj-qrcode");
-  }
-  else
-  {
-    r->handler = apr_psprintf(r->pool, "chxj-picture");
+    if (fname == NULL)
+    {
+      ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "NotFound [%s]", r->filename);
+      return DECLINED;
+    }
+  
+    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "Found [%s]", fname);
+    r->filename = apr_psprintf(r->pool, "%s", fname);
+  
+    if (strcasecmp("qrc", ext[ii]) == 0)
+    {
+      r->handler = apr_psprintf(r->pool, "chxj-qrcode");
+    }
+    else
+    {
+      r->handler = apr_psprintf(r->pool, "chxj-picture");
+    }
   }
   return OK;
 }
