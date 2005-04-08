@@ -513,7 +513,6 @@ static qr_capacity_t v_capacity_table[] = {
 };
 
 
-static void   s_node_to_qrcode      (qr_code_t* qrcode, Node* root);
 static char*  s_get_mode_spec       (qr_code_t* qrcode);
 static char*  s_get_char_bit_count  (qr_code_t* qrcode, int len);
 static char*  s_data_to_bin_num     (qr_code_t* qrcode, int data_code_count);
@@ -538,7 +537,6 @@ static int    s_count_same_block    (qr_ver_t ver, char* dst[]);
 static int    s_count_11311_pattern (qr_ver_t ver, char* dst[]);
 static int    s_count_dark_ratio    (qr_ver_t ver, char* dst[]);
 
-static int    s_create_image_data   (qr_code_t* qrcode, char** img, size_t* len);
 static void   chxj_qr_code          (qr_code_t* qrcode, char* module[]);
 
 int
@@ -550,6 +548,7 @@ chxj_qr_code_handler(request_rec* r)
   Doc                doc;
   char*              img;
   Node*              root;
+  mod_chxj_config*   conf;
 
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r,
                                     "start chxj_qr_code_handler()");
@@ -557,6 +556,15 @@ chxj_qr_code_handler(request_rec* r)
   {
     ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r,
                                     "end chxj_qr_code_handler()");
+    return DECLINED;
+  }
+
+  /*------------------------------------------------*/
+  /* もし、イメージ変換ハンドラ中であれば処理しない */
+  /*------------------------------------------------*/
+  conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  if (conf->image == CHXJ_IMG_ON)
+  {
     return DECLINED;
   }
 
@@ -570,10 +578,10 @@ chxj_qr_code_handler(request_rec* r)
 
   qs_init_malloc(&doc);
   root = qs_parse_file(&doc, r->filename);
-  s_node_to_qrcode(&qrcode, root);
+  chxj_qrcode_node_to_qrcode(&qrcode, root);
   qs_all_free(&doc,QX_LOGMARK);
 
-  sts = s_create_image_data(&qrcode, &img, &len);
+  sts = chxj_qrcode_create_image_data(&qrcode, &img, &len);
   if (sts != OK)
   {
     return sts;
@@ -585,8 +593,8 @@ chxj_qr_code_handler(request_rec* r)
   return OK;
 }
 
-static int
-s_create_image_data(
+int
+chxj_qrcode_create_image_data(
   qr_code_t* qrcode,
   char** img,
   size_t* img_len)
@@ -811,10 +819,7 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
   /* 終端パターンの付加                                                       */
   /*--------------------------------------------------------------------------*/
   binstr = apr_pstrcat(r->pool, binstr, real_data, NULL);
-/*
 #ifdef QR_CODE_DEBUG
-*/
-#if 1
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "Before TERM BIT[%s]", binstr);
 #endif
   if (data_code_count * 8 > strlen(binstr))
@@ -825,10 +830,7 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
       binstr = apr_pstrcat(r->pool, binstr, "0", NULL);
     }
   }
-/*
 #ifdef QR_CODE_DEBUG
-*/
-#if 1
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "After TERM BIT[%s] len[%d]bit [%f]byte", binstr, strlen(binstr), (float)(((float)strlen(binstr))/8.0));
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "add term data");
 #endif
@@ -946,8 +948,8 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
 #endif
 }
 
-static void
-s_node_to_qrcode(qr_code_t* qrcode, Node* node)
+void
+chxj_qrcode_node_to_qrcode(qr_code_t* qrcode, Node* node)
 {
   request_rec* r = qrcode->r;
   Doc* doc = qrcode->doc;
@@ -963,7 +965,7 @@ s_node_to_qrcode(qr_code_t* qrcode, Node* node)
     char* name = qs_get_node_name(doc,child);
     if (strcasecmp("qrcode",name) == 0)
     {
-      s_node_to_qrcode(qrcode, child);
+      chxj_qrcode_node_to_qrcode(qrcode, child);
     }
     else
     if (strcasecmp("version", name) == 0)
@@ -1114,6 +1116,7 @@ s_node_to_qrcode(qr_code_t* qrcode, Node* node)
     else
     if (strcasecmp("data", name) == 0)
     {
+      /* TODO: 改行も可能なように修正する */
       Node* cchild = qs_get_child_node(doc, child);
       char* value;
       if (cchild == NULL)

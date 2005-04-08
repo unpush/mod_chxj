@@ -19,6 +19,8 @@
 #include "chxj_img_conv_format.h"
 #include "chxj_specified_device.h"
 #include "chxj_str_util.h"
+#include "chxj_qr_code.h"
+#include "qs_parse_string.h"
 
 #include "http_core.h"
 #include <wand/magick_wand.h>
@@ -122,6 +124,7 @@ static apr_status_t chxj_create_cache_file(
                 apr_finfo_t* st,
                 query_string_param_t *qsp);
 static apr_status_t chxj_send_cache_file(
+                device_table* spec,
                 query_string_param_t* query_string,
                 request_rec* r,
                 const char* tmpfile);
@@ -164,12 +167,19 @@ chxj_img_conv_format(request_rec *r)
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, 
                   "chxj_img_conv_format[%s]", r->the_request);
 
+  conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+
   if (strcasecmp(r->handler, "chxj-picture")
-  &&  strcasecmp(r->handler, "chxj-qrcode-picture"))
+  &&  strcasecmp(r->handler, "chxj-qrcode"))
   {
     /*------------------------------------------------------------------------*/
     /* イメージ変換ハンドラまたは、QRコードのイメージ変換ハンドラではない場合 */
     /*------------------------------------------------------------------------*/
+    return DECLINED;
+  }
+  if (strcasecmp(r->handler, "chxj-qrcode") == 0
+  &&  conf->image == CHXJ_IMG_OFF)
+  {
     return DECLINED;
   }
 
@@ -203,7 +213,6 @@ chxj_img_conv_format(request_rec *r)
   /*--------------------------------------------------------------------------*/
   /* Create Workfile Name                                                     */
   /*--------------------------------------------------------------------------*/
-  conf = ap_get_module_config(r->per_dir_config, &chxj_module);
   tmpfile = chxj_create_workfile(r, conf, user_agent, qsp);
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "workfile=[%s]", tmpfile);
 
@@ -214,6 +223,7 @@ chxj_img_conv_format(request_rec *r)
   }
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"found [%s]", r->filename);
   rv = apr_stat(&cache_st, tmpfile, APR_FINFO_MIN, r->pool);
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"found [%s]", r->filename);
   if (rv != APR_SUCCESS || cache_st.ctime < st.mtime)
   {
     /*------------------------------------------------------------------------*/
@@ -227,7 +237,7 @@ chxj_img_conv_format(request_rec *r)
     }
   }
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"color=[%d]", spec->color);
-  rv = chxj_send_cache_file(qsp,r, tmpfile);
+  rv = chxj_send_cache_file(spec, qsp,r, tmpfile);
   if (rv != OK)
   {
     return rv;
@@ -259,28 +269,74 @@ chxj_create_cache_file(request_rec* r,
   MagickBooleanType  status;
   MagickWand*        magick_wand;
 
-  rv = apr_file_open(&fin, 
-                  r->filename, 
-                  APR_READ|APR_BINARY ,
-                  APR_OS_DEFAULT, 
-                  r->pool);
-  if (rv != APR_SUCCESS)
+  char*              ext;
+
+  ext = strrchr(r->filename, '.');
+  if (ext == NULL || strlen(ext) < 3)
   {
     ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,
-                    "file open failed.[%s]", r->filename);
+                    "unsupport file.[%s]", r->filename);
     return HTTP_NOT_FOUND;
   }
-
-  readdata = apr_palloc(r->pool, st->size);
-  rv = apr_file_read_full(fin, (void*)readdata, st->size, &readbyte);
-  if (rv != APR_SUCCESS || readbyte != st->size)
+  if (strcasecmp(ext, ".qrc") == 0)
   {
-    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,
-                    "file read failed.[%s]", r->filename);
-    apr_file_close(fin);
+    /*------------------------------------------------------------------------*/
+    /* QRCODE用のファイルの場合                                               */
+    /*------------------------------------------------------------------------*/
+    Doc       doc;
+    Node*     root;
+    qr_code_t qrcode;
+    int       sts;
 
-    return HTTP_NOT_FOUND;
+    memset(&doc, 0, sizeof(Doc));
+    memset(&qrcode, 0, sizeof(qr_code_t));
+    doc.r = r;
+    doc.parse_mode = PARSE_MODE_CHTML;
+    qrcode.doc      = &doc;
+    qrcode.r        = r;
+
+    qs_init_malloc(&doc);
+    root = qs_parse_file(&doc, r->filename);
+
+    chxj_qrcode_node_to_qrcode(&qrcode, root);
+    qs_all_free(&doc,QX_LOGMARK);
+    sts = chxj_qrcode_create_image_data(&qrcode, &readdata, &readbyte);
+    if (sts != OK)
+    {
+      ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,
+                    "qrcode create failed.");
+      return sts;
+    }
   }
+  else
+  /*--------------------------------------------------------------------------*/
+  /* 通常のイメージファイルの場合                                             */
+  /*--------------------------------------------------------------------------*/
+  {
+    rv = apr_file_open(&fin, 
+                    r->filename, 
+                    APR_READ|APR_BINARY ,
+                    APR_OS_DEFAULT, 
+                    r->pool);
+    if (rv != APR_SUCCESS)
+    {
+      ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,
+                      "file open failed.[%s]", r->filename);
+      return HTTP_NOT_FOUND;
+    }
+  
+    readdata = apr_palloc(r->pool, st->size);
+    rv = apr_file_read_full(fin, (void*)readdata, st->size, &readbyte);
+    if (rv != APR_SUCCESS || readbyte != st->size)
+    {
+      ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,
+                      "file read failed.[%s]", r->filename);
+      apr_file_close(fin);
+  
+      return HTTP_NOT_FOUND;
+    }
+  }
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "start img convert");
 
 
   magick_wand=NewMagickWand();
@@ -965,7 +1021,7 @@ chxj_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table* spec
 }
 
 static apr_status_t 
-chxj_send_cache_file(query_string_param_t* query_string, request_rec* r, const char* tmpfile)
+chxj_send_cache_file(device_table* spec, query_string_param_t* query_string, request_rec* r, const char* tmpfile)
 {
   apr_status_t rv;
   apr_finfo_t  st;
@@ -983,6 +1039,26 @@ chxj_send_cache_file(query_string_param_t* query_string, request_rec* r, const c
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"name:[%s]", query_string->name);
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"offset:[%ld]", query_string->offset);
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"count:[%ld]", query_string->count);
+
+  if (spec->available_jpeg == 1)
+  {
+    r->content_type = apr_psprintf(r->pool, "image/jpeg");
+  }
+  else
+  if (spec->available_png == 1)
+  {
+    r->content_type = apr_psprintf(r->pool, "image/png");
+  }
+  else
+  if (spec->available_gif == 1)
+  {
+    r->content_type = apr_psprintf(r->pool, "image/gif");
+  }
+  else
+  if (spec->available_bmp2 == 1 || spec->available_bmp4 == 1)
+  {
+    r->content_type = apr_psprintf(r->pool, "image/bmp");
+  }
 
   if (query_string->mode != IMG_CONV_MODE_EZGET && query_string->name == NULL)
   {
@@ -1159,18 +1235,16 @@ chxj_trans_name(request_rec *r)
   const char* ccp;
   char* docroot;
   int len;
-  ap_regex_t *regexp;
-  ap_regmatch_t match[10];
   apr_finfo_t st;
   apr_status_t rv;
   mod_chxj_config* conf;
-  int rtn;
   int ii;
-  char*      ext[4] = {
+  char*      ext[] = {
           "jpg",
           "png",
           "bmp",
           "gif",
+          "qrc",    /* QRCode出力用ファイルの拡張子 */
   };
   char*    fname;
 
@@ -1179,20 +1253,6 @@ chxj_trans_name(request_rec *r)
   {
     return DECLINED;
   }
-#if 0
-  regexp = ap_pregcomp(r->pool, (const char*)conf->image_uri, AP_REG_EXTENDED|AP_REG_ICASE);
-  if (regexp == NULL)
-  {
-    return DECLINED;
-  }
-
-  rtn = ap_regexec(regexp, r->uri, regexp->re_nsub + 1, match, 0);
-  if (rtn != 0)
-  {
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "Not match URI[%s]", r->uri);
-    return DECLINED;
-  }
-#endif
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "Match URI[%s]", r->uri);
 
   if (r->filename == NULL) 
@@ -1223,7 +1283,7 @@ chxj_trans_name(request_rec *r)
   }
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "URI[%s]", r->filename);
 
-  for (ii=0; ii<4; ii++) 
+  for (ii=0; ii<5; ii++) 
   {
     fname = apr_psprintf(r->pool, "%s.%s", r->filename, ext[ii]);
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "search [%s]", fname);
@@ -1240,9 +1300,18 @@ chxj_trans_name(request_rec *r)
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "NotFound [%s]", r->filename);
     return HTTP_NOT_FOUND;
   }
+
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "Found [%s]", fname);
   r->filename = apr_psprintf(r->pool, "%s", fname);
-  r->handler = apr_psprintf(r->pool, "chxj-picture");
+
+  if (strcasecmp("qrc", ext[ii]) == 0)
+  {
+    r->handler = apr_psprintf(r->pool, "chxj-qrcode");
+  }
+  else
+  {
+    r->handler = apr_psprintf(r->pool, "chxj-picture");
+  }
   return OK;
 }
 

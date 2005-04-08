@@ -102,6 +102,8 @@ typedef struct _qr_code_t {
   char*        indata;
 } qr_code_t;
 
-int chxj_qr_code_handler(request_rec* r);
+int     chxj_qr_code_handler            (request_rec* r);
+int     chxj_qrcode_create_image_data   (qr_code_t* qrcode, char** img, size_t* img_len);
+void    chxj_qrcode_node_to_qrcode      (qr_code_t* qrcode, Node* root);
 
 #endif
