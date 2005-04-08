@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2005 QSDN,Inc. All rights reserved.
+ * Copyright (C) 2005 Atsushi Konno All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 #include <unistd.h>
 #include <assert.h>
 #include "chxj_str_util.h"
@@ -141,12 +157,17 @@ static int v_data_code_count[][4] = {
 /* 40         */  {2956,2334,1666,1276,},
 };
 
+/*----------------------------------------------------------------------------*/
+/* あまった場合の付加ビット                                                   */
+/*----------------------------------------------------------------------------*/
 static char* v_pend_bit[]  = {
   "11101100",
   "00010001",
 };
 
-/* モジュール数 */
+/*----------------------------------------------------------------------------*/
+/* モジュール数                                                               */
+/*----------------------------------------------------------------------------*/
 static int v_module_count_table[] = {
   21, 25, 29, 33, 37, 41, 45, 49,
   53, 57, 61, 65, 69, 73, 77, 81,
@@ -154,7 +175,9 @@ static int v_module_count_table[] = {
   117, 121, 125, 129, 133, 137, 141, 145,
   149, 153, 157, 161, 165, 169, 173, 177,
 };
-/* 位置あわせパターンの位置 */
+/*----------------------------------------------------------------------------*/
+/* 位置あわせパターンの位置                                                   */
+/*----------------------------------------------------------------------------*/
 typedef struct _qr_position_pattern_t {
   int count;
   int position[7];
@@ -202,6 +225,9 @@ static qr_position_pattern_t v_position_adjust_table[] = {
   {46, {6,30,58,86,114,142,170,},},
 };
 
+/*----------------------------------------------------------------------------*/
+/* マスク定義                                                                 */
+/*----------------------------------------------------------------------------*/
 typedef enum _qr_mask_pattern_t {
   QR_MASK_1 = 0,
   QR_MASK_2,
@@ -214,6 +240,9 @@ typedef enum _qr_mask_pattern_t {
 } 
 qr_mask_pattern_t;
 
+/*----------------------------------------------------------------------------*/
+/* 白い画像(PNG)                                                              */
+/*----------------------------------------------------------------------------*/
 static unsigned char v_white_base_pic[] = {
   0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a,
   0x00, 0x00, 0x00, 0x0d, 0x49, 0x48, 0x44, 0x52,
@@ -233,6 +262,9 @@ static unsigned char v_white_base_pic[] = {
   0x00, 0x00, 0x00, 0x49, 0x45, 0x4e, 0x44, 0xae,
   0x42, 0x60, 0x82, 0x0a
 };
+/*----------------------------------------------------------------------------*/
+/* 黒い画像(PNG)                                                              */
+/*----------------------------------------------------------------------------*/
 static unsigned char v_black_pixel_pic[] = {
   0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a,
   0x00, 0x00, 0x00, 0x0d, 0x49, 0x48, 0x44, 0x52,
@@ -253,6 +285,9 @@ static unsigned char v_black_pixel_pic[] = {
   0x20, 0x65, 0x0b, 0x00, 0x00, 0x00, 0x00, 0x49,
   0x45, 0x4e, 0x44, 0xae, 0x42, 0x60, 0x82, 
 };
+/*----------------------------------------------------------------------------*/
+/* 型番情報                                                                   */
+/*----------------------------------------------------------------------------*/
 typedef struct _qr_version_info_t {
   qr_ver_t version;
   char* bits;
@@ -304,9 +339,12 @@ static qr_version_info_t v_version_info_table[] = {
 /**
  * データ容量のテーブル
  */
+/*----------------------------------------------------------------------------*/
+/* バージョン別、レベル別、モード別データ容量                                 */
+/*----------------------------------------------------------------------------*/
 typedef struct _qr_capacity_t {
-  qr_ver_t version;
-  qr_level_t level;
+  qr_ver_t    version; /* 冗長情報 */
+  qr_level_t  level;   /* 冗長情報 */
   int size[4];
 } qr_capacity_t;
 
@@ -550,8 +588,10 @@ chxj_qr_code_handler(request_rec* r)
   Node*              root;
   mod_chxj_config*   conf;
 
+#ifdef QR_CODE_DEBUG
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r,
                                     "start chxj_qr_code_handler()");
+#endif
   if (strcasecmp(r->handler, "chxj-qrcode"))
   {
     ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r,
@@ -559,9 +599,9 @@ chxj_qr_code_handler(request_rec* r)
     return DECLINED;
   }
 
-  /*------------------------------------------------*/
-  /* もし、イメージ変換ハンドラ中であれば処理しない */
-  /*------------------------------------------------*/
+  /*--------------------------------------------------------------------------*/
+  /* もし、イメージ変換ハンドラ中であれば、ここでは処理しない                 */
+  /*--------------------------------------------------------------------------*/
   conf = ap_get_module_config(r->per_dir_config, &chxj_module);
   if (conf->image == CHXJ_IMG_ON)
   {
@@ -1136,10 +1176,12 @@ chxj_qrcode_node_to_qrcode(qr_code_t* qrcode, Node* node)
       qrcode->indata = apr_pstrdup(qrcode->r->pool, value);
     }
   }
+#ifdef QR_CODE_DEBUG
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "qrcode->version[%d]", qrcode->version);
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "qrcode->level[%d]", qrcode->level);
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "qrcode->mode[%d]", qrcode->mode);
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "qrcode->indata[%s]", qrcode->indata);
+#endif
 }
 
 
