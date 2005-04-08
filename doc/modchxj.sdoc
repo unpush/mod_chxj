@@ -1,0 +1,705 @@
+<?xml version='1.0' encoding="EUC-JP" ?>
+
+<doc xml:lang="ja">
+<head>
+  <title>mod_chxj</title>
+  <subtitle></subtitle>
+  <author>Atsushi Konno</author>
+  <date>29 Mar 2005</date>
+</head>
+<body>
+<section title="Overview">
+
+mod_chxjはオープンソースの携帯向けコンテンツ変換Apache2.0用モジュールであり、
+CHTML（DoCoMo i-Mode用 CHTML3.0)で記述された文書を、アクセスに来た端末のUser-Agentヘッダを見て、それぞれの端末にあった形式に変換します。
+HTML文書に限らず、画像（jpg、gif、png）、絵文字についても、定義ファイルに従ってそれぞれのキャリアにあった絵文字に変換します。
+
+
+時代遅れの感はありますが・・・。
+
+</section>
+<section title="インストール">
+<subsection title="準備">
+mod_chxjをインストールする前に、下記のものを用意する必要があります。
+<ol>
+  <li>Apache2.0のヘッダーファイル群</li>
+  <li>Apache2.0用のapxs</li>
+  <li>apr(Apache Portable Runtime)ライブラリとそのヘッダファイル郡</li>
+  <li>automake、autoconf、libtool</li>
+  <li>ImageMagick(MagickWand)</li>
+  <li>Linux</li>
+</ol>
+</subsection>
+<subsection title="mod_chxjの入手">
+mod_chxjは<a href="http://sourceforge.jp/projects/modchxj/">こちら</a>からダウンロードすることができます。
+</subsection>
+<subsection title="インストール">
+以下にmod_chxjインストール手順を示します。
+<ol>
+<li>Configure スクリプトを生成します<program title="Configure スクリプトの生成">
+$ ./buildconf.sh
+</program> 
+<note>"$"はプロンプトをあらわします。</note>
+</li>
+<li>Configure
+
+以下は、/usr/include/apache2.0に、Apache2.0のヘッダーファイルが存在する場合です。
+<program title="Configure">
+$ ./configure --with-apache-header=/usr/include/apache2.0
+</program>
+<note>--with-apache-headerは必須です。</note>
+</li>
+<li>mod_chxj.soを生成します
+<program title="make">
+$ make
+</program>
+</li>
+<li>apacheにインストールします
+<program title="install">
+$ make install
+</program>
+</li>
+<li>データの設置
+etcディレクトリは以下のdevice_data.xmlとemoji.xmlをApache
+からアクセスできるところに配置します。
+
+以下、/etc/apache2/chxjディレクトリにchxj用設定ファイルを用意する場合
+
+<program title="データの設置">
+$ mkdir -p /etc/apache2/chxj
+$ cp etc/device_data.xml /etc/apache2/chxj
+$ cp etc/emoji.xml /etc/apache2/chxj
+</program>
+</li>
+</ol>
+</subsection>
+</section>
+<section title="Configuration">
+
+以下はmod_chxjが/usr/lib/apache2/modulesディレクトリ配下に設置されたものとしています
+
+<subsection title="htmlファイルが変換対象の場合">
+
+例として、Locationが"/chxj"以下のものは全て変換する場合を説明します。
+
+<ol>
+<li>httpd.confに以下を追加します。
+
+<program title="httpd.conf">
+# モジュールをApache2.0にロード
+LoadModule chxj_module /usr/lib/apache2/modules/mod_chxj.so
+
+# デバイスデータの設定
+ChxjLoadDeviceData  /etc/apache2/chxj/device_data.xml
+
+# 絵文字データの設定
+ChxjLoadEmojiData   /etc/apache2/chxj/emoji.xml
+
+# 変換させる対象の設定
+&lt;Location /chxj&gt;
+  SetOutputFilter chxj_output_filter
+  SetInputFilter  chxj_input_filter
+&lt;/Location&gt;
+</program>
+</li>
+<li>apacheの再起動。</li>
+</ol>
+</subsection>
+<subsection title="php等の出力結果が変換対象の場合">
+<ol>
+<li>httpd.confに以下を追加します
+
+<program title="httpd.conf">
+# モジュールをApache2.0にロード
+LoadModule chxj_module /usr/lib/apache2/modules/mod_chxj.so
+
+# デバイスデータの設定
+ChxjLoadDeviceData  /etc/apache2/chxj/device_data.xml
+
+# 絵文字データの設定
+ChxjLoadEmojiData   /etc/apache2/chxj/emoji.xml
+
+&lt;Location /chxj&gt;
+  SetOutputFilter chxj_output_filter
+  SetInputFilter  chxj_input_filter
+&lt;/Location&gt;
+</program>
+</li>
+<li>apacheの再起動。</li>
+</ol>
+</subsection>
+
+<subsection title="mod_jk2を使用したtomcatの出力結果が変換対象の場合">
+<ol>
+<li>httpd.confに以下を追加します
+
+<program title="httpd.conf">
+# モジュールをApache2.0にロード
+LoadModule chxj_module /usr/lib/apache2/modules/mod_chxj.so
+
+# デバイスデータの設定
+ChxjLoadDeviceData  /etc/apache2/chxj/device_data.xml
+
+# 絵文字データの設定
+ChxjLoadEmojiData   /etc/apache2/chxj/emoji.xml
+&lt;Location /chxj&gt;
+   SetOutputFilter chxj_output_filter
+&lt;/Location&gt;
+</program>
+<note>注意：input_filterは設定しないでください！！！</note>
+</li>
+
+<li>chxjfilter-0.0.1.jarを生成します
+<ol>
+<li>build.propertiesを環境に合わせて編集します
+
+<program title="build.propertiesの編集">
+$ cd java
+$ vi build.properties
+</program>
+</li>
+<li>chxjfilter-0.0.1.jarを生成します
+
+<program title="コンパイル">
+$ ant dist
+</program>
+</li>
+<li>生成されたchxjfilter-0.0.1.jarにクラスパスをとおします</li>
+</ol>
+</li>
+
+<li>web.xmlの編集し、以下を追加します。
+
+<program title="web.xml">
+&lt;filter&gt;
+   &lt;filter-name&gt;chxjfilter&lt;/filter-name&gt;
+   &lt;filter-class&gt;com.qsdn.filter.CHXJFilter&lt;/filter-class&gt;
+&lt;/filter&gt;
+&lt;filter-mapping&gt;
+    &lt;filter-name&gt;chxjfilter&lt;/filter-name&gt;
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+&lt;/filter-mapping&gt;
+</program>
+</li>
+
+<li>apache等の再起動</li>
+</ol>
+</subsection>
+
+
+
+<subsection title="画像自動変換機能を使用する場合">
+<ol>
+<li>httpd.confに以下を追加します。
+下記は、URIが/imgで始まる全ての画像に対して動作するようmod_chxjに指示しています。
+
+<program title="httpd.conf">
+ChxjImageUri ^/img/*
+ChxjImageCacheDir /tmp
+ChxjImageCopyright "A.Konno"
+</program>
+
+上記の説明を以下に示します。
+
+<ol>
+    <li>ChxjImageUri<br />
+      mod_chxjの画像変換ハンドラを起動させたいリクエストＵＲＬのパターンを指定します。
+      パターンのルールは、REGEXに基づきます。
+ 
+      <program title="ChxjImageUri">
+      ChxjImageUri ^/img/*
+      </program>
+
+      URLが /img/ で始まっているリクエストに対してハンドラが起動されます。
+      <br />
+      <br />
+    </li>
+
+
+    <li>ChxjImageCacheDir<br />
+      mod_chxj画像変換ハンドラが使用する変換後の画像をおいておくディレクトリを指定します。
+      デフォルトは/tmp。
+
+      <program title="ChxjImageCacheDir">
+      ChxjImageCacheDir /tmp
+      </program>
+
+      mod_chxjに画像変換キャッシュとして/tmpを使用するよう指示します。
+      <br />
+      <br />
+    </li>
+
+
+    <li>ChxjImageCopyright<br />
+      mod_chxjの画像変換ハンドラに、転送禁止設定を行うよう指示します。
+      パラメータとして任意の文字列をとります。
+      ChxjImageCopyrightディレクティブで指定された文字列は、それぞれのイメージの
+      コメント部に埋め込まれます。
+
+      <program title="ChxjImageCopyright">
+      ChxjImageCopyright "A.Konno"
+      </program>
+
+       mod_chxjに転送禁止設定を行うよう指示しています。
+       変換後イメージのコメント部分には、キャリア毎に以下の文字列を埋め込みます。
+
+       <b>AU の場合</b>
+       <program title="AU">
+       kddi_copyright=on,A.Konno
+       </program>
+
+       <b>DoCoMoの場合</b>
+       <program title="DoCoMo">copy="NO",A.Konno</program>
+
+       <b>Vodafone</b>の場合は、レスポンスヘッダに
+
+       <program title="Vodafone/J-Phone">
+         x-jphone-copyright:no-transfer
+       </program>
+
+       を埋め込みます。
+       <note>Vodafoneの場合は、リクエストＵＲＬの最後が.pnzか、.jpzで終わるようにダミーを付けなければなりません。</note>
+    </li>
+  </ol>
+  </li>
+</ol>
+</subsection>
+</section>
+<section title="対応するCHTMLタグ">
+変換可能なＣＨＴＭＬタグは以下のとおりです。
+
+<table title="対応タグ一覧">
+  <thead>
+    <tr>
+      <td>タグ</td>
+      <td>属性</td>
+      <td>CHTML</td>
+      <td>HDML</td>
+      <td>XHTML</td>
+      <td>JHTML</td>
+      <td>備考</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+       <td>&lt;HTML&gt;</td>
+       <td align="center"> </td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="left">属性を指定した場合は無視します</td>
+    </tr>
+    <tr>
+       <td>&lt;META&gt;</td>
+       <td align="center">http-equiv</td>
+       <td align="center">△</td>
+       <td align="center">×</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="left">CHTML1.0、HDMLでは無視します</td>
+    </tr>
+    <tr>
+       <td> </td>
+       <td align="center">content</td>
+       <td align="center">△</td>
+       <td align="center">×</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="left">CHTML1.0、HDMLでは無視します</td>
+    </tr>
+    <tr>
+       <td>&lt;HEAD&gt;</td>
+       <td align="center"> </td>
+       <td align="center">○</td>
+       <td align="center">△</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="left">属性を指定した場合は無視します</td>
+    </tr>
+    <tr>
+       <td>&lt;TITLE&gt;</td>
+       <td align="center"> </td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="left">属性を指定した場合は無視します</td>
+    </tr>
+    <tr>
+       <td>&lt;BASE&gt;</td>
+       <td align="center"> </td>
+       <td align="center">○</td>
+       <td align="center">×</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="left">HDMLでは無視します</td>
+    </tr>
+    <tr>
+       <td>&lt;BODY&gt;</td>
+       <td align="center">bgcolor</td>
+       <td align="center">△</td>
+       <td align="center">×</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="left">HDML、CHTML1.0、CHTML2.0では無視します</td>
+    </tr>
+    <tr>
+       <td> </td>
+       <td align="center">text</td>
+       <td align="center">△</td>
+       <td align="center">×</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="left">HDML、CHTML1.0、CHTML2.0では無視します</td>
+    </tr>
+    <tr>
+       <td> </td>
+       <td align="center">link</td>
+       <td align="center">△</td>
+       <td align="center">×</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="left">HDML、CHTML1.0、CHTML2.0では無視します</td>
+    </tr>
+    <tr>
+       <td>&lt;A&gt;</td>
+       <td align="center">href</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="left"> </td>
+    </tr>
+    <tr>
+       <td> </td>
+       <td align="center">accesskey</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="left"> </td>
+    </tr>
+    <tr>
+       <td>&lt;BR&gt;</td>
+       <td align="center"> </td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="left"> </td>
+    </tr>
+    <tr>
+       <td>&lt;FONT&gt;</td>
+       <td align="center">color</td>
+       <td align="center">△</td>
+       <td align="center">×</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="left">HDML,CHTML1.0では無視します</td>
+    </tr>
+    <tr>
+       <td>&lt;FORM&gt;</td>
+       <td align="center">action</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="left"> </td>
+    </tr>
+    <tr>
+       <td> </td>
+       <td align="center">method</td>
+       <td align="center">○</td>
+       <td align="center">×</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="left">HDMLでは無視します</td>
+    </tr>
+    <tr>
+       <td>&lt;INPUT&gt;</td>
+       <td align="center">name</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="left"> </td>
+    </tr>
+    <tr>
+       <td> </td>
+       <td align="center">type</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="left">text,password,hidden,radio,checkbox,submitに対応</td>
+    </tr>
+    <tr>
+       <td> </td>
+       <td align="center">value</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="left"></td>
+    </tr>
+    <tr>
+       <td> </td>
+       <td align="center">istyle</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="left"> </td>
+    </tr>
+    <tr>
+       <td>&lt;SELECT&lt;</td>
+       <td align="center">name</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="left"> </td>
+    </tr>
+    <tr>
+       <td> </td>
+       <td align="center">size</td>
+       <td align="center">○</td>
+       <td align="center">×</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="left">HDMLでは無視します</td>
+    </tr>
+    <tr>
+       <td>&lt;OPTION&gt;</td>
+       <td align="center">value</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="left"><note>必ず閉じてください。そのうち対応します。</note></td>
+    </tr>
+    <tr>
+       <td> </td>
+       <td align="center">checked</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="left"> </td>
+    </tr>
+    <tr>
+       <td>&lt;DIV&gt;</td>
+       <td align="center">align</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="left"> </td>
+    </tr>
+    <tr>
+       <td>&lt;HR&gt;</td>
+       <td align="center"> </td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="left"> </td>
+    </tr>
+    <tr>
+       <td>&lt;CENTER&gt;</td>
+       <td align="center"> </td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="left"> </td>
+    </tr>
+    <tr>
+       <td>&lt;IMG&gt;</td>
+       <td align="center">src</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="left"> </td>
+    </tr>
+    <tr>
+       <td>&lt;CHXJ:IF&gt;</td>
+       <td align="center">lang</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="left">lang="chtml" lang="xhtml" lang="hdml" lang="jhtml"が指定できます</td>
+    </tr>
+  </tbody>
+
+  上記以外のタグは全て無視されます。
+
+</table>
+
+</section>
+<section title="独自拡張タグ">
+<ol>
+  <li>&lt;CHXJ:IF&gt;<br />
+    
+       &lt;CHXJ:IF&gt;タグと&lt;/CHXJ:IF&gt;タグではさまれたタグやテキストは、
+       変換せずに<b>そのまま</b><note>変換しませんので注意が必要です</note>出力します。必須の属性としてlangがあります。lang属性を指定することによって、
+       例えば、<b>「HDML機の場合のみ出力させる」</b>といったことを可能にします。<br />
+       <br />
+       ex) 
+       <program title="HTML文書中にHDML機の場合のみ有効にしたいタグ、または文書がある場合">
+       &lt;CHXJ:IF lang="HDML" &gt;
+         &lt;NODISPLAY&gt;
+           &lt;ACTION TYPE=ACCEPT TASK=GOSUB DEST='device:data/dnld?url=abc&amp;name=abc.jpg&amp;size=100&amp;disposition=devjaww&amp;title=test'&gt;
+         &lt;/NODISPLAY&gt;
+       &lt;/CHXJ:IF&gt;
+       </program><br />
+
+       ex) 
+       <program title="i-Modeのみ出力したい文書がある場合">
+       &lt;CHXJ:IF lang="chtml" &gt;
+         シークレットコードがどーのこーの。
+       &lt;/CHXJ:IF&gt;
+       </program><br />
+
+       また、lang属性は、複数指定することも可能です。<br /> 
+
+       <program title="HDML機,J-PHONE機は以下を出力します">
+       &lt;CHXJ:IF lang="chtml" lang="jhtml"&gt;
+       あなたの携帯は、HDML機かJ-HTML機です。
+       &lt;/CHXJ:IF&gt;
+       </program><br />
+    
+  </li>
+</ol>
+</section>
+
+
+
+<section title="文字コード">
+  文字コードは、絵文字の入出力がある関係上、Shift_JISのみとしています。
+</section>
+
+
+<section title="絵文字について">
+  i-Mode用の絵文字を書いておけば、アクセスしたキャリアによって、mod_chxjが対応の絵文字に自動変換します。
+  ソースに2byteのバイナリコードを直接書いても、１０進参照文字列<note>１６進参照文字列には対応していません</note>（&amp;#XXX;の形）で書いても、どちらでも変換対象になります。
+  １０進参照文字列で書いた場合は、mod_chxjにより、自動で２バイトコードに変換します。
+<subsection title="絵文字変換定義">
+絵文字の変換に関する動作を変えたい場合（例えば「ハートがあったら、ＡＵの場合はスペードに」とか、「変換定義がおかしい」といった場合）は、
+emoji.xmlファイルを直接編集することによって定義を変更することが可能です。emoji.xmlはXMLファイルとなっていますので、vi等で簡単に定義を
+変更することができます<note>厳密にはXMLになっていないので、日本語の記述はＳＪＩＳでお願いします。</note>。
+
+<br />
+以下に、emoji.xmlファイルの一部を記します。
+<program title="emoji.xml">
+&lt;?xml encoding="Shift_JIS" &gt;
+
+&lt;emoji&gt;
+  &lt;set&gt;
+    &lt;no&gt;1&lt;/no&gt;
+    &lt;imode&gt;
+      &lt;hex1&gt;f8&lt;/hex1&gt;
+      &lt;hex2&gt;9f&lt;/hex2&gt;
+      &lt;string&gt;&amp;#63647;&lt;/string&gt;
+      &lt;description&gt;&lt;/description&gt;
+    &lt;/imode&gt;
+    &lt;ezweb&gt;
+      &lt;A&gt;44&lt;/A&gt;
+      &lt;B&gt;44&lt;/B&gt;
+      &lt;C&gt;44&lt;/C&gt;
+      &lt;D&gt;44&lt;/D&gt;
+    &lt;/ezweb&gt;
+    &lt;jphone&gt;
+      &lt;string&gt;$Gj&lt;/string&gt;
+    &lt;/jphone&gt;
+  &lt;/set&gt;
+</program>
+
+絵文字の定義は、&lt;emoji&gt;タグから&lt;/emoji&gt;タグまでの間にあります。その中の要素を説明します。
+１つの絵文字につき、１つのセット（&lt;set&gt;タグから&lt;/set&gt;タグまで）とし、キャリア毎の絵文字を定義しています。
+
+<ol>
+  <li>&lt;imode&gt;要素<br />
+まず、元となるi-Mode用の絵文字は、&lt;imode&gt;タグにはさまれた間に定義されています。
+&lt;imode&gt;要素は、２バイトコード要素(&lt;hex1&gt;&lt;hex2&gt;)と、
+１０進参照文字列要素(&lt;string&gt;)を保持していて、この２つの要素を変換元の値として使用します。
+アクセスしてきた端末が、i-Mode機であった場合で、かつＣＨＴＭＬ中に１０進参照文字列が絵文字として書かれている場合には、
+&lt;hex1&gt;&lt;hex2&gt;要素に定義されている値に置換します。
+  </li>
+<br />
+<br />
+  <li>&lt;ezweb&gt;要素<br />
+アクセスしてきた端末が、AU機であった場合、&lt;ezweb&gt;要素に定義されている値に変換します。
+&lt;ezweb&gt;要素は、&lt;A&gt;〜&lt;D&gt;要素を持っていて、それぞれAUの絵文字タイプＡ〜Ｄに対応していますので、
+もし、Ｄタイプの絵文字端末であったなら、&lt;D&gt;要素に定義されている値に変換します。ここで定義されている値は、
+HDML機の場合は、<b>&lt;IMG ICON="XX"&gt;</b>の"XX"の部分に当てはめられて、置換されます。
+XHTML機の場合は、<b>&lt;IMG LOCALSRC="XX"&gt;</b>の"XX"の部分に当てはめられて、置換されます。
+  </li>
+<br />
+<br />
+  <li>&lt;jphone&gt;要素<br />
+アクセスしてきた端末が、Vodafone/J-Phone端末であった場合、&lt;jphone&gt;要素に定義されている値に変換します。
+&lt;jphone&gt;要素は、&lt;string&gt;要素を保持していて、ここで定義されている値を直接使用します。
+  </li>
+</ol><br />
+emoji.xmlに定義されていない絵文字で、変換したい絵文字がある場合には、このファイルに新たな定義を足せば、
+変換するようになります。
+</subsection>
+</section>
+
+
+<section title="デバイス定義 device_data.xml">
+mod_chxjの動作を決定付ける重要な定義です。変換対象の端末は全て、device_data.xmlファイルに定義される必要があります。
+定義されていない端末は、mod_chxjとしては、認識することができません。認識できない場合には、ＣＨＴＭＬをそのまま出力します。
+</section>
+
+
+<section title="イメージ画像変換">
+mod_chxjには、JPEG、GIF、PNG、BMPファイルを置いておくだけで、デバイス定義に従って、それぞれのキャリア対応のフォーマットに変換する機能があります。
+画像のサイズ（縦Ｘ横）も、端末の画面サイズに合わせて変換します。
+画像のサイズ（バイト数）については、デバイス定義中のキャッシュサイズを見て、その値よりも小さくなるように<b>努力</b>しますが、元の画像が
+大きすぎる場合や、複雑な画像の場合には、キャッシュサイズよりも小さくできずに表示できない場合があります。
+<br />
+それぞれのタグで指定する場合には、ファイル名の拡張子（.jpgや.gif等）をはずした形で指定します。<br />
+本機能には３つのモードが存在します。そのモードを以下に記します。
+
+<subsection title="サムネイルモード">
+  端末側画面サイズの約３分の１程度のサイズ（縦Ｘ横）に画像を縮小表示します。
+  <program title="サムネイルモード 使用例">
+  &lt;IMG SRC="/img/logo?Mode=Thumbnail"&gt;
+  </program>
+</subsection>
+<subsection title="壁紙モード">
+  端末側画面のサイズにマッチするサイズに拡大・縮小します。横長の画像の場合には、縦幅を合わせた後に左右をトリミングします。
+  <program title="壁紙モード 使用例">
+  &lt;IMG SRC="/img/logo?Mode=WP"&gt;
+  </program>
+</subsection>
+<subsection title="EzGetモード">
+  壁紙ダウンロードを行いたい場合に使用します。EzGETモードは、壁紙モードで出力される画像サイズと同一サイズの画像が使用されます。
+  <program title="EzGetモード 使用例">
+  &lt;A HREF="/img/logo?Mode=EzGet"&gt;
+  </program>
+</subsection>
+<subsection title="その他の機能">
+  モードの他に、画像サイズ（縦Ｘ横）を直接指定することも可能です。
+<b>w</b>パラメータ、<b>h</b>パラメータを使用して指定します。
+  <ol>
+  <li>wパラメータ<br />
+  横幅を指定します。
+  </li>
+  <li>hパラメータ<br />
+  縦幅を指定します。
+  </li>
+  </ol>
+  <program title="w/hパラメータ 使用例">
+  &lt;IMG SRC="/img/logo?w=100&amp;h=200"&gt;
+  </program>
+</subsection>
+上記全てのモード、パラメータはＧＥＴリクエストとしてのみ使用できます。
+</section>
+</body>
+</doc>
