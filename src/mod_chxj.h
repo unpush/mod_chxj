@@ -73,9 +73,11 @@ typedef struct _emoji_t {
 
 typedef struct _mod_chxj_config_t 
 {
+  int                 image;
+
   char*               device_data_file;
   char*               emoji_data_file;
-  char*               image_uri;
+
   char*               image_cache_dir;
   char*               image_copyright;
   device_table_list*  devices;
@@ -107,6 +109,9 @@ typedef struct _mod_chxj_ctx_t
 #define HTTP_USER_AGENT       "User-Agent"
 
 module AP_MODULE_DECLARE_DATA chxj_module;
+
+#define CHXJ_IMG_ON     (1)
+#define CHXJ_IMG_OFF    (0)
 
 
 #endif

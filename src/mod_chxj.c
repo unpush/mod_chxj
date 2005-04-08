@@ -714,7 +714,7 @@ chxj_create_per_dir_config(apr_pool_t *p, char *arg)
   conf->emoji_data_file  = NULL;
   conf->emoji            = NULL;
   conf->emoji_tail       = NULL;
-  conf->image_uri        = NULL;
+  conf->image            = CHXJ_IMG_OFF;
   conf->image_cache_dir  = apr_psprintf(p, "%s",DEFAULT_IMAGE_CACHE_DIR);
 
   /* Default is copyleft */
@@ -734,7 +734,7 @@ chxj_merge_per_dir_config(apr_pool_t *p, void *basev, void *addv)
   mrg->device_data_file = NULL;
   mrg->devices          = NULL;
   mrg->emoji_data_file  = NULL;
-  mrg->image_uri        = NULL;
+  mrg->image            = CHXJ_IMG_OFF;
   mrg->image_cache_dir  = NULL;
   mrg->image_copyright  = NULL;
   mrg->emoji            = NULL;
@@ -763,13 +763,13 @@ chxj_merge_per_dir_config(apr_pool_t *p, void *basev, void *addv)
     mrg->emoji_data_file = apr_pstrdup(p, add->emoji_data_file);
   }
 
-  if (add->image_uri == NULL)
+  if (add->image == CHXJ_IMG_OFF)
   {
-    mrg->image_uri = apr_pstrdup(p, base->image_uri);
+    mrg->image = base->image;
   }
   else
   {
-    mrg->image_uri = apr_pstrdup(p, add->image_uri);
+    mrg->image = add->image;
   }
 
   if (strcasecmp(add->image_cache_dir ,DEFAULT_IMAGE_CACHE_DIR)==0)
@@ -856,7 +856,7 @@ cmd_load_emoji_data(cmd_parms *parms, void *mconfig, const char* arg)
 }
 
 static const char* 
-cmd_set_image_uri(cmd_parms *parms, void *mconfig, const char* arg) 
+cmd_set_image_engine(cmd_parms *parms, void *mconfig, const char* arg) 
 {
   mod_chxj_config* conf;
   Doc doc;
@@ -867,7 +867,14 @@ cmd_set_image_uri(cmd_parms *parms, void *mconfig, const char* arg)
   }
 
   conf = (mod_chxj_config*)mconfig;
-  conf->image_uri = apr_pstrdup(parms->pool, arg);
+  if (strcasecmp("ON", arg) == 0)
+  {
+    conf->image = CHXJ_IMG_ON;
+  }
+  else
+  {
+    conf->image = CHXJ_IMG_OFF;
+  }
   return NULL;
 }
 
@@ -919,8 +926,8 @@ static const command_rec cmds[] = {
     OR_ALL,
     "Load Emoji Data"),
   AP_INIT_TAKE1(
-    "ChxjImageUri",
-    cmd_set_image_uri,
+    "ChxjImageEngine",
+    cmd_set_image_engine,
     NULL,
     OR_ALL,
     "Convert Target URI"),

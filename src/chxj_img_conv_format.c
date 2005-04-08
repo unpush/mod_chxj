@@ -164,8 +164,12 @@ chxj_img_conv_format(request_rec *r)
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, 
                   "chxj_img_conv_format[%s]", r->the_request);
 
-  if (strcasecmp(r->handler, "chxj-picture"))
+  if (strcasecmp(r->handler, "chxj-picture")
+  &&  strcasecmp(r->handler, "chxj-qrcode-picture"))
   {
+    /*------------------------------------------------------------------------*/
+    /* イメージ変換ハンドラまたは、QRコードのイメージ変換ハンドラではない場合 */
+    /*------------------------------------------------------------------------*/
     return DECLINED;
   }
 
@@ -1171,11 +1175,11 @@ chxj_trans_name(request_rec *r)
   char*    fname;
 
   conf = ap_get_module_config(r->per_dir_config, &chxj_module);
-  if (conf->image_uri == NULL)
+  if (conf->image != CHXJ_IMG_ON)
   {
     return DECLINED;
   }
-
+#if 0
   regexp = ap_pregcomp(r->pool, (const char*)conf->image_uri, AP_REG_EXTENDED|AP_REG_ICASE);
   if (regexp == NULL)
   {
@@ -1188,6 +1192,7 @@ chxj_trans_name(request_rec *r)
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "Not match URI[%s]", r->uri);
     return DECLINED;
   }
+#endif
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "Match URI[%s]", r->uri);
 
   if (r->filename == NULL) 
