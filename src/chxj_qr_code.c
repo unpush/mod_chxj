@@ -1161,7 +1161,7 @@ chxj_qrcode_node_to_qrcode(qr_code_t* qrcode, Node* node)
       char* value;
       if (cchild == NULL)
       {
-        qrcode->indata = apr_palloc(qrcode->r->pool, 1);
+        qrcode->indata = apr_palloc(r->pool, 1);
         qrcode->indata[0] = 0;
         continue;
       }
@@ -1169,11 +1169,11 @@ chxj_qrcode_node_to_qrcode(qr_code_t* qrcode, Node* node)
       value = qs_get_node_value(doc, cchild);
       if (strcasecmp("TEXT", name) != 0)
       {
-        qrcode->indata = apr_palloc(qrcode->r->pool, 1);
+        qrcode->indata = apr_palloc(r->pool, 1);
         qrcode->indata[0] = 0;
         continue;
       }
-      qrcode->indata = apr_pstrdup(qrcode->r->pool, value);
+      qrcode->indata = apr_pstrdup(r->pool, value);
     }
   }
 #ifdef QR_CODE_DEBUG
