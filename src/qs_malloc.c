@@ -39,9 +39,14 @@ qs_init_malloc(Doc* doc)
     doc->pointer_table[ii].address = 0;
     doc->pointer_table[ii].size    = 0L;
     doc->pointer_table[ii].next    = NULL;
+    doc->pointer_table[ii].prev    = NULL;
     if (ii==0)
     {
       doc->free_list_head = &(doc->pointer_table[ii]);
+    }
+    else
+    {
+      doc->pointer_table[ii].prev = &(doc->pointer_table[ii-1]);
     }
 
     if (ii < QX_ALLOC_MAX-1)
@@ -104,6 +109,7 @@ qs_malloc(Doc* doc, int size, const char* fname, int line)
 static void
 s_add_to_allocated_list(Doc* doc, Pointer_Table* pt)
 {
+  pt->prev = NULL;
   if (doc->allocated_list_head == NULL)
   {
     doc->allocated_list_head = pt;
@@ -112,6 +118,7 @@ s_add_to_allocated_list(Doc* doc, Pointer_Table* pt)
   else
   {
     doc->allocated_list_tail->next = pt;
+    pt->prev = doc->allocated_list_tail;
     doc->allocated_list_tail = pt;
   }
   pt->next = NULL;
@@ -127,7 +134,12 @@ s_get_free_pointer_table(Doc* doc)
   {
     pt = doc->free_list_head;
     doc->free_list_head = doc->free_list_head->next;
+    if (doc->free_list_head != NULL)
+    {
+      doc->free_list_head->prev = NULL;
+    }
     pt->next = NULL;
+    pt->prev = NULL;
   }
   return pt;
 }
@@ -139,39 +151,57 @@ void
 qs_free(Doc* doc, void *s, const char* fname, int line) 
 {
   Pointer_Table* pp;
-  Pointer_Table* pp_prev;
 #ifdef MALLOC_TRACE
   char buffer[BUFSIZ];
   sprintf(buffer,"free Address:[0x%x]", s);
   qs_log(doc,QX_LOG_DEBUG,fname,line,buffer);
 #endif
 
-  pp_prev = NULL;
-  for (pp = doc->allocated_list_head; pp; pp = pp->next)
+  for (pp = doc->allocated_list_tail; pp; pp = pp->prev)
   {
     if (pp->address == (unsigned int)s)
     {
       free((void*)pp->address);
+      pp->address = 0;
       doc->alloc_size -= pp->size;
       pp->size = 0;
 
       break;
     }
-    pp_prev = pp;
   }
   if (pp == NULL)
   {
     return;
   }
-  if (pp_prev == NULL)
+  if (pp->next == NULL && pp->prev == NULL)
   {
+    /* 先頭で最後の場合 */
     doc->allocated_list_head = NULL;
     doc->allocated_list_tail = NULL;
   }
   else 
   {
-    pp_prev->next = pp->next;
+    if (pp->prev == NULL)
+    {
+      /* 先頭の場合 */
+      pp->next->prev = pp->prev;
+      doc->allocated_list_head = pp->next;
+    }
+    else
+    if (pp->next == NULL)
+    {
+      /* 最後の場合 */
+      pp->prev->next = pp->next;
+      doc->allocated_list_tail = pp->prev;
+    }
+    else
+    {
+      /* 途中の場合 */
+      pp->prev->next = pp->next;
+      pp->next->prev = pp->prev;
+    }
     pp->next = NULL;
+    pp->prev = NULL;
   }
   s_add_to_free_list(doc, pp);
 
@@ -190,6 +220,7 @@ s_add_to_free_list(Doc* doc, Pointer_Table* pt)
   else
   {
     doc->free_list_tail->next = pt;
+    pt->prev = doc->free_list_tail;
     doc->free_list_tail = pt;
   }
   pt->next = NULL;
@@ -203,13 +234,13 @@ qs_all_free(Doc* doc, const char* fname, int line)
 
   if (doc->do_init_flag) 
   {
-    for (pp = doc->allocated_list_head; pp; pp = pp->next)
+    for (pp = doc->allocated_list_tail; pp; pp = pp->prev)
     {
       free((void*)pp->address);
       pp->address = 0;
       pp->size =0;
     }
-    free((void*)doc->pointer_table);
+    free((void*)(doc->pointer_table));
     doc->pointer_table       = NULL;
     doc->allocated_list_head = NULL;
     doc->allocated_list_tail = NULL;

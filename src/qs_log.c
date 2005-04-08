@@ -19,8 +19,8 @@
 #include "qs_log.h"
 #include "qs_malloc.h"
 #include "http_log.h"
-#define USE_LOG
 /*
+#define USE_LOG
 #ifndef DEBUG
 #define DEBUG
 #endif

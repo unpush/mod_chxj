@@ -118,6 +118,7 @@ typedef struct pointer_table_t {
   unsigned int address;
   unsigned long size;
   struct pointer_table_t* next;
+  struct pointer_table_t* prev;
 } Pointer_Table;
 
 

@@ -53,6 +53,7 @@
 #include "chxj_jhtml.h"
 
 #include "chxj_img_conv_format.h"
+#include "chxj_qr_code.h"
 
 
 #ifdef PACKAGE_NAME
@@ -692,6 +693,7 @@ chxj_register_hooks(apr_pool_t *p)
                       NULL, 
                       AP_FTYPE_RESOURCE);
   ap_hook_handler(chxj_convert_images, NULL, NULL, APR_HOOK_MIDDLE);
+  ap_hook_handler(chxj_qr_code_handler, NULL, NULL, APR_HOOK_MIDDLE);
   ap_hook_translate_name(chxj_translate_name, NULL, NULL, APR_HOOK_MIDDLE);
 }
 
