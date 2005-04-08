@@ -924,6 +924,8 @@ static qr_ecc_spec_t v_ecc_spec_table[] = {
 #endif
 
 /**
+ * 誤り訂正情報を付加します。また、ＲＳブロック数が複数の場合は、
+ * インタリーブした結果を<code>dst</code>に設定します.
  */
 int
 chxj_calc_ecc(qr_code_t* qrcode,
