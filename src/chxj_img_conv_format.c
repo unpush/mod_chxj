@@ -41,15 +41,46 @@ typedef enum img_conv_mode_t {
   IMG_CONV_MODE_EZGET,
 } img_conv_mode_t;
 
+/*----------------------------------------------------------------------------*/
+/* ユーザエージェント使用フラグ                                               */
+/*----------------------------------------------------------------------------*/
+typedef enum _ua_use_flag_t {
+  UA_USE=0,
+  UA_IGN,
+} ua_use_flag_t;
+
 typedef struct _query_string_param_t {
   img_conv_mode_t   mode;
   char* user_agent;
+  ua_use_flag_t   ua_flag;
+
   char* name;     /* for EZGET */
   long offset;    /* for EZGET */
   long count;     /* for EZGET */
   int width;
   int height;
 } query_string_param_t;
+
+static device_table v_ignore_spec = {
+  NULL,
+  "IGN",
+  "IGN",
+  CHXJ_SPEC_HTML,
+  640,
+  480,
+  640,
+  480,
+  1024*1024,
+  1,
+  1,
+  1,
+  0,
+  0,
+  96,
+  96,
+  65536,
+  NULL,
+};
 
 /*----------------------------------------------------------------------------*/
 /* for AU CRC table                                                           */
@@ -111,6 +142,8 @@ static const char* HDML_FAIL_PAGE =
   "    \x83\x5f\x83\x45\x83\x93\x83\x8d\x81\x5b\x83\x68\x82\xc9\x8e\xb8\x94\x73\x82\xb5\x82\xdc\x82\xb5\x82\xbd\r\n"
   "  </DISPLAY>\r\n"
   "<HDML>\r\n";
+
+
 
 static char* chxj_create_workfile(
                 request_rec* r, 
@@ -199,12 +232,21 @@ chxj_img_conv_format(request_rec *r)
   {
     user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
   }
-  spec = chxj_specified_device(r, user_agent);
+
+  if (qsp->ua_flag == UA_IGN)
+  {
+    spec = &v_ignore_spec;
+  }
+  else
+  {
+    spec = chxj_specified_device(r, user_agent);
+  }
 
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "found device_name=[%s]", 
                   spec->device_name);
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "User-Agent=[%s]", 
                   user_agent);
+
   if (spec->width == 0 || spec->heigh == 0)
   {
     return HTTP_NOT_FOUND;
@@ -634,15 +676,18 @@ chxj_fixup_size(MagickWand* magick_wand,
   else
   {
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"**** detect normal mode ****");
-    if (neww > c_width)
+    if (qsp->ua_flag != UA_IGN)
     {
-      newh = (int)((double)newh * (double)((double)c_width / (double)neww));
-      neww = (int)((double)neww * (double)((double)c_width / (double)neww));
-    }
-    if (newh > c_heigh)
-    {
-      neww = (int)((double)neww * (double)((double)c_heigh / (double)newh));
-      newh = (int)((double)newh * (double)((double)c_heigh / (double)newh));
+      if (neww > c_width)
+      {
+        newh = (int)((double)newh * (double)((double)c_width / (double)neww));
+        neww = (int)((double)neww * (double)((double)c_width / (double)neww));
+      }
+      if (newh > c_heigh)
+      {
+        neww = (int)((double)neww * (double)((double)c_heigh / (double)newh));
+        newh = (int)((double)newh * (double)((double)c_heigh / (double)newh));
+      }
     }
   }
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert width=[%d --> %d]", oldw, neww);
@@ -1183,6 +1228,10 @@ chxj_create_workfile(
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "mode=normal [%s]", fname);
     break;
   }
+  if (qsp->ua_flag == UA_IGN)
+  {
+    fname = apr_psprintf(r->pool, "%s.IGN", fname);
+  }
 
   len = strlen(fname);
   jj=0;
@@ -1331,6 +1380,7 @@ chxj_get_query_string_param(request_rec *r)
   param = apr_palloc(r->pool, sizeof(query_string_param_t));
   param->mode       = IMG_CONV_MODE_NORMAL;
   param->user_agent = NULL;
+  param->ua_flag    = UA_USE;
   param->name       = NULL;
   param->offset     = 0;
   param->count      = 0;
@@ -1358,14 +1408,14 @@ chxj_get_query_string_param(request_rec *r)
 
     name  = apr_strtok(pair, "=", &vstate);
     value = apr_strtok(NULL, "=", &vstate);
-    if (strcasecmp(name, "mode") == 0 && value != NULL) 
+    if ((strcasecmp(name, "mode") == 0 || strcasecmp(name, "m") == 0) && value != NULL) 
     {
-      if (strcasecmp(value, "thumbnail") == 0)
+      if (strcasecmp(value, "thumbnail") == 0 || strcasecmp(value, "tb") == 0)
       {
         param->mode = IMG_CONV_MODE_THUMBNAIL;
       }
       else
-      if (strcasecmp(value, "WP") == 0)
+      if (strcasecmp(value, "WP") == 0 || strcasecmp(value, "WallPaper") == 0)
       {
         param->mode = IMG_CONV_MODE_WALLPAPER;
       }
@@ -1376,9 +1426,13 @@ chxj_get_query_string_param(request_rec *r)
       }
     }
     else
-    if (strcasecmp(name, "user-agent") == 0 && value != NULL)
+    if ((strcasecmp(name, "ua") == 0 || strcasecmp(name, "user-agent") == 0) && value != NULL)
     {
       ap_unescape_url(value);
+      if (strcasecmp(value, "IGN") == 0)
+      {
+        param->ua_flag = UA_IGN;
+      }
       param->user_agent = apr_pstrdup(r->pool, value);
     }
     else
