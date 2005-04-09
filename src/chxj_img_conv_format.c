@@ -279,6 +279,8 @@ chxj_exchange_image(request_rec *r, const char** src, apr_size_t* len)
   device_table*         spec;
   char*                 dst;
 
+  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "start chxj_exchange_image()");
+
   qsp = chxj_get_query_string_param(r);
   conf = ap_get_module_config(r->per_dir_config, &chxj_module);
 
@@ -319,6 +321,7 @@ chxj_exchange_image(request_rec *r, const char** src, apr_size_t* len)
   {
     *len = 0;
   }
+  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "end chxj_exchange_image()");
   return dst;
 }
 
