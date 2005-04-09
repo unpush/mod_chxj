@@ -705,14 +705,11 @@ s_create_blob_data(request_rec* r,
                    char* indata,
                    apr_size_t* len)
 {
-  apr_status_t       rv;
-  apr_size_t         readbyte;
   apr_size_t         writebyte;
   unsigned short     crc;
   img_conv_mode_t    mode = qsp->mode;
 
   char*              writedata = NULL;
-  char*              readdata  = NULL;
   char*              dst       = NULL;
 
   MagickBooleanType  status;
