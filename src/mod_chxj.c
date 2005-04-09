@@ -658,11 +658,6 @@ chxj_config_server_create(apr_pool_t *p, server_rec *s)
   return gc;
 }
 
-static int chxj_convert_images(request_rec *r)
-{
-  return chxj_img_conv_format(r);
-}
-
 
 static int
 chxj_translate_name(request_rec *r)
@@ -692,7 +687,7 @@ chxj_register_hooks(apr_pool_t *p)
                       chxj_input_filter, 
                       NULL, 
                       AP_FTYPE_RESOURCE);
-  ap_hook_handler(chxj_convert_images, NULL, NULL, APR_HOOK_MIDDLE);
+  ap_hook_handler(chxj_img_conv_format_handler, NULL, NULL, APR_HOOK_MIDDLE);
   ap_hook_handler(chxj_qr_code_handler, NULL, NULL, APR_HOOK_MIDDLE);
   ap_hook_translate_name(chxj_translate_name, NULL, NULL, APR_HOOK_MIDDLE);
 }

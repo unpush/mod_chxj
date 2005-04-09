@@ -21,7 +21,7 @@
 #define DEFAULT_IMAGE_CACHE_DIR "/tmp"
 
 
-int chxj_img_conv_format(request_rec *r);
+int chxj_img_conv_format_handler(request_rec* r);
 int chxj_trans_name(request_rec *r);
 
 

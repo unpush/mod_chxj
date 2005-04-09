@@ -150,13 +150,13 @@ static char* chxj_create_workfile(
                 mod_chxj_config* conf, 
                 const char* user_agent, 
                 query_string_param_t *qsp);
-static apr_status_t chxj_create_cache_file(
+static apr_status_t s_create_cache_file(
                 request_rec* r, 
                 const char* tmpfile, 
                 device_table* spec,
                 apr_finfo_t* st,
                 query_string_param_t *qsp);
-static apr_status_t chxj_send_cache_file(
+static apr_status_t s_send_cache_file(
                 device_table* spec,
                 query_string_param_t* query_string,
                 request_rec* r,
@@ -180,26 +180,27 @@ static MagickWand* chxj_add_copyright(
                 MagickWand* magick_wand,
                 request_rec* r,
                 device_table* spec);
+static int
+s_img_conv_format_from_file(
+                request_rec*          r, 
+                mod_chxj_config*      conf, 
+                const char*           user_agent,
+                query_string_param_t* qsp,
+                device_table*         spec);
 
-
-int
-chxj_img_conv_format(request_rec *r)
+int 
+chxj_img_conv_format_handler(request_rec* r)
 {
-  apr_status_t   rv;
-  apr_finfo_t    st;
-  apr_finfo_t    cache_st;
-  char*          user_agent;
-  device_table*  spec;
-  char*          tmpfile;
-
-  query_string_param_t *qsp = chxj_get_query_string_param(r);
-
-
-  mod_chxj_config* conf;
+  mod_chxj_config*      conf;
+  query_string_param_t* qsp;
+  char*                 user_agent;
+  device_table*         spec;
+  
 
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, 
-                  "chxj_img_conv_format[%s]", r->the_request);
+                  "chxj_img_conv_format_handler[%s]", r->the_request);
 
+  qsp = chxj_get_query_string_param(r);
   conf = ap_get_module_config(r->per_dir_config, &chxj_module);
 
   if (strcasecmp(r->handler, "chxj-picture")
@@ -210,12 +211,10 @@ chxj_img_conv_format(request_rec *r)
     /*------------------------------------------------------------------------*/
     return DECLINED;
   }
-  if (strcasecmp(r->handler, "chxj-qrcode") == 0
-  &&  conf->image == CHXJ_IMG_OFF)
+  if (strcasecmp(r->handler, "chxj-qrcode") == 0 &&  conf->image == CHXJ_IMG_OFF)
   {
     return DECLINED;
   }
-
   if (r->header_only) 
   {
     return DECLINED;
@@ -252,6 +251,23 @@ chxj_img_conv_format(request_rec *r)
     return HTTP_NOT_FOUND;
   }
 
+  return s_img_conv_format_from_file(r, conf, user_agent, qsp, spec);
+}
+
+
+static int
+s_img_conv_format_from_file(
+                request_rec*          r, 
+                mod_chxj_config*      conf, 
+                const char*           user_agent,
+                query_string_param_t* qsp,
+                device_table*         spec)
+{
+  apr_status_t   rv;
+  apr_finfo_t    st;
+  apr_finfo_t    cache_st;
+  char*          tmpfile;
+
   /*--------------------------------------------------------------------------*/
   /* Create Workfile Name                                                     */
   /*--------------------------------------------------------------------------*/
@@ -272,14 +288,14 @@ chxj_img_conv_format(request_rec *r)
     /* It tries to make the cash file when it doesn't exist or there is       */
     /* change time later since the making time of the cash file.              */
     /*------------------------------------------------------------------------*/
-    rv = chxj_create_cache_file(r,tmpfile, spec, &st, qsp);
+    rv = s_create_cache_file(r,tmpfile, spec, &st, qsp);
     if (rv != OK)
     {
       return rv;
     }
   }
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"color=[%d]", spec->color);
-  rv = chxj_send_cache_file(spec, qsp,r, tmpfile);
+  rv = s_send_cache_file(spec, qsp,r, tmpfile);
   if (rv != OK)
   {
     return rv;
@@ -290,7 +306,7 @@ chxj_img_conv_format(request_rec *r)
 }
 
 static apr_status_t
-chxj_create_cache_file(request_rec* r, 
+s_create_cache_file(request_rec* r, 
                        const char* tmpfile, 
                        device_table* spec, 
                        apr_finfo_t* st, 
@@ -1057,7 +1073,7 @@ chxj_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table* spec
 }
 
 static apr_status_t 
-chxj_send_cache_file(device_table* spec, query_string_param_t* query_string, request_rec* r, const char* tmpfile)
+s_send_cache_file(device_table* spec, query_string_param_t* query_string, request_rec* r, const char* tmpfile)
 {
   apr_status_t rv;
   apr_finfo_t  st;
