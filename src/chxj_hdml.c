@@ -457,7 +457,16 @@ hdml_1_0_node_exchange(Hdml* hdml, Node* node,  int indent)
       if (chxj_chxjif_is_mine(hdml->spec, doc, child))
       {
         ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag is mine");
-        hdml_1_0_chxjif_tag(hdml, child);
+        char* parse_attr = NULL;
+        parse_attr = qs_get_parse_attr(doc, child, r);
+        if (parse_attr != NULL && strcasecmp(parse_attr, "true") == 0)
+        {
+          hdml->out = hdml_1_0_node_exchange(hdml, child,indent+1);
+        }
+        else
+        {
+          hdml_1_0_chxjif_tag(hdml, child);
+        }
       }
     }
     /*------------------------------------------------------------------------*/
