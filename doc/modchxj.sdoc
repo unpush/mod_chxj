@@ -194,23 +194,20 @@ $ ant dist
 下記は、URIが/imgで始まる全ての画像に対して動作するようmod_chxjに指示しています。
 
 <program title="httpd.conf">
-ChxjImageUri ^/img/*
+&lt;Location /img&gt;
+ChxjImageEngine On
 ChxjImageCacheDir /tmp
 ChxjImageCopyright "A.Konno"
+&lt;/Location&gt;
 </program>
 
 上記の説明を以下に示します。
 
 <ol>
-    <li>ChxjImageUri<br />
-      mod_chxjの画像変換ハンドラを起動させたいリクエストＵＲＬのパターンを指定します。
-      パターンのルールは、REGEXに基づきます。
+    <li>ChxjImageEngine<br />
+      mod_chxjの画像変換ハンドラを起動するよう指示しています。
+      DefaultはOff
  
-      <program title="ChxjImageUri">
-      ChxjImageUri ^/img/*
-      </program>
-
-      URLが /img/ で始まっているリクエストに対してハンドラが起動されます。
       <br />
       <br />
     </li>
