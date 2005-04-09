@@ -285,6 +285,7 @@ chxj_input_exchange(request_rec *r, const char** src, apr_size_t* len)
   return result;
 }
 
+
 /**
  * The received data is returned to the filter.
  *
@@ -381,6 +382,19 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
           {
             ctx->buffer = apr_psprintf(r->pool, "\n");
             ctx->len += 1;
+          }
+        }
+        else
+        if (strncmp(r->content_type, "image/", 6) == 0)
+        {
+          if (ctx->len)
+          {
+            char* tmp = apr_palloc(r->pool, ctx->len + 1);
+            memset(tmp, 0, ctx->len + 1);
+            memcpy(tmp, ctx->buffer, ctx->len);
+            ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "input data=[%s]", tmp);
+            ctx->buffer = chxj_exchange_image(r, (const char**)&tmp, (apr_size_t*)&ctx->len);
+            ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "output data=[%.*s]", ctx->len,ctx->buffer);
           }
         }
         contentLength = apr_psprintf(r->pool, "%d", ctx->len);
