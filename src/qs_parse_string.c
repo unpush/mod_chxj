@@ -87,8 +87,21 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
 #endif
       if (doc->parse_mode == PARSE_MODE_CHTML && strcasecmp(node->name, "chxj:if") == 0)
       {
+        Attr* parse_attr;
+
         doc->parse_mode = PARSE_MODE_NO_PARSE;
         doc->now_parent_node = node;
+        for(parse_attr = node->attr; parse_attr; parse_attr = parse_attr->next)
+        {
+          if (strcasecmp(parse_attr->name, "parse") == 0)
+          {
+            if (strcasecmp(parse_attr->value, "true") == 0)
+            {
+              doc->parse_mode = PARSE_MODE_CHTML;
+            }
+          }
+        }
+
       }
       if (doc->parse_mode == PARSE_MODE_CHTML && has_child(node->name)) 
       {

@@ -358,7 +358,17 @@ xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent)
           ap_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
         }
         ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag is mine");
-        xhtml_1_0_chxjif_tag(xhtml, child);
+
+        char* parse_attr = NULL;
+        parse_attr = qs_get_parse_attr(doc, child, r);
+        if (parse_attr != NULL && strcasecmp(parse_attr, "true") == 0)
+        {
+          xhtml_1_0_node_exchange (xhtml, child, indent+1);
+        }
+        else
+        {
+          xhtml_1_0_chxjif_tag(xhtml, child);
+        }
       }
     }
     /*------------------------------------------------------------------------*/

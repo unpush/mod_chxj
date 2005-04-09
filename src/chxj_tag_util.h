@@ -41,7 +41,7 @@ char*    qs_trim_string(request_rec* r, char* s);
 
 int chxj_chxjif_is_mine(device_table* spec, Doc* doc, Node* tag);
 char* qs_get_destlang_attr(Doc* doc, Node* tag, request_rec* r);
-
+char* qs_get_parse_attr(Doc* doc, Node* tag, request_rec* r);
 #endif
 /*
  * vim:ts=2 et

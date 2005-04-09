@@ -579,6 +579,44 @@ qs_get_destlang_attr(Doc* doc, Node* tag, request_rec* r)
   }
   return NULL;
 }
+/**
+ * The value of the PARSE attribute is acquired.
+ *
+ * @param doc  [i] The pointer to the Doc structure to be scanned is
+ *                 specified.
+ * @param tag  [i] The tag node to be scanned is specified.
+ * @param r    [i] To use POOL, the pointer to request_rec is specified.
+ * @return The value of the PARSE attribute is returned. NULL is returned when
+ *         not found.
+ */
+char*
+qs_get_parse_attr(Doc* doc, Node* tag, request_rec* r)
+{
+  Attr*        attr;
+
+  /*--------------------------------------------------------------------------*/
+  /* The object tag node is scanned.                                          */
+  /*--------------------------------------------------------------------------*/
+  for (attr = qs_get_attr(doc,tag);
+       attr != NULL;
+       attr = qs_get_next_attr(doc,attr))
+  {
+    char* name  = qs_get_attr_name(doc,attr);
+    char* value = qs_get_attr_value(doc,attr);
+
+    if (strcasecmp(name, "parse") == 0)
+    {
+      /*----------------------------------------------------------------------*/
+      /* The VALUE attribute was found.                                       */
+      /*----------------------------------------------------------------------*/
+      return apr_pstrdup(r->pool, value);
+    }
+  }
+  /*--------------------------------------------------------------------------*/
+  /* not found                                                                */
+  /*--------------------------------------------------------------------------*/
+  return NULL;
+}
 
 /*
  * vim:ts=2 et
