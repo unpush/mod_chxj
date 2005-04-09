@@ -354,7 +354,17 @@ jhtml_node_exchange(Jhtml* jhtml, Node* node, int indent)
       if (chxj_chxjif_is_mine(jhtml->spec, doc, child))
       {
         ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag is mine");
-        jhtml_1_0_chxjif_tag(jhtml, child);
+
+        char* parse_attr = NULL;
+        parse_attr = qs_get_parse_attr(doc, child, r);
+        if (parse_attr != NULL && strcasecmp(parse_attr, "true") == 0)
+        {
+          jhtml_node_exchange (jhtml, child, indent+1);
+        }
+        else
+        {
+          jhtml_1_0_chxjif_tag(jhtml, child);
+        }
       }
     }
     /*------------------------------------------------------------------------*/
