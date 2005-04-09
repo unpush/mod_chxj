@@ -347,7 +347,16 @@ chtml10_node_exchange(Chtml10* chtml10, Node* node, int indent)
       if (chxj_chxjif_is_mine(chtml10->spec, doc, child))
       {
         ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag is mine");
-        chtml10_chxjif_tag(chtml10, child);
+        char* parse_attr = NULL;
+        parse_attr = qs_get_parse_attr(doc, child, r);
+        if (parse_attr != NULL && strcasecmp(parse_attr, "true") == 0)
+        {
+          chtml10_node_exchange (chtml10, child, indent+1);
+        }
+        else
+        {
+          chtml10_chxjif_tag(chtml10, child);
+        }
       }
     }
     /*------------------------------------------------------------------------*/
