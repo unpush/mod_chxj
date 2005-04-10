@@ -554,9 +554,10 @@ static qr_capacity_t v_capacity_table[] = {
 static char*  s_get_mode_spec       (qr_code_t* qrcode);
 static char*  s_get_char_bit_count  (qr_code_t* qrcode, int len);
 static char*  s_data_to_bin_num     (qr_code_t* qrcode, int data_code_count);
-static char*  s_data_to_bin_alpha   (qr_code_t* qrcode,  int data_code_count);
-static int    s_char_to_num_alpha   (char src);
-static char*  s_data_to_bin_8bit    (qr_code_t* qrcode,  int data_code_count);
+static char*  s_data_to_bin_alpha   (qr_code_t* qrcode, int data_code_count);
+static int    s_char_to_num_alpha   (qr_code_t* qrcode, char src);
+static char*  s_data_to_bin_8bit    (qr_code_t* qrcode, int data_code_count);
+static char*  s_data_to_bin_kanji   (qr_code_t* qrcode, int data_code_count);
 static char*  s_tidy_8bit_code      (qr_code_t* qrcode, const char* indata, int data_code_count);
 static char*  s_str_to_bin          (qr_code_t* qrcode, char* indata, int data_code_count);
 static void   s_init_modules        (qr_code_t* qrcode, qr_mask_pattern_t pat, char* module[]);
@@ -856,53 +857,59 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
 #ifdef QR_CODE_DEBUG
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "start chxj_qr_code()");
 #endif
-  /*--------------------------------------------------------------------------*/
-  /* モード指示子を取得します                                                 */
-  /*--------------------------------------------------------------------------*/
-  binstr = apr_psprintf(r->pool, "%s", s_get_mode_spec(qrcode));
+  do {
+    /*------------------------------------------------------------------------*/
+    /* モード指示子を取得します                                               */
+    /*------------------------------------------------------------------------*/
+    binstr = apr_psprintf(r->pool, "%s", s_get_mode_spec(qrcode));
 #ifdef QR_CODE_DEBUG
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "s_get_mode_spec()");
+    ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "s_get_mode_spec()");
 #endif
 
-  /*--------------------------------------------------------------------------*/
-  /* 文字数指示子を取得します                                                 */
-  /*--------------------------------------------------------------------------*/
-  binstr = apr_pstrcat(r->pool, binstr, 
+    /*------------------------------------------------------------------------*/
+    /* 文字数指示子を取得します                                               */
+    /*------------------------------------------------------------------------*/
+    binstr = apr_pstrcat(r->pool, binstr, 
                   s_get_char_bit_count(qrcode, strlen(qrcode->indata)), NULL);
 #ifdef QR_CODE_DEBUG
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, 
+    ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, 
                   "s_get_char_bit_count()[%s]", binstr);
 #endif
 
-  /*--------------------------------------------------------------------------*/
-  /* データコード数を算出                                                     */
-  /*--------------------------------------------------------------------------*/
-  data_code_count = v_data_code_count[qrcode->version][qrcode->level];
+    /*------------------------------------------------------------------------*/
+    /* データコード数を算出                                                   */
+    /*------------------------------------------------------------------------*/
+    data_code_count = v_data_code_count[qrcode->version][qrcode->level];
 #ifdef QR_CODE_DEBUG
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, 
+    ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, 
                   "data_code_count=[%d]", data_code_count);
 #endif
 
-  /*--------------------------------------------------------------------------*/
-  /* 実データの２進化                                                         */
-  /*--------------------------------------------------------------------------*/
-  switch(qrcode->mode) 
-  {
-  case QR_NUM_MODE:
-    real_data = s_data_to_bin_num(qrcode, data_code_count);
-    break;
-  case QR_ALPHA_MODE:
-    real_data = s_data_to_bin_alpha(qrcode, data_code_count);
-    break;
-  case QR_8BIT_MODE:
-    real_data = s_data_to_bin_8bit(qrcode,data_code_count);
-    break;
-  case QR_KANJI_MODE:
-    /* TODO: */
-    break;
-  default:
-    _exit(1);
+    /*------------------------------------------------------------------------*/
+    /* 実データの２進化                                                       */
+    /*------------------------------------------------------------------------*/
+    qrcode->mode_change = QR_NOT_CHANGE;
+    switch(qrcode->mode) 
+    {
+    case QR_NUM_MODE:
+      real_data = s_data_to_bin_num(qrcode, data_code_count);
+      break;
+    case QR_ALPHA_MODE:
+      real_data = s_data_to_bin_alpha(qrcode, data_code_count);
+      break;
+    case QR_8BIT_MODE:
+      real_data = s_data_to_bin_8bit(qrcode,data_code_count);
+      break;
+    case QR_KANJI_MODE:
+      real_data = s_data_to_bin_kanji(qrcode,data_code_count);
+      break;
+    default:
+      qrcode->mode = QR_8BIT_MODE;
+      qrcode->mode_change = QR_CHANGE;
+      break;
+    }
   }
+  while(qrcode->mode_change == QR_CHANGE);
 
   /*--------------------------------------------------------------------------*/
   /* 終端パターンの付加                                                       */
@@ -1262,9 +1269,9 @@ s_get_char_bit_count(qr_code_t* qrcode, int len)
   char* result;
   int data_capacity   = v_capacity_table[qrcode->version*4+qrcode->level].size[qrcode->mode];
 
-  if (data_capacity < len )
+  if (data_capacity < len)
   {
-    len = data_capacity;;
+    len = data_capacity;
   }
 
   tmp = (char*)apr_palloc(qrcode->r->pool, bit_count + 1);
@@ -1314,6 +1321,13 @@ s_data_to_bin_num(qr_code_t* qrcode, int data_code_count)
   }
   setn = len / 3;
   modn = len % 3;
+
+  if (chxj_chk_numeric(qrcode->indata) != 0)
+  {
+    qrcode->mode_change = QR_CHANGE;
+    qrcode->mode        = QR_8BIT_MODE;
+    return NULL;
+  }
 
   result = (char*)apr_palloc(qrcode->r->pool, setn*10 + ((modn == 1) ? 4 : (modn == 2) ? 7 : 0) + 1); 
   kk = 0;
@@ -1391,8 +1405,17 @@ s_data_to_bin_alpha(qr_code_t* qrcode, int data_code_count)
     if ((ii % 2) == 1)
     {
       tmp[3] = 0;
-      int n = s_char_to_num_alpha(tmp[0])*45;
-      n += s_char_to_num_alpha(tmp[1]);
+      int n = s_char_to_num_alpha(qrcode,tmp[0])*45;
+      if (qrcode->mode_change == QR_CHANGE)
+      {
+        return NULL;
+      }
+
+      n += s_char_to_num_alpha(qrcode,tmp[1]);
+      if (qrcode->mode_change == QR_CHANGE)
+      {
+        return NULL;
+      }
       for (jj=0; jj<11; jj++)
       {
         tmp_bit[jj] = (n & 0x01) ?  '1'  : '0';
@@ -1408,7 +1431,11 @@ s_data_to_bin_alpha(qr_code_t* qrcode, int data_code_count)
   if (modn != 0)
   {
     tmp[modn] = 0;
-    int n = s_char_to_num_alpha(tmp[0]);
+    int n = s_char_to_num_alpha(qrcode,tmp[0]);
+    if (qrcode->mode_change == QR_CHANGE)
+    {
+      return NULL;
+    }
     for (jj=0; jj< 6; jj++)
     {
       tmp_bit[jj] = (n & 0x01) ?  '1'  : '0';
@@ -1430,7 +1457,7 @@ s_data_to_bin_alpha(qr_code_t* qrcode, int data_code_count)
  * 英数字から、数値に変換します.
  */
 static int
-s_char_to_num_alpha(char src)
+s_char_to_num_alpha(qr_code_t* qrcode, char src)
 {
   switch(src)
   {
@@ -1444,84 +1471,32 @@ s_char_to_num_alpha(char src)
   case '7': return 7;
   case '8': return 8;
   case '9': return 9;
-  case 'A': 
-  case 'a':
-    return 10;
-  case 'B':
-  case 'b':
-    return 11;
-  case 'C': 
-  case 'c':
-    return 12;
-  case 'D': 
-  case 'd':
-    return 13;
-  case 'E': 
-  case 'e':
-    return 14;
-  case 'F': 
-  case 'f':
-    return 15;
-  case 'G': 
-  case 'g':
-    return 16;
-  case 'H': 
-  case 'h':
-    return 17;
-  case 'I': 
-  case 'i':
-    return 18;
-  case 'J': 
-  case 'j':
-    return 19;
-  case 'K': 
-  case 'k':
-    return 20;
-  case 'L': 
-  case 'l':
-    return 21;
-  case 'M': 
-  case 'm':
-    return 22;
-  case 'N': 
-  case 'n':
-    return 23;
-  case 'O': 
-  case 'o':
-    return 24;
-  case 'P': 
-  case 'p':
-    return 25;
-  case 'Q': 
-  case 'q':
-    return 26;
-  case 'R': 
-  case 'r':
-    return 27;
-  case 'S': 
-  case 's':
-    return 28;
-  case 'T': 
-  case 't':
-    return 29;
-  case 'U': 
-  case 'u':
-    return 30;
-  case 'V': 
-  case 'v':
-    return 31;
-  case 'W': 
-  case 'w':
-    return 32;
-  case 'X': 
-  case 'x':
-    return 33;
-  case 'Y': 
-  case 'y':
-    return 34;
-  case 'Z': 
-  case 'z':
-    return 35;
+  case 'A': return 10;
+  case 'B': return 11;
+  case 'C': return 12;
+  case 'D': return 13;
+  case 'E': return 14;
+  case 'F': return 15;
+  case 'G': return 16;
+  case 'H': return 17;
+  case 'I': return 18;
+  case 'J': return 19;
+  case 'K': return 20;
+  case 'L': return 21;
+  case 'M': return 22;
+  case 'N': return 23;
+  case 'O': return 24;
+  case 'P': return 25;
+  case 'Q': return 26;
+  case 'R': return 27;
+  case 'S': return 28;
+  case 'T': return 29;
+  case 'U': return 30;
+  case 'V': return 31;
+  case 'W': return 32;
+  case 'X': return 33;
+  case 'Y': return 34;
+  case 'Z': return 35;
   case ' ': 
     return 36;
   case '$': 
@@ -1541,7 +1516,9 @@ s_char_to_num_alpha(char src)
   case ':': 
     return 44;
   default:
-    _exit(-1);
+    qrcode->mode_change = QR_CHANGE;
+    qrcode->mode = QR_8BIT_MODE;
+    return -1;
   }
 }
 
@@ -1584,6 +1561,87 @@ s_data_to_bin_8bit(qr_code_t* qrcode, int data_code_count)
     }
   }
   result[kk] = 0;
+#ifdef QR_CODE_DEBUG
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, qrcode->r, "input data --> 2bin result[%s] len:[%d]", result, strlen(result));
+#endif
+  return result;
+}
+
+/**
+ * Kanji mode.
+ * A binary character string is acquired from input data.
+ */
+static char*
+s_data_to_bin_kanji(qr_code_t* qrcode, int data_code_count)
+{
+  int len = strlen(qrcode->indata);
+  int ii;
+  int jj;
+  int kk;
+  char* result;
+  char  tmp_bit[13+1];
+  int data_capacity   = v_capacity_table[qrcode->version*4+qrcode->level].size[qrcode->mode];
+  if (data_capacity < len)
+  {
+    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, qrcode->r, "input data is too long");
+    len = data_capacity;
+  }
+  if ((len % 2) != 0)
+  {
+    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, qrcode->r, "invalid data.");
+    qrcode->mode_change = QR_CHANGE;
+    qrcode->mode        = QR_8BIT_MODE;
+    return NULL;
+  }
+
+  result = (char*)apr_palloc(qrcode->r->pool, (len/2)*13 + 1); 
+  for (kk=0,ii=0; ii<len-1; ii++)
+  {
+    int c;
+    int up_c;
+    int dn_c;
+    c = qrcode->indata[ii+0] << 8;
+    c += qrcode->indata[ii+1];
+
+    if (c >= 0x8140 && c <= 0x9FFC)
+    {
+      c -= 0x8140;
+      up_c = ((c >> 8) & 0xff) * 0xC0;
+      dn_c = ( c       & 0xff);
+      c  = up_c;
+      c += dn_c;
+    }
+    else
+    if (c >= 0xE040 && c <= 0xEBBF)
+    {
+      c -= 0xC140;
+      up_c = ((c >> 8) & 0xff) * 0xC0;
+      dn_c = ( c       & 0xff);
+      c  = up_c;
+      c += dn_c;
+    }
+    else
+    {
+      qrcode->mode_change = QR_CHANGE;
+      qrcode->mode        = QR_8BIT_MODE;
+      return NULL;
+    }
+
+    memset(tmp_bit, 0, 13+1);
+    for (jj=0; jj<13; jj++)
+    {
+      tmp_bit[jj] = (c & 0x01) ? '1' : '0';
+      c = c >> 1;
+    }
+    tmp_bit[13] = 0;
+    for (jj=13-1; jj>=0; jj--)
+    {
+      result[kk++] = tmp_bit[jj];
+    }
+    ii++;
+  }
+  result[kk] = 0;
+
 #ifdef QR_CODE_DEBUG
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, qrcode->r, "input data --> 2bin result[%s] len:[%d]", result, strlen(result));
 #endif

@@ -97,8 +97,14 @@ typedef enum _qr_code_found_t {
   QR_FOUND,
 } qr_code_found_t;
 
+typedef enum _qr_mode_change_t {
+  QR_NOT_CHANGE = 0,
+  QR_CHANGE,
+} qr_mode_change_t;
+
 typedef struct _qr_code_t {
   qr_code_found_t found;
+  qr_mode_change_t mode_change;
 
   qr_ver_t     version;
   qr_level_t   level;
