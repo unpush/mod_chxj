@@ -1269,9 +1269,19 @@ s_get_char_bit_count(qr_code_t* qrcode, int len)
   char* result;
   int data_capacity   = v_capacity_table[qrcode->version*4+qrcode->level].size[qrcode->mode];
 
-  if (data_capacity < len)
+  if (qrcode->mode == QR_KANJI_MODE && data_capacity < (len / 2))
+  {
+    len = data_capacity * 2;
+  }
+  else
+  if (qrcode->mode != QR_KANJI_MODE && data_capacity < len)
   {
     len = data_capacity;
+  }
+
+  if (qrcode->mode == QR_KANJI_MODE)
+  {
+    len /= 2;
   }
 
   tmp = (char*)apr_palloc(qrcode->r->pool, bit_count + 1);
