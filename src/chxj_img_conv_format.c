@@ -181,9 +181,9 @@ static MagickWand* s_fixup_color(MagickWand* magick_wand,
                                  img_conv_mode_t mode);
 static MagickWand* s_fixup_depth(MagickWand* magick_wand, 
                                  request_rec* r, device_table* spec);
-static MagickWand* chxj_img_down_sizing(MagickWand* magick_wand, 
+static MagickWand* s_img_down_sizing(MagickWand* magick_wand, 
                 request_rec* r, device_table* spec);
-static MagickWand* chxj_add_copyright(
+static MagickWand* s_add_copyright(
                 MagickWand* magick_wand,
                 request_rec* r,
                 device_table* spec);
@@ -532,7 +532,7 @@ s_create_cache_file(request_rec* r,
       return HTTP_NOT_FOUND;
     }
 
-    magick_wand = chxj_img_down_sizing(magick_wand, r, spec);
+    magick_wand = s_img_down_sizing(magick_wand, r, spec);
     if (magick_wand == NULL)
     {
       return HTTP_NOT_FOUND;
@@ -563,7 +563,7 @@ s_create_cache_file(request_rec* r,
       EXIT_MAGICK_ERROR();
       return HTTP_NOT_FOUND;
     }
-    magick_wand = chxj_img_down_sizing(magick_wand, r, spec);
+    magick_wand = s_img_down_sizing(magick_wand, r, spec);
     if (magick_wand == NULL)
     {
       return HTTP_NOT_FOUND;
@@ -595,7 +595,7 @@ s_create_cache_file(request_rec* r,
       return HTTP_NOT_FOUND;
     }
 
-    magick_wand = chxj_img_down_sizing(magick_wand, r, spec);
+    magick_wand = s_img_down_sizing(magick_wand, r, spec);
     if (magick_wand == NULL)
     {
       return HTTP_NOT_FOUND;
@@ -626,7 +626,7 @@ s_create_cache_file(request_rec* r,
       return HTTP_NOT_FOUND;
     }
 
-    magick_wand = chxj_img_down_sizing(magick_wand, r, spec);
+    magick_wand = s_img_down_sizing(magick_wand, r, spec);
     if (magick_wand == NULL)
     {
       return HTTP_NOT_FOUND;
@@ -639,8 +639,8 @@ s_create_cache_file(request_rec* r,
   /* Add Comment (Copyright and so on.)                                       */
   /*--------------------------------------------------------------------------*/
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
-                    "call chxj_add_copyright()");
-  magick_wand = chxj_add_copyright(magick_wand, r, spec);
+                    "call s_add_copyright()");
+  magick_wand = s_add_copyright(magick_wand, r, spec);
   if (magick_wand == NULL)
   {
     return HTTP_NOT_FOUND;
@@ -791,7 +791,7 @@ s_create_blob_data(request_rec* r,
       return NULL;
     }
 
-    magick_wand = chxj_img_down_sizing(magick_wand, r, spec);
+    magick_wand = s_img_down_sizing(magick_wand, r, spec);
     if (magick_wand == NULL)
     {
       return NULL;
@@ -822,7 +822,7 @@ s_create_blob_data(request_rec* r,
       EXIT_MAGICK_ERROR();
       return NULL;
     }
-    magick_wand = chxj_img_down_sizing(magick_wand, r, spec);
+    magick_wand = s_img_down_sizing(magick_wand, r, spec);
     if (magick_wand == NULL)
     {
       return NULL;
@@ -854,7 +854,7 @@ s_create_blob_data(request_rec* r,
       return NULL;
     }
 
-    magick_wand = chxj_img_down_sizing(magick_wand, r, spec);
+    magick_wand = s_img_down_sizing(magick_wand, r, spec);
     if (magick_wand == NULL)
     {
       return NULL;
@@ -885,7 +885,7 @@ s_create_blob_data(request_rec* r,
       return NULL;
     }
 
-    magick_wand = chxj_img_down_sizing(magick_wand, r, spec);
+    magick_wand = s_img_down_sizing(magick_wand, r, spec);
     if (magick_wand == NULL)
     {
       return NULL;
@@ -898,8 +898,8 @@ s_create_blob_data(request_rec* r,
   /* Add Comment (Copyright and so on.)                                       */
   /*--------------------------------------------------------------------------*/
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
-                    "call chxj_add_copyright()");
-  magick_wand = chxj_add_copyright(magick_wand, r, spec);
+                    "call s_add_copyright()");
+  magick_wand = s_add_copyright(magick_wand, r, spec);
   if (magick_wand == NULL)
   {
     return NULL;
@@ -1202,7 +1202,7 @@ s_fixup_depth(MagickWand* magick_wand, request_rec* r, device_table* spec)
 }
 
 static MagickWand*
-chxj_add_copyright(MagickWand* magick_wand, request_rec* r, device_table* spec)
+s_add_copyright(MagickWand* magick_wand, request_rec* r, device_table* spec)
 {
   MagickBooleanType  status;
   mod_chxj_config* conf = ap_get_module_config(r->per_dir_config, &chxj_module);
@@ -1253,7 +1253,7 @@ chxj_add_copyright(MagickWand* magick_wand, request_rec* r, device_table* spec)
 }
 
 static MagickWand*
-chxj_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table* spec)
+s_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table* spec)
 {
   MagickBooleanType  status;
   unsigned long quality = 70;
