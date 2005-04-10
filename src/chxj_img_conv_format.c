@@ -89,7 +89,7 @@ static device_table v_ignore_spec = {
 };
 
 /*----------------------------------------------------------------------------*/
-/* for AU CRC table                                                           */
+/* CRC calculation table for AU                                               */
 /*----------------------------------------------------------------------------*/
 static unsigned short  AU_CRC_TBL[256] = {
   0x0000,0x1021,0x2042,0x3063,0x4084,0x50A5,0x60C6,0x70E7,
@@ -126,6 +126,9 @@ static unsigned short  AU_CRC_TBL[256] = {
   0x6E17,0x7E36,0x4E55,0x5E74,0x2E93,0x3EB2,0x0ED1,0x1EF0 
 };
 
+/*----------------------------------------------------------------------------*/
+/* Download page for AU                                                       */
+/*----------------------------------------------------------------------------*/
 static const char* HDML_FIRST_PAGE = 
   "<HDML VERSION=3.0 TTL=0 PUBLIC=TRUE>\r\n"
   "  <NODISPLAY>\r\n"
@@ -149,37 +152,35 @@ static const char* HDML_FAIL_PAGE =
   "  </DISPLAY>\r\n"
   "<HDML>\r\n";
 
-
-
-static char* s_create_workfile(
-                request_rec* r, 
-                mod_chxj_config* conf, 
-                const char* user_agent, 
-                query_string_param_t *qsp);
-static apr_status_t s_create_cache_file(
-                request_rec* r, 
-                const char* tmpfile, 
-                device_table* spec,
-                apr_finfo_t* st,
-                query_string_param_t *qsp);
-static apr_status_t s_send_cache_file(
-                device_table* spec,
-                query_string_param_t* query_string,
-                request_rec* r,
-                const char* tmpfile);
-static query_string_param_t* chxj_get_query_string_param(request_rec *r);
-static unsigned short chxj_add_crc(
-                const char* writedata, 
-                apr_size_t witebyte);
-static MagickWand* chxj_fixup_size(
-                MagickWand* magick_wand, 
-                request_rec* r, 
-                device_table* spec, 
-                query_string_param_t *qsp);
-static MagickWand* chxj_fixup_color(MagickWand* magick_wand, 
-                request_rec* r, device_table* spec, img_conv_mode_t mode);
-static MagickWand* chxj_fixup_depth(MagickWand* magick_wand, 
-                request_rec* r, device_table* spec);
+/*----------------------------------------------------------------------------*/
+/* Prototype declaration                                                      */
+/*----------------------------------------------------------------------------*/
+static char*        s_create_workfile(request_rec* r, 
+                                      mod_chxj_config* conf, 
+                                      const char* user_agent, 
+                                      query_string_param_t *qsp);
+static apr_status_t s_create_cache_file(request_rec* r, 
+                                        const char* tmpfile, 
+                                        device_table* spec,
+                                        apr_finfo_t* st,
+                                        query_string_param_t *qsp);
+static apr_status_t s_send_cache_file(device_table* spec,
+                                      query_string_param_t* query_string,
+                                      request_rec* r,
+                                      const char* tmpfile);
+static query_string_param_t* s_get_query_string_param(request_rec *r);
+static unsigned short s_add_crc(const char* writedata, 
+                                apr_size_t witebyte);
+static MagickWand* s_fixup_size(MagickWand* magick_wand, 
+                                request_rec* r, 
+                                device_table* spec, 
+                                query_string_param_t *qsp);
+static MagickWand* s_fixup_color(MagickWand* magick_wand, 
+                                 request_rec* r, 
+                                 device_table* spec, 
+                                 img_conv_mode_t mode);
+static MagickWand* s_fixup_depth(MagickWand* magick_wand, 
+                                 request_rec* r, device_table* spec);
 static MagickWand* chxj_img_down_sizing(MagickWand* magick_wand, 
                 request_rec* r, device_table* spec);
 static MagickWand* chxj_add_copyright(
@@ -221,7 +222,7 @@ chxj_img_conv_format_handler(request_rec* r)
     /*------------------------------------------------------------------------*/
     return DECLINED;
   }
-  qsp = chxj_get_query_string_param(r);
+  qsp = s_get_query_string_param(r);
   conf = ap_get_module_config(r->per_dir_config, &chxj_module);
 
   if (strcasecmp(r->handler, "chxj-qrcode") == 0 &&  conf->image == CHXJ_IMG_OFF)
@@ -287,7 +288,7 @@ chxj_exchange_image(request_rec *r, const char** src, apr_size_t* len)
 
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "start chxj_exchange_image()");
 
-  qsp = chxj_get_query_string_param(r);
+  qsp = s_get_query_string_param(r);
   conf = ap_get_module_config(r->per_dir_config, &chxj_module);
 
   /*--------------------------------------------------------------------------*/
@@ -477,8 +478,8 @@ s_create_cache_file(request_rec* r,
   /* The size of the image is changed.                                        */
   /*--------------------------------------------------------------------------*/
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
-                    "call chxj_fixup_size()");
-  magick_wand = chxj_fixup_size(magick_wand, r, spec, qsp);
+                    "call s_fixup_size()");
+  magick_wand = s_fixup_size(magick_wand, r, spec, qsp);
   if (magick_wand == NULL)
   {
     return HTTP_NOT_FOUND;
@@ -488,8 +489,8 @@ s_create_cache_file(request_rec* r,
   /* The colors of the image is changed.                                      */
   /*--------------------------------------------------------------------------*/
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
-                    "call chxj_fixup_color()");
-  magick_wand = chxj_fixup_color(magick_wand, r,spec, mode);
+                    "call s_fixup_color()");
+  magick_wand = s_fixup_color(magick_wand, r,spec, mode);
   if (magick_wand == NULL)
   {
     return HTTP_NOT_FOUND;
@@ -499,8 +500,8 @@ s_create_cache_file(request_rec* r,
   /* DEPTH of the image is changed.                                           */
   /*--------------------------------------------------------------------------*/
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
-                    "call chxj_fixup_depth()");
-  magick_wand = chxj_fixup_depth(magick_wand, r, spec);
+                    "call s_fixup_depth()");
+  magick_wand = s_fixup_depth(magick_wand, r, spec);
   if (magick_wand == NULL)
   {
     return HTTP_NOT_FOUND;
@@ -681,7 +682,7 @@ s_create_cache_file(request_rec* r,
   if (spec->html_spec_type == CHXJ_SPEC_XHtml_Mobile_1_0
   ||  spec->html_spec_type == CHXJ_SPEC_Hdml)
   {
-    crc = chxj_add_crc(writedata, writebyte);
+    crc = s_add_crc(writedata, writebyte);
     rv = apr_file_putc((crc >> 8)  & 0xff, fout);
     if (rv != APR_SUCCESS)
     {
@@ -736,8 +737,8 @@ s_create_blob_data(request_rec* r,
   /* The size of the image is changed.                                        */
   /*--------------------------------------------------------------------------*/
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
-                    "call chxj_fixup_size()");
-  magick_wand = chxj_fixup_size(magick_wand, r, spec, qsp);
+                    "call s_fixup_size()");
+  magick_wand = s_fixup_size(magick_wand, r, spec, qsp);
   if (magick_wand == NULL)
   {
     return NULL;
@@ -747,8 +748,8 @@ s_create_blob_data(request_rec* r,
   /* The colors of the image is changed.                                      */
   /*--------------------------------------------------------------------------*/
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
-                    "call chxj_fixup_color()");
-  magick_wand = chxj_fixup_color(magick_wand, r,spec, mode);
+                    "call s_fixup_color()");
+  magick_wand = s_fixup_color(magick_wand, r,spec, mode);
   if (magick_wand == NULL)
   {
     return NULL;
@@ -758,8 +759,8 @@ s_create_blob_data(request_rec* r,
   /* DEPTH of the image is changed.                                           */
   /*--------------------------------------------------------------------------*/
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
-                    "call chxj_fixup_depth()");
-  magick_wand = chxj_fixup_depth(magick_wand, r, spec);
+                    "call s_fixup_depth()");
+  magick_wand = s_fixup_depth(magick_wand, r, spec);
   if (magick_wand == NULL)
   {
     return NULL;
@@ -925,7 +926,7 @@ s_create_blob_data(request_rec* r,
   if (spec->html_spec_type == CHXJ_SPEC_XHtml_Mobile_1_0
   ||  spec->html_spec_type == CHXJ_SPEC_Hdml)
   {
-    crc = chxj_add_crc(writedata, writebyte);
+    crc = s_add_crc(writedata, writebyte);
     dst[writebyte + 0] = (crc >> 8) & 0xff;
     dst[writebyte + 1] = (crc     ) & 0xff;
     writebyte += 2;
@@ -937,7 +938,7 @@ s_create_blob_data(request_rec* r,
 }
 
 static MagickWand* 
-chxj_fixup_size(MagickWand* magick_wand, 
+s_fixup_size(MagickWand* magick_wand, 
                 request_rec* r, 
                 device_table* spec, 
                 query_string_param_t *qsp)
@@ -1083,7 +1084,7 @@ chxj_fixup_size(MagickWand* magick_wand,
   return magick_wand;
 }
 static MagickWand*
-chxj_fixup_color(MagickWand* magick_wand, request_rec* r, device_table* spec, img_conv_mode_t mode)
+s_fixup_color(MagickWand* magick_wand, request_rec* r, device_table* spec, img_conv_mode_t mode)
 {
   MagickBooleanType  status;
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,r,"start chxj_fixup_clor()");
@@ -1124,7 +1125,7 @@ chxj_fixup_color(MagickWand* magick_wand, request_rec* r, device_table* spec, im
   return magick_wand;
 }
 static MagickWand*
-chxj_fixup_depth(MagickWand* magick_wand, request_rec* r, device_table* spec)
+s_fixup_depth(MagickWand* magick_wand, request_rec* r, device_table* spec)
 {
   MagickBooleanType  status;
 
@@ -1578,7 +1579,7 @@ s_create_workfile(
 }
 
 static unsigned short
-chxj_add_crc(const char* writedata, apr_size_t writebyte)
+s_add_crc(const char* writedata, apr_size_t writebyte)
 {
   unsigned short crc = 0xffff;
   apr_size_t     ii;
@@ -1690,7 +1691,7 @@ chxj_trans_name(request_rec *r)
  * @param r   [i]
  */
 static query_string_param_t*
-chxj_get_query_string_param(request_rec *r)
+s_get_query_string_param(request_rec *r)
 {
   char* pair;
   char* name;
