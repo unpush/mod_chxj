@@ -1269,7 +1269,8 @@ s_get_char_bit_count(qr_code_t* qrcode, int len)
   char* result;
   int data_capacity   = v_capacity_table[qrcode->version*4+qrcode->level].size[qrcode->mode];
 
-  if (qrcode->mode == QR_KANJI_MODE && data_capacity < (len / 2))
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, qrcode->r, "len [%d]", len);
+  if (qrcode->mode == QR_KANJI_MODE && data_capacity * 2 < len)
   {
     len = data_capacity * 2;
   }
@@ -1283,6 +1284,7 @@ s_get_char_bit_count(qr_code_t* qrcode, int len)
   {
     len /= 2;
   }
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, qrcode->r, "len [%d]", len);
 
   tmp = (char*)apr_palloc(qrcode->r->pool, bit_count + 1);
   for (ii=0; ii<bit_count; ii++)
@@ -1591,10 +1593,10 @@ s_data_to_bin_kanji(qr_code_t* qrcode, int data_code_count)
   char* result;
   char  tmp_bit[13+1];
   int data_capacity   = v_capacity_table[qrcode->version*4+qrcode->level].size[qrcode->mode];
-  if (data_capacity < len)
+  if (data_capacity * 2 < len)
   {
     ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, qrcode->r, "input data is too long");
-    len = data_capacity;
+    len = data_capacity * 2;
   }
   if ((len % 2) != 0)
   {
@@ -1610,8 +1612,8 @@ s_data_to_bin_kanji(qr_code_t* qrcode, int data_code_count)
     int c;
     int up_c;
     int dn_c;
-    c = qrcode->indata[ii+0] << 8;
-    c += qrcode->indata[ii+1];
+    c = (qrcode->indata[ii+0] & 0xff)<< 8;
+    c +=(qrcode->indata[ii+1] & 0xff);
 
     if (c >= 0x8140 && c <= 0x9FFC)
     {

@@ -1699,11 +1699,6 @@ s_get_query_string_param(request_rec *r)
   param->width      = 0;
   param->height     = 0;
 
-  ap_log_rerror(APLOG_MARK,
-                APLOG_DEBUG,
-                0, 
-                r, 
-                "query_string[%s]", s);
   if (s == NULL)
   {
     return param;
