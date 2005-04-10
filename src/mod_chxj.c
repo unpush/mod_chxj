@@ -377,7 +377,6 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
             ctx->len += 1;
           }
         }
-        else
         if (strncmp(r->content_type, "image/", 6) == 0)
         {
           if (ctx->len)

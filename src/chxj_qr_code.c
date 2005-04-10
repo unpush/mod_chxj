@@ -618,7 +618,12 @@ chxj_qr_code_handler(request_rec* r)
 
   qs_init_malloc(&doc);
   root = qs_parse_file(&doc, r->filename);
+  qrcode.found = QR_NOT_FOUND;
   chxj_qrcode_node_to_qrcode(&qrcode, root);
+  if (qrcode.found == QR_NOT_FOUND)
+  {
+    return HTTP_NOT_FOUND;
+  }
   qs_all_free(&doc,QX_LOGMARK);
 
   sts = chxj_qrcode_create_image_data(&qrcode, &img, &len);
@@ -655,6 +660,7 @@ chxj_qr_code_blob_handler(request_rec* r, const char* indata, size_t* len)
 
   qs_init_malloc(&doc);
   root = qs_parse_string(&doc, indata, *len);
+  qrcode.found = QR_NOT_FOUND;
   chxj_qrcode_node_to_qrcode(&qrcode, root);
   qs_all_free(&doc,QX_LOGMARK);
   if (qrcode.found == QR_NOT_FOUND)
@@ -1037,7 +1043,6 @@ chxj_qrcode_node_to_qrcode(qr_code_t* qrcode, Node* node)
   request_rec* r = qrcode->r;
   Doc* doc = qrcode->doc;
   Node* child;
-  qrcode->found = QR_NOT_FOUND;
 
   for (child = qs_get_child_node(doc,node);
        child ;
