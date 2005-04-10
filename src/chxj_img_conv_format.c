@@ -213,9 +213,6 @@ chxj_img_conv_format_handler(request_rec* r)
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, 
                   "chxj_img_conv_format_handler[%s]", r->the_request);
 
-  qsp = chxj_get_query_string_param(r);
-  conf = ap_get_module_config(r->per_dir_config, &chxj_module);
-
   if (strcasecmp(r->handler, "chxj-picture")
   &&  strcasecmp(r->handler, "chxj-qrcode"))
   {
@@ -224,6 +221,9 @@ chxj_img_conv_format_handler(request_rec* r)
     /*------------------------------------------------------------------------*/
     return DECLINED;
   }
+  qsp = chxj_get_query_string_param(r);
+  conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+
   if (strcasecmp(r->handler, "chxj-qrcode") == 0 &&  conf->image == CHXJ_IMG_OFF)
   {
     return DECLINED;
