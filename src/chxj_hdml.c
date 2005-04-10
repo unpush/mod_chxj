@@ -20,6 +20,7 @@
 #include <unistd.h>
 #include "chxj_img_conv.h"
 #include "chxj_dump.h"
+#include "chxj_qr_code.h"
 
 #define CHECK_BOX_PREFIX     "_chxj_c_"
 #define RADIO_BUTTON_PREFIX  "_chxj_r_"
@@ -98,10 +99,22 @@ chxj_exchange_hdml(request_rec* r,
   Hdml      hdml;
 
   /*--------------------------------------------------------------------------*/
+  /* If qrcode xml                                                            */
+  /*--------------------------------------------------------------------------*/
+  *dstlen = srclen;
+  dst = chxj_qr_code_blob_handler(r, src, (size_t*)dstlen);
+  if (dst != NULL)
+  {
+    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"i found qrcode xml");
+    return dst;
+  }
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"not found qrcode xml");
+
+  /*--------------------------------------------------------------------------*/
   /* initialize hdml structure                                                */
   /*--------------------------------------------------------------------------*/
   chxj_init_hdml(&hdml,&doc,r, spec);
-
+  ap_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
   /*--------------------------------------------------------------------------*/
   /* DEBUG                                                                    */
   /*--------------------------------------------------------------------------*/

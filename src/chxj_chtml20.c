@@ -19,6 +19,7 @@
 #include "chxj_str_util.h"
 #include "chxj_dump.h"
 #include "chxj_img_conv.h"
+#include "chxj_qr_code.h"
 
 static char* chtml20_node_exchange    (Chtml20* chtml, Node* node, int indent);
 static char* chtml20_start_html_tag   (Chtml20* chtml, Node* child);
@@ -82,9 +83,22 @@ chxj_exchange_chtml20(
   Doc       doc;
 
   /*--------------------------------------------------------------------------*/
+  /* If qrcode xml                                                            */
+  /*--------------------------------------------------------------------------*/
+  *dstlen = srclen;
+  dst = chxj_qr_code_blob_handler(r, src, (size_t*)dstlen);
+  if (dst != NULL)
+  {
+    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"i found qrcode xml");
+    return dst;
+  }
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"not found qrcode xml");
+
+  /*--------------------------------------------------------------------------*/
   /* The CHTML structure is initialized.                                      */
   /*--------------------------------------------------------------------------*/
   chxj_init_chtml20(&chtml20, &doc, r, spec);
+  ap_set_content_type(r, "text/html; charset=Windows-31J");
 
   /*--------------------------------------------------------------------------*/
   /* The character string of the input is analyzed.                           */

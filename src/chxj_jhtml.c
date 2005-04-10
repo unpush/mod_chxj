@@ -18,6 +18,7 @@
 #include "chxj_hdml.h"
 #include "chxj_dump.h"
 #include "chxj_img_conv.h"
+#include "chxj_qr_code.h"
 
 static char* jhtml_node_exchange    (Jhtml* jhtml, Node* node, int indent);
 static char* jhtml_start_html_tag   (Jhtml* jhtml, Node* child);
@@ -82,9 +83,22 @@ chxj_exchange_jhtml(
   Doc       doc;
 
   /*--------------------------------------------------------------------------*/
+  /* If qrcode xml                                                            */
+  /*--------------------------------------------------------------------------*/
+  *dstlen = srclen;
+  dst = chxj_qr_code_blob_handler(r, src, (size_t*)dstlen);
+  if (dst != NULL)
+  {
+    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"i found qrcode xml");
+    return dst;
+  }
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"not found qrcode xml");
+
+  /*--------------------------------------------------------------------------*/
   /* The CHTML structure is initialized.                                      */
   /*--------------------------------------------------------------------------*/
   chxj_init_jhtml(&jhtml, &doc, r, spec);
+  ap_set_content_type(r, "text/html; charset=Windows-31J");
 
   /*--------------------------------------------------------------------------*/
   /* The character string of the input is analyzed.                           */
