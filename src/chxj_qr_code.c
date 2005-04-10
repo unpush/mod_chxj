@@ -633,6 +633,38 @@ chxj_qr_code_handler(request_rec* r)
   return OK;
 }
 
+char* 
+chxj_qr_code_blob_handler(request_rec* r, const char* indata, size_t* len)
+{
+  int                sts;
+  qr_code_t          qrcode;
+  Doc                doc;
+  char*              img;
+  Node*              root;
+
+  memset(&doc, 0, sizeof(Doc));
+  memset(&qrcode, 0, sizeof(qr_code_t));
+
+  doc.r           = r;
+  doc.parse_mode  = PARSE_MODE_CHTML;
+  qrcode.doc      = &doc;
+  qrcode.r        = r;
+
+  qs_init_malloc(&doc);
+  root = qs_parse_string(&doc, indata, *len);
+  chxj_qrcode_node_to_qrcode(&qrcode, root);
+  qs_all_free(&doc,QX_LOGMARK);
+
+  sts = chxj_qrcode_create_image_data(&qrcode, &img, len);
+  if (sts != OK)
+  {
+    return NULL;
+  }
+  ap_set_content_type(r, "image/jpg");
+
+  return img;
+}
+
 int
 chxj_qrcode_create_image_data(
   qr_code_t* qrcode,
