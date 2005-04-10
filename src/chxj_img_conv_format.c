@@ -42,25 +42,31 @@ typedef enum img_conv_mode_t {
 } img_conv_mode_t;
 
 /*----------------------------------------------------------------------------*/
-/* ユーザエージェント使用フラグ                                               */
+/* User-Agent use flag                                                        */
 /*----------------------------------------------------------------------------*/
 typedef enum _ua_use_flag_t {
-  UA_USE=0,
-  UA_IGN,
+  UA_USE=0,               /* User-Agent is used.                              */
+  UA_IGN,                 /* User-Agent is disregarded.                       */
 } ua_use_flag_t;
 
+/*----------------------------------------------------------------------------*/
+/* Request parameter maintenance structure                                    */
+/*----------------------------------------------------------------------------*/
 typedef struct _query_string_param_t {
   img_conv_mode_t   mode;
-  char* user_agent;
-  ua_use_flag_t   ua_flag;
+  char*             user_agent;
+  ua_use_flag_t     ua_flag;
 
-  char* name;     /* for EZGET */
-  long offset;    /* for EZGET */
-  long count;     /* for EZGET */
-  int width;
-  int height;
+  char*             name;     /* for EZGET */
+  long              offset;    /* for EZGET */
+  long              count;     /* for EZGET */
+  int               width;
+  int               height;
 } query_string_param_t;
 
+/*----------------------------------------------------------------------------*/
+/* Device_spec when User-Agent is disregarded                                 */
+/*----------------------------------------------------------------------------*/
 static device_table v_ignore_spec = {
   NULL,
   "IGN",
