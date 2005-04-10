@@ -182,6 +182,7 @@ typedef struct _qr_position_pattern_t {
   int count;
   int position[7];
 } qr_position_pattern_t;
+
 static qr_position_pattern_t v_position_adjust_table[] = {
   { 0, {0,0,0,0,0,0,0,},},
   { 1, {6,18,0,0,0,0,0,},},
@@ -806,7 +807,14 @@ chxj_qrcode_create_image_data(
     }
   }
 
-  status = MagickResizeImage(magick_wand, ((module_count+6)*4), ((module_count+6)*4) , LanczosFilter,0.0);
+  if (qrcode->size <= 0)
+  {
+    status = MagickResizeImage(magick_wand, ((module_count)*4+6), ((module_count)*4+6) , LanczosFilter,0.0);
+  }
+  else
+  {  
+    status = MagickResizeImage(magick_wand, (module_count * qrcode->size + 6), (module_count * qrcode->size + 6) , LanczosFilter,0.0);
+  }
   if (status == MagickFalse)
   {
     EXIT_MAGICK_ERROR();
@@ -1058,7 +1066,13 @@ chxj_qrcode_node_to_qrcode(qr_code_t* qrcode, Node* node)
     char* name = qs_get_node_name(doc,child);
     if (strcasecmp("qrcode",name) == 0)
     {
-      qrcode->found = QR_FOUND;
+      qrcode->found       = QR_FOUND;
+      qrcode->mode_change = QR_NOT_CHANGE;
+      qrcode->version     = QR_VER_5;
+      qrcode->level       = QR_LEVEL_L;
+      qrcode->mode        = QR_8BIT_MODE;
+      qrcode->size        = 0;
+      qrcode->indata      = NULL;
       chxj_qrcode_node_to_qrcode(qrcode, child);
     }
     else
@@ -1228,6 +1242,49 @@ chxj_qrcode_node_to_qrcode(qr_code_t* qrcode, Node* node)
         continue;
       }
       qrcode->indata = apr_pstrdup(r->pool, value);
+    }
+    else
+    if (strcasecmp("size", name) == 0)
+    {
+      int size;
+      char* value;
+      Node* cchild = qs_get_child_node(doc, child);
+
+      if (cchild == NULL)
+      {
+        qrcode->size = 0;
+        continue;
+      }
+      name = qs_get_node_name(doc, cchild);
+      value = qs_get_node_value(doc, cchild);
+      if (strcasecmp("TEXT", name) != 0)
+      {
+        qrcode->size = 0;
+        continue;
+      }
+      if (value == NULL || strlen(value) == 0)
+      {
+        qrcode->size = 0;
+        continue;
+      }
+      if (chxj_chk_numeric(value))
+      {
+        qrcode->size = 0;
+        continue;
+      }
+
+      size = chxj_atoi(value);
+      if (size <= 0)
+      {
+        qrcode->size = 0;
+        continue;
+      }
+      if (size > 20)
+      {
+        qrcode->size = 20;
+        continue;
+      }
+      qrcode->size = size;
     }
   }
 #ifdef QR_CODE_DEBUG
