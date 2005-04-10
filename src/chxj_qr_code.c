@@ -642,6 +642,9 @@ chxj_qr_code_blob_handler(request_rec* r, const char* indata, size_t* len)
   char*              img;
   Node*              root;
 
+  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r,
+                                    "start chxj_qr_code_blob_handler()");
+
   memset(&doc, 0, sizeof(Doc));
   memset(&qrcode, 0, sizeof(qr_code_t));
 
@@ -654,13 +657,21 @@ chxj_qr_code_blob_handler(request_rec* r, const char* indata, size_t* len)
   root = qs_parse_string(&doc, indata, *len);
   chxj_qrcode_node_to_qrcode(&qrcode, root);
   qs_all_free(&doc,QX_LOGMARK);
+  if (qrcode.found == QR_NOT_FOUND)
+  {
+    return NULL;
+  }
 
   sts = chxj_qrcode_create_image_data(&qrcode, &img, len);
   if (sts != OK)
   {
+    ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r,
+                                    "end chxj_qr_code_blob_handler()");
     return NULL;
   }
   ap_set_content_type(r, "image/jpg");
+  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r,
+                                    "end chxj_qr_code_blob_handler()");
 
   return img;
 }
@@ -1026,10 +1037,8 @@ chxj_qrcode_node_to_qrcode(qr_code_t* qrcode, Node* node)
   request_rec* r = qrcode->r;
   Doc* doc = qrcode->doc;
   Node* child;
-  /*--------------------------------------------------------------------------*/
-  /* TODO: ノードからデータを取得し、                                         */
-  /* それぞれのメンバに設定するロジックを書きます                             */
-  /*--------------------------------------------------------------------------*/
+  qrcode->found = QR_NOT_FOUND;
+
   for (child = qs_get_child_node(doc,node);
        child ;
        child = qs_get_next_node(doc,child))
@@ -1037,6 +1046,7 @@ chxj_qrcode_node_to_qrcode(qr_code_t* qrcode, Node* node)
     char* name = qs_get_node_name(doc,child);
     if (strcasecmp("qrcode",name) == 0)
     {
+      qrcode->found = QR_FOUND;
       chxj_qrcode_node_to_qrcode(qrcode, child);
     }
     else

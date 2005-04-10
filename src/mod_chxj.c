@@ -117,7 +117,6 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
       /*----------------------------------------------------------------------*/
       ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "select DoCoMo i-Mode 1.0 ");
       dst = chxj_exchange_chtml10(r, spec, *src, *len, len);
-      *len = strlen(dst);
       ap_set_content_type(r, "text/html; charset=Windows-31J");
 
     }
@@ -129,7 +128,6 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
       /*----------------------------------------------------------------------*/
       ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "select DoCoMo i-Mode 2.0 ");
       dst = chxj_exchange_chtml20(r, spec, *src, *len, len);
-      *len = strlen(dst);
       ap_set_content_type(r, "text/html; charset=Windows-31J");
     }
     else 
@@ -140,7 +138,6 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
       /*----------------------------------------------------------------------*/
       ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "select DoCoMo i-Mode 3.0 ");
       dst = chxj_exchange_chtml30(r, spec, *src, *len, len);
-      *len = strlen(dst);
       ap_set_content_type(r, "text/html; charset=Windows-31J");
     }
     else
@@ -151,7 +148,6 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
       /*----------------------------------------------------------------------*/
       ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "select DoCoMo i-Mode 4.0 ");
       dst = chxj_exchange_chtml30(r, spec, *src, *len, len);
-      *len = strlen(dst);
       ap_set_content_type(r, "text/html; charset=Windows-31J");
     }
     else 
@@ -162,7 +158,6 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
       /*----------------------------------------------------------------------*/
       ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "select DoCoMo i-Mode 5.0 ");
       dst = chxj_exchange_chtml30(r, spec, *src, *len, len);
-      *len = strlen(dst);
       ap_set_content_type(r, "text/html; charset=Windows-31J");
     }
     else
@@ -173,7 +168,6 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
       /*----------------------------------------------------------------------*/
       ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "select XHTML Mobile 1.0");
       dst = chxj_exchange_xhtml_mobile_1_0(r, spec, *src, *len, len);
-      *len = strlen(dst);
     }
     else
     if (spec->html_spec_type == CHXJ_SPEC_Hdml) 
@@ -193,7 +187,6 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
       /*----------------------------------------------------------------------*/
       ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "select JHTML");
       dst = chxj_exchange_jhtml(r, spec, *src, *len, len);
-      *len = strlen(dst);
       ap_set_content_type(r, "text/html; charset=Windows-31J");
     }
     else 
