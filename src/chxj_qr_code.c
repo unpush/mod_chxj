@@ -1227,21 +1227,27 @@ chxj_qrcode_node_to_qrcode(qr_code_t* qrcode, Node* node)
       /* TODO: 改行も可能なように修正する */
       Node* cchild = qs_get_child_node(doc, child);
       char* value;
+
+      qrcode->indata = apr_palloc(r->pool, 1);
+      qrcode->indata[0] = 0;
       if (cchild == NULL)
       {
-        qrcode->indata = apr_palloc(r->pool, 1);
-        qrcode->indata[0] = 0;
         continue;
       }
-      name = qs_get_node_name(doc, cchild);
-      value = qs_get_node_value(doc, cchild);
-      if (strcasecmp("TEXT", name) != 0)
+      for (;cchild; cchild = cchild->next)
       {
-        qrcode->indata = apr_palloc(r->pool, 1);
-        qrcode->indata[0] = 0;
-        continue;
+        name = qs_get_node_name(doc, cchild);
+        value = qs_get_node_value(doc, cchild);
+        if (strcasecmp("TEXT", name) != 0)
+        {
+          continue;
+        }
+        if (strlen(qrcode->indata) > 0)
+        {
+          qrcode->indata = apr_pstrcat(r->pool, qrcode->indata, "\r\n", NULL);
+        }
+        qrcode->indata = apr_pstrcat(r->pool, qrcode->indata, value, NULL);
       }
-      qrcode->indata = apr_pstrdup(r->pool, value);
     }
     else
     if (strcasecmp("size", name) == 0)
