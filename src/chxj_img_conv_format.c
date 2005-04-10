@@ -155,26 +155,25 @@ static const char* HDML_FAIL_PAGE =
 /*----------------------------------------------------------------------------*/
 /* Prototype declaration                                                      */
 /*----------------------------------------------------------------------------*/
-static char*        s_create_workfile(request_rec* r, 
-                                      mod_chxj_config* conf, 
-                                      const char* user_agent, 
-                                      query_string_param_t *qsp);
+static char*        s_create_workfile(  request_rec*, mod_chxj_config* , 
+                                        const char*, 
+                                        query_string_param_t*);
 static apr_status_t s_create_cache_file(request_rec* r, 
                                         const char* tmpfile, 
                                         device_table* spec,
                                         apr_finfo_t* st,
                                         query_string_param_t *qsp);
-static apr_status_t s_send_cache_file(device_table* spec,
-                                      query_string_param_t* query_string,
-                                      request_rec* r,
-                                      const char* tmpfile);
+static apr_status_t s_send_cache_file(  device_table* spec,
+                                        query_string_param_t* query_string,
+                                        request_rec* r,
+                                        const char* tmpfile);
 static query_string_param_t* s_get_query_string_param(request_rec *r);
-static unsigned short s_add_crc(const char* writedata, 
-                                apr_size_t witebyte);
-static MagickWand* s_fixup_size(MagickWand* magick_wand, 
-                                request_rec* r, 
-                                device_table* spec, 
-                                query_string_param_t *qsp);
+static unsigned short s_add_crc(        const char* writedata, 
+                                        apr_size_t witebyte);
+static MagickWand* s_fixup_size(MagickWand* , 
+                                        request_rec* r, 
+                                        device_table* spec, 
+                                        query_string_param_t *qsp);
 static MagickWand* s_fixup_color(MagickWand* magick_wand, 
                                  request_rec* r, 
                                  device_table* spec, 
@@ -182,20 +181,18 @@ static MagickWand* s_fixup_color(MagickWand* magick_wand,
 static MagickWand* s_fixup_depth(MagickWand* magick_wand, 
                                  request_rec* r, device_table* spec);
 static MagickWand* s_img_down_sizing(MagickWand* magick_wand, 
-                request_rec* r, device_table* spec);
+                                request_rec* r, device_table* spec);
 static MagickWand* s_add_copyright(
-                MagickWand* magick_wand,
-                request_rec* r,
-                device_table* spec);
-static char*
-s_create_blob_data(request_rec* r,
+                          MagickWand* magick_wand,
+                          request_rec* r,
+                          device_table* spec);
+static char* s_create_blob_data(request_rec* r,
                    device_table* spec,
                    query_string_param_t *qsp,
                    char* indata,
                    apr_size_t* len);
 
-static int
-s_img_conv_format_from_file(
+static int s_img_conv_format_from_file(
                 request_rec*          r, 
                 mod_chxj_config*      conf, 
                 const char*           user_agent,
@@ -210,16 +207,9 @@ chxj_img_conv_format_handler(request_rec* r)
   char*                 user_agent;
   device_table*         spec;
   
-
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, 
-                  "chxj_img_conv_format_handler[%s]", r->the_request);
-
   if (strcasecmp(r->handler, "chxj-picture")
   &&  strcasecmp(r->handler, "chxj-qrcode"))
   {
-    /*------------------------------------------------------------------------*/
-    /* イメージ変換ハンドラまたは、QRコードのイメージ変換ハンドラではない場合 */
-    /*------------------------------------------------------------------------*/
     return DECLINED;
   }
   qsp = s_get_query_string_param(r);
@@ -286,7 +276,6 @@ chxj_exchange_image(request_rec *r, const char** src, apr_size_t* len)
   device_table*         spec;
   char*                 dst;
 
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "start chxj_exchange_image()");
 
   qsp = s_get_query_string_param(r);
   conf = ap_get_module_config(r->per_dir_config, &chxj_module);
@@ -328,7 +317,6 @@ chxj_exchange_image(request_rec *r, const char** src, apr_size_t* len)
   {
     *len = 0;
   }
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "end chxj_exchange_image()");
   return dst;
 }
 
