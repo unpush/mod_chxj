@@ -151,7 +151,7 @@ static const char* HDML_FAIL_PAGE =
 
 
 
-static char* chxj_create_workfile(
+static char* s_create_workfile(
                 request_rec* r, 
                 mod_chxj_config* conf, 
                 const char* user_agent, 
@@ -347,7 +347,7 @@ s_img_conv_format_from_file(
   /*--------------------------------------------------------------------------*/
   /* Create Workfile Name                                                     */
   /*--------------------------------------------------------------------------*/
-  tmpfile = chxj_create_workfile(r, conf, user_agent, qsp);
+  tmpfile = s_create_workfile(r, conf, user_agent, qsp);
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "workfile=[%s]", tmpfile);
 
   rv = apr_stat(&st, r->filename, APR_FINFO_MIN, r->pool);
@@ -1514,7 +1514,7 @@ s_send_cache_file(device_table* spec, query_string_param_t* query_string, reques
 
 
 static char*
-chxj_create_workfile(
+s_create_workfile(
                 request_rec*          r, 
                 mod_chxj_config*      conf, 
                 const char*           user_agent, 
