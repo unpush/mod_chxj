@@ -963,6 +963,7 @@ chxj_calc_ecc(qr_code_t* qrcode,
                (v_ecc_spec_table[qrcode->version*4+qrcode->level].rs[1].rs_block_count 
                 * v_ecc_spec_table[qrcode->version*4+qrcode->level].rs[1].total_code_count);
 
+
   now_rs_num = 0;
   for (rs_pos = 0; rs_pos < 2; rs_pos++)
   {
