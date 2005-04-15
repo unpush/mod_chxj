@@ -26,57 +26,57 @@
 #define RADIO_BUTTON_PREFIX  "_chxj_r_"
 #define SUBMIT_BUTTON_PREFIX "_chxj_s_"
 
-static void  s_init_hdml(Hdml* hdml, Doc* doc, request_rec* r, device_table* spec);
-static char* hdml_1_0_node_exchange   (Hdml* doc, Node* node, int indent);
-static char* hdml_1_0_start_html_tag  (Hdml* doc, Node* child) ;
-static char* hdml_1_0_end_html_tag    (Hdml* doc, Node* child) ;
-static char* hdml_1_0_start_meta_tag  (Hdml* doc, Node* node) ;
-static char* hdml_1_0_end_meta_tag    (Hdml* doc, Node* node) ;
-static char* hdml_1_0_start_head_tag  (Hdml* doc, Node* node) ;
-static char* hdml_1_0_end_head_tag    (Hdml* doc, Node* node) ;
-static char* hdml_1_0_start_title_tag (Hdml* doc, Node* node) ;
-static char* hdml_1_0_end_title_tag   (Hdml* doc,  Node* node) ;
-static char* hdml_1_0_start_base_tag  (Hdml* doc, Node* node) ;
-static char* hdml_1_0_end_base_tag    (Hdml* doc,  Node* node) ;
-static char* hdml_1_0_start_body_tag  (Hdml* doc, Node* node) ;
-static char* hdml_1_0_end_body_tag    (Hdml* doc,  Node* node) ;
-static char* hdml_1_0_start_a_tag     (Hdml* doc, Node* node) ;
-static char* hdml_1_0_end_a_tag       (Hdml* doc,  Node* node) ;
-static char* hdml_1_0_start_br_tag    (Hdml* doc, Node* node) ;
-static char* hdml_1_0_end_br_tag      (Hdml* doc,  Node* node) ;
-static char* hdml_1_0_start_font_tag  (Hdml* doc, Node* node) ;
-static char* hdml_1_0_end_font_tag    (Hdml* doc,  Node* node) ;
-static char* hdml_1_0_start_form_tag  (Hdml* doc, Node* node) ;
-static char* hdml_1_0_end_form_tag    (Hdml* doc,  Node* node) ;
-static char* hdml_1_0_start_input_tag (Hdml* doc, Node* node) ;
-static char* hdml_1_0_end_input_tag   (Hdml* doc,  Node* node) ;
-static char* hdml_1_0_start_select_tag(Hdml* doc, Node* node) ;
-static char* hdml_1_0_end_select_tag  (Hdml* doc,  Node* node) ;
-static char* hdml_1_0_start_option_tag(Hdml* doc, Node* node) ;
-static char* hdml_1_0_end_option_tag  (Hdml* doc,  Node* node) ;
-static char* hdml_1_0_start_center_tag(Hdml* doc, Node* node) ;
-static char* hdml_1_0_end_center_tag  (Hdml* doc,  Node* node) ;
-static char* hdml_1_0_start_hr_tag    (Hdml* doc, Node* node) ;
-static char* hdml_1_0_end_hr_tag      (Hdml* doc,  Node* node) ;
-static char* hdml_1_0_start_img_tag   (Hdml* doc, Node* node) ;
-static char* hdml_1_0_end_img_tag     (Hdml* doc,  Node* node) ;
-static char* hdml_1_0_start_div_tag   (Hdml* doc, Node* node) ;
-static char* hdml_1_0_end_div_tag     (Hdml* doc,  Node* node) ;
+static void  s_init_hdml            (Hdml* hdml, Doc* doc, request_rec* r, device_table* spec);
+static char* s_hdml_node_exchange   (Hdml* doc, Node* node, int indent);
+static char* s_hdml_start_html_tag  (Hdml* doc, Node* child) ;
+static char* s_hdml_end_html_tag    (Hdml* doc, Node* child) ;
+static char* s_hdml_start_meta_tag  (Hdml* doc, Node* node) ;
+static char* s_hdml_end_meta_tag    (Hdml* doc, Node* node) ;
+static char* s_hdml_start_head_tag  (Hdml* doc, Node* node) ;
+static char* s_hdml_end_head_tag    (Hdml* doc, Node* node) ;
+static char* s_hdml_start_title_tag (Hdml* doc, Node* node) ;
+static char* s_hdml_end_title_tag   (Hdml* doc,  Node* node) ;
+static char* s_hdml_start_base_tag  (Hdml* doc, Node* node) ;
+static char* s_hdml_end_base_tag    (Hdml* doc,  Node* node) ;
+static char* s_hdml_start_body_tag  (Hdml* doc, Node* node) ;
+static char* s_hdml_end_body_tag    (Hdml* doc,  Node* node) ;
+static char* s_hdml_start_a_tag     (Hdml* doc, Node* node) ;
+static char* s_hdml_end_a_tag       (Hdml* doc,  Node* node) ;
+static char* s_hdml_start_br_tag    (Hdml* doc, Node* node) ;
+static char* s_hdml_end_br_tag      (Hdml* doc,  Node* node) ;
+static char* s_hdml_start_font_tag  (Hdml* doc, Node* node) ;
+static char* s_hdml_end_font_tag    (Hdml* doc,  Node* node) ;
+static char* s_hdml_start_form_tag  (Hdml* doc, Node* node) ;
+static char* s_hdml_end_form_tag    (Hdml* doc,  Node* node) ;
+static char* s_hdml_start_input_tag (Hdml* doc, Node* node) ;
+static char* s_hdml_end_input_tag   (Hdml* doc,  Node* node) ;
+static char* s_hdml_start_select_tag(Hdml* doc, Node* node) ;
+static char* s_hdml_end_select_tag  (Hdml* doc,  Node* node) ;
+static char* s_hdml_start_option_tag(Hdml* doc, Node* node) ;
+static char* s_hdml_end_option_tag  (Hdml* doc,  Node* node) ;
+static char* s_hdml_start_center_tag(Hdml* doc, Node* node) ;
+static char* s_hdml_end_center_tag  (Hdml* doc,  Node* node) ;
+static char* s_hdml_start_hr_tag    (Hdml* doc, Node* node) ;
+static char* s_hdml_end_hr_tag      (Hdml* doc,  Node* node) ;
+static char* s_hdml_start_img_tag   (Hdml* doc, Node* node) ;
+static char* s_hdml_end_img_tag     (Hdml* doc,  Node* node) ;
+static char* s_hdml_start_div_tag   (Hdml* doc, Node* node) ;
+static char* s_hdml_end_div_tag     (Hdml* doc,  Node* node) ;
 static char* qs_get_form_no(request_rec* r, Hdml* hdml);
-static void hdml_1_0_count_radio_tag  (Hdml* hdml, Node* node) ;
-static void hdml_do_input_text_tag    (Hdml* hdml, Node* tag);
-static void hdml_do_input_password_tag(Hdml* hdml, Node* tag);
-static void hdml_do_input_submit_tag  (Hdml* hdml, Node* tag);
-static void hdml_do_input_hidden_tag  (Hdml* hdml, Node* tag);
-static void hdml_do_input_radio_tag   (Hdml* hdml, Node* tag);
-static void hdml_do_input_checkbox_tag(Hdml* hdml, Node* tag);
-static void hdml_tag_output_upper_half(Hdml* hdml, Node* node);
+static void  s_hdml_count_radio_tag  (Hdml* hdml, Node* node) ;
+static void  s_hdml_do_input_text_tag    (Hdml* hdml, Node* tag);
+static void  s_hdml_do_input_password_tag(Hdml* hdml, Node* tag);
+static void  s_hdml_do_input_submit_tag  (Hdml* hdml, Node* tag);
+static void  s_hdml_do_input_hidden_tag  (Hdml* hdml, Node* tag);
+static void  s_hdml_do_input_radio_tag   (Hdml* hdml, Node* tag);
+static void  s_hdml_do_input_checkbox_tag(Hdml* hdml, Node* tag);
+static void  s_hdml_tag_output_upper_half(Hdml* hdml, Node* node);
 static Hdml* qs_output_to_hdml_out    (Hdml* hdml, char* s);
 static Hdml* qs_output_to_hdml_card   (Hdml* hdml, char* s);
-static void qs_output_to_postdata     (Hdml* hdml, char* s);
-static void qs_output_to_init_vars    (Hdml* hdml, char* s);
-static int hdml_search_emoji          (Hdml* hdml, char* txt, char** rslt);
-static void hdml_1_0_chxjif_tag       (Hdml* hdml, Node* node);
+static void  qs_output_to_postdata     (Hdml* hdml, char* s);
+static void  qs_output_to_init_vars    (Hdml* hdml, char* s);
+static int   s_hdml_search_emoji          (Hdml* hdml, char* txt, char** rslt);
+static void  s_hdml_chxjif_tag       (Hdml* hdml, Node* node);
 /**
  * converts from CHTML to hdml.
  *
@@ -165,9 +165,9 @@ chxj_exchange_hdml(request_rec* r,
     /*------------------------------------------------------------------------*/
     /* The number of radiobuttons is counted.                                 */
     /*------------------------------------------------------------------------*/
-    hdml_1_0_count_radio_tag(&hdml, qs_get_root(&doc));
+    s_hdml_count_radio_tag(&hdml, qs_get_root(&doc));
 
-    dst = hdml_1_0_node_exchange(&hdml, qs_get_root(&doc), 0);
+    dst = s_hdml_node_exchange(&hdml, qs_get_root(&doc), 0);
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "tmp=[%s]", dst);
     qs_all_free(&doc,QX_LOGMARK);
   }
@@ -264,7 +264,7 @@ s_init_hdml(Hdml* hdml, Doc* doc, request_rec* r, device_table* spec)
  * @return The conversion result is returned. 
  */
 static char*
-hdml_1_0_node_exchange(Hdml* hdml, Node* node,  int indent) 
+s_hdml_node_exchange(Hdml* hdml, Node* node,  int indent) 
 {
   Node*         child;
   Doc*          doc   = hdml->doc; 
@@ -287,10 +287,10 @@ hdml_1_0_node_exchange(Hdml* hdml, Node* node,  int indent)
     /*------------------------------------------------------------------------*/
     if (strcasecmp(name, "html") == 0) 
     {
-      hdml->out = hdml_1_0_start_html_tag(hdml, child);
+      hdml->out = s_hdml_start_html_tag(hdml, child);
       hdml->hdml_br_flag = 0;
-      hdml->out = hdml_1_0_node_exchange(hdml, child,indent+1);
-      hdml->out = hdml_1_0_end_html_tag(hdml, child);
+      hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
+      hdml->out = s_hdml_end_html_tag(hdml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <META>                                                                 */
@@ -298,9 +298,9 @@ hdml_1_0_node_exchange(Hdml* hdml, Node* node,  int indent)
     else
     if (strcasecmp(name, "meta") == 0) 
     {
-      hdml->out = hdml_1_0_start_meta_tag(hdml, child);
+      hdml->out = s_hdml_start_meta_tag(hdml, child);
       hdml->hdml_br_flag = 0;
-      hdml->out = hdml_1_0_end_meta_tag(hdml, child);
+      hdml->out = s_hdml_end_meta_tag(hdml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <HEAD>                                                                 */
@@ -308,10 +308,10 @@ hdml_1_0_node_exchange(Hdml* hdml, Node* node,  int indent)
     else
     if (strcasecmp(name, "head") == 0) 
     {
-      hdml->out = hdml_1_0_start_head_tag(hdml, child);
+      hdml->out = s_hdml_start_head_tag(hdml, child);
       hdml->hdml_br_flag = 0;
-      hdml->out = hdml_1_0_node_exchange(hdml, child,indent+1);
-      hdml->out = hdml_1_0_end_head_tag(hdml, child);
+      hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
+      hdml->out = s_hdml_end_head_tag(hdml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <TITLE>                                                                */
@@ -319,10 +319,10 @@ hdml_1_0_node_exchange(Hdml* hdml, Node* node,  int indent)
     else
     if (strcasecmp(name, "title") == 0) 
     {
-      hdml->out = hdml_1_0_start_title_tag(hdml, child);
+      hdml->out = s_hdml_start_title_tag(hdml, child);
       hdml->hdml_br_flag = 0;
-      hdml->out = hdml_1_0_node_exchange(hdml, child,indent+1);
-      hdml->out = hdml_1_0_end_title_tag(hdml, child);
+      hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
+      hdml->out = s_hdml_end_title_tag(hdml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <BASE>                                                                 */
@@ -330,9 +330,9 @@ hdml_1_0_node_exchange(Hdml* hdml, Node* node,  int indent)
     else
     if (strcasecmp(name, "base") == 0) 
     {
-      hdml->out = hdml_1_0_start_base_tag(hdml, child);
+      hdml->out = s_hdml_start_base_tag(hdml, child);
       hdml->hdml_br_flag = 0;
-      hdml->out = hdml_1_0_end_base_tag(hdml, child);
+      hdml->out = s_hdml_end_base_tag(hdml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <BODY>                                                                 */
@@ -340,10 +340,10 @@ hdml_1_0_node_exchange(Hdml* hdml, Node* node,  int indent)
     else
     if (strcasecmp(name, "body") == 0) 
     {
-      hdml->out = hdml_1_0_start_body_tag(hdml, child);
+      hdml->out = s_hdml_start_body_tag(hdml, child);
       hdml->hdml_br_flag = 0;
-      hdml->out = hdml_1_0_node_exchange(hdml, child,indent+1);
-      hdml->out = hdml_1_0_end_body_tag(hdml, child);
+      hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
+      hdml->out = s_hdml_end_body_tag(hdml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <A>                                                                    */
@@ -351,10 +351,10 @@ hdml_1_0_node_exchange(Hdml* hdml, Node* node,  int indent)
     else
     if (strcasecmp(name, "a") == 0) 
     {
-      hdml->out = hdml_1_0_start_a_tag(hdml, child);
+      hdml->out = s_hdml_start_a_tag(hdml, child);
       hdml->hdml_br_flag = 0;
-      hdml->out = hdml_1_0_node_exchange(hdml, child,indent+1);
-      hdml->out = hdml_1_0_end_a_tag(hdml, child);
+      hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
+      hdml->out = s_hdml_end_a_tag(hdml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <BR>                                                                   */
@@ -362,9 +362,9 @@ hdml_1_0_node_exchange(Hdml* hdml, Node* node,  int indent)
     else
     if (strcasecmp(name, "br") == 0) 
     {
-      hdml->out = hdml_1_0_start_br_tag(hdml, child);
-      hdml->out = hdml_1_0_node_exchange(hdml, child,indent+1);
-      hdml->out = hdml_1_0_end_br_tag(hdml, child);
+      hdml->out = s_hdml_start_br_tag(hdml, child);
+      hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
+      hdml->out = s_hdml_end_br_tag(hdml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <FONT>                                                                 */
@@ -372,9 +372,9 @@ hdml_1_0_node_exchange(Hdml* hdml, Node* node,  int indent)
     else
     if (strcasecmp(name, "font") == 0) 
     {
-      hdml->out = hdml_1_0_start_font_tag(hdml, child);
-      hdml->out = hdml_1_0_node_exchange(hdml, child,indent+1);
-      hdml->out = hdml_1_0_end_font_tag(hdml, child);
+      hdml->out = s_hdml_start_font_tag(hdml, child);
+      hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
+      hdml->out = s_hdml_end_font_tag(hdml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <FORM>                                                                 */
@@ -382,10 +382,10 @@ hdml_1_0_node_exchange(Hdml* hdml, Node* node,  int indent)
     else
     if (strcasecmp(name, "form") == 0) 
     {
-      hdml->out = hdml_1_0_start_form_tag(hdml, child);
+      hdml->out = s_hdml_start_form_tag(hdml, child);
       hdml->hdml_br_flag = 0;
-      hdml->out = hdml_1_0_node_exchange(hdml, child,indent+1);
-      hdml->out = hdml_1_0_end_form_tag(hdml, child);
+      hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
+      hdml->out = s_hdml_end_form_tag(hdml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <INPUT>                                                                */
@@ -393,10 +393,10 @@ hdml_1_0_node_exchange(Hdml* hdml, Node* node,  int indent)
     else
     if (strcasecmp(name, "input") == 0) 
     {
-      hdml->out = hdml_1_0_start_input_tag(hdml, child);
+      hdml->out = s_hdml_start_input_tag(hdml, child);
       hdml->hdml_br_flag = 0;
-      hdml->out = hdml_1_0_node_exchange(hdml, child,indent+1);
-      hdml->out = hdml_1_0_end_input_tag(hdml, child);
+      hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
+      hdml->out = s_hdml_end_input_tag(hdml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <SELECT>                                                               */
@@ -404,10 +404,10 @@ hdml_1_0_node_exchange(Hdml* hdml, Node* node,  int indent)
     else
     if (strcasecmp(name, "select") == 0) 
     {
-      hdml->out = hdml_1_0_start_select_tag(hdml, child);
+      hdml->out = s_hdml_start_select_tag(hdml, child);
       hdml->hdml_br_flag = 0;
-      hdml->out = hdml_1_0_node_exchange(hdml, child,indent+1);
-      hdml->out = hdml_1_0_end_select_tag(hdml, child);
+      hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
+      hdml->out = s_hdml_end_select_tag(hdml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <OPTION>                                                               */
@@ -415,10 +415,10 @@ hdml_1_0_node_exchange(Hdml* hdml, Node* node,  int indent)
     else
     if (strcasecmp(name, "option") == 0) 
     {
-      hdml->out = hdml_1_0_start_option_tag(hdml, child);
+      hdml->out = s_hdml_start_option_tag(hdml, child);
       hdml->hdml_br_flag = 0;
-      hdml->out = hdml_1_0_node_exchange(hdml, child,indent+1);
-      hdml->out = hdml_1_0_end_option_tag(hdml, child);
+      hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
+      hdml->out = s_hdml_end_option_tag(hdml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <DIV>                                                                  */
@@ -426,10 +426,10 @@ hdml_1_0_node_exchange(Hdml* hdml, Node* node,  int indent)
     else
     if (strcasecmp(name, "div") == 0) 
     {
-      hdml->out = hdml_1_0_start_div_tag(hdml, child);
+      hdml->out = s_hdml_start_div_tag(hdml, child);
       hdml->hdml_br_flag = 0;
-      hdml->out = hdml_1_0_node_exchange(hdml, child, indent+1);
-      hdml->out = hdml_1_0_end_div_tag(hdml, child);
+      hdml->out = s_hdml_node_exchange(hdml, child, indent+1);
+      hdml->out = s_hdml_end_div_tag(hdml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <HR>                                                                   */
@@ -437,8 +437,8 @@ hdml_1_0_node_exchange(Hdml* hdml, Node* node,  int indent)
     else
     if (strcasecmp(name, "hr") == 0) 
     {
-      hdml->out = hdml_1_0_start_hr_tag(hdml, child);
-      hdml->out = hdml_1_0_end_hr_tag(hdml, child);
+      hdml->out = s_hdml_start_hr_tag(hdml, child);
+      hdml->out = s_hdml_end_hr_tag(hdml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <CENTER>                                                               */
@@ -446,9 +446,9 @@ hdml_1_0_node_exchange(Hdml* hdml, Node* node,  int indent)
     else
     if (strcasecmp(name, "center") == 0) 
     {
-      hdml->out = hdml_1_0_start_center_tag(hdml, child);
-      hdml->out = hdml_1_0_node_exchange(hdml, child,indent+1);
-      hdml->out = hdml_1_0_end_center_tag(hdml, child);
+      hdml->out = s_hdml_start_center_tag(hdml, child);
+      hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
+      hdml->out = s_hdml_end_center_tag(hdml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <IMG>                                                                  */
@@ -456,9 +456,9 @@ hdml_1_0_node_exchange(Hdml* hdml, Node* node,  int indent)
     else
     if (strcasecmp(name, "img") == 0) 
     {
-      hdml->out = hdml_1_0_start_img_tag(hdml, child);
+      hdml->out = s_hdml_start_img_tag(hdml, child);
       hdml->hdml_br_flag = 0;
-      hdml->out = hdml_1_0_end_img_tag  (hdml, child);
+      hdml->out = s_hdml_end_img_tag  (hdml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <CHXJ:IF>                                                              */
@@ -474,11 +474,11 @@ hdml_1_0_node_exchange(Hdml* hdml, Node* node,  int indent)
         parse_attr = qs_get_parse_attr(doc, child, r);
         if (parse_attr != NULL && strcasecmp(parse_attr, "true") == 0)
         {
-          hdml->out = hdml_1_0_node_exchange(hdml, child,indent+1);
+          hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
         }
         else
         {
-          hdml_1_0_chxjif_tag(hdml, child);
+          s_hdml_chxjif_tag(hdml, child);
         }
       }
     }
@@ -517,7 +517,7 @@ hdml_1_0_node_exchange(Hdml* hdml, Node* node,  int indent)
       for (ii=0; ii<qs_get_node_size(doc,child); ii++) 
       {
         char* out;
-        int rtn = hdml_search_emoji(hdml, &textval[ii], &out);
+        int rtn = s_hdml_search_emoji(hdml, &textval[ii], &out);
         if (rtn != 0)
         {
           tdst = qs_out_apr_pstrcat(r, tdst, out, &tdst_len);
@@ -540,7 +540,7 @@ hdml_1_0_node_exchange(Hdml* hdml, Node* node,  int indent)
       }
       memcpy(tmp, textval, strlen(textval)-1);
 
-      hdml_tag_output_upper_half(hdml, node);
+      s_hdml_tag_output_upper_half(hdml, node);
       qs_output_to_hdml_out(hdml, tdst);
       hdml->hdml_br_flag = 0;
     }
@@ -550,7 +550,7 @@ hdml_1_0_node_exchange(Hdml* hdml, Node* node,  int indent)
 }
 
 static int
-hdml_search_emoji(Hdml* hdml, char* txt, char** rslt)
+s_hdml_search_emoji(Hdml* hdml, char* txt, char** rslt)
 {
   emoji_t* ee;
   request_rec* r;
@@ -698,7 +698,7 @@ hdml_search_emoji(Hdml* hdml, char* txt, char** rslt)
  * @return The conversion result is returned. 
  */
 static char*
-hdml_1_0_start_html_tag(Hdml* hdml, Node* node) 
+s_hdml_start_html_tag(Hdml* hdml, Node* node) 
 {
   qs_output_to_hdml_out(hdml, 
     "<HDML VERSION=3.0 TTL=0 MARKABLE=TRUE>\n"
@@ -721,7 +721,7 @@ hdml_1_0_start_html_tag(Hdml* hdml, Node* node)
  * @return The conversion result is returned. 
  */
 static char*
-hdml_1_0_end_html_tag(Hdml* hdml, Node* child) 
+s_hdml_end_html_tag(Hdml* hdml, Node* child) 
 {
   qs_output_to_hdml_card(hdml, 
                   "<NODISPLAY NAME=D1>\n"
@@ -759,7 +759,7 @@ hdml_1_0_end_html_tag(Hdml* hdml, Node* child)
  * @return The conversion result is returned. 
  */
 static char*
-hdml_1_0_start_meta_tag(Hdml* hdml, Node* node) 
+s_hdml_start_meta_tag(Hdml* hdml, Node* node) 
 {
   /* ignore */
   return hdml->out;
@@ -774,7 +774,7 @@ hdml_1_0_start_meta_tag(Hdml* hdml, Node* node)
  * @return The conversion result is returned. 
  */
 static char*
-hdml_1_0_end_meta_tag(Hdml* hdml, Node* child) 
+s_hdml_end_meta_tag(Hdml* hdml, Node* child) 
 {
   return hdml->out;
 }
@@ -788,7 +788,7 @@ hdml_1_0_end_meta_tag(Hdml* hdml, Node* child)
  * @return The conversion result is returned. 
  */
 static char*
-hdml_1_0_start_head_tag(Hdml* hdml, Node* node) 
+s_hdml_start_head_tag(Hdml* hdml, Node* node) 
 {
   /* ignore */
   return hdml->out;
@@ -803,7 +803,7 @@ hdml_1_0_start_head_tag(Hdml* hdml, Node* node)
  * @return The conversion result is returned. 
  */
 static char*
-hdml_1_0_end_head_tag(Hdml* hdml, Node* child) 
+s_hdml_end_head_tag(Hdml* hdml, Node* child) 
 {
   /* ignore */
   return hdml->out;
@@ -818,7 +818,7 @@ hdml_1_0_end_head_tag(Hdml* hdml, Node* child)
  * @return The conversion result is returned. 
  */
 static char*
-hdml_1_0_start_title_tag(Hdml* hdml, Node* node) 
+s_hdml_start_title_tag(Hdml* hdml, Node* node) 
 {
   qs_output_to_hdml_out(hdml, "<DISPLAY NAME=D2 TITLE=\"");
   hdml->found_title = 1;
@@ -835,7 +835,7 @@ hdml_1_0_start_title_tag(Hdml* hdml, Node* node)
  * @return The conversion result is returned. 
  */
 static char*
-hdml_1_0_end_title_tag(Hdml* hdml, Node* child) 
+s_hdml_end_title_tag(Hdml* hdml, Node* child) 
 {
   qs_output_to_hdml_out(hdml, "\">\n");
 
@@ -851,7 +851,7 @@ hdml_1_0_end_title_tag(Hdml* hdml, Node* child)
  * @return The conversion result is returned. 
  */
 static char*
-hdml_1_0_start_base_tag(Hdml* hdml, Node* node) 
+s_hdml_start_base_tag(Hdml* hdml, Node* node) 
 {
   return hdml->out;
 }
@@ -866,7 +866,7 @@ hdml_1_0_start_base_tag(Hdml* hdml, Node* node)
  * @return The conversion result is returned. 
  */
 static char*
-hdml_1_0_end_base_tag(Hdml* hdml, Node* child) 
+s_hdml_end_base_tag(Hdml* hdml, Node* child) 
 {
   return hdml->out;
 }
@@ -880,7 +880,7 @@ hdml_1_0_end_base_tag(Hdml* hdml, Node* child)
  * @return The conversion result is returned. 
  */
 static char*
-hdml_1_0_start_body_tag(Hdml* hdml, Node* node) 
+s_hdml_start_body_tag(Hdml* hdml, Node* node) 
 {
   Doc*         doc  = hdml->doc;
   Attr*        attr;
@@ -933,7 +933,7 @@ hdml_1_0_start_body_tag(Hdml* hdml, Node* node)
  * @return The conversion result is returned. 
  */
 static char*
-hdml_1_0_end_body_tag(Hdml* hdml, Node* child) 
+s_hdml_end_body_tag(Hdml* hdml, Node* child) 
 {
   qs_output_to_hdml_out(hdml, "\n</DISPLAY>\n");
 
@@ -949,12 +949,12 @@ hdml_1_0_end_body_tag(Hdml* hdml, Node* child)
  * @return The conversion result is returned. 
  */
 static char*
-hdml_1_0_start_a_tag(Hdml* hdml, Node* node) 
+s_hdml_start_a_tag(Hdml* hdml, Node* node) 
 {
   Doc*         doc  = hdml->doc;
   Attr*        attr;
 
-  hdml_tag_output_upper_half(hdml,node);
+  s_hdml_tag_output_upper_half(hdml,node);
 
   qs_output_to_hdml_out(hdml, "<A");
 
@@ -1071,7 +1071,7 @@ hdml_1_0_start_a_tag(Hdml* hdml, Node* node)
  * @return The conversion result is returned. 
  */
 static char*
-hdml_1_0_end_a_tag(Hdml* hdml, Node* child) 
+s_hdml_end_a_tag(Hdml* hdml, Node* child) 
 {
   qs_output_to_hdml_out(hdml, "</A>\n");
 
@@ -1089,7 +1089,7 @@ hdml_1_0_end_a_tag(Hdml* hdml, Node* child)
  * @return The conversion result is returned. 
  */
 static char*
-hdml_1_0_start_br_tag(Hdml* hdml, Node* node) 
+s_hdml_start_br_tag(Hdml* hdml, Node* node) 
 {
   if (hdml->in_center > 0) 
   {
@@ -1116,7 +1116,7 @@ hdml_1_0_start_br_tag(Hdml* hdml, Node* node)
  * @return The conversion result is returned. 
  */
 static char*
-hdml_1_0_end_br_tag(Hdml* hdml, Node* child) 
+s_hdml_end_br_tag(Hdml* hdml, Node* child) 
 {
   return hdml->out;
 }
@@ -1130,7 +1130,7 @@ hdml_1_0_end_br_tag(Hdml* hdml, Node* child)
  * @return The conversion result is returned. 
  */
 static char*
-hdml_1_0_start_font_tag(Hdml* hdml, Node* node) 
+s_hdml_start_font_tag(Hdml* hdml, Node* node) 
 {
   return hdml->out;
 }
@@ -1144,7 +1144,7 @@ hdml_1_0_start_font_tag(Hdml* hdml, Node* node)
  * @return The conversion result is returned. 
  */
 static char*
-hdml_1_0_end_font_tag(Hdml* hdml, Node* child) 
+s_hdml_end_font_tag(Hdml* hdml, Node* child) 
 {
   return hdml->out;
 }
@@ -1158,7 +1158,7 @@ hdml_1_0_end_font_tag(Hdml* hdml, Node* child)
  * @return The conversion result is returned. 
  */
 static char*
-hdml_1_0_start_form_tag(Hdml* hdml, Node* node) 
+s_hdml_start_form_tag(Hdml* hdml, Node* node) 
 {
   request_rec* r = hdml->doc->r;
   Attr* attr;
@@ -1208,7 +1208,7 @@ hdml_1_0_start_form_tag(Hdml* hdml, Node* node)
  * @return The HDML output result after it edits it is returned. 
  */
 static char*
-hdml_1_0_end_form_tag(Hdml* hdml, Node* child) 
+s_hdml_end_form_tag(Hdml* hdml, Node* child) 
 {
   request_rec* r = hdml->doc->r;
 
@@ -1244,7 +1244,7 @@ hdml_1_0_end_form_tag(Hdml* hdml, Node* child)
  * @param node [i]   The tag node to be processed is specified. 
  */
 static char*
-hdml_1_0_start_input_tag(Hdml* hdml, Node* node) 
+s_hdml_start_input_tag(Hdml* hdml, Node* node) 
 {
   Doc* doc = hdml->doc;
   Attr* attr;
@@ -1263,14 +1263,14 @@ hdml_1_0_start_input_tag(Hdml* hdml, Node* node)
         /*--------------------------------------------------------------------*/
         /* "input type ='text'" tag is processed.                             */
         /*--------------------------------------------------------------------*/
-        hdml_do_input_text_tag(hdml, node);
+        s_hdml_do_input_text_tag(hdml, node);
       }
       if (strcasecmp(value, "password") == 0) 
       {
         /*--------------------------------------------------------------------*/
         /* "input type='password'" tag is processed.                          */
         /*--------------------------------------------------------------------*/
-        hdml_do_input_password_tag(hdml, node);
+        s_hdml_do_input_password_tag(hdml, node);
       }
       else
       if (strcasecmp(value, "submit") == 0) 
@@ -1278,7 +1278,7 @@ hdml_1_0_start_input_tag(Hdml* hdml, Node* node)
         /*--------------------------------------------------------------------*/
         /* "input type='submit'" tag is processed.                            */
         /*--------------------------------------------------------------------*/
-        hdml_do_input_submit_tag(hdml, node);
+        s_hdml_do_input_submit_tag(hdml, node);
       }
       else 
       if (strcasecmp(value, "hidden") == 0) 
@@ -1286,7 +1286,7 @@ hdml_1_0_start_input_tag(Hdml* hdml, Node* node)
         /*--------------------------------------------------------------------*/
         /* "input type='hidden'" tag is processed.                            */
         /*--------------------------------------------------------------------*/
-        hdml_do_input_hidden_tag(hdml, node);
+        s_hdml_do_input_hidden_tag(hdml, node);
       }
       else
       if (strcasecmp(value, "radio") == 0) 
@@ -1294,7 +1294,7 @@ hdml_1_0_start_input_tag(Hdml* hdml, Node* node)
         /*--------------------------------------------------------------------*/
         /* "input type='radio'" tag is processed.                             */
         /*--------------------------------------------------------------------*/
-        hdml_do_input_radio_tag(hdml, node);
+        s_hdml_do_input_radio_tag(hdml, node);
       }
       else 
       if (strcasecmp(value, "checkbox") == 0) 
@@ -1302,7 +1302,7 @@ hdml_1_0_start_input_tag(Hdml* hdml, Node* node)
         /*--------------------------------------------------------------------*/
         /* "input type='checkbox'" tag is processed.                          */
         /*--------------------------------------------------------------------*/
-        hdml_do_input_checkbox_tag(hdml, node);
+        s_hdml_do_input_checkbox_tag(hdml, node);
       }
     }
     else 
@@ -1352,7 +1352,7 @@ hdml_1_0_start_input_tag(Hdml* hdml, Node* node)
  * @param tag  [i]   The tag node of input type=text is specified. 
  */
 static void
-hdml_do_input_text_tag(Hdml* hdml, Node* tag)
+s_hdml_do_input_text_tag(Hdml* hdml, Node* tag)
 {
   Doc*          doc   = hdml->doc;
   request_rec*  r     = doc->r;
@@ -1362,7 +1362,7 @@ hdml_do_input_text_tag(Hdml* hdml, Node* tag)
   char*         nm;
   char*         fmt;
   int           ii;
-  hdml_tag_output_upper_half(hdml, tag);
+  s_hdml_tag_output_upper_half(hdml, tag);
 
   hdml->card_cnt++;
   qs_output_to_hdml_out(hdml, 
@@ -1463,7 +1463,7 @@ hdml_do_input_text_tag(Hdml* hdml, Node* tag)
  * @param tag  [i]   The tag node of input type=password is specified. 
  */
 static void
-hdml_do_input_password_tag(Hdml* hdml, Node* tag)
+s_hdml_do_input_password_tag(Hdml* hdml, Node* tag)
 {
   Doc*            doc = hdml->doc;
   request_rec*    r   = doc->r;
@@ -1472,7 +1472,8 @@ hdml_do_input_password_tag(Hdml* hdml, Node* tag)
   char*           is;
   char*           nm;
   char*           fmt;
-  hdml_tag_output_upper_half(hdml, tag);
+
+  s_hdml_tag_output_upper_half(hdml, tag);
 
   hdml->card_cnt++;
   qs_output_to_hdml_out(hdml, "<A TASK=GOSUB LABEL=\"\x93\xfc\x97\xcd\" DEST=");
@@ -1565,13 +1566,14 @@ hdml_do_input_password_tag(Hdml* hdml, Node* tag)
  * @param tag  [i]   The tag node of input type=submit is specified. 
  */
 static void
-hdml_do_input_submit_tag(Hdml* hdml, Node* tag)
+s_hdml_do_input_submit_tag(Hdml* hdml, Node* tag)
 {
   Doc*          doc = hdml->doc;
   request_rec*  r   = doc->r;
   char*         nm  = NULL;
   char*         val = NULL;
-  hdml_tag_output_upper_half(hdml, tag);
+
+  s_hdml_tag_output_upper_half(hdml, tag);
 
   qs_output_to_hdml_out(hdml, 
                   apr_psprintf(r->pool, 
@@ -1610,7 +1612,7 @@ hdml_do_input_submit_tag(Hdml* hdml, Node* tag)
  * @param tag  [i]   The tag node of input type=hidden is specified. 
  */
 static void
-hdml_do_input_hidden_tag(Hdml* hdml, Node* tag)
+s_hdml_do_input_hidden_tag(Hdml* hdml, Node* tag)
 {
   Doc*          doc = hdml->doc;
   request_rec*  r   = doc->r;
@@ -1641,7 +1643,7 @@ hdml_do_input_hidden_tag(Hdml* hdml, Node* tag)
  * @param tag  [i]   The tag node of input type=radio is specified. 
  */
 static void
-hdml_do_input_radio_tag(Hdml* hdml, Node* tag)
+s_hdml_do_input_radio_tag(Hdml* hdml, Node* tag)
 {
   Doc*          doc       = hdml->doc;
   request_rec*  r         = doc->r;
@@ -1651,7 +1653,8 @@ hdml_do_input_radio_tag(Hdml* hdml, Node* tag)
   int           jj;
   int           kk;
   int           r_cnt;
-  hdml_tag_output_upper_half(hdml, tag);
+
+  s_hdml_tag_output_upper_half(hdml, tag);
 
   /*--------------------------------------------------------------------------*/
   /* get name and value attribute                                             */
@@ -1834,7 +1837,7 @@ hdml_do_input_radio_tag(Hdml* hdml, Node* tag)
  * @param tag  [i]   The tag node of input type=checkbox is specified. 
  */
 static void
-hdml_do_input_checkbox_tag(Hdml* hdml, Node* tag)
+s_hdml_do_input_checkbox_tag(Hdml* hdml, Node* tag)
 {
   Doc*          doc       = hdml->doc;
   request_rec*  r         = doc->r;
@@ -1986,7 +1989,7 @@ qs_conv_istyle_to_format(request_rec* r, char* is)
  * @return The conversion result is returned.
  */
 static char*
-hdml_1_0_end_input_tag(Hdml* hdml, Node* child) 
+s_hdml_end_input_tag(Hdml* hdml, Node* child) 
 {
   return hdml->out;
 }
@@ -2000,7 +2003,7 @@ hdml_1_0_end_input_tag(Hdml* hdml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-hdml_1_0_start_center_tag(Hdml* hdml, Node* node) 
+s_hdml_start_center_tag(Hdml* hdml, Node* node) 
 {
   hdml->center++;
   hdml->in_center++;
@@ -2023,7 +2026,7 @@ hdml_1_0_start_center_tag(Hdml* hdml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-hdml_1_0_end_center_tag(Hdml* hdml, Node* child) 
+s_hdml_end_center_tag(Hdml* hdml, Node* child) 
 {
   hdml->center = 0;
   hdml->in_center = 0;
@@ -2043,7 +2046,7 @@ hdml_1_0_end_center_tag(Hdml* hdml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-hdml_1_0_start_hr_tag(Hdml* hdml, Node* node) 
+s_hdml_start_hr_tag(Hdml* hdml, Node* node) 
 {
   if (hdml->hdml_br_flag == 0) 
   {
@@ -2075,7 +2078,7 @@ hdml_1_0_start_hr_tag(Hdml* hdml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-hdml_1_0_end_hr_tag(Hdml* hdml, Node* child) 
+s_hdml_end_hr_tag(Hdml* hdml, Node* child) 
 {
   return hdml->out;
 }
@@ -2089,7 +2092,7 @@ hdml_1_0_end_hr_tag(Hdml* hdml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-hdml_1_0_start_img_tag(Hdml* hdml, Node* node) 
+s_hdml_start_img_tag(Hdml* hdml, Node* node) 
 {
   Doc*          doc  = hdml->doc;
 #ifndef IMG_NOT_CONVERT_FILENAME
@@ -2097,7 +2100,7 @@ hdml_1_0_start_img_tag(Hdml* hdml, Node* node)
 #endif
   Attr*         attr;
 
-  hdml_tag_output_upper_half(hdml, node);
+  s_hdml_tag_output_upper_half(hdml, node);
 
   qs_output_to_hdml_out(hdml, "<img");
 
@@ -2174,7 +2177,7 @@ hdml_1_0_start_img_tag(Hdml* hdml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-hdml_1_0_end_img_tag(Hdml* hdml, Node* child) 
+s_hdml_end_img_tag(Hdml* hdml, Node* child) 
 {
   return hdml->out;
 }
@@ -2188,13 +2191,13 @@ hdml_1_0_end_img_tag(Hdml* hdml, Node* child)
  * @return The conversion result is returned.
  */
 static char* 
-hdml_1_0_start_select_tag(Hdml* hdml, Node* node)  
+s_hdml_start_select_tag(Hdml* hdml, Node* node)  
 {
   Doc*         doc = hdml->doc;
   request_rec* r   = doc->r;
   Attr*        attr;
 
-  hdml_tag_output_upper_half(hdml, node);
+  s_hdml_tag_output_upper_half(hdml, node);
 
   hdml->card_cnt++;
 
@@ -2283,7 +2286,7 @@ hdml_1_0_start_select_tag(Hdml* hdml, Node* node)
  * @return The conversion result is returned.
  */
 static char* 
-hdml_1_0_end_select_tag(Hdml* hdml,  Node* node)  
+s_hdml_end_select_tag(Hdml* hdml,  Node* node)  
 {
   qs_output_to_hdml_card(hdml, "</CHOICE>\n");
 
@@ -2299,7 +2302,7 @@ hdml_1_0_end_select_tag(Hdml* hdml,  Node* node)
  * @return The conversion result is returned.
  */
 static char* 
-hdml_1_0_start_option_tag(Hdml* hdml, Node* node) 
+s_hdml_start_option_tag(Hdml* hdml, Node* node) 
 {
   request_rec* r     = hdml->doc->r;
   Doc*         doc   = hdml->doc;
@@ -2351,7 +2354,7 @@ hdml_1_0_start_option_tag(Hdml* hdml, Node* node)
  * @return The conversion result is returned.
  */
 static char* 
-hdml_1_0_end_option_tag(Hdml* hdml,  Node* node)  
+s_hdml_end_option_tag(Hdml* hdml,  Node* node)  
 {
   hdml->option_flag = 0;
   return hdml->out;
@@ -2366,7 +2369,7 @@ hdml_1_0_end_option_tag(Hdml* hdml,  Node* node)
  * @return The conversion result is returned.
  */
 static char* 
-hdml_1_0_start_div_tag(Hdml* hdml, Node* node) 
+s_hdml_start_div_tag(Hdml* hdml, Node* node) 
 {
   Doc*    doc   = hdml->doc;
   Attr*   attr;
@@ -2421,7 +2424,7 @@ hdml_1_0_start_div_tag(Hdml* hdml, Node* node)
  * @return The conversion result is returned.
  */
 static char* 
-hdml_1_0_end_div_tag(Hdml* hdml,  Node* node)  
+s_hdml_end_div_tag(Hdml* hdml,  Node* node)  
 {
   request_rec* r = hdml->doc->r;
 
@@ -2494,7 +2497,7 @@ qs_get_form_no(request_rec* r, Hdml* hdml)
  *                 specified. 
  */
 static void
-hdml_1_0_count_radio_tag(Hdml* hdml, Node* node) 
+s_hdml_count_radio_tag(Hdml* hdml, Node* node) 
 {
   Node*         child;
   Doc*          doc       = hdml->doc; 
@@ -2518,7 +2521,7 @@ hdml_1_0_count_radio_tag(Hdml* hdml, Node* node)
     name = qs_get_node_name(doc,child);
     if (strcasecmp(name, "input") != 0)
     {
-      hdml_1_0_count_radio_tag(hdml, child);
+      s_hdml_count_radio_tag(hdml, child);
       continue;
     }
 
@@ -2693,7 +2696,7 @@ qs_output_to_postdata(Hdml* hdml, char* s)
  * @param node   [i]   The A tag node is specified.
  */
 static void
-hdml_tag_output_upper_half(Hdml* hdml, Node* node)
+s_hdml_tag_output_upper_half(Hdml* hdml, Node* node)
 {
   if (hdml->hdml_br_flag   == 1 
   &&  hdml->div_right_flag == 1) 
@@ -2745,7 +2748,7 @@ qs_output_to_init_vars(Hdml* hdml, char* s)
 }
 
 static void
-hdml_1_0_chxjif_tag(Hdml* hdml, Node* node)
+s_hdml_chxjif_tag(Hdml* hdml, Node* node)
 {
   Doc*         doc   = hdml->doc;
   Node*        child;
@@ -2755,7 +2758,7 @@ hdml_1_0_chxjif_tag(Hdml* hdml, Node* node)
        child = qs_get_next_node(doc, child))
   {
     qs_output_to_hdml_out(hdml, child->otext);
-    hdml_1_0_chxjif_tag(hdml, child);
+    s_hdml_chxjif_tag(hdml, child);
   }
 }
 /*
