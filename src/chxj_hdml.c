@@ -26,57 +26,60 @@
 #define RADIO_BUTTON_PREFIX  "_chxj_r_"
 #define SUBMIT_BUTTON_PREFIX "_chxj_s_"
 
-static void  s_init_hdml            (Hdml* hdml, Doc* doc, request_rec* r, device_table* spec);
-static char* s_hdml_node_exchange   (Hdml* doc, Node* node, int indent);
-static char* s_hdml_start_html_tag  (Hdml* doc, Node* child) ;
-static char* s_hdml_end_html_tag    (Hdml* doc, Node* child) ;
-static char* s_hdml_start_meta_tag  (Hdml* doc, Node* node) ;
-static char* s_hdml_end_meta_tag    (Hdml* doc, Node* node) ;
-static char* s_hdml_start_head_tag  (Hdml* doc, Node* node) ;
-static char* s_hdml_end_head_tag    (Hdml* doc, Node* node) ;
-static char* s_hdml_start_title_tag (Hdml* doc, Node* node) ;
-static char* s_hdml_end_title_tag   (Hdml* doc,  Node* node) ;
-static char* s_hdml_start_base_tag  (Hdml* doc, Node* node) ;
-static char* s_hdml_end_base_tag    (Hdml* doc,  Node* node) ;
-static char* s_hdml_start_body_tag  (Hdml* doc, Node* node) ;
-static char* s_hdml_end_body_tag    (Hdml* doc,  Node* node) ;
-static char* s_hdml_start_a_tag     (Hdml* doc, Node* node) ;
-static char* s_hdml_end_a_tag       (Hdml* doc,  Node* node) ;
-static char* s_hdml_start_br_tag    (Hdml* doc, Node* node) ;
-static char* s_hdml_end_br_tag      (Hdml* doc,  Node* node) ;
-static char* s_hdml_start_font_tag  (Hdml* doc, Node* node) ;
-static char* s_hdml_end_font_tag    (Hdml* doc,  Node* node) ;
-static char* s_hdml_start_form_tag  (Hdml* doc, Node* node) ;
-static char* s_hdml_end_form_tag    (Hdml* doc,  Node* node) ;
-static char* s_hdml_start_input_tag (Hdml* doc, Node* node) ;
-static char* s_hdml_end_input_tag   (Hdml* doc,  Node* node) ;
-static char* s_hdml_start_select_tag(Hdml* doc, Node* node) ;
-static char* s_hdml_end_select_tag  (Hdml* doc,  Node* node) ;
-static char* s_hdml_start_option_tag(Hdml* doc, Node* node) ;
-static char* s_hdml_end_option_tag  (Hdml* doc,  Node* node) ;
-static char* s_hdml_start_center_tag(Hdml* doc, Node* node) ;
-static char* s_hdml_end_center_tag  (Hdml* doc,  Node* node) ;
-static char* s_hdml_start_hr_tag    (Hdml* doc, Node* node) ;
-static char* s_hdml_end_hr_tag      (Hdml* doc,  Node* node) ;
-static char* s_hdml_start_img_tag   (Hdml* doc, Node* node) ;
-static char* s_hdml_end_img_tag     (Hdml* doc,  Node* node) ;
-static char* s_hdml_start_div_tag   (Hdml* doc, Node* node) ;
-static char* s_hdml_end_div_tag     (Hdml* doc,  Node* node) ;
-static char* qs_get_form_no(request_rec* r, Hdml* hdml);
-static void  s_hdml_count_radio_tag  (Hdml* hdml, Node* node) ;
-static void  s_hdml_do_input_text_tag    (Hdml* hdml, Node* tag);
-static void  s_hdml_do_input_password_tag(Hdml* hdml, Node* tag);
-static void  s_hdml_do_input_submit_tag  (Hdml* hdml, Node* tag);
-static void  s_hdml_do_input_hidden_tag  (Hdml* hdml, Node* tag);
-static void  s_hdml_do_input_radio_tag   (Hdml* hdml, Node* tag);
-static void  s_hdml_do_input_checkbox_tag(Hdml* hdml, Node* tag);
-static void  s_hdml_tag_output_upper_half(Hdml* hdml, Node* node);
-static Hdml* qs_output_to_hdml_out    (Hdml* hdml, char* s);
-static Hdml* qs_output_to_hdml_card   (Hdml* hdml, char* s);
-static void  qs_output_to_postdata     (Hdml* hdml, char* s);
-static void  qs_output_to_init_vars    (Hdml* hdml, char* s);
-static int   s_hdml_search_emoji          (Hdml* hdml, char* txt, char** rslt);
-static void  s_hdml_chxjif_tag       (Hdml* hdml, Node* node);
+static void  s_init_hdml            (hdml_t* hdml, Doc* doc, request_rec* r, device_table* spec);
+static char* s_hdml_node_exchange   (hdml_t* doc,  Node* node, int indent);
+static char* s_hdml_start_html_tag  (hdml_t* doc,  Node* child);
+static char* s_hdml_end_html_tag    (hdml_t* doc,  Node* child);
+static char* s_hdml_start_meta_tag  (hdml_t* doc,  Node* node);
+static char* s_hdml_end_meta_tag    (hdml_t* doc,  Node* node);
+static char* s_hdml_start_head_tag  (hdml_t* doc,  Node* node);
+static char* s_hdml_end_head_tag    (hdml_t* doc,  Node* node);
+static char* s_hdml_start_title_tag (hdml_t* doc,  Node* node);
+static char* s_hdml_end_title_tag   (hdml_t* doc,  Node* node);
+static char* s_hdml_start_base_tag  (hdml_t* doc,  Node* node);
+static char* s_hdml_end_base_tag    (hdml_t* doc,  Node* node);
+static char* s_hdml_start_body_tag  (hdml_t* doc,  Node* node);
+static char* s_hdml_end_body_tag    (hdml_t* doc,  Node* node);
+static char* s_hdml_start_a_tag     (hdml_t* doc,  Node* node);
+static char* s_hdml_end_a_tag       (hdml_t* doc,  Node* node);
+static char* s_hdml_start_br_tag    (hdml_t* doc,  Node* node);
+static char* s_hdml_end_br_tag      (hdml_t* doc,  Node* node);
+static char* s_hdml_start_font_tag  (hdml_t* doc,  Node* node);
+static char* s_hdml_end_font_tag    (hdml_t* doc,  Node* node);
+static char* s_hdml_start_form_tag  (hdml_t* doc,  Node* node);
+static char* s_hdml_end_form_tag    (hdml_t* doc,  Node* node);
+static char* s_hdml_start_input_tag (hdml_t* doc,  Node* node);
+static char* s_hdml_end_input_tag   (hdml_t* doc,  Node* node);
+static char* s_hdml_start_select_tag(hdml_t* doc,  Node* node);
+static char* s_hdml_end_select_tag  (hdml_t* doc,  Node* node);
+static char* s_hdml_start_option_tag(hdml_t* doc,  Node* node);
+static char* s_hdml_end_option_tag  (hdml_t* doc,  Node* node);
+static char* s_hdml_start_center_tag(hdml_t* doc,  Node* node);
+static char* s_hdml_end_center_tag  (hdml_t* doc,  Node* node);
+static char* s_hdml_start_hr_tag    (hdml_t* doc,  Node* node);
+static char* s_hdml_end_hr_tag      (hdml_t* doc,  Node* node);
+static char* s_hdml_start_img_tag   (hdml_t* doc,  Node* node);
+static char* s_hdml_end_img_tag     (hdml_t* doc,  Node* node);
+static char* s_hdml_start_div_tag   (hdml_t* doc,  Node* node);
+static char* s_hdml_end_div_tag     (hdml_t* doc,  Node* node);
+static char* s_get_form_no          (request_rec* r, hdml_t* hdml);
+static void  s_hdml_count_radio_tag (hdml_t* hdml, Node* node) ;
+static void  s_hdml_do_input_text_tag    (hdml_t* hdml, Node* tag);
+static void  s_hdml_do_input_password_tag(hdml_t* hdml, Node* tag);
+static void  s_hdml_do_input_submit_tag  (hdml_t* hdml, Node* tag);
+static void  s_hdml_do_input_hidden_tag  (hdml_t* hdml, Node* tag);
+static void  s_hdml_do_input_radio_tag   (hdml_t* hdml, Node* tag);
+static void  s_hdml_do_input_checkbox_tag(hdml_t* hdml, Node* tag);
+static void  s_hdml_tag_output_upper_half(hdml_t* hdml, Node* node);
+static hdml_t* s_output_to_hdml_out       (hdml_t* hdml, char* s);
+static hdml_t* s_output_to_hdml_card      (hdml_t* hdml, char* s);
+static void  s_output_to_postdata       (hdml_t* hdml, char* s);
+static void  s_output_to_init_vars      (hdml_t* hdml, char* s);
+static int   s_hdml_search_emoji         (hdml_t* hdml, char* txt, char** rslt);
+static void  s_hdml_chxjif_tag           (hdml_t* hdml, Node* node);
+
+
+
 /**
  * converts from CHTML to hdml.
  *
@@ -96,7 +99,7 @@ chxj_exchange_hdml(request_rec* r,
   char*     dst = NULL;
   char*     buf = NULL;
   Doc       doc;
-  Hdml      hdml;
+  hdml_t      hdml;
 
   /*--------------------------------------------------------------------------*/
   /* If qrcode xml                                                            */
@@ -136,13 +139,13 @@ chxj_exchange_hdml(request_rec* r,
     /*------------------------------------------------------------------------*/
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, 
                     "Location is not null[Location:%s]", buf);
-    qs_output_to_hdml_out(&hdml, 
+    s_output_to_hdml_out(&hdml, 
         "<HDML VERSION=3.0 MARKABLE=TRUE PUBLIC=TRUE>\n"
         "<NODISPLAY MARKABLE=TRUE PUBLIC=TRUE TITLE=\" \">\n"
         "<ACTION TYPE=ACCEPT TASK=GO DEST=\""
         );
-    qs_output_to_hdml_out(&hdml, buf);
-    qs_output_to_hdml_out(&hdml,
+    s_output_to_hdml_out(&hdml, buf);
+    s_output_to_hdml_out(&hdml,
         "\">\n"
         "</NODISPLAY>\n"
         "</HDML>\n"
@@ -209,7 +212,7 @@ chxj_exchange_hdml(request_rec* r,
  * @param spec [i]   The pointer to the device_table
  */
 static void 
-s_init_hdml(Hdml* hdml, Doc* doc, request_rec* r, device_table* spec)
+s_init_hdml(hdml_t* hdml, Doc* doc, request_rec* r, device_table* spec)
 {
   int     ii;
   int     jj;
@@ -217,7 +220,7 @@ s_init_hdml(Hdml* hdml, Doc* doc, request_rec* r, device_table* spec)
   /*--------------------------------------------------------------------------*/
   /* init hdml structure value                                                */
   /*--------------------------------------------------------------------------*/
-  memset(hdml, 0, sizeof(Hdml));
+  memset(hdml, 0, sizeof(hdml_t));
   hdml->doc      = doc;
   hdml->card     = qs_alloc_zero_byte_string(r);
   hdml->spec     = spec;
@@ -264,13 +267,15 @@ s_init_hdml(Hdml* hdml, Doc* doc, request_rec* r, device_table* spec)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_node_exchange(Hdml* hdml, Node* node,  int indent) 
+s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent) 
 {
   Node*         child;
   Doc*          doc   = hdml->doc; 
   request_rec*  r     = doc->r;
 
-  for (child = qs_get_child_node(doc,node); child != NULL; child = qs_get_next_node(doc,child)) 
+  for (child = qs_get_child_node(doc,node); 
+       child ; 
+       child = qs_get_next_node(doc,child)) 
   {
     char* name = qs_get_node_name(doc,child);
 
@@ -541,7 +546,7 @@ s_hdml_node_exchange(Hdml* hdml, Node* node,  int indent)
       memcpy(tmp, textval, strlen(textval)-1);
 
       s_hdml_tag_output_upper_half(hdml, node);
-      qs_output_to_hdml_out(hdml, tdst);
+      s_output_to_hdml_out(hdml, tdst);
       hdml->hdml_br_flag = 0;
     }
   }
@@ -550,7 +555,7 @@ s_hdml_node_exchange(Hdml* hdml, Node* node,  int indent)
 }
 
 static int
-s_hdml_search_emoji(Hdml* hdml, char* txt, char** rslt)
+s_hdml_search_emoji(hdml_t* hdml, char* txt, char** rslt)
 {
   emoji_t* ee;
   request_rec* r;
@@ -698,9 +703,9 @@ s_hdml_search_emoji(Hdml* hdml, char* txt, char** rslt)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_start_html_tag(Hdml* hdml, Node* node) 
+s_hdml_start_html_tag(hdml_t* hdml, Node* node) 
 {
-  qs_output_to_hdml_out(hdml, 
+  s_output_to_hdml_out(hdml, 
     "<HDML VERSION=3.0 TTL=0 MARKABLE=TRUE>\n"
     "<NODISPLAY NAME=D0>\n"
     "<ACTION TYPE=ACCEPT TASK=GOSUB DEST=#D1 NEXT=#D2 CLEAR=TRUE>\n"
@@ -721,29 +726,29 @@ s_hdml_start_html_tag(Hdml* hdml, Node* node)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_end_html_tag(Hdml* hdml, Node* child) 
+s_hdml_end_html_tag(hdml_t* hdml, Node* child) 
 {
-  qs_output_to_hdml_card(hdml, 
+  s_output_to_hdml_card(hdml, 
                   "<NODISPLAY NAME=D1>\n"
                   "<ACTION TYPE=ACCEPT TASK=RETURN VARS=\""
                   );
 
   if (strlen(hdml->init_vars) != 0) 
   {
-    qs_output_to_hdml_card(hdml, hdml->init_vars   );
+    s_output_to_hdml_card(hdml, hdml->init_vars   );
   }
   else 
   {
-    qs_output_to_hdml_card(hdml, "_chxj_dmy="            );
+    s_output_to_hdml_card(hdml, "_chxj_dmy="            );
   }
 
-  qs_output_to_hdml_card(hdml,   
+  s_output_to_hdml_card(hdml,   
                   "\" CLEAR=TRUE>\n"
                   "</NODISPLAY>\n"
                   );
 
-  qs_output_to_hdml_out(hdml, hdml->card );
-  qs_output_to_hdml_out(hdml, "</HDML>\n");
+  s_output_to_hdml_out(hdml, hdml->card );
+  s_output_to_hdml_out(hdml, "</HDML>\n");
 
   hdml->hdml_end_flag = 1;
 
@@ -759,7 +764,7 @@ s_hdml_end_html_tag(Hdml* hdml, Node* child)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_start_meta_tag(Hdml* hdml, Node* node) 
+s_hdml_start_meta_tag(hdml_t* hdml, Node* node) 
 {
   /* ignore */
   return hdml->out;
@@ -774,7 +779,7 @@ s_hdml_start_meta_tag(Hdml* hdml, Node* node)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_end_meta_tag(Hdml* hdml, Node* child) 
+s_hdml_end_meta_tag(hdml_t* hdml, Node* child) 
 {
   return hdml->out;
 }
@@ -788,7 +793,7 @@ s_hdml_end_meta_tag(Hdml* hdml, Node* child)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_start_head_tag(Hdml* hdml, Node* node) 
+s_hdml_start_head_tag(hdml_t* hdml, Node* node) 
 {
   /* ignore */
   return hdml->out;
@@ -803,7 +808,7 @@ s_hdml_start_head_tag(Hdml* hdml, Node* node)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_end_head_tag(Hdml* hdml, Node* child) 
+s_hdml_end_head_tag(hdml_t* hdml, Node* child) 
 {
   /* ignore */
   return hdml->out;
@@ -818,9 +823,9 @@ s_hdml_end_head_tag(Hdml* hdml, Node* child)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_start_title_tag(Hdml* hdml, Node* node) 
+s_hdml_start_title_tag(hdml_t* hdml, Node* node) 
 {
-  qs_output_to_hdml_out(hdml, "<DISPLAY NAME=D2 TITLE=\"");
+  s_output_to_hdml_out(hdml, "<DISPLAY NAME=D2 TITLE=\"");
   hdml->found_title = 1;
 
   return hdml->out;
@@ -835,9 +840,9 @@ s_hdml_start_title_tag(Hdml* hdml, Node* node)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_end_title_tag(Hdml* hdml, Node* child) 
+s_hdml_end_title_tag(hdml_t* hdml, Node* child) 
 {
-  qs_output_to_hdml_out(hdml, "\">\n");
+  s_output_to_hdml_out(hdml, "\">\n");
 
   return hdml->out;
 }
@@ -851,7 +856,7 @@ s_hdml_end_title_tag(Hdml* hdml, Node* child)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_start_base_tag(Hdml* hdml, Node* node) 
+s_hdml_start_base_tag(hdml_t* hdml, Node* node) 
 {
   return hdml->out;
 }
@@ -866,7 +871,7 @@ s_hdml_start_base_tag(Hdml* hdml, Node* node)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_end_base_tag(Hdml* hdml, Node* child) 
+s_hdml_end_base_tag(hdml_t* hdml, Node* child) 
 {
   return hdml->out;
 }
@@ -880,16 +885,16 @@ s_hdml_end_base_tag(Hdml* hdml, Node* child)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_start_body_tag(Hdml* hdml, Node* node) 
+s_hdml_start_body_tag(hdml_t* hdml, Node* node) 
 {
   Doc*         doc  = hdml->doc;
   Attr*        attr;
 
   if (hdml->found_title == 0)
   {
-    qs_output_to_hdml_out(hdml, "<DISPLAY NAME=D2 TITLE=\"NO TITLE\">\n");
+    s_output_to_hdml_out(hdml, "<DISPLAY NAME=D2 TITLE=\"NO TITLE\">\n");
   }
-  qs_output_to_hdml_out(hdml, "<ACTION TYPE=ACCEPT TASK=NOOP LABEL=\" \"");
+  s_output_to_hdml_out(hdml, "<ACTION TYPE=ACCEPT TASK=NOOP LABEL=\" \"");
 
   /*--------------------------------*/
   /* Get Attributes                 */
@@ -919,7 +924,7 @@ s_hdml_start_body_tag(Hdml* hdml, Node* node)
     }
   }
 
-  qs_output_to_hdml_out(hdml, ">\n");
+  s_output_to_hdml_out(hdml, ">\n");
 
   return hdml->out;
 }
@@ -933,9 +938,9 @@ s_hdml_start_body_tag(Hdml* hdml, Node* node)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_end_body_tag(Hdml* hdml, Node* child) 
+s_hdml_end_body_tag(hdml_t* hdml, Node* child) 
 {
-  qs_output_to_hdml_out(hdml, "\n</DISPLAY>\n");
+  s_output_to_hdml_out(hdml, "\n</DISPLAY>\n");
 
   return hdml->out;
 }
@@ -949,14 +954,14 @@ s_hdml_end_body_tag(Hdml* hdml, Node* child)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_start_a_tag(Hdml* hdml, Node* node) 
+s_hdml_start_a_tag(hdml_t* hdml, Node* node) 
 {
   Doc*         doc  = hdml->doc;
   Attr*        attr;
 
   s_hdml_tag_output_upper_half(hdml,node);
 
-  qs_output_to_hdml_out(hdml, "<A");
+  s_output_to_hdml_out(hdml, "<A");
 
 
   /*------------------------------------*/
@@ -976,32 +981,32 @@ s_hdml_start_a_tag(Hdml* hdml, Node* node)
     {
       if (strncasecmp(value, "mailto:", 7) == 0) 
       {
-        qs_output_to_hdml_out(hdml, " TASK=GO DEST=\""     );
-        qs_output_to_hdml_out(hdml, value                  );
-        qs_output_to_hdml_out(hdml, "\" "                  );
+        s_output_to_hdml_out(hdml, " TASK=GO DEST=\""     );
+        s_output_to_hdml_out(hdml, value                  );
+        s_output_to_hdml_out(hdml, "\" "                  );
       }
       else 
       if (strncasecmp(value, "tel:", 4) == 0) 
       {
 
-        qs_output_to_hdml_out(hdml,  " TASK=CALL NUMBER=\"");
-        qs_output_to_hdml_out(hdml, &value[4]              );
-        qs_output_to_hdml_out(hdml, "\" "                  );
+        s_output_to_hdml_out(hdml,  " TASK=CALL NUMBER=\"");
+        s_output_to_hdml_out(hdml, &value[4]              );
+        s_output_to_hdml_out(hdml, "\" "                  );
       }
       else 
       {
-        qs_output_to_hdml_out(hdml, " TASK=GO DEST=\""     );
-        qs_output_to_hdml_out(hdml, value                  );
-        qs_output_to_hdml_out(hdml, "\""                   );
+        s_output_to_hdml_out(hdml, " TASK=GO DEST=\""     );
+        s_output_to_hdml_out(hdml, value                  );
+        s_output_to_hdml_out(hdml, "\""                   );
       }
     }
     else
     if (strcasecmp(name, "accesskey") == 0) 
     {
       if (strcasecmp(value, "0") != 0) {
-        qs_output_to_hdml_out(hdml, " ACCESSKEY="          );
-        qs_output_to_hdml_out(hdml, value                  );
-        qs_output_to_hdml_out(hdml, ""                     );
+        s_output_to_hdml_out(hdml, " ACCESSKEY="          );
+        s_output_to_hdml_out(hdml, value                  );
+        s_output_to_hdml_out(hdml, ""                     );
       }
     }
     else
@@ -1055,7 +1060,7 @@ s_hdml_start_a_tag(Hdml* hdml, Node* node)
       /* ignore */
     }
   }
-  qs_output_to_hdml_out(hdml, ">"  );
+  s_output_to_hdml_out(hdml, ">"  );
 
   hdml->hdml_a_flag = 1;
 
@@ -1071,9 +1076,9 @@ s_hdml_start_a_tag(Hdml* hdml, Node* node)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_end_a_tag(Hdml* hdml, Node* child) 
+s_hdml_end_a_tag(hdml_t* hdml, Node* child) 
 {
-  qs_output_to_hdml_out(hdml, "</A>\n");
+  s_output_to_hdml_out(hdml, "</A>\n");
 
   hdml->hdml_a_flag = 0;
 
@@ -1089,7 +1094,7 @@ s_hdml_end_a_tag(Hdml* hdml, Node* child)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_start_br_tag(Hdml* hdml, Node* node) 
+s_hdml_start_br_tag(hdml_t* hdml, Node* node) 
 {
   if (hdml->in_center > 0) 
   {
@@ -1100,7 +1105,7 @@ s_hdml_start_br_tag(Hdml* hdml, Node* node)
     hdml->div_in_center = 0;
   }
 
-  qs_output_to_hdml_out(hdml, "<BR>\n");
+  s_output_to_hdml_out(hdml, "<BR>\n");
 
   hdml->hdml_br_flag = 1;
 
@@ -1116,7 +1121,7 @@ s_hdml_start_br_tag(Hdml* hdml, Node* node)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_end_br_tag(Hdml* hdml, Node* child) 
+s_hdml_end_br_tag(hdml_t* hdml, Node* child) 
 {
   return hdml->out;
 }
@@ -1130,7 +1135,7 @@ s_hdml_end_br_tag(Hdml* hdml, Node* child)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_start_font_tag(Hdml* hdml, Node* node) 
+s_hdml_start_font_tag(hdml_t* hdml, Node* node) 
 {
   return hdml->out;
 }
@@ -1144,7 +1149,7 @@ s_hdml_start_font_tag(Hdml* hdml, Node* node)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_end_font_tag(Hdml* hdml, Node* child) 
+s_hdml_end_font_tag(hdml_t* hdml, Node* child) 
 {
   return hdml->out;
 }
@@ -1158,7 +1163,7 @@ s_hdml_end_font_tag(Hdml* hdml, Node* child)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_start_form_tag(Hdml* hdml, Node* node) 
+s_hdml_start_form_tag(hdml_t* hdml, Node* node) 
 {
   request_rec* r = hdml->doc->r;
   Attr* attr;
@@ -1208,11 +1213,11 @@ s_hdml_start_form_tag(Hdml* hdml, Node* node)
  * @return The HDML output result after it edits it is returned. 
  */
 static char*
-s_hdml_end_form_tag(Hdml* hdml, Node* child) 
+s_hdml_end_form_tag(hdml_t* hdml, Node* child) 
 {
   request_rec* r = hdml->doc->r;
 
-  qs_output_to_postdata(hdml, "_chxj_dmy=");
+  s_output_to_postdata(hdml, "_chxj_dmy=");
 
   hdml->form_tmp = apr_pstrcat(r->pool, 
                              hdml->form_tmp,
@@ -1228,7 +1233,7 @@ s_hdml_end_form_tag(Hdml* hdml, Node* child)
                                "</NODISPLAY>\n",
                                NULL);
 
-  qs_output_to_hdml_card(hdml, hdml->form_tmp);
+  s_output_to_hdml_card(hdml, hdml->form_tmp);
 
   hdml->form_tmp = NULL;
   hdml->pure_form_cnt++;
@@ -1244,7 +1249,7 @@ s_hdml_end_form_tag(Hdml* hdml, Node* child)
  * @param node [i]   The tag node to be processed is specified. 
  */
 static char*
-s_hdml_start_input_tag(Hdml* hdml, Node* node) 
+s_hdml_start_input_tag(hdml_t* hdml, Node* node) 
 {
   Doc* doc = hdml->doc;
   Attr* attr;
@@ -1352,7 +1357,7 @@ s_hdml_start_input_tag(Hdml* hdml, Node* node)
  * @param tag  [i]   The tag node of input type=text is specified. 
  */
 static void
-s_hdml_do_input_text_tag(Hdml* hdml, Node* tag)
+s_hdml_do_input_text_tag(hdml_t* hdml, Node* tag)
 {
   Doc*          doc   = hdml->doc;
   request_rec*  r     = doc->r;
@@ -1365,28 +1370,28 @@ s_hdml_do_input_text_tag(Hdml* hdml, Node* tag)
   s_hdml_tag_output_upper_half(hdml, tag);
 
   hdml->card_cnt++;
-  qs_output_to_hdml_out(hdml, 
+  s_output_to_hdml_out(hdml, 
                   apr_psprintf(r->pool,
                           "<A TASK=GOSUB LABEL=\x93\xfc\x97\xcd DEST=#D%d "
                           "VARS=\"V=$%s%02d\" RECEIVE=%s%02d>",
                           hdml->card_cnt,
-                          qs_get_form_no(r, hdml),
+                          s_get_form_no(r, hdml),
                           hdml->var_cnt[hdml->pure_form_cnt],
-                          qs_get_form_no(r, hdml),
+                          s_get_form_no(r, hdml),
                           hdml->var_cnt[hdml->pure_form_cnt]
                   ));
 
-  qs_output_to_hdml_out(hdml, 
+  s_output_to_hdml_out(hdml, 
                   apr_psprintf(r->pool, "[$%s%02d]</A>\n"  , 
-                          qs_get_form_no(r, hdml),
+                          s_get_form_no(r, hdml),
                           hdml->var_cnt[hdml->pure_form_cnt]));
 
   /*--------------------------------------------------------------------------*/
   /* ENTRY CARD is output here.                                               */
   /*--------------------------------------------------------------------------*/
-  qs_output_to_hdml_card(hdml, "<ENTRY NAME="                               );
-  qs_output_to_hdml_card(hdml, apr_psprintf(r->pool, "D%d ", hdml->card_cnt));
-  qs_output_to_hdml_card(hdml, " KEY=V DEFAULT=$V "                         );
+  s_output_to_hdml_card(hdml, "<ENTRY NAME="                               );
+  s_output_to_hdml_card(hdml, apr_psprintf(r->pool, "D%d ", hdml->card_cnt));
+  s_output_to_hdml_card(hdml, " KEY=V DEFAULT=$V "                         );
 
   mlen = NULL;
   is   = NULL;
@@ -1398,11 +1403,11 @@ s_hdml_do_input_text_tag(Hdml* hdml, Node* tag)
     nm = qs_alloc_zero_byte_string(r);
   }
 
-  qs_output_to_postdata(hdml, 
+  s_output_to_postdata(hdml, 
                   apr_psprintf(r->pool, 
                           "%s=$%s%02d", 
                           nm,
-                          qs_get_form_no(r, hdml),
+                          s_get_form_no(r, hdml),
                           hdml->var_cnt[hdml->pure_form_cnt]));
 
   mlen = qs_get_maxlength_attr  (doc, tag, r);
@@ -1424,32 +1429,32 @@ s_hdml_do_input_text_tag(Hdml* hdml, Node* tag)
           break;
         }
       }
-      qs_output_to_hdml_card(hdml, apr_psprintf(r->pool, " FORMAT=%d%s", atoi(mlen), fmt));
+      s_output_to_hdml_card(hdml, apr_psprintf(r->pool, " FORMAT=%d%s", atoi(mlen), fmt));
     }
     else 
     {
-      qs_output_to_hdml_card(hdml, apr_psprintf(r->pool, " FORMAT=*%s", fmt)       );
+      s_output_to_hdml_card(hdml, apr_psprintf(r->pool, " FORMAT=*%s", fmt)       );
     }
   }
 
-  qs_output_to_hdml_card(hdml, 
+  s_output_to_hdml_card(hdml, 
                   " MARKABLE=FALSE>\n"
                   "<ACTION TYPE=ACCEPT TASK=RETURN RETVALS=$V>\n"
                   "</ENTRY>\n");
 
   if (val != NULL) 
   {
-    qs_output_to_init_vars(hdml, 
+    s_output_to_init_vars(hdml, 
                     apr_psprintf(r->pool, "%s%02d=%s", 
-                        qs_get_form_no(r, hdml),
+                        s_get_form_no(r, hdml),
                         hdml->var_cnt[hdml->pure_form_cnt],
                         ap_escape_uri(r->pool,val)));
   }
   else 
   {
-    qs_output_to_init_vars(hdml, 
+    s_output_to_init_vars(hdml, 
                     apr_psprintf(r->pool, "%s%02d=", 
-                        qs_get_form_no(r, hdml),
+                        s_get_form_no(r, hdml),
                         hdml->var_cnt[hdml->pure_form_cnt]));
   }
   hdml->var_cnt[hdml->pure_form_cnt]++;
@@ -1463,7 +1468,7 @@ s_hdml_do_input_text_tag(Hdml* hdml, Node* tag)
  * @param tag  [i]   The tag node of input type=password is specified. 
  */
 static void
-s_hdml_do_input_password_tag(Hdml* hdml, Node* tag)
+s_hdml_do_input_password_tag(hdml_t* hdml, Node* tag)
 {
   Doc*            doc = hdml->doc;
   request_rec*    r   = doc->r;
@@ -1476,25 +1481,25 @@ s_hdml_do_input_password_tag(Hdml* hdml, Node* tag)
   s_hdml_tag_output_upper_half(hdml, tag);
 
   hdml->card_cnt++;
-  qs_output_to_hdml_out(hdml, "<A TASK=GOSUB LABEL=\"\x93\xfc\x97\xcd\" DEST=");
-  qs_output_to_hdml_out(hdml, apr_psprintf(r->pool, "#D%d ", hdml->card_cnt));
-  qs_output_to_hdml_out(hdml, 
+  s_output_to_hdml_out(hdml, "<A TASK=GOSUB LABEL=\"\x93\xfc\x97\xcd\" DEST=");
+  s_output_to_hdml_out(hdml, apr_psprintf(r->pool, "#D%d ", hdml->card_cnt));
+  s_output_to_hdml_out(hdml, 
                   apr_psprintf(r->pool, "VARS=\"V=$%s%02d\" ", 
-                          qs_get_form_no(r, hdml),
+                          s_get_form_no(r, hdml),
                           hdml->var_cnt[hdml->pure_form_cnt]));
 
-  qs_output_to_hdml_out(hdml, 
+  s_output_to_hdml_out(hdml, 
                   apr_psprintf(r->pool, "RECEIVE=%s%02d>"  , 
-                          qs_get_form_no(r, hdml),
+                          s_get_form_no(r, hdml),
                           hdml->var_cnt[hdml->pure_form_cnt]));
-  qs_output_to_hdml_out(hdml, 
+  s_output_to_hdml_out(hdml, 
                   apr_psprintf(r->pool, "[$%s%02d]</A>\n"  , 
-                          qs_get_form_no(r, hdml),
+                          s_get_form_no(r, hdml),
                           hdml->var_cnt[hdml->pure_form_cnt]));
 
-  qs_output_to_hdml_card(hdml, "<ENTRY NAME="                               );
-  qs_output_to_hdml_card(hdml, apr_psprintf(r->pool, "D%d ", hdml->card_cnt));
-  qs_output_to_hdml_card(hdml, " KEY=V DEFAULT=$V "                         );
+  s_output_to_hdml_card(hdml, "<ENTRY NAME="                               );
+  s_output_to_hdml_card(hdml, apr_psprintf(r->pool, "D%d ", hdml->card_cnt));
+  s_output_to_hdml_card(hdml, " KEY=V DEFAULT=$V "                         );
 
   mlen = NULL;
   is   = NULL;
@@ -1506,11 +1511,11 @@ s_hdml_do_input_password_tag(Hdml* hdml, Node* tag)
   {
     nm = qs_alloc_zero_byte_string(r);
   }
-  qs_output_to_postdata(hdml, 
+  s_output_to_postdata(hdml, 
                   apr_psprintf(r->pool, 
                           "%s=$%s%02d", 
                           nm,
-                          qs_get_form_no(r, hdml),
+                          s_get_form_no(r, hdml),
                           hdml->var_cnt[hdml->pure_form_cnt]));
 
   mlen = qs_get_maxlength_attr  (doc, tag, r);
@@ -1525,34 +1530,34 @@ s_hdml_do_input_password_tag(Hdml* hdml, Node* tag)
     {
       mlen = apr_psprintf(r->pool, "0");
     }
-    qs_output_to_hdml_card(hdml, 
+    s_output_to_hdml_card(hdml, 
                     apr_psprintf(r->pool, " FORMAT=%d%s", chxj_atoi(mlen), fmt));
   }
   else 
   {
-    qs_output_to_hdml_card(hdml, 
+    s_output_to_hdml_card(hdml, 
                     apr_psprintf(r->pool, " FORMAT=*%s", fmt)       );
   }
-  qs_output_to_hdml_card(hdml, apr_psprintf(r->pool, " NOECHO=TRUE "));
+  s_output_to_hdml_card(hdml, apr_psprintf(r->pool, " NOECHO=TRUE "));
 
-  qs_output_to_hdml_card(hdml, 
+  s_output_to_hdml_card(hdml, 
                   " MARKABLE=FALSE>\n"
                   "<ACTION TYPE=ACCEPT TASK=RETURN RETVALS=$V>\n"
                   "</ENTRY>\n");
 
   if (val != NULL) 
   {
-    qs_output_to_init_vars(hdml, 
+    s_output_to_init_vars(hdml, 
                     apr_psprintf(r->pool, "%s%02d=%s", 
-                        qs_get_form_no(r, hdml),
+                        s_get_form_no(r, hdml),
                         hdml->var_cnt[hdml->pure_form_cnt], 
                         ap_escape_uri(r->pool,val)));
   }
   else 
   {
-    qs_output_to_init_vars(hdml, 
+    s_output_to_init_vars(hdml, 
                     apr_psprintf(r->pool, "%s%02d=", 
-                        qs_get_form_no(r, hdml),
+                        s_get_form_no(r, hdml),
                         hdml->var_cnt[hdml->pure_form_cnt]));
   }
   hdml->var_cnt[hdml->pure_form_cnt]++;
@@ -1566,7 +1571,7 @@ s_hdml_do_input_password_tag(Hdml* hdml, Node* tag)
  * @param tag  [i]   The tag node of input type=submit is specified. 
  */
 static void
-s_hdml_do_input_submit_tag(Hdml* hdml, Node* tag)
+s_hdml_do_input_submit_tag(hdml_t* hdml, Node* tag)
 {
   Doc*          doc = hdml->doc;
   request_rec*  r   = doc->r;
@@ -1575,7 +1580,7 @@ s_hdml_do_input_submit_tag(Hdml* hdml, Node* tag)
 
   s_hdml_tag_output_upper_half(hdml, tag);
 
-  qs_output_to_hdml_out(hdml, 
+  s_output_to_hdml_out(hdml, 
                   apr_psprintf(r->pool, 
                           "<A TASK=GO LABEL=OK DEST=#F%d ",
                           hdml->pure_form_cnt));
@@ -1588,20 +1593,20 @@ s_hdml_do_input_submit_tag(Hdml* hdml, Node* tag)
 
   if (nm != NULL && val != NULL) 
   {
-    qs_output_to_hdml_out(hdml, 
+    s_output_to_hdml_out(hdml, 
                     apr_psprintf(r->pool, "VARS=\"%s=%s\" ", 
                             nm, 
                             ap_escape_uri(r->pool,val)));
     if (strstr(hdml->postdata[hdml->pure_form_cnt], nm) == NULL) 
     {
-      qs_output_to_postdata(hdml, 
+      s_output_to_postdata(hdml, 
                       apr_psprintf(r->pool,"%s%s=$%s", 
                               SUBMIT_BUTTON_PREFIX, nm, nm));
     }
   }
-  qs_output_to_hdml_out(hdml, ">"         );
-  qs_output_to_hdml_out(hdml, val);
-  qs_output_to_hdml_out(hdml, "</A>\n"    );
+  s_output_to_hdml_out(hdml, ">"         );
+  s_output_to_hdml_out(hdml, val);
+  s_output_to_hdml_out(hdml, "</A>\n"    );
 }
 
 /**
@@ -1612,7 +1617,7 @@ s_hdml_do_input_submit_tag(Hdml* hdml, Node* tag)
  * @param tag  [i]   The tag node of input type=hidden is specified. 
  */
 static void
-s_hdml_do_input_hidden_tag(Hdml* hdml, Node* tag)
+s_hdml_do_input_hidden_tag(hdml_t* hdml, Node* tag)
 {
   Doc*          doc = hdml->doc;
   request_rec*  r   = doc->r;
@@ -1627,7 +1632,7 @@ s_hdml_do_input_hidden_tag(Hdml* hdml, Node* tag)
 
   if (nm != NULL && val != NULL) 
   {
-    qs_output_to_postdata(hdml, 
+    s_output_to_postdata(hdml, 
                     apr_psprintf(r->pool, 
                             "%s=%s", 
                             nm, 
@@ -1643,7 +1648,7 @@ s_hdml_do_input_hidden_tag(Hdml* hdml, Node* tag)
  * @param tag  [i]   The tag node of input type=radio is specified. 
  */
 static void
-s_hdml_do_input_radio_tag(Hdml* hdml, Node* tag)
+s_hdml_do_input_radio_tag(hdml_t* hdml, Node* tag)
 {
   Doc*          doc       = hdml->doc;
   request_rec*  r         = doc->r;
@@ -1696,7 +1701,7 @@ s_hdml_do_input_radio_tag(Hdml* hdml, Node* tag)
     return;
   }
 
-  qs_output_to_hdml_out(hdml, 
+  s_output_to_hdml_out(hdml, 
                   apr_psprintf(r->pool, 
                           "<A TASK=GOSUB "
                           "LABEL=\"\x93\xfc\x97\xcd\" "
@@ -1708,11 +1713,11 @@ s_hdml_do_input_radio_tag(Hdml* hdml, Node* tag)
 
   if (hdml->radio_out_cnt[ii] == 0) 
   {
-    qs_output_to_hdml_card(hdml, 
+    s_output_to_hdml_card(hdml, 
                     apr_psprintf(r->pool,
                             "<NODISPLAY NAME=R%d>\n",
                             ii));
-    qs_output_to_hdml_card(hdml, 
+    s_output_to_hdml_card(hdml, 
                     apr_psprintf(r->pool, 
                             "<ACTION "
                             "TYPE=ACCEPT TASK=RETURN RETVALS=\"$VAL;"));
@@ -1736,23 +1741,23 @@ s_hdml_do_input_radio_tag(Hdml* hdml, Node* tag)
     }
     if (jj != 0) 
     {
-      qs_output_to_hdml_out(hdml, apr_psprintf(r->pool, ";"));
+      s_output_to_hdml_out(hdml, apr_psprintf(r->pool, ";"));
       if (hdml->radio_out_cnt[ii] == 0) 
       {
-        qs_output_to_hdml_card(hdml, apr_psprintf(r->pool, ";"));
+        s_output_to_hdml_card(hdml, apr_psprintf(r->pool, ";"));
       }
     }
 
-    qs_output_to_hdml_out(hdml, apr_psprintf(r->pool, "%s_%02d", nm, kk));
+    s_output_to_hdml_out(hdml, apr_psprintf(r->pool, "%s_%02d", nm, kk));
     if (hdml->radio_out_cnt[ii] == 0) 
     {
       if (jj == 0) 
       {
-        qs_output_to_hdml_card(hdml, apr_psprintf(r->pool, "X"));
+        s_output_to_hdml_card(hdml, apr_psprintf(r->pool, "X"));
       }
       else 
       {
-        qs_output_to_hdml_card(hdml, apr_psprintf(r->pool, "_"));
+        s_output_to_hdml_card(hdml, apr_psprintf(r->pool, "_"));
       }
     }
     kk++;
@@ -1761,16 +1766,16 @@ s_hdml_do_input_radio_tag(Hdml* hdml, Node* tag)
       kk=0;
     }
   }
-  qs_output_to_hdml_out(hdml, 
+  s_output_to_hdml_out(hdml, 
                   apr_psprintf(r->pool, "\" >$%s_%02d</A>", 
                           nm, 
                           hdml->radio_out_cnt[ii]));
   if (hdml->radio_out_cnt[ii] == 0) 
   {
-    qs_output_to_hdml_card(hdml, "\">\n"         );
-    qs_output_to_hdml_card(hdml, "</NODISPLAY>\n");
+    s_output_to_hdml_card(hdml, "\">\n"         );
+    s_output_to_hdml_card(hdml, "</NODISPLAY>\n");
 
-    qs_output_to_postdata(hdml,  apr_psprintf(r->pool, "%s%s=$%s", RADIO_BUTTON_PREFIX, nm, nm));
+    s_output_to_postdata(hdml,  apr_psprintf(r->pool, "%s%s=$%s", RADIO_BUTTON_PREFIX, nm, nm));
 
     for (jj=0; jj<r_cnt; jj++) 
     {
@@ -1780,7 +1785,7 @@ s_hdml_do_input_radio_tag(Hdml* hdml, Node* tag)
         if (strcasecmp(hdml->radio_value_list[ii][jj], 
                        hdml->radio_checked_value[ii]) == 0)
         {
-          qs_output_to_init_vars(hdml, 
+          s_output_to_init_vars(hdml, 
                           apr_psprintf(r->pool, 
                                   "%s_%02d=X", 
                                   nm, 
@@ -1788,7 +1793,7 @@ s_hdml_do_input_radio_tag(Hdml* hdml, Node* tag)
         }
         else 
         {
-          qs_output_to_init_vars(hdml, 
+          s_output_to_init_vars(hdml, 
                           apr_psprintf(r->pool, 
                                   "%s_%02d=_", 
                                   nm, 
@@ -1797,7 +1802,7 @@ s_hdml_do_input_radio_tag(Hdml* hdml, Node* tag)
       }
       else 
       {
-        qs_output_to_init_vars(hdml, 
+        s_output_to_init_vars(hdml, 
                         apr_psprintf(r->pool, 
                                 "%s_%02d=_", 
                                 nm, 
@@ -1810,7 +1815,7 @@ s_hdml_do_input_radio_tag(Hdml* hdml, Node* tag)
       ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, 
                     "radio button is checked. checked value is [%s]", 
                     hdml->radio_checked_value[ii]);
-      qs_output_to_init_vars(hdml, 
+      s_output_to_init_vars(hdml, 
                     apr_psprintf(r->pool, 
                             "%s=%s", 
                             nm, 
@@ -1820,7 +1825,7 @@ s_hdml_do_input_radio_tag(Hdml* hdml, Node* tag)
     {
       ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, 
                     "radio button is not checked. checked value is []");
-      qs_output_to_init_vars(hdml, 
+      s_output_to_init_vars(hdml, 
                     apr_psprintf(r->pool, 
                             "%s=", 
                             nm));
@@ -1837,7 +1842,7 @@ s_hdml_do_input_radio_tag(Hdml* hdml, Node* tag)
  * @param tag  [i]   The tag node of input type=checkbox is specified. 
  */
 static void
-s_hdml_do_input_checkbox_tag(Hdml* hdml, Node* tag)
+s_hdml_do_input_checkbox_tag(hdml_t* hdml, Node* tag)
 {
   Doc*          doc       = hdml->doc;
   request_rec*  r         = doc->r;
@@ -1852,7 +1857,7 @@ s_hdml_do_input_checkbox_tag(Hdml* hdml, Node* tag)
   if (hdml->has_checkbox == 0) 
   {
     hdml->has_checkbox++;
-    qs_output_to_hdml_card(hdml, 
+    s_output_to_hdml_card(hdml, 
                     "<NODISPLAY NAME=\"_chk\">\n"
                     "<ACTION TYPE=\"ACCEPT\" TASK=\"RETURN\" "
                                              "RETVALS=\"_uchk;$V;X\" >\n"
@@ -1884,56 +1889,56 @@ s_hdml_do_input_checkbox_tag(Hdml* hdml, Node* tag)
   {
     nm   = qs_alloc_zero_byte_string(r);
   }
-  qs_output_to_hdml_out(hdml, apr_psprintf(r->pool, 
+  s_output_to_hdml_out(hdml, apr_psprintf(r->pool, 
                                 "<A TASK=GOSUB LABEL=\"a\xaf\xb8\" "
                                    "DEST=\"#$%s%02d\" "
                                    "VARS=\"V=%s\" "
                                    "RECEIVE=\"%s%02d;%s%02d;%s%02d\">"
                                    "$%s%02d</A>\n",
-                                qs_get_form_no(r, hdml),
+                                s_get_form_no(r, hdml),
                                 hdml->var_cnt[hdml->pure_form_cnt] + 0,
                                 val,
-                                qs_get_form_no(r, hdml),
+                                s_get_form_no(r, hdml),
                                 hdml->var_cnt[hdml->pure_form_cnt] + 0,
-                                qs_get_form_no(r, hdml),
+                                s_get_form_no(r, hdml),
                                 hdml->var_cnt[hdml->pure_form_cnt] + 1,
-                                qs_get_form_no(r, hdml),
+                                s_get_form_no(r, hdml),
                                 hdml->var_cnt[hdml->pure_form_cnt] + 2,
-                                qs_get_form_no(r, hdml),
+                                s_get_form_no(r, hdml),
                                 hdml->var_cnt[hdml->pure_form_cnt] + 2));
   if (chk) 
   {
-    qs_output_to_init_vars(hdml, 
+    s_output_to_init_vars(hdml, 
                     apr_psprintf(r->pool, 
                             "%s%02d=_uchk&%s%02d=%s&%s%02d=X",
-                            qs_get_form_no(r, hdml),
+                            s_get_form_no(r, hdml),
                             hdml->var_cnt[hdml->pure_form_cnt] + 0,
-                            qs_get_form_no(r, hdml),
+                            s_get_form_no(r, hdml),
                             hdml->var_cnt[hdml->pure_form_cnt] + 1,
                             ap_escape_uri(r->pool,val),
-                            qs_get_form_no(r, hdml),
+                            s_get_form_no(r, hdml),
                             hdml->var_cnt[hdml->pure_form_cnt] + 2
                             ));
   }
   else
   {
-    qs_output_to_init_vars(hdml, 
+    s_output_to_init_vars(hdml, 
                     apr_psprintf(r->pool, 
                             "%s%02d=_chk&%s%02d=&%s%02d=_",
-                            qs_get_form_no(r, hdml),
+                            s_get_form_no(r, hdml),
                             hdml->var_cnt[hdml->pure_form_cnt] + 0,
-                            qs_get_form_no(r, hdml),
+                            s_get_form_no(r, hdml),
                             hdml->var_cnt[hdml->pure_form_cnt] + 1,
-                            qs_get_form_no(r, hdml),
+                            s_get_form_no(r, hdml),
                             hdml->var_cnt[hdml->pure_form_cnt] + 2
                             ));
   }
 
-  qs_output_to_postdata(hdml, 
+  s_output_to_postdata(hdml, 
                   apr_psprintf(r->pool, "%s%s=$%s%02d",
                                   CHECK_BOX_PREFIX,
                                   nm,
-                                  qs_get_form_no(r, hdml),
+                                  s_get_form_no(r, hdml),
                                   hdml->var_cnt[hdml->pure_form_cnt] + 1));
   hdml->var_cnt[hdml->pure_form_cnt] += 3;
 }
@@ -1989,7 +1994,7 @@ qs_conv_istyle_to_format(request_rec* r, char* is)
  * @return The conversion result is returned.
  */
 static char*
-s_hdml_end_input_tag(Hdml* hdml, Node* child) 
+s_hdml_end_input_tag(hdml_t* hdml, Node* child) 
 {
   return hdml->out;
 }
@@ -2003,16 +2008,16 @@ s_hdml_end_input_tag(Hdml* hdml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_hdml_start_center_tag(Hdml* hdml, Node* node) 
+s_hdml_start_center_tag(hdml_t* hdml, Node* node) 
 {
   hdml->center++;
   hdml->in_center++;
 
   if (hdml->hdml_br_flag == 0) 
   {
-    hdml = qs_output_to_hdml_out(hdml, "<BR>\n");
+    hdml = s_output_to_hdml_out(hdml, "<BR>\n");
   }
-  hdml = qs_output_to_hdml_out(hdml, "<CENTER>");
+  hdml = s_output_to_hdml_out(hdml, "<CENTER>");
 
   return hdml->out;
 }
@@ -2026,12 +2031,12 @@ s_hdml_start_center_tag(Hdml* hdml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_hdml_end_center_tag(Hdml* hdml, Node* child) 
+s_hdml_end_center_tag(hdml_t* hdml, Node* child) 
 {
   hdml->center = 0;
   hdml->in_center = 0;
 
-  hdml = qs_output_to_hdml_out(hdml, "<BR>\n");
+  hdml = s_output_to_hdml_out(hdml, "<BR>\n");
   hdml->hdml_br_flag = 1;
 
   return hdml->out;
@@ -2046,11 +2051,11 @@ s_hdml_end_center_tag(Hdml* hdml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_hdml_start_hr_tag(Hdml* hdml, Node* node) 
+s_hdml_start_hr_tag(hdml_t* hdml, Node* node) 
 {
   if (hdml->hdml_br_flag == 0) 
   {
-    qs_output_to_hdml_out(hdml, "<BR>\n");
+    s_output_to_hdml_out(hdml, "<BR>\n");
     if (hdml->in_center > 0) 
     {
       hdml->in_center--;
@@ -2062,7 +2067,7 @@ s_hdml_start_hr_tag(Hdml* hdml, Node* node)
     }
   }
 
-  qs_output_to_hdml_out(hdml, "<CENTER>\x81\x7c\x81\x7c\x81\x7c\x81\x7c\x81\x7c\x81\x7c\x81\x7c\x81\x7c\x81\x7c<BR>\n");
+  s_output_to_hdml_out(hdml, "<CENTER>\x81\x7c\x81\x7c\x81\x7c\x81\x7c\x81\x7c\x81\x7c\x81\x7c\x81\x7c\x81\x7c<BR>\n");
 
   hdml->hdml_br_flag = 1;
 
@@ -2078,7 +2083,7 @@ s_hdml_start_hr_tag(Hdml* hdml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_hdml_end_hr_tag(Hdml* hdml, Node* child) 
+s_hdml_end_hr_tag(hdml_t* hdml, Node* child) 
 {
   return hdml->out;
 }
@@ -2092,7 +2097,7 @@ s_hdml_end_hr_tag(Hdml* hdml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_hdml_start_img_tag(Hdml* hdml, Node* node) 
+s_hdml_start_img_tag(hdml_t* hdml, Node* node) 
 {
   Doc*          doc  = hdml->doc;
 #ifndef IMG_NOT_CONVERT_FILENAME
@@ -2102,7 +2107,7 @@ s_hdml_start_img_tag(Hdml* hdml, Node* node)
 
   s_hdml_tag_output_upper_half(hdml, node);
 
-  qs_output_to_hdml_out(hdml, "<img");
+  s_output_to_hdml_out(hdml, "<img");
 
   /* Get Attributes */
   for (attr = qs_get_attr(doc,node); attr != NULL; attr = qs_get_next_attr(doc,attr)) 
@@ -2112,58 +2117,58 @@ s_hdml_start_img_tag(Hdml* hdml, Node* node)
 
     if (strcasecmp(name, "src") == 0) 
     {
-      qs_output_to_hdml_out(hdml, " src=\"");
+      s_output_to_hdml_out(hdml, " src=\"");
 #ifdef IMG_NOT_CONVERT_FILENAME
-      qs_output_to_hdml_out(hdml, value    );
+      s_output_to_hdml_out(hdml, value    );
 #else
-      qs_output_to_hdml_out(hdml, chxj_img_conv(doc->r, spec,value));
+      s_output_to_hdml_out(hdml, chxj_img_conv(doc->r, spec,value));
 #endif
-      qs_output_to_hdml_out(hdml, "\""     );
+      s_output_to_hdml_out(hdml, "\""     );
     }
     else 
     if (strcasecmp(name, "align" ) == 0) 
     {
-      qs_output_to_hdml_out(hdml, " align=\"" );
-      qs_output_to_hdml_out(hdml, value       );
-      qs_output_to_hdml_out(hdml, "\""        );
+      s_output_to_hdml_out(hdml, " align=\"" );
+      s_output_to_hdml_out(hdml, value       );
+      s_output_to_hdml_out(hdml, "\""        );
     }
     else
     if (strcasecmp(name, "width" ) == 0) 
     {
-      qs_output_to_hdml_out(hdml, " width=\"");
-      qs_output_to_hdml_out(hdml, value      );
-      qs_output_to_hdml_out(hdml, "\""       );
+      s_output_to_hdml_out(hdml, " width=\"");
+      s_output_to_hdml_out(hdml, value      );
+      s_output_to_hdml_out(hdml, "\""       );
     }
     else
     if (strcasecmp(name, "height") == 0) 
     {
-      qs_output_to_hdml_out(hdml, " height=\"");
-      qs_output_to_hdml_out(hdml, value       );
-      qs_output_to_hdml_out(hdml, "\""        );
+      s_output_to_hdml_out(hdml, " height=\"");
+      s_output_to_hdml_out(hdml, value       );
+      s_output_to_hdml_out(hdml, "\""        );
     }
     else
     if (strcasecmp(name, "hspace") == 0) 
     {
-      qs_output_to_hdml_out(hdml, " hspace=\"");
-      qs_output_to_hdml_out(hdml, value       );
-      qs_output_to_hdml_out(hdml, "\""        );
+      s_output_to_hdml_out(hdml, " hspace=\"");
+      s_output_to_hdml_out(hdml, value       );
+      s_output_to_hdml_out(hdml, "\""        );
     }
     else
     if (strcasecmp(name, "vspace") == 0) 
     {
-      qs_output_to_hdml_out(hdml, " vspace=\"");
-      qs_output_to_hdml_out(hdml, value       );
-      qs_output_to_hdml_out(hdml, "\""        );
+      s_output_to_hdml_out(hdml, " vspace=\"");
+      s_output_to_hdml_out(hdml, value       );
+      s_output_to_hdml_out(hdml, "\""        );
     }
     else
     if (strcasecmp(name, "alt"   ) == 0) 
     {
-      qs_output_to_hdml_out(hdml, " alt=\""   );
-      qs_output_to_hdml_out(hdml, value       );
-      qs_output_to_hdml_out(hdml, "\""        );
+      s_output_to_hdml_out(hdml, " alt=\""   );
+      s_output_to_hdml_out(hdml, value       );
+      s_output_to_hdml_out(hdml, "\""        );
     }
   }
-  qs_output_to_hdml_out(hdml, ">"             );
+  s_output_to_hdml_out(hdml, ">"             );
 
   return hdml->out;
 }
@@ -2177,7 +2182,7 @@ s_hdml_start_img_tag(Hdml* hdml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_hdml_end_img_tag(Hdml* hdml, Node* child) 
+s_hdml_end_img_tag(hdml_t* hdml, Node* child) 
 {
   return hdml->out;
 }
@@ -2191,7 +2196,7 @@ s_hdml_end_img_tag(Hdml* hdml, Node* child)
  * @return The conversion result is returned.
  */
 static char* 
-s_hdml_start_select_tag(Hdml* hdml, Node* node)  
+s_hdml_start_select_tag(hdml_t* hdml, Node* node)  
 {
   Doc*         doc = hdml->doc;
   request_rec* r   = doc->r;
@@ -2201,25 +2206,25 @@ s_hdml_start_select_tag(Hdml* hdml, Node* node)
 
   hdml->card_cnt++;
 
-  qs_output_to_hdml_out(hdml, apr_psprintf(r->pool, 
+  s_output_to_hdml_out(hdml, apr_psprintf(r->pool, 
                                    "<A TASK=GOSUB LABEL=\x91\x49\x91\xf0 "
                                    "VARS=\"V=$%s%02d\" DEST=#D%d "
                                    "RECEIVE=\"%s%02d;%s%02d\">"
                                    "$%s%02d</A>\n",
-                                   qs_get_form_no(r, hdml),
+                                   s_get_form_no(r, hdml),
                                    hdml->var_cnt[hdml->pure_form_cnt]+0, 
                                    hdml->card_cnt,
-                                   qs_get_form_no(r, hdml),
+                                   s_get_form_no(r, hdml),
                                    hdml->var_cnt[hdml->pure_form_cnt]+0, 
-                                   qs_get_form_no(r, hdml),
+                                   s_get_form_no(r, hdml),
                                    hdml->var_cnt[hdml->pure_form_cnt]+1, 
-                                   qs_get_form_no(r, hdml),
+                                   s_get_form_no(r, hdml),
                                    hdml->var_cnt[hdml->pure_form_cnt]+1));
 
-  qs_output_to_hdml_card(hdml, 
+  s_output_to_hdml_card(hdml, 
                   apr_psprintf(r->pool, 
                           "<CHOICE KEY=V NAME=D%d ", hdml->card_cnt));
-  qs_output_to_hdml_card(hdml, 
+  s_output_to_hdml_card(hdml, 
                   apr_psprintf(r->pool, 
                           "DEFAULT=$V METHOD=ALPHA MARKABLE=FALSE>\n"));
   /*--------------------------------------------------------------------------*/
@@ -2236,10 +2241,10 @@ s_hdml_start_select_tag(Hdml* hdml, Node* node)
     if (strcasecmp(name, "name") == 0) 
     {
 
-      qs_output_to_postdata(hdml, 
+      s_output_to_postdata(hdml, 
                       apr_psprintf(r->pool, "%s=$%s%02d", 
                               value,
-                              qs_get_form_no(r, hdml),
+                              s_get_form_no(r, hdml),
                               hdml->var_cnt[hdml->pure_form_cnt]));
       selval = qs_get_selected_value(doc, node, r);
       if (selval == NULL) 
@@ -2260,13 +2265,13 @@ s_hdml_start_select_tag(Hdml* hdml, Node* node)
       }
       ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "selvaltxt:[%s]" ,selvaltxt);
 
-      qs_output_to_init_vars(hdml, 
+      s_output_to_init_vars(hdml, 
                       apr_psprintf(r->pool, 
                               "%s%02d=%s&%s%02d=%s",
-                              qs_get_form_no(r, hdml),
+                              s_get_form_no(r, hdml),
                               hdml->var_cnt[hdml->pure_form_cnt] + 0,
                               selval, 
-                              qs_get_form_no(r, hdml),
+                              s_get_form_no(r, hdml),
                               hdml->var_cnt[hdml->pure_form_cnt] + 1,
                               selvaltxt));
 
@@ -2286,9 +2291,9 @@ s_hdml_start_select_tag(Hdml* hdml, Node* node)
  * @return The conversion result is returned.
  */
 static char* 
-s_hdml_end_select_tag(Hdml* hdml,  Node* node)  
+s_hdml_end_select_tag(hdml_t* hdml,  Node* node)  
 {
-  qs_output_to_hdml_card(hdml, "</CHOICE>\n");
+  s_output_to_hdml_card(hdml, "</CHOICE>\n");
 
   return hdml->out;
 }
@@ -2302,7 +2307,7 @@ s_hdml_end_select_tag(Hdml* hdml,  Node* node)
  * @return The conversion result is returned.
  */
 static char* 
-s_hdml_start_option_tag(Hdml* hdml, Node* node) 
+s_hdml_start_option_tag(hdml_t* hdml, Node* node) 
 {
   request_rec* r     = hdml->doc->r;
   Doc*         doc   = hdml->doc;
@@ -2333,7 +2338,7 @@ s_hdml_start_option_tag(Hdml* hdml, Node* node)
 
   if (val != NULL && txtval != NULL) 
   {
-    qs_output_to_hdml_card(hdml, 
+    s_output_to_hdml_card(hdml, 
                     apr_psprintf(r->pool, 
                             "<CE TASK=RETURN VALUE=\"%s\" "
                             "RETVALS=\"$V;%s\">%s</CE>\n", 
@@ -2354,7 +2359,7 @@ s_hdml_start_option_tag(Hdml* hdml, Node* node)
  * @return The conversion result is returned.
  */
 static char* 
-s_hdml_end_option_tag(Hdml* hdml,  Node* node)  
+s_hdml_end_option_tag(hdml_t* hdml,  Node* node)  
 {
   hdml->option_flag = 0;
   return hdml->out;
@@ -2369,7 +2374,7 @@ s_hdml_end_option_tag(Hdml* hdml,  Node* node)
  * @return The conversion result is returned.
  */
 static char* 
-s_hdml_start_div_tag(Hdml* hdml, Node* node) 
+s_hdml_start_div_tag(hdml_t* hdml, Node* node) 
 {
   Doc*    doc   = hdml->doc;
   Attr*   attr;
@@ -2381,7 +2386,7 @@ s_hdml_start_div_tag(Hdml* hdml, Node* node)
   if (hdml->hdml_br_flag == 0)
   {
     hdml->hdml_br_flag = 1;
-    qs_output_to_hdml_out(hdml, "<BR>\n");
+    s_output_to_hdml_out(hdml, "<BR>\n");
   }
 
   /*--------------------------------------------------------------------------*/
@@ -2398,14 +2403,14 @@ s_hdml_start_div_tag(Hdml* hdml, Node* node)
       if (strcasecmp(value, "right") == 0) 
       {
         hdml->div_right_flag = 1;
-        qs_output_to_hdml_out(hdml, "<RIGHT>");
+        s_output_to_hdml_out(hdml, "<RIGHT>");
         hdml->hdml_br_flag = 0;
         break;
       }
       else if (strcasecmp(value, "center") == 0)
       {
         hdml->div_center_flag = 1;
-        qs_output_to_hdml_out(hdml, "<CENTER>");
+        s_output_to_hdml_out(hdml, "<CENTER>");
         hdml->hdml_br_flag = 0;
         break;
       }
@@ -2424,19 +2429,19 @@ s_hdml_start_div_tag(Hdml* hdml, Node* node)
  * @return The conversion result is returned.
  */
 static char* 
-s_hdml_end_div_tag(Hdml* hdml,  Node* node)  
+s_hdml_end_div_tag(hdml_t* hdml,  Node* node)  
 {
   request_rec* r = hdml->doc->r;
 
 
   if (hdml->div_right_flag == 1) 
   {
-    qs_output_to_hdml_out(hdml, apr_psprintf(r->pool, "<BR>\n"));
+    s_output_to_hdml_out(hdml, apr_psprintf(r->pool, "<BR>\n"));
     hdml->div_right_flag = 0;
   }
   if (hdml->div_center_flag == 1) 
   {
-    qs_output_to_hdml_out(hdml, apr_psprintf(r->pool, "<BR>\n"));
+    s_output_to_hdml_out(hdml, apr_psprintf(r->pool, "<BR>\n"));
     hdml->div_center_flag = 0;
     hdml->div_in_center   = 0;
   }
@@ -2472,7 +2477,7 @@ qs_out_apr_pstrcat(request_rec* r, char* o, char* s, int* len)
  * @return The character string after it generates it is returned. 
  */
 static char*
-qs_get_form_no(request_rec* r, Hdml* hdml) 
+s_get_form_no(request_rec* r, hdml_t* hdml) 
 {
   char *result;
   apr_time_exp_t tm;
@@ -2497,7 +2502,7 @@ qs_get_form_no(request_rec* r, Hdml* hdml)
  *                 specified. 
  */
 static void
-s_hdml_count_radio_tag(Hdml* hdml, Node* node) 
+s_hdml_count_radio_tag(hdml_t* hdml, Node* node) 
 {
   Node*         child;
   Doc*          doc       = hdml->doc; 
@@ -2634,8 +2639,8 @@ s_hdml_count_radio_tag(Hdml* hdml, Node* node)
  * @param s    [i]   The character string that should be output is specified. 
  * @return The pointer to the HDML structure after it processes it is returned.
  */
-static Hdml* 
-qs_output_to_hdml_out(Hdml* hdml, char* s)
+static hdml_t* 
+s_output_to_hdml_out(hdml_t* hdml, char* s)
 {
   hdml->out = qs_out_apr_pstrcat(hdml->doc->r, hdml->out, s, &hdml->out_len);
   return hdml;
@@ -2650,8 +2655,8 @@ qs_output_to_hdml_out(Hdml* hdml, char* s)
  * @param s    [i]   The character string that should be output is specified. 
  * @return The pointer to the HDML structure after it processes it is returned.
  */
-static Hdml*
-qs_output_to_hdml_card(Hdml* hdml, char* s)
+static hdml_t*
+s_output_to_hdml_card(hdml_t* hdml, char* s)
 {
   hdml->card = qs_out_apr_pstrcat(hdml->doc->r, hdml->card, s, &hdml->card_len);
   return hdml;
@@ -2666,7 +2671,7 @@ qs_output_to_hdml_card(Hdml* hdml, char* s)
  *                   specified.
  */
 static void
-qs_output_to_postdata(Hdml* hdml, char* s)
+s_output_to_postdata(hdml_t* hdml, char* s)
 {
   request_rec*          r = hdml->doc->r;
 
@@ -2696,12 +2701,12 @@ qs_output_to_postdata(Hdml* hdml, char* s)
  * @param node   [i]   The A tag node is specified.
  */
 static void
-s_hdml_tag_output_upper_half(Hdml* hdml, Node* node)
+s_hdml_tag_output_upper_half(hdml_t* hdml, Node* node)
 {
   if (hdml->hdml_br_flag   == 1 
   &&  hdml->div_right_flag == 1) 
   {
-    qs_output_to_hdml_out(hdml, "<RIGHT>");
+    s_output_to_hdml_out(hdml, "<RIGHT>");
     hdml->hdml_br_flag = 0;
   }
 
@@ -2709,7 +2714,7 @@ s_hdml_tag_output_upper_half(Hdml* hdml, Node* node)
   &&  hdml->center > 0 
   &&  hdml->in_center == 0) 
   {
-    qs_output_to_hdml_out(hdml, "<CENTER>");
+    s_output_to_hdml_out(hdml, "<CENTER>");
     hdml->in_center++;
     hdml->hdml_br_flag = 0;
   }
@@ -2718,7 +2723,7 @@ s_hdml_tag_output_upper_half(Hdml* hdml, Node* node)
   &&  hdml->div_center_flag > 0 
   &&  hdml->div_in_center == 0) 
   {
-    qs_output_to_hdml_out(hdml, "<CENTER>");
+    s_output_to_hdml_out(hdml, "<CENTER>");
     hdml->div_in_center++;
     hdml->hdml_br_flag = 0;
   }
@@ -2733,7 +2738,7 @@ s_hdml_tag_output_upper_half(Hdml* hdml, Node* node)
  *                   specified.
  */
 static void
-qs_output_to_init_vars(Hdml* hdml, char* s)
+s_output_to_init_vars(hdml_t* hdml, char* s)
 {
   request_rec*    r = hdml->doc->r;
 
@@ -2748,7 +2753,7 @@ qs_output_to_init_vars(Hdml* hdml, char* s)
 }
 
 static void
-s_hdml_chxjif_tag(Hdml* hdml, Node* node)
+s_hdml_chxjif_tag(hdml_t* hdml, Node* node)
 {
   Doc*         doc   = hdml->doc;
   Node*        child;
@@ -2757,7 +2762,7 @@ s_hdml_chxjif_tag(Hdml* hdml, Node* node)
        child;
        child = qs_get_next_node(doc, child))
   {
-    qs_output_to_hdml_out(hdml, child->otext);
+    s_output_to_hdml_out(hdml, child->otext);
     s_hdml_chxjif_tag(hdml, child);
   }
 }
