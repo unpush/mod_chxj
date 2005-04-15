@@ -55,8 +55,8 @@ static char* s_xhtml_1_0_start_select_tag (Xhtml* xhtml, Node* node);
 static char* s_xhtml_1_0_end_select_tag   (Xhtml* xhtml, Node* node);
 static char* s_xhtml_1_0_start_option_tag (Xhtml* xhtml, Node* node);
 static char* s_xhtml_1_0_end_option_tag   (Xhtml* xhtml, Node* node);
-static char* xhtml_1_0_start_div_tag    (Xhtml* xhtml, Node* node);
-static char* xhtml_1_0_end_div_tag      (Xhtml* xhtml, Node* node);
+static char* s_xhtml_1_0_start_div_tag    (Xhtml* xhtml, Node* node);
+static char* s_xhtml_1_0_end_div_tag      (Xhtml* xhtml, Node* node);
 static void chxj_init_xhtml(Xhtml* xhtml, Doc* doc, request_rec* r, device_table* spec);
 static int xhtml_search_emoji(Xhtml* xhtml, char* txt, char** rslt);
 static void xhtml_1_0_chxjif_tag(Xhtml* xhtml, Node* node);
@@ -353,9 +353,9 @@ s_xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent)
     else
     if (strcasecmp(name, "div") == 0)
     {
-      xhtml_1_0_start_div_tag (xhtml, child);
+      s_xhtml_1_0_start_div_tag (xhtml, child);
       s_xhtml_1_0_node_exchange (xhtml, child, indent+1);
-      xhtml_1_0_end_div_tag   (xhtml, child);
+      s_xhtml_1_0_end_div_tag   (xhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <CHXJ:IF>                                                              */
@@ -1764,7 +1764,7 @@ s_xhtml_1_0_end_option_tag(Xhtml* xhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-xhtml_1_0_start_div_tag(Xhtml* xhtml, Node* child)
+s_xhtml_1_0_start_div_tag(Xhtml* xhtml, Node* child)
 {
   Doc* doc = xhtml->doc;
   request_rec* r = doc->r;
@@ -1806,7 +1806,7 @@ xhtml_1_0_start_div_tag(Xhtml* xhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-xhtml_1_0_end_div_tag(Xhtml* xhtml, Node* child)
+s_xhtml_1_0_end_div_tag(Xhtml* xhtml, Node* child)
 {
   Doc* doc = xhtml->doc;
   request_rec* r = doc->r;
