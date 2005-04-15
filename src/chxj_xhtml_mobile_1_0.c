@@ -57,8 +57,8 @@ static char* s_xhtml_1_0_start_option_tag (Xhtml* xhtml, Node* node);
 static char* s_xhtml_1_0_end_option_tag   (Xhtml* xhtml, Node* node);
 static char* s_xhtml_1_0_start_div_tag    (Xhtml* xhtml, Node* node);
 static char* s_xhtml_1_0_end_div_tag      (Xhtml* xhtml, Node* node);
-static void chxj_init_xhtml(Xhtml* xhtml, Doc* doc, request_rec* r, device_table* spec);
-static int xhtml_search_emoji(Xhtml* xhtml, char* txt, char** rslt);
+static void  s_init_xhtml(Xhtml* xhtml, Doc* doc, request_rec* r, device_table* spec);
+static int   s_xhtml_search_emoji(Xhtml* xhtml, char* txt, char** rslt);
 static void xhtml_1_0_chxjif_tag(Xhtml* xhtml, Node* node);
  
 /**
@@ -100,7 +100,7 @@ chxj_exchange_xhtml_mobile_1_0(
   /*--------------------------------------------------------------------------*/
   /* The XHTML structure is initialized.                                      */
   /*--------------------------------------------------------------------------*/
-  chxj_init_xhtml(&xhtml, &doc, r, spec);
+  s_init_xhtml(&xhtml, &doc, r, spec);
   ap_set_content_type(r, "text/html; charset=Windows-31J");
 
   /*--------------------------------------------------------------------------*/
@@ -154,7 +154,7 @@ chxj_exchange_xhtml_mobile_1_0(
  * @param spec  [i]   The pointer to the device_table
  */
 static void
-chxj_init_xhtml(Xhtml* xhtml, Doc* doc, request_rec* r, device_table* spec)
+s_init_xhtml(Xhtml* xhtml, Doc* doc, request_rec* r, device_table* spec)
 {
   memset(doc,   0, sizeof(Doc));
   memset(xhtml, 0, sizeof(Xhtml));
@@ -415,7 +415,7 @@ s_xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent)
       for (ii=0; ii<qs_get_node_size(doc,child); ii++)
       {
         char* out;
-        int rtn = xhtml_search_emoji(xhtml, &textval[ii], &out);
+        int rtn = s_xhtml_search_emoji(xhtml, &textval[ii], &out);
         if (rtn != 0)
         {
           ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0, r,
@@ -456,7 +456,7 @@ s_xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent)
  * @return When corresponding EMOJI exists, it returns it excluding 0. 
  */
 static int
-xhtml_search_emoji(Xhtml* xhtml, char* txt, char** rslt)
+s_xhtml_search_emoji(Xhtml* xhtml, char* txt, char** rslt)
 {
   emoji_t*      ee;
   request_rec*  r;

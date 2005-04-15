@@ -29,7 +29,7 @@ typedef struct _Xhtml_t {
 
     device_table* spec;
     mod_chxj_config* conf;
-} Xhtml;
+} xhtml_t;
 
 /*----------------------------------------------------------------------------*/
 /* Prototype                                                                  */
