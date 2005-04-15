@@ -22,44 +22,44 @@
 #include "chxj_qr_code.h"
 
 
-static char* s_xhtml_1_0_node_exchange    (Xhtml* xhtml, Node* node, int indent);
-static char* s_xhtml_1_0_start_html_tag   (Xhtml* xhtml, Node* child);
-static char* s_xhtml_1_0_end_html_tag     (Xhtml* xhtml, Node* child);
-static char* s_xhtml_1_0_start_meta_tag   (Xhtml* xhtml, Node* node);
-static char* s_xhtml_1_0_end_meta_tag     (Xhtml* xhtml, Node* node);
-static char* s_xhtml_1_0_start_head_tag   (Xhtml* xhtml, Node* node);
-static char* s_xhtml_1_0_end_head_tag     (Xhtml* xhtml, Node* node);
-static char* s_xhtml_1_0_start_title_tag  (Xhtml* xhtml, Node* node);
-static char* s_xhtml_1_0_end_title_tag    (Xhtml* xhtml, Node* node);
-static char* s_xhtml_1_0_start_base_tag   (Xhtml* xhtml, Node* node);
-static char* s_xhtml_1_0_end_base_tag     (Xhtml* xhtml, Node* node);
-static char* s_xhtml_1_0_start_body_tag   (Xhtml* xhtml, Node* node);
-static char* s_xhtml_1_0_end_body_tag     (Xhtml* xhtml, Node* node);
-static char* s_xhtml_1_0_start_a_tag      (Xhtml* xhtml, Node* node);
-static char* s_xhtml_1_0_end_a_tag        (Xhtml* xhtml, Node* node);
-static char* s_xhtml_1_0_start_br_tag     (Xhtml* xhtml, Node* node);
-static char* s_xhtml_1_0_end_br_tag       (Xhtml* xhtml, Node* node);
-static char* s_xhtml_1_0_start_font_tag   (Xhtml* xhtml, Node* node);
-static char* s_xhtml_1_0_end_font_tag     (Xhtml* xhtml, Node* node);
-static char* s_xhtml_1_0_start_form_tag   (Xhtml* xhtml, Node* node);
-static char* s_xhtml_1_0_end_form_tag     (Xhtml* xhtml, Node* node);
-static char* s_xhtml_1_0_start_input_tag  (Xhtml* xhtml, Node* node);
-static char* s_xhtml_1_0_end_input_tag    (Xhtml* xhtml, Node* node);
-static char* s_xhtml_1_0_start_center_tag (Xhtml* xhtml, Node* node);
-static char* s_xhtml_1_0_end_center_tag   (Xhtml* xhtml, Node* node);
-static char* s_xhtml_1_0_start_hr_tag     (Xhtml* xhtml, Node* node);
-static char* s_xhtml_1_0_end_hr_tag       (Xhtml* xhtml, Node* node);
-static char* s_xhtml_1_0_start_img_tag    (Xhtml* xhtml, Node* node);
-static char* s_xhtml_1_0_end_img_tag      (Xhtml* xhtml, Node* node);
-static char* s_xhtml_1_0_start_select_tag (Xhtml* xhtml, Node* node);
-static char* s_xhtml_1_0_end_select_tag   (Xhtml* xhtml, Node* node);
-static char* s_xhtml_1_0_start_option_tag (Xhtml* xhtml, Node* node);
-static char* s_xhtml_1_0_end_option_tag   (Xhtml* xhtml, Node* node);
-static char* s_xhtml_1_0_start_div_tag    (Xhtml* xhtml, Node* node);
-static char* s_xhtml_1_0_end_div_tag      (Xhtml* xhtml, Node* node);
-static void  s_init_xhtml(Xhtml* xhtml, Doc* doc, request_rec* r, device_table* spec);
-static int   s_xhtml_search_emoji(Xhtml* xhtml, char* txt, char** rslt);
-static void  s_xhtml_1_0_chxjif_tag(Xhtml* xhtml, Node* node);
+static char* s_xhtml_1_0_node_exchange    (xhtml_t* xhtml, Node* node, int indent);
+static char* s_xhtml_1_0_start_html_tag   (xhtml_t* xhtml, Node* child);
+static char* s_xhtml_1_0_end_html_tag     (xhtml_t* xhtml, Node* child);
+static char* s_xhtml_1_0_start_meta_tag   (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_end_meta_tag     (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_start_head_tag   (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_end_head_tag     (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_start_title_tag  (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_end_title_tag    (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_start_base_tag   (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_end_base_tag     (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_start_body_tag   (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_end_body_tag     (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_start_a_tag      (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_end_a_tag        (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_start_br_tag     (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_end_br_tag       (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_start_font_tag   (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_end_font_tag     (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_start_form_tag   (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_end_form_tag     (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_start_input_tag  (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_end_input_tag    (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_start_center_tag (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_end_center_tag   (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_start_hr_tag     (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_end_hr_tag       (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_start_img_tag    (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_end_img_tag      (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_start_select_tag (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_end_select_tag   (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_start_option_tag (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_end_option_tag   (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_start_div_tag    (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_end_div_tag      (xhtml_t* xhtml, Node* node);
+static void  s_init_xhtml(xhtml_t* xhtml, Doc* doc, request_rec* r, device_table* spec);
+static int   s_xhtml_search_emoji(xhtml_t* xhtml, char* txt, char** rslt);
+static void  s_xhtml_1_0_chxjif_tag(xhtml_t* xhtml, Node* node);
  
 /**
  * converts from CHTML to XHTML.
@@ -80,7 +80,7 @@ chxj_exchange_xhtml_mobile_1_0(
 {
   char*     dst = NULL;
   char*     ss;
-  Xhtml     xhtml;
+  xhtml_t     xhtml;
   Doc       doc;
 
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"start chxj_exchange_xhtml_mobile_1_0()");
@@ -154,10 +154,10 @@ chxj_exchange_xhtml_mobile_1_0(
  * @param spec  [i]   The pointer to the device_table
  */
 static void
-s_init_xhtml(Xhtml* xhtml, Doc* doc, request_rec* r, device_table* spec)
+s_init_xhtml(xhtml_t* xhtml, Doc* doc, request_rec* r, device_table* spec)
 {
   memset(doc,   0, sizeof(Doc));
-  memset(xhtml, 0, sizeof(Xhtml));
+  memset(xhtml, 0, sizeof(xhtml_t));
 
   doc->r      = r;
   xhtml->doc  = doc;
@@ -177,7 +177,7 @@ s_init_xhtml(Xhtml* xhtml, Doc* doc, request_rec* r, device_table* spec)
  * @return The character string after it converts it is returned. 
  */
 static char*
-s_xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent) 
+s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent) 
 {
   Node*         child;
   Doc*          doc   = xhtml->doc;
@@ -456,7 +456,7 @@ s_xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent)
  * @return When corresponding EMOJI exists, it returns it excluding 0. 
  */
 static int
-s_xhtml_search_emoji(Xhtml* xhtml, char* txt, char** rslt)
+s_xhtml_search_emoji(xhtml_t* xhtml, char* txt, char** rslt)
 {
   emoji_t*      ee;
   request_rec*  r;
@@ -605,7 +605,7 @@ s_xhtml_search_emoji(Xhtml* xhtml, char* txt, char** rslt)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_html_tag(Xhtml* xhtml, Node* node) 
+s_xhtml_1_0_start_html_tag(xhtml_t* xhtml, Node* node) 
 {
   Attr*         attr;
   Doc*          doc   = xhtml->doc;
@@ -677,7 +677,7 @@ s_xhtml_1_0_start_html_tag(Xhtml* xhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_html_tag(Xhtml* xhtml, Node* child) 
+s_xhtml_1_0_end_html_tag(xhtml_t* xhtml, Node* child) 
 {
   Doc*          doc = xhtml->doc;
   request_rec*  r   = doc->r;
@@ -696,7 +696,7 @@ s_xhtml_1_0_end_html_tag(Xhtml* xhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_meta_tag(Xhtml* xhtml, Node* node) 
+s_xhtml_1_0_start_meta_tag(xhtml_t* xhtml, Node* node) 
 {
   Attr*         attr;
   Doc*          doc   = xhtml->doc;
@@ -767,7 +767,7 @@ s_xhtml_1_0_start_meta_tag(Xhtml* xhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_meta_tag(Xhtml* xhtml, Node* child) 
+s_xhtml_1_0_end_meta_tag(xhtml_t* xhtml, Node* child) 
 {
   return xhtml->out;
 }
@@ -781,7 +781,7 @@ s_xhtml_1_0_end_meta_tag(Xhtml* xhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_head_tag(Xhtml* xhtml, Node* node) 
+s_xhtml_1_0_start_head_tag(xhtml_t* xhtml, Node* node) 
 {
   Doc*          doc = xhtml->doc;
   request_rec*  r   = doc->r;
@@ -799,7 +799,7 @@ s_xhtml_1_0_start_head_tag(Xhtml* xhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_head_tag(Xhtml* xhtml, Node* child) 
+s_xhtml_1_0_end_head_tag(xhtml_t* xhtml, Node* child) 
 {
   Doc*          doc = xhtml->doc;
   request_rec*  r   = doc->r;
@@ -817,7 +817,7 @@ s_xhtml_1_0_end_head_tag(Xhtml* xhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_title_tag(Xhtml* xhtml, Node* node) 
+s_xhtml_1_0_start_title_tag(xhtml_t* xhtml, Node* node) 
 {
   Doc* doc = xhtml->doc;
   request_rec* r = doc->r;
@@ -835,7 +835,7 @@ s_xhtml_1_0_start_title_tag(Xhtml* xhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_title_tag(Xhtml* xhtml, Node* child) 
+s_xhtml_1_0_end_title_tag(xhtml_t* xhtml, Node* child) 
 {
   Doc*          doc = xhtml->doc;
   request_rec*  r   = doc->r;
@@ -854,7 +854,7 @@ s_xhtml_1_0_end_title_tag(Xhtml* xhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_base_tag(Xhtml* xhtml, Node* node) 
+s_xhtml_1_0_start_base_tag(xhtml_t* xhtml, Node* node) 
 {
   Attr*         attr;
   Doc*          doc   = xhtml->doc;
@@ -894,7 +894,7 @@ s_xhtml_1_0_start_base_tag(Xhtml* xhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_base_tag(Xhtml* xhtml, Node* child) 
+s_xhtml_1_0_end_base_tag(xhtml_t* xhtml, Node* child) 
 {
   return xhtml->out;
 }
@@ -908,7 +908,7 @@ s_xhtml_1_0_end_base_tag(Xhtml* xhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_body_tag(Xhtml* xhtml, Node* node) 
+s_xhtml_1_0_start_body_tag(xhtml_t* xhtml, Node* node) 
 {
   Doc* doc = xhtml->doc;
   request_rec* r = doc->r;
@@ -978,7 +978,7 @@ s_xhtml_1_0_start_body_tag(Xhtml* xhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_body_tag(Xhtml* xhtml, Node* child) 
+s_xhtml_1_0_end_body_tag(xhtml_t* xhtml, Node* child) 
 {
   Doc*          doc = xhtml->doc;
   request_rec*  r = doc->r;
@@ -997,7 +997,7 @@ s_xhtml_1_0_end_body_tag(Xhtml* xhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_a_tag(Xhtml* xhtml, Node* node) 
+s_xhtml_1_0_start_a_tag(xhtml_t* xhtml, Node* node) 
 {
   Doc*          doc   = xhtml->doc;
   request_rec*  r     = doc->r;
@@ -1108,7 +1108,7 @@ s_xhtml_1_0_start_a_tag(Xhtml* xhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_a_tag(Xhtml* xhtml, Node* child) 
+s_xhtml_1_0_end_a_tag(xhtml_t* xhtml, Node* child) 
 {
   Doc* doc = xhtml->doc;
   request_rec* r = doc->r;
@@ -1126,7 +1126,7 @@ s_xhtml_1_0_end_a_tag(Xhtml* xhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_br_tag(Xhtml* xhtml, Node* node) 
+s_xhtml_1_0_start_br_tag(xhtml_t* xhtml, Node* node) 
 {
   Doc* doc = xhtml->doc;
   request_rec* r = doc->r;
@@ -1143,7 +1143,7 @@ s_xhtml_1_0_start_br_tag(Xhtml* xhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_br_tag(Xhtml* xhtml, Node* child) 
+s_xhtml_1_0_end_br_tag(xhtml_t* xhtml, Node* child) 
 {
   return xhtml->out;
 }
@@ -1157,7 +1157,7 @@ s_xhtml_1_0_end_br_tag(Xhtml* xhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_font_tag(Xhtml* xhtml, Node* node) 
+s_xhtml_1_0_start_font_tag(xhtml_t* xhtml, Node* node) 
 {
   Doc* doc = xhtml->doc;
   request_rec* r = doc->r;
@@ -1193,7 +1193,7 @@ s_xhtml_1_0_start_font_tag(Xhtml* xhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_font_tag(Xhtml* xhtml, Node* child) 
+s_xhtml_1_0_end_font_tag(xhtml_t* xhtml, Node* child) 
 {
   Doc* doc = xhtml->doc;
   request_rec* r = doc->r;
@@ -1210,7 +1210,7 @@ s_xhtml_1_0_end_font_tag(Xhtml* xhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_form_tag(Xhtml* xhtml, Node* node) 
+s_xhtml_1_0_start_form_tag(xhtml_t* xhtml, Node* node) 
 {
   Doc* doc = xhtml->doc;
   request_rec* r = doc->r;
@@ -1265,7 +1265,7 @@ s_xhtml_1_0_start_form_tag(Xhtml* xhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_form_tag(Xhtml* xhtml, Node* child) 
+s_xhtml_1_0_end_form_tag(xhtml_t* xhtml, Node* child) 
 {
   Doc* doc = xhtml->doc;
   request_rec* r = doc->r;
@@ -1283,7 +1283,7 @@ s_xhtml_1_0_end_form_tag(Xhtml* xhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_input_tag(Xhtml* xhtml, Node* node) 
+s_xhtml_1_0_start_input_tag(xhtml_t* xhtml, Node* node) 
 {
   Doc*          doc         = xhtml->doc;
   request_rec*  r           = doc->r;
@@ -1429,7 +1429,7 @@ s_xhtml_1_0_start_input_tag(Xhtml* xhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_input_tag(Xhtml* xhtml, Node* child) 
+s_xhtml_1_0_end_input_tag(xhtml_t* xhtml, Node* child) 
 {
   return xhtml->out;
 }
@@ -1443,7 +1443,7 @@ s_xhtml_1_0_end_input_tag(Xhtml* xhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_center_tag(Xhtml* xhtml, Node* node) 
+s_xhtml_1_0_start_center_tag(xhtml_t* xhtml, Node* node) 
 {
   Doc*          doc = xhtml->doc;
   request_rec*  r   = doc->r;
@@ -1462,7 +1462,7 @@ s_xhtml_1_0_start_center_tag(Xhtml* xhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_center_tag(Xhtml* xhtml, Node* child) 
+s_xhtml_1_0_end_center_tag(xhtml_t* xhtml, Node* child) 
 {
   Doc*          doc = xhtml->doc;
   request_rec*  r   = doc->r;
@@ -1481,7 +1481,7 @@ s_xhtml_1_0_end_center_tag(Xhtml* xhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_hr_tag(Xhtml* xhtml, Node* node) 
+s_xhtml_1_0_start_hr_tag(xhtml_t* xhtml, Node* node) 
 {
   Doc*          doc = xhtml->doc;
   request_rec*  r   = doc->r;
@@ -1500,7 +1500,7 @@ s_xhtml_1_0_start_hr_tag(Xhtml* xhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_hr_tag(Xhtml* xhtml, Node* child) 
+s_xhtml_1_0_end_hr_tag(xhtml_t* xhtml, Node* child) 
 {
   return xhtml->out;
 }
@@ -1514,7 +1514,7 @@ s_xhtml_1_0_end_hr_tag(Xhtml* xhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_img_tag(Xhtml* xhtml, Node* node) 
+s_xhtml_1_0_start_img_tag(xhtml_t* xhtml, Node* node) 
 {
   Doc*          doc = xhtml->doc;
   request_rec*  r   = doc->r;
@@ -1599,7 +1599,7 @@ s_xhtml_1_0_start_img_tag(Xhtml* xhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_img_tag(Xhtml* xhtml, Node* child) 
+s_xhtml_1_0_end_img_tag(xhtml_t* xhtml, Node* child) 
 {
   return xhtml->out;
 }
@@ -1613,7 +1613,7 @@ s_xhtml_1_0_end_img_tag(Xhtml* xhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_select_tag(Xhtml* xhtml, Node* child)
+s_xhtml_1_0_start_select_tag(xhtml_t* xhtml, Node* child)
 {
   Doc* doc = xhtml->doc;
   request_rec* r = doc->r;
@@ -1670,7 +1670,7 @@ s_xhtml_1_0_start_select_tag(Xhtml* xhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_select_tag(Xhtml* xhtml, Node* child)
+s_xhtml_1_0_end_select_tag(xhtml_t* xhtml, Node* child)
 {
   Doc* doc = xhtml->doc;
   request_rec* r = doc->r;
@@ -1688,7 +1688,7 @@ s_xhtml_1_0_end_select_tag(Xhtml* xhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_option_tag(Xhtml* xhtml, Node* child)
+s_xhtml_1_0_start_option_tag(xhtml_t* xhtml, Node* child)
 {
   Doc* doc = xhtml->doc;
   request_rec* r = doc->r;
@@ -1745,7 +1745,7 @@ s_xhtml_1_0_start_option_tag(Xhtml* xhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_option_tag(Xhtml* xhtml, Node* child)
+s_xhtml_1_0_end_option_tag(xhtml_t* xhtml, Node* child)
 {
   Doc* doc = xhtml->doc;
   request_rec* r = doc->r;
@@ -1764,7 +1764,7 @@ s_xhtml_1_0_end_option_tag(Xhtml* xhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_div_tag(Xhtml* xhtml, Node* child)
+s_xhtml_1_0_start_div_tag(xhtml_t* xhtml, Node* child)
 {
   Doc* doc = xhtml->doc;
   request_rec* r = doc->r;
@@ -1806,7 +1806,7 @@ s_xhtml_1_0_start_div_tag(Xhtml* xhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_div_tag(Xhtml* xhtml, Node* child)
+s_xhtml_1_0_end_div_tag(xhtml_t* xhtml, Node* child)
 {
   Doc* doc = xhtml->doc;
   request_rec* r = doc->r;
@@ -1824,7 +1824,7 @@ s_xhtml_1_0_end_div_tag(Xhtml* xhtml, Node* child)
  * @param node   [i]   The CHXJ:IF tag node is specified.
  */
 static void
-s_xhtml_1_0_chxjif_tag(Xhtml* xhtml, Node* node)
+s_xhtml_1_0_chxjif_tag(xhtml_t* xhtml, Node* node)
 {
   Doc*         doc   = xhtml->doc;
   Node*        child;
