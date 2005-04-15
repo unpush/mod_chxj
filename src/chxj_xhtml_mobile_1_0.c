@@ -39,12 +39,12 @@ static char* s_xhtml_1_0_start_a_tag      (Xhtml* xhtml, Node* node);
 static char* s_xhtml_1_0_end_a_tag        (Xhtml* xhtml, Node* node);
 static char* s_xhtml_1_0_start_br_tag     (Xhtml* xhtml, Node* node);
 static char* s_xhtml_1_0_end_br_tag       (Xhtml* xhtml, Node* node);
-static char* xhtml_1_0_start_font_tag   (Xhtml* xhtml, Node* node);
-static char* xhtml_1_0_end_font_tag     (Xhtml* xhtml, Node* node);
-static char* xhtml_1_0_start_form_tag   (Xhtml* xhtml, Node* node);
-static char* xhtml_1_0_end_form_tag     (Xhtml* xhtml, Node* node);
-static char* xhtml_1_0_start_input_tag  (Xhtml* xhtml, Node* node);
-static char* xhtml_1_0_end_input_tag    (Xhtml* xhtml, Node* node);
+static char* s_xhtml_1_0_start_font_tag   (Xhtml* xhtml, Node* node);
+static char* s_xhtml_1_0_end_font_tag     (Xhtml* xhtml, Node* node);
+static char* s_xhtml_1_0_start_form_tag   (Xhtml* xhtml, Node* node);
+static char* s_xhtml_1_0_end_form_tag     (Xhtml* xhtml, Node* node);
+static char* s_xhtml_1_0_start_input_tag  (Xhtml* xhtml, Node* node);
+static char* s_xhtml_1_0_end_input_tag    (Xhtml* xhtml, Node* node);
 static char* xhtml_1_0_start_center_tag (Xhtml* xhtml, Node* node);
 static char* xhtml_1_0_end_center_tag   (Xhtml* xhtml, Node* node);
 static char* xhtml_1_0_start_hr_tag     (Xhtml* xhtml, Node* node);
@@ -275,9 +275,9 @@ s_xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent)
     else
     if (strcasecmp(name, "font") == 0) 
     {
-      xhtml_1_0_start_font_tag(xhtml, child);
+      s_xhtml_1_0_start_font_tag(xhtml, child);
       s_xhtml_1_0_node_exchange (xhtml, child,indent+1);
-      xhtml_1_0_end_font_tag  (xhtml, child);
+      s_xhtml_1_0_end_font_tag  (xhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <FORM>                                                                 */
@@ -285,9 +285,9 @@ s_xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent)
     else
     if (strcasecmp(name, "form") == 0) 
     {
-      xhtml_1_0_start_form_tag(xhtml, child);
+      s_xhtml_1_0_start_form_tag(xhtml, child);
       s_xhtml_1_0_node_exchange (xhtml, child,indent+1);
-      xhtml_1_0_end_form_tag  (xhtml, child);
+      s_xhtml_1_0_end_form_tag  (xhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <INPUT>                                                                */
@@ -295,9 +295,9 @@ s_xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent)
     else
     if (strcasecmp(name, "input") == 0) 
     {
-      xhtml_1_0_start_input_tag (xhtml, child);
+      s_xhtml_1_0_start_input_tag (xhtml, child);
       s_xhtml_1_0_node_exchange   (xhtml, child,indent+1);
-      xhtml_1_0_end_input_tag   (xhtml, child);
+      s_xhtml_1_0_end_input_tag   (xhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <HR>                                                                   */
@@ -1157,7 +1157,7 @@ s_xhtml_1_0_end_br_tag(Xhtml* xhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-xhtml_1_0_start_font_tag(Xhtml* xhtml, Node* node) 
+s_xhtml_1_0_start_font_tag(Xhtml* xhtml, Node* node) 
 {
   Doc* doc = xhtml->doc;
   request_rec* r = doc->r;
@@ -1193,7 +1193,7 @@ xhtml_1_0_start_font_tag(Xhtml* xhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-xhtml_1_0_end_font_tag(Xhtml* xhtml, Node* child) 
+s_xhtml_1_0_end_font_tag(Xhtml* xhtml, Node* child) 
 {
   Doc* doc = xhtml->doc;
   request_rec* r = doc->r;
@@ -1210,7 +1210,7 @@ xhtml_1_0_end_font_tag(Xhtml* xhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-xhtml_1_0_start_form_tag(Xhtml* xhtml, Node* node) 
+s_xhtml_1_0_start_form_tag(Xhtml* xhtml, Node* node) 
 {
   Doc* doc = xhtml->doc;
   request_rec* r = doc->r;
@@ -1265,7 +1265,7 @@ xhtml_1_0_start_form_tag(Xhtml* xhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-xhtml_1_0_end_form_tag(Xhtml* xhtml, Node* child) 
+s_xhtml_1_0_end_form_tag(Xhtml* xhtml, Node* child) 
 {
   Doc* doc = xhtml->doc;
   request_rec* r = doc->r;
@@ -1283,7 +1283,7 @@ xhtml_1_0_end_form_tag(Xhtml* xhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-xhtml_1_0_start_input_tag(Xhtml* xhtml, Node* node) 
+s_xhtml_1_0_start_input_tag(Xhtml* xhtml, Node* node) 
 {
   Doc*          doc         = xhtml->doc;
   request_rec*  r           = doc->r;
@@ -1429,7 +1429,7 @@ xhtml_1_0_start_input_tag(Xhtml* xhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-xhtml_1_0_end_input_tag(Xhtml* xhtml, Node* child) 
+s_xhtml_1_0_end_input_tag(Xhtml* xhtml, Node* child) 
 {
   return xhtml->out;
 }
