@@ -18,15 +18,15 @@
 #include "mod_chxj.h"
 #include "chxj_load_emoji_data.h"
 
-static char* load_emoji_set_tag( Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node);
-static char* set_emoji_data( Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node);
-static char* load_emoji_emoji_tag( Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node);
-static void emoji_add_to_tail( mod_chxj_config* conf, emoji_t* emoji);
-static char* load_emoji_no_tag( Doc* doc, apr_pool_t* p, emoji_t* em, Node* node);
-static char* load_emoji_imode_tag( Doc* doc, apr_pool_t* p, emoji_t* em, Node* node);
-static char* load_emoji_ezweb_tag( Doc* doc, apr_pool_t* p, emoji_t* em, Node* node);
-static char* load_emoji_jphone_tag( Doc* doc, apr_pool_t* p, emoji_t* em, Node* node);
-static char hexstring_to_byte(char* s);
+static char* s_load_emoji_set_tag( Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node);
+static char* s_set_emoji_data( Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node);
+static char* s_load_emoji_emoji_tag( Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node);
+static void  s_emoji_add_to_tail( mod_chxj_config* conf, emoji_t* emoji);
+static char* s_load_emoji_no_tag( Doc* doc, apr_pool_t* p, emoji_t* em, Node* node);
+static char* s_load_emoji_imode_tag( Doc* doc, apr_pool_t* p, emoji_t* em, Node* node);
+static char* s_load_emoji_ezweb_tag( Doc* doc, apr_pool_t* p, emoji_t* em, Node* node);
+static char* s_load_emoji_jphone_tag( Doc* doc, apr_pool_t* p, emoji_t* em, Node* node);
+static char  s_hexstring_to_byte(char* s);
 
 
 /**
@@ -42,7 +42,7 @@ chxj_load_emoji_data(
 
   conf->emoji = NULL;
   conf->emoji_tail = NULL;
-  rtn = set_emoji_data(doc, p, conf,qs_get_root(doc));
+  rtn = s_set_emoji_data(doc, p, conf,qs_get_root(doc));
   if (rtn != NULL)
   {
     return rtn;
@@ -55,7 +55,7 @@ chxj_load_emoji_data(
  * <emoji>
  */
 static char*
-set_emoji_data(
+s_set_emoji_data(
   Doc* doc,
   apr_pool_t* p,
   mod_chxj_config* conf,
@@ -71,7 +71,7 @@ set_emoji_data(
     char* name = qs_get_node_name(doc,child);
     if (strcasecmp(name, "emoji") == 0) 
     {
-      rtn = load_emoji_emoji_tag(doc, p, conf, child);
+      rtn = s_load_emoji_emoji_tag(doc, p, conf, child);
       if (rtn != NULL)
       {
         return rtn;
@@ -82,7 +82,7 @@ set_emoji_data(
 }
 
 static char* 
-load_emoji_emoji_tag(
+s_load_emoji_emoji_tag(
   Doc* doc,
   apr_pool_t* p,
   mod_chxj_config* conf,
@@ -97,7 +97,7 @@ load_emoji_emoji_tag(
     char* name = qs_get_node_name(doc, child);
     if (strcasecmp(name, "set") == 0)
     {
-      rtn = load_emoji_set_tag(doc, p, conf, child);
+      rtn = s_load_emoji_set_tag(doc, p, conf, child);
       if (rtn != NULL)
       {
         return rtn;
@@ -109,7 +109,7 @@ load_emoji_emoji_tag(
 
 
 static char*
-load_emoji_set_tag(
+s_load_emoji_set_tag(
   Doc* doc,
   apr_pool_t* p,
   mod_chxj_config* conf,
@@ -132,7 +132,7 @@ load_emoji_set_tag(
 
     if (strcasecmp(name, "no") == 0) 
     {
-      rtn = load_emoji_no_tag(doc, p, em, child);
+      rtn = s_load_emoji_no_tag(doc, p, em, child);
       if (rtn != NULL)
       {
         return rtn;
@@ -142,7 +142,7 @@ load_emoji_set_tag(
     else 
     if (strcasecmp(name, "imode") == 0)
     {
-      rtn = load_emoji_imode_tag(doc, p, em, child);
+      rtn = s_load_emoji_imode_tag(doc, p, em, child);
       if (rtn != NULL)
       {
         return rtn;
@@ -151,7 +151,7 @@ load_emoji_set_tag(
     else
     if (strcasecmp(name, "ezweb") == 0)
     {
-      rtn = load_emoji_ezweb_tag(doc, p, em, child);
+      rtn = s_load_emoji_ezweb_tag(doc, p, em, child);
       if (rtn != NULL)
       {
         return rtn;
@@ -160,7 +160,7 @@ load_emoji_set_tag(
     else
     if (strcasecmp(name, "jphone") == 0)
     {
-      rtn = load_emoji_jphone_tag(doc, p, em, child);
+      rtn = s_load_emoji_jphone_tag(doc, p, em, child);
       if (rtn != NULL)
       {
         return rtn;
@@ -168,13 +168,13 @@ load_emoji_set_tag(
     }
   }
 
-  emoji_add_to_tail(conf, em);
+  s_emoji_add_to_tail(conf, em);
   return NULL;
 }
 
 
 static char*
-load_emoji_no_tag(
+s_load_emoji_no_tag(
   Doc* doc,
   apr_pool_t* p,
   emoji_t* em,
@@ -203,7 +203,7 @@ load_emoji_no_tag(
 }
 
 static char*
-load_emoji_imode_tag(
+s_load_emoji_imode_tag(
   Doc* doc,
   apr_pool_t* p,
   emoji_t* em,
@@ -231,7 +231,7 @@ load_emoji_imode_tag(
         char* cvalue = qs_get_node_value(doc, hex1node);
         if (strcasecmp(cname, "text") == 0)
         {
-          em->imode->hex1byte = hexstring_to_byte(cvalue);
+          em->imode->hex1byte = s_hexstring_to_byte(cvalue);
         }
       }
       else
@@ -249,7 +249,7 @@ load_emoji_imode_tag(
         char* cvalue = qs_get_node_value(doc, hex2node);
         if (strcasecmp(cname, "text") == 0)
         {
-          em->imode->hex2byte = hexstring_to_byte(cvalue);
+          em->imode->hex2byte = s_hexstring_to_byte(cvalue);
         }
       }
       else
@@ -300,7 +300,7 @@ load_emoji_imode_tag(
 }
 
 static char*
-load_emoji_ezweb_tag(
+s_load_emoji_ezweb_tag(
   Doc* doc,
   apr_pool_t* p,
   emoji_t* em,
@@ -403,7 +403,7 @@ load_emoji_ezweb_tag(
 }
 
 static char*
-load_emoji_jphone_tag(
+s_load_emoji_jphone_tag(
   Doc* doc,
   apr_pool_t* p,
   emoji_t* em,
@@ -468,7 +468,7 @@ load_emoji_jphone_tag(
 }
 
 static void
-emoji_add_to_tail(
+s_emoji_add_to_tail(
   mod_chxj_config* conf,
   emoji_t* emoji)
 {
@@ -485,7 +485,7 @@ emoji_add_to_tail(
 }
 
 static char 
-hexstring_to_byte(char* s)
+s_hexstring_to_byte(char* s)
 {
   int len;
   int ii;
