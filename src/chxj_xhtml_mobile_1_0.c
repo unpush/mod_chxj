@@ -22,7 +22,7 @@
 #include "chxj_qr_code.h"
 
 
-static char* xhtml_1_0_node_exchange    (Xhtml* xhtml, Node* node, int indent);
+static char* s_xhtml_1_0_node_exchange    (Xhtml* xhtml, Node* node, int indent);
 static char* xhtml_1_0_start_html_tag   (Xhtml* xhtml, Node* child);
 static char* xhtml_1_0_end_html_tag     (Xhtml* xhtml, Node* child);
 static char* xhtml_1_0_start_meta_tag   (Xhtml* xhtml, Node* node);
@@ -123,7 +123,7 @@ chxj_exchange_xhtml_mobile_1_0(
   /*--------------------------------------------------------------------------*/
   /* It converts it from CHTML to XHTML.                                      */
   /*--------------------------------------------------------------------------*/
-  dst = xhtml_1_0_node_exchange(&xhtml, qs_get_root(&doc), 0);
+  dst = s_xhtml_1_0_node_exchange(&xhtml, qs_get_root(&doc), 0);
   qs_all_free(&doc,QX_LOGMARK);
 
   if (dst == NULL) 
@@ -177,7 +177,7 @@ chxj_init_xhtml(Xhtml* xhtml, Doc* doc, request_rec* r, device_table* spec)
  * @return The character string after it converts it is returned. 
  */
 static char*
-xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent) 
+s_xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent) 
 {
   Node*         child;
   Doc*          doc   = xhtml->doc;
@@ -198,7 +198,7 @@ xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent)
     if (strcasecmp(name, "html") == 0) 
     {
       xhtml_1_0_start_html_tag(xhtml, child);
-      xhtml_1_0_node_exchange (xhtml, child,indent+1);
+      s_xhtml_1_0_node_exchange (xhtml, child,indent+1);
       xhtml_1_0_end_html_tag  (xhtml, child);
     }
     /*------------------------------------------------------------------------*/
@@ -217,7 +217,7 @@ xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent)
     if (strcasecmp(name, "head") == 0) 
     {
       xhtml_1_0_start_head_tag(xhtml, child);
-      xhtml_1_0_node_exchange (xhtml, child,indent+1);
+      s_xhtml_1_0_node_exchange (xhtml, child,indent+1);
       xhtml_1_0_end_head_tag  (xhtml, child);
     }
     /*------------------------------------------------------------------------*/
@@ -227,7 +227,7 @@ xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent)
     if (strcasecmp(name, "title") == 0) 
     {
       xhtml_1_0_start_title_tag (xhtml, child);
-      xhtml_1_0_node_exchange   (xhtml, child,indent+1);
+      s_xhtml_1_0_node_exchange   (xhtml, child,indent+1);
       xhtml_1_0_end_title_tag   (xhtml, child);
     }
     /*------------------------------------------------------------------------*/
@@ -246,7 +246,7 @@ xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent)
     if (strcasecmp(name, "body") == 0) 
     {
       xhtml_1_0_start_body_tag(xhtml, child);
-      xhtml_1_0_node_exchange (xhtml, child,indent+1);
+      s_xhtml_1_0_node_exchange (xhtml, child,indent+1);
       xhtml_1_0_end_body_tag  (xhtml, child);
     }
     /*------------------------------------------------------------------------*/
@@ -256,7 +256,7 @@ xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent)
     if (strcasecmp(name, "a") == 0) 
     {
       xhtml_1_0_start_a_tag   (xhtml, child);
-      xhtml_1_0_node_exchange (xhtml, child,indent+1);
+      s_xhtml_1_0_node_exchange (xhtml, child,indent+1);
       xhtml_1_0_end_a_tag     (xhtml, child);
     }
     /*------------------------------------------------------------------------*/
@@ -266,7 +266,7 @@ xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent)
     if (strcasecmp(name, "br") == 0) 
     {
       xhtml_1_0_start_br_tag  (xhtml, child);
-      xhtml_1_0_node_exchange (xhtml, child,indent+1);
+      s_xhtml_1_0_node_exchange (xhtml, child,indent+1);
       xhtml_1_0_end_br_tag    (xhtml, child);
     }
     /*------------------------------------------------------------------------*/
@@ -276,7 +276,7 @@ xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent)
     if (strcasecmp(name, "font") == 0) 
     {
       xhtml_1_0_start_font_tag(xhtml, child);
-      xhtml_1_0_node_exchange (xhtml, child,indent+1);
+      s_xhtml_1_0_node_exchange (xhtml, child,indent+1);
       xhtml_1_0_end_font_tag  (xhtml, child);
     }
     /*------------------------------------------------------------------------*/
@@ -286,7 +286,7 @@ xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent)
     if (strcasecmp(name, "form") == 0) 
     {
       xhtml_1_0_start_form_tag(xhtml, child);
-      xhtml_1_0_node_exchange (xhtml, child,indent+1);
+      s_xhtml_1_0_node_exchange (xhtml, child,indent+1);
       xhtml_1_0_end_form_tag  (xhtml, child);
     }
     /*------------------------------------------------------------------------*/
@@ -296,7 +296,7 @@ xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent)
     if (strcasecmp(name, "input") == 0) 
     {
       xhtml_1_0_start_input_tag (xhtml, child);
-      xhtml_1_0_node_exchange   (xhtml, child,indent+1);
+      s_xhtml_1_0_node_exchange   (xhtml, child,indent+1);
       xhtml_1_0_end_input_tag   (xhtml, child);
     }
     /*------------------------------------------------------------------------*/
@@ -315,7 +315,7 @@ xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent)
     if (strcasecmp(name, "center") == 0) 
     {
       xhtml_1_0_start_center_tag(xhtml, child);
-      xhtml_1_0_node_exchange   (xhtml, child,indent+1);
+      s_xhtml_1_0_node_exchange   (xhtml, child,indent+1);
       xhtml_1_0_end_center_tag  (xhtml, child);
     }
     /*------------------------------------------------------------------------*/
@@ -334,7 +334,7 @@ xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent)
     if (strcasecmp(name, "select") == 0)
     {
       xhtml_1_0_start_select_tag(xhtml, child);
-      xhtml_1_0_node_exchange   (xhtml, child, indent+1);
+      s_xhtml_1_0_node_exchange   (xhtml, child, indent+1);
       xhtml_1_0_end_select_tag  (xhtml, child);
     }
     /*------------------------------------------------------------------------*/
@@ -344,7 +344,7 @@ xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent)
     if (strcasecmp(name, "option") == 0)
     {
       xhtml_1_0_start_option_tag(xhtml, child);
-      xhtml_1_0_node_exchange   (xhtml, child, indent+1);
+      s_xhtml_1_0_node_exchange   (xhtml, child, indent+1);
       xhtml_1_0_end_option_tag  (xhtml, child);
     }
     /*------------------------------------------------------------------------*/
@@ -354,7 +354,7 @@ xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent)
     if (strcasecmp(name, "div") == 0)
     {
       xhtml_1_0_start_div_tag (xhtml, child);
-      xhtml_1_0_node_exchange (xhtml, child, indent+1);
+      s_xhtml_1_0_node_exchange (xhtml, child, indent+1);
       xhtml_1_0_end_div_tag   (xhtml, child);
     }
     /*------------------------------------------------------------------------*/
@@ -377,7 +377,7 @@ xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent)
         parse_attr = qs_get_parse_attr(doc, child, r);
         if (parse_attr != NULL && strcasecmp(parse_attr, "true") == 0)
         {
-          xhtml_1_0_node_exchange (xhtml, child, indent+1);
+          s_xhtml_1_0_node_exchange (xhtml, child, indent+1);
         }
         else
         {
