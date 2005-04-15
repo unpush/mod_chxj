@@ -24,7 +24,7 @@
 
 static char* s_xhtml_1_0_node_exchange    (Xhtml* xhtml, Node* node, int indent);
 static char* s_xhtml_1_0_start_html_tag   (Xhtml* xhtml, Node* child);
-static char* xhtml_1_0_end_html_tag     (Xhtml* xhtml, Node* child);
+static char* s_xhtml_1_0_end_html_tag     (Xhtml* xhtml, Node* child);
 static char* xhtml_1_0_start_meta_tag   (Xhtml* xhtml, Node* node);
 static char* xhtml_1_0_end_meta_tag     (Xhtml* xhtml, Node* node);
 static char* xhtml_1_0_start_head_tag   (Xhtml* xhtml, Node* node);
@@ -199,7 +199,7 @@ s_xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent)
     {
       s_xhtml_1_0_start_html_tag(xhtml, child);
       s_xhtml_1_0_node_exchange (xhtml, child,indent+1);
-      xhtml_1_0_end_html_tag  (xhtml, child);
+      s_xhtml_1_0_end_html_tag  (xhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <META>                                                                 */
@@ -677,7 +677,7 @@ s_xhtml_1_0_start_html_tag(Xhtml* xhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-xhtml_1_0_end_html_tag(Xhtml* xhtml, Node* child) 
+s_xhtml_1_0_end_html_tag(Xhtml* xhtml, Node* child) 
 {
   Doc*          doc = xhtml->doc;
   request_rec*  r   = doc->r;
