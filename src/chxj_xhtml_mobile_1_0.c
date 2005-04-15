@@ -45,16 +45,16 @@ static char* s_xhtml_1_0_start_form_tag   (Xhtml* xhtml, Node* node);
 static char* s_xhtml_1_0_end_form_tag     (Xhtml* xhtml, Node* node);
 static char* s_xhtml_1_0_start_input_tag  (Xhtml* xhtml, Node* node);
 static char* s_xhtml_1_0_end_input_tag    (Xhtml* xhtml, Node* node);
-static char* xhtml_1_0_start_center_tag (Xhtml* xhtml, Node* node);
-static char* xhtml_1_0_end_center_tag   (Xhtml* xhtml, Node* node);
-static char* xhtml_1_0_start_hr_tag     (Xhtml* xhtml, Node* node);
-static char* xhtml_1_0_end_hr_tag       (Xhtml* xhtml, Node* node);
-static char* xhtml_1_0_start_img_tag    (Xhtml* xhtml, Node* node);
-static char* xhtml_1_0_end_img_tag      (Xhtml* xhtml, Node* node);
-static char* xhtml_1_0_start_select_tag (Xhtml* xhtml, Node* node);
-static char* xhtml_1_0_end_select_tag   (Xhtml* xhtml, Node* node);
-static char* xhtml_1_0_start_option_tag (Xhtml* xhtml, Node* node);
-static char* xhtml_1_0_end_option_tag   (Xhtml* xhtml, Node* node);
+static char* s_xhtml_1_0_start_center_tag (Xhtml* xhtml, Node* node);
+static char* s_xhtml_1_0_end_center_tag   (Xhtml* xhtml, Node* node);
+static char* s_xhtml_1_0_start_hr_tag     (Xhtml* xhtml, Node* node);
+static char* s_xhtml_1_0_end_hr_tag       (Xhtml* xhtml, Node* node);
+static char* s_xhtml_1_0_start_img_tag    (Xhtml* xhtml, Node* node);
+static char* s_xhtml_1_0_end_img_tag      (Xhtml* xhtml, Node* node);
+static char* s_xhtml_1_0_start_select_tag (Xhtml* xhtml, Node* node);
+static char* s_xhtml_1_0_end_select_tag   (Xhtml* xhtml, Node* node);
+static char* s_xhtml_1_0_start_option_tag (Xhtml* xhtml, Node* node);
+static char* s_xhtml_1_0_end_option_tag   (Xhtml* xhtml, Node* node);
 static char* xhtml_1_0_start_div_tag    (Xhtml* xhtml, Node* node);
 static char* xhtml_1_0_end_div_tag      (Xhtml* xhtml, Node* node);
 static void chxj_init_xhtml(Xhtml* xhtml, Doc* doc, request_rec* r, device_table* spec);
@@ -305,8 +305,8 @@ s_xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent)
     else
     if (strcasecmp(name, "hr") == 0) 
     {
-      xhtml_1_0_start_hr_tag  (xhtml, child);
-      xhtml_1_0_end_hr_tag    (xhtml, child);
+      s_xhtml_1_0_start_hr_tag  (xhtml, child);
+      s_xhtml_1_0_end_hr_tag    (xhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <CENTER>                                                               */
@@ -314,9 +314,9 @@ s_xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent)
     else
     if (strcasecmp(name, "center") == 0) 
     {
-      xhtml_1_0_start_center_tag(xhtml, child);
+      s_xhtml_1_0_start_center_tag(xhtml, child);
       s_xhtml_1_0_node_exchange   (xhtml, child,indent+1);
-      xhtml_1_0_end_center_tag  (xhtml, child);
+      s_xhtml_1_0_end_center_tag  (xhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <IMG>                                                                  */
@@ -324,8 +324,8 @@ s_xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent)
     else
     if (strcasecmp(name, "img") == 0) 
     {
-      xhtml_1_0_start_img_tag (xhtml, child);
-      xhtml_1_0_end_img_tag   (xhtml, child);
+      s_xhtml_1_0_start_img_tag (xhtml, child);
+      s_xhtml_1_0_end_img_tag   (xhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <SELECT>                                                               */
@@ -333,9 +333,9 @@ s_xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent)
     else
     if (strcasecmp(name, "select") == 0)
     {
-      xhtml_1_0_start_select_tag(xhtml, child);
+      s_xhtml_1_0_start_select_tag(xhtml, child);
       s_xhtml_1_0_node_exchange   (xhtml, child, indent+1);
-      xhtml_1_0_end_select_tag  (xhtml, child);
+      s_xhtml_1_0_end_select_tag  (xhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <OPTION>                                                               */
@@ -343,9 +343,9 @@ s_xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent)
     else
     if (strcasecmp(name, "option") == 0)
     {
-      xhtml_1_0_start_option_tag(xhtml, child);
+      s_xhtml_1_0_start_option_tag(xhtml, child);
       s_xhtml_1_0_node_exchange   (xhtml, child, indent+1);
-      xhtml_1_0_end_option_tag  (xhtml, child);
+      s_xhtml_1_0_end_option_tag  (xhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <DIV>                                                                  */
@@ -1443,7 +1443,7 @@ s_xhtml_1_0_end_input_tag(Xhtml* xhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-xhtml_1_0_start_center_tag(Xhtml* xhtml, Node* node) 
+s_xhtml_1_0_start_center_tag(Xhtml* xhtml, Node* node) 
 {
   Doc*          doc = xhtml->doc;
   request_rec*  r   = doc->r;
@@ -1462,7 +1462,7 @@ xhtml_1_0_start_center_tag(Xhtml* xhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-xhtml_1_0_end_center_tag(Xhtml* xhtml, Node* child) 
+s_xhtml_1_0_end_center_tag(Xhtml* xhtml, Node* child) 
 {
   Doc*          doc = xhtml->doc;
   request_rec*  r   = doc->r;
@@ -1481,7 +1481,7 @@ xhtml_1_0_end_center_tag(Xhtml* xhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-xhtml_1_0_start_hr_tag(Xhtml* xhtml, Node* node) 
+s_xhtml_1_0_start_hr_tag(Xhtml* xhtml, Node* node) 
 {
   Doc*          doc = xhtml->doc;
   request_rec*  r   = doc->r;
@@ -1500,7 +1500,7 @@ xhtml_1_0_start_hr_tag(Xhtml* xhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-xhtml_1_0_end_hr_tag(Xhtml* xhtml, Node* child) 
+s_xhtml_1_0_end_hr_tag(Xhtml* xhtml, Node* child) 
 {
   return xhtml->out;
 }
@@ -1514,7 +1514,7 @@ xhtml_1_0_end_hr_tag(Xhtml* xhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-xhtml_1_0_start_img_tag(Xhtml* xhtml, Node* node) 
+s_xhtml_1_0_start_img_tag(Xhtml* xhtml, Node* node) 
 {
   Doc*          doc = xhtml->doc;
   request_rec*  r   = doc->r;
@@ -1599,7 +1599,7 @@ xhtml_1_0_start_img_tag(Xhtml* xhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-xhtml_1_0_end_img_tag(Xhtml* xhtml, Node* child) 
+s_xhtml_1_0_end_img_tag(Xhtml* xhtml, Node* child) 
 {
   return xhtml->out;
 }
@@ -1613,7 +1613,7 @@ xhtml_1_0_end_img_tag(Xhtml* xhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-xhtml_1_0_start_select_tag(Xhtml* xhtml, Node* child)
+s_xhtml_1_0_start_select_tag(Xhtml* xhtml, Node* child)
 {
   Doc* doc = xhtml->doc;
   request_rec* r = doc->r;
@@ -1670,7 +1670,7 @@ xhtml_1_0_start_select_tag(Xhtml* xhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-xhtml_1_0_end_select_tag(Xhtml* xhtml, Node* child)
+s_xhtml_1_0_end_select_tag(Xhtml* xhtml, Node* child)
 {
   Doc* doc = xhtml->doc;
   request_rec* r = doc->r;
@@ -1688,7 +1688,7 @@ xhtml_1_0_end_select_tag(Xhtml* xhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-xhtml_1_0_start_option_tag(Xhtml* xhtml, Node* child)
+s_xhtml_1_0_start_option_tag(Xhtml* xhtml, Node* child)
 {
   Doc* doc = xhtml->doc;
   request_rec* r = doc->r;
@@ -1745,7 +1745,7 @@ xhtml_1_0_start_option_tag(Xhtml* xhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-xhtml_1_0_end_option_tag(Xhtml* xhtml, Node* child)
+s_xhtml_1_0_end_option_tag(Xhtml* xhtml, Node* child)
 {
   Doc* doc = xhtml->doc;
   request_rec* r = doc->r;
