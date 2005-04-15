@@ -26,7 +26,7 @@
 #define RADIO_BUTTON_PREFIX  "_chxj_r_"
 #define SUBMIT_BUTTON_PREFIX "_chxj_s_"
 
-static void chxj_init_hdml(Hdml* hdml, Doc* doc, request_rec* r, device_table* spec);
+static void  s_init_hdml(Hdml* hdml, Doc* doc, request_rec* r, device_table* spec);
 static char* hdml_1_0_node_exchange   (Hdml* doc, Node* node, int indent);
 static char* hdml_1_0_start_html_tag  (Hdml* doc, Node* child) ;
 static char* hdml_1_0_end_html_tag    (Hdml* doc, Node* child) ;
@@ -113,7 +113,7 @@ chxj_exchange_hdml(request_rec* r,
   /*--------------------------------------------------------------------------*/
   /* initialize hdml structure                                                */
   /*--------------------------------------------------------------------------*/
-  chxj_init_hdml(&hdml,&doc,r, spec);
+  s_init_hdml(&hdml,&doc,r, spec);
   ap_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
   /*--------------------------------------------------------------------------*/
   /* DEBUG                                                                    */
@@ -209,7 +209,7 @@ chxj_exchange_hdml(request_rec* r,
  * @param spec [i]   The pointer to the device_table
  */
 static void 
-chxj_init_hdml(Hdml* hdml, Doc* doc, request_rec* r, device_table* spec)
+s_init_hdml(Hdml* hdml, Doc* doc, request_rec* r, device_table* spec)
 {
   int     ii;
   int     jj;
