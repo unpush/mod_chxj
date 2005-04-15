@@ -59,7 +59,7 @@ static char* s_xhtml_1_0_start_div_tag    (Xhtml* xhtml, Node* node);
 static char* s_xhtml_1_0_end_div_tag      (Xhtml* xhtml, Node* node);
 static void  s_init_xhtml(Xhtml* xhtml, Doc* doc, request_rec* r, device_table* spec);
 static int   s_xhtml_search_emoji(Xhtml* xhtml, char* txt, char** rslt);
-static void xhtml_1_0_chxjif_tag(Xhtml* xhtml, Node* node);
+static void  s_xhtml_1_0_chxjif_tag(Xhtml* xhtml, Node* node);
  
 /**
  * converts from CHTML to XHTML.
@@ -381,7 +381,7 @@ s_xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent)
         }
         else
         {
-          xhtml_1_0_chxjif_tag(xhtml, child);
+          s_xhtml_1_0_chxjif_tag(xhtml, child);
         }
       }
     }
@@ -1816,8 +1816,15 @@ s_xhtml_1_0_end_div_tag(Xhtml* xhtml, Node* child)
   return xhtml->out;
 }
 
+/**
+ * It is a handler who processes the CHXJ:IF tag.
+ *
+ * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The CHXJ:IF tag node is specified.
+ */
 static void
-xhtml_1_0_chxjif_tag(Xhtml* xhtml, Node* node)
+s_xhtml_1_0_chxjif_tag(Xhtml* xhtml, Node* node)
 {
   Doc*         doc   = xhtml->doc;
   Node*        child;
@@ -1828,7 +1835,7 @@ xhtml_1_0_chxjif_tag(Xhtml* xhtml, Node* node)
        child = qs_get_next_node(doc, child))
   {
     xhtml->out = apr_pstrcat(r->pool, xhtml->out, child->otext, NULL);
-    xhtml_1_0_chxjif_tag(xhtml, child);
+    s_xhtml_1_0_chxjif_tag(xhtml, child);
   }
 }
 /*
