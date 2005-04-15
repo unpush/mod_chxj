@@ -29,10 +29,10 @@ static char* s_xhtml_1_0_start_meta_tag   (Xhtml* xhtml, Node* node);
 static char* s_xhtml_1_0_end_meta_tag     (Xhtml* xhtml, Node* node);
 static char* s_xhtml_1_0_start_head_tag   (Xhtml* xhtml, Node* node);
 static char* s_xhtml_1_0_end_head_tag     (Xhtml* xhtml, Node* node);
-static char* xhtml_1_0_start_title_tag  (Xhtml* xhtml, Node* node);
-static char* xhtml_1_0_end_title_tag    (Xhtml* xhtml, Node* node);
-static char* xhtml_1_0_start_base_tag   (Xhtml* xhtml, Node* node);
-static char* xhtml_1_0_end_base_tag     (Xhtml* xhtml, Node* node);
+static char* s_xhtml_1_0_start_title_tag  (Xhtml* xhtml, Node* node);
+static char* s_xhtml_1_0_end_title_tag    (Xhtml* xhtml, Node* node);
+static char* s_xhtml_1_0_start_base_tag   (Xhtml* xhtml, Node* node);
+static char* s_xhtml_1_0_end_base_tag     (Xhtml* xhtml, Node* node);
 static char* xhtml_1_0_start_body_tag   (Xhtml* xhtml, Node* node);
 static char* xhtml_1_0_end_body_tag     (Xhtml* xhtml, Node* node);
 static char* xhtml_1_0_start_a_tag      (Xhtml* xhtml, Node* node);
@@ -226,9 +226,9 @@ s_xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent)
     else
     if (strcasecmp(name, "title") == 0) 
     {
-      xhtml_1_0_start_title_tag (xhtml, child);
+      s_xhtml_1_0_start_title_tag (xhtml, child);
       s_xhtml_1_0_node_exchange   (xhtml, child,indent+1);
-      xhtml_1_0_end_title_tag   (xhtml, child);
+      s_xhtml_1_0_end_title_tag   (xhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <BASE>                                                                 */
@@ -236,8 +236,8 @@ s_xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent)
     else
     if (strcasecmp(name, "base") == 0) 
     {
-      xhtml_1_0_start_base_tag(xhtml, child);
-      xhtml_1_0_end_base_tag  (xhtml, child);
+      s_xhtml_1_0_start_base_tag(xhtml, child);
+      s_xhtml_1_0_end_base_tag  (xhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <BODY>                                                                 */
@@ -817,7 +817,7 @@ s_xhtml_1_0_end_head_tag(Xhtml* xhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-xhtml_1_0_start_title_tag(Xhtml* xhtml, Node* node) 
+s_xhtml_1_0_start_title_tag(Xhtml* xhtml, Node* node) 
 {
   Doc* doc = xhtml->doc;
   request_rec* r = doc->r;
@@ -835,7 +835,7 @@ xhtml_1_0_start_title_tag(Xhtml* xhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-xhtml_1_0_end_title_tag(Xhtml* xhtml, Node* child) 
+s_xhtml_1_0_end_title_tag(Xhtml* xhtml, Node* child) 
 {
   Doc*          doc = xhtml->doc;
   request_rec*  r   = doc->r;
@@ -854,7 +854,7 @@ xhtml_1_0_end_title_tag(Xhtml* xhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-xhtml_1_0_start_base_tag(Xhtml* xhtml, Node* node) 
+s_xhtml_1_0_start_base_tag(Xhtml* xhtml, Node* node) 
 {
   Attr*         attr;
   Doc*          doc   = xhtml->doc;
@@ -894,7 +894,7 @@ xhtml_1_0_start_base_tag(Xhtml* xhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-xhtml_1_0_end_base_tag(Xhtml* xhtml, Node* child) 
+s_xhtml_1_0_end_base_tag(Xhtml* xhtml, Node* child) 
 {
   return xhtml->out;
 }
