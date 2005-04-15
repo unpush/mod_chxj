@@ -37,8 +37,8 @@ static char* s_xhtml_1_0_start_body_tag   (Xhtml* xhtml, Node* node);
 static char* s_xhtml_1_0_end_body_tag     (Xhtml* xhtml, Node* node);
 static char* s_xhtml_1_0_start_a_tag      (Xhtml* xhtml, Node* node);
 static char* s_xhtml_1_0_end_a_tag        (Xhtml* xhtml, Node* node);
-static char* xhtml_1_0_start_br_tag     (Xhtml* xhtml, Node* node);
-static char* xhtml_1_0_end_br_tag       (Xhtml* xhtml, Node* node);
+static char* s_xhtml_1_0_start_br_tag     (Xhtml* xhtml, Node* node);
+static char* s_xhtml_1_0_end_br_tag       (Xhtml* xhtml, Node* node);
 static char* xhtml_1_0_start_font_tag   (Xhtml* xhtml, Node* node);
 static char* xhtml_1_0_end_font_tag     (Xhtml* xhtml, Node* node);
 static char* xhtml_1_0_start_form_tag   (Xhtml* xhtml, Node* node);
@@ -265,9 +265,9 @@ s_xhtml_1_0_node_exchange(Xhtml* xhtml, Node* node, int indent)
     else
     if (strcasecmp(name, "br") == 0) 
     {
-      xhtml_1_0_start_br_tag  (xhtml, child);
+      s_xhtml_1_0_start_br_tag  (xhtml, child);
       s_xhtml_1_0_node_exchange (xhtml, child,indent+1);
-      xhtml_1_0_end_br_tag    (xhtml, child);
+      s_xhtml_1_0_end_br_tag    (xhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <FONT>                                                                 */
@@ -1126,7 +1126,7 @@ s_xhtml_1_0_end_a_tag(Xhtml* xhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-xhtml_1_0_start_br_tag(Xhtml* xhtml, Node* node) 
+s_xhtml_1_0_start_br_tag(Xhtml* xhtml, Node* node) 
 {
   Doc* doc = xhtml->doc;
   request_rec* r = doc->r;
@@ -1143,7 +1143,7 @@ xhtml_1_0_start_br_tag(Xhtml* xhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-xhtml_1_0_end_br_tag(Xhtml* xhtml, Node* child) 
+s_xhtml_1_0_end_br_tag(Xhtml* xhtml, Node* child) 
 {
   return xhtml->out;
 }
