@@ -22,14 +22,14 @@
 /*----------------------------------------------------------------------------*/
 /* Structure for HDML                                                         */
 /*----------------------------------------------------------------------------*/
-typedef struct _Jhtml_t {
+typedef struct _jhtml_t {
     Doc* doc;
     char* out;
     int   out_len;
 
     device_table* spec;
     mod_chxj_config* conf;
-} Jhtml;
+} jhtml_t;
 
 /*----------------------------------------------------------------------------*/
 /* Prototype                                                                  */

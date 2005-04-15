@@ -20,45 +20,45 @@
 #include "chxj_img_conv.h"
 #include "chxj_qr_code.h"
 
-static char* jhtml_node_exchange    (Jhtml* jhtml, Node* node, int indent);
-static char* jhtml_start_html_tag   (Jhtml* jhtml, Node* child);
-static char* jhtml_end_html_tag     (Jhtml* jhtml, Node* child);
-static char* jhtml_start_meta_tag   (Jhtml* jhtml, Node* node);
-static char* jhtml_end_meta_tag     (Jhtml* jhtml, Node* node);
-static char* jhtml_start_head_tag   (Jhtml* jhtml, Node* node);
-static char* jhtml_end_head_tag     (Jhtml* jhtml, Node* node);
-static char* jhtml_start_title_tag  (Jhtml* jhtml, Node* node);
-static char* jhtml_end_title_tag    (Jhtml* jhtml, Node* node);
-static char* jhtml_start_base_tag   (Jhtml* jhtml, Node* node);
-static char* jhtml_end_base_tag     (Jhtml* jhtml, Node* node);
-static char* jhtml_start_body_tag   (Jhtml* jhtml, Node* node);
-static char* jhtml_end_body_tag     (Jhtml* jhtml, Node* node);
-static char* jhtml_start_a_tag      (Jhtml* jhtml, Node* node);
-static char* jhtml_end_a_tag        (Jhtml* jhtml, Node* node);
-static char* jhtml_start_br_tag     (Jhtml* jhtml, Node* node);
-static char* jhtml_end_br_tag       (Jhtml* jhtml, Node* node);
-static char* jhtml_start_font_tag   (Jhtml* jhtml, Node* node);
-static char* jhtml_end_font_tag     (Jhtml* jhtml, Node* node);
-static char* jhtml_start_form_tag   (Jhtml* jhtml, Node* node);
-static char* jhtml_end_form_tag     (Jhtml* jhtml, Node* node);
-static char* jhtml_start_input_tag  (Jhtml* jhtml, Node* node);
-static char* jhtml_end_input_tag    (Jhtml* jhtml, Node* node);
-static char* jhtml_start_center_tag (Jhtml* jhtml, Node* node);
-static char* jhtml_end_center_tag   (Jhtml* jhtml, Node* node);
-static char* jhtml_start_hr_tag     (Jhtml* jhtml, Node* node);
-static char* jhtml_end_hr_tag       (Jhtml* jhtml, Node* node);
-static char* jhtml_start_img_tag    (Jhtml* jhtml, Node* node);
-static char* jhtml_end_img_tag      (Jhtml* jhtml, Node* node);
-static char* jhtml_start_select_tag (Jhtml* jhtml, Node* node);
-static char* jhtml_end_select_tag   (Jhtml* jhtml, Node* node);
-static char* jhtml_start_option_tag (Jhtml* jhtml, Node* node);
-static char* jhtml_end_option_tag   (Jhtml* jhtml, Node* node);
-static char* jhtml_start_div_tag    (Jhtml* jhtml, Node* node);
-static char* jhtml_end_div_tag      (Jhtml* jhtml, Node* node);
-static void chxj_init_jhtml(Jhtml* jhtml, Doc* doc, request_rec* r, device_table* spec);
-static int jhtml_search_emoji(Jhtml* jhtml, char* txt, char** rslt);
+static char* s_jhtml_node_exchange    (Jhtml* jhtml, Node* node, int indent);
+static char* s_jhtml_start_html_tag   (Jhtml* jhtml, Node* child);
+static char* s_jhtml_end_html_tag     (Jhtml* jhtml, Node* child);
+static char* s_jhtml_start_meta_tag   (Jhtml* jhtml, Node* node);
+static char* s_jhtml_end_meta_tag     (Jhtml* jhtml, Node* node);
+static char* s_jhtml_start_head_tag   (Jhtml* jhtml, Node* node);
+static char* s_jhtml_end_head_tag     (Jhtml* jhtml, Node* node);
+static char* s_jhtml_start_title_tag  (Jhtml* jhtml, Node* node);
+static char* s_jhtml_end_title_tag    (Jhtml* jhtml, Node* node);
+static char* s_jhtml_start_base_tag   (Jhtml* jhtml, Node* node);
+static char* s_jhtml_end_base_tag     (Jhtml* jhtml, Node* node);
+static char* s_jhtml_start_body_tag   (Jhtml* jhtml, Node* node);
+static char* s_jhtml_end_body_tag     (Jhtml* jhtml, Node* node);
+static char* s_jhtml_start_a_tag      (Jhtml* jhtml, Node* node);
+static char* s_jhtml_end_a_tag        (Jhtml* jhtml, Node* node);
+static char* s_jhtml_start_br_tag     (Jhtml* jhtml, Node* node);
+static char* s_jhtml_end_br_tag       (Jhtml* jhtml, Node* node);
+static char* s_jhtml_start_font_tag   (Jhtml* jhtml, Node* node);
+static char* s_jhtml_end_font_tag     (Jhtml* jhtml, Node* node);
+static char* s_jhtml_start_form_tag   (Jhtml* jhtml, Node* node);
+static char* s_jhtml_end_form_tag     (Jhtml* jhtml, Node* node);
+static char* s_jhtml_start_input_tag  (Jhtml* jhtml, Node* node);
+static char* s_jhtml_end_input_tag    (Jhtml* jhtml, Node* node);
+static char* s_jhtml_start_center_tag (Jhtml* jhtml, Node* node);
+static char* s_jhtml_end_center_tag   (Jhtml* jhtml, Node* node);
+static char* s_jhtml_start_hr_tag     (Jhtml* jhtml, Node* node);
+static char* s_jhtml_end_hr_tag       (Jhtml* jhtml, Node* node);
+static char* s_jhtml_start_img_tag    (Jhtml* jhtml, Node* node);
+static char* s_jhtml_end_img_tag      (Jhtml* jhtml, Node* node);
+static char* s_jhtml_start_select_tag (Jhtml* jhtml, Node* node);
+static char* s_jhtml_end_select_tag   (Jhtml* jhtml, Node* node);
+static char* s_jhtml_start_option_tag (Jhtml* jhtml, Node* node);
+static char* s_jhtml_end_option_tag   (Jhtml* jhtml, Node* node);
+static char* s_jhtml_start_div_tag    (Jhtml* jhtml, Node* node);
+static char* s_jhtml_end_div_tag      (Jhtml* jhtml, Node* node);
+static void  s_init_jhtml(Jhtml* jhtml, Doc* doc, request_rec* r, device_table* spec);
+static int   s_jhtml_search_emoji(Jhtml* jhtml, char* txt, char** rslt);
 static char* chxj_istyle_to_mode(request_rec* r, const char* s);
-static void jhtml_1_0_chxjif_tag(Jhtml* jhtml, Node* node); 
+static void  s_jhtml_chxjif_tag(Jhtml* jhtml, Node* node); 
 
 /**
  * converts from CHTML5.0 to JHTML.
@@ -97,7 +97,7 @@ chxj_exchange_jhtml(
   /*--------------------------------------------------------------------------*/
   /* The CHTML structure is initialized.                                      */
   /*--------------------------------------------------------------------------*/
-  chxj_init_jhtml(&jhtml, &doc, r, spec);
+  s_init_jhtml(&jhtml, &doc, r, spec);
   ap_set_content_type(r, "text/html; charset=Windows-31J");
 
   /*--------------------------------------------------------------------------*/
@@ -117,7 +117,7 @@ chxj_exchange_jhtml(
   /*--------------------------------------------------------------------------*/
   /* It converts it from CHTML to JHTML.                                      */
   /*--------------------------------------------------------------------------*/
-  dst = jhtml_node_exchange(&jhtml, qs_get_root(&doc), 0);
+  dst = s_jhtml_node_exchange(&jhtml, qs_get_root(&doc), 0);
   qs_all_free(&doc,QX_LOGMARK);
 
   if (dst == NULL) 
@@ -147,7 +147,7 @@ chxj_exchange_jhtml(
  * @param spec  [i]   The pointer to the device_table
  */
 static void
-chxj_init_jhtml(Jhtml* jhtml, Doc* doc, request_rec* r, device_table* spec)
+s_init_jhtml(Jhtml* jhtml, Doc* doc, request_rec* r, device_table* spec)
 {
   memset(doc,   0, sizeof(Doc));
   memset(jhtml, 0, sizeof(Jhtml));
@@ -170,7 +170,7 @@ chxj_init_jhtml(Jhtml* jhtml, Doc* doc, request_rec* r, device_table* spec)
  * @return The character string after it converts it is returned. 
  */
 static char*
-jhtml_node_exchange(Jhtml* jhtml, Node* node, int indent) 
+s_jhtml_node_exchange(Jhtml* jhtml, Node* node, int indent) 
 {
   Node*         child;
   Doc*          doc   = jhtml->doc;
@@ -190,9 +190,9 @@ jhtml_node_exchange(Jhtml* jhtml, Node* node, int indent)
     /*------------------------------------------------------------------------*/
     if (strcasecmp(name, "html") == 0) 
     {
-      jhtml_start_html_tag(jhtml, child);
-      jhtml_node_exchange (jhtml, child,indent+1);
-      jhtml_end_html_tag  (jhtml, child);
+      s_jhtml_start_html_tag(jhtml, child);
+      s_jhtml_node_exchange (jhtml, child,indent+1);
+      s_jhtml_end_html_tag  (jhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <META>                                                                 */
@@ -200,8 +200,8 @@ jhtml_node_exchange(Jhtml* jhtml, Node* node, int indent)
     else
     if (strcasecmp(name, "meta") == 0) 
     {
-      jhtml_start_meta_tag(jhtml, child);
-      jhtml_end_meta_tag  (jhtml, child);
+      s_jhtml_start_meta_tag(jhtml, child);
+      s_jhtml_end_meta_tag  (jhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <HEAD>                                                                 */
@@ -209,9 +209,9 @@ jhtml_node_exchange(Jhtml* jhtml, Node* node, int indent)
     else
     if (strcasecmp(name, "head") == 0) 
     {
-      jhtml_start_head_tag(jhtml, child);
-      jhtml_node_exchange (jhtml, child,indent+1);
-      jhtml_end_head_tag  (jhtml, child);
+      s_jhtml_start_head_tag(jhtml, child);
+      s_jhtml_node_exchange (jhtml, child,indent+1);
+      s_jhtml_end_head_tag  (jhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <TITLE>                                                                */
@@ -219,9 +219,9 @@ jhtml_node_exchange(Jhtml* jhtml, Node* node, int indent)
     else
     if (strcasecmp(name, "title") == 0) 
     {
-      jhtml_start_title_tag (jhtml, child);
-      jhtml_node_exchange   (jhtml, child,indent+1);
-      jhtml_end_title_tag   (jhtml, child);
+      s_jhtml_start_title_tag (jhtml, child);
+      s_jhtml_node_exchange   (jhtml, child,indent+1);
+      s_jhtml_end_title_tag   (jhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <BASE>                                                                 */
@@ -229,8 +229,8 @@ jhtml_node_exchange(Jhtml* jhtml, Node* node, int indent)
     else
     if (strcasecmp(name, "base") == 0) 
     {
-      jhtml_start_base_tag(jhtml, child);
-      jhtml_end_base_tag  (jhtml, child);
+      s_jhtml_start_base_tag(jhtml, child);
+      s_jhtml_end_base_tag  (jhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <BODY>                                                                 */
@@ -238,9 +238,9 @@ jhtml_node_exchange(Jhtml* jhtml, Node* node, int indent)
     else
     if (strcasecmp(name, "body") == 0) 
     {
-      jhtml_start_body_tag(jhtml, child);
-      jhtml_node_exchange (jhtml, child,indent+1);
-      jhtml_end_body_tag  (jhtml, child);
+      s_jhtml_start_body_tag(jhtml, child);
+      s_jhtml_node_exchange (jhtml, child,indent+1);
+      s_jhtml_end_body_tag  (jhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <A>                                                                    */
@@ -248,9 +248,9 @@ jhtml_node_exchange(Jhtml* jhtml, Node* node, int indent)
     else
     if (strcasecmp(name, "a") == 0) 
     {
-      jhtml_start_a_tag   (jhtml, child);
-      jhtml_node_exchange (jhtml, child,indent+1);
-      jhtml_end_a_tag     (jhtml, child);
+      s_jhtml_start_a_tag   (jhtml, child);
+      s_jhtml_node_exchange (jhtml, child,indent+1);
+      s_jhtml_end_a_tag     (jhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <BR>                                                                   */
@@ -258,9 +258,9 @@ jhtml_node_exchange(Jhtml* jhtml, Node* node, int indent)
     else
     if (strcasecmp(name, "br") == 0) 
     {
-      jhtml_start_br_tag  (jhtml, child);
-      jhtml_node_exchange (jhtml, child,indent+1);
-      jhtml_end_br_tag    (jhtml, child);
+      s_jhtml_start_br_tag  (jhtml, child);
+      s_jhtml_node_exchange (jhtml, child,indent+1);
+      s_jhtml_end_br_tag    (jhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <FONT>                                                                 */
@@ -268,9 +268,9 @@ jhtml_node_exchange(Jhtml* jhtml, Node* node, int indent)
     else
     if (strcasecmp(name, "font") == 0) 
     {
-      jhtml_start_font_tag(jhtml, child);
-      jhtml_node_exchange (jhtml, child,indent+1);
-      jhtml_end_font_tag  (jhtml, child);
+      s_jhtml_start_font_tag(jhtml, child);
+      s_jhtml_node_exchange (jhtml, child,indent+1);
+      s_jhtml_end_font_tag  (jhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <FORM>                                                                 */
@@ -278,9 +278,9 @@ jhtml_node_exchange(Jhtml* jhtml, Node* node, int indent)
     else
     if (strcasecmp(name, "form") == 0) 
     {
-      jhtml_start_form_tag(jhtml, child);
-      jhtml_node_exchange (jhtml, child,indent+1);
-      jhtml_end_form_tag  (jhtml, child);
+      s_jhtml_start_form_tag(jhtml, child);
+      s_jhtml_node_exchange (jhtml, child,indent+1);
+      s_jhtml_end_form_tag  (jhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <INPUT>                                                                */
@@ -288,9 +288,9 @@ jhtml_node_exchange(Jhtml* jhtml, Node* node, int indent)
     else
     if (strcasecmp(name, "input") == 0) 
     {
-      jhtml_start_input_tag (jhtml, child);
-      jhtml_node_exchange   (jhtml, child,indent+1);
-      jhtml_end_input_tag   (jhtml, child);
+      s_jhtml_start_input_tag (jhtml, child);
+      s_jhtml_node_exchange   (jhtml, child,indent+1);
+      s_jhtml_end_input_tag   (jhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <HR>                                                                   */
@@ -298,8 +298,8 @@ jhtml_node_exchange(Jhtml* jhtml, Node* node, int indent)
     else
     if (strcasecmp(name, "hr") == 0) 
     {
-      jhtml_start_hr_tag  (jhtml, child);
-      jhtml_end_hr_tag    (jhtml, child);
+      s_jhtml_start_hr_tag  (jhtml, child);
+      s_jhtml_end_hr_tag    (jhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <CENTER>                                                               */
@@ -307,9 +307,9 @@ jhtml_node_exchange(Jhtml* jhtml, Node* node, int indent)
     else
     if (strcasecmp(name, "center") == 0) 
     {
-      jhtml_start_center_tag(jhtml, child);
-      jhtml_node_exchange   (jhtml, child,indent+1);
-      jhtml_end_center_tag  (jhtml, child);
+      s_jhtml_start_center_tag(jhtml, child);
+      s_jhtml_node_exchange   (jhtml, child,indent+1);
+      s_jhtml_end_center_tag  (jhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <IMG>                                                                  */
@@ -317,8 +317,8 @@ jhtml_node_exchange(Jhtml* jhtml, Node* node, int indent)
     else
     if (strcasecmp(name, "img") == 0) 
     {
-      jhtml_start_img_tag (jhtml, child);
-      jhtml_end_img_tag   (jhtml, child);
+      s_jhtml_start_img_tag (jhtml, child);
+      s_jhtml_end_img_tag   (jhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <SELECT>                                                               */
@@ -326,9 +326,9 @@ jhtml_node_exchange(Jhtml* jhtml, Node* node, int indent)
     else
     if (strcasecmp(name, "select") == 0)
     {
-      jhtml_start_select_tag(jhtml, child);
-      jhtml_node_exchange   (jhtml, child, indent+1);
-      jhtml_end_select_tag  (jhtml, child);
+      s_jhtml_start_select_tag(jhtml, child);
+      s_jhtml_node_exchange   (jhtml, child, indent+1);
+      s_jhtml_end_select_tag  (jhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <OPTION>                                                               */
@@ -336,9 +336,9 @@ jhtml_node_exchange(Jhtml* jhtml, Node* node, int indent)
     else
     if (strcasecmp(name, "option") == 0)
     {
-      jhtml_start_option_tag(jhtml, child);
-      jhtml_node_exchange   (jhtml, child, indent+1);
-      jhtml_end_option_tag  (jhtml, child);
+      s_jhtml_start_option_tag(jhtml, child);
+      s_jhtml_node_exchange   (jhtml, child, indent+1);
+      s_jhtml_end_option_tag  (jhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <DIV>                                                                  */
@@ -346,9 +346,9 @@ jhtml_node_exchange(Jhtml* jhtml, Node* node, int indent)
     else
     if (strcasecmp(name, "div") == 0)
     {
-      jhtml_start_div_tag (jhtml, child);
-      jhtml_node_exchange (jhtml, child, indent+1);
-      jhtml_end_div_tag   (jhtml, child);
+      s_jhtml_start_div_tag (jhtml, child);
+      s_jhtml_node_exchange (jhtml, child, indent+1);
+      s_jhtml_end_div_tag   (jhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <BLINK>                                                                */
@@ -373,11 +373,11 @@ jhtml_node_exchange(Jhtml* jhtml, Node* node, int indent)
         parse_attr = qs_get_parse_attr(doc, child, r);
         if (parse_attr != NULL && strcasecmp(parse_attr, "true") == 0)
         {
-          jhtml_node_exchange (jhtml, child, indent+1);
+          s_jhtml_node_exchange (jhtml, child, indent+1);
         }
         else
         {
-          jhtml_1_0_chxjif_tag(jhtml, child);
+          s_jhtml_chxjif_tag(jhtml, child);
         }
       }
     }
@@ -411,7 +411,7 @@ jhtml_node_exchange(Jhtml* jhtml, Node* node, int indent)
       for (ii=0; ii<qs_get_node_size(doc,child); ii++)
       {
         char* out;
-        int rtn = jhtml_search_emoji(jhtml, &textval[ii], &out);
+        int rtn = s_jhtml_search_emoji(jhtml, &textval[ii], &out);
         if (rtn != 0)
         {
           tdst = qs_out_apr_pstrcat(r, tdst, out, &tdst_len);
@@ -450,7 +450,7 @@ jhtml_node_exchange(Jhtml* jhtml, Node* node, int indent)
  * @return When corresponding EMOJI exists, it returns it excluding 0. 
  */
 static int
-jhtml_search_emoji(Jhtml* jhtml, char* txt, char** rslt)
+s_jhtml_search_emoji(Jhtml* jhtml, char* txt, char** rslt)
 {
   emoji_t*      ee;
   request_rec*  r;
@@ -519,7 +519,7 @@ jhtml_search_emoji(Jhtml* jhtml, char* txt, char** rslt)
  * @return The conversion result is returned.
  */
 static char*
-jhtml_start_html_tag(Jhtml* jhtml, Node* node) 
+s_jhtml_start_html_tag(Jhtml* jhtml, Node* node) 
 {
   Doc*          doc   = jhtml->doc;
   request_rec*  r     = doc->r;
@@ -541,7 +541,7 @@ jhtml_start_html_tag(Jhtml* jhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-jhtml_end_html_tag(Jhtml* jhtml, Node* child) 
+s_jhtml_end_html_tag(Jhtml* jhtml, Node* child) 
 {
   Doc*          doc = jhtml->doc;
   request_rec*  r   = doc->r;
@@ -560,7 +560,7 @@ jhtml_end_html_tag(Jhtml* jhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-jhtml_start_meta_tag(Jhtml* jhtml, Node* node) 
+s_jhtml_start_meta_tag(Jhtml* jhtml, Node* node) 
 {
   Doc* doc = jhtml->doc;
   request_rec* r = doc->r;
@@ -617,7 +617,7 @@ jhtml_start_meta_tag(Jhtml* jhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-jhtml_end_meta_tag(Jhtml* jhtml, Node* child) 
+s_jhtml_end_meta_tag(Jhtml* jhtml, Node* child) 
 {
   return jhtml->out;
 }
@@ -631,7 +631,7 @@ jhtml_end_meta_tag(Jhtml* jhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-jhtml_start_head_tag(Jhtml* jhtml, Node* node) 
+s_jhtml_start_head_tag(Jhtml* jhtml, Node* node) 
 {
   Doc*          doc = jhtml->doc;
   request_rec*  r   = doc->r;
@@ -649,7 +649,7 @@ jhtml_start_head_tag(Jhtml* jhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-jhtml_end_head_tag(Jhtml* jhtml, Node* child) 
+s_jhtml_end_head_tag(Jhtml* jhtml, Node* child) 
 {
   Doc*          doc = jhtml->doc;
   request_rec*  r   = doc->r;
@@ -667,7 +667,7 @@ jhtml_end_head_tag(Jhtml* jhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-jhtml_start_title_tag(Jhtml* jhtml, Node* node) 
+s_jhtml_start_title_tag(Jhtml* jhtml, Node* node) 
 {
   Doc* doc = jhtml->doc;
   request_rec* r = doc->r;
@@ -685,7 +685,7 @@ jhtml_start_title_tag(Jhtml* jhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-jhtml_end_title_tag(Jhtml* jhtml, Node* child) 
+s_jhtml_end_title_tag(Jhtml* jhtml, Node* child) 
 {
   Doc*          doc = jhtml->doc;
   request_rec*  r   = doc->r;
@@ -704,7 +704,7 @@ jhtml_end_title_tag(Jhtml* jhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-jhtml_start_base_tag(Jhtml* jhtml, Node* node) 
+s_jhtml_start_base_tag(Jhtml* jhtml, Node* node) 
 {
   Attr*         attr;
   Doc*          doc   = jhtml->doc;
@@ -744,7 +744,7 @@ jhtml_start_base_tag(Jhtml* jhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-jhtml_end_base_tag(Jhtml* jhtml, Node* child) 
+s_jhtml_end_base_tag(Jhtml* jhtml, Node* child) 
 {
   return jhtml->out;
 }
@@ -758,7 +758,7 @@ jhtml_end_base_tag(Jhtml* jhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-jhtml_start_body_tag(Jhtml* jhtml, Node* node) 
+s_jhtml_start_body_tag(Jhtml* jhtml, Node* node) 
 {
   Doc* doc = jhtml->doc;
   request_rec* r = doc->r;
@@ -845,7 +845,7 @@ jhtml_start_body_tag(Jhtml* jhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-jhtml_end_body_tag(Jhtml* jhtml, Node* child) 
+s_jhtml_end_body_tag(Jhtml* jhtml, Node* child) 
 {
   Doc*          doc = jhtml->doc;
   request_rec*  r = doc->r;
@@ -864,7 +864,7 @@ jhtml_end_body_tag(Jhtml* jhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-jhtml_start_a_tag(Jhtml* jhtml, Node* node) 
+s_jhtml_start_a_tag(Jhtml* jhtml, Node* node) 
 {
   Doc*          doc   = jhtml->doc;
   request_rec*  r     = doc->r;
@@ -1023,7 +1023,7 @@ jhtml_start_a_tag(Jhtml* jhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-jhtml_end_a_tag(Jhtml* jhtml, Node* child) 
+s_jhtml_end_a_tag(Jhtml* jhtml, Node* child) 
 {
   Doc* doc = jhtml->doc;
   request_rec* r = doc->r;
@@ -1041,7 +1041,7 @@ jhtml_end_a_tag(Jhtml* jhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-jhtml_start_br_tag(Jhtml* jhtml, Node* node) 
+s_jhtml_start_br_tag(Jhtml* jhtml, Node* node) 
 {
   Doc* doc = jhtml->doc;
   request_rec* r = doc->r;
@@ -1058,7 +1058,7 @@ jhtml_start_br_tag(Jhtml* jhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-jhtml_end_br_tag(Jhtml* jhtml, Node* child) 
+s_jhtml_end_br_tag(Jhtml* jhtml, Node* child) 
 {
   return jhtml->out;
 }
@@ -1072,7 +1072,7 @@ jhtml_end_br_tag(Jhtml* jhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-jhtml_start_font_tag(Jhtml* jhtml, Node* node) 
+s_jhtml_start_font_tag(Jhtml* jhtml, Node* node) 
 {
   Doc*          doc   = jhtml->doc;
   request_rec*  r     = doc->r;
@@ -1122,7 +1122,7 @@ jhtml_start_font_tag(Jhtml* jhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-jhtml_end_font_tag(Jhtml* jhtml, Node* child) 
+s_jhtml_end_font_tag(Jhtml* jhtml, Node* child) 
 {
   request_rec* r = jhtml->doc->r;
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</font>", NULL);
@@ -1138,7 +1138,7 @@ jhtml_end_font_tag(Jhtml* jhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-jhtml_start_form_tag(Jhtml* jhtml, Node* node) 
+s_jhtml_start_form_tag(Jhtml* jhtml, Node* node) 
 {
   Doc* doc = jhtml->doc;
   request_rec* r = doc->r;
@@ -1206,7 +1206,7 @@ jhtml_start_form_tag(Jhtml* jhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-jhtml_end_form_tag(Jhtml* jhtml, Node* child) 
+s_jhtml_end_form_tag(Jhtml* jhtml, Node* child) 
 {
   Doc* doc = jhtml->doc;
   request_rec* r = doc->r;
@@ -1224,7 +1224,7 @@ jhtml_end_form_tag(Jhtml* jhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-jhtml_start_input_tag(Jhtml* jhtml, Node* node) 
+s_jhtml_start_input_tag(Jhtml* jhtml, Node* node) 
 {
   Doc*          doc         = jhtml->doc;
   request_rec*  r           = doc->r;
@@ -1359,7 +1359,7 @@ jhtml_start_input_tag(Jhtml* jhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-jhtml_end_input_tag(Jhtml* jhtml, Node* child) 
+s_jhtml_end_input_tag(Jhtml* jhtml, Node* child) 
 {
   return jhtml->out;
 }
@@ -1373,7 +1373,7 @@ jhtml_end_input_tag(Jhtml* jhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-jhtml_start_center_tag(Jhtml* jhtml, Node* node) 
+s_jhtml_start_center_tag(Jhtml* jhtml, Node* node) 
 {
   Doc*          doc = jhtml->doc;
   request_rec*  r   = doc->r;
@@ -1392,7 +1392,7 @@ jhtml_start_center_tag(Jhtml* jhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-jhtml_end_center_tag(Jhtml* jhtml, Node* child) 
+s_jhtml_end_center_tag(Jhtml* jhtml, Node* child) 
 {
   Doc*          doc = jhtml->doc;
   request_rec*  r   = doc->r;
@@ -1411,7 +1411,7 @@ jhtml_end_center_tag(Jhtml* jhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-jhtml_start_hr_tag(Jhtml* jhtml, Node* node) 
+s_jhtml_start_hr_tag(Jhtml* jhtml, Node* node) 
 {
   Doc* doc = jhtml->doc;
   request_rec* r = doc->r;
@@ -1487,7 +1487,7 @@ jhtml_start_hr_tag(Jhtml* jhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-jhtml_end_hr_tag(Jhtml* jhtml, Node* child) 
+s_jhtml_end_hr_tag(Jhtml* jhtml, Node* child) 
 {
   return jhtml->out;
 }
@@ -1501,7 +1501,7 @@ jhtml_end_hr_tag(Jhtml* jhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-jhtml_start_img_tag(Jhtml* jhtml, Node* node) 
+s_jhtml_start_img_tag(Jhtml* jhtml, Node* node) 
 {
   Doc*          doc = jhtml->doc;
   request_rec*  r   = doc->r;
@@ -1615,7 +1615,7 @@ jhtml_start_img_tag(Jhtml* jhtml, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-jhtml_end_img_tag(Jhtml* jhtml, Node* child) 
+s_jhtml_end_img_tag(Jhtml* jhtml, Node* child) 
 {
   return jhtml->out;
 }
@@ -1629,7 +1629,7 @@ jhtml_end_img_tag(Jhtml* jhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-jhtml_start_select_tag(Jhtml* jhtml, Node* child)
+s_jhtml_start_select_tag(Jhtml* jhtml, Node* child)
 {
   Doc* doc = jhtml->doc;
   request_rec* r = doc->r;
@@ -1692,7 +1692,7 @@ jhtml_start_select_tag(Jhtml* jhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-jhtml_end_select_tag(Jhtml* jhtml, Node* child)
+s_jhtml_end_select_tag(Jhtml* jhtml, Node* child)
 {
   Doc* doc = jhtml->doc;
   request_rec* r = doc->r;
@@ -1710,7 +1710,7 @@ jhtml_end_select_tag(Jhtml* jhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-jhtml_start_option_tag(Jhtml* jhtml, Node* child)
+s_jhtml_start_option_tag(Jhtml* jhtml, Node* child)
 {
   Doc* doc = jhtml->doc;
   request_rec* r = doc->r;
@@ -1771,7 +1771,7 @@ jhtml_start_option_tag(Jhtml* jhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-jhtml_end_option_tag(Jhtml* jhtml, Node* child)
+s_jhtml_end_option_tag(Jhtml* jhtml, Node* child)
 {
   /* Don't close */
   return jhtml->out;
@@ -1786,7 +1786,7 @@ jhtml_end_option_tag(Jhtml* jhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-jhtml_start_div_tag(Jhtml* jhtml, Node* child)
+s_jhtml_start_div_tag(Jhtml* jhtml, Node* child)
 {
   Doc* doc = jhtml->doc;
   request_rec* r = doc->r;
@@ -1830,7 +1830,7 @@ jhtml_start_div_tag(Jhtml* jhtml, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-jhtml_end_div_tag(Jhtml* jhtml, Node* child)
+s_jhtml_end_div_tag(Jhtml* jhtml, Node* child)
 {
   Doc* doc = jhtml->doc;
   request_rec* r = doc->r;
@@ -1870,7 +1870,7 @@ chxj_istyle_to_mode(request_rec* r, const char* s)
 }
 
 static void
-jhtml_1_0_chxjif_tag(Jhtml* jhtml, Node* node)
+s_jhtml_chxjif_tag(Jhtml* jhtml, Node* node)
 {
   Doc*         doc   = jhtml->doc;
   Node*        child;
@@ -1881,7 +1881,7 @@ jhtml_1_0_chxjif_tag(Jhtml* jhtml, Node* node)
        child = qs_get_next_node(doc, child))
   {
     jhtml->out = apr_pstrcat(r->pool, jhtml->out, child->otext, NULL);
-    jhtml_1_0_chxjif_tag(jhtml, child);
+    s_jhtml_chxjif_tag(jhtml, child);
   }
 }
 /*
