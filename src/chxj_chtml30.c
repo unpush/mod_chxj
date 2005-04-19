@@ -56,7 +56,7 @@ static char* s_chtml30_start_option_tag (Chtml30* chtml, Node* node);
 static char* s_chtml30_end_option_tag   (Chtml30* chtml, Node* node);
 static char* s_chtml30_start_div_tag    (Chtml30* chtml, Node* node);
 static char* s_chtml30_end_div_tag      (Chtml30* chtml, Node* node);
-static void chxj_init_chtml30(Chtml30* chtml, Doc* doc, request_rec* r, device_table* spec);
+static void s_init_chtml30(Chtml30* chtml, Doc* doc, request_rec* r, device_table* spec);
 static int chtml30_search_emoji(Chtml30* chtml, char* txt, char** rslt);
 static void chtml30_chxjif_tag(Chtml30* chtml, Node* node); 
 
@@ -98,7 +98,7 @@ chxj_exchange_chtml30(
   /*--------------------------------------------------------------------------*/
   /* The CHTML structure is initialized.                                      */
   /*--------------------------------------------------------------------------*/
-  chxj_init_chtml30(&chtml30, &doc, r, spec);
+  s_init_chtml30(&chtml30, &doc, r, spec);
   ap_set_content_type(r, "text/html; charset=Windows-31J");
 
   /*--------------------------------------------------------------------------*/
@@ -150,7 +150,7 @@ chxj_exchange_chtml30(
  * @param spec  [i]   The pointer to the device_table
  */
 static void
-chxj_init_chtml30(Chtml30* chtml30, Doc* doc, request_rec* r, device_table* spec)
+s_init_chtml30(Chtml30* chtml30, Doc* doc, request_rec* r, device_table* spec)
 {
   memset(doc,   0, sizeof(Doc));
   memset(chtml30, 0, sizeof(Chtml30));
