@@ -22,8 +22,8 @@
 #include "chxj_qr_code.h"
 
 static char* s_chtml20_node_exchange    (Chtml20* chtml, Node* node, int indent);
-static char* chtml20_start_html_tag   (Chtml20* chtml, Node* child);
-static char* chtml20_end_html_tag     (Chtml20* chtml, Node* child);
+static char* s_chtml20_start_html_tag   (Chtml20* chtml, Node* child);
+static char* s_chtml20_end_html_tag     (Chtml20* chtml, Node* child);
 static char* chtml20_start_meta_tag   (Chtml20* chtml, Node* node);
 static char* chtml20_end_meta_tag     (Chtml20* chtml, Node* node);
 static char* chtml20_start_head_tag   (Chtml20* chtml, Node* node);
@@ -191,9 +191,9 @@ s_chtml20_node_exchange(Chtml20* chtml20, Node* node, int indent)
     /*------------------------------------------------------------------------*/
     if (strcasecmp(name, "html") == 0) 
     {
-      chtml20_start_html_tag(chtml20, child);
+      s_chtml20_start_html_tag(chtml20, child);
       s_chtml20_node_exchange (chtml20, child,indent+1);
-      chtml20_end_html_tag  (chtml20, child);
+      s_chtml20_end_html_tag  (chtml20, child);
     }
     /*------------------------------------------------------------------------*/
     /* <META>                                                                 */
@@ -506,7 +506,7 @@ chtml20_search_emoji(Chtml20* chtml20, char* txt, char** rslt)
  * @return The conversion result is returned.
  */
 static char*
-chtml20_start_html_tag(Chtml20* chtml20, Node* node) 
+s_chtml20_start_html_tag(Chtml20* chtml20, Node* node) 
 {
   Doc*          doc   = chtml20->doc;
   request_rec*  r     = doc->r;
@@ -528,7 +528,7 @@ chtml20_start_html_tag(Chtml20* chtml20, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-chtml20_end_html_tag(Chtml20* chtml20, Node* child) 
+s_chtml20_end_html_tag(Chtml20* chtml20, Node* child) 
 {
   Doc*          doc = chtml20->doc;
   request_rec*  r   = doc->r;
