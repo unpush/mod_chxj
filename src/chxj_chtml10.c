@@ -41,10 +41,10 @@ static char* s_chtml10_start_font_tag   (Chtml10* chtml, Node* node);
 static char* s_chtml10_end_font_tag     (Chtml10* chtml, Node* node);
 static char* s_chtml10_start_form_tag   (Chtml10* chtml, Node* node);
 static char* s_chtml10_end_form_tag     (Chtml10* chtml, Node* node);
-static char* chtml10_start_input_tag  (Chtml10* chtml, Node* node);
-static char* chtml10_end_input_tag    (Chtml10* chtml, Node* node);
-static char* chtml10_start_center_tag (Chtml10* chtml, Node* node);
-static char* chtml10_end_center_tag   (Chtml10* chtml, Node* node);
+static char* s_chtml10_start_input_tag  (Chtml10* chtml, Node* node);
+static char* s_chtml10_end_input_tag    (Chtml10* chtml, Node* node);
+static char* s_chtml10_start_center_tag (Chtml10* chtml, Node* node);
+static char* s_chtml10_end_center_tag   (Chtml10* chtml, Node* node);
 static char* chtml10_start_hr_tag     (Chtml10* chtml, Node* node);
 static char* chtml10_end_hr_tag       (Chtml10* chtml, Node* node);
 static char* chtml10_start_img_tag    (Chtml10* chtml, Node* node);
@@ -289,9 +289,9 @@ s_chtml10_node_exchange(Chtml10* chtml10, Node* node, int indent)
     else
     if (strcasecmp(name, "input") == 0) 
     {
-      chtml10_start_input_tag (chtml10, child);
+      s_chtml10_start_input_tag (chtml10, child);
       s_chtml10_node_exchange   (chtml10, child,indent+1);
-      chtml10_end_input_tag   (chtml10, child);
+      s_chtml10_end_input_tag   (chtml10, child);
     }
     /*------------------------------------------------------------------------*/
     /* <HR>                                                                   */
@@ -308,9 +308,9 @@ s_chtml10_node_exchange(Chtml10* chtml10, Node* node, int indent)
     else
     if (strcasecmp(name, "center") == 0) 
     {
-      chtml10_start_center_tag(chtml10, child);
+      s_chtml10_start_center_tag(chtml10, child);
       s_chtml10_node_exchange   (chtml10, child,indent+1);
-      chtml10_end_center_tag  (chtml10, child);
+      s_chtml10_end_center_tag  (chtml10, child);
     }
     /*------------------------------------------------------------------------*/
     /* <IMG>                                                                  */
@@ -1097,7 +1097,7 @@ s_chtml10_end_form_tag(Chtml10* chtml10, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-chtml10_start_input_tag(Chtml10* chtml10, Node* node) 
+s_chtml10_start_input_tag(Chtml10* chtml10, Node* node) 
 {
   Doc*          doc         = chtml10->doc;
   request_rec*  r           = doc->r;
@@ -1208,7 +1208,7 @@ chtml10_start_input_tag(Chtml10* chtml10, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-chtml10_end_input_tag(Chtml10* chtml10, Node* child) 
+s_chtml10_end_input_tag(Chtml10* chtml10, Node* child) 
 {
   return chtml10->out;
 }
@@ -1222,7 +1222,7 @@ chtml10_end_input_tag(Chtml10* chtml10, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-chtml10_start_center_tag(Chtml10* chtml10, Node* node) 
+s_chtml10_start_center_tag(Chtml10* chtml10, Node* node) 
 {
   Doc*          doc = chtml10->doc;
   request_rec*  r   = doc->r;
@@ -1241,7 +1241,7 @@ chtml10_start_center_tag(Chtml10* chtml10, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-chtml10_end_center_tag(Chtml10* chtml10, Node* child) 
+s_chtml10_end_center_tag(Chtml10* chtml10, Node* child) 
 {
   Doc*          doc = chtml10->doc;
   request_rec*  r   = doc->r;
