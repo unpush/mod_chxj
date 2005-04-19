@@ -43,7 +43,7 @@ static char* s_chtml30_end_font_tag     (Chtml30* chtml, Node* node);
 static char* s_chtml30_start_form_tag   (Chtml30* chtml, Node* node);
 static char* s_chtml30_end_form_tag     (Chtml30* chtml, Node* node);
 static char* s_chtml30_start_input_tag  (Chtml30* chtml, Node* node);
-static char* chtml30_end_input_tag    (Chtml30* chtml, Node* node);
+static char* s_chtml30_end_input_tag    (Chtml30* chtml, Node* node);
 static char* chtml30_start_center_tag (Chtml30* chtml, Node* node);
 static char* chtml30_end_center_tag   (Chtml30* chtml, Node* node);
 static char* chtml30_start_hr_tag     (Chtml30* chtml, Node* node);
@@ -293,7 +293,7 @@ s_chtml30_node_exchange(Chtml30* chtml30, Node* node, int indent)
     {
       s_chtml30_start_input_tag (chtml30, child);
       s_chtml30_node_exchange   (chtml30, child,indent+1);
-      chtml30_end_input_tag   (chtml30, child);
+      s_chtml30_end_input_tag   (chtml30, child);
     }
     /*------------------------------------------------------------------------*/
     /* <HR>                                                                   */
@@ -1341,7 +1341,7 @@ s_chtml30_start_input_tag(Chtml30* chtml30, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-chtml30_end_input_tag(Chtml30* chtml30, Node* child) 
+s_chtml30_end_input_tag(Chtml30* chtml30, Node* child) 
 {
   return chtml30->out;
 }
