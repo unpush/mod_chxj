@@ -21,7 +21,7 @@
 #include "chxj_img_conv.h"
 #include "chxj_qr_code.h"
 
-static char* chtml30_node_exchange    (Chtml30* chtml, Node* node, int indent);
+static char* s_chtml30_node_exchange    (Chtml30* chtml, Node* node, int indent);
 static char* chtml30_start_html_tag   (Chtml30* chtml, Node* child);
 static char* chtml30_end_html_tag     (Chtml30* chtml, Node* child);
 static char* chtml30_start_meta_tag   (Chtml30* chtml, Node* node);
@@ -120,7 +120,7 @@ chxj_exchange_chtml30(
   /*--------------------------------------------------------------------------*/
   /* It converts it from CHTML to CHTML.                                      */
   /*--------------------------------------------------------------------------*/
-  dst = chtml30_node_exchange(&chtml30, qs_get_root(&doc), 0);
+  dst = s_chtml30_node_exchange(&chtml30, qs_get_root(&doc), 0);
   qs_all_free(&doc,QX_LOGMARK);
 
   if (dst == NULL) 
@@ -173,7 +173,7 @@ chxj_init_chtml30(Chtml30* chtml30, Doc* doc, request_rec* r, device_table* spec
  * @return The character string after it converts it is returned. 
  */
 static char*
-chtml30_node_exchange(Chtml30* chtml30, Node* node, int indent) 
+s_chtml30_node_exchange(Chtml30* chtml30, Node* node, int indent) 
 {
   Node*         child;
   Doc*          doc   = chtml30->doc;
@@ -194,7 +194,7 @@ chtml30_node_exchange(Chtml30* chtml30, Node* node, int indent)
     if (strcasecmp(name, "html") == 0) 
     {
       chtml30_start_html_tag(chtml30, child);
-      chtml30_node_exchange (chtml30, child,indent+1);
+      s_chtml30_node_exchange (chtml30, child,indent+1);
       chtml30_end_html_tag  (chtml30, child);
     }
     /*------------------------------------------------------------------------*/
@@ -213,7 +213,7 @@ chtml30_node_exchange(Chtml30* chtml30, Node* node, int indent)
     if (strcasecmp(name, "head") == 0) 
     {
       chtml30_start_head_tag(chtml30, child);
-      chtml30_node_exchange (chtml30, child,indent+1);
+      s_chtml30_node_exchange (chtml30, child,indent+1);
       chtml30_end_head_tag  (chtml30, child);
     }
     /*------------------------------------------------------------------------*/
@@ -223,7 +223,7 @@ chtml30_node_exchange(Chtml30* chtml30, Node* node, int indent)
     if (strcasecmp(name, "title") == 0) 
     {
       chtml30_start_title_tag (chtml30, child);
-      chtml30_node_exchange   (chtml30, child,indent+1);
+      s_chtml30_node_exchange   (chtml30, child,indent+1);
       chtml30_end_title_tag   (chtml30, child);
     }
     /*------------------------------------------------------------------------*/
@@ -242,7 +242,7 @@ chtml30_node_exchange(Chtml30* chtml30, Node* node, int indent)
     if (strcasecmp(name, "body") == 0) 
     {
       chtml30_start_body_tag(chtml30, child);
-      chtml30_node_exchange (chtml30, child,indent+1);
+      s_chtml30_node_exchange (chtml30, child,indent+1);
       chtml30_end_body_tag  (chtml30, child);
     }
     /*------------------------------------------------------------------------*/
@@ -252,7 +252,7 @@ chtml30_node_exchange(Chtml30* chtml30, Node* node, int indent)
     if (strcasecmp(name, "a") == 0) 
     {
       chtml30_start_a_tag   (chtml30, child);
-      chtml30_node_exchange (chtml30, child,indent+1);
+      s_chtml30_node_exchange (chtml30, child,indent+1);
       chtml30_end_a_tag     (chtml30, child);
     }
     /*------------------------------------------------------------------------*/
@@ -262,7 +262,7 @@ chtml30_node_exchange(Chtml30* chtml30, Node* node, int indent)
     if (strcasecmp(name, "br") == 0) 
     {
       chtml30_start_br_tag  (chtml30, child);
-      chtml30_node_exchange (chtml30, child,indent+1);
+      s_chtml30_node_exchange (chtml30, child,indent+1);
       chtml30_end_br_tag    (chtml30, child);
     }
     /*------------------------------------------------------------------------*/
@@ -272,7 +272,7 @@ chtml30_node_exchange(Chtml30* chtml30, Node* node, int indent)
     if (strcasecmp(name, "font") == 0) 
     {
       chtml30_start_font_tag(chtml30, child);
-      chtml30_node_exchange (chtml30, child,indent+1);
+      s_chtml30_node_exchange (chtml30, child,indent+1);
       chtml30_end_font_tag  (chtml30, child);
     }
     /*------------------------------------------------------------------------*/
@@ -282,7 +282,7 @@ chtml30_node_exchange(Chtml30* chtml30, Node* node, int indent)
     if (strcasecmp(name, "form") == 0) 
     {
       chtml30_start_form_tag(chtml30, child);
-      chtml30_node_exchange (chtml30, child,indent+1);
+      s_chtml30_node_exchange (chtml30, child,indent+1);
       chtml30_end_form_tag  (chtml30, child);
     }
     /*------------------------------------------------------------------------*/
@@ -292,7 +292,7 @@ chtml30_node_exchange(Chtml30* chtml30, Node* node, int indent)
     if (strcasecmp(name, "input") == 0) 
     {
       chtml30_start_input_tag (chtml30, child);
-      chtml30_node_exchange   (chtml30, child,indent+1);
+      s_chtml30_node_exchange   (chtml30, child,indent+1);
       chtml30_end_input_tag   (chtml30, child);
     }
     /*------------------------------------------------------------------------*/
@@ -311,7 +311,7 @@ chtml30_node_exchange(Chtml30* chtml30, Node* node, int indent)
     if (strcasecmp(name, "center") == 0) 
     {
       chtml30_start_center_tag(chtml30, child);
-      chtml30_node_exchange   (chtml30, child,indent+1);
+      s_chtml30_node_exchange   (chtml30, child,indent+1);
       chtml30_end_center_tag  (chtml30, child);
     }
     /*------------------------------------------------------------------------*/
@@ -330,7 +330,7 @@ chtml30_node_exchange(Chtml30* chtml30, Node* node, int indent)
     if (strcasecmp(name, "select") == 0)
     {
       chtml30_start_select_tag(chtml30, child);
-      chtml30_node_exchange   (chtml30, child, indent+1);
+      s_chtml30_node_exchange   (chtml30, child, indent+1);
       chtml30_end_select_tag  (chtml30, child);
     }
     /*------------------------------------------------------------------------*/
@@ -340,7 +340,7 @@ chtml30_node_exchange(Chtml30* chtml30, Node* node, int indent)
     if (strcasecmp(name, "option") == 0)
     {
       chtml30_start_option_tag(chtml30, child);
-      chtml30_node_exchange   (chtml30, child, indent+1);
+      s_chtml30_node_exchange   (chtml30, child, indent+1);
       chtml30_end_option_tag  (chtml30, child);
     }
     /*------------------------------------------------------------------------*/
@@ -350,7 +350,7 @@ chtml30_node_exchange(Chtml30* chtml30, Node* node, int indent)
     if (strcasecmp(name, "div") == 0)
     {
       chtml30_start_div_tag (chtml30, child);
-      chtml30_node_exchange (chtml30, child, indent+1);
+      s_chtml30_node_exchange (chtml30, child, indent+1);
       chtml30_end_div_tag   (chtml30, child);
     }
     /*------------------------------------------------------------------------*/
@@ -375,7 +375,7 @@ chtml30_node_exchange(Chtml30* chtml30, Node* node, int indent)
         parse_attr = qs_get_parse_attr(doc, child, r);
         if (parse_attr != NULL && strcasecmp(parse_attr, "true") == 0)
         {
-          chtml30_node_exchange (chtml30, child, indent+1);
+          s_chtml30_node_exchange (chtml30, child, indent+1);
         }
         else
         {

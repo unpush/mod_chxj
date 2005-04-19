@@ -30,7 +30,7 @@ typedef struct _Ctml10_t {
 
     device_table* spec;
     mod_chxj_config* conf;
-} Chtml10;
+} chtml10_t;
 
 /*----------------------------------------------------------------------------*/
 /* Prototype                                                                  */

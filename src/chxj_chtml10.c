@@ -55,9 +55,9 @@ static char* s_chtml10_start_option_tag (Chtml10* chtml, Node* node);
 static char* s_chtml10_end_option_tag   (Chtml10* chtml, Node* node);
 static char* s_chtml10_start_div_tag    (Chtml10* chtml, Node* node);
 static char* s_chtml10_end_div_tag      (Chtml10* chtml, Node* node);
-static void s_init_chtml10(Chtml10* chtml, Doc* doc, request_rec* r, device_table* spec);
-static int s_chtml10_search_emoji(Chtml10* chtml, char* txt, char** rslt);
-static void s_chtml10_chxjif_tag(Chtml10* chtml, Node* node);
+static void  s_init_chtml10(Chtml10* chtml, Doc* doc, request_rec* r, device_table* spec);
+static int   s_chtml10_search_emoji(Chtml10* chtml, char* txt, char** rslt);
+static void  s_chtml10_chxjif_tag(Chtml10* chtml, Node* node);
 
 
 /**
