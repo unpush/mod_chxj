@@ -58,7 +58,7 @@ static char* s_chtml30_start_div_tag    (Chtml30* chtml, Node* node);
 static char* s_chtml30_end_div_tag      (Chtml30* chtml, Node* node);
 static void  s_init_chtml30(Chtml30* chtml, Doc* doc, request_rec* r, device_table* spec);
 static int   s_chtml30_search_emoji(Chtml30* chtml, char* txt, char** rslt);
-static void chtml30_chxjif_tag(Chtml30* chtml, Node* node); 
+static void  s_chtml30_chxjif_tag(Chtml30* chtml, Node* node); 
 
 /**
  * converts from CHTML5.0 to CHTML3.0.
@@ -379,7 +379,7 @@ s_chtml30_node_exchange(Chtml30* chtml30, Node* node, int indent)
         }
         else
         {
-          chtml30_chxjif_tag(chtml30, child);
+          s_chtml30_chxjif_tag(chtml30, child);
         }
       }
     }
@@ -1825,7 +1825,7 @@ s_chtml30_end_div_tag(Chtml30* chtml30, Node* child)
 
 
 static void
-chtml30_chxjif_tag(Chtml30* chtml30, Node* node)
+s_chtml30_chxjif_tag(Chtml30* chtml30, Node* node)
 {
   Doc*         doc   = chtml30->doc;
   Node*        child;
@@ -1836,7 +1836,7 @@ chtml30_chxjif_tag(Chtml30* chtml30, Node* node)
        child = qs_get_next_node(doc, child))
   {
     chtml30->out = apr_pstrcat(r->pool, chtml30->out, child->otext, NULL);
-    chtml30_chxjif_tag(chtml30, child);
+    s_chtml30_chxjif_tag(chtml30, child);
   }
 }
 /*
