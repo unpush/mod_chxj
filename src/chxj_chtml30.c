@@ -36,7 +36,7 @@ static char* s_chtml30_start_body_tag   (Chtml30* chtml, Node* node);
 static char* s_chtml30_end_body_tag     (Chtml30* chtml, Node* node);
 static char* s_chtml30_start_a_tag      (Chtml30* chtml, Node* node);
 static char* s_chtml30_end_a_tag        (Chtml30* chtml, Node* node);
-static char* chtml30_start_br_tag     (Chtml30* chtml, Node* node);
+static char* s_chtml30_start_br_tag     (Chtml30* chtml, Node* node);
 static char* chtml30_end_br_tag       (Chtml30* chtml, Node* node);
 static char* chtml30_start_font_tag   (Chtml30* chtml, Node* node);
 static char* chtml30_end_font_tag     (Chtml30* chtml, Node* node);
@@ -261,7 +261,7 @@ s_chtml30_node_exchange(Chtml30* chtml30, Node* node, int indent)
     else
     if (strcasecmp(name, "br") == 0) 
     {
-      chtml30_start_br_tag  (chtml30, child);
+      s_chtml30_start_br_tag  (chtml30, child);
       s_chtml30_node_exchange (chtml30, child,indent+1);
       chtml30_end_br_tag    (chtml30, child);
     }
@@ -1030,7 +1030,7 @@ s_chtml30_end_a_tag(Chtml30* chtml30, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-chtml30_start_br_tag(Chtml30* chtml30, Node* node) 
+s_chtml30_start_br_tag(Chtml30* chtml30, Node* node) 
 {
   Doc* doc = chtml30->doc;
   request_rec* r = doc->r;
