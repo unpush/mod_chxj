@@ -37,8 +37,8 @@ static char* s_chtml10_start_a_tag      (Chtml10* chtml, Node* node);
 static char* s_chtml10_end_a_tag        (Chtml10* chtml, Node* node);
 static char* s_chtml10_start_br_tag     (Chtml10* chtml, Node* node);
 static char* s_chtml10_end_br_tag       (Chtml10* chtml, Node* node);
-static char* chtml10_start_font_tag   (Chtml10* chtml, Node* node);
-static char* chtml10_end_font_tag     (Chtml10* chtml, Node* node);
+static char* s_chtml10_start_font_tag   (Chtml10* chtml, Node* node);
+static char* s_chtml10_end_font_tag     (Chtml10* chtml, Node* node);
 static char* chtml10_start_form_tag   (Chtml10* chtml, Node* node);
 static char* chtml10_end_form_tag     (Chtml10* chtml, Node* node);
 static char* chtml10_start_input_tag  (Chtml10* chtml, Node* node);
@@ -269,9 +269,9 @@ s_chtml10_node_exchange(Chtml10* chtml10, Node* node, int indent)
     else
     if (strcasecmp(name, "font") == 0) 
     {
-      chtml10_start_font_tag(chtml10, child);
+      s_chtml10_start_font_tag(chtml10, child);
       s_chtml10_node_exchange (chtml10, child,indent+1);
-      chtml10_end_font_tag  (chtml10, child);
+      s_chtml10_end_font_tag  (chtml10, child);
     }
     /*------------------------------------------------------------------------*/
     /* <FORM>                                                                 */
@@ -984,7 +984,7 @@ s_chtml10_end_br_tag(Chtml10* chtml10, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-chtml10_start_font_tag(Chtml10* chtml10, Node* node) 
+s_chtml10_start_font_tag(Chtml10* chtml10, Node* node) 
 {
   /* Ignore */
 
@@ -1000,7 +1000,7 @@ chtml10_start_font_tag(Chtml10* chtml10, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-chtml10_end_font_tag(Chtml10* chtml10, Node* child) 
+s_chtml10_end_font_tag(Chtml10* chtml10, Node* child) 
 {
   /* ignore */
   return chtml10->out;
