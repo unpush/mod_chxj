@@ -26,8 +26,8 @@ static char* s_chtml20_start_html_tag   (Chtml20* chtml, Node* child);
 static char* s_chtml20_end_html_tag     (Chtml20* chtml, Node* child);
 static char* s_chtml20_start_meta_tag   (Chtml20* chtml, Node* node);
 static char* s_chtml20_end_meta_tag     (Chtml20* chtml, Node* node);
-static char* chtml20_start_head_tag   (Chtml20* chtml, Node* node);
-static char* chtml20_end_head_tag     (Chtml20* chtml, Node* node);
+static char* s_chtml20_start_head_tag   (Chtml20* chtml, Node* node);
+static char* s_chtml20_end_head_tag     (Chtml20* chtml, Node* node);
 static char* chtml20_start_title_tag  (Chtml20* chtml, Node* node);
 static char* chtml20_end_title_tag    (Chtml20* chtml, Node* node);
 static char* chtml20_start_base_tag   (Chtml20* chtml, Node* node);
@@ -210,9 +210,9 @@ s_chtml20_node_exchange(Chtml20* chtml20, Node* node, int indent)
     else
     if (strcasecmp(name, "head") == 0) 
     {
-      chtml20_start_head_tag(chtml20, child);
+      s_chtml20_start_head_tag(chtml20, child);
       s_chtml20_node_exchange (chtml20, child,indent+1);
-      chtml20_end_head_tag  (chtml20, child);
+      s_chtml20_end_head_tag  (chtml20, child);
     }
     /*------------------------------------------------------------------------*/
     /* <TITLE>                                                                */
@@ -618,7 +618,7 @@ s_chtml20_end_meta_tag(Chtml20* chtml20, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-chtml20_start_head_tag(Chtml20* chtml20, Node* node) 
+s_chtml20_start_head_tag(Chtml20* chtml20, Node* node) 
 {
   Doc*          doc = chtml20->doc;
   request_rec*  r   = doc->r;
@@ -636,7 +636,7 @@ chtml20_start_head_tag(Chtml20* chtml20, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-chtml20_end_head_tag(Chtml20* chtml20, Node* child) 
+s_chtml20_end_head_tag(Chtml20* chtml20, Node* child) 
 {
   Doc*          doc = chtml20->doc;
   request_rec*  r   = doc->r;
