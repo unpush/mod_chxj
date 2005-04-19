@@ -56,8 +56,8 @@ static char* s_chtml30_start_option_tag (Chtml30* chtml, Node* node);
 static char* s_chtml30_end_option_tag   (Chtml30* chtml, Node* node);
 static char* s_chtml30_start_div_tag    (Chtml30* chtml, Node* node);
 static char* s_chtml30_end_div_tag      (Chtml30* chtml, Node* node);
-static void s_init_chtml30(Chtml30* chtml, Doc* doc, request_rec* r, device_table* spec);
-static int chtml30_search_emoji(Chtml30* chtml, char* txt, char** rslt);
+static void  s_init_chtml30(Chtml30* chtml, Doc* doc, request_rec* r, device_table* spec);
+static int   s_chtml30_search_emoji(Chtml30* chtml, char* txt, char** rslt);
 static void chtml30_chxjif_tag(Chtml30* chtml, Node* node); 
 
 /**
@@ -413,7 +413,7 @@ s_chtml30_node_exchange(Chtml30* chtml30, Node* node, int indent)
       for (ii=0; ii<qs_get_node_size(doc,child); ii++)
       {
         char* out;
-        int rtn = chtml30_search_emoji(chtml30, &textval[ii], &out);
+        int rtn = s_chtml30_search_emoji(chtml30, &textval[ii], &out);
         if (rtn != 0)
         {
           tdst = qs_out_apr_pstrcat(r, tdst, out, &tdst_len);
@@ -452,7 +452,7 @@ s_chtml30_node_exchange(Chtml30* chtml30, Node* node, int indent)
  * @return When corresponding EMOJI exists, it returns it excluding 0. 
  */
 static int
-chtml30_search_emoji(Chtml30* chtml30, char* txt, char** rslt)
+s_chtml30_search_emoji(Chtml30* chtml30, char* txt, char** rslt)
 {
   emoji_t*      ee;
   request_rec*  r;
