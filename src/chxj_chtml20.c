@@ -50,7 +50,7 @@ static char* s_chtml20_start_hr_tag     (Chtml20* chtml, Node* node);
 static char* s_chtml20_end_hr_tag       (Chtml20* chtml, Node* node);
 static char* s_chtml20_start_img_tag    (Chtml20* chtml, Node* node);
 static char* s_chtml20_end_img_tag      (Chtml20* chtml, Node* node);
-static char* chtml20_start_select_tag (Chtml20* chtml, Node* node);
+static char* s_chtml20_start_select_tag (Chtml20* chtml, Node* node);
 static char* chtml20_end_select_tag   (Chtml20* chtml, Node* node);
 static char* chtml20_start_option_tag (Chtml20* chtml, Node* node);
 static char* chtml20_end_option_tag   (Chtml20* chtml, Node* node);
@@ -327,7 +327,7 @@ s_chtml20_node_exchange(Chtml20* chtml20, Node* node, int indent)
     else
     if (strcasecmp(name, "select") == 0)
     {
-      chtml20_start_select_tag(chtml20, child);
+      s_chtml20_start_select_tag(chtml20, child);
       s_chtml20_node_exchange   (chtml20, child, indent+1);
       chtml20_end_select_tag  (chtml20, child);
     }
@@ -1599,7 +1599,7 @@ s_chtml20_end_img_tag(Chtml20* chtml20, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-chtml20_start_select_tag(Chtml20* chtml20, Node* child)
+s_chtml20_start_select_tag(Chtml20* chtml20, Node* child)
 {
   Doc* doc = chtml20->doc;
   request_rec* r = doc->r;
