@@ -58,7 +58,7 @@ static char* s_chtml20_start_div_tag    (Chtml20* chtml, Node* node);
 static char* s_chtml20_end_div_tag      (Chtml20* chtml, Node* node);
 static void  s_init_chtml20(Chtml20* chtml, Doc* doc, request_rec* r, device_table* spec);
 static int   s_chtml20_search_emoji(Chtml20* chtml, char* txt, char** rslt);
-static void  chtml20_chxjif_tag(Chtml20* chtml, Node* node); 
+static void  s_chtml20_chxjif_tag(Chtml20* chtml, Node* node); 
 
 /**
  * converts from CHTML5.0 to CHTML2.0.
@@ -377,7 +377,7 @@ s_chtml20_node_exchange(Chtml20* chtml20, Node* node, int indent)
         }
         else
         {
-          chtml20_chxjif_tag(chtml20, child);
+          s_chtml20_chxjif_tag(chtml20, child);
         }
       }
     }
@@ -1812,7 +1812,7 @@ s_chtml20_end_div_tag(Chtml20* chtml20, Node* child)
 
 
 static void
-chtml20_chxjif_tag(Chtml20* chtml20, Node* node)
+s_chtml20_chxjif_tag(Chtml20* chtml20, Node* node)
 {
   Doc*         doc   = chtml20->doc;
   Node*        child;
@@ -1823,7 +1823,7 @@ chtml20_chxjif_tag(Chtml20* chtml20, Node* node)
        child = qs_get_next_node(doc, child))
   {
     chtml20->out = apr_pstrcat(r->pool, chtml20->out, child->otext, NULL);
-    chtml20_chxjif_tag(chtml20, child);
+    s_chtml20_chxjif_tag(chtml20, child);
   }
 }
 /*
