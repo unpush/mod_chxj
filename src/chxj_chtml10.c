@@ -45,19 +45,19 @@ static char* s_chtml10_start_input_tag  (Chtml10* chtml, Node* node);
 static char* s_chtml10_end_input_tag    (Chtml10* chtml, Node* node);
 static char* s_chtml10_start_center_tag (Chtml10* chtml, Node* node);
 static char* s_chtml10_end_center_tag   (Chtml10* chtml, Node* node);
-static char* chtml10_start_hr_tag     (Chtml10* chtml, Node* node);
-static char* chtml10_end_hr_tag       (Chtml10* chtml, Node* node);
-static char* chtml10_start_img_tag    (Chtml10* chtml, Node* node);
-static char* chtml10_end_img_tag      (Chtml10* chtml, Node* node);
-static char* chtml10_start_select_tag (Chtml10* chtml, Node* node);
-static char* chtml10_end_select_tag   (Chtml10* chtml, Node* node);
-static char* chtml10_start_option_tag (Chtml10* chtml, Node* node);
-static char* chtml10_end_option_tag   (Chtml10* chtml, Node* node);
-static char* chtml10_start_div_tag    (Chtml10* chtml, Node* node);
-static char* chtml10_end_div_tag      (Chtml10* chtml, Node* node);
-static void chxj_init_chtml10(Chtml10* chtml, Doc* doc, request_rec* r, device_table* spec);
-static int chtml10_search_emoji(Chtml10* chtml, char* txt, char** rslt);
-static void chtml10_chxjif_tag(Chtml10* chtml, Node* node);
+static char* s_chtml10_start_hr_tag     (Chtml10* chtml, Node* node);
+static char* s_chtml10_end_hr_tag       (Chtml10* chtml, Node* node);
+static char* s_chtml10_start_img_tag    (Chtml10* chtml, Node* node);
+static char* s_chtml10_end_img_tag      (Chtml10* chtml, Node* node);
+static char* s_chtml10_start_select_tag (Chtml10* chtml, Node* node);
+static char* s_chtml10_end_select_tag   (Chtml10* chtml, Node* node);
+static char* s_chtml10_start_option_tag (Chtml10* chtml, Node* node);
+static char* s_chtml10_end_option_tag   (Chtml10* chtml, Node* node);
+static char* s_chtml10_start_div_tag    (Chtml10* chtml, Node* node);
+static char* s_chtml10_end_div_tag      (Chtml10* chtml, Node* node);
+static void s_init_chtml10(Chtml10* chtml, Doc* doc, request_rec* r, device_table* spec);
+static int s_chtml10_search_emoji(Chtml10* chtml, char* txt, char** rslt);
+static void s_chtml10_chxjif_tag(Chtml10* chtml, Node* node);
 
 
 /**
@@ -97,7 +97,7 @@ chxj_exchange_chtml10(
   /*--------------------------------------------------------------------------*/
   /* The CHTML structure is initialized.                                      */
   /*--------------------------------------------------------------------------*/
-  chxj_init_chtml10(&chtml10, &doc, r, spec);
+  s_init_chtml10(&chtml10, &doc, r, spec);
   ap_set_content_type(r, "text/html; charset=Windows-31J");
 
   /*--------------------------------------------------------------------------*/
@@ -148,7 +148,7 @@ chxj_exchange_chtml10(
  * @param spec  [i]   The pointer to the device_table
  */
 static void
-chxj_init_chtml10(Chtml10* chtml10, Doc* doc, request_rec* r, device_table* spec)
+s_init_chtml10(Chtml10* chtml10, Doc* doc, request_rec* r, device_table* spec)
 {
   memset(doc,   0, sizeof(Doc));
   memset(chtml10, 0, sizeof(Chtml10));
@@ -299,8 +299,8 @@ s_chtml10_node_exchange(Chtml10* chtml10, Node* node, int indent)
     else
     if (strcasecmp(name, "hr") == 0) 
     {
-      chtml10_start_hr_tag  (chtml10, child);
-      chtml10_end_hr_tag    (chtml10, child);
+      s_chtml10_start_hr_tag  (chtml10, child);
+      s_chtml10_end_hr_tag    (chtml10, child);
     }
     /*------------------------------------------------------------------------*/
     /* <CENTER>                                                               */
@@ -318,8 +318,8 @@ s_chtml10_node_exchange(Chtml10* chtml10, Node* node, int indent)
     else
     if (strcasecmp(name, "img") == 0) 
     {
-      chtml10_start_img_tag (chtml10, child);
-      chtml10_end_img_tag   (chtml10, child);
+      s_chtml10_start_img_tag (chtml10, child);
+      s_chtml10_end_img_tag   (chtml10, child);
     }
     /*------------------------------------------------------------------------*/
     /* <SELECT>                                                               */
@@ -327,9 +327,9 @@ s_chtml10_node_exchange(Chtml10* chtml10, Node* node, int indent)
     else
     if (strcasecmp(name, "select") == 0)
     {
-      chtml10_start_select_tag(chtml10, child);
+      s_chtml10_start_select_tag(chtml10, child);
       s_chtml10_node_exchange   (chtml10, child, indent+1);
-      chtml10_end_select_tag  (chtml10, child);
+      s_chtml10_end_select_tag  (chtml10, child);
     }
     /*------------------------------------------------------------------------*/
     /* <OPTION>                                                               */
@@ -337,9 +337,9 @@ s_chtml10_node_exchange(Chtml10* chtml10, Node* node, int indent)
     else
     if (strcasecmp(name, "option") == 0)
     {
-      chtml10_start_option_tag(chtml10, child);
+      s_chtml10_start_option_tag(chtml10, child);
       s_chtml10_node_exchange   (chtml10, child, indent+1);
-      chtml10_end_option_tag  (chtml10, child);
+      s_chtml10_end_option_tag  (chtml10, child);
     }
     /*------------------------------------------------------------------------*/
     /* <DIV>                                                                  */
@@ -347,9 +347,9 @@ s_chtml10_node_exchange(Chtml10* chtml10, Node* node, int indent)
     else
     if (strcasecmp(name, "div") == 0)
     {
-      chtml10_start_div_tag (chtml10, child);
+      s_chtml10_start_div_tag (chtml10, child);
       s_chtml10_node_exchange (chtml10, child, indent+1);
-      chtml10_end_div_tag   (chtml10, child);
+      s_chtml10_end_div_tag   (chtml10, child);
     }
     /*------------------------------------------------------------------------*/
     /* <CHXJ:IF>                                                              */
@@ -369,7 +369,7 @@ s_chtml10_node_exchange(Chtml10* chtml10, Node* node, int indent)
         }
         else
         {
-          chtml10_chxjif_tag(chtml10, child);
+          s_chtml10_chxjif_tag(chtml10, child);
         }
       }
     }
@@ -403,7 +403,7 @@ s_chtml10_node_exchange(Chtml10* chtml10, Node* node, int indent)
       for (ii=0; ii<qs_get_node_size(doc,child); ii++)
       {
         char* out;
-        int rtn = chtml10_search_emoji(chtml10, &textval[ii], &out);
+        int rtn = s_chtml10_search_emoji(chtml10, &textval[ii], &out);
         if (rtn != 0)
         {
           tdst = qs_out_apr_pstrcat(r, tdst, out, &tdst_len);
@@ -442,7 +442,7 @@ s_chtml10_node_exchange(Chtml10* chtml10, Node* node, int indent)
  * @return When corresponding EMOJI exists, it returns it excluding 0. 
  */
 static int
-chtml10_search_emoji(Chtml10* chtml10, char* txt, char** rslt)
+s_chtml10_search_emoji(Chtml10* chtml10, char* txt, char** rslt)
 {
   emoji_t*      ee;
   request_rec*  r;
@@ -1260,7 +1260,7 @@ s_chtml10_end_center_tag(Chtml10* chtml10, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-chtml10_start_hr_tag(Chtml10* chtml10, Node* node) 
+s_chtml10_start_hr_tag(Chtml10* chtml10, Node* node) 
 {
   Doc* doc = chtml10->doc;
   request_rec* r = doc->r;
@@ -1336,7 +1336,7 @@ chtml10_start_hr_tag(Chtml10* chtml10, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-chtml10_end_hr_tag(Chtml10* chtml10, Node* child) 
+s_chtml10_end_hr_tag(Chtml10* chtml10, Node* child) 
 {
   return chtml10->out;
 }
@@ -1350,7 +1350,7 @@ chtml10_end_hr_tag(Chtml10* chtml10, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-chtml10_start_img_tag(Chtml10* chtml10, Node* node) 
+s_chtml10_start_img_tag(Chtml10* chtml10, Node* node) 
 {
   Doc*          doc = chtml10->doc;
   request_rec*  r   = doc->r;
@@ -1465,7 +1465,7 @@ chtml10_start_img_tag(Chtml10* chtml10, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-chtml10_end_img_tag(Chtml10* chtml10, Node* child) 
+s_chtml10_end_img_tag(Chtml10* chtml10, Node* child) 
 {
   return chtml10->out;
 }
@@ -1479,7 +1479,7 @@ chtml10_end_img_tag(Chtml10* chtml10, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-chtml10_start_select_tag(Chtml10* chtml10, Node* child)
+s_chtml10_start_select_tag(Chtml10* chtml10, Node* child)
 {
   Doc* doc = chtml10->doc;
   request_rec* r = doc->r;
@@ -1542,7 +1542,7 @@ chtml10_start_select_tag(Chtml10* chtml10, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-chtml10_end_select_tag(Chtml10* chtml10, Node* child)
+s_chtml10_end_select_tag(Chtml10* chtml10, Node* child)
 {
   Doc* doc = chtml10->doc;
   request_rec* r = doc->r;
@@ -1560,7 +1560,7 @@ chtml10_end_select_tag(Chtml10* chtml10, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-chtml10_start_option_tag(Chtml10* chtml10, Node* child)
+s_chtml10_start_option_tag(Chtml10* chtml10, Node* child)
 {
   Doc* doc = chtml10->doc;
   request_rec* r = doc->r;
@@ -1621,7 +1621,7 @@ chtml10_start_option_tag(Chtml10* chtml10, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-chtml10_end_option_tag(Chtml10* chtml10, Node* child)
+s_chtml10_end_option_tag(Chtml10* chtml10, Node* child)
 {
   /* Don't close */
   return chtml10->out;
@@ -1636,7 +1636,7 @@ chtml10_end_option_tag(Chtml10* chtml10, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-chtml10_start_div_tag(Chtml10* chtml10, Node* child)
+s_chtml10_start_div_tag(Chtml10* chtml10, Node* child)
 {
   Doc* doc = chtml10->doc;
   request_rec* r = doc->r;
@@ -1680,7 +1680,7 @@ chtml10_start_div_tag(Chtml10* chtml10, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-chtml10_end_div_tag(Chtml10* chtml10, Node* child)
+s_chtml10_end_div_tag(Chtml10* chtml10, Node* child)
 {
   Doc* doc = chtml10->doc;
   request_rec* r = doc->r;
@@ -1691,7 +1691,7 @@ chtml10_end_div_tag(Chtml10* chtml10, Node* child)
 }
 
 static void
-chtml10_chxjif_tag(Chtml10* chtml10, Node* node)
+s_chtml10_chxjif_tag(Chtml10* chtml10, Node* node)
 {
   Doc*         doc   = chtml10->doc;
   Node*        child;
@@ -1702,7 +1702,7 @@ chtml10_chxjif_tag(Chtml10* chtml10, Node* node)
        child = qs_get_next_node(doc, child))
   {
     chtml10->out = apr_pstrcat(r->pool, chtml10->out, child->otext, NULL);
-    chtml10_chxjif_tag(chtml10, child);
+    s_chtml10_chxjif_tag(chtml10, child);
   }
 }
 /*
