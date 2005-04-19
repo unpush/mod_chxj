@@ -28,7 +28,7 @@
 
 static void s_set_devices_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node) ;
 static void s_set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node) ;
-static void set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node) ;
+static void s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node) ;
 /**
  * load device_data.xml
  */
@@ -134,13 +134,13 @@ s_set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node
             dtl->pattern = apr_pstrdup(p, qs_get_attr_value(doc,attr));
         }
       }
-      set_device_data(doc, p, dtl, child);
+      s_set_device_data(doc, p, dtl, child);
     }
   }
 }
 
 static void
-set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node) 
+s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node) 
 {
   Node* child;
   device_table* dt;
@@ -167,7 +167,7 @@ set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node)
     char* name = qs_get_node_name(doc,child);
     if (strcasecmp(name, "device") == 0) 
     {
-      set_device_data(doc,p, dtl, child);
+      s_set_device_data(doc,p, dtl, child);
     }
     else
     if (strcasecmp(name, "device_id") == 0) 
