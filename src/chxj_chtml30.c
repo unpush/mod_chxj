@@ -35,7 +35,7 @@ static char* s_chtml30_end_base_tag     (Chtml30* chtml, Node* node);
 static char* s_chtml30_start_body_tag   (Chtml30* chtml, Node* node);
 static char* s_chtml30_end_body_tag     (Chtml30* chtml, Node* node);
 static char* s_chtml30_start_a_tag      (Chtml30* chtml, Node* node);
-static char* chtml30_end_a_tag        (Chtml30* chtml, Node* node);
+static char* s_chtml30_end_a_tag        (Chtml30* chtml, Node* node);
 static char* chtml30_start_br_tag     (Chtml30* chtml, Node* node);
 static char* chtml30_end_br_tag       (Chtml30* chtml, Node* node);
 static char* chtml30_start_font_tag   (Chtml30* chtml, Node* node);
@@ -253,7 +253,7 @@ s_chtml30_node_exchange(Chtml30* chtml30, Node* node, int indent)
     {
       s_chtml30_start_a_tag   (chtml30, child);
       s_chtml30_node_exchange (chtml30, child,indent+1);
-      chtml30_end_a_tag     (chtml30, child);
+      s_chtml30_end_a_tag     (chtml30, child);
     }
     /*------------------------------------------------------------------------*/
     /* <BR>                                                                   */
@@ -1012,7 +1012,7 @@ s_chtml30_start_a_tag(Chtml30* chtml30, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-chtml30_end_a_tag(Chtml30* chtml30, Node* child) 
+s_chtml30_end_a_tag(Chtml30* chtml30, Node* child) 
 {
   Doc* doc = chtml30->doc;
   request_rec* r = doc->r;
