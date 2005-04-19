@@ -30,7 +30,7 @@ static char* s_chtml20_start_head_tag   (Chtml20* chtml, Node* node);
 static char* s_chtml20_end_head_tag     (Chtml20* chtml, Node* node);
 static char* s_chtml20_start_title_tag  (Chtml20* chtml, Node* node);
 static char* s_chtml20_end_title_tag    (Chtml20* chtml, Node* node);
-static char* chtml20_start_base_tag   (Chtml20* chtml, Node* node);
+static char* s_chtml20_start_base_tag   (Chtml20* chtml, Node* node);
 static char* chtml20_end_base_tag     (Chtml20* chtml, Node* node);
 static char* chtml20_start_body_tag   (Chtml20* chtml, Node* node);
 static char* chtml20_end_body_tag     (Chtml20* chtml, Node* node);
@@ -230,7 +230,7 @@ s_chtml20_node_exchange(Chtml20* chtml20, Node* node, int indent)
     else
     if (strcasecmp(name, "base") == 0) 
     {
-      chtml20_start_base_tag(chtml20, child);
+      s_chtml20_start_base_tag(chtml20, child);
       chtml20_end_base_tag  (chtml20, child);
     }
     /*------------------------------------------------------------------------*/
@@ -691,7 +691,7 @@ s_chtml20_end_title_tag(Chtml20* chtml20, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-chtml20_start_base_tag(Chtml20* chtml20, Node* node) 
+s_chtml20_start_base_tag(Chtml20* chtml20, Node* node) 
 {
   Attr*         attr;
   Doc*          doc   = chtml20->doc;
