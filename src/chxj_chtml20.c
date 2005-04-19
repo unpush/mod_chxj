@@ -37,7 +37,7 @@ static char* s_chtml20_end_body_tag     (Chtml20* chtml, Node* node);
 static char* s_chtml20_start_a_tag      (Chtml20* chtml, Node* node);
 static char* s_chtml20_end_a_tag        (Chtml20* chtml, Node* node);
 static char* s_chtml20_start_br_tag     (Chtml20* chtml, Node* node);
-static char* chtml20_end_br_tag       (Chtml20* chtml, Node* node);
+static char* s_chtml20_end_br_tag       (Chtml20* chtml, Node* node);
 static char* chtml20_start_font_tag   (Chtml20* chtml, Node* node);
 static char* chtml20_end_font_tag     (Chtml20* chtml, Node* node);
 static char* chtml20_start_form_tag   (Chtml20* chtml, Node* node);
@@ -261,7 +261,7 @@ s_chtml20_node_exchange(Chtml20* chtml20, Node* node, int indent)
     {
       s_chtml20_start_br_tag  (chtml20, child);
       s_chtml20_node_exchange (chtml20, child,indent+1);
-      chtml20_end_br_tag    (chtml20, child);
+      s_chtml20_end_br_tag    (chtml20, child);
     }
     /*------------------------------------------------------------------------*/
     /* <FONT>                                                                 */
@@ -1041,7 +1041,7 @@ s_chtml20_start_br_tag(Chtml20* chtml20, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-chtml20_end_br_tag(Chtml20* chtml20, Node* child) 
+s_chtml20_end_br_tag(Chtml20* chtml20, Node* child) 
 {
   return chtml20->out;
 }
