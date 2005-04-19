@@ -21,44 +21,44 @@
 #include "chxj_img_conv.h"
 #include "chxj_qr_code.h"
 
-static char* s_chtml20_node_exchange    (Chtml20* chtml, Node* node, int indent);
-static char* s_chtml20_start_html_tag   (Chtml20* chtml, Node* child);
-static char* s_chtml20_end_html_tag     (Chtml20* chtml, Node* child);
-static char* s_chtml20_start_meta_tag   (Chtml20* chtml, Node* node);
-static char* s_chtml20_end_meta_tag     (Chtml20* chtml, Node* node);
-static char* s_chtml20_start_head_tag   (Chtml20* chtml, Node* node);
-static char* s_chtml20_end_head_tag     (Chtml20* chtml, Node* node);
-static char* s_chtml20_start_title_tag  (Chtml20* chtml, Node* node);
-static char* s_chtml20_end_title_tag    (Chtml20* chtml, Node* node);
-static char* s_chtml20_start_base_tag   (Chtml20* chtml, Node* node);
-static char* s_chtml20_end_base_tag     (Chtml20* chtml, Node* node);
-static char* s_chtml20_start_body_tag   (Chtml20* chtml, Node* node);
-static char* s_chtml20_end_body_tag     (Chtml20* chtml, Node* node);
-static char* s_chtml20_start_a_tag      (Chtml20* chtml, Node* node);
-static char* s_chtml20_end_a_tag        (Chtml20* chtml, Node* node);
-static char* s_chtml20_start_br_tag     (Chtml20* chtml, Node* node);
-static char* s_chtml20_end_br_tag       (Chtml20* chtml, Node* node);
-static char* s_chtml20_start_font_tag   (Chtml20* chtml, Node* node);
-static char* s_chtml20_end_font_tag     (Chtml20* chtml, Node* node);
-static char* s_chtml20_start_form_tag   (Chtml20* chtml, Node* node);
-static char* s_chtml20_end_form_tag     (Chtml20* chtml, Node* node);
-static char* s_chtml20_start_input_tag  (Chtml20* chtml, Node* node);
-static char* s_chtml20_end_input_tag    (Chtml20* chtml, Node* node);
-static char* s_chtml20_start_center_tag (Chtml20* chtml, Node* node);
-static char* s_chtml20_end_center_tag   (Chtml20* chtml, Node* node);
-static char* s_chtml20_start_hr_tag     (Chtml20* chtml, Node* node);
-static char* s_chtml20_end_hr_tag       (Chtml20* chtml, Node* node);
-static char* s_chtml20_start_img_tag    (Chtml20* chtml, Node* node);
-static char* s_chtml20_end_img_tag      (Chtml20* chtml, Node* node);
-static char* s_chtml20_start_select_tag (Chtml20* chtml, Node* node);
-static char* s_chtml20_end_select_tag   (Chtml20* chtml, Node* node);
-static char* s_chtml20_start_option_tag (Chtml20* chtml, Node* node);
-static char* s_chtml20_end_option_tag   (Chtml20* chtml, Node* node);
-static char* s_chtml20_start_div_tag    (Chtml20* chtml, Node* node);
-static char* s_chtml20_end_div_tag      (Chtml20* chtml, Node* node);
-static void  s_init_chtml20(Chtml20* chtml, Doc* doc, request_rec* r, device_table* spec);
-static int   s_chtml20_search_emoji(Chtml20* chtml, char* txt, char** rslt);
-static void  s_chtml20_chxjif_tag(Chtml20* chtml, Node* node); 
+static char* s_chtml20_node_exchange    (chtml20_t* chtml, Node* node, int indent);
+static char* s_chtml20_start_html_tag   (chtml20_t* chtml, Node* child);
+static char* s_chtml20_end_html_tag     (chtml20_t* chtml, Node* child);
+static char* s_chtml20_start_meta_tag   (chtml20_t* chtml, Node* node);
+static char* s_chtml20_end_meta_tag     (chtml20_t* chtml, Node* node);
+static char* s_chtml20_start_head_tag   (chtml20_t* chtml, Node* node);
+static char* s_chtml20_end_head_tag     (chtml20_t* chtml, Node* node);
+static char* s_chtml20_start_title_tag  (chtml20_t* chtml, Node* node);
+static char* s_chtml20_end_title_tag    (chtml20_t* chtml, Node* node);
+static char* s_chtml20_start_base_tag   (chtml20_t* chtml, Node* node);
+static char* s_chtml20_end_base_tag     (chtml20_t* chtml, Node* node);
+static char* s_chtml20_start_body_tag   (chtml20_t* chtml, Node* node);
+static char* s_chtml20_end_body_tag     (chtml20_t* chtml, Node* node);
+static char* s_chtml20_start_a_tag      (chtml20_t* chtml, Node* node);
+static char* s_chtml20_end_a_tag        (chtml20_t* chtml, Node* node);
+static char* s_chtml20_start_br_tag     (chtml20_t* chtml, Node* node);
+static char* s_chtml20_end_br_tag       (chtml20_t* chtml, Node* node);
+static char* s_chtml20_start_font_tag   (chtml20_t* chtml, Node* node);
+static char* s_chtml20_end_font_tag     (chtml20_t* chtml, Node* node);
+static char* s_chtml20_start_form_tag   (chtml20_t* chtml, Node* node);
+static char* s_chtml20_end_form_tag     (chtml20_t* chtml, Node* node);
+static char* s_chtml20_start_input_tag  (chtml20_t* chtml, Node* node);
+static char* s_chtml20_end_input_tag    (chtml20_t* chtml, Node* node);
+static char* s_chtml20_start_center_tag (chtml20_t* chtml, Node* node);
+static char* s_chtml20_end_center_tag   (chtml20_t* chtml, Node* node);
+static char* s_chtml20_start_hr_tag     (chtml20_t* chtml, Node* node);
+static char* s_chtml20_end_hr_tag       (chtml20_t* chtml, Node* node);
+static char* s_chtml20_start_img_tag    (chtml20_t* chtml, Node* node);
+static char* s_chtml20_end_img_tag      (chtml20_t* chtml, Node* node);
+static char* s_chtml20_start_select_tag (chtml20_t* chtml, Node* node);
+static char* s_chtml20_end_select_tag   (chtml20_t* chtml, Node* node);
+static char* s_chtml20_start_option_tag (chtml20_t* chtml, Node* node);
+static char* s_chtml20_end_option_tag   (chtml20_t* chtml, Node* node);
+static char* s_chtml20_start_div_tag    (chtml20_t* chtml, Node* node);
+static char* s_chtml20_end_div_tag      (chtml20_t* chtml, Node* node);
+static void  s_init_chtml20(chtml20_t* chtml, Doc* doc, request_rec* r, device_table* spec);
+static int   s_chtml20_search_emoji(chtml20_t* chtml, char* txt, char** rslt);
+static void  s_chtml20_chxjif_tag(chtml20_t* chtml, Node* node); 
 
 /**
  * converts from CHTML5.0 to CHTML2.0.
@@ -79,7 +79,7 @@ chxj_exchange_chtml20(
 {
   char*     dst = NULL;
   char*     ss;
-  Chtml20   chtml20;
+  chtml20_t   chtml20;
   Doc       doc;
 
   /*--------------------------------------------------------------------------*/
@@ -148,10 +148,10 @@ chxj_exchange_chtml20(
  * @param spec  [i]   The pointer to the device_table
  */
 static void
-s_init_chtml20(Chtml20* chtml20, Doc* doc, request_rec* r, device_table* spec)
+s_init_chtml20(chtml20_t* chtml20, Doc* doc, request_rec* r, device_table* spec)
 {
   memset(doc,   0, sizeof(Doc));
-  memset(chtml20, 0, sizeof(Chtml20));
+  memset(chtml20, 0, sizeof(chtml20_t));
 
   doc->r      = r;
   chtml20->doc  = doc;
@@ -171,7 +171,7 @@ s_init_chtml20(Chtml20* chtml20, Doc* doc, request_rec* r, device_table* spec)
  * @return The character string after it converts it is returned. 
  */
 static char*
-s_chtml20_node_exchange(Chtml20* chtml20, Node* node, int indent) 
+s_chtml20_node_exchange(chtml20_t* chtml20, Node* node, int indent) 
 {
   Node*         child;
   Doc*          doc   = chtml20->doc;
@@ -450,7 +450,7 @@ s_chtml20_node_exchange(Chtml20* chtml20, Node* node, int indent)
  * @return When corresponding EMOJI exists, it returns it excluding 0. 
  */
 static int
-s_chtml20_search_emoji(Chtml20* chtml20, char* txt, char** rslt)
+s_chtml20_search_emoji(chtml20_t* chtml20, char* txt, char** rslt)
 {
   emoji_t*      ee;
   request_rec*  r;
@@ -506,7 +506,7 @@ s_chtml20_search_emoji(Chtml20* chtml20, char* txt, char** rslt)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml20_start_html_tag(Chtml20* chtml20, Node* node) 
+s_chtml20_start_html_tag(chtml20_t* chtml20, Node* node) 
 {
   Doc*          doc   = chtml20->doc;
   request_rec*  r     = doc->r;
@@ -528,7 +528,7 @@ s_chtml20_start_html_tag(Chtml20* chtml20, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml20_end_html_tag(Chtml20* chtml20, Node* child) 
+s_chtml20_end_html_tag(chtml20_t* chtml20, Node* child) 
 {
   Doc*          doc = chtml20->doc;
   request_rec*  r   = doc->r;
@@ -547,7 +547,7 @@ s_chtml20_end_html_tag(Chtml20* chtml20, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml20_start_meta_tag(Chtml20* chtml20, Node* node) 
+s_chtml20_start_meta_tag(chtml20_t* chtml20, Node* node) 
 {
   Doc* doc = chtml20->doc;
   request_rec* r = doc->r;
@@ -604,7 +604,7 @@ s_chtml20_start_meta_tag(Chtml20* chtml20, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml20_end_meta_tag(Chtml20* chtml20, Node* child) 
+s_chtml20_end_meta_tag(chtml20_t* chtml20, Node* child) 
 {
   return chtml20->out;
 }
@@ -618,7 +618,7 @@ s_chtml20_end_meta_tag(Chtml20* chtml20, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml20_start_head_tag(Chtml20* chtml20, Node* node) 
+s_chtml20_start_head_tag(chtml20_t* chtml20, Node* node) 
 {
   Doc*          doc = chtml20->doc;
   request_rec*  r   = doc->r;
@@ -636,7 +636,7 @@ s_chtml20_start_head_tag(Chtml20* chtml20, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml20_end_head_tag(Chtml20* chtml20, Node* child) 
+s_chtml20_end_head_tag(chtml20_t* chtml20, Node* child) 
 {
   Doc*          doc = chtml20->doc;
   request_rec*  r   = doc->r;
@@ -654,7 +654,7 @@ s_chtml20_end_head_tag(Chtml20* chtml20, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml20_start_title_tag(Chtml20* chtml20, Node* node) 
+s_chtml20_start_title_tag(chtml20_t* chtml20, Node* node) 
 {
   Doc* doc = chtml20->doc;
   request_rec* r = doc->r;
@@ -672,7 +672,7 @@ s_chtml20_start_title_tag(Chtml20* chtml20, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml20_end_title_tag(Chtml20* chtml20, Node* child) 
+s_chtml20_end_title_tag(chtml20_t* chtml20, Node* child) 
 {
   Doc*          doc = chtml20->doc;
   request_rec*  r   = doc->r;
@@ -691,7 +691,7 @@ s_chtml20_end_title_tag(Chtml20* chtml20, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml20_start_base_tag(Chtml20* chtml20, Node* node) 
+s_chtml20_start_base_tag(chtml20_t* chtml20, Node* node) 
 {
   Attr*         attr;
   Doc*          doc   = chtml20->doc;
@@ -731,7 +731,7 @@ s_chtml20_start_base_tag(Chtml20* chtml20, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml20_end_base_tag(Chtml20* chtml20, Node* child) 
+s_chtml20_end_base_tag(chtml20_t* chtml20, Node* child) 
 {
   return chtml20->out;
 }
@@ -745,7 +745,7 @@ s_chtml20_end_base_tag(Chtml20* chtml20, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml20_start_body_tag(Chtml20* chtml20, Node* node) 
+s_chtml20_start_body_tag(chtml20_t* chtml20, Node* node) 
 {
   Doc* doc = chtml20->doc;
   request_rec* r = doc->r;
@@ -832,7 +832,7 @@ s_chtml20_start_body_tag(Chtml20* chtml20, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml20_end_body_tag(Chtml20* chtml20, Node* child) 
+s_chtml20_end_body_tag(chtml20_t* chtml20, Node* child) 
 {
   Doc*          doc = chtml20->doc;
   request_rec*  r = doc->r;
@@ -851,7 +851,7 @@ s_chtml20_end_body_tag(Chtml20* chtml20, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml20_start_a_tag(Chtml20* chtml20, Node* node) 
+s_chtml20_start_a_tag(chtml20_t* chtml20, Node* node) 
 {
   Doc*          doc   = chtml20->doc;
   request_rec*  r     = doc->r;
@@ -1006,7 +1006,7 @@ s_chtml20_start_a_tag(Chtml20* chtml20, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml20_end_a_tag(Chtml20* chtml20, Node* child) 
+s_chtml20_end_a_tag(chtml20_t* chtml20, Node* child) 
 {
   Doc* doc = chtml20->doc;
   request_rec* r = doc->r;
@@ -1024,7 +1024,7 @@ s_chtml20_end_a_tag(Chtml20* chtml20, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml20_start_br_tag(Chtml20* chtml20, Node* node) 
+s_chtml20_start_br_tag(chtml20_t* chtml20, Node* node) 
 {
   Doc* doc = chtml20->doc;
   request_rec* r = doc->r;
@@ -1041,7 +1041,7 @@ s_chtml20_start_br_tag(Chtml20* chtml20, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml20_end_br_tag(Chtml20* chtml20, Node* child) 
+s_chtml20_end_br_tag(chtml20_t* chtml20, Node* child) 
 {
   return chtml20->out;
 }
@@ -1055,7 +1055,7 @@ s_chtml20_end_br_tag(Chtml20* chtml20, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml20_start_font_tag(Chtml20* chtml20, Node* node) 
+s_chtml20_start_font_tag(chtml20_t* chtml20, Node* node) 
 {
   Doc*          doc   = chtml20->doc;
   request_rec*  r     = doc->r;
@@ -1105,7 +1105,7 @@ s_chtml20_start_font_tag(Chtml20* chtml20, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml20_end_font_tag(Chtml20* chtml20, Node* child) 
+s_chtml20_end_font_tag(chtml20_t* chtml20, Node* child) 
 {
   request_rec* r = chtml20->doc->r;
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</font>", NULL);
@@ -1121,7 +1121,7 @@ s_chtml20_end_font_tag(Chtml20* chtml20, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml20_start_form_tag(Chtml20* chtml20, Node* node) 
+s_chtml20_start_form_tag(chtml20_t* chtml20, Node* node) 
 {
   Doc* doc = chtml20->doc;
   request_rec* r = doc->r;
@@ -1185,7 +1185,7 @@ s_chtml20_start_form_tag(Chtml20* chtml20, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml20_end_form_tag(Chtml20* chtml20, Node* child) 
+s_chtml20_end_form_tag(chtml20_t* chtml20, Node* child) 
 {
   Doc* doc = chtml20->doc;
   request_rec* r = doc->r;
@@ -1203,7 +1203,7 @@ s_chtml20_end_form_tag(Chtml20* chtml20, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml20_start_input_tag(Chtml20* chtml20, Node* node) 
+s_chtml20_start_input_tag(chtml20_t* chtml20, Node* node) 
 {
   Doc*          doc         = chtml20->doc;
   request_rec*  r           = doc->r;
@@ -1328,7 +1328,7 @@ s_chtml20_start_input_tag(Chtml20* chtml20, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml20_end_input_tag(Chtml20* chtml20, Node* child) 
+s_chtml20_end_input_tag(chtml20_t* chtml20, Node* child) 
 {
   return chtml20->out;
 }
@@ -1342,7 +1342,7 @@ s_chtml20_end_input_tag(Chtml20* chtml20, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml20_start_center_tag(Chtml20* chtml20, Node* node) 
+s_chtml20_start_center_tag(chtml20_t* chtml20, Node* node) 
 {
   Doc*          doc = chtml20->doc;
   request_rec*  r   = doc->r;
@@ -1361,7 +1361,7 @@ s_chtml20_start_center_tag(Chtml20* chtml20, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml20_end_center_tag(Chtml20* chtml20, Node* child) 
+s_chtml20_end_center_tag(chtml20_t* chtml20, Node* child) 
 {
   Doc*          doc = chtml20->doc;
   request_rec*  r   = doc->r;
@@ -1380,7 +1380,7 @@ s_chtml20_end_center_tag(Chtml20* chtml20, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml20_start_hr_tag(Chtml20* chtml20, Node* node) 
+s_chtml20_start_hr_tag(chtml20_t* chtml20, Node* node) 
 {
   Doc* doc = chtml20->doc;
   request_rec* r = doc->r;
@@ -1456,7 +1456,7 @@ s_chtml20_start_hr_tag(Chtml20* chtml20, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml20_end_hr_tag(Chtml20* chtml20, Node* child) 
+s_chtml20_end_hr_tag(chtml20_t* chtml20, Node* child) 
 {
   return chtml20->out;
 }
@@ -1470,7 +1470,7 @@ s_chtml20_end_hr_tag(Chtml20* chtml20, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml20_start_img_tag(Chtml20* chtml20, Node* node) 
+s_chtml20_start_img_tag(chtml20_t* chtml20, Node* node) 
 {
   Doc*          doc = chtml20->doc;
   request_rec*  r   = doc->r;
@@ -1585,7 +1585,7 @@ s_chtml20_start_img_tag(Chtml20* chtml20, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml20_end_img_tag(Chtml20* chtml20, Node* child) 
+s_chtml20_end_img_tag(chtml20_t* chtml20, Node* child) 
 {
   return chtml20->out;
 }
@@ -1599,7 +1599,7 @@ s_chtml20_end_img_tag(Chtml20* chtml20, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml20_start_select_tag(Chtml20* chtml20, Node* child)
+s_chtml20_start_select_tag(chtml20_t* chtml20, Node* child)
 {
   Doc* doc = chtml20->doc;
   request_rec* r = doc->r;
@@ -1662,7 +1662,7 @@ s_chtml20_start_select_tag(Chtml20* chtml20, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml20_end_select_tag(Chtml20* chtml20, Node* child)
+s_chtml20_end_select_tag(chtml20_t* chtml20, Node* child)
 {
   Doc* doc = chtml20->doc;
   request_rec* r = doc->r;
@@ -1680,7 +1680,7 @@ s_chtml20_end_select_tag(Chtml20* chtml20, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml20_start_option_tag(Chtml20* chtml20, Node* child)
+s_chtml20_start_option_tag(chtml20_t* chtml20, Node* child)
 {
   Doc* doc = chtml20->doc;
   request_rec* r = doc->r;
@@ -1741,7 +1741,7 @@ s_chtml20_start_option_tag(Chtml20* chtml20, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml20_end_option_tag(Chtml20* chtml20, Node* child)
+s_chtml20_end_option_tag(chtml20_t* chtml20, Node* child)
 {
   /* Don't close */
   return chtml20->out;
@@ -1756,7 +1756,7 @@ s_chtml20_end_option_tag(Chtml20* chtml20, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml20_start_div_tag(Chtml20* chtml20, Node* child)
+s_chtml20_start_div_tag(chtml20_t* chtml20, Node* child)
 {
   Doc* doc = chtml20->doc;
   request_rec* r = doc->r;
@@ -1800,7 +1800,7 @@ s_chtml20_start_div_tag(Chtml20* chtml20, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml20_end_div_tag(Chtml20* chtml20, Node* child)
+s_chtml20_end_div_tag(chtml20_t* chtml20, Node* child)
 {
   Doc* doc = chtml20->doc;
   request_rec* r = doc->r;
@@ -1812,7 +1812,7 @@ s_chtml20_end_div_tag(Chtml20* chtml20, Node* child)
 
 
 static void
-s_chtml20_chxjif_tag(Chtml20* chtml20, Node* node)
+s_chtml20_chxjif_tag(chtml20_t* chtml20, Node* node)
 {
   Doc*         doc   = chtml20->doc;
   Node*        child;
