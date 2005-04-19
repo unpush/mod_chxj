@@ -21,7 +21,7 @@
 #include "chxj_qr_code.h"
 
 static char* s_chtml10_node_exchange    (Chtml10* chtml, Node* node, int indent);
-static char* chtml10_start_html_tag   (Chtml10* chtml, Node* child);
+static char* s_chtml10_start_html_tag   (Chtml10* chtml, Node* child);
 static char* chtml10_end_html_tag     (Chtml10* chtml, Node* child);
 static char* chtml10_start_meta_tag   (Chtml10* chtml, Node* node);
 static char* chtml10_end_meta_tag     (Chtml10* chtml, Node* node);
@@ -191,7 +191,7 @@ s_chtml10_node_exchange(Chtml10* chtml10, Node* node, int indent)
     /*------------------------------------------------------------------------*/
     if (strcasecmp(name, "html") == 0) 
     {
-      chtml10_start_html_tag(chtml10, child);
+      s_chtml10_start_html_tag(chtml10, child);
       s_chtml10_node_exchange (chtml10, child,indent+1);
       chtml10_end_html_tag  (chtml10, child);
     }
@@ -498,7 +498,7 @@ chtml10_search_emoji(Chtml10* chtml10, char* txt, char** rslt)
  * @return The conversion result is returned.
  */
 static char*
-chtml10_start_html_tag(Chtml10* chtml10, Node* node) 
+s_chtml10_start_html_tag(Chtml10* chtml10, Node* node) 
 {
   Doc*          doc   = chtml10->doc;
   request_rec*  r     = doc->r;
