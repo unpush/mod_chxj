@@ -49,7 +49,7 @@ static char* s_chtml30_end_center_tag   (Chtml30* chtml, Node* node);
 static char* s_chtml30_start_hr_tag     (Chtml30* chtml, Node* node);
 static char* s_chtml30_end_hr_tag       (Chtml30* chtml, Node* node);
 static char* s_chtml30_start_img_tag    (Chtml30* chtml, Node* node);
-static char* chtml30_end_img_tag      (Chtml30* chtml, Node* node);
+static char* s_chtml30_end_img_tag      (Chtml30* chtml, Node* node);
 static char* chtml30_start_select_tag (Chtml30* chtml, Node* node);
 static char* chtml30_end_select_tag   (Chtml30* chtml, Node* node);
 static char* chtml30_start_option_tag (Chtml30* chtml, Node* node);
@@ -321,7 +321,7 @@ s_chtml30_node_exchange(Chtml30* chtml30, Node* node, int indent)
     if (strcasecmp(name, "img") == 0) 
     {
       s_chtml30_start_img_tag (chtml30, child);
-      chtml30_end_img_tag   (chtml30, child);
+      s_chtml30_end_img_tag   (chtml30, child);
     }
     /*------------------------------------------------------------------------*/
     /* <SELECT>                                                               */
@@ -1598,7 +1598,7 @@ s_chtml30_start_img_tag(Chtml30* chtml30, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-chtml30_end_img_tag(Chtml30* chtml30, Node* child) 
+s_chtml30_end_img_tag(Chtml30* chtml30, Node* child) 
 {
   return chtml30->out;
 }
