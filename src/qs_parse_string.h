@@ -142,6 +142,9 @@ typedef struct _doc {
 
   ParseMode_t    parse_mode;
 
+  apr_allocator_t* allocator;
+  apr_pool_t*      pool;
+
 #ifndef __NON_MOD_CHXJ__
   request_rec* r;
 #endif
