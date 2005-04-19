@@ -57,8 +57,8 @@ static char* s_chtml20_end_option_tag   (Chtml20* chtml, Node* node);
 static char* s_chtml20_start_div_tag    (Chtml20* chtml, Node* node);
 static char* s_chtml20_end_div_tag      (Chtml20* chtml, Node* node);
 static void  s_init_chtml20(Chtml20* chtml, Doc* doc, request_rec* r, device_table* spec);
-static int chtml20_search_emoji(Chtml20* chtml, char* txt, char** rslt);
-static void chtml20_chxjif_tag(Chtml20* chtml, Node* node); 
+static int   s_chtml20_search_emoji(Chtml20* chtml, char* txt, char** rslt);
+static void  chtml20_chxjif_tag(Chtml20* chtml, Node* node); 
 
 /**
  * converts from CHTML5.0 to CHTML2.0.
@@ -411,7 +411,7 @@ s_chtml20_node_exchange(Chtml20* chtml20, Node* node, int indent)
       for (ii=0; ii<qs_get_node_size(doc,child); ii++)
       {
         char* out;
-        int rtn = chtml20_search_emoji(chtml20, &textval[ii], &out);
+        int rtn = s_chtml20_search_emoji(chtml20, &textval[ii], &out);
         if (rtn != 0)
         {
           tdst = qs_out_apr_pstrcat(r, tdst, out, &tdst_len);
@@ -450,7 +450,7 @@ s_chtml20_node_exchange(Chtml20* chtml20, Node* node, int indent)
  * @return When corresponding EMOJI exists, it returns it excluding 0. 
  */
 static int
-chtml20_search_emoji(Chtml20* chtml20, char* txt, char** rslt)
+s_chtml20_search_emoji(Chtml20* chtml20, char* txt, char** rslt)
 {
   emoji_t*      ee;
   request_rec*  r;
