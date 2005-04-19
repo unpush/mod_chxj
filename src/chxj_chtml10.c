@@ -29,14 +29,14 @@ static char* s_chtml10_start_head_tag   (Chtml10* chtml, Node* node);
 static char* s_chtml10_end_head_tag     (Chtml10* chtml, Node* node);
 static char* s_chtml10_start_title_tag  (Chtml10* chtml, Node* node);
 static char* s_chtml10_end_title_tag    (Chtml10* chtml, Node* node);
-static char* chtml10_start_base_tag   (Chtml10* chtml, Node* node);
-static char* chtml10_end_base_tag     (Chtml10* chtml, Node* node);
-static char* chtml10_start_body_tag   (Chtml10* chtml, Node* node);
-static char* chtml10_end_body_tag     (Chtml10* chtml, Node* node);
-static char* chtml10_start_a_tag      (Chtml10* chtml, Node* node);
-static char* chtml10_end_a_tag        (Chtml10* chtml, Node* node);
-static char* chtml10_start_br_tag     (Chtml10* chtml, Node* node);
-static char* chtml10_end_br_tag       (Chtml10* chtml, Node* node);
+static char* s_chtml10_start_base_tag   (Chtml10* chtml, Node* node);
+static char* s_chtml10_end_base_tag     (Chtml10* chtml, Node* node);
+static char* s_chtml10_start_body_tag   (Chtml10* chtml, Node* node);
+static char* s_chtml10_end_body_tag     (Chtml10* chtml, Node* node);
+static char* s_chtml10_start_a_tag      (Chtml10* chtml, Node* node);
+static char* s_chtml10_end_a_tag        (Chtml10* chtml, Node* node);
+static char* s_chtml10_start_br_tag     (Chtml10* chtml, Node* node);
+static char* s_chtml10_end_br_tag       (Chtml10* chtml, Node* node);
 static char* chtml10_start_font_tag   (Chtml10* chtml, Node* node);
 static char* chtml10_end_font_tag     (Chtml10* chtml, Node* node);
 static char* chtml10_start_form_tag   (Chtml10* chtml, Node* node);
@@ -230,8 +230,8 @@ s_chtml10_node_exchange(Chtml10* chtml10, Node* node, int indent)
     else
     if (strcasecmp(name, "base") == 0) 
     {
-      chtml10_start_base_tag(chtml10, child);
-      chtml10_end_base_tag  (chtml10, child);
+      s_chtml10_start_base_tag(chtml10, child);
+      s_chtml10_end_base_tag  (chtml10, child);
     }
     /*------------------------------------------------------------------------*/
     /* <BODY>                                                                 */
@@ -239,9 +239,9 @@ s_chtml10_node_exchange(Chtml10* chtml10, Node* node, int indent)
     else
     if (strcasecmp(name, "body") == 0) 
     {
-      chtml10_start_body_tag(chtml10, child);
+      s_chtml10_start_body_tag(chtml10, child);
       s_chtml10_node_exchange (chtml10, child,indent+1);
-      chtml10_end_body_tag  (chtml10, child);
+      s_chtml10_end_body_tag  (chtml10, child);
     }
     /*------------------------------------------------------------------------*/
     /* <A>                                                                    */
@@ -249,9 +249,9 @@ s_chtml10_node_exchange(Chtml10* chtml10, Node* node, int indent)
     else
     if (strcasecmp(name, "a") == 0) 
     {
-      chtml10_start_a_tag   (chtml10, child);
+      s_chtml10_start_a_tag   (chtml10, child);
       s_chtml10_node_exchange (chtml10, child,indent+1);
-      chtml10_end_a_tag     (chtml10, child);
+      s_chtml10_end_a_tag     (chtml10, child);
     }
     /*------------------------------------------------------------------------*/
     /* <BR>                                                                   */
@@ -259,9 +259,9 @@ s_chtml10_node_exchange(Chtml10* chtml10, Node* node, int indent)
     else
     if (strcasecmp(name, "br") == 0) 
     {
-      chtml10_start_br_tag  (chtml10, child);
+      s_chtml10_start_br_tag  (chtml10, child);
       s_chtml10_node_exchange (chtml10, child,indent+1);
-      chtml10_end_br_tag    (chtml10, child);
+      s_chtml10_end_br_tag    (chtml10, child);
     }
     /*------------------------------------------------------------------------*/
     /* <FONT>                                                                 */
@@ -641,7 +641,7 @@ s_chtml10_end_title_tag(Chtml10* chtml10, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-chtml10_start_base_tag(Chtml10* chtml10, Node* node) 
+s_chtml10_start_base_tag(Chtml10* chtml10, Node* node) 
 {
   Attr*         attr;
   Doc*          doc   = chtml10->doc;
@@ -681,7 +681,7 @@ chtml10_start_base_tag(Chtml10* chtml10, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-chtml10_end_base_tag(Chtml10* chtml10, Node* child) 
+s_chtml10_end_base_tag(Chtml10* chtml10, Node* child) 
 {
   return chtml10->out;
 }
@@ -695,7 +695,7 @@ chtml10_end_base_tag(Chtml10* chtml10, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-chtml10_start_body_tag(Chtml10* chtml10, Node* node) 
+s_chtml10_start_body_tag(Chtml10* chtml10, Node* node) 
 {
   Doc* doc = chtml10->doc;
   request_rec* r = doc->r;
@@ -766,7 +766,7 @@ chtml10_start_body_tag(Chtml10* chtml10, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-chtml10_end_body_tag(Chtml10* chtml10, Node* child) 
+s_chtml10_end_body_tag(Chtml10* chtml10, Node* child) 
 {
   Doc*          doc = chtml10->doc;
   request_rec*  r = doc->r;
@@ -785,7 +785,7 @@ chtml10_end_body_tag(Chtml10* chtml10, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-chtml10_start_a_tag(Chtml10* chtml10, Node* node) 
+s_chtml10_start_a_tag(Chtml10* chtml10, Node* node) 
 {
   Doc*          doc   = chtml10->doc;
   request_rec*  r     = doc->r;
@@ -935,7 +935,7 @@ chtml10_start_a_tag(Chtml10* chtml10, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-chtml10_end_a_tag(Chtml10* chtml10, Node* child) 
+s_chtml10_end_a_tag(Chtml10* chtml10, Node* child) 
 {
   Doc* doc = chtml10->doc;
   request_rec* r = doc->r;
@@ -953,7 +953,7 @@ chtml10_end_a_tag(Chtml10* chtml10, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-chtml10_start_br_tag(Chtml10* chtml10, Node* node) 
+s_chtml10_start_br_tag(Chtml10* chtml10, Node* node) 
 {
   Doc* doc = chtml10->doc;
   request_rec* r = doc->r;
@@ -970,7 +970,7 @@ chtml10_start_br_tag(Chtml10* chtml10, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-chtml10_end_br_tag(Chtml10* chtml10, Node* child) 
+s_chtml10_end_br_tag(Chtml10* chtml10, Node* child) 
 {
   return chtml10->out;
 }
