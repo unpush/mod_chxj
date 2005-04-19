@@ -16,14 +16,14 @@
  */
 #include <unistd.h>
 #include <assert.h>
-#include "chxj_str_util.h"
-#include "chxj_qr_code.h"
-#include "chxj_calc_ecc.h"
 #include "apr_strings.h"
 #include "httpd.h"
 #include "http_protocol.h"
 #include "http_log.h"
 
+#include "chxj_str_util.h"
+#include "chxj_qr_code.h"
+#include "chxj_calc_ecc.h"
 #include "mod_chxj.h"
 #include "chxj_specified_device.h"
 #include "qs_malloc.h"

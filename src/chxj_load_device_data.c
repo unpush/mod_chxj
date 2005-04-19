@@ -26,7 +26,7 @@
 #include "chxj_str_util.h"
 
 
-static void set_devices_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node) ;
+static void s_set_devices_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node) ;
 static void set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node) ;
 static void set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node) ;
 /**
@@ -36,7 +36,7 @@ void
 chxj_load_device_data(Doc* doc, apr_pool_t *p, mod_chxj_config* conf) 
 {
   conf->devices = NULL;
-  set_devices_data(doc, p, conf,qs_get_root(doc));
+  s_set_devices_data(doc, p, conf,qs_get_root(doc));
 #if 0
   do {
     FILE* fp = fopen("/tmp/load_device.log", "a");
@@ -66,7 +66,7 @@ chxj_load_device_data(Doc* doc, apr_pool_t *p, mod_chxj_config* conf)
  * <devices>
  */
 static void
-set_devices_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node) 
+s_set_devices_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node) 
 {
   Node* child;
   for (child = qs_get_child_node(doc,node); 
