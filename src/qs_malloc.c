@@ -37,10 +37,8 @@ qs_init_malloc(Doc* doc)
   {
     QX_LOGGER_FATAL("Out Of Memory");
   }
-  apr_pool_initialize();
 
   doc->do_init_flag = 1;
-
 }
 
 /**
@@ -71,7 +69,6 @@ qs_all_free(Doc* doc, const char* fname, int line)
 {
   if (doc->do_init_flag) 
   {
-    apr_pool_terminate();
     apr_pool_destroy(doc->pool);
 
     apr_allocator_destroy(doc->allocator);
