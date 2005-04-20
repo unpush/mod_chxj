@@ -18,7 +18,6 @@
 #include <strings.h>
 #include "httpd.h"
 #include "http_log.h"
-#include "qs_malloc.h"
 #include "qs_parse_string.h"
 #include "qs_parse_tag.h"
 #include "qs_log.h"
@@ -112,9 +111,9 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
       /* TEXT */
       int endpoint = s_cut_text(&src[ii], srclen - ii);
       Node* node = qs_new_tag(doc);
-      node->value = (char*)qs_malloc(doc,endpoint+1, QX_LOGMARK);
-      node->name  = (char*)qs_malloc(doc,4+1,        QX_LOGMARK);
-      node->otext = (char*)qs_malloc(doc,endpoint+1, QX_LOGMARK);
+      node->value = (char*)apr_palloc(doc->pool,endpoint+1);
+      node->name  = (char*)apr_palloc(doc->pool,4+1);
+      node->otext = (char*)apr_palloc(doc->pool,endpoint+1);
       node->size  = endpoint;
       memset(node->value, 0, endpoint+1);
       memset(node->otext, 0, endpoint+1);
@@ -229,7 +228,7 @@ s_cut_text(const char* s, int len) {
 
 Node*
 qs_init_root_node(Doc* doc) {
-  doc->root_node = (Node*)qs_malloc(doc,sizeof(struct _node),QX_LOGMARK);
+  doc->root_node = (Node*)apr_palloc(doc->pool,sizeof(struct _node));
   if (doc->root_node == NULL) {
     QX_LOGGER_FATAL("Out Of Memory");
   }
@@ -238,7 +237,7 @@ qs_init_root_node(Doc* doc) {
   doc->root_node->child  = NULL;
   doc->root_node->attr   = NULL;
 
-  doc->root_node->name   = (char*)qs_malloc(doc,5,QX_LOGMARK);
+  doc->root_node->name   = (char*)apr_palloc(doc->pool,5);
   if (doc->root_node->name == NULL) {
     QX_LOGGER_FATAL("Out Of Memory");
   }

@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 #include <stdio.h>
-#include "qs_malloc.h"
 #include "qs_parse_string.h"
 #include "qs_parse_attr.h"
 #include "qs_log.h"
@@ -61,7 +60,7 @@ qs_parse_attr(Doc* doc, const char*s, int len, int *pos)
     *pos = ii;
     return NULL;
   }
-  name = (char*)qs_malloc(doc, size+1, QX_LOGMARK);
+  name = (char*)apr_palloc(doc->pool,size+1);
   memset(name, 0, size+1);
   memcpy(name, &s[start_pos], size);
   QX_LOGGER_DEBUG((char*)name);
@@ -144,7 +143,7 @@ qs_parse_attr(Doc* doc, const char*s, int len, int *pos)
     QX_LOGGER_DEBUG_INT("size",size);
   }
 
-  value = (char*)qs_malloc(doc, size+1, QX_LOGMARK);
+  value = (char*)apr_palloc(doc->pool, size+1);
   memset(value, 0, size+1);
   if (size != 0) 
   {
@@ -165,7 +164,7 @@ qs_parse_attr(Doc* doc, const char*s, int len, int *pos)
 Attr*
 qs_new_attr(Doc* doc) 
 {
-  Attr* attr = (Attr*)qs_malloc(doc,sizeof(Attr),QX_LOGMARK);
+  Attr* attr = (Attr*)apr_palloc(doc->pool,sizeof(Attr));
   if (attr == NULL) 
   {
     QX_LOGGER_FATAL("Out Of Memory");

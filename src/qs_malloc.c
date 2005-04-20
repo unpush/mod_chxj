@@ -41,25 +41,6 @@ qs_init_malloc(Doc* doc)
   doc->do_init_flag = 1;
 }
 
-/**
- *it is a wrapper of "malloc()" function. 
- */
-void*
-qs_malloc(Doc* doc, int size, const char* fname, int line) 
-{
-  return apr_palloc(doc->pool, size);
-}
-
-
-
-/**
- *it is a wrapper of "free()" function. 
- */
-void
-qs_free(Doc* doc, void *s, const char* fname, int line) 
-{
-}
-
 
 
 

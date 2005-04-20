@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 #include <stdio.h>
-#include "qs_malloc.h"
 #include "qs_parse_string.h"
 #include "qs_log.h"
 #include "qs_parse_attr.h"
@@ -43,7 +42,7 @@ qs_parse_tag(Doc* doc, const char* s, int len)
 
   node = (Node*)qs_new_tag(doc);
   node->name = tag_name;
-  node->otext = qs_malloc(doc,len+2, QX_LOGMARK);
+  node->otext = apr_palloc(doc->pool,len+2);
   memset(node->otext, 0, len+2);
   memcpy(node->otext, sp, len+1);
 
@@ -103,7 +102,7 @@ s_get_tag_name(Doc* doc, const char* s, int len)
 
   size = ii-sp;
 
-  return_value = (char*)qs_malloc(doc, size+1,QX_LOGMARK);
+  return_value = (char*)apr_palloc(doc->pool, size+1);
 
   memset(return_value, 0, size+1);
   memcpy(return_value, &s[sp], size);
@@ -117,7 +116,7 @@ s_get_tag_name(Doc* doc, const char* s, int len)
 Node*
 qs_new_tag(Doc* doc) 
 {
-  Node* node      = (Node*)qs_malloc(doc, sizeof(Node), QX_LOGMARK);
+  Node* node      = (Node*)apr_palloc(doc->pool, sizeof(Node));
   node->next      = NULL;
   node->parent    = NULL;
   node->child     = NULL;
