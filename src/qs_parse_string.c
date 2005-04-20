@@ -62,14 +62,12 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
 
         if (doc->parse_mode != PARSE_MODE_NO_PARSE)
         {
-          qs_free_node(doc,node);
           continue;
         }
       }
       if (strncmp(node->name, "!--", 3) == 0) 
       {
         /* comment tag */
-        qs_free_node(doc, node);
         continue;
       }
       qs_add_child_node(doc,node);
@@ -269,28 +267,6 @@ qs_add_child_node(Doc* doc,Node* node)
     doc->now_parent_node->child_tail->next = node;
     doc->now_parent_node->child_tail       = node;
   }
-}
-
-
-
-void
-qs_free_node(Doc* doc, Node* node) 
-{
-  QX_LOGGER_DEBUG("start qs_free_node()");
-
-  qs_free(doc,node->name, QX_LOGMARK);
-  Attr* attr;
-  Attr* nattr;
-
-  for (attr = node->attr; attr ; attr = nattr) {
-    nattr = attr->next;
-    qs_free(doc,attr->name, QX_LOGMARK);
-    qs_free(doc,attr->value, QX_LOGMARK);
-    qs_free(doc,attr, QX_LOGMARK);
-  }
-
-  qs_free(doc,node, QX_LOGMARK);
-  QX_LOGGER_DEBUG("end qs_free_node()");
 }
 
 
