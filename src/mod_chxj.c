@@ -566,7 +566,7 @@ apr_status_t
 chxj_init_module_kill(void *data)
 {
   server_rec *base_server = (server_rec *)data;
-  mod_chxj_global_config* conf;
+  mod_chxj_global_config_t* conf;
 
   ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, base_server, 
                   "start chxj_init_module_kill()");
@@ -581,10 +581,11 @@ chxj_init_module_kill(void *data)
   return APR_SUCCESS;
 }
 
-static mod_chxj_global_config*
+
+static mod_chxj_global_config_t*
 chxj_global_config_create(apr_pool_t* pool, server_rec* s)
 {
-  mod_chxj_global_config* conf;
+  mod_chxj_global_config_t* conf;
   void*           param;
 
   ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, s,
@@ -592,7 +593,7 @@ chxj_global_config_create(apr_pool_t* pool, server_rec* s)
 
 
   apr_pool_userdata_get(&param, CHXJ_MOD_CONFIG_KEY, pool);
-  conf = (mod_chxj_global_config*)param;
+  conf = (mod_chxj_global_config_t*)param;
   apr_pool_cleanup_register(pool, s,
                                chxj_init_module_kill,
                                apr_pool_cleanup_null);
@@ -609,8 +610,8 @@ chxj_global_config_create(apr_pool_t* pool, server_rec* s)
   /*--------------------------------------------------------------------------*/
   /* allocate an own subpool which survives server restarts                   */
   /*--------------------------------------------------------------------------*/
-  conf = (mod_chxj_global_config*)apr_palloc(pool, 
-                  sizeof(mod_chxj_global_config));
+  conf = (mod_chxj_global_config_t*)apr_palloc(pool, 
+                  sizeof(mod_chxj_global_config_t));
   conf->client_shm  = NULL;
   conf->client_lock = NULL;
   memset(conf->client_lock_file_name, 0, sizeof(conf->client_lock_file_name));
@@ -650,7 +651,7 @@ chxj_init_module(apr_pool_t *p,
 static void*
 chxj_config_server_create(apr_pool_t *p, server_rec *s)
 {
-  mod_chxj_global_config *gc;
+  mod_chxj_global_config_t *gc;
 
   gc = chxj_global_config_create(p,s);
 

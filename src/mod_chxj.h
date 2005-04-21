@@ -91,7 +91,7 @@ typedef struct _mod_chxj_global_config_t
   apr_shm_t*          client_shm;
   apr_global_mutex_t* client_lock;
   char                client_lock_file_name[256];
-} mod_chxj_global_config;
+} mod_chxj_global_config_t;
 
 typedef struct _mod_chxj_ctx_t
 {
