@@ -120,9 +120,9 @@ s_load_emoji_set_tag(
   char* rtn;
 
   em = apr_palloc(p, sizeof(emoji_t));
-  em->imode = apr_palloc(p, sizeof(imode_emoji));
-  em->ezweb = apr_palloc(p, sizeof(ezweb_emoji));
-  em->jphone = apr_palloc(p, sizeof(jphone_emoji));
+  em->imode = apr_palloc(p, sizeof(imode_emoji_t));
+  em->ezweb = apr_palloc(p, sizeof(ezweb_emoji_t));
+  em->jphone = apr_palloc(p, sizeof(jphone_emoji_t));
   
   for (child = qs_get_child_node(doc, node);
        child;

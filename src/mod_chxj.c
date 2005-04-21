@@ -324,7 +324,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
   const char*  data;
   char*       contentLength;
   apr_size_t  len;
-  mod_chxj_ctx* ctx;
+  mod_chxj_ctx_t* ctx;
 
 
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, 
@@ -352,7 +352,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
       /*----------------------------------------------------------------------*/
       if (f->ctx) 
       {
-        ctx = (mod_chxj_ctx*)f->ctx;
+        ctx = (mod_chxj_ctx_t*)f->ctx;
         if (strncmp(r->content_type, "text/html",   9) == 0)
         {
           if (ctx->len)
@@ -410,7 +410,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
         /* Start                                                              */
         /*--------------------------------------------------------------------*/
         ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "new context");
-        ctx = (mod_chxj_ctx*)apr_palloc(r->pool, sizeof(mod_chxj_ctx));
+        ctx = (mod_chxj_ctx_t*)apr_palloc(r->pool, sizeof(mod_chxj_ctx_t));
         if (len > 0)
         {
           ctx->buffer = apr_palloc(r->pool, len);
@@ -431,7 +431,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
         /*--------------------------------------------------------------------*/
         char* tmp;
         ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "append data start");
-        ctx = (mod_chxj_ctx*)f->ctx;
+        ctx = (mod_chxj_ctx_t*)f->ctx;
 
         if (len > 0)
         {

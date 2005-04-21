@@ -100,7 +100,7 @@ typedef struct _mod_chxj_ctx_t
   apr_bucket_brigade *bb;
 
   char* buffer;
-} mod_chxj_ctx;
+} mod_chxj_ctx_t;
 
 #include "chxj_tag_util.h"
 
