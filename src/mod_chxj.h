@@ -50,25 +50,25 @@ typedef struct _imode_emoji_t {
   char  hex2byte;
   char* string;
   char *description;
-} imode_emoji;
+} imode_emoji_t;
 
 typedef struct _ezweb_emoji_t {
   char* typeA;
   char* typeB;
   char* typeC;
   char* typeD;
-} ezweb_emoji;
+} ezweb_emoji_t;
 
 typedef struct _jphone_emoji_t {
   char* string;
-} jphone_emoji;
+} jphone_emoji_t;
 
 typedef struct _emoji_t {
   struct _emoji_t* next;
   int no;
-  imode_emoji* imode;
-  ezweb_emoji* ezweb;
-  jphone_emoji* jphone;
+  imode_emoji_t* imode;
+  ezweb_emoji_t* ezweb;
+  jphone_emoji_t* jphone;
 } emoji_t;
 
 typedef struct _mod_chxj_config_t 
