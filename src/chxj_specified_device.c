@@ -34,7 +34,7 @@ chxj_specified_device(request_rec* r, const char* user_agent)
   device_table *returnType = &UNKNOWN_DEVICE;
   device_table_list* dtl;
   device_table* dt;
-  mod_chxj_config* conf; 
+  mod_chxj_config_t* conf; 
   int rtn;
   char* device_id;
 

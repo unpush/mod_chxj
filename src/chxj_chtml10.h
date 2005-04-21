@@ -29,7 +29,7 @@ typedef struct _Ctml10_t {
     int   out_len;
 
     device_table* spec;
-    mod_chxj_config* conf;
+    mod_chxj_config_t* conf;
 } chtml10_t;
 
 /*----------------------------------------------------------------------------*/

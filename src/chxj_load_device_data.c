@@ -26,14 +26,14 @@
 #include "chxj_str_util.h"
 
 
-static void s_set_devices_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node) ;
-static void s_set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node) ;
+static void s_set_devices_data(Doc* doc, apr_pool_t* p, mod_chxj_config_t* conf, Node* node) ;
+static void s_set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config_t* conf, Node* node) ;
 static void s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node) ;
 /**
  * load device_data.xml
  */
 void
-chxj_load_device_data(Doc* doc, apr_pool_t *p, mod_chxj_config* conf) 
+chxj_load_device_data(Doc* doc, apr_pool_t *p, mod_chxj_config_t* conf) 
 {
   conf->devices = NULL;
   s_set_devices_data(doc, p, conf,qs_get_root(doc));
@@ -66,7 +66,7 @@ chxj_load_device_data(Doc* doc, apr_pool_t *p, mod_chxj_config* conf)
  * <devices>
  */
 static void
-s_set_devices_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node) 
+s_set_devices_data(Doc* doc, apr_pool_t* p, mod_chxj_config_t* conf, Node* node) 
 {
   Node* child;
   for (child = qs_get_child_node(doc,node); 
@@ -85,7 +85,7 @@ s_set_devices_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node)
  * <user_agent>
  */
 static void
-s_set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node) 
+s_set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config_t* conf, Node* node) 
 {
   Node* child;
   device_table_list* t;

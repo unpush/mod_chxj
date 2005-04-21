@@ -28,7 +28,7 @@ typedef struct _ctml20_t {
     int   out_len;
 
     device_table* spec;
-    mod_chxj_config* conf;
+    mod_chxj_config_t* conf;
 } chtml20_t;
 
 /*----------------------------------------------------------------------------*/

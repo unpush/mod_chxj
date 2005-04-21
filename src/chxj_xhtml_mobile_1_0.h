@@ -22,13 +22,13 @@
 /*----------------------------------------------------------------------------*/
 /* Structure for HDML                                                         */
 /*----------------------------------------------------------------------------*/
-typedef struct _Xhtml_t {
+typedef struct _xhtml_t {
     Doc* doc;
     char* out;
     int   out_len;
 
     device_table* spec;
-    mod_chxj_config* conf;
+    mod_chxj_config_t* conf;
 } xhtml_t;
 
 /*----------------------------------------------------------------------------*/

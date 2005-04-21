@@ -18,10 +18,10 @@
 #include "mod_chxj.h"
 #include "chxj_load_emoji_data.h"
 
-static char* s_load_emoji_set_tag( Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node);
-static char* s_set_emoji_data( Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node);
-static char* s_load_emoji_emoji_tag( Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node);
-static void  s_emoji_add_to_tail( mod_chxj_config* conf, emoji_t* emoji);
+static char* s_load_emoji_set_tag( Doc* doc, apr_pool_t* p, mod_chxj_config_t* conf, Node* node);
+static char* s_set_emoji_data( Doc* doc, apr_pool_t* p, mod_chxj_config_t* conf, Node* node);
+static char* s_load_emoji_emoji_tag( Doc* doc, apr_pool_t* p, mod_chxj_config_t* conf, Node* node);
+static void  s_emoji_add_to_tail( mod_chxj_config_t* conf, emoji_t* emoji);
 static char* s_load_emoji_no_tag( Doc* doc, apr_pool_t* p, emoji_t* em, Node* node);
 static char* s_load_emoji_imode_tag( Doc* doc, apr_pool_t* p, emoji_t* em, Node* node);
 static char* s_load_emoji_ezweb_tag( Doc* doc, apr_pool_t* p, emoji_t* em, Node* node);
@@ -36,7 +36,7 @@ char*
 chxj_load_emoji_data(
   Doc* doc,
   apr_pool_t *p,
-  mod_chxj_config* conf) 
+  mod_chxj_config_t* conf) 
 {
   char* rtn;
 
@@ -58,7 +58,7 @@ static char*
 s_set_emoji_data(
   Doc* doc,
   apr_pool_t* p,
-  mod_chxj_config* conf,
+  mod_chxj_config_t* conf,
   Node* node) 
 {
   Node* child;
@@ -85,7 +85,7 @@ static char*
 s_load_emoji_emoji_tag(
   Doc* doc,
   apr_pool_t* p,
-  mod_chxj_config* conf,
+  mod_chxj_config_t* conf,
   Node* node)
 {
   Node* child;
@@ -112,7 +112,7 @@ static char*
 s_load_emoji_set_tag(
   Doc* doc,
   apr_pool_t* p,
-  mod_chxj_config* conf,
+  mod_chxj_config_t* conf,
   Node* node)
 {
   Node* child;
@@ -469,7 +469,7 @@ s_load_emoji_jphone_tag(
 
 static void
 s_emoji_add_to_tail(
-  mod_chxj_config* conf,
+  mod_chxj_config_t* conf,
   emoji_t* emoji)
 {
   emoji->next = NULL;

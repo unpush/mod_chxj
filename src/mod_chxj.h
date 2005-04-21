@@ -84,7 +84,7 @@ typedef struct _mod_chxj_config_t
   emoji_t*            emoji;
   emoji_t*            emoji_tail;
 
-} mod_chxj_config;
+} mod_chxj_config_t;
 
 typedef struct _mod_chxj_global_config_t
 {

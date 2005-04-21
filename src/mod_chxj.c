@@ -700,9 +700,9 @@ chxj_register_hooks(apr_pool_t *p)
 static void* 
 chxj_create_per_dir_config(apr_pool_t *p, char *arg) 
 {
-  mod_chxj_config* conf;
+  mod_chxj_config_t* conf;
 
-  conf = apr_pcalloc(p, sizeof(mod_chxj_config));
+  conf = apr_pcalloc(p, sizeof(mod_chxj_config_t));
   conf->device_data_file = NULL;
   conf->devices          = NULL;
   conf->emoji_data_file  = NULL;
@@ -721,9 +721,9 @@ chxj_create_per_dir_config(apr_pool_t *p, char *arg)
 static void*
 chxj_merge_per_dir_config(apr_pool_t *p, void *basev, void *addv)
 {
-  mod_chxj_config *base = (mod_chxj_config*)basev;
-  mod_chxj_config *add  = (mod_chxj_config*)addv;
-  mod_chxj_config *mrg  = (mod_chxj_config*)apr_palloc(p, sizeof(mod_chxj_config));
+  mod_chxj_config_t *base = (mod_chxj_config_t*)basev;
+  mod_chxj_config_t *add  = (mod_chxj_config_t*)addv;
+  mod_chxj_config_t *mrg  = (mod_chxj_config_t*)apr_palloc(p, sizeof(mod_chxj_config_t));
 
   mrg->device_data_file = NULL;
   mrg->devices          = NULL;
@@ -796,7 +796,7 @@ chxj_merge_per_dir_config(apr_pool_t *p, void *basev, void *addv)
 static const char* 
 cmd_load_device_data(cmd_parms *parms, void *mconfig, const char* arg) 
 {
-  mod_chxj_config* conf;
+  mod_chxj_config_t* conf;
   Doc doc;
   doc.r = NULL;
   if (strlen(arg) > 256) 
@@ -804,7 +804,7 @@ cmd_load_device_data(cmd_parms *parms, void *mconfig, const char* arg)
     return "device data filename too long.";
   }
 
-  conf = (mod_chxj_config*)mconfig;
+  conf = (mod_chxj_config_t*)mconfig;
   conf->device_data_file = apr_pstrdup(parms->pool, arg);
 
   qs_init_malloc(&doc);
@@ -827,7 +827,7 @@ cmd_load_device_data(cmd_parms *parms, void *mconfig, const char* arg)
 static const char* 
 cmd_load_emoji_data(cmd_parms *parms, void *mconfig, const char* arg) 
 {
-  mod_chxj_config* conf;
+  mod_chxj_config_t* conf;
   char* rtn;
   Doc doc;
   doc.r = NULL;
@@ -837,7 +837,7 @@ cmd_load_emoji_data(cmd_parms *parms, void *mconfig, const char* arg)
     return "emoji data filename too long.";
   }
 
-  conf = (mod_chxj_config*)mconfig;
+  conf = (mod_chxj_config_t*)mconfig;
   conf->emoji_data_file = apr_pstrdup(parms->pool, arg);
   qs_init_malloc(&doc);
   qs_init_root_node(&doc);
@@ -852,7 +852,7 @@ cmd_load_emoji_data(cmd_parms *parms, void *mconfig, const char* arg)
 static const char* 
 cmd_set_image_engine(cmd_parms *parms, void *mconfig, const char* arg) 
 {
-  mod_chxj_config* conf;
+  mod_chxj_config_t* conf;
   Doc doc;
   doc.r = NULL;
   if (strlen(arg) > 256) 
@@ -860,7 +860,7 @@ cmd_set_image_engine(cmd_parms *parms, void *mconfig, const char* arg)
     return "image uri is too long.";
   }
 
-  conf = (mod_chxj_config*)mconfig;
+  conf = (mod_chxj_config_t*)mconfig;
   if (strcasecmp("ON", arg) == 0)
   {
     conf->image = CHXJ_IMG_ON;
@@ -875,7 +875,7 @@ cmd_set_image_engine(cmd_parms *parms, void *mconfig, const char* arg)
 static const char* 
 cmd_set_image_cache_dir(cmd_parms *parms, void *mconfig, const char* arg) 
 {
-  mod_chxj_config* conf;
+  mod_chxj_config_t* conf;
   Doc doc;
   doc.r = NULL;
   if (strlen(arg) > 256) 
@@ -883,7 +883,7 @@ cmd_set_image_cache_dir(cmd_parms *parms, void *mconfig, const char* arg)
     return "cache dir name is too long.";
   }
 
-  conf = (mod_chxj_config*)mconfig;
+  conf = (mod_chxj_config_t*)mconfig;
   conf->image_cache_dir = apr_pstrdup(parms->pool, arg);
   return NULL;
 }
@@ -891,7 +891,7 @@ cmd_set_image_cache_dir(cmd_parms *parms, void *mconfig, const char* arg)
 static const char* 
 cmd_set_image_copyright(cmd_parms *parms, void *mconfig, const char* arg) 
 {
-  mod_chxj_config* conf;
+  mod_chxj_config_t* conf;
   Doc doc;
 
   doc.r = NULL;
@@ -900,7 +900,7 @@ cmd_set_image_copyright(cmd_parms *parms, void *mconfig, const char* arg)
     return "Copyright Flag is too long.";
   }
 
-  conf = (mod_chxj_config*)mconfig;
+  conf = (mod_chxj_config_t*)mconfig;
   conf->image_copyright = apr_pstrdup(parms->pool, arg);
   return NULL;
 }
