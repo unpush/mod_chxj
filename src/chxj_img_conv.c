@@ -18,7 +18,7 @@
 
 
 char* 
-chxj_img_conv(request_rec* r, device_table* spec, const char* s)
+chxj_img_conv(request_rec* r, device_table_t* spec, const char* s)
 {
   char* dst = apr_pstrdup(r->pool, s);
   if (spec != NULL)

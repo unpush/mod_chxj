@@ -18,5 +18,5 @@
 #define __CHXJ_IMG_CONV_H__
 #include "mod_chxj.h"
 
-char* chxj_img_conv(request_rec* r, device_table* spec, const char* s);
+char* chxj_img_conv(request_rec* r, device_table_t* spec, const char* s);
 #endif

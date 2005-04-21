@@ -27,7 +27,7 @@ typedef struct _jhtml_t {
     char* out;
     int   out_len;
 
-    device_table* spec;
+    device_table_t* spec;
     mod_chxj_config_t* conf;
 } jhtml_t;
 
@@ -37,7 +37,7 @@ typedef struct _jhtml_t {
 char*
 chxj_exchange_jhtml(
   request_rec* r,
-  device_table *spec,
+  device_table_t* spec,
   const char* src,
   apr_size_t srclen,
   apr_size_t *dstlen);

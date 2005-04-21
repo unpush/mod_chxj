@@ -77,15 +77,15 @@ typedef struct device_table_t {
   /*--------------------------------------------------------------------------*/
   int color;
   char* emoji_type;
-} device_table;
+} device_table_t;
 
 typedef struct device_table_list_t {
   struct device_table_list_t* next;
   char* pattern;
-  device_table* table;
-  device_table* tail;
-} device_table_list;
+  device_table_t* table;
+  device_table_t* tail;
+} device_table_list_t;
 
-device_table* chxj_specified_device(request_rec* r, const char* user_agent);
+device_table_t* chxj_specified_device(request_rec* r, const char* user_agent);
 
 #endif

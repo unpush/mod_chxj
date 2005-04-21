@@ -23,11 +23,11 @@
 /* Structure for HDML                                                         */
 /*----------------------------------------------------------------------------*/
 typedef struct _ctml20_t {
-    Doc* doc;
-    char* out;
-    int   out_len;
+    Doc*               doc;
+    char*              out;
+    int                out_len;
 
-    device_table* spec;
+    device_table_t*    spec;
     mod_chxj_config_t* conf;
 } chtml20_t;
 
@@ -37,7 +37,7 @@ typedef struct _ctml20_t {
 char*
 chxj_exchange_chtml20(
                   request_rec* r,
-                  device_table *spec,
+                  device_table_t* spec,
                   const char* src,
                   apr_size_t srclen,
                   apr_size_t *dstlen);

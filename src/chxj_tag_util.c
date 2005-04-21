@@ -486,7 +486,7 @@ qs_is_checked_checkbox_attr(Doc* doc, Node* tag, request_rec* r)
 
 
 int
-chxj_chxjif_is_mine(device_table* spec, Doc* doc, Node* tag)
+chxj_chxjif_is_mine(device_table_t* spec, Doc* doc, Node* tag)
 {
   request_rec* r = doc->r;
   Attr* attr;

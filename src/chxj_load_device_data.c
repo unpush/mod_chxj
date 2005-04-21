@@ -28,7 +28,7 @@
 
 static void s_set_devices_data(Doc* doc, apr_pool_t* p, mod_chxj_config_t* conf, Node* node) ;
 static void s_set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config_t* conf, Node* node) ;
-static void s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node) ;
+static void s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list_t* dtl, Node* node) ;
 /**
  * load device_data.xml
  */
@@ -40,10 +40,10 @@ chxj_load_device_data(Doc* doc, apr_pool_t *p, mod_chxj_config_t* conf)
 #if 0
   do {
     FILE* fp = fopen("/tmp/load_device.log", "a");
-    device_table_list* ll = conf->devices;
+    device_table_list_t* ll = conf->devices;
     for (;ll; ll= ll->next)
     {
-      device_table* dt;
+      device_table_t* dt;
       fprintf(fp, "user_agent:[%s]\n", ll->pattern);
       for (dt = ll->table; dt; dt = dt->next)
       {
@@ -88,7 +88,7 @@ static void
 s_set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config_t* conf, Node* node) 
 {
   Node* child;
-  device_table_list* t;
+  device_table_list_t* t;
 
   for (child = qs_get_child_node(doc,node);
        child ;
@@ -99,11 +99,11 @@ s_set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config_t* conf, Node* no
     if (strcasecmp(name, "user_agent") == 0 ) 
     {
       Attr* attr;
-      device_table_list* dtl;
+      device_table_list_t* dtl;
 
       if (conf->devices == NULL) 
       {
-        conf->devices = apr_pcalloc(p, sizeof(device_table_list));
+        conf->devices = apr_pcalloc(p, sizeof(device_table_list_t));
         conf->devices->next    = NULL;
         conf->devices->pattern = NULL;
         conf->devices->table   = NULL;
@@ -119,7 +119,7 @@ s_set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config_t* conf, Node* no
             break;
           }
         }
-        t->next = apr_pcalloc(p, sizeof(device_table_list));
+        t->next = apr_pcalloc(p, sizeof(device_table_list_t));
         t->next->next = NULL;
         t->next->pattern = NULL;
         t->next->table = NULL;
@@ -140,12 +140,12 @@ s_set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config_t* conf, Node* no
 }
 
 static void
-s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node) 
+s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list_t* dtl, Node* node) 
 {
   Node* child;
-  device_table* dt;
+  device_table_t* dt;
 
-  dt = apr_pcalloc(p, sizeof(device_table));
+  dt = apr_pcalloc(p, sizeof(device_table_t));
   dt->next           = NULL;
   dt->device_id      = NULL;
   dt->device_name    = NULL;

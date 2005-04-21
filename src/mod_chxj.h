@@ -73,16 +73,16 @@ typedef struct _emoji_t {
 
 typedef struct _mod_chxj_config_t 
 {
-  int                 image;
+  int                   image;
 
-  char*               device_data_file;
-  char*               emoji_data_file;
+  char*                 device_data_file;
+  char*                 emoji_data_file;
 
-  char*               image_cache_dir;
-  char*               image_copyright;
-  device_table_list*  devices;
-  emoji_t*            emoji;
-  emoji_t*            emoji_tail;
+  char*                 image_cache_dir;
+  char*                 image_copyright;
+  device_table_list_t*  devices;
+  emoji_t*              emoji;
+  emoji_t*              emoji_tail;
 
 } mod_chxj_config_t;
 

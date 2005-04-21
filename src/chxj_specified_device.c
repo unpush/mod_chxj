@@ -17,7 +17,7 @@
 #include "mod_chxj.h"
 #include "ap_regex.h"
 
-static device_table  UNKNOWN_DEVICE      = {
+static device_table_t  UNKNOWN_DEVICE      = {
     NULL, "","UNKNOWN", CHXJ_SPEC_UNKNOWN,  0,  0,0,0,0,0,0,0,0,0,0,0,0, ""};
 
 /**
@@ -26,14 +26,14 @@ static device_table  UNKNOWN_DEVICE      = {
  * @param userAgent UserAgent is appointed here,
  * @return The style which corresponds is returned.
  */
-device_table*
+device_table_t*
 chxj_specified_device(request_rec* r, const char* user_agent) 
 {
-  ap_regex_t *regexp;
-  ap_regmatch_t match[10];
-  device_table *returnType = &UNKNOWN_DEVICE;
-  device_table_list* dtl;
-  device_table* dt;
+  ap_regex_t*          regexp;
+  ap_regmatch_t        match[10];
+  device_table_t*      returnType = &UNKNOWN_DEVICE;
+  device_table_list_t* dtl;
+  device_table_t* dt;
   mod_chxj_config_t* conf; 
   int rtn;
   char* device_id;

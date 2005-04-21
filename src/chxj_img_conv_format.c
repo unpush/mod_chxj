@@ -67,7 +67,7 @@ typedef struct _query_string_param_t {
 /*----------------------------------------------------------------------------*/
 /* Device_spec when User-Agent is disregarded                                 */
 /*----------------------------------------------------------------------------*/
-static device_table v_ignore_spec = {
+static device_table_t v_ignore_spec = {
   NULL,
   "IGN",
   "IGN",
@@ -160,10 +160,10 @@ static char*        s_create_workfile(  request_rec*, mod_chxj_config_t* ,
                                         query_string_param_t*);
 static apr_status_t s_create_cache_file(request_rec* r, 
                                         const char* tmpfile, 
-                                        device_table* spec,
+                                        device_table_t* spec,
                                         apr_finfo_t* st,
                                         query_string_param_t *qsp);
-static apr_status_t s_send_cache_file(  device_table* spec,
+static apr_status_t s_send_cache_file(  device_table_t* spec,
                                         query_string_param_t* query_string,
                                         request_rec* r,
                                         const char* tmpfile);
@@ -172,32 +172,32 @@ static unsigned short s_add_crc(        const char* writedata,
                                         apr_size_t witebyte);
 static MagickWand* s_fixup_size(MagickWand* , 
                                         request_rec* r, 
-                                        device_table* spec, 
+                                        device_table_t* spec, 
                                         query_string_param_t *qsp);
 static MagickWand* s_fixup_color(MagickWand* magick_wand, 
                                  request_rec* r, 
-                                 device_table* spec, 
+                                 device_table_t* spec, 
                                  img_conv_mode_t mode);
 static MagickWand* s_fixup_depth(MagickWand* magick_wand, 
-                                 request_rec* r, device_table* spec);
+                                 request_rec* r, device_table_t* spec);
 static MagickWand* s_img_down_sizing(MagickWand* magick_wand, 
-                                request_rec* r, device_table* spec);
+                                request_rec* r, device_table_t* spec);
 static MagickWand* s_add_copyright(
                           MagickWand* magick_wand,
                           request_rec* r,
-                          device_table* spec);
+                          device_table_t* spec);
 static char* s_create_blob_data(request_rec* r,
-                   device_table* spec,
+                   device_table_t* spec,
                    query_string_param_t *qsp,
                    char* indata,
                    apr_size_t* len);
 
 static int s_img_conv_format_from_file(
                 request_rec*          r, 
-                mod_chxj_config_t*      conf, 
+                mod_chxj_config_t*    conf, 
                 const char*           user_agent,
                 query_string_param_t* qsp,
-                device_table*         spec);
+                device_table_t*       spec);
 
 int 
 chxj_img_conv_format_handler(request_rec* r)
@@ -205,7 +205,7 @@ chxj_img_conv_format_handler(request_rec* r)
   mod_chxj_config_t*      conf;
   query_string_param_t* qsp;
   char*                 user_agent;
-  device_table*         spec;
+  device_table_t*       spec;
   
   if (strcasecmp(r->handler, "chxj-picture")
   &&  strcasecmp(r->handler, "chxj-qrcode"))
@@ -273,7 +273,7 @@ chxj_exchange_image(request_rec *r, const char** src, apr_size_t* len)
   mod_chxj_config_t*      conf;
   query_string_param_t* qsp;
   char*                 user_agent;
-  device_table*         spec;
+  device_table_t*       spec;
   char*                 dst;
 
 
@@ -323,10 +323,10 @@ chxj_exchange_image(request_rec *r, const char** src, apr_size_t* len)
 static int
 s_img_conv_format_from_file(
                 request_rec*          r, 
-                mod_chxj_config_t*      conf, 
+                mod_chxj_config_t*    conf, 
                 const char*           user_agent,
                 query_string_param_t* qsp,
-                device_table*         spec)
+                device_table_t*       spec)
 {
   apr_status_t   rv;
   apr_finfo_t    st;
@@ -372,10 +372,10 @@ s_img_conv_format_from_file(
 
 
 static apr_status_t
-s_create_cache_file(request_rec* r, 
-                       const char* tmpfile, 
-                       device_table* spec, 
-                       apr_finfo_t* st, 
+s_create_cache_file(request_rec*       r, 
+                       const char*     tmpfile, 
+                       device_table_t* spec, 
+                       apr_finfo_t*    st, 
                        query_string_param_t *qsp)
 {
   apr_status_t       rv;
@@ -698,7 +698,7 @@ s_create_cache_file(request_rec* r,
 
 static char*
 s_create_blob_data(request_rec* r, 
-                   device_table* spec, 
+                   device_table_t* spec, 
                    query_string_param_t *qsp,
                    char* indata,
                    apr_size_t* len)
@@ -928,7 +928,7 @@ s_create_blob_data(request_rec* r,
 static MagickWand* 
 s_fixup_size(MagickWand* magick_wand, 
                 request_rec* r, 
-                device_table* spec, 
+                device_table_t* spec, 
                 query_string_param_t *qsp)
 {
   MagickBooleanType  status;
@@ -1072,7 +1072,7 @@ s_fixup_size(MagickWand* magick_wand,
   return magick_wand;
 }
 static MagickWand*
-s_fixup_color(MagickWand* magick_wand, request_rec* r, device_table* spec, img_conv_mode_t mode)
+s_fixup_color(MagickWand* magick_wand, request_rec* r, device_table_t* spec, img_conv_mode_t mode)
 {
   MagickBooleanType  status;
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,r,"start chxj_fixup_clor()");
@@ -1113,7 +1113,7 @@ s_fixup_color(MagickWand* magick_wand, request_rec* r, device_table* spec, img_c
   return magick_wand;
 }
 static MagickWand*
-s_fixup_depth(MagickWand* magick_wand, request_rec* r, device_table* spec)
+s_fixup_depth(MagickWand* magick_wand, request_rec* r, device_table_t* spec)
 {
   MagickBooleanType  status;
 
@@ -1190,7 +1190,7 @@ s_fixup_depth(MagickWand* magick_wand, request_rec* r, device_table* spec)
 }
 
 static MagickWand*
-s_add_copyright(MagickWand* magick_wand, request_rec* r, device_table* spec)
+s_add_copyright(MagickWand* magick_wand, request_rec* r, device_table_t* spec)
 {
   MagickBooleanType  status;
   mod_chxj_config_t* conf = ap_get_module_config(r->per_dir_config, &chxj_module);
@@ -1241,7 +1241,7 @@ s_add_copyright(MagickWand* magick_wand, request_rec* r, device_table* spec)
 }
 
 static MagickWand*
-s_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table* spec)
+s_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table_t* spec)
 {
   MagickBooleanType  status;
   unsigned long quality = 70;
@@ -1369,7 +1369,7 @@ s_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table* spec)
 }
 
 static apr_status_t 
-s_send_cache_file(device_table* spec, query_string_param_t* query_string, request_rec* r, const char* tmpfile)
+s_send_cache_file(device_table_t* spec, query_string_param_t* query_string, request_rec* r, const char* tmpfile)
 {
   apr_status_t rv;
   apr_finfo_t  st;
