@@ -1599,6 +1599,8 @@ chxj_trans_name(request_rec *r)
           "qrc",    /* QRCode出力用ファイルの拡張子 */
   };
   char*    fname;
+  char*    idx;
+  char*    filename_sv;
 
   conf = ap_get_module_config(r->per_dir_config, &chxj_module);
   if (conf->image != CHXJ_IMG_ON)
@@ -1611,6 +1613,14 @@ chxj_trans_name(request_rec *r)
   {
     r->filename = apr_pstrdup(r->pool, r->uri);
   }
+  filename_sv = NULL;
+  if ((idx = strchr(r->filename, ":")) != NULL) {
+    filename_sv = idx+1;
+  }
+  else {
+    filename_sv = r->filename;
+  }
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "r->filename[%s]", filename_sv);
 
   ccp = ap_document_root(r);
   if (ccp == NULL)
@@ -1625,20 +1635,20 @@ chxj_trans_name(request_rec *r)
     docroot[len-1] = '\0';
   }
   if (r->server->path 
-  &&  strncmp(r->filename, r->server->path, r->server->pathlen) == 0) 
+  &&  strncmp(filename_sv, r->server->path, r->server->pathlen) == 0) 
   {
-    r->filename = apr_pstrcat(r->pool, docroot, (r->filename + r->server->pathlen), NULL);
+    filename_sv = apr_pstrcat(r->pool, docroot, (filename_sv + r->server->pathlen), NULL);
   }
   else 
   {
-    r->filename = apr_pstrcat(r->pool, docroot, r->filename, NULL);
+    filename_sv = apr_pstrcat(r->pool, docroot, filename_sv, NULL);
   }
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "URI[%s]", r->filename);
+  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "URI[%s]", filename_sv);
 
 
   for (ii=0; ii<5; ii++) 
   {
-    fname = apr_psprintf(r->pool, "%s.%s", r->filename, ext[ii]);
+    fname = apr_psprintf(r->pool, "%s.%s", filename_sv, ext[ii]);
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "search [%s]", fname);
 
     rv = apr_stat(&st, fname, APR_FINFO_MIN, r->pool);
