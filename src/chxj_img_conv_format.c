@@ -1603,65 +1603,56 @@ chxj_trans_name(request_rec *r)
   char*    filename_sv;
 
   conf = ap_get_module_config(r->per_dir_config, &chxj_module);
-  if (conf->image != CHXJ_IMG_ON)
-  {
+  if (conf->image != CHXJ_IMG_ON) 
     return DECLINED;
-  }
+
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "Match URI[%s]", r->uri);
 
   if (r->filename == NULL) 
-  {
     r->filename = apr_pstrdup(r->pool, r->uri);
-  }
+
   filename_sv = NULL;
-  if ((idx = strchr(r->filename, ":")) != NULL) {
+  if ((idx = strchr(r->filename, ":")) != NULL) 
     filename_sv = idx+1;
-  }
-  else {
+  else 
     filename_sv = r->filename;
-  }
+
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "r->filename[%s]", filename_sv);
 
   ccp = ap_document_root(r);
   if (ccp == NULL)
-  {
     return HTTP_INTERNAL_SERVER_ERROR;
-  }
+
   docroot = apr_pstrdup(r->pool, ccp);
   len = strlen(docroot);
 
   if (docroot[len-1] == '/') 
-  {
     docroot[len-1] = '\0';
-  }
+
+
   if (r->server->path 
-  &&  strncmp(filename_sv, r->server->path, r->server->pathlen) == 0) 
-  {
+  &&  *filename_sv == *r->server->path 
+  &&  strncmp(filename_sv, r->server->path, r->server->pathlen) == 0) {
     filename_sv = apr_pstrcat(r->pool, docroot, (filename_sv + r->server->pathlen), NULL);
   }
-  else 
-  {
+  else {
     filename_sv = apr_pstrcat(r->pool, docroot, filename_sv, NULL);
   }
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "URI[%s]", filename_sv);
 
 
-  for (ii=0; ii<5; ii++) 
-  {
+  for (ii=0; ii<5; ii++) {
     fname = apr_psprintf(r->pool, "%s.%s", filename_sv, ext[ii]);
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "search [%s]", fname);
 
     rv = apr_stat(&st, fname, APR_FINFO_MIN, r->pool);
     if (rv == APR_SUCCESS)
-    {
       break;
-    }
+
     fname = NULL;
   }
-  if (r->handler == NULL || strcasecmp(r->handler, "chxj-qrcode") != 0)
-  {
-    if (fname == NULL)
-    {
+  if (r->handler == NULL || strcasecmp(r->handler, "chxj-qrcode") != 0) {
+    if (fname == NULL) {
       ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "NotFound [%s]", r->filename);
       return DECLINED;
     }
@@ -1669,12 +1660,10 @@ chxj_trans_name(request_rec *r)
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "Found [%s]", fname);
     r->filename = apr_psprintf(r->pool, "%s", fname);
   
-    if (strcasecmp("qrc", ext[ii]) == 0)
-    {
+    if (strcasecmp("qrc", ext[ii]) == 0) {
       r->handler = apr_psprintf(r->pool, "chxj-qrcode");
     }
-    else
-    {
+    else {
       r->handler = apr_psprintf(r->pool, "chxj-picture");
     }
   }
@@ -1710,89 +1699,71 @@ s_get_query_string_param(request_rec *r)
   param->height     = 0;
 
   if (s == NULL)
-  {
     return param;
-  }
 
-  for (;;) 
-  {
+  for (;;) {
     pair = apr_strtok(s, "&", &pstate);
-    if (pair == NULL)
-    {
-      break;
-    } 
+    if (pair == NULL) break;
+
     s = NULL;
 
     name  = apr_strtok(pair, "=", &vstate);
     value = apr_strtok(NULL, "=", &vstate);
-    if ((strcasecmp(name, "mode") == 0 || strcasecmp(name, "m") == 0) && value != NULL) 
-    {
-      if (strcasecmp(value, "thumbnail") == 0 || strcasecmp(value, "tb") == 0)
-      {
+    if ((strcasecmp(name, "mode") == 0 
+      || strcasecmp(name, "m") == 0) 
+    && value != NULL) {
+      if (strcasecmp(value, "thumbnail") == 0 || strcasecmp(value, "tb") == 0) {
         param->mode = IMG_CONV_MODE_THUMBNAIL;
       }
-      else
-      if (strcasecmp(value, "WP") == 0 || strcasecmp(value, "WallPaper") == 0)
-      {
+      else 
+      if (strcasecmp(value, "WP") == 0 || strcasecmp(value, "WallPaper") == 0) {
         param->mode = IMG_CONV_MODE_WALLPAPER;
       }
       else
-      if (strcasecmp(value, "EZGET") == 0)
-      {
+      if (strcasecmp(value, "EZGET") == 0) {
         param->mode = IMG_CONV_MODE_EZGET;
       }
     }
     else
-    if ((strcasecmp(name, "ua") == 0 || strcasecmp(name, "user-agent") == 0) && value != NULL)
-    {
+    if ((strcasecmp(name, "ua") == 0 
+    || strcasecmp(name, "user-agent") == 0) && value != NULL) {
       ap_unescape_url(value);
-      if (strcasecmp(value, "IGN") == 0)
-      {
+      if (strcasecmp(value, "IGN") == 0) {
         param->ua_flag = UA_IGN;
       }
       param->user_agent = apr_pstrdup(r->pool, value);
     }
     else
-    if (strcasecmp(name, "name") == 0 && value != NULL)
-    {
+    if (strcasecmp(name, "name") == 0 && value != NULL) {
       param->name = apr_pstrdup(r->pool, value);
     }
     else
-    if (strcasecmp(name, "offset") == 0 && value != NULL)
-    {
-      if (chxj_chk_numeric(value) == 0)
-      {
+    if (strcasecmp(name, "offset") == 0 && value != NULL) {
+      if (chxj_chk_numeric(value) == 0) {
         param->offset = chxj_atoi(value);
       }
     }
     else
-    if (strcasecmp(name, "count") == 0 && value != NULL)
-    {
-      if (chxj_chk_numeric(value) == 0)
-      {
+    if (strcasecmp(name, "count") == 0 && value != NULL) {
+      if (chxj_chk_numeric(value) == 0) {
         param->count = chxj_atoi(value);
       }
     }
     else
-    if (strcasecmp(name, "w") == 0 && value != NULL)
-    {
-      if (chxj_chk_numeric(value) == 0)
-      {
+    if (strcasecmp(name, "w") == 0 && value != NULL) {
+      if (chxj_chk_numeric(value) == 0) {
         param->width = chxj_atoi(value);
       }
     }
     else
-    if (strcasecmp(name, "h") == 0 && value != NULL)
-    {
-      if (chxj_chk_numeric(value) == 0)
-      {
+    if (strcasecmp(name, "h") == 0 && value != NULL) {
+      if (chxj_chk_numeric(value) == 0) {
         param->height = chxj_atoi(value);
       }
     }
   }
 
-  if (param->mode == IMG_CONV_MODE_NORMAL && param->name != NULL)
-  {
+  if (param->mode == IMG_CONV_MODE_NORMAL && param->name != NULL) {
     param->mode = IMG_CONV_MODE_WALLPAPER;
   }
   return param;
