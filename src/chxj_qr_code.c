@@ -897,8 +897,7 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
     /* 実データの２進化                                                       */
     /*------------------------------------------------------------------------*/
     qrcode->mode_change = QR_NOT_CHANGE;
-    switch(qrcode->mode) 
-    {
+    switch(qrcode->mode) {
     case QR_NUM_MODE:
       real_data = s_data_to_bin_num(qrcode, data_code_count);
       break;
@@ -926,11 +925,9 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
 #ifdef QR_CODE_DEBUG
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "Before TERM BIT[%s]", binstr);
 #endif
-  if (data_code_count * 8 > strlen(binstr))
-  {
+  if (data_code_count * 8 > strlen(binstr)) {
     int binstr_len = strlen(binstr);
-    for (ii=0; ii< (data_code_count * 8) - binstr_len && ii < 4; ii++)
-    {
+    for (ii=0; ii< (data_code_count * 8) - binstr_len && ii < 4; ii++) {
       binstr = apr_pstrcat(r->pool, binstr, "0", NULL);
     }
   }
@@ -962,8 +959,7 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
   /*--------------------------------------------------------------------------*/
   do {
     char* rows = apr_psprintf(r->pool, " ");
-    for (ii=0; ii<data_code_count; ii++)
-    {
+    for (ii=0; ii<data_code_count; ii++) {
       rows = apr_pstrcat(r->pool, rows, apr_psprintf(r->pool, "[%02x]\n", (unsigned char)decstr[ii]), NULL);
     }
     ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "decstr[%s]", rows);
@@ -976,7 +972,7 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
   /* 出力としてのeccstrは、インタリーブ済みのデータがセットされます.          */
   /*--------------------------------------------------------------------------*/
   eccstr = apr_palloc(r->pool, module_count* module_count);
-  data_total_count = chxj_calc_ecc(qrcode, decstr, eccstr);
+  data_total_count = chxj_calc_ecc(qrcode, (unsigned char*)decstr, eccstr);
 #ifdef QR_CODE_DEBUG
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, 
                   "chxj_calc_ecc() total_count[%d]", data_total_count);
