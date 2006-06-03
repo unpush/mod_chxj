@@ -965,12 +965,10 @@ chxj_calc_ecc(qr_code_t* qrcode,
 
 
   now_rs_num = 0;
-  for (rs_pos = 0; rs_pos < 2; rs_pos++)
-  {
+  for (rs_pos = 0; rs_pos < 2; rs_pos++) {
     for (rs_cnt = v_ecc_spec_table[qrcode->version*4+qrcode->level].rs[rs_pos].rs_block_count;
          rs_cnt > 0;
-         rs_cnt--)
-    {
+         rs_cnt--) {
 
       unsigned char* tmp;
       int  rs_ii = 0;
@@ -1000,8 +998,7 @@ chxj_calc_ecc(qr_code_t* qrcode,
 #endif
 
       /* 元データをコピー */
-      for (jj=0; jj<data_count; jj++)
-      {
+      for (jj=0; jj<data_count; jj++) {
         tmp[data_count + ecc_count - 1 - jj] = indata[in_pos];
 
         rs_block[now_rs_num][rs_ii++] = indata[in_pos];
@@ -1013,8 +1010,7 @@ chxj_calc_ecc(qr_code_t* qrcode,
       do {
         char* debug_rows = apr_palloc(r->pool, 1);
         debug_rows[0] = 0;
-        for (jj=ecc_count + data_count - 1; jj>=0; jj--)
-        {
+        for (jj=ecc_count + data_count - 1; jj>=0; jj--) {
           debug_rows = apr_pstrcat(r->pool, debug_rows, apr_psprintf(r->pool, "[%d]", tmp[jj]), NULL);
         }
         ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "rows [%s]", debug_rows);
@@ -1024,20 +1020,17 @@ chxj_calc_ecc(qr_code_t* qrcode,
 
       ii=data_count + ecc_count -1;
 
-      for (xx = data_count - 1; xx >= 0; xx--)
-      {
+      for (xx = data_count - 1; xx >= 0; xx--) {
         int tgt = tmp[ii--];
         int shisu = v_galois_int_to_log[tgt];
 #ifdef QR_CODE_DEBUG
         ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "tgt[%d] shisu[%d]", tgt, shisu);
 #endif
-        if (tgt == 0) 
-        {
+        if (tgt == 0) {
           continue;
         }
 
-        for (jj=ecc_count; jj>=0;jj--)
-        {
+        for (jj=ecc_count; jj>=0;jj--) {
           assert(v_poly_ecc[ecc_count] != NULL);
           tmp[jj+xx] ^= v_galois_log_to_int[(v_poly_ecc[ecc_count][jj] + shisu)]; 
         }
@@ -1046,8 +1039,7 @@ chxj_calc_ecc(qr_code_t* qrcode,
         do {
           char* debug_rows = apr_palloc(r->pool, 1);
           debug_rows[0] = 0;
-          for (jj=ecc_count + data_count - 1; jj>=0; jj--)
-          {
+          for (jj=ecc_count + data_count - 1; jj>=0; jj--) {
             debug_rows = apr_pstrcat(r->pool, debug_rows, apr_psprintf(r->pool, "[%d]", tmp[jj]), NULL);
           }
           ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "rows [%s]", debug_rows);
@@ -1056,8 +1048,7 @@ chxj_calc_ecc(qr_code_t* qrcode,
 #endif
       }
 
-      for (; ii>=0; ii--)
-      {
+      for (; ii>=0; ii--) {
         rs_block[now_rs_num][rs_ii++] = tmp[ii];
       }
       now_rs_num++;
@@ -1068,11 +1059,9 @@ chxj_calc_ecc(qr_code_t* qrcode,
   /* for DEBUG */
   do {
     ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "######### RS BLOCK DUMP ###############");
-    for (jj=0; jj<rs_total_block_count; jj++)
-    {
+    for (jj=0; jj<rs_total_block_count; jj++) {
        char* rows = apr_psprintf(r->pool, "%02d size:[%d] rest:[%d]",jj, rs_block_size[jj], rs_block_rest[jj]);
-       for (ii=0; ii<rs_block_size[jj]; ii++)
-       {
+       for (ii=0; ii<rs_block_size[jj]; ii++) {
          rows = apr_pstrcat(r->pool, rows, apr_psprintf(r->pool, "[%d]", rs_block[jj][ii]), NULL);
        }
        ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "%s", rows);
@@ -1082,39 +1071,31 @@ chxj_calc_ecc(qr_code_t* qrcode,
 
 
   /* インタリーブの実装 （データ部）*/
-  for (;;)
-  {
+  for (;;) {
     exist_flag = 0;
-    for (jj=0; jj<rs_total_block_count; jj++)
-    {
-      if (rs_block_rest[jj] - rs_block_ecc_size[jj] > 0)
-      {
+    for (jj=0; jj<rs_total_block_count; jj++) {
+      if (rs_block_rest[jj] - rs_block_ecc_size[jj] > 0) {
         dst[rslt_pos++] = rs_block[jj][rs_block_size[jj]-rs_block_rest[jj]];
         rs_block_rest[jj]--;
         exist_flag = 1;
       }
     }
-    if (exist_flag == 0)
-    {
+    if (exist_flag == 0) {
       /* RSブロックの残数が全て０になったら、終了 */
       break;
     }
   }
   /* インタリーブの実装（ＥＣＣ部） */
-  for (;;)
-  {
+  for (;;) {
     exist_flag = 0;
-    for (jj=0; jj<rs_total_block_count; jj++)
-    {
-      if (rs_block_rest[jj] > 0)
-      {
+    for (jj=0; jj<rs_total_block_count; jj++) {
+      if (rs_block_rest[jj] > 0) {
         dst[rslt_pos++] = rs_block[jj][rs_block_size[jj]-rs_block_rest[jj]];
         rs_block_rest[jj]--;
         exist_flag = 1;
       }
     }
-    if (exist_flag == 0)
-    {
+    if (exist_flag == 0) {
       /* RSブロックの残数が全て０になったら、終了 */
       break;
     }
@@ -1123,8 +1104,7 @@ chxj_calc_ecc(qr_code_t* qrcode,
   /* for DEBUG */
   do {
     ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "######### AFTER BLOCK DUMP ###############");
-    for (ii=0; ii<rslt_pos; ii++)
-    {
+    for (ii=0; ii<rslt_pos; ii++) {
       ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "[%d]", dst[ii]);
     }
   } while(0);
