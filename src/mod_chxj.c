@@ -101,7 +101,8 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, 
           "content type is %s", r->content_type);
 
-  if (strncmp(r->content_type, "text/html",   9) != 0) {
+  if (*(char*)r->content_type == 't' 
+  && strncmp(r->content_type, "text/html",   9) != 0) {
     ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 
       0, r, "content type is %s", r->content_type);
     return (char*)*src;
@@ -328,12 +329,14 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
       /*----------------------------------------------------------------------*/
       if (f->ctx) {
         ctx = (mod_chxj_ctx_t*)f->ctx;
-        if (strncmp(r->content_type, "text/html",   9) == 0) {
+        if (*(char*)r->content_type == 't' 
+        && strncmp(r->content_type, "text/html",   9) == 0) {
           if (ctx->len) {
             char* tmp = apr_palloc(r->pool, ctx->len + 1);
             memset(tmp, 0, ctx->len + 1);
             memcpy(tmp, ctx->buffer, ctx->len);
-            ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "input data=[%s]", tmp);
+            ap_log_rerror(
+              APLOG_MARK, APLOG_DEBUG, 0, r, "input data=[%s]", tmp);
             ctx->buffer = chxj_exchange(r, (const char**)&tmp, (apr_size_t*)&ctx->len);
             ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "output data=[%.*s]", ctx->len,ctx->buffer);
           }

@@ -48,8 +48,9 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
       if (node->name[0] == '/' ) {
 
         if ((doc->parse_mode == PARSE_MODE_CHTML && has_child(&(node->name[1])))
-        ||  (doc->parse_mode == PARSE_MODE_NO_PARSE && strcasecmp(&node->name[1], "chxj:if") == 0)) 
-        {
+        ||  (doc->parse_mode == PARSE_MODE_NO_PARSE 
+        &&  (node->name[1] == 'c' || node->name[1] == 'C')
+        &&  strcasecmp(&node->name[1], "chxj:if") == 0)) {
           if (doc->now_parent_node->parent != NULL) {
             doc->now_parent_node = doc->now_parent_node->parent;
             doc->parse_mode = PARSE_MODE_CHTML;
@@ -59,7 +60,7 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
         if (doc->parse_mode != PARSE_MODE_NO_PARSE)
           continue;
       }
-      if (strncmp(node->name, "!--", 3) == 0) {
+      if (*node->name == '!' && strncmp(node->name, "!--", 3) == 0) {
         /* comment tag */
         continue;
       }
@@ -72,14 +73,20 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
 #ifdef DEBUG
   QX_LOGGER_DEBUG("return from qs_add_child_node()");
 #endif
-      if (doc->parse_mode == PARSE_MODE_CHTML && strcasecmp(node->name, "chxj:if") == 0) {
+      if (doc->parse_mode == PARSE_MODE_CHTML && 
+      (*node->name == 'c' || *node->name == 'C') &&
+      strcasecmp(node->name, "chxj:if") == 0) {
         Attr* parse_attr;
 
         doc->parse_mode = PARSE_MODE_NO_PARSE;
         doc->now_parent_node = node;
-        for(parse_attr = node->attr; parse_attr; parse_attr = parse_attr->next) {
-          if (strcasecmp(parse_attr->name, "parse") == 0) {
-            if (strcasecmp(parse_attr->value, "true") == 0) {
+        for(parse_attr = node->attr;
+            parse_attr; 
+            parse_attr = parse_attr->next) {
+          if ((*parse_attr->name == 'p' || *parse_attr->name == 'P') 
+          &&   strcasecmp(parse_attr->name, "parse") == 0) {
+            if ((*parse_attr->value == 't' || *parse_attr->value == 'T')
+            &&   strcasecmp(parse_attr->value, "true") == 0) {
               doc->parse_mode = PARSE_MODE_CHTML;
             }
           }
