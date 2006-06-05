@@ -28,13 +28,11 @@ qs_init_malloc(Doc* doc)
   apr_status_t rtn;
 
   rtn = apr_allocator_create(&(doc->allocator));
-  if (rtn != APR_SUCCESS)
-  {
+  if (rtn != APR_SUCCESS) {
     QX_LOGGER_FATAL("Out Of Memory");
   }
   rtn = apr_pool_create_ex(&(doc->pool), NULL, NULL, doc->allocator);
-  if (rtn != APR_SUCCESS)
-  {
+  if (rtn != APR_SUCCESS) {
     QX_LOGGER_FATAL("Out Of Memory");
   }
 
@@ -48,8 +46,7 @@ qs_init_malloc(Doc* doc)
 void
 qs_all_free(Doc* doc, const char* fname, int line) 
 {
-  if (doc->do_init_flag) 
-  {
+  if (doc->do_init_flag) {
     apr_pool_destroy(doc->pool);
 
     apr_allocator_destroy(doc->allocator);

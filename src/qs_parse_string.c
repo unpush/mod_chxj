@@ -34,74 +34,59 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
 
   doc->now_parent_node = qs_init_root_node(doc);
 
-  for (ii=0; ii<srclen; ii++) 
-  {
-    if (doc->parse_mode != PARSE_MODE_NO_PARSE && is_white_space(src[ii])) 
-    {
+  for (ii=0; ii<srclen; ii++) {
+    if (doc->parse_mode != PARSE_MODE_NO_PARSE 
+    && is_white_space(src[ii])) {
       continue;
     }
-    if ((unsigned char)'<' == src[ii]) 
-    {
+    if ((unsigned char)'<' == src[ii]) {
       int endpoint = s_cut_tag(&src[ii], srclen - ii);
       Node* node   = NULL;
       node = qs_parse_tag(doc, &src[ii], endpoint);
 
       ii += endpoint;
-      if (node->name[0] == '/' ) 
-      {
+      if (node->name[0] == '/' ) {
 
         if ((doc->parse_mode == PARSE_MODE_CHTML && has_child(&(node->name[1])))
         ||  (doc->parse_mode == PARSE_MODE_NO_PARSE && strcasecmp(&node->name[1], "chxj:if") == 0)) 
         {
-          if (doc->now_parent_node->parent != NULL)
-          {
+          if (doc->now_parent_node->parent != NULL) {
             doc->now_parent_node = doc->now_parent_node->parent;
             doc->parse_mode = PARSE_MODE_CHTML;
           }
         }
 
         if (doc->parse_mode != PARSE_MODE_NO_PARSE)
-        {
           continue;
-        }
       }
-      if (strncmp(node->name, "!--", 3) == 0) 
-      {
+      if (strncmp(node->name, "!--", 3) == 0) {
         /* comment tag */
         continue;
       }
       qs_add_child_node(doc,node);
 
-      if (doc->parse_mode == PARSE_MODE_NO_PARSE)
-      {
+      if (doc->parse_mode == PARSE_MODE_NO_PARSE) {
         if (node->name[0] == '/')
-        {
           continue;
-        }
       }
 #ifdef DEBUG
   QX_LOGGER_DEBUG("return from qs_add_child_node()");
 #endif
-      if (doc->parse_mode == PARSE_MODE_CHTML && strcasecmp(node->name, "chxj:if") == 0)
-      {
+      if (doc->parse_mode == PARSE_MODE_CHTML && strcasecmp(node->name, "chxj:if") == 0) {
         Attr* parse_attr;
 
         doc->parse_mode = PARSE_MODE_NO_PARSE;
         doc->now_parent_node = node;
-        for(parse_attr = node->attr; parse_attr; parse_attr = parse_attr->next)
-        {
-          if (strcasecmp(parse_attr->name, "parse") == 0)
-          {
-            if (strcasecmp(parse_attr->value, "true") == 0)
-            {
+        for(parse_attr = node->attr; parse_attr; parse_attr = parse_attr->next) {
+          if (strcasecmp(parse_attr->name, "parse") == 0) {
+            if (strcasecmp(parse_attr->value, "true") == 0) {
               doc->parse_mode = PARSE_MODE_CHTML;
             }
           }
         }
 
       }
-      if (doc->parse_mode == PARSE_MODE_CHTML && has_child(node->name)) 
-      {
+      if (doc->parse_mode == PARSE_MODE_CHTML && has_child(node->name)) {
         doc->now_parent_node = node;
       }
     }
@@ -128,8 +113,7 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
   QX_LOGGER_DEBUG("parse_string end");
 #endif
 #ifdef DEBUG
-  if (doc->r != NULL)
-  {
+  if (doc->r != NULL) {
     qs_dump_node(doc, doc->root_node, 0);
   }
 #endif
@@ -138,7 +122,8 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
 }
 
 static void
-qs_dump_node(Doc* doc, Node* node, int indent) {
+qs_dump_node(Doc* doc, Node* node, int indent) 
+{
   Node* p = (Node*)qs_get_child_node(doc,node);
 
   for (;p;p = (Node*)qs_get_next_node(doc,p)) {
@@ -166,7 +151,8 @@ qs_dump_node(Doc* doc, Node* node, int indent) {
 
 
 static int
-s_cut_tag(const char* s, int len) {
+s_cut_tag(const char* s, int len) 
+{
   int lv = 0;
   int ii;
 
@@ -175,13 +161,11 @@ s_cut_tag(const char* s, int len) {
       ii++;
       continue;
     }
-    if (is_sjis_kana(s[ii])) {
+    if (is_sjis_kana(s[ii])) 
       continue;
-    }
 
-    if (is_white_space(s[ii])) {
+    if (is_white_space(s[ii])) 
       continue;
-    }
 
     if (s[ii] == '<') {
       lv++;
@@ -190,9 +174,8 @@ s_cut_tag(const char* s, int len) {
 
     if (s[ii] == '>') {
       lv--;
-      if (lv == 0) {
+      if (lv == 0) 
         break;
-      }
       continue;
     }
   }
@@ -200,24 +183,23 @@ s_cut_tag(const char* s, int len) {
 }
 
 static int
-s_cut_text(const char* s, int len) {
+s_cut_text(const char* s, int len) 
+{
   int ii;
   for (ii=0;ii<len; ii++) {
     if (is_sjis_kanji(s[ii])) {
       ii++;
       continue;
     }
-    if (is_sjis_kana(s[ii])) {
+    if (is_sjis_kana(s[ii])) 
       continue;
-    }
 
-    if (is_white_space(s[ii])) {
+    if (is_white_space(s[ii])) 
       continue;
-    }
 
-    if (s[ii] == '<') {
+    if (s[ii] == '<') 
       break;
-    }
+
   }
 
   return ii;
@@ -225,11 +207,12 @@ s_cut_text(const char* s, int len) {
 
 
 Node*
-qs_init_root_node(Doc* doc) {
+qs_init_root_node(Doc* doc) 
+{
   doc->root_node = (Node*)apr_palloc(doc->pool,sizeof(struct _node));
-  if (doc->root_node == NULL) {
+  if (doc->root_node == NULL) 
     QX_LOGGER_FATAL("Out Of Memory");
-  }
+
   doc->root_node->next   = NULL;
   doc->root_node->parent = NULL;
   doc->root_node->child  = NULL;
@@ -254,13 +237,11 @@ qs_add_child_node(Doc* doc,Node* node)
   node->child      = NULL;
   node->child_tail = NULL;
   node->parent = doc->now_parent_node;
-  if (doc->now_parent_node->child == NULL) 
-  {
+  if (doc->now_parent_node->child == NULL) {
     doc->now_parent_node->child      = node;
     doc->now_parent_node->child_tail = node;
   }
-  else 
-  {
+  else {
 #ifdef DEBUG
     QX_LOGGER_DEBUG("search child free node");
 #endif

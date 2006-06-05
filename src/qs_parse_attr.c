@@ -40,14 +40,11 @@ qs_parse_attr(Doc* doc, const char*s, int len, int *pos)
   QX_LOGGER_DEBUG_INT("len",len);
 
   /* get attr name */
-  for (;ii<len; ii++) 
-  {
-    if (is_white_space(s[ii])) 
-    {
+  for (;ii<len; ii++) {
+    if (is_white_space(s[ii])) {
       break;
     }
-    if (s[ii] == '=') 
-    {
+    if (s[ii] == '=') {
       break;
     }
   }
@@ -55,8 +52,7 @@ qs_parse_attr(Doc* doc, const char*s, int len, int *pos)
   size = ii - start_pos;
   QX_LOGGER_DEBUG_INT("size", size);
   /* not found */
-  if (size == 0) 
-  {
+  if (size == 0) {
     *pos = ii;
     return NULL;
   }
@@ -67,77 +63,54 @@ qs_parse_attr(Doc* doc, const char*s, int len, int *pos)
 
   novalue = 0;
   /* find '=' */
-  for (;ii<len; ii++) 
-  {
+  for (;ii<len; ii++) {
     if (is_white_space(s[ii])) 
-    {
       /* ignore */
       continue;
-    }
     if (s[ii] == '=') 
-    {
       ii++;
-    }
     else 
-    {
       /* novalue */
       novalue = 1;
-    }
     break;
   }
 
   if (ii == len) 
-  {
     novalue = 1;
-  }
 
   size = 0;
-  if (!novalue) 
-  {
+  if (!novalue) {
     /* ignore space */
     ii += qs_ignore_sp(doc, &s[ii], len-ii);
-    for (;ii<len; ii++) 
-    {
-      if (s[ii] == '\'' || s[ii] == '"') 
-      {
+    for (;ii<len; ii++) {
+      if (s[ii] == '\'' || s[ii] == '"') {
         use_quote = 1;
         ii++;
         break;
       }
-      if (!is_white_space(s[ii])) 
-      {
+      if (!is_white_space(s[ii])) {
         break;
       }
     }
   
     start_pos = ii;
     /* get attr value */
-    for (;ii<len; ii++) 
-    {
-      if (is_sjis_kanji(s[ii])) 
-      {
+    for (;ii<len; ii++) {
+      if (is_sjis_kanji(s[ii])) {
         ii++;
         continue;
       }
       if (is_sjis_kana(s[ii])) 
-      {
         continue;
-      }
-      if (is_white_space(s[ii])) 
-      {
+      if (is_white_space(s[ii])) {
         if (! use_quote) 
-        {
           break;
-        }
       }
       if (s[ii] == '"') 
-      {
         break;
-      }
+
       if (s[ii] == '\'') 
-      {
         break;
-      }
     }
     size = ii - start_pos;
     QX_LOGGER_DEBUG_INT("size",size);
@@ -146,9 +119,7 @@ qs_parse_attr(Doc* doc, const char*s, int len, int *pos)
   value = (char*)apr_palloc(doc->pool, size+1);
   memset(value, 0, size+1);
   if (size != 0) 
-  {
     memcpy(value, &s[start_pos], size);
-  }
 
   attr = qs_new_attr(doc);
   attr->name = name;
@@ -165,8 +136,7 @@ Attr*
 qs_new_attr(Doc* doc) 
 {
   Attr* attr = (Attr*)apr_palloc(doc->pool,sizeof(Attr));
-  if (attr == NULL) 
-  {
+  if (attr == NULL) {
     QX_LOGGER_FATAL("Out Of Memory");
   }
   attr->next   = NULL;

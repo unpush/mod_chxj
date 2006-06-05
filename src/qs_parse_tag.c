@@ -51,11 +51,9 @@ qs_parse_tag(Doc* doc, const char* s, int len)
   ll -= (strlen(tag_name));
   QX_LOGGER_DEBUG_INT("ll",ll);
   sp += (strlen(tag_name)+1);
-  for (;;) 
-  {
+  for (;;) {
     Attr* attr = qs_parse_attr(doc,sp, ll, &next_point);
-    if (attr == NULL) 
-    {
+    if (attr == NULL) {
       QX_LOGGER_DEBUG("End of QS_PARSE_ATTR()");
       break;
     }
@@ -83,21 +81,16 @@ s_get_tag_name(Doc* doc, const char* s, int len)
   char* return_value = NULL;
 
   /* ignore space. */
-  for (ii = 0; ii < len; ii++) 
-  {
+  for (ii = 0; ii < len; ii++) {
     if (is_white_space(s[ii])) 
-    {
       continue;
-    }
     break;
   }
+
   sp = ii;
-  for (;ii<len; ii++) 
-  {
+  for (;ii<len; ii++) {
     if (is_white_space(s[ii])) 
-    {
       break;
-    }
   }
 
   size = ii-sp;
@@ -135,15 +128,13 @@ qs_new_tag(Doc* doc)
 Node*
 qs_add_attr(Doc* doc, Node* node, Attr* attr) 
 {
-  if (node == NULL) 
-  {
+  if (node == NULL) {
     QX_LOGGER_FATAL("qs_add_attr() node is null");
   }
 
   attr->parent = node;
   attr->next   = NULL;
-  if (node->attr == NULL) 
-  {
+  if (node->attr == NULL) {
     node->attr      = attr;
     node->attr_tail = attr;
     return node;

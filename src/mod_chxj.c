@@ -101,27 +101,25 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, 
           "content type is %s", r->content_type);
 
-  if (strncmp(r->content_type, "text/html",   9) != 0)
-  {
-    ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "content type is %s", r->content_type);
+  if (strncmp(r->content_type, "text/html",   9) != 0) {
+    ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 
+      0, r, "content type is %s", r->content_type);
     return (char*)*src;
   }
 
-  if (!r->header_only) 
-  {
+  if (!r->header_only) {
     device_table_t* spec = chxj_specified_device(r, user_agent);
-    if (spec->html_spec_type == CHXJ_SPEC_Chtml_1_0) 
-    {
+    if (spec->html_spec_type == CHXJ_SPEC_Chtml_1_0) {
       /*----------------------------------------------------------------------*/
       /* DoCoMo i-Mode 1.0                                                    */
       /*----------------------------------------------------------------------*/
-      ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "select DoCoMo i-Mode 1.0 ");
+      ap_log_rerror(
+        APLOG_MARK,APLOG_DEBUG, 0, r, "select DoCoMo i-Mode 1.0 ");
       dst = chxj_exchange_chtml10(r, spec, *src, *len, len);
 
     }
     else
-    if (spec->html_spec_type == CHXJ_SPEC_Chtml_2_0) 
-    {
+    if (spec->html_spec_type == CHXJ_SPEC_Chtml_2_0) {
       /*----------------------------------------------------------------------*/
       /* DoCoMo i-Mode 2.0                                                    */
       /*----------------------------------------------------------------------*/
@@ -129,8 +127,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
       dst = chxj_exchange_chtml20(r, spec, *src, *len, len);
     }
     else 
-    if (spec->html_spec_type == CHXJ_SPEC_Chtml_3_0) 
-    {
+    if (spec->html_spec_type == CHXJ_SPEC_Chtml_3_0) {
       /*----------------------------------------------------------------------*/
       /* DoCoMo i-Mode 3.0                                                    */
       /*----------------------------------------------------------------------*/
@@ -138,8 +135,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
       dst = chxj_exchange_chtml30(r, spec, *src, *len, len);
     }
     else
-    if (spec->html_spec_type == CHXJ_SPEC_Chtml_4_0) 
-    {
+    if (spec->html_spec_type == CHXJ_SPEC_Chtml_4_0) {
       /*----------------------------------------------------------------------*/
       /* DoCoMo i-Mode 4.0                                                    */
       /*----------------------------------------------------------------------*/
@@ -147,8 +143,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
       dst = chxj_exchange_chtml30(r, spec, *src, *len, len);
     }
     else 
-    if (spec->html_spec_type == CHXJ_SPEC_Chtml_5_0) 
-    {
+    if (spec->html_spec_type == CHXJ_SPEC_Chtml_5_0) {
       /*----------------------------------------------------------------------*/
       /* DoCoMo i-Mode 5.0                                                    */
       /*----------------------------------------------------------------------*/
@@ -156,8 +151,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
       dst = chxj_exchange_chtml30(r, spec, *src, *len, len);
     }
     else
-    if (spec->html_spec_type == CHXJ_SPEC_XHtml_Mobile_1_0) 
-    {
+    if (spec->html_spec_type == CHXJ_SPEC_XHtml_Mobile_1_0) {
       /*----------------------------------------------------------------------*/
       /* AU XHtml Mobile 1.0 (XHtml Basic 1.0 extended)                       */
       /*----------------------------------------------------------------------*/
@@ -165,8 +159,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
       dst = chxj_exchange_xhtml_mobile_1_0(r, spec, *src, *len, len);
     }
     else
-    if (spec->html_spec_type == CHXJ_SPEC_Hdml) 
-    {
+    if (spec->html_spec_type == CHXJ_SPEC_Hdml) {
       /*----------------------------------------------------------------------*/
       /* AU HDML Version 3.0 Only                                             */
       /*----------------------------------------------------------------------*/
@@ -174,16 +167,14 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
       dst = chxj_exchange_hdml(r, spec, *src, *len, len);
     }
     else
-    if (spec->html_spec_type == CHXJ_SPEC_Jhtml) 
-    {
+    if (spec->html_spec_type == CHXJ_SPEC_Jhtml) {
       /*----------------------------------------------------------------------*/
       /* J-Phone and Vodaphone                                                */
       /*----------------------------------------------------------------------*/
       ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "select JHTML");
       dst = chxj_exchange_jhtml(r, spec, *src, *len, len);
     }
-    else 
-    {
+    else {
       ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "select ?????");
       ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "html_spec_type[%d]", 
                       spec->html_spec_type);
@@ -193,14 +184,16 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
 
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "end chxj_exchange()");
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "Length=[%d]", *len);
-  if (*len == 0)
-  {
+  if (*len == 0) {
     dst = apr_psprintf(r->pool, "\n");
     *len = 1;
   }
   dst[*len] = 0;
   return dst;
 }
+
+
+
 /**
  * It converts it from POSTDATA .
  *
@@ -226,21 +219,16 @@ chxj_input_exchange(request_rec *r, const char** src, apr_size_t* len)
   /* _chxj_c_ */
   /* _chxj_r_ */
   /* _chxj_s_ */
-  for (;;) 
-  {
+  for (;;) {
     pair = apr_strtok(s, "&", &pstate);
     if (pair == NULL)
-    {
       break;
-    } 
     s = NULL;
 
     name  = apr_strtok(pair, "=", &vstate);
     value = apr_strtok(NULL, "=", &vstate);
-    if (strncasecmp(name, "_chxj", 5) != 0) 
-    {
-      if (strlen(result) != 0)
-      {
+    if (strncasecmp(name, "_chxj", 5) != 0) {
+      if (strlen(result) != 0) {
         result = apr_pstrcat(r->pool, result, "&", NULL);
       }
       result = apr_pstrcat(r->pool, result, name, "=", value, NULL);
@@ -248,22 +236,16 @@ chxj_input_exchange(request_rec *r, const char** src, apr_size_t* len)
     else
     if (strncasecmp(name, "_chxj_c_", 8) == 0 
     ||  strncasecmp(name, "_chxj_r_", 8) == 0
-    ||  strncasecmp(name, "_chxj_s_", 8) == 0)
-    {
+    ||  strncasecmp(name, "_chxj_s_", 8) == 0) {
       if (value == NULL)
-      {
         continue;
-      }
 
       if (strlen(value) == 0)
-      {
         continue;
-      }
 
       if (strlen(result) != 0)
-      {
         result = apr_pstrcat(r->pool, result, "&", NULL);
-      }
+
       result = apr_pstrcat(r->pool, result, &name[8], "=", value, NULL);
     }
   }
@@ -299,8 +281,7 @@ pass_data_to_filter(ap_filter_t *f, const char *data,
   APR_BRIGADE_INSERT_TAIL(bb, b);
 
   rv = ap_pass_brigade(f->next, bb);
-  if (rv != APR_SUCCESS) 
-  {
+  if (rv != APR_SUCCESS) {
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, rv, r,
                    "ap_pass_brigade()");
     return rv;
@@ -329,29 +310,23 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
 
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, 
           "start of chxj_output_filter()");
-  if (!f->ctx) 
-  {
+  if (!f->ctx) {
     if ((f->r->proto_num >= 1001) 
     &&  !f->r->main 
     &&  !f->r->prev) 
-    {
       f->r->chunked = 1;
-    }
   }
 
 
   for (b = APR_BRIGADE_FIRST(bb);
        b != APR_BRIGADE_SENTINEL(bb); 
-       b = APR_BUCKET_NEXT(b)) 
-  {
-    if (APR_BUCKET_IS_EOS(b)) 
-    {
+       b = APR_BUCKET_NEXT(b)) {
+    if (APR_BUCKET_IS_EOS(b)) {
       ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "eos");
       /*----------------------------------------------------------------------*/
       /* End Of File                                                          */
       /*----------------------------------------------------------------------*/
-      if (f->ctx) 
-      {
+      if (f->ctx) {
         ctx = (mod_chxj_ctx_t*)f->ctx;
         if (strncmp(r->content_type, "text/html",   9) == 0)
         {

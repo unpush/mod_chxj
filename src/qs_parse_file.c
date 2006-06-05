@@ -43,18 +43,14 @@ qs_parse_file(Doc* doc, const char* filename)
 
   rtn = stat(filename, &st); 
   if (rtn != 0)
-  {
     return return_value;
-  }
+
   fd = open(filename, O_RDONLY);
   if (fd == -1)
-  {
     return return_value;
-  }
 
   tgt = (char*)mmap(0, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
-  if ((int)tgt == -1)
-  {
+  if ((int)tgt == -1) {
     close(fd);
     return return_value;
   }
