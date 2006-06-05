@@ -328,10 +328,8 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
       /*----------------------------------------------------------------------*/
       if (f->ctx) {
         ctx = (mod_chxj_ctx_t*)f->ctx;
-        if (strncmp(r->content_type, "text/html",   9) == 0)
-        {
-          if (ctx->len)
-          {
+        if (strncmp(r->content_type, "text/html",   9) == 0) {
+          if (ctx->len) {
             char* tmp = apr_palloc(r->pool, ctx->len + 1);
             memset(tmp, 0, ctx->len + 1);
             memcpy(tmp, ctx->buffer, ctx->len);
@@ -339,68 +337,62 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
             ctx->buffer = chxj_exchange(r, (const char**)&tmp, (apr_size_t*)&ctx->len);
             ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "output data=[%.*s]", ctx->len,ctx->buffer);
           }
-          else 
-          {
+          else {
             ctx->buffer = apr_psprintf(r->pool, "\n");
             ctx->len += 1;
           }
         }
-        if (strncmp(r->content_type, "image/", 6) == 0)
-        {
-          if (ctx->len)
-          {
+        if (*(char*)r->content_type == 'i' && 
+        strncmp(r->content_type, "image/", 6) == 0) {
+          if (ctx->len) {
             char* tmp = apr_palloc(r->pool, ctx->len + 1);
             memset(tmp, 0, ctx->len + 1);
             memcpy(tmp, ctx->buffer, ctx->len);
-            ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "input data=[%s]", tmp);
-            ctx->buffer = chxj_exchange_image(r, (const char**)&tmp, (apr_size_t*)&ctx->len);
-            ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "output data=[%.*s]", ctx->len,ctx->buffer);
+            ap_log_rerror(
+              APLOG_MARK, APLOG_DEBUG, 0, r, "input data=[%s]", tmp);
+            ctx->buffer = 
+              chxj_exchange_image(r, (const char**)&tmp,(apr_size_t*)&ctx->len);
+            ap_log_rerror(
+              APLOG_MARK, APLOG_DEBUG, 0, r, "output data=[%.*s]", ctx->len,ctx->buffer);
           }
         }
         contentLength = apr_psprintf(r->pool, "%d", ctx->len);
         apr_table_setn(r->headers_out, "Content-Length", contentLength);
         
-        if (ctx->len > 0)
-        {
+        if (ctx->len > 0) {
           rv = pass_data_to_filter(f, (const char*)ctx->buffer, (apr_size_t)ctx->len);
         }
         f->ctx = NULL;
         return rv;
       }
-      else
-      {
+      else {
         apr_table_setn(r->headers_out, "Content-Length", "0");
         rv = pass_data_to_filter(f, (const char*)"", (apr_size_t)0);
         return rv;
       }
     }
     else
-    if (apr_bucket_read(b, &data, &len, APR_BLOCK_READ) == APR_SUCCESS) 
-    {
+    if (apr_bucket_read(b, &data, &len, APR_BLOCK_READ) == APR_SUCCESS) {
       ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "read data[%.*s]",len, data);
 
-      if (f->ctx == NULL) 
-      {
+      if (f->ctx == NULL) {
         /*--------------------------------------------------------------------*/
         /* Start                                                              */
         /*--------------------------------------------------------------------*/
         ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "new context");
         ctx = (mod_chxj_ctx_t*)apr_palloc(r->pool, sizeof(mod_chxj_ctx_t));
-        if (len > 0)
-        {
+        if (len > 0) {
           ctx->buffer = apr_palloc(r->pool, len);
           memcpy(ctx->buffer, data, len);
         }
-        else 
-        {
+        else {
           ctx->buffer = apr_palloc(r->pool, 1);
           ctx->buffer = '\0';
         }
         ctx->len = len;
         f->ctx = (void*)ctx;
       }
-      else 
-      {
+      else {
         /*--------------------------------------------------------------------*/
         /* append data                                                        */
         /*--------------------------------------------------------------------*/
@@ -408,8 +400,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
         ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "append data start");
         ctx = (mod_chxj_ctx_t*)f->ctx;
 
-        if (len > 0)
-        {
+        if (len > 0) {
           tmp = apr_palloc(r->pool, ctx->len);
           memcpy(tmp, ctx->buffer, ctx->len);
           ctx->buffer = apr_palloc(r->pool, ctx->len + len);
@@ -470,25 +461,21 @@ chxj_input_filter(ap_filter_t*        f,
   obb = apr_brigade_create(r->pool, c->bucket_alloc);
 
   rv = ap_get_brigade(f->next, ibb, mode, block, readbytes);
-  if (rv != APR_SUCCESS)
-  {
+  if (rv != APR_SUCCESS) {
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, rv, r,
                     "ap_get_brigade() failed");
     return rv;
   }
 
-  APR_BRIGADE_FOREACH(b, ibb) 
-  {
+  APR_BRIGADE_FOREACH(b, ibb) {
     rv = apr_bucket_read(b, &data, &len, APR_BLOCK_READ);
-    if (rv != APR_SUCCESS) 
-    {
+    if (rv != APR_SUCCESS) {
       ap_log_rerror(APLOG_MARK, APLOG_ERR, rv, r,
                      "apr_bucket_read() failed");
       return rv;
     }
 
-    if (data != NULL)
-    {
+    if (data != NULL) {
       data_bucket = apr_palloc(r->pool, len+1);
       memset((void*)data_bucket, 0, len+1);
       memcpy(data_bucket, data, len);
@@ -497,16 +484,14 @@ chxj_input_filter(ap_filter_t*        f,
       data_brigade = apr_pstrcat(r->pool, data_brigade, data_bucket, NULL);
     }
 
-    if (APR_BUCKET_IS_EOS(b)) 
-    {
+    if (APR_BUCKET_IS_EOS(b)) {
       break;
     }
   }
   apr_brigade_cleanup(ibb);
 
   len = strlen(data_brigade);
-  if (len == 0)
-  {
+  if (len == 0) {
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, rv, r,
                     "data_brigade length is 0");
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "end of chxj_input_filter()");
@@ -515,8 +500,7 @@ chxj_input_filter(ap_filter_t*        f,
   }
   data_brigade = chxj_input_exchange(r, (const char**)&data_brigade, (apr_size_t*)&len);
 
-  if (len > 0)
-  {
+  if (len > 0) {
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, f->r, "(in:exchange)POSTDATA:[%s]", data_brigade);
 
     obb = apr_brigade_create(r->pool, c->bucket_alloc);
@@ -572,8 +556,7 @@ chxj_global_config_create(apr_pool_t* pool, server_rec* s)
   apr_pool_cleanup_register(pool, s,
                                chxj_init_module_kill,
                                apr_pool_cleanup_null);
-  if (conf)
-  {
+  if (conf) {
     /*------------------------------------------------------------------------*/
     /* reused for lifetime of the server                                      */
     /*------------------------------------------------------------------------*/
@@ -709,55 +692,46 @@ chxj_merge_per_dir_config(apr_pool_t *p, void *basev, void *addv)
   mrg->image_copyright  = NULL;
   mrg->emoji            = NULL;
   mrg->emoji_tail       = NULL;
-  if (add->device_data_file == NULL)
-  {
+
+  if (! add->device_data_file) {
     mrg->devices = base->devices;
     mrg->device_data_file = apr_pstrdup(p, base->device_data_file);
   }
-  else
-  {
+  else {
     mrg->devices = add->devices;
     mrg->device_data_file = apr_pstrdup(p, add->device_data_file);
   }
 
-  if (add->emoji_data_file == NULL)
-  {
+  if (! add->emoji_data_file) {
     mrg->emoji = base->emoji;
     mrg->emoji_tail = base->emoji_tail;
     mrg->emoji_data_file = apr_pstrdup(p, base->emoji_data_file);
   }
-  else
-  {
+  else {
     mrg->emoji = add->emoji;
     mrg->emoji_tail = add->emoji_tail;
     mrg->emoji_data_file = apr_pstrdup(p, add->emoji_data_file);
   }
 
-  if (add->image == CHXJ_IMG_OFF)
-  {
+  if (add->image == CHXJ_IMG_OFF) {
     mrg->image = base->image;
   }
-  else
-  {
+  else {
     mrg->image = add->image;
   }
 
-  if (strcasecmp(add->image_cache_dir ,DEFAULT_IMAGE_CACHE_DIR)==0)
-  {
+  if (strcasecmp(add->image_cache_dir ,DEFAULT_IMAGE_CACHE_DIR)==0) {
     mrg->image_cache_dir = apr_pstrdup(p, base->image_cache_dir);
   }
-  else
-  {
+  else {
     mrg->image_cache_dir = apr_pstrdup(p, add->image_cache_dir);
   }
 
-  if (add->image_copyright == NULL && base->image_copyright != NULL)
-  {
+  if (add->image_copyright == NULL && base->image_copyright != NULL) {
     mrg->image_copyright = apr_pstrdup(p, base->image_copyright);
   }
   else
-  if (add->image_copyright != NULL)
-  {
+  if (add->image_copyright != NULL) {
     mrg->image_copyright = apr_pstrdup(p, add->image_copyright);
   }
   return mrg;
