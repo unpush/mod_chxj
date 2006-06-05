@@ -87,8 +87,7 @@ chxj_exchange_jhtml(
   /*--------------------------------------------------------------------------*/
   *dstlen = srclen;
   dst = chxj_qr_code_blob_handler(r, src, (size_t*)dstlen);
-  if (dst != NULL)
-  {
+  if (dst != NULL) {
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"i found qrcode xml");
     return dst;
   }
@@ -120,13 +119,11 @@ chxj_exchange_jhtml(
   dst = s_jhtml_node_exchange(&jhtml, qs_get_root(&doc), 0);
   qs_all_free(&doc,QX_LOGMARK);
 
-  if (dst == NULL) 
-  {
+  if (dst == NULL) {
     return apr_pstrdup(r->pool,ss);
   }
 
-  if (strlen(dst) == 0)
-  {
+  if (strlen(dst) == 0) {
     dst = apr_psprintf(r->pool, "\n");
   }
   *dstlen = strlen(dst);
@@ -181,151 +178,135 @@ s_jhtml_node_exchange(jhtml_t* jhtml, Node* node, int indent)
   /*--------------------------------------------------------------------------*/
   for (child = qs_get_child_node(doc,node);
        child ;
-       child = qs_get_next_node(doc,child)) 
-  {
+       child = qs_get_next_node(doc,child)) {
     char* name = qs_get_node_name(doc,child);
 
-    /*------------------------------------------------------------------------*/
-    /* <HTML>                                                                 */
-    /*------------------------------------------------------------------------*/
-    if (strcasecmp(name, "html") == 0) 
-    {
-      s_jhtml_start_html_tag(jhtml, child);
-      s_jhtml_node_exchange (jhtml, child,indent+1);
-      s_jhtml_end_html_tag  (jhtml, child);
+    if (*name == 'h' || *name == 'H') { 
+      /*----------------------------------------------------------------------*/
+      /* <HTML>                                                               */
+      /*----------------------------------------------------------------------*/
+      if (strcasecmp(name, "html") == 0) {
+        s_jhtml_start_html_tag(jhtml, child);
+        s_jhtml_node_exchange (jhtml, child,indent+1);
+        s_jhtml_end_html_tag  (jhtml, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <HEAD>                                                               */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "head") == 0) {
+        s_jhtml_start_head_tag(jhtml, child);
+        s_jhtml_node_exchange (jhtml, child,indent+1);
+        s_jhtml_end_head_tag  (jhtml, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <HR>                                                                 */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "hr") == 0) {
+        s_jhtml_start_hr_tag  (jhtml, child);
+        s_jhtml_end_hr_tag    (jhtml, child);
+      }
     }
     /*------------------------------------------------------------------------*/
     /* <META>                                                                 */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "meta") == 0) 
-    {
+    if ((*name == 'm' || *name == 'M') && strcasecmp(name, "meta") == 0) {
       s_jhtml_start_meta_tag(jhtml, child);
       s_jhtml_end_meta_tag  (jhtml, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <HEAD>                                                                 */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "head") == 0) 
-    {
-      s_jhtml_start_head_tag(jhtml, child);
-      s_jhtml_node_exchange (jhtml, child,indent+1);
-      s_jhtml_end_head_tag  (jhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <TITLE>                                                                */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "title") == 0) 
-    {
+    if ((*name == 't' || *name == 'T') && strcasecmp(name, "title") == 0) {
       s_jhtml_start_title_tag (jhtml, child);
       s_jhtml_node_exchange   (jhtml, child,indent+1);
       s_jhtml_end_title_tag   (jhtml, child);
     }
-    /*------------------------------------------------------------------------*/
-    /* <BASE>                                                                 */
-    /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "base") == 0) 
-    {
-      s_jhtml_start_base_tag(jhtml, child);
-      s_jhtml_end_base_tag  (jhtml, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <BODY>                                                                 */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "body") == 0) 
-    {
-      s_jhtml_start_body_tag(jhtml, child);
-      s_jhtml_node_exchange (jhtml, child,indent+1);
-      s_jhtml_end_body_tag  (jhtml, child);
+    if (*name == 'b' || *name == 'B') {
+      /*----------------------------------------------------------------------*/
+      /* <BASE>                                                               */
+      /*----------------------------------------------------------------------*/
+      if (strcasecmp(name, "base") == 0) {
+        s_jhtml_start_base_tag(jhtml, child);
+        s_jhtml_end_base_tag  (jhtml, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <BODY>                                                               */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "body") == 0) {
+        s_jhtml_start_body_tag(jhtml, child);
+        s_jhtml_node_exchange (jhtml, child,indent+1);
+        s_jhtml_end_body_tag  (jhtml, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <BR>                                                                 */
+      /*----------------------------------------------------------------------*/
+      else 
+      if (strcasecmp(name, "br") == 0) {
+        s_jhtml_start_br_tag  (jhtml, child);
+        s_jhtml_node_exchange (jhtml, child,indent+1);
+        s_jhtml_end_br_tag    (jhtml, child);
+      }
     }
     /*------------------------------------------------------------------------*/
     /* <A>                                                                    */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "a") == 0) 
-    {
+    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "a") == 0) {
       s_jhtml_start_a_tag   (jhtml, child);
       s_jhtml_node_exchange (jhtml, child,indent+1);
       s_jhtml_end_a_tag     (jhtml, child);
     }
-    /*------------------------------------------------------------------------*/
-    /* <BR>                                                                   */
-    /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "br") == 0) 
-    {
-      s_jhtml_start_br_tag  (jhtml, child);
-      s_jhtml_node_exchange (jhtml, child,indent+1);
-      s_jhtml_end_br_tag    (jhtml, child);
+    if (*name == 'f' || *name == 'F') {
+      /*----------------------------------------------------------------------*/
+      /* <FONT>                                                               */
+      /*----------------------------------------------------------------------*/
+      if (strcasecmp(name, "font") == 0) {
+        s_jhtml_start_font_tag(jhtml, child);
+        s_jhtml_node_exchange (jhtml, child,indent+1);
+        s_jhtml_end_font_tag  (jhtml, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <FORM>                                                               */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "form") == 0) {
+        s_jhtml_start_form_tag(jhtml, child);
+        s_jhtml_node_exchange (jhtml, child,indent+1);
+        s_jhtml_end_form_tag  (jhtml, child);
+      }
     }
-    /*------------------------------------------------------------------------*/
-    /* <FONT>                                                                 */
-    /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "font") == 0) 
-    {
-      s_jhtml_start_font_tag(jhtml, child);
-      s_jhtml_node_exchange (jhtml, child,indent+1);
-      s_jhtml_end_font_tag  (jhtml, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <FORM>                                                                 */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "form") == 0) 
-    {
-      s_jhtml_start_form_tag(jhtml, child);
-      s_jhtml_node_exchange (jhtml, child,indent+1);
-      s_jhtml_end_form_tag  (jhtml, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <INPUT>                                                                */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "input") == 0) 
-    {
-      s_jhtml_start_input_tag (jhtml, child);
-      s_jhtml_node_exchange   (jhtml, child,indent+1);
-      s_jhtml_end_input_tag   (jhtml, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <HR>                                                                   */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "hr") == 0) 
-    {
-      s_jhtml_start_hr_tag  (jhtml, child);
-      s_jhtml_end_hr_tag    (jhtml, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <CENTER>                                                               */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "center") == 0) 
-    {
-      s_jhtml_start_center_tag(jhtml, child);
-      s_jhtml_node_exchange   (jhtml, child,indent+1);
-      s_jhtml_end_center_tag  (jhtml, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <IMG>                                                                  */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "img") == 0) 
-    {
-      s_jhtml_start_img_tag (jhtml, child);
-      s_jhtml_end_img_tag   (jhtml, child);
+    if (*name == 'i' || *name == 'I') {
+      /*----------------------------------------------------------------------*/
+      /* <INPUT>                                                              */
+      /*----------------------------------------------------------------------*/
+      if (strcasecmp(name, "input") == 0) {
+        s_jhtml_start_input_tag (jhtml, child);
+        s_jhtml_node_exchange   (jhtml, child,indent+1);
+        s_jhtml_end_input_tag   (jhtml, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <IMG>                                                                */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "img") == 0) {
+        s_jhtml_start_img_tag (jhtml, child);
+        s_jhtml_end_img_tag   (jhtml, child);
+      }
     }
     /*------------------------------------------------------------------------*/
     /* <SELECT>                                                               */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "select") == 0)
-    {
+    if ((*name == 's' || *name == 'S') 
+    &&  strcasecmp(name, "select") == 0) {
       s_jhtml_start_select_tag(jhtml, child);
       s_jhtml_node_exchange   (jhtml, child, indent+1);
       s_jhtml_end_select_tag  (jhtml, child);
@@ -334,8 +315,8 @@ s_jhtml_node_exchange(jhtml_t* jhtml, Node* node, int indent)
     /* <OPTION>                                                               */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "option") == 0)
-    {
+    if ((*name == 'o' || *name == 'O')
+    &&  strcasecmp(name, "option") == 0) {
       s_jhtml_start_option_tag(jhtml, child);
       s_jhtml_node_exchange   (jhtml, child, indent+1);
       s_jhtml_end_option_tag  (jhtml, child);
@@ -344,8 +325,8 @@ s_jhtml_node_exchange(jhtml_t* jhtml, Node* node, int indent)
     /* <DIV>                                                                  */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "div") == 0)
-    {
+    if ((*name == 'd' || *name == 'D')
+    &&  strcasecmp(name, "div") == 0) {
       s_jhtml_start_div_tag (jhtml, child);
       s_jhtml_node_exchange (jhtml, child, indent+1);
       s_jhtml_end_div_tag   (jhtml, child);
@@ -354,30 +335,37 @@ s_jhtml_node_exchange(jhtml_t* jhtml, Node* node, int indent)
     /* <BLINK>                                                                */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "blink") == 0)
-    {
+    if ((*name == 'b' || *name == 'B')
+    && strcasecmp(name, "blink") == 0) {
       /* ignore */
     }
     /*------------------------------------------------------------------------*/
-    /* <CHXJ:IF>                                                              */
+    /* <CENTER>                                                               */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "chxj:if") == 0)
-    {
-      ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag found");
-      if (chxj_chxjif_is_mine(jhtml->spec, doc, child))
-      {
-        ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag is mine");
-
-        char* parse_attr = NULL;
-        parse_attr = qs_get_parse_attr(doc, child, r);
-        if (parse_attr != NULL && strcasecmp(parse_attr, "true") == 0)
-        {
-          s_jhtml_node_exchange (jhtml, child, indent+1);
-        }
-        else
-        {
-          s_jhtml_chxjif_tag(jhtml, child);
+    if (*name == 'c' || *name == 'C') {
+      if (strcasecmp(name, "center") == 0) {
+        s_jhtml_start_center_tag(jhtml, child);
+        s_jhtml_node_exchange   (jhtml, child,indent+1);
+        s_jhtml_end_center_tag  (jhtml, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <CHXJ:IF>                                                            */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "chxj:if") == 0) {
+        ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag found");
+        if (chxj_chxjif_is_mine(jhtml->spec, doc, child)) {
+          ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag is mine");
+  
+          char* parse_attr = NULL;
+          parse_attr = qs_get_parse_attr(doc, child, r);
+          if (parse_attr != NULL && strcasecmp(parse_attr, "true") == 0) {
+            s_jhtml_node_exchange (jhtml, child, indent+1);
+          }
+          else {
+            s_jhtml_chxjif_tag(jhtml, child);
+          }
         }
       }
     }
