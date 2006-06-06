@@ -90,8 +90,7 @@ chxj_exchange_xhtml_mobile_1_0(
   /*--------------------------------------------------------------------------*/
   *dstlen = srclen;
   dst = chxj_qr_code_blob_handler(r, src, (size_t*)dstlen);
-  if (dst != NULL)
-  {
+  if (dst != NULL) {
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"i found qrcode xml");
     return dst;
   }
