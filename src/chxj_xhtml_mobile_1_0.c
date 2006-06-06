@@ -232,22 +232,33 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
       s_xhtml_1_0_node_exchange   (xhtml, child,indent+1);
       s_xhtml_1_0_end_title_tag   (xhtml, child);
     }
-    /*------------------------------------------------------------------------*/
-    /* <BASE>                                                                 */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "base") == 0) {
-      s_xhtml_1_0_start_base_tag(xhtml, child);
-      s_xhtml_1_0_end_base_tag  (xhtml, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <BODY>                                                                 */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "body") == 0) {
-      s_xhtml_1_0_start_body_tag(xhtml, child);
-      s_xhtml_1_0_node_exchange (xhtml, child,indent+1);
-      s_xhtml_1_0_end_body_tag  (xhtml, child);
+    else 
+    if (*name == 'b' || *name == 'B') {
+      /*----------------------------------------------------------------------*/
+      /* <BASE>                                                               */
+      /*----------------------------------------------------------------------*/
+      if (strcasecmp(name, "base") == 0) {
+        s_xhtml_1_0_start_base_tag(xhtml, child);
+        s_xhtml_1_0_end_base_tag  (xhtml, child);
+      }
+      else
+      /*----------------------------------------------------------------------*/
+      /* <BODY>                                                               */
+      /*----------------------------------------------------------------------*/
+      if (strcasecmp(name, "body") == 0) {
+        s_xhtml_1_0_start_body_tag(xhtml, child);
+        s_xhtml_1_0_node_exchange (xhtml, child,indent+1);
+        s_xhtml_1_0_end_body_tag  (xhtml, child);
+      }
+      else
+      /*----------------------------------------------------------------------*/
+      /* <BR>                                                                 */
+      /*----------------------------------------------------------------------*/
+      if (strcasecmp(name, "br") == 0) {
+        s_xhtml_1_0_start_br_tag  (xhtml, child);
+        s_xhtml_1_0_node_exchange (xhtml, child,indent+1);
+        s_xhtml_1_0_end_br_tag    (xhtml, child);
+      }
     }
     /*------------------------------------------------------------------------*/
     /* <A>                                                                    */
@@ -257,15 +268,6 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
       s_xhtml_1_0_start_a_tag   (xhtml, child);
       s_xhtml_1_0_node_exchange (xhtml, child,indent+1);
       s_xhtml_1_0_end_a_tag     (xhtml, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <BR>                                                                   */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "br") == 0) {
-      s_xhtml_1_0_start_br_tag  (xhtml, child);
-      s_xhtml_1_0_node_exchange (xhtml, child,indent+1);
-      s_xhtml_1_0_end_br_tag    (xhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <FONT>                                                                 */
