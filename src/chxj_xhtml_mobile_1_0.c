@@ -126,19 +126,17 @@ chxj_exchange_xhtml_mobile_1_0(
   qs_all_free(&doc,QX_LOGMARK);
 
   if (dst == NULL) 
-  {
     return apr_pstrdup(r->pool,ss);
-  }
 
   if (strlen(dst) == 0)
-  {
     dst = apr_psprintf(r->pool, "\n");
-  }
+
   *dstlen = strlen(dst);
 #ifdef DUMP_LOG
   chxj_dump_out("[dst] CHTML->XHTML", dst, *dstlen);
 #endif
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"end chxj_exchange_xhtml_mobile_1_0()");
+
   return dst;
 }
 
