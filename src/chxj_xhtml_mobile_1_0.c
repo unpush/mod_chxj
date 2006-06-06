@@ -185,44 +185,49 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
   /*--------------------------------------------------------------------------*/
   for (child = qs_get_child_node(doc,node);
        child ;
-       child = qs_get_next_node(doc,child)) 
-  {
+       child = qs_get_next_node(doc,child)) {
     char* name = qs_get_node_name(doc,child);
 
-    /*------------------------------------------------------------------------*/
-    /* <HTML>                                                                 */
-    /*------------------------------------------------------------------------*/
-    if (strcasecmp(name, "html") == 0) 
-    {
-      s_xhtml_1_0_start_html_tag(xhtml, child);
-      s_xhtml_1_0_node_exchange (xhtml, child,indent+1);
-      s_xhtml_1_0_end_html_tag  (xhtml, child);
+    if (*name == 'h' || *name == 'H') {
+      /*----------------------------------------------------------------------*/
+      /* <HTML>                                                               */
+      /*----------------------------------------------------------------------*/
+      if (strcasecmp(name, "html") == 0) {
+        s_xhtml_1_0_start_html_tag(xhtml, child);
+        s_xhtml_1_0_node_exchange (xhtml, child,indent+1);
+        s_xhtml_1_0_end_html_tag  (xhtml, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <HEAD>                                                               */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "head") == 0) {
+        s_xhtml_1_0_start_head_tag(xhtml, child);
+        s_xhtml_1_0_node_exchange (xhtml, child,indent+1);
+        s_xhtml_1_0_end_head_tag  (xhtml, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <HR>                                                                 */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "hr") == 0) {
+        s_xhtml_1_0_start_hr_tag  (xhtml, child);
+        s_xhtml_1_0_end_hr_tag    (xhtml, child);
+      }
     }
     /*------------------------------------------------------------------------*/
     /* <META>                                                                 */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "meta") == 0) 
-    {
+    if (strcasecmp(name, "meta") == 0) {
       s_xhtml_1_0_start_meta_tag(xhtml, child);
       s_xhtml_1_0_end_meta_tag  (xhtml, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <HEAD>                                                                 */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "head") == 0) 
-    {
-      s_xhtml_1_0_start_head_tag(xhtml, child);
-      s_xhtml_1_0_node_exchange (xhtml, child,indent+1);
-      s_xhtml_1_0_end_head_tag  (xhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <TITLE>                                                                */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "title") == 0) 
-    {
+    if (strcasecmp(name, "title") == 0) {
       s_xhtml_1_0_start_title_tag (xhtml, child);
       s_xhtml_1_0_node_exchange   (xhtml, child,indent+1);
       s_xhtml_1_0_end_title_tag   (xhtml, child);
@@ -231,8 +236,7 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
     /* <BASE>                                                                 */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "base") == 0) 
-    {
+    if (strcasecmp(name, "base") == 0) {
       s_xhtml_1_0_start_base_tag(xhtml, child);
       s_xhtml_1_0_end_base_tag  (xhtml, child);
     }
@@ -240,8 +244,7 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
     /* <BODY>                                                                 */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "body") == 0) 
-    {
+    if (strcasecmp(name, "body") == 0) {
       s_xhtml_1_0_start_body_tag(xhtml, child);
       s_xhtml_1_0_node_exchange (xhtml, child,indent+1);
       s_xhtml_1_0_end_body_tag  (xhtml, child);
@@ -250,8 +253,7 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
     /* <A>                                                                    */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "a") == 0) 
-    {
+    if (strcasecmp(name, "a") == 0) {
       s_xhtml_1_0_start_a_tag   (xhtml, child);
       s_xhtml_1_0_node_exchange (xhtml, child,indent+1);
       s_xhtml_1_0_end_a_tag     (xhtml, child);
@@ -260,8 +262,7 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
     /* <BR>                                                                   */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "br") == 0) 
-    {
+    if (strcasecmp(name, "br") == 0) {
       s_xhtml_1_0_start_br_tag  (xhtml, child);
       s_xhtml_1_0_node_exchange (xhtml, child,indent+1);
       s_xhtml_1_0_end_br_tag    (xhtml, child);
@@ -270,8 +271,7 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
     /* <FONT>                                                                 */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "font") == 0) 
-    {
+    if (strcasecmp(name, "font") == 0) {
       s_xhtml_1_0_start_font_tag(xhtml, child);
       s_xhtml_1_0_node_exchange (xhtml, child,indent+1);
       s_xhtml_1_0_end_font_tag  (xhtml, child);
@@ -280,8 +280,7 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
     /* <FORM>                                                                 */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "form") == 0) 
-    {
+    if (strcasecmp(name, "form") == 0) {
       s_xhtml_1_0_start_form_tag(xhtml, child);
       s_xhtml_1_0_node_exchange (xhtml, child,indent+1);
       s_xhtml_1_0_end_form_tag  (xhtml, child);
@@ -290,27 +289,16 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
     /* <INPUT>                                                                */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "input") == 0) 
-    {
+    if (strcasecmp(name, "input") == 0) {
       s_xhtml_1_0_start_input_tag (xhtml, child);
       s_xhtml_1_0_node_exchange   (xhtml, child,indent+1);
       s_xhtml_1_0_end_input_tag   (xhtml, child);
     }
     /*------------------------------------------------------------------------*/
-    /* <HR>                                                                   */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "hr") == 0) 
-    {
-      s_xhtml_1_0_start_hr_tag  (xhtml, child);
-      s_xhtml_1_0_end_hr_tag    (xhtml, child);
-    }
-    /*------------------------------------------------------------------------*/
     /* <CENTER>                                                               */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "center") == 0) 
-    {
+    if (strcasecmp(name, "center") == 0) {
       s_xhtml_1_0_start_center_tag(xhtml, child);
       s_xhtml_1_0_node_exchange   (xhtml, child,indent+1);
       s_xhtml_1_0_end_center_tag  (xhtml, child);
@@ -319,8 +307,7 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
     /* <IMG>                                                                  */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "img") == 0) 
-    {
+    if (strcasecmp(name, "img") == 0) {
       s_xhtml_1_0_start_img_tag (xhtml, child);
       s_xhtml_1_0_end_img_tag   (xhtml, child);
     }
@@ -328,8 +315,7 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
     /* <SELECT>                                                               */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "select") == 0)
-    {
+    if (strcasecmp(name, "select") == 0) {
       s_xhtml_1_0_start_select_tag(xhtml, child);
       s_xhtml_1_0_node_exchange   (xhtml, child, indent+1);
       s_xhtml_1_0_end_select_tag  (xhtml, child);
@@ -338,8 +324,7 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
     /* <OPTION>                                                               */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "option") == 0)
-    {
+    if (strcasecmp(name, "option") == 0) {
       s_xhtml_1_0_start_option_tag(xhtml, child);
       s_xhtml_1_0_node_exchange   (xhtml, child, indent+1);
       s_xhtml_1_0_end_option_tag  (xhtml, child);
@@ -348,8 +333,7 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
     /* <DIV>                                                                  */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "div") == 0)
-    {
+    if (strcasecmp(name, "div") == 0) {
       s_xhtml_1_0_start_div_tag (xhtml, child);
       s_xhtml_1_0_node_exchange (xhtml, child, indent+1);
       s_xhtml_1_0_end_div_tag   (xhtml, child);
@@ -358,26 +342,21 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
     /* <CHXJ:IF>                                                              */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "chxj:if") == 0)
-    {
+    if (strcasecmp(name, "chxj:if") == 0) {
       ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag found");
-      if (chxj_chxjif_is_mine(xhtml->spec, doc, child))
-      {
+      if (chxj_chxjif_is_mine(xhtml->spec, doc, child)) {
         char* destlang = qs_get_destlang_attr(doc, child, r);
-        if (destlang != NULL && strcasecmp(destlang, "hdml") == 0)
-        {
+        if (destlang != NULL && strcasecmp(destlang, "hdml") == 0) {
           ap_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
         }
         ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag is mine");
 
         char* parse_attr = NULL;
         parse_attr = qs_get_parse_attr(doc, child, r);
-        if (parse_attr != NULL && strcasecmp(parse_attr, "true") == 0)
-        {
+        if (parse_attr != NULL && strcasecmp(parse_attr, "true") == 0) {
           s_xhtml_1_0_node_exchange (xhtml, child, indent+1);
         }
-        else
-        {
+        else {
           s_xhtml_1_0_chxjif_tag(xhtml, child);
         }
       }
@@ -386,8 +365,7 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
     /* NORMAL TEXT                                                            */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "text") == 0) 
-    {
+    if (strcasecmp(name, "text") == 0) {
       char*   textval;
       char*   tmp;
       char*   tdst;
@@ -398,9 +376,7 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
       textval = qs_get_node_value(doc,child);
       textval = qs_trim_string(xhtml->doc->r, textval);
       if (strlen(textval) == 0)
-      {
         continue;
-      }
 
       tmp = apr_palloc(r->pool, qs_get_node_size(doc,child)+1);
       memset(tmp, 0, qs_get_node_size(doc,child)+1);
@@ -409,28 +385,24 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
       memset(one_byte, 0, sizeof(one_byte));
       tdst_len = 0;
 
-      for (ii=0; ii<qs_get_node_size(doc,child); ii++)
-      {
+      for (ii=0; ii<qs_get_node_size(doc,child); ii++) {
         char* out;
         int rtn = s_xhtml_search_emoji(xhtml, &textval[ii], &out);
-        if (rtn != 0)
-        {
+        if (rtn != 0) {
           ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0, r,
                           "[%s][%d]", out, rtn);
           tdst = qs_out_apr_pstrcat(r, tdst, out, &tdst_len);
           ii+=(rtn - 1);
           continue;
         }
-        if (is_sjis_kanji(textval[ii]))
-        {
+        if (is_sjis_kanji(textval[ii])) {
           one_byte[0] = textval[ii+0];
           tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
           one_byte[0] = textval[ii+1];
           tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
           ii++;
         }
-        else if (textval[ii] != '\r' && textval[ii] != '\n')
-        {
+        else if (textval[ii] != '\r' && textval[ii] != '\n') {
           one_byte[0] = textval[ii+0];
           tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
         }
