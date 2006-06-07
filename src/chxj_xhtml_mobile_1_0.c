@@ -954,13 +954,11 @@ s_xhtml_1_0_start_a_tag(xhtml_t* xhtml, Node* node)
   /*--------------------------------------------------------------------------*/
   for (attr = qs_get_attr(doc,node);
        attr; 
-       attr = qs_get_next_attr(doc,attr)) 
-  {
+       attr = qs_get_next_attr(doc,attr)) {
     char* name  = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
 
-    if (strcasecmp(name, "name") == 0) 
-    {
+    if (strcasecmp(name, "name") == 0) {
       xhtml->out = apr_pstrcat(r->pool, 
                       xhtml->out, 
                       " id=\"", 
@@ -969,8 +967,7 @@ s_xhtml_1_0_start_a_tag(xhtml_t* xhtml, Node* node)
                       NULL);
     }
     else
-    if (strcasecmp(name, "href") == 0) 
-    {
+    if (strcasecmp(name, "href") == 0) {
       xhtml->out = apr_pstrcat(r->pool, 
                       xhtml->out, 
                       " href=\"", 
@@ -979,8 +976,7 @@ s_xhtml_1_0_start_a_tag(xhtml_t* xhtml, Node* node)
                       NULL);
     }
     else
-    if (strcasecmp(name, "accesskey") == 0) 
-    {
+    if (strcasecmp(name, "accesskey") == 0) {
       xhtml->out = apr_pstrcat(r->pool, 
                       xhtml->out, 
                       " accesskey=\"", 
@@ -989,53 +985,43 @@ s_xhtml_1_0_start_a_tag(xhtml_t* xhtml, Node* node)
                       NULL);
     }
     else
-    if (strcasecmp(name, "cti") == 0) 
-    {
+    if (strcasecmp(name, "cti") == 0) {
       /* ignore */
     }
     else
-    if (strcasecmp(name, "ijam") == 0) 
-    {
+    if (strcasecmp(name, "ijam") == 0) {
       /* ignore */
     }
     else
-    if (strcasecmp(name, "utn") == 0) 
-    {
+    if (strcasecmp(name, "utn") == 0) {
       /* ignore */
     }
     else
-    if (strcasecmp(name, "telbook") == 0) 
-    {
+    if (strcasecmp(name, "telbook") == 0) {
       /* ignore */
     }
     else
-    if (strcasecmp(name, "kana") == 0) 
-    {
+    if (strcasecmp(name, "kana") == 0) {
       /* ignore */
     }
     else
-    if (strcasecmp(name, "email") == 0) 
-    {
+    if (strcasecmp(name, "email") == 0) {
       /* ignore */
     }
     else
-    if (strcasecmp(name, "ista") == 0) 
-    {
+    if (strcasecmp(name, "ista") == 0) {
       /* ignore */
     }
     else
-    if (strcasecmp(name, "ilet") == 0) 
-    {
+    if (strcasecmp(name, "ilet") == 0) {
       /* ignore */
     }
     else
-    if (strcasecmp(name, "iswf") == 0) 
-    {
+    if (strcasecmp(name, "iswf") == 0) {
       /* ignore */
     }
     else
-    if (strcasecmp(name, "irst") == 0) 
-    {
+    if (strcasecmp(name, "irst") == 0) {
       /* ignore */
     }
   }
