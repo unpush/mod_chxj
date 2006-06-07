@@ -306,7 +306,7 @@ s_chtml10_node_exchange(chtml10_t* chtml10, Node* node, int indent)
     /* <SELECT>                                                               */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "select") == 0) {
+    if ((*name == 's' || *name == 'S') && strcasecmp(name, "select") == 0) {
       s_chtml10_start_select_tag(chtml10, child);
       s_chtml10_node_exchange   (chtml10, child, indent+1);
       s_chtml10_end_select_tag  (chtml10, child);
@@ -315,8 +315,7 @@ s_chtml10_node_exchange(chtml10_t* chtml10, Node* node, int indent)
     /* <OPTION>                                                               */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "option") == 0)
-    {
+    if ((*name == 'o' || *name == 'O') && strcasecmp(name, "option") == 0) {
       s_chtml10_start_option_tag(chtml10, child);
       s_chtml10_node_exchange   (chtml10, child, indent+1);
       s_chtml10_end_option_tag  (chtml10, child);
@@ -325,8 +324,7 @@ s_chtml10_node_exchange(chtml10_t* chtml10, Node* node, int indent)
     /* <DIV>                                                                  */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "div") == 0)
-    {
+    if ((*name == 'd' || *name == 'D') && strcasecmp(name, "div") == 0) {
       s_chtml10_start_div_tag (chtml10, child);
       s_chtml10_node_exchange (chtml10, child, indent+1);
       s_chtml10_end_div_tag   (chtml10, child);
@@ -364,8 +362,7 @@ s_chtml10_node_exchange(chtml10_t* chtml10, Node* node, int indent)
     /* NORMAL TEXT                                                            */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "text") == 0) 
-    {
+    if (strcasecmp(name, "text") == 0) {
       char*   textval;
       char*   tmp;
       char*   tdst;
@@ -376,9 +373,7 @@ s_chtml10_node_exchange(chtml10_t* chtml10, Node* node, int indent)
       textval = qs_get_node_value(doc,child);
       textval = qs_trim_string(chtml10->doc->r, textval);
       if (strlen(textval) == 0)
-      {
         continue;
-      }
 
       tmp = apr_palloc(r->pool, qs_get_node_size(doc,child)+1);
       memset(tmp, 0, qs_get_node_size(doc,child)+1);
@@ -387,26 +382,23 @@ s_chtml10_node_exchange(chtml10_t* chtml10, Node* node, int indent)
       memset(one_byte, 0, sizeof(one_byte));
       tdst_len = 0;
 
-      for (ii=0; ii<qs_get_node_size(doc,child); ii++)
-      {
+      for (ii=0; ii<qs_get_node_size(doc,child); ii++) {
         char* out;
         int rtn = s_chtml10_search_emoji(chtml10, &textval[ii], &out);
-        if (rtn != 0)
-        {
+        if (rtn) {
           tdst = qs_out_apr_pstrcat(r, tdst, out, &tdst_len);
           ii+=(rtn - 1);
           continue;
         }
-        if (is_sjis_kanji(textval[ii]))
-        {
+
+        if (is_sjis_kanji(textval[ii])) {
           one_byte[0] = textval[ii+0];
           tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
           one_byte[0] = textval[ii+1];
           tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
           ii++;
         }
-        else if (textval[ii] != '\r' && textval[ii] != '\n')
-        {
+        else if (textval[ii] != '\r' && textval[ii] != '\n') {
           one_byte[0] = textval[ii+0];
           tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
         }
