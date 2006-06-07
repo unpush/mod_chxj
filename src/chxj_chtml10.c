@@ -221,8 +221,7 @@ s_chtml10_node_exchange(chtml10_t* chtml10, Node* node, int indent)
     /* <TITLE>                                                                */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "title") == 0) 
-    {
+    if ((*name == 't' || *name == 'T') && strcasecmp(name, "title") == 0) {
       s_chtml10_start_title_tag (chtml10, child);
       s_chtml10_node_exchange   (chtml10, child,indent+1);
       s_chtml10_end_title_tag   (chtml10, child);
@@ -231,8 +230,7 @@ s_chtml10_node_exchange(chtml10_t* chtml10, Node* node, int indent)
     /* <BASE>                                                                 */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "base") == 0) 
-    {
+    if (strcasecmp(name, "base") == 0) {
       s_chtml10_start_base_tag(chtml10, child);
       s_chtml10_end_base_tag  (chtml10, child);
     }
