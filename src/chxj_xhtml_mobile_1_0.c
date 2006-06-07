@@ -958,7 +958,7 @@ s_xhtml_1_0_start_a_tag(xhtml_t* xhtml, Node* node)
     char* name  = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
 
-    if (strcasecmp(name, "name") == 0) {
+    if ((*name == 'n' || *name == 'N') && strcasecmp(name, "name") == 0) {
       xhtml->out = apr_pstrcat(r->pool, 
                       xhtml->out, 
                       " id=\"", 
@@ -967,7 +967,7 @@ s_xhtml_1_0_start_a_tag(xhtml_t* xhtml, Node* node)
                       NULL);
     }
     else
-    if (strcasecmp(name, "href") == 0) {
+    if ((*name == 'h' || *name == 'H') && strcasecmp(name, "href") == 0) {
       xhtml->out = apr_pstrcat(r->pool, 
                       xhtml->out, 
                       " href=\"", 
@@ -976,7 +976,7 @@ s_xhtml_1_0_start_a_tag(xhtml_t* xhtml, Node* node)
                       NULL);
     }
     else
-    if (strcasecmp(name, "accesskey") == 0) {
+    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "accesskey") == 0) {
       xhtml->out = apr_pstrcat(r->pool, 
                       xhtml->out, 
                       " accesskey=\"", 
