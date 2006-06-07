@@ -1472,20 +1472,17 @@ s_xhtml_1_0_start_img_tag(xhtml_t* xhtml, Node* node)
                       xhtml->out, " height=\"",value,"\"", NULL);
     }
     else
-    if (strcasecmp(name, "hspace") == 0) 
-    {
+    if (strcasecmp(name, "hspace") == 0) {
       xhtml->out = apr_pstrcat(r->pool, 
                       xhtml->out, " hspace=\"",value,"\"", NULL);
     }
     else
-    if (strcasecmp(name, "vspace") == 0) 
-    {
+    if (strcasecmp(name, "vspace") == 0) {
       xhtml->out = apr_pstrcat(r->pool, 
                       xhtml->out, " vspace=\"",value,"\"", NULL);
     }
     else
-    if (strcasecmp(name, "alt"   ) == 0) 
-    {
+    if (strcasecmp(name, "alt"   ) == 0) {
       xhtml->out = apr_pstrcat(r->pool, 
                       xhtml->out, " alt=\"",value,"\"", NULL);
     }
