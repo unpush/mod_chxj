@@ -1669,25 +1669,22 @@ s_xhtml_1_0_start_div_tag(xhtml_t* xhtml, Node* child)
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<div", NULL);
   for (attr = qs_get_attr(doc,child);
        attr;
-       attr = qs_get_next_attr(doc,attr)) 
-  {
+       attr = qs_get_next_attr(doc,attr)) {
     char* nm  = qs_get_attr_name(doc,attr);
     char* val = qs_get_attr_value(doc,attr);
 
-    if (strcasecmp(nm, "align") == 0)
-    {
+    if ((*nm == 'a' || *nm == 'A') && strcasecmp(nm, "align") == 0) {
       /* CHTML version 3.2 */
       align = apr_pstrdup(r->pool, val);
     }
   }
 
-  if (align != NULL)
-  {
+  if (align)
     xhtml->out = apr_pstrcat(r->pool, 
                     xhtml->out, " align=\"", align, "\"", NULL);
-  }
 
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, ">", NULL);
+
   return xhtml->out;
 }
 
@@ -1726,8 +1723,7 @@ s_xhtml_1_0_chxjif_tag(xhtml_t* xhtml, Node* node)
 
   for (child = qs_get_child_node(doc, node);
        child;
-       child = qs_get_next_node(doc, child))
-  {
+       child = qs_get_next_node(doc, child)) {
     xhtml->out = apr_pstrcat(r->pool, xhtml->out, child->otext, NULL);
     s_xhtml_1_0_chxjif_tag(xhtml, child);
   }
