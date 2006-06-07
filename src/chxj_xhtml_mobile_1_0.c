@@ -1536,17 +1536,17 @@ s_xhtml_1_0_start_select_tag(xhtml_t* xhtml, Node* child)
     char* nm  = qs_get_attr_name(doc,attr);
     char* val = qs_get_attr_value(doc,attr);
 
-    if (strcasecmp(nm, "size") == 0) {
+    if ((*nm == 's' || *nm == 'S') && strcasecmp(nm, "size") == 0) {
       /* CHTML version 2.0 */
       size = apr_pstrdup(r->pool, val);
     }
     else
-    if (strcasecmp(nm, "name") == 0) {
+    if ((*nm == 'n' || *nm == 'N') && strcasecmp(nm, "name") == 0) {
       /* CHTML version 2.0 */
       name = apr_pstrdup(r->pool, val);
     }
     else
-    if (strcasecmp(nm, "multiple") == 0) {
+    if ((*nm == 'm' || *nm == 'M') && strcasecmp(nm, "multiple") == 0) {
       /* CHTML version 2.0 */
       /* Ignore */
     }
