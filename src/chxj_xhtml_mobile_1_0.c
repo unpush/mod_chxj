@@ -1150,12 +1150,10 @@ s_xhtml_1_0_start_form_tag(xhtml_t* xhtml, Node* node)
   /*--------------------------------------------------------------------------*/
   for (attr = qs_get_attr(doc,node);
        attr;
-       attr = qs_get_next_attr(doc,attr)) 
-  {
+       attr = qs_get_next_attr(doc,attr)) {
     char* name = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
-    if (strcasecmp(name, "action") == 0) 
-    {
+    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "action") == 0) {
       xhtml->out = apr_pstrcat(r->pool, 
                       xhtml->out, 
                       " action=\"",
@@ -1164,8 +1162,7 @@ s_xhtml_1_0_start_form_tag(xhtml_t* xhtml, Node* node)
                       NULL);
     }
     else
-    if (strcasecmp(name, "method") == 0) 
-    {
+    if ((*name == 'm' || *name == 'M') && strcasecmp(name, "method") == 0) {
       xhtml->out = apr_pstrcat(r->pool, 
                       xhtml->out, 
                       " method=\"",
@@ -1174,8 +1171,7 @@ s_xhtml_1_0_start_form_tag(xhtml_t* xhtml, Node* node)
                       NULL);
     }
     else
-    if (strcasecmp(name, "utn") == 0) 
-    {
+    if ((*name == 'u' || *name == 'U') && strcasecmp(name, "utn") == 0) {
       /* ignore */
     }
   }
@@ -1238,8 +1234,7 @@ s_xhtml_1_0_start_input_tag(xhtml_t* xhtml, Node* node)
   accesskey  = qs_get_accesskey_attr(doc, node, r);
   size       = qs_get_size_attr(doc, node, r);
 
-  if (type != NULL)
-  {
+  if (type) {
     xhtml->out = apr_pstrcat(r->pool,
                     xhtml->out, 
                     " type=\"", 
@@ -1247,8 +1242,7 @@ s_xhtml_1_0_start_input_tag(xhtml_t* xhtml, Node* node)
                     "\" ", 
                     NULL);
   }
-  if (size != NULL)
-  {
+  if (size) {
     xhtml->out = apr_pstrcat(r->pool, 
                     xhtml->out, 
                     " size=\"", 
@@ -1256,8 +1250,7 @@ s_xhtml_1_0_start_input_tag(xhtml_t* xhtml, Node* node)
                     "\" ", 
                     NULL);
   }
-  if (name != NULL)
-  {
+  if (name) {
     xhtml->out = apr_pstrcat(r->pool, 
                     xhtml->out, 
                     " name=\"", 
@@ -1265,8 +1258,7 @@ s_xhtml_1_0_start_input_tag(xhtml_t* xhtml, Node* node)
                     "\" ", 
                     NULL);
   }
-  if (value != NULL)
-  {
+  if (value) {
     xhtml->out = apr_pstrcat(r->pool, 
                     xhtml->out, 
                     " value=\"", 
@@ -1274,24 +1266,19 @@ s_xhtml_1_0_start_input_tag(xhtml_t* xhtml, Node* node)
                     "\" ", 
                     NULL);
   }
-  if (accesskey != NULL)
-  {
+  if (accesskey) {
     xhtml->out = apr_pstrcat(r->pool, 
                     xhtml->out, 
                     " accesskey=\"", 
                     accesskey, "\" ", 
                     NULL);
   }
-  if (istyle != NULL)
-  {
+  if (istyle) {
     char* fmt = qs_conv_istyle_to_format(r,istyle);
-    if (max_length != NULL)
-    {
+    if (max_length) {
       int ii;
-      for (ii=0; ii<strlen(max_length); ii++)
-      {
-        if (max_length[ii] < '0' || max_length[ii] > '9')
-        {
+      for (ii=0; ii<strlen(max_length); ii++) {
+        if (max_length[ii] < '0' || max_length[ii] > '9') {
           max_length = apr_psprintf(r->pool, "0");
           break;
         }
@@ -1304,8 +1291,7 @@ s_xhtml_1_0_start_input_tag(xhtml_t* xhtml, Node* node)
                       fmt), 
                       NULL);
     }
-    else
-    {
+    else {
       xhtml->out = apr_pstrcat(r->pool, 
                       xhtml->out, 
                       " FORMAT=\"", 
@@ -1318,10 +1304,10 @@ s_xhtml_1_0_start_input_tag(xhtml_t* xhtml, Node* node)
   /*--------------------------------------------------------------------------*/
   /* The figure is default for the password.                                  */
   /*--------------------------------------------------------------------------*/
-  if (type != NULL && istyle == NULL && strcasecmp(type, "password") == 0)
-  {
-    if (max_length != NULL)
-    {
+  if (type && istyle == NULL 
+  && (*type == 'p' || *type == 'P') 
+  && strcasecmp(type, "password") == 0) {
+    if (max_length) {
       xhtml->out = apr_pstrcat(r->pool, 
                       xhtml->out, 
                       " FORMAT=\"", 
@@ -1330,15 +1316,13 @@ s_xhtml_1_0_start_input_tag(xhtml_t* xhtml, Node* node)
                       "\"", 
                       NULL);
     }
-    else
-    {
+    else {
       xhtml->out = apr_pstrcat(r->pool, 
                       xhtml->out, 
                       " FORMAT=\"", "*", "N", "\"", NULL);
     }
   }
-  if (checked != NULL)
-  {
+  if (checked) {
     xhtml->out = apr_pstrcat(r->pool, 
                     xhtml->out, " checked=\"checked\"", NULL);
   }
@@ -1458,13 +1442,11 @@ s_xhtml_1_0_start_img_tag(xhtml_t* xhtml, Node* node)
   /*--------------------------------------------------------------------------*/
   for (attr = qs_get_attr(doc,node);
        attr;
-       attr = qs_get_next_attr(doc,attr)) 
-  {
+       attr = qs_get_next_attr(doc,attr)) {
     char* name  = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
 
-    if (strcasecmp(name, "src") == 0) 
-    {
+    if (strcasecmp(name, "src") == 0) {
 #ifdef IMG_NOT_CONVERT_FILENAME
       xhtml->out = apr_pstrcat(r->pool, 
                       xhtml->out, " src=\"",value,"\"", NULL);
@@ -1475,8 +1457,7 @@ s_xhtml_1_0_start_img_tag(xhtml_t* xhtml, Node* node)
 #endif
     }
     else
-    if (strcasecmp(name, "align" ) == 0) 
-    {
+    if (strcasecmp(name, "align" ) == 0) {
       xhtml->out = apr_pstrcat(r->pool, 
                       xhtml->out, " align=\"",value,"\"", NULL);
     }
