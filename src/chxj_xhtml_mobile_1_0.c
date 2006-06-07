@@ -450,12 +450,10 @@ s_xhtml_search_emoji(xhtml_t* xhtml, char* txt, char** rslt)
 
   for (ee = xhtml->conf->emoji;
        ee;
-       ee = ee->next) 
-  {
+       ee = ee->next) {
     unsigned char hex1byte;
     unsigned char hex2byte;
-    if (ee->imode == NULL)
-    {
+    if (!ee->imode) {
       ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
                       "emoji->imode is NULL");
       continue;
@@ -463,49 +461,42 @@ s_xhtml_search_emoji(xhtml_t* xhtml, char* txt, char** rslt)
 
     if (ee->imode->string != NULL
     &&  strlen(ee->imode->string) > 0
-    &&  strncasecmp(ee->imode->string, txt, strlen(ee->imode->string)) == 0)
-    {
-      if (spec == NULL || spec->emoji_type == NULL)
-      {
+    &&  strncasecmp(ee->imode->string, txt, strlen(ee->imode->string)) == 0) {
+      if (spec == NULL || spec->emoji_type == NULL) {
         *rslt = apr_psprintf(r->pool,
                         "<img localsrc=%s>",
                         ee->ezweb->typeA);
         return strlen(ee->imode->string);
       }
 
-      if (strcasecmp(xhtml->spec->emoji_type, "a") == 0)
-      {
+      if (strcasecmp(xhtml->spec->emoji_type, "a") == 0) {
         *rslt = apr_psprintf(r->pool,
                         "<img localsrc=%s>",
                         ee->ezweb->typeA);
         return strlen(ee->imode->string);
       } 
       else
-      if (strcasecmp(xhtml->spec->emoji_type, "b") == 0)
-      {
+      if (strcasecmp(xhtml->spec->emoji_type, "b") == 0) {
         *rslt = apr_psprintf(r->pool,
                         "<img localsrc=%s>",
                         ee->ezweb->typeB);
         return strlen(ee->imode->string);
       }
       else
-      if (strcasecmp(xhtml->spec->emoji_type, "c") == 0)
-      {
+      if (strcasecmp(xhtml->spec->emoji_type, "c") == 0) {
         *rslt = apr_psprintf(r->pool,
                         "<img localsrc=%s>",
                         ee->ezweb->typeC);
         return strlen(ee->imode->string);
       }
       else
-      if (strcasecmp(xhtml->spec->emoji_type, "d") == 0)
-      {
+      if (strcasecmp(xhtml->spec->emoji_type, "d") == 0) {
         *rslt = apr_psprintf(r->pool,
                         "<img localsrc=%s>",
                         ee->ezweb->typeD);
         return strlen(ee->imode->string);
       }
-      else
-      {
+      else {
         *rslt = apr_psprintf(r->pool,
                         "<img localsrc=%s>",
                         ee->ezweb->typeA);
@@ -517,49 +508,42 @@ s_xhtml_search_emoji(xhtml_t* xhtml, char* txt, char** rslt)
     hex2byte = ee->imode->hex2byte & 0xff;
     if (len >= 2
     && ((unsigned char)txt[0] & 0xff) == ((unsigned char)hex1byte)
-    && ((unsigned char)txt[1] & 0xff) == ((unsigned char)hex2byte)) 
-    {
-      if (spec == NULL || spec->emoji_type == NULL)
-      {
+    && ((unsigned char)txt[1] & 0xff) == ((unsigned char)hex2byte)) {
+      if (spec == NULL || spec->emoji_type == NULL) {
         *rslt = apr_psprintf(r->pool,
                         "<img localsrc=\"%s\">",
                         ee->ezweb->typeA);
         return 2;
       }
 
-      if (strcasecmp(xhtml->spec->emoji_type, "a") == 0)
-      {
+      if (strcasecmp(xhtml->spec->emoji_type, "a") == 0) {
         *rslt = apr_psprintf(r->pool,
                         "<img localsrc=\"%s\">",
                         ee->ezweb->typeA);
         return 2;
       } 
       else
-      if (strcasecmp(xhtml->spec->emoji_type, "b") == 0)
-      {
+      if (strcasecmp(xhtml->spec->emoji_type, "b") == 0) {
         *rslt = apr_psprintf(r->pool,
                         "<img localsrc=\"%s\">",
                         ee->ezweb->typeB);
         return 2;
       }
       else
-      if (strcasecmp(xhtml->spec->emoji_type, "c") == 0)
-      {
+      if (strcasecmp(xhtml->spec->emoji_type, "c") == 0) {
         *rslt = apr_psprintf(r->pool,
                         "<img localsrc=\"%s\">",
                         ee->ezweb->typeC);
         return 2;
       }
       else
-      if (strcasecmp(xhtml->spec->emoji_type, "d") == 0)
-      {
+      if (strcasecmp(xhtml->spec->emoji_type, "d") == 0) {
         *rslt = apr_psprintf(r->pool,
                         "<img localsrc=\"%s\">",
                         ee->ezweb->typeD);
         return 2;
       }
-      else
-      {
+      else {
         *rslt = apr_psprintf(r->pool,
                         "<img localsrc=\"%s\">",
                         ee->ezweb->typeD);
@@ -616,12 +600,10 @@ s_xhtml_1_0_start_html_tag(xhtml_t* xhtml, Node* node)
   /*--------------------------------------------------------------------------*/
   for (attr = qs_get_attr(doc,node);
        attr; 
-       attr = qs_get_next_attr(doc,attr)) 
-  {
+       attr = qs_get_next_attr(doc,attr)) {
     char* name  = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
-    if (strcasecmp(name, "lang") == 0) 
-    {
+    if (strcasecmp(name, "lang") == 0) {
       xhtml->out = apr_pstrcat(r->pool, 
                       xhtml->out, 
                       " xml:lang=\"", 
@@ -630,8 +612,7 @@ s_xhtml_1_0_start_html_tag(xhtml_t* xhtml, Node* node)
                       NULL);
     }
     else
-    if (strcasecmp(name, "version") == 0) 
-    {
+    if (strcasecmp(name, "version") == 0) {
       xhtml->out = apr_pstrcat(r->pool, 
                       xhtml->out, 
                       " version=\"-//OPENWAVE//DTD XHTML Mobile 1.0//EN\"", 
@@ -684,12 +665,10 @@ s_xhtml_1_0_start_meta_tag(xhtml_t* xhtml, Node* node)
   /*--------------------------------------------------------------------------*/
   for (attr = qs_get_attr(doc,node);
        attr; 
-       attr = qs_get_next_attr(doc,attr)) 
-  {
+       attr = qs_get_next_attr(doc,attr)) {
     char* name  = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
-    if (strcasecmp(name, "name") == 0) 
-    {
+    if (strcasecmp(name, "name") == 0) {
       xhtml->out = apr_pstrcat(r->pool,
                       xhtml->out,
                       " ", 
@@ -700,8 +679,7 @@ s_xhtml_1_0_start_meta_tag(xhtml_t* xhtml, Node* node)
                       NULL);
     }
     else
-    if (strcasecmp(name, "http-equiv") == 0) 
-    {
+    if (strcasecmp(name, "http-equiv") == 0) {
       xhtml->out = apr_pstrcat(r->pool,
                       xhtml->out,
                       " ", 
@@ -712,8 +690,7 @@ s_xhtml_1_0_start_meta_tag(xhtml_t* xhtml, Node* node)
                       NULL);
     }
     else
-    if (strcasecmp(name, "content") == 0) 
-    {
+    if (strcasecmp(name, "content") == 0) {
       xhtml->out = apr_pstrcat(r->pool,
                       xhtml->out, 
                       " ", 
