@@ -263,25 +263,25 @@ s_chtml10_node_exchange(chtml10_t* chtml10, Node* node, int indent)
       s_chtml10_node_exchange (chtml10, child,indent+1);
       s_chtml10_end_a_tag     (chtml10, child);
     }
-    /*------------------------------------------------------------------------*/
-    /* <FONT>                                                                 */
-    /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "font") == 0) 
-    {
-      s_chtml10_start_font_tag(chtml10, child);
-      s_chtml10_node_exchange (chtml10, child,indent+1);
-      s_chtml10_end_font_tag  (chtml10, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <FORM>                                                                 */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "form") == 0) 
-    {
-      s_chtml10_start_form_tag(chtml10, child);
-      s_chtml10_node_exchange (chtml10, child,indent+1);
-      s_chtml10_end_form_tag  (chtml10, child);
+    if (*name == 'f' || *name == 'F') {
+      /*----------------------------------------------------------------------*/
+      /* <FONT>                                                               */
+      /*----------------------------------------------------------------------*/
+      if (strcasecmp(name, "font") == 0) {
+        s_chtml10_start_font_tag(chtml10, child);
+        s_chtml10_node_exchange (chtml10, child,indent+1);
+        s_chtml10_end_font_tag  (chtml10, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <FORM>                                                               */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "form") == 0) {
+        s_chtml10_start_form_tag(chtml10, child);
+        s_chtml10_node_exchange (chtml10, child,indent+1);
+        s_chtml10_end_form_tag  (chtml10, child);
+      }
     }
     /*------------------------------------------------------------------------*/
     /* <INPUT>                                                                */
