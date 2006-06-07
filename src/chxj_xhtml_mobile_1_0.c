@@ -1462,8 +1462,7 @@ s_xhtml_1_0_start_img_tag(xhtml_t* xhtml, Node* node)
                       xhtml->out, " align=\"",value,"\"", NULL);
     }
     else
-    if (strcasecmp(name, "width" ) == 0) 
-    {
+    if (strcasecmp(name, "width" ) == 0) {
       xhtml->out = apr_pstrcat(r->pool, 
                       xhtml->out, " width=\"",value,"\"", NULL);
     }
