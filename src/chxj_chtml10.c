@@ -226,23 +226,24 @@ s_chtml10_node_exchange(chtml10_t* chtml10, Node* node, int indent)
       s_chtml10_node_exchange   (chtml10, child,indent+1);
       s_chtml10_end_title_tag   (chtml10, child);
     }
-    /*------------------------------------------------------------------------*/
-    /* <BASE>                                                                 */
-    /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "base") == 0) {
-      s_chtml10_start_base_tag(chtml10, child);
-      s_chtml10_end_base_tag  (chtml10, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <BODY>                                                                 */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "body") == 0) 
-    {
-      s_chtml10_start_body_tag(chtml10, child);
-      s_chtml10_node_exchange (chtml10, child,indent+1);
-      s_chtml10_end_body_tag  (chtml10, child);
+    if (*name == 'b' || *name == 'B') {
+      /*----------------------------------------------------------------------*/
+      /* <BASE>                                                               */
+      /*----------------------------------------------------------------------*/
+      if (strcasecmp(name, "base") == 0) {
+        s_chtml10_start_base_tag(chtml10, child);
+        s_chtml10_end_base_tag  (chtml10, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <BODY>                                                               */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "body") == 0) {
+        s_chtml10_start_body_tag(chtml10, child);
+        s_chtml10_node_exchange (chtml10, child,indent+1);
+        s_chtml10_end_body_tag  (chtml10, child);
+      }
     }
     /*------------------------------------------------------------------------*/
     /* <A>                                                                    */
