@@ -120,7 +120,7 @@ chxj_exchange_chtml10(
   dst = s_chtml10_node_exchange(&chtml10, qs_get_root(&doc), 0);
   qs_all_free(&doc,QX_LOGMARK);
 
-  if (dst)
+  if (!dst)
     return apr_pstrdup(r->pool,ss);
 
   if (strlen(dst) == 0) {
@@ -362,7 +362,7 @@ s_chtml10_node_exchange(chtml10_t* chtml10, Node* node, int indent)
     /* NORMAL TEXT                                                            */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "text") == 0) {
+    if ((*name == 't' || *name == 'T') && strcasecmp(name, "text") == 0) {
       char*   textval;
       char*   tmp;
       char*   tdst;
@@ -433,28 +433,26 @@ s_chtml10_search_emoji(chtml10_t* chtml10, char* txt, char** rslt)
   len = strlen(txt);
   r = chtml10->doc->r;
 
-  if (spec == NULL)
-  {
+  if (!spec) {
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "spec is NULL");
   }
 
   for (ee = chtml10->conf->emoji;
        ee;
-       ee = ee->next) 
-  {
-    if (ee->imode == NULL)
-    {
+       ee = ee->next) {
+
+    if (!ee->imode) {
       ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
                       "emoji->imode is NULL");
       continue;
     }
 
-    if (ee->imode->string != NULL
+    if (ee->imode->string
+    &&  txt
     &&  strlen(ee->imode->string) > 0
-    &&  strncasecmp(ee->imode->string, txt, strlen(ee->imode->string)) == 0)
-    {
-      if (spec == NULL || spec->emoji_type == NULL)
-      {
+    &&  *ee->imode->string == *txt
+    &&  strncasecmp(ee->imode->string, txt, strlen(ee->imode->string)) == 0) {
+      if (!spec || !spec->emoji_type) {
         *rslt = apr_palloc(r->pool, 3);
         (*rslt)[0] = ee->imode->hex1byte & 0xff;
         (*rslt)[1] = ee->imode->hex2byte & 0xff;
@@ -633,12 +631,10 @@ s_chtml10_start_base_tag(chtml10_t* chtml10, Node* node)
   /*--------------------------------------------------------------------------*/
   for (attr = qs_get_attr(doc,node);
        attr;
-       attr = qs_get_next_attr(doc,attr)) 
-  {
+       attr = qs_get_next_attr(doc,attr)) {
     char* name = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
-    if (strcasecmp(name, "href") == 0) 
-    {
+    if ((*name == 'h' || *name == 'H') && strcasecmp(name, "href") == 0) {
       chtml10->out = apr_pstrcat(r->pool, 
                       chtml10->out, 
                       " href=\"", 
