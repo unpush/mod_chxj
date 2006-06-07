@@ -1552,15 +1552,14 @@ s_xhtml_1_0_start_select_tag(xhtml_t* xhtml, Node* child)
     }
   }
 
-  if (size != NULL)
-  {
+  if (size)
     xhtml->out = apr_pstrcat(r->pool, xhtml->out, " size=\"",size,"\"", NULL);
-  }
-  if (name != NULL)
-  {
+
+  if (name)
     xhtml->out = apr_pstrcat(r->pool, xhtml->out, " name=\"",name,"\"", NULL);
-  }
+
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, ">\n", NULL);
+
   return xhtml->out;
 }
 
