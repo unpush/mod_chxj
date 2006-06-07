@@ -289,31 +289,24 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
         s_xhtml_1_0_end_form_tag  (xhtml, child);
       }
     }
-    /*------------------------------------------------------------------------*/
-    /* <INPUT>                                                                */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "input") == 0) {
-      s_xhtml_1_0_start_input_tag (xhtml, child);
-      s_xhtml_1_0_node_exchange   (xhtml, child,indent+1);
-      s_xhtml_1_0_end_input_tag   (xhtml, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <CENTER>                                                               */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "center") == 0) {
-      s_xhtml_1_0_start_center_tag(xhtml, child);
-      s_xhtml_1_0_node_exchange   (xhtml, child,indent+1);
-      s_xhtml_1_0_end_center_tag  (xhtml, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <IMG>                                                                  */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "img") == 0) {
-      s_xhtml_1_0_start_img_tag (xhtml, child);
-      s_xhtml_1_0_end_img_tag   (xhtml, child);
+    else 
+    if (*name == 'i' || *name == 'I') {
+      /*----------------------------------------------------------------------*/
+      /* <INPUT>                                                              */
+      /*----------------------------------------------------------------------*/
+      if (strcasecmp(name, "input") == 0) {
+        s_xhtml_1_0_start_input_tag (xhtml, child);
+        s_xhtml_1_0_node_exchange   (xhtml, child,indent+1);
+        s_xhtml_1_0_end_input_tag   (xhtml, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <IMG>                                                                */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "img") == 0) {
+        s_xhtml_1_0_start_img_tag (xhtml, child);
+        s_xhtml_1_0_end_img_tag   (xhtml, child);
+      }
     }
     /*------------------------------------------------------------------------*/
     /* <SELECT>                                                               */
@@ -342,27 +335,38 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
       s_xhtml_1_0_node_exchange (xhtml, child, indent+1);
       s_xhtml_1_0_end_div_tag   (xhtml, child);
     }
-    /*------------------------------------------------------------------------*/
-    /* <CHXJ:IF>                                                              */
-    /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "chxj:if") == 0) {
-      ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag found");
-      if (chxj_chxjif_is_mine(xhtml->spec, doc, child)) {
-        char* destlang = qs_get_destlang_attr(doc, child, r);
-        if (destlang != NULL && strcasecmp(destlang, "hdml") == 0) {
-          ap_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
+    if (*name == 'c' || *name == 'C') {
+      /*----------------------------------------------------------------------*/
+      /* <CHXJ:IF>                                                            */
+      /*----------------------------------------------------------------------*/
+      if (strcasecmp(name, "chxj:if") == 0) {
+        ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag found");
+        if (chxj_chxjif_is_mine(xhtml->spec, doc, child)) {
+          char* destlang = qs_get_destlang_attr(doc, child, r);
+          if (destlang != NULL && strcasecmp(destlang, "hdml") == 0) {
+            ap_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
+          }
+          ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag is mine");
+  
+          char* parse_attr = NULL;
+          parse_attr = qs_get_parse_attr(doc, child, r);
+          if (parse_attr != NULL && strcasecmp(parse_attr, "true") == 0) {
+            s_xhtml_1_0_node_exchange (xhtml, child, indent+1);
+          }
+          else {
+            s_xhtml_1_0_chxjif_tag(xhtml, child);
+          }
         }
-        ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag is mine");
-
-        char* parse_attr = NULL;
-        parse_attr = qs_get_parse_attr(doc, child, r);
-        if (parse_attr != NULL && strcasecmp(parse_attr, "true") == 0) {
-          s_xhtml_1_0_node_exchange (xhtml, child, indent+1);
-        }
-        else {
-          s_xhtml_1_0_chxjif_tag(xhtml, child);
-        }
+      }
+      /*----------------------------------------------------------------------*/
+      /* <CENTER>                                                             */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "center") == 0) {
+        s_xhtml_1_0_start_center_tag(xhtml, child);
+        s_xhtml_1_0_node_exchange   (xhtml, child,indent+1);
+        s_xhtml_1_0_end_center_tag  (xhtml, child);
       }
     }
     /*------------------------------------------------------------------------*/
