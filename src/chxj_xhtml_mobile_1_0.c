@@ -819,12 +819,10 @@ s_xhtml_1_0_start_base_tag(xhtml_t* xhtml, Node* node)
   /*--------------------------------------------------------------------------*/
   for (attr = qs_get_attr(doc,node);
        attr;
-       attr = qs_get_next_attr(doc,attr)) 
-  {
+       attr = qs_get_next_attr(doc,attr)) {
     char* name = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
-    if (strcasecmp(name, "href") == 0) 
-    {
+    if (strcasecmp(name, "href") == 0) {
       xhtml->out = apr_pstrcat(r->pool, 
                       xhtml->out, 
                       " href=\"", 
@@ -873,12 +871,10 @@ s_xhtml_1_0_start_body_tag(xhtml_t* xhtml, Node* node)
   /*--------------------------------------------------------------------------*/
   for (attr = qs_get_attr(doc,node);
        attr;
-       attr = qs_get_next_attr(doc,attr)) 
-  {
+       attr = qs_get_next_attr(doc,attr)) {
     char* name  = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
-    if (strcasecmp(name, "bgcolor") == 0) 
-    {
+    if ((*name == 'b' || *name == 'B') && strcasecmp(name, "bgcolor") == 0) {
       xhtml->out = apr_pstrcat(r->pool, 
                       xhtml->out, 
                       " bgcolor=\"", 
@@ -887,8 +883,7 @@ s_xhtml_1_0_start_body_tag(xhtml_t* xhtml, Node* node)
                       NULL);
     }
     else
-    if (strcasecmp(name, "text") == 0) 
-    {
+    if ((*name == 't' || *name == 'T') && strcasecmp(name, "text") == 0) {
       xhtml->out = apr_pstrcat(r->pool, 
                       xhtml->out, 
                       " text=\"", 
@@ -897,8 +892,7 @@ s_xhtml_1_0_start_body_tag(xhtml_t* xhtml, Node* node)
                       NULL);
     }
     else
-    if (strcasecmp(name, "link") == 0) 
-    {
+    if ((*name == 'l' || *name == 'L') && strcasecmp(name, "link") == 0) {
       xhtml->out = apr_pstrcat(r->pool, 
                       xhtml->out, 
                       " link=\"", 
@@ -907,13 +901,11 @@ s_xhtml_1_0_start_body_tag(xhtml_t* xhtml, Node* node)
                       NULL);
     }
     else
-    if (strcasecmp(name, "alink") == 0) 
-    {
+    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "alink") == 0) {
       /* ignore */
     }
     else
-    if (strcasecmp(name, "vlink") == 0) 
-    {
+    if ((*name == 'v' || *name == 'V') && strcasecmp(name, "vlink") == 0) {
       /* ignore */
     }
   }
