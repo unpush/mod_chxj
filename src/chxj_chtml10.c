@@ -87,8 +87,7 @@ chxj_exchange_chtml10(
   /*--------------------------------------------------------------------------*/
   *dstlen = srclen;
   dst = chxj_qr_code_blob_handler(r, src, (size_t*)dstlen);
-  if (dst != NULL)
-  {
+  if (dst) {
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"i found qrcode xml");
     return dst;
   }
@@ -121,19 +120,17 @@ chxj_exchange_chtml10(
   dst = s_chtml10_node_exchange(&chtml10, qs_get_root(&doc), 0);
   qs_all_free(&doc,QX_LOGMARK);
 
-  if (dst == NULL) 
-  {
+  if (dst)
     return apr_pstrdup(r->pool,ss);
-  }
 
-  if (strlen(dst) == 0)
-  {
+  if (strlen(dst) == 0) {
     dst = apr_psprintf(r->pool, "\n");
   }
   *dstlen = strlen(dst);
 #ifdef DUMP_LOG
   chxj_dump_out("[dst] CHTML -> CHTML1.0", dst, *dstlen);
 #endif
+
   return dst;
 }
 
