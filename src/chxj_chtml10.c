@@ -258,8 +258,7 @@ s_chtml10_node_exchange(chtml10_t* chtml10, Node* node, int indent)
     /* <A>                                                                    */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "a") == 0) 
-    {
+    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "a") == 0) {
       s_chtml10_start_a_tag   (chtml10, child);
       s_chtml10_node_exchange (chtml10, child,indent+1);
       s_chtml10_end_a_tag     (chtml10, child);
