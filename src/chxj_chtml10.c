@@ -795,8 +795,7 @@ s_chtml10_start_a_tag(chtml10_t* chtml10, Node* node)
                       NULL);
     }
     else
-    if (strcasecmp(name, "accesskey") == 0) 
-    {
+    if (strcasecmp(name, "accesskey") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML1.0                                                             */
       /*----------------------------------------------------------------------*/
