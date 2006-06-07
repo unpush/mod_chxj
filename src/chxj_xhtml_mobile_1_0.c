@@ -1602,39 +1602,31 @@ s_xhtml_1_0_start_option_tag(xhtml_t* xhtml, Node* child)
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<option", NULL);
   for (attr = qs_get_attr(doc,child);
        attr;
-       attr = qs_get_next_attr(doc,attr)) 
-  {
+       attr = qs_get_next_attr(doc,attr)) {
     char* nm  = qs_get_attr_name(doc,attr);
     char* val = qs_get_attr_value(doc,attr);
 
-    if (strcasecmp(nm, "selected") == 0)
-    {
+    if ((*nm == 's' || *nm == 'S') && strcasecmp(nm, "selected") == 0) {
       /* CHTML version 2.0 */
       selected = apr_pstrdup(r->pool, val);
     }
     else
-    if (strcasecmp(nm, "value") == 0)
-    {
+    if ((*nm == 'v' || *nm == 'V') && strcasecmp(nm, "value") == 0) {
       /* CHTML version 2.0 */
       value = apr_pstrdup(r->pool, val);
     }
   }
 
-  if (value != NULL)
-  {
+  if (value)
     xhtml->out = apr_pstrcat(r->pool, xhtml->out, " value=\"",value,"\"", NULL);
-  }
   else
-  {
     xhtml->out = apr_pstrcat(r->pool, xhtml->out, " value=\"\"", NULL);
-  }
 
-  if (selected != NULL)
-  {
+  if (selected)
     xhtml->out = apr_pstrcat(r->pool, xhtml->out, " selected=\"selected\"", NULL);
-  }
 
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, ">", NULL);
+
   return xhtml->out;
 }
 
