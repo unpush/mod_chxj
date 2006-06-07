@@ -179,37 +179,43 @@ s_chtml10_node_exchange(chtml10_t* chtml10, Node* node, int indent)
   /*--------------------------------------------------------------------------*/
   for (child = qs_get_child_node(doc,node);
        child ;
-       child = qs_get_next_node(doc,child)) 
-  {
+       child = qs_get_next_node(doc,child)) {
     char* name = qs_get_node_name(doc,child);
 
-    /*------------------------------------------------------------------------*/
-    /* <HTML>                                                                 */
-    /*------------------------------------------------------------------------*/
-    if (strcasecmp(name, "html") == 0) 
-    {
-      s_chtml10_start_html_tag(chtml10, child);
-      s_chtml10_node_exchange (chtml10, child,indent+1);
-      s_chtml10_end_html_tag  (chtml10, child);
+    if (*name == 'h' || *name == 'H') {
+      /*----------------------------------------------------------------------*/
+      /* <HTML>                                                               */
+      /*----------------------------------------------------------------------*/
+      if (strcasecmp(name, "html") == 0) {
+        s_chtml10_start_html_tag(chtml10, child);
+        s_chtml10_node_exchange (chtml10, child,indent+1);
+        s_chtml10_end_html_tag  (chtml10, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <HEAD>                                                               */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "head") == 0) {
+        s_chtml10_start_head_tag(chtml10, child);
+        s_chtml10_node_exchange (chtml10, child,indent+1);
+        s_chtml10_end_head_tag  (chtml10, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <HR>                                                                 */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "hr") == 0) {
+        s_chtml10_start_hr_tag  (chtml10, child);
+        s_chtml10_end_hr_tag    (chtml10, child);
+      }
     }
     /*------------------------------------------------------------------------*/
     /* <META>                                                                 */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "meta") == 0) 
-    {
+    if ((*name == 'm' || *name == 'M') && strcasecmp(name, "meta") == 0) {
       s_chtml10_start_meta_tag(chtml10, child);
       s_chtml10_end_meta_tag  (chtml10, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <HEAD>                                                                 */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "head") == 0) 
-    {
-      s_chtml10_start_head_tag(chtml10, child);
-      s_chtml10_node_exchange (chtml10, child,indent+1);
-      s_chtml10_end_head_tag  (chtml10, child);
     }
     /*------------------------------------------------------------------------*/
     /* <TITLE>                                                                */
@@ -289,15 +295,6 @@ s_chtml10_node_exchange(chtml10_t* chtml10, Node* node, int indent)
       s_chtml10_start_input_tag (chtml10, child);
       s_chtml10_node_exchange   (chtml10, child,indent+1);
       s_chtml10_end_input_tag   (chtml10, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <HR>                                                                   */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "hr") == 0) 
-    {
-      s_chtml10_start_hr_tag  (chtml10, child);
-      s_chtml10_end_hr_tag    (chtml10, child);
     }
     /*------------------------------------------------------------------------*/
     /* <CENTER>                                                               */
