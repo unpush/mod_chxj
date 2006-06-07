@@ -714,8 +714,7 @@ s_chtml10_start_body_tag(chtml10_t* chtml10, Node* node)
       /* ignore */
     }
     else
-    if (strcasecmp(name, "vlink") == 0) 
-    {
+    if ((*name == 'v' || *name == 'V') && strcasecmp(name, "vlink") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 4.0                                                            */
       /*----------------------------------------------------------------------*/
