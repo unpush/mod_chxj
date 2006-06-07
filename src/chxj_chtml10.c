@@ -283,15 +283,24 @@ s_chtml10_node_exchange(chtml10_t* chtml10, Node* node, int indent)
         s_chtml10_end_form_tag  (chtml10, child);
       }
     }
-    /*------------------------------------------------------------------------*/
-    /* <INPUT>                                                                */
-    /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "input") == 0) 
-    {
-      s_chtml10_start_input_tag (chtml10, child);
-      s_chtml10_node_exchange   (chtml10, child,indent+1);
-      s_chtml10_end_input_tag   (chtml10, child);
+    if (*name == 'i' || *name == 'I') {
+      /*----------------------------------------------------------------------*/
+      /* <INPUT>                                                              */
+      /*----------------------------------------------------------------------*/
+      if (strcasecmp(name, "input") == 0) {
+        s_chtml10_start_input_tag (chtml10, child);
+        s_chtml10_node_exchange   (chtml10, child,indent+1);
+        s_chtml10_end_input_tag   (chtml10, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <IMG>                                                                */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "img") == 0) {
+        s_chtml10_start_img_tag (chtml10, child);
+        s_chtml10_end_img_tag   (chtml10, child);
+      }
     }
     /*------------------------------------------------------------------------*/
     /* <CENTER>                                                               */
@@ -302,15 +311,6 @@ s_chtml10_node_exchange(chtml10_t* chtml10, Node* node, int indent)
       s_chtml10_start_center_tag(chtml10, child);
       s_chtml10_node_exchange   (chtml10, child,indent+1);
       s_chtml10_end_center_tag  (chtml10, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <IMG>                                                                  */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "img") == 0) 
-    {
-      s_chtml10_start_img_tag (chtml10, child);
-      s_chtml10_end_img_tag   (chtml10, child);
     }
     /*------------------------------------------------------------------------*/
     /* <SELECT>                                                               */
