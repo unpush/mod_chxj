@@ -80,7 +80,7 @@ chxj_exchange_xhtml_mobile_1_0(
 {
   char*     dst = NULL;
   char*     ss;
-  xhtml_t     xhtml;
+  xhtml_t   xhtml;
   Doc       doc;
 
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"start chxj_exchange_xhtml_mobile_1_0()");
@@ -446,9 +446,7 @@ s_xhtml_search_emoji(xhtml_t* xhtml, char* txt, char** rslt)
   r = xhtml->doc->r;
 
   if (spec == NULL)
-  {
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "spec is NULL");
-  }
 
   for (ee = xhtml->conf->emoji;
        ee;
