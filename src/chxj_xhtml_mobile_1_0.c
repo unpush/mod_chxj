@@ -1446,7 +1446,7 @@ s_xhtml_1_0_start_img_tag(xhtml_t* xhtml, Node* node)
     char* name  = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
 
-    if (strcasecmp(name, "src") == 0) {
+    if ((*name == 's' || *name == 'S') && strcasecmp(name, "src") == 0) {
 #ifdef IMG_NOT_CONVERT_FILENAME
       xhtml->out = apr_pstrcat(r->pool, 
                       xhtml->out, " src=\"",value,"\"", NULL);
@@ -1457,34 +1457,38 @@ s_xhtml_1_0_start_img_tag(xhtml_t* xhtml, Node* node)
 #endif
     }
     else
-    if (strcasecmp(name, "align" ) == 0) {
-      xhtml->out = apr_pstrcat(r->pool, 
-                      xhtml->out, " align=\"",value,"\"", NULL);
+    if (*name == 'a' || *name == 'A') {
+      if (strcasecmp(name, "align" ) == 0) {
+        xhtml->out = apr_pstrcat(r->pool, 
+                        xhtml->out, " align=\"",value,"\"", NULL);
+      }
+      else
+      if (strcasecmp(name, "alt"   ) == 0) {
+        xhtml->out = apr_pstrcat(r->pool, 
+                        xhtml->out, " alt=\"",value,"\"", NULL);
+      }
     }
     else
-    if (strcasecmp(name, "width" ) == 0) {
+    if ((*name == 'w' || *name == 'W') && strcasecmp(name, "width" ) == 0) {
       xhtml->out = apr_pstrcat(r->pool, 
                       xhtml->out, " width=\"",value,"\"", NULL);
     }
     else
-    if (strcasecmp(name, "height") == 0) {
-      xhtml->out = apr_pstrcat(r->pool, 
-                      xhtml->out, " height=\"",value,"\"", NULL);
+    if (*name == 'h' || *name == 'H') {
+      if (strcasecmp(name, "height") == 0) {
+        xhtml->out = apr_pstrcat(r->pool, 
+                        xhtml->out, " height=\"",value,"\"", NULL);
+      }
+      else
+      if (strcasecmp(name, "hspace") == 0) {
+        xhtml->out = apr_pstrcat(r->pool, 
+                        xhtml->out, " hspace=\"",value,"\"", NULL);
+      }
     }
     else
-    if (strcasecmp(name, "hspace") == 0) {
-      xhtml->out = apr_pstrcat(r->pool, 
-                      xhtml->out, " hspace=\"",value,"\"", NULL);
-    }
-    else
-    if (strcasecmp(name, "vspace") == 0) {
+    if ((*name == 'v' || *name == 'V') && strcasecmp(name, "vspace") == 0) {
       xhtml->out = apr_pstrcat(r->pool, 
                       xhtml->out, " vspace=\"",value,"\"", NULL);
-    }
-    else
-    if (strcasecmp(name, "alt"   ) == 0) {
-      xhtml->out = apr_pstrcat(r->pool, 
-                      xhtml->out, " alt=\"",value,"\"", NULL);
     }
   }
 
