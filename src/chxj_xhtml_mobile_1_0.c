@@ -219,7 +219,7 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
     /* <META>                                                                 */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "meta") == 0) {
+    if ((*name == 'm' || *name == 'M') && strcasecmp(name, "meta") == 0) {
       s_xhtml_1_0_start_meta_tag(xhtml, child);
       s_xhtml_1_0_end_meta_tag  (xhtml, child);
     }
@@ -227,7 +227,7 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
     /* <TITLE>                                                                */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "title") == 0) {
+    if ((*name == 't' || *name == 'T') && strcasecmp(name, "title") == 0) {
       s_xhtml_1_0_start_title_tag (xhtml, child);
       s_xhtml_1_0_node_exchange   (xhtml, child,indent+1);
       s_xhtml_1_0_end_title_tag   (xhtml, child);
@@ -264,7 +264,7 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
     /* <A>                                                                    */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "a") == 0) {
+    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "a") == 0) {
       s_xhtml_1_0_start_a_tag   (xhtml, child);
       s_xhtml_1_0_node_exchange (xhtml, child,indent+1);
       s_xhtml_1_0_end_a_tag     (xhtml, child);
@@ -312,7 +312,7 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
     /* <SELECT>                                                               */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "select") == 0) {
+    if ((*name == 's' || *name == 'S') && strcasecmp(name, "select") == 0) {
       s_xhtml_1_0_start_select_tag(xhtml, child);
       s_xhtml_1_0_node_exchange   (xhtml, child, indent+1);
       s_xhtml_1_0_end_select_tag  (xhtml, child);
@@ -321,7 +321,7 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
     /* <OPTION>                                                               */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "option") == 0) {
+    if ((*name == 'o' || *name == 'O') && strcasecmp(name, "option") == 0) {
       s_xhtml_1_0_start_option_tag(xhtml, child);
       s_xhtml_1_0_node_exchange   (xhtml, child, indent+1);
       s_xhtml_1_0_end_option_tag  (xhtml, child);
@@ -330,7 +330,7 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
     /* <DIV>                                                                  */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "div") == 0) {
+    if ((*name == 'd' || *name == 'D') && strcasecmp(name, "div") == 0) {
       s_xhtml_1_0_start_div_tag (xhtml, child);
       s_xhtml_1_0_node_exchange (xhtml, child, indent+1);
       s_xhtml_1_0_end_div_tag   (xhtml, child);
