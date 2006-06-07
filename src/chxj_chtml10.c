@@ -303,21 +303,10 @@ s_chtml10_node_exchange(chtml10_t* chtml10, Node* node, int indent)
       }
     }
     /*------------------------------------------------------------------------*/
-    /* <CENTER>                                                               */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "center") == 0) 
-    {
-      s_chtml10_start_center_tag(chtml10, child);
-      s_chtml10_node_exchange   (chtml10, child,indent+1);
-      s_chtml10_end_center_tag  (chtml10, child);
-    }
-    /*------------------------------------------------------------------------*/
     /* <SELECT>                                                               */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "select") == 0)
-    {
+    if (strcasecmp(name, "select") == 0) {
       s_chtml10_start_select_tag(chtml10, child);
       s_chtml10_node_exchange   (chtml10, child, indent+1);
       s_chtml10_end_select_tag  (chtml10, child);
@@ -342,25 +331,32 @@ s_chtml10_node_exchange(chtml10_t* chtml10, Node* node, int indent)
       s_chtml10_node_exchange (chtml10, child, indent+1);
       s_chtml10_end_div_tag   (chtml10, child);
     }
-    /*------------------------------------------------------------------------*/
-    /* <CHXJ:IF>                                                              */
-    /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "chxj:if") == 0)
-    {
-      ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag found");
-      if (chxj_chxjif_is_mine(chtml10->spec, doc, child))
-      {
-        ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag is mine");
-        char* parse_attr = NULL;
-        parse_attr = qs_get_parse_attr(doc, child, r);
-        if (parse_attr != NULL && strcasecmp(parse_attr, "true") == 0)
-        {
-          s_chtml10_node_exchange (chtml10, child, indent+1);
-        }
-        else
-        {
-          s_chtml10_chxjif_tag(chtml10, child);
+    if (*name == 'c' || *name == 'C') {
+      /*------------------------------------------------------------------------*/
+      /* <CENTER>                                                               */
+      /*------------------------------------------------------------------------*/
+      if (strcasecmp(name, "center") == 0) {
+        s_chtml10_start_center_tag(chtml10, child);
+        s_chtml10_node_exchange   (chtml10, child,indent+1);
+        s_chtml10_end_center_tag  (chtml10, child);
+      }
+      /*------------------------------------------------------------------------*/
+      /* <CHXJ:IF>                                                              */
+      /*------------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "chxj:if") == 0) {
+        ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag found");
+
+        if (chxj_chxjif_is_mine(chtml10->spec, doc, child)) {
+          ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag is mine");
+          char* parse_attr = NULL;
+          parse_attr = qs_get_parse_attr(doc, child, r);
+
+          if (parse_attr != NULL && strcasecmp(parse_attr, "true") == 0)
+            s_chtml10_node_exchange (chtml10, child, indent+1);
+          else 
+            s_chtml10_chxjif_tag(chtml10, child);
         }
       }
     }
