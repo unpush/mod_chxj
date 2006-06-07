@@ -1532,25 +1532,21 @@ s_xhtml_1_0_start_select_tag(xhtml_t* xhtml, Node* child)
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<select", NULL);
   for (attr = qs_get_attr(doc,child);
        attr;
-       attr = qs_get_next_attr(doc,attr)) 
-  {
+       attr = qs_get_next_attr(doc,attr)) {
     char* nm  = qs_get_attr_name(doc,attr);
     char* val = qs_get_attr_value(doc,attr);
 
-    if (strcasecmp(nm, "size") == 0)
-    {
+    if (strcasecmp(nm, "size") == 0) {
       /* CHTML version 2.0 */
       size = apr_pstrdup(r->pool, val);
     }
     else
-    if (strcasecmp(nm, "name") == 0)
-    {
+    if (strcasecmp(nm, "name") == 0) {
       /* CHTML version 2.0 */
       name = apr_pstrdup(r->pool, val);
     }
     else
-    if (strcasecmp(nm, "multiple") == 0)
-    {
+    if (strcasecmp(nm, "multiple") == 0) {
       /* CHTML version 2.0 */
       /* Ignore */
     }
