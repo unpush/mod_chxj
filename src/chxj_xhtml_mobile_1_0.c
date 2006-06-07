@@ -1096,17 +1096,14 @@ s_xhtml_1_0_start_font_tag(xhtml_t* xhtml, Node* node)
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<font", NULL);
   /* Get Attributes */
   for (attr = qs_get_attr(doc,node);
-       attr; attr = qs_get_next_attr(doc,attr)) 
-  {
+       attr; attr = qs_get_next_attr(doc,attr)) {
     char* name = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
-    if (strcasecmp(name, "color") == 0) 
-    {
+    if ((*name == 'c' || *name == 'C') && strcasecmp(name, "color") == 0) {
       xhtml->out = apr_pstrcat(r->pool, xhtml->out, " color=\"",value,"\"", NULL);
     }
     else
-    if (strcasecmp(name, "size") == 0) 
-    {
+    if ((*name == 's' || *name == 'S') && strcasecmp(name, "size") == 0) {
       xhtml->out = apr_pstrcat(r->pool, xhtml->out, " size=\"",value,"\"", NULL);
     }
   }
