@@ -1108,14 +1108,13 @@ s_chtml10_start_input_tag(chtml10_t* chtml10, Node* node)
                     "\" ", 
                     NULL);
 
-  if (accesskey != NULL)
-  {
+  if (accesskey)
     chtml10->out = apr_pstrcat(r->pool, 
                     chtml10->out, 
                     " accesskey=\"", 
                     accesskey, "\" ", 
                     NULL);
-  }
+
   if (istyle != NULL)
   {
     /*------------------------------------------------------------------------*/
