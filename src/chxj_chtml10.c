@@ -1132,13 +1132,12 @@ s_chtml10_start_input_tag(chtml10_t* chtml10, Node* node)
                       "\"", 
                       NULL);
 
-  if (checked != NULL)
-  {
+  if (checked)
     chtml10->out = apr_pstrcat(r->pool, 
                     chtml10->out, " checked ", NULL);
-  }
 
   chtml10->out = apr_pstrcat(r->pool, chtml10->out, " >", NULL);
+
   return chtml10->out;
 }
 
