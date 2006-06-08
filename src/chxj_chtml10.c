@@ -983,12 +983,10 @@ s_chtml10_start_form_tag(chtml10_t* chtml10, Node* node)
   /*--------------------------------------------------------------------------*/
   for (attr = qs_get_attr(doc,node);
        attr;
-       attr = qs_get_next_attr(doc,attr)) 
-  {
+       attr = qs_get_next_attr(doc,attr)) {
     char* name = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
-    if (strcasecmp(name, "action") == 0) 
-    {
+    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "action") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
