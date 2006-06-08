@@ -998,8 +998,7 @@ s_chtml10_start_form_tag(chtml10_t* chtml10, Node* node)
                       NULL);
     }
     else
-    if (strcasecmp(name, "method") == 0) 
-    {
+    if ((*name == 'm' || *name == 'M') && strcasecmp(name, "method") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
@@ -1011,8 +1010,7 @@ s_chtml10_start_form_tag(chtml10_t* chtml10, Node* node)
                       NULL);
     }
     else
-    if (strcasecmp(name, "utn") == 0) 
-    {
+    if ((*name == 'u' || *name == 'U') && strcasecmp(name, "utn") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 3.0                                                            */
       /*----------------------------------------------------------------------*/
