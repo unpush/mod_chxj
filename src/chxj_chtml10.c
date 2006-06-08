@@ -1212,12 +1212,10 @@ s_chtml10_start_hr_tag(chtml10_t* chtml10, Node* node)
  
   for (attr = qs_get_attr(doc,node);
        attr; 
-       attr = qs_get_next_attr(doc,attr)) 
-  {
+       attr = qs_get_next_attr(doc,attr)) {
     char* name = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
-    if (strcasecmp(name, "align") == 0) 
-    {
+    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "align") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
@@ -1226,8 +1224,7 @@ s_chtml10_start_hr_tag(chtml10_t* chtml10, Node* node)
                         " align=\"", value, "\" ", NULL);
     }
     else
-    if (strcasecmp(name, "size") == 0)
-    {
+    if ((*name == 's' || *name == 'S') && strcasecmp(name, "size") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
@@ -1236,8 +1233,7 @@ s_chtml10_start_hr_tag(chtml10_t* chtml10, Node* node)
                         " size=\"", value, "\" ", NULL);
     }
     else
-    if (strcasecmp(name, "width") == 0)
-    {
+    if ((*name == 'w' || *name == 'W') && strcasecmp(name, "width") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
@@ -1246,8 +1242,7 @@ s_chtml10_start_hr_tag(chtml10_t* chtml10, Node* node)
                         " width=\"", value, "\" ", NULL);
     }
     else
-    if (strcasecmp(name, "noshade") == 0)
-    {
+    if ((*name == 'n' || *name == 'N') && strcasecmp(name, "noshade") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
@@ -1256,8 +1251,7 @@ s_chtml10_start_hr_tag(chtml10_t* chtml10, Node* node)
                         " noshade ", NULL);
     }
     else
-    if (strcasecmp(name, "color") == 0)
-    {
+    if ((*name == 'c' || *name == 'C') && strcasecmp(name, "color") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 4.0                                                            */
       /*----------------------------------------------------------------------*/
