@@ -1115,8 +1115,7 @@ s_chtml10_start_input_tag(chtml10_t* chtml10, Node* node)
                     accesskey, "\" ", 
                     NULL);
 
-  if (istyle != NULL)
-  {
+  if (istyle) {
     /*------------------------------------------------------------------------*/
     /* CHTML 2.0                                                              */
     /*------------------------------------------------------------------------*/
@@ -1125,15 +1124,13 @@ s_chtml10_start_input_tag(chtml10_t* chtml10, Node* node)
   /*--------------------------------------------------------------------------*/
   /* The figure is default for the password.                                  */
   /*--------------------------------------------------------------------------*/
-  if (max_length != NULL)
-  {
+  if (max_length)
     chtml10->out = apr_pstrcat(r->pool, 
                       chtml10->out, 
                       " maxlength=\"", 
                       max_length, 
                       "\"", 
                       NULL);
-  }
 
   if (checked != NULL)
   {
