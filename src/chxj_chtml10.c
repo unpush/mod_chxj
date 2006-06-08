@@ -1092,15 +1092,14 @@ s_chtml10_start_input_tag(chtml10_t* chtml10, Node* node)
                     "\" ", 
                     NULL);
 
-  if (name != NULL)
-  {
+  if (name)
     chtml10->out = apr_pstrcat(r->pool, 
                     chtml10->out, 
                     " name=\"", 
                     name, 
                     "\" ", 
                     NULL);
-  }
+
   if (value != NULL)
   {
     chtml10->out = apr_pstrcat(r->pool, 
