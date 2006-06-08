@@ -4313,6 +4313,26 @@
       <dpi_width>96</dpi_width>
       <dpi_heigh>96</dpi_heigh>
     </device>
+    <device>
+      <device_id>SH700iS</device_id>
+      <device_name>SH700iS</device_name>
+      <html_spec_type>CHTML_5_0</html_spec_type>
+      <width>240</width>
+      <heigh>252</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>false</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
   </user_agent>
   <user_agent pattern="DoCoMo/1.0/([^   /]+)/c[0-9][0-9]/TB$">
     <device>
