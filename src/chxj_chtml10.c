@@ -1076,24 +1076,22 @@ s_chtml10_start_input_tag(chtml10_t* chtml10, Node* node)
   accesskey  = qs_get_accesskey_attr(doc, node, r);
   size       = qs_get_size_attr(doc, node, r);
 
-  if (type != NULL)
-  {
+  if (type)
     chtml10->out = apr_pstrcat(r->pool,
                     chtml10->out, 
                     " type=\"", 
                     type, 
                     "\" ", 
                     NULL);
-  }
-  if (size != NULL)
-  {
+
+  if (size) 
     chtml10->out = apr_pstrcat(r->pool, 
                     chtml10->out, 
                     " size=\"", 
                     size, 
                     "\" ", 
                     NULL);
-  }
+
   if (name != NULL)
   {
     chtml10->out = apr_pstrcat(r->pool, 
