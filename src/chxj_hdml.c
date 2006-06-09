@@ -2515,15 +2515,11 @@ s_hdml_count_radio_tag(hdml_t* hdml, Node* node)
     /*------------------------------------------------------------------------*/
     /* It adds it to radio_value_list.                                        */
     /*------------------------------------------------------------------------*/
-    for (jj=0; jj<MAX_RADIO_VALUE_COUNT; jj++)
-    {
-      if (hdml->radio_value_list[ii][jj] == NULL) 
-      {
+    for (jj=0; jj<MAX_RADIO_VALUE_COUNT; jj++) {
+      if (!hdml->radio_value_list[ii][jj]) 
         break;
-      }
     }
-    if (jj == MAX_RADIO_VALUE_COUNT)
-    {
+    if (jj == MAX_RADIO_VALUE_COUNT) {
       ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,
                       apr_psprintf(r->pool,
                         "I do not understand the value of the radiobutton "
@@ -2538,8 +2534,7 @@ s_hdml_count_radio_tag(hdml_t* hdml, Node* node)
     /* Now let's be the checked attribute or scan.                            */
     /*------------------------------------------------------------------------*/
     chkd = qs_get_checked_attr(hdml->doc, child, hdml->doc->r);
-    if (chkd != NULL)
-    {
+    if (chkd) {
       ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
                       apr_psprintf(r->pool,
                               "The tag scanned now had the checked "
