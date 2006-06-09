@@ -1561,8 +1561,7 @@ s_chtml10_start_div_tag(chtml10_t* chtml10, Node* child)
   chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<div", NULL);
   for (attr = qs_get_attr(doc,child);
        attr;
-       attr = qs_get_next_attr(doc,attr)) 
-  {
+       attr = qs_get_next_attr(doc,attr)) {
     char* nm  = qs_get_attr_name(doc,attr);
     char* val = qs_get_attr_value(doc,attr);
 
