@@ -1609,8 +1609,7 @@ s_hdml_do_input_radio_tag(hdml_t* hdml, Node* tag)
       break;
     }
   }
-  if (ii == MAX_RADIO_COUNT) 
-  {
+  if (ii == MAX_RADIO_COUNT) {
     /* @todo Oops.. */
     ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, 
                     "%s:%d Oops... The same name was not in the list. ", 
