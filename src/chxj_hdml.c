@@ -2067,21 +2067,19 @@ s_hdml_start_img_tag(hdml_t* hdml, Node* node)
       s_output_to_hdml_out(hdml, "\""        );
     }
     else
-    if (strcasecmp(name, "hspace") == 0) 
-    {
+    if (strcasecmp(name, "hspace") == 0) {
       s_output_to_hdml_out(hdml, " hspace=\"");
       s_output_to_hdml_out(hdml, value       );
       s_output_to_hdml_out(hdml, "\""        );
     }
     else
-    if (strcasecmp(name, "vspace") == 0) 
-    {
+    if ((*name == 'v' || *name == 'V') && strcasecmp(name, "vspace") == 0) {
       s_output_to_hdml_out(hdml, " vspace=\"");
       s_output_to_hdml_out(hdml, value       );
       s_output_to_hdml_out(hdml, "\""        );
     }
     else
-    if (strcasecmp(name, "alt"   ) == 0) {
+    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "alt"   ) == 0) {
       s_output_to_hdml_out(hdml, " alt=\""   );
       s_output_to_hdml_out(hdml, value       );
       s_output_to_hdml_out(hdml, "\""        );
