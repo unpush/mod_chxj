@@ -1339,8 +1339,7 @@ s_hdml_do_input_text_tag(hdml_t* hdml, Node* tag)
         
   if (fmt != NULL) 
   {
-    if (mlen != NULL) 
-    {
+    if (mlen) {
       for (ii=0; ii<strlen(mlen); ii++)
       {
         if (mlen[ii] < '0' || mlen[ii] > '9')
