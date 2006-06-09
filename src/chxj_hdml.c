@@ -971,7 +971,7 @@ s_hdml_start_a_tag(hdml_t* hdml, Node* node)
       /* ignore */
     }
     else
-    if (strcasecmp(name, "kana") == 0) {
+    if ((*name == 'k' || *name == 'K') && strcasecmp(name, "kana") == 0) {
       /* ignore */
     }
     else
