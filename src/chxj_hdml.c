@@ -2081,8 +2081,7 @@ s_hdml_start_img_tag(hdml_t* hdml, Node* node)
       s_output_to_hdml_out(hdml, "\""        );
     }
     else
-    if (strcasecmp(name, "alt"   ) == 0) 
-    {
+    if (strcasecmp(name, "alt"   ) == 0) {
       s_output_to_hdml_out(hdml, " alt=\""   );
       s_output_to_hdml_out(hdml, value       );
       s_output_to_hdml_out(hdml, "\""        );
@@ -2151,15 +2150,15 @@ s_hdml_start_select_tag(hdml_t* hdml, Node* node)
   /* Get Attributes                                                           */
   /*--------------------------------------------------------------------------*/
   for (attr = qs_get_attr(doc,node); 
-       attr != NULL; 
-       attr=qs_get_next_attr(doc,attr)) 
-  {
+       attr; 
+       attr=qs_get_next_attr(doc,attr)) {
+
     char* name      = qs_get_attr_name(doc,attr);
     char* value     = qs_get_attr_value(doc,attr);
     char* selval    = NULL;
     char* selvaltxt = NULL;
-    if (strcasecmp(name, "name") == 0) 
-    {
+
+    if ((*name == 'n' || *name == 'N') && strcasecmp(name, "name") == 0) {
 
       s_output_to_postdata(hdml, 
                       apr_psprintf(r->pool, "%s=$%s%02d", 
@@ -2167,20 +2166,17 @@ s_hdml_start_select_tag(hdml_t* hdml, Node* node)
                               s_get_form_no(r, hdml),
                               hdml->var_cnt[hdml->pure_form_cnt]));
       selval = qs_get_selected_value(doc, node, r);
-      if (selval == NULL) 
-      {
+      if (! selval) {
         ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, 
                         "selected value not found");
         selval = qs_alloc_zero_byte_string(r);
       }
-      else
-      {
+      else {
         ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, 
                         "selected value found[%s]" , selval);
       }
       selvaltxt = qs_get_selected_value_text(doc, node, r);
-      if (selvaltxt == NULL)
-      {
+      if (!selvaltxt) {
         selvaltxt = qs_alloc_zero_byte_string(r);
       }
       ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "selvaltxt:[%s]" ,selvaltxt);
