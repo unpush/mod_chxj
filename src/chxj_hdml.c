@@ -1114,13 +1114,13 @@ s_hdml_start_form_tag(hdml_t* hdml, Node* node)
        attr = qs_get_next_attr(doc,attr)) {
     char* name = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
-    if (strcasecmp(name, "action") == 0) {
+
+    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "action") == 0) {
       act = apr_psprintf(r->pool, "%s", value);
       break;
     }
   }
-  if (act != NULL) 
-  {
+  if (act) {
     hdml->form_tmp = apr_pstrcat(r->pool,
                              hdml->form_tmp,
                              act,
