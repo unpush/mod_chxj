@@ -2060,14 +2060,13 @@ s_hdml_start_img_tag(hdml_t* hdml, Node* node)
       s_output_to_hdml_out(hdml, "\""       );
     }
     else
-    if (strcasecmp(name, "height") == 0) 
-    {
+    if ((*name == 'h' || *name == 'H') && strcasecmp(name, "height") == 0) {
       s_output_to_hdml_out(hdml, " height=\"");
       s_output_to_hdml_out(hdml, value       );
       s_output_to_hdml_out(hdml, "\""        );
     }
     else
-    if (strcasecmp(name, "hspace") == 0) {
+    if ((*name == 'h' || *name == 'H') && strcasecmp(name, "hspace") == 0) {
       s_output_to_hdml_out(hdml, " hspace=\"");
       s_output_to_hdml_out(hdml, value       );
       s_output_to_hdml_out(hdml, "\""        );
