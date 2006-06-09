@@ -1578,6 +1578,7 @@ s_chtml10_start_div_tag(chtml10_t* chtml10, Node* child)
                     chtml10->out, " align=\"", align, "\"", NULL);
 
   chtml10->out = apr_pstrcat(r->pool, chtml10->out, ">", NULL);
+
   return chtml10->out;
 }
 
