@@ -861,8 +861,7 @@ s_hdml_start_body_tag(hdml_t* hdml, Node* node)
     else if (strcasecmp(name, "link")   == 0) {
       /* ignore */
     }
-    else if (strcasecmp(name, "alink")  == 0) 
-    {
+    else if (strcasecmp(name, "alink")  == 0) {
       /* ignore */
     }
     else if (strcasecmp(name, "vlink")  == 0) 
