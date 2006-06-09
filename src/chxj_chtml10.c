@@ -1444,13 +1444,12 @@ s_chtml10_start_select_tag(chtml10_t* chtml10, Node* child)
     }
   }
 
-  if (size != NULL) {
+  if (size)
     chtml10->out = apr_pstrcat(r->pool, chtml10->out, " size=\"",size,"\"", NULL);
-  }
-  if (name != NULL)
-  {
+
+  if (name) 
     chtml10->out = apr_pstrcat(r->pool, chtml10->out, " name=\"",name,"\"", NULL);
-  }
+
   chtml10->out = apr_pstrcat(r->pool, chtml10->out, ">\n", NULL);
   return chtml10->out;
 }
