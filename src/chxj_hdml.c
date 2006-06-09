@@ -397,6 +397,15 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
         hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
         hdml->out = s_hdml_end_input_tag(hdml, child);
       }
+      /*----------------------------------------------------------------------*/
+      /* <IMG>                                                                */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "img") == 0) {
+        hdml->out = s_hdml_start_img_tag(hdml, child);
+        hdml->hdml_br_flag = 0;
+        hdml->out = s_hdml_end_img_tag  (hdml, child);
+      }
     }
     /*------------------------------------------------------------------------*/
     /* <SELECT>                                                               */
@@ -436,15 +445,6 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
       hdml->out = s_hdml_start_center_tag(hdml, child);
       hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
       hdml->out = s_hdml_end_center_tag(hdml, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <IMG>                                                                  */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "img") == 0) {
-      hdml->out = s_hdml_start_img_tag(hdml, child);
-      hdml->hdml_br_flag = 0;
-      hdml->out = s_hdml_end_img_tag  (hdml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <CHXJ:IF>                                                              */
