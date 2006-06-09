@@ -1195,21 +1195,22 @@ s_hdml_start_input_tag(hdml_t* hdml, Node* node)
     char* name  = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
 
-    if (strcasecmp(name, "type") == 0) {
-      if (strcasecmp(value, "text") == 0) {
+    if ((*name == 't'|| *name == 'T') && strcasecmp(name, "type") == 0) {
+      if ((*value == 't' || *value == 'T') && strcasecmp(value, "text") == 0) {
         /*--------------------------------------------------------------------*/
         /* "input type ='text'" tag is processed.                             */
         /*--------------------------------------------------------------------*/
         s_hdml_do_input_text_tag(hdml, node);
       }
-      if (strcasecmp(value, "password") == 0) {
+      else
+      if ((*value == 'p' || *value == 'P') && strcasecmp(value, "password") == 0) {
         /*--------------------------------------------------------------------*/
         /* "input type='password'" tag is processed.                          */
         /*--------------------------------------------------------------------*/
         s_hdml_do_input_password_tag(hdml, node);
       }
       else
-      if (strcasecmp(value, "submit") == 0) {
+      if ((*value == 's' || *value == 'S') && strcasecmp(value, "submit") == 0) {
         /*--------------------------------------------------------------------*/
         /* "input type='submit'" tag is processed.                            */
         /*--------------------------------------------------------------------*/
