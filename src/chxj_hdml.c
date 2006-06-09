@@ -1189,10 +1189,12 @@ s_hdml_start_input_tag(hdml_t* hdml, Node* node)
   /*--------------------------------------------------------------------------*/
   /* The attribute of the input tag is acquired.                              */
   /*--------------------------------------------------------------------------*/
-  for (attr = qs_get_attr(doc,node); attr != NULL; attr = qs_get_next_attr(doc,attr)) 
-  {
+  for (attr = qs_get_attr(doc,node); 
+       attr; 
+       attr = qs_get_next_attr(doc,attr)) {
     char* name  = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
+
     if (strcasecmp(name, "type") == 0) 
     {
       if (strcasecmp(value, "text") == 0)
