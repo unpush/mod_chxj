@@ -1354,8 +1354,7 @@ s_chtml10_start_img_tag(chtml10_t* chtml10, Node* node)
                       chtml10->out, " hspace=\"",value,"\"", NULL);
     }
     else
-    if (strcasecmp(name, "vspace") == 0) 
-    {
+    if (strcasecmp(name, "vspace") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
