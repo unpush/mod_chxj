@@ -1216,8 +1216,7 @@ s_hdml_start_input_tag(hdml_t* hdml, Node* node)
         s_hdml_do_input_submit_tag(hdml, node);
       }
       else 
-      if (strcasecmp(value, "hidden") == 0) 
-      {
+      if (strcasecmp(value, "hidden") == 0) {
         /*--------------------------------------------------------------------*/
         /* "input type='hidden'" tag is processed.                            */
         /*--------------------------------------------------------------------*/
