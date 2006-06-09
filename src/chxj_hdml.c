@@ -1337,13 +1337,10 @@ s_hdml_do_input_text_tag(hdml_t* hdml, Node* tag)
   fmt  = qs_conv_istyle_to_format(r, is);
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "qs_conv_istyle_to_format end");
         
-  if (fmt != NULL) 
-  {
+  if (fmt) {
     if (mlen) {
-      for (ii=0; ii<strlen(mlen); ii++)
-      {
-        if (mlen[ii] < '0' || mlen[ii] > '9')
-        {
+      for (ii=0; ii<strlen(mlen); ii++) {
+        if (mlen[ii] < '0' || mlen[ii] > '9') {
           mlen = apr_psprintf(r->pool, "0");
           break;
         }
