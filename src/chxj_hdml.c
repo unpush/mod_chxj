@@ -566,39 +566,34 @@ s_hdml_search_emoji(hdml_t* hdml, char* txt, char** rslt)
         return strlen(ee->imode->string);
       }
 
-      if (strcasecmp(hdml->spec->emoji_type, "a") == 0)
-      {
+      if (strcasecmp(hdml->spec->emoji_type, "a") == 0) {
         *rslt = apr_psprintf(r->pool,
                         "<IMG ICON=%s>",
                         ee->ezweb->typeA);
         return strlen(ee->imode->string);
       } 
       else
-      if (strcasecmp(hdml->spec->emoji_type, "b") == 0)
-      {
+      if (strcasecmp(hdml->spec->emoji_type, "b") == 0) {
         *rslt = apr_psprintf(r->pool,
                         "<IMG ICON=%s>",
                         ee->ezweb->typeB);
         return strlen(ee->imode->string);
       }
       else
-      if (strcasecmp(hdml->spec->emoji_type, "c") == 0)
-      {
+      if (strcasecmp(hdml->spec->emoji_type, "c") == 0) {
         *rslt = apr_psprintf(r->pool,
                         "<IMG ICON=%s>",
                         ee->ezweb->typeC);
         return strlen(ee->imode->string);
       }
       else
-      if (strcasecmp(hdml->spec->emoji_type, "d") == 0)
-      {
+      if (strcasecmp(hdml->spec->emoji_type, "d") == 0) {
         *rslt = apr_psprintf(r->pool,
                         "<IMG ICON=%s>",
                         ee->ezweb->typeD);
         return strlen(ee->imode->string);
       }
-      else
-      {
+      else {
         *rslt = apr_psprintf(r->pool,
                         "<IMG ICON=%s>",
                         ee->ezweb->typeA);
