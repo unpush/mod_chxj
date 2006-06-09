@@ -345,6 +345,15 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
         hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
         hdml->out = s_hdml_end_body_tag(hdml, child);
       }
+      /*----------------------------------------------------------------------*/
+      /* <BR>                                                                 */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "br") == 0) {
+        hdml->out = s_hdml_start_br_tag(hdml, child);
+        hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
+        hdml->out = s_hdml_end_br_tag(hdml, child);
+      }
     }
     /*------------------------------------------------------------------------*/
     /* <A>                                                                    */
@@ -355,15 +364,6 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
       hdml->hdml_br_flag = 0;
       hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
       hdml->out = s_hdml_end_a_tag(hdml, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <BR>                                                                   */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "br") == 0) {
-      hdml->out = s_hdml_start_br_tag(hdml, child);
-      hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
-      hdml->out = s_hdml_end_br_tag(hdml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <FONT>                                                                 */
