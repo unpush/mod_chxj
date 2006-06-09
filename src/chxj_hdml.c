@@ -539,9 +539,7 @@ s_hdml_search_emoji(hdml_t* hdml, char* txt, char** rslt)
   r = hdml->doc->r;
 
   if (spec == NULL)
-  {
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "spec is NULL");
-  }
 
   for (ee = hdml->conf->emoji;
        ee;
