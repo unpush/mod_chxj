@@ -1774,8 +1774,7 @@ s_hdml_do_input_checkbox_tag(hdml_t* hdml, Node* tag)
   /* It is posted to the one without the checked attribute.                   */
   /* However, they were able to be removed with INPUT FILTER.                 */
   /*--------------------------------------------------------------------------*/
-  if (hdml->has_checkbox == 0) 
-  {
+  if (! hdml->has_checkbox) {
     hdml->has_checkbox++;
     s_output_to_hdml_card(hdml, 
                     "<NODISPLAY NAME=\"_chk\">\n"
@@ -1801,14 +1800,12 @@ s_hdml_do_input_checkbox_tag(hdml_t* hdml, Node* tag)
   val = qs_get_value_attr(doc, tag, r);
   nm  = qs_get_name_attr(doc, tag, r);
 
-  if (val == NULL) 
-  {
+  if (! val) 
     val    = qs_alloc_zero_byte_string(r);
-  }
-  if (nm == NULL)
-  {
+
+  if (! nm)
     nm   = qs_alloc_zero_byte_string(r);
-  }
+
   s_output_to_hdml_out(hdml, apr_psprintf(r->pool, 
                                 "<A TASK=GOSUB LABEL=\"a\xaf\xb8\" "
                                    "DEST=\"#$%s%02d\" "
@@ -1826,8 +1823,7 @@ s_hdml_do_input_checkbox_tag(hdml_t* hdml, Node* tag)
                                 hdml->var_cnt[hdml->pure_form_cnt] + 2,
                                 s_get_form_no(r, hdml),
                                 hdml->var_cnt[hdml->pure_form_cnt] + 2));
-  if (chk) 
-  {
+  if (chk) {
     s_output_to_init_vars(hdml, 
                     apr_psprintf(r->pool, 
                             "%s%02d=_uchk&%s%02d=%s&%s%02d=X",
@@ -1840,8 +1836,7 @@ s_hdml_do_input_checkbox_tag(hdml_t* hdml, Node* tag)
                             hdml->var_cnt[hdml->pure_form_cnt] + 2
                             ));
   }
-  else
-  {
+  else {
     s_output_to_init_vars(hdml, 
                     apr_psprintf(r->pool, 
                             "%s%02d=_chk&%s%02d=&%s%02d=_",
@@ -1860,6 +1855,7 @@ s_hdml_do_input_checkbox_tag(hdml_t* hdml, Node* tag)
                                   nm,
                                   s_get_form_no(r, hdml),
                                   hdml->var_cnt[hdml->pure_form_cnt] + 1));
+
   hdml->var_cnt[hdml->pure_form_cnt] += 3;
 }
 
