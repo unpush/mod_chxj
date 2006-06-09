@@ -2680,11 +2680,11 @@ s_hdml_chxjif_tag(hdml_t* hdml, Node* node)
 
   for (child = qs_get_child_node(doc, node);
        child;
-       child = qs_get_next_node(doc, child))
-  {
+       child = qs_get_next_node(doc, child)) {
     s_output_to_hdml_out(hdml, child->otext);
     s_hdml_chxjif_tag(hdml, child);
   }
+
 }
 /*
  * vim:ts=2 et
