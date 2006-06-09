@@ -923,12 +923,11 @@ s_hdml_start_a_tag(hdml_t* hdml, Node* node)
        attr = qs_get_next_attr(doc,attr)) {
     char* name  = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
-    if (strcasecmp(name, "name") == 0) 
-    {
+    if (strcasecmp(name, "name") == 0) {
       /* IGNORE */
     }
-    else if (strcasecmp(name, "href") == 0) 
-    {
+    else 
+    if (strcasecmp(name, "href") == 0) {
       if (strncasecmp(value, "mailto:", 7) == 0) 
       {
         s_output_to_hdml_out(hdml, " TASK=GO DEST=\""     );
