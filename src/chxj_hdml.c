@@ -850,22 +850,27 @@ s_hdml_start_body_tag(hdml_t* hdml, Node* node)
   /* Get Attributes                 */
   /*--------------------------------*/
   for (attr = qs_get_attr(doc,node); 
-    attr != NULL; attr = qs_get_next_attr(doc,attr)) {
+    attr; 
+    attr = qs_get_next_attr(doc,attr)) {
     char* name  = qs_get_attr_name(doc,attr);
 
-    if (strcasecmp(name, "bgcolor")     == 0) {
+    if ((*name == 'b' || *name == 'B') && strcasecmp(name, "bgcolor")     == 0) {
       /* ignore */
     }
-    else if (strcasecmp(name, "text")   == 0) {
+    else 
+    if ((*name == 't' || *name == 'T') && strcasecmp(name, "text")   == 0) {
       /* ignore */
     }
-    else if (strcasecmp(name, "link")   == 0) {
+    else 
+    if ((*name == 'l' || *name == 'L') && strcasecmp(name, "link")   == 0) {
       /* ignore */
     }
-    else if (strcasecmp(name, "alink")  == 0) {
+    else 
+    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "alink")  == 0) {
       /* ignore */
     }
-    else if (strcasecmp(name, "vlink")  == 0) {
+    else 
+    if ((*name == 'v' || *name == 'V') && strcasecmp(name, "vlink")  == 0) {
       /* ignore */
     }
   }
