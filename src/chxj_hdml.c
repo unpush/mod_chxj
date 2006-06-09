@@ -934,7 +934,7 @@ s_hdml_start_a_tag(hdml_t* hdml, Node* node)
         s_output_to_hdml_out(hdml, "\" "                  );
       }
       else 
-      if (strncasecmp(value, "tel:", 4) == 0) {
+      if ((*value == 't' || *value == 'T') && strncasecmp(value, "tel:", 4) == 0) {
 
         s_output_to_hdml_out(hdml,  " TASK=CALL NUMBER=\"");
         s_output_to_hdml_out(hdml, &value[4]              );
@@ -947,7 +947,7 @@ s_hdml_start_a_tag(hdml_t* hdml, Node* node)
       }
     }
     else
-    if (strcasecmp(name, "accesskey") == 0) {
+    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "accesskey") == 0) {
       if (strcasecmp(value, "0") != 0) {
         s_output_to_hdml_out(hdml, " ACCESSKEY="          );
         s_output_to_hdml_out(hdml, value                  );
