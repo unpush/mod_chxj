@@ -1436,7 +1436,7 @@ s_chtml10_start_select_tag(chtml10_t* chtml10, Node* child)
       name = apr_pstrdup(r->pool, val);
     }
     else
-    if (strcasecmp(nm, "multiple") == 0) {
+    if ((*nm == 'm' || *nm == 'M') && strcasecmp(nm, "multiple") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0 version 2.0                                                */
       /*----------------------------------------------------------------------*/
