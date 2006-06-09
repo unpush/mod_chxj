@@ -955,43 +955,35 @@ s_hdml_start_a_tag(hdml_t* hdml, Node* node)
       }
     }
     else
-    if (strcasecmp(name, "cti") == 0) 
-    {
+    if (strcasecmp(name, "cti") == 0) {
       /* ignore */
     }
     else
-    if (strcasecmp(name, "ijam") == 0) 
-    {
+    if (strcasecmp(name, "ijam") == 0) {
       /* ignore */
     }
     else
-    if (strcasecmp(name, "utn") == 0) 
-    {
+    if (strcasecmp(name, "utn") == 0) {
       /* ignore */
     }
     else
-    if (strcasecmp(name, "telbook") == 0) 
-    {
+    if (strcasecmp(name, "telbook") == 0) {
       /* ignore */
     }
     else
-    if (strcasecmp(name, "kana") == 0) 
-    {
+    if (strcasecmp(name, "kana") == 0) {
       /* ignore */
     }
     else
-    if (strcasecmp(name, "email") == 0) 
-    {
+    if (strcasecmp(name, "email") == 0) {
       /* ignore */
     }
     else
-    if (strcasecmp(name, "ista") == 0) 
-    {
+    if (strcasecmp(name, "ista") == 0) {
       /* ignore */
     }
     else
-    if (strcasecmp(name, "ilet") == 0) 
-    {
+    if (strcasecmp(name, "ilet") == 0) {
       /* ignore */
     }
     else
