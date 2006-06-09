@@ -469,7 +469,7 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
     /* NORMAL TEXT                                                            */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "text") == 0) {
+    if ((*name == 't' || *name == 'T') && strcasecmp(name, "text") == 0) {
       char* textval;
       char* tmp;
       char* tdst;
