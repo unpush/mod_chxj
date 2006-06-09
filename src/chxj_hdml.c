@@ -441,7 +441,7 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
     /* <CENTER>                                                               */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "center") == 0) {
+    if ((*name == 'c' || *name == 'C') && strcasecmp(name, "center") == 0) {
       hdml->out = s_hdml_start_center_tag(hdml, child);
       hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
       hdml->out = s_hdml_end_center_tag(hdml, child);
