@@ -277,33 +277,43 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
     if (hdml->hdml_end_flag == 1) 
       continue;
 
-    /*------------------------------------------------------------------------*/
-    /* <HTML>                                                                 */
-    /*------------------------------------------------------------------------*/
-    if (strcasecmp(name, "html") == 0) {
-      hdml->out = s_hdml_start_html_tag(hdml, child);
-      hdml->hdml_br_flag = 0;
-      hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
-      hdml->out = s_hdml_end_html_tag(hdml, child);
+    if (*name == 'h' || *name == 'H') {
+      /*----------------------------------------------------------------------*/
+      /* <HTML>                                                               */
+      /*----------------------------------------------------------------------*/
+      if (strcasecmp(name, "html") == 0) {
+        hdml->out = s_hdml_start_html_tag(hdml, child);
+        hdml->hdml_br_flag = 0;
+        hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
+        hdml->out = s_hdml_end_html_tag(hdml, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <HEAD>                                                               */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "head") == 0) {
+        hdml->out = s_hdml_start_head_tag(hdml, child);
+        hdml->hdml_br_flag = 0;
+        hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
+        hdml->out = s_hdml_end_head_tag(hdml, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <HR>                                                                 */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "hr") == 0) {
+        hdml->out = s_hdml_start_hr_tag(hdml, child);
+        hdml->out = s_hdml_end_hr_tag(hdml, child);
+      }
     }
     /*------------------------------------------------------------------------*/
     /* <META>                                                                 */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "meta") == 0) {
+    if ((*name == 'm' || *name == 'M') && strcasecmp(name, "meta") == 0) {
       hdml->out = s_hdml_start_meta_tag(hdml, child);
       hdml->hdml_br_flag = 0;
       hdml->out = s_hdml_end_meta_tag(hdml, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <HEAD>                                                                 */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "head") == 0) {
-      hdml->out = s_hdml_start_head_tag(hdml, child);
-      hdml->hdml_br_flag = 0;
-      hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
-      hdml->out = s_hdml_end_head_tag(hdml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <TITLE>                                                                */
@@ -411,14 +421,6 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
       hdml->hdml_br_flag = 0;
       hdml->out = s_hdml_node_exchange(hdml, child, indent+1);
       hdml->out = s_hdml_end_div_tag(hdml, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <HR>                                                                   */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "hr") == 0) {
-      hdml->out = s_hdml_start_hr_tag(hdml, child);
-      hdml->out = s_hdml_end_hr_tag(hdml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <CENTER>                                                               */
