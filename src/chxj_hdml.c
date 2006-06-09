@@ -319,8 +319,7 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
     /* <BASE>                                                                 */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "base") == 0) 
-    {
+    if (strcasecmp(name, "base") == 0) {
       hdml->out = s_hdml_start_base_tag(hdml, child);
       hdml->hdml_br_flag = 0;
       hdml->out = s_hdml_end_base_tag(hdml, child);
