@@ -386,15 +386,17 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
         hdml->out = s_hdml_end_form_tag(hdml, child);
       }
     }
-    /*------------------------------------------------------------------------*/
-    /* <INPUT>                                                                */
-    /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "input") == 0) {
-      hdml->out = s_hdml_start_input_tag(hdml, child);
-      hdml->hdml_br_flag = 0;
-      hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
-      hdml->out = s_hdml_end_input_tag(hdml, child);
+    if (*name == 'i' || *name == 'I') {
+      /*----------------------------------------------------------------------*/
+      /* <INPUT>                                                              */
+      /*----------------------------------------------------------------------*/
+      if (strcasecmp(name, "input") == 0) {
+        hdml->out = s_hdml_start_input_tag(hdml, child);
+        hdml->hdml_br_flag = 0;
+        hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
+        hdml->out = s_hdml_end_input_tag(hdml, child);
+      }
     }
     /*------------------------------------------------------------------------*/
     /* <SELECT>                                                               */
