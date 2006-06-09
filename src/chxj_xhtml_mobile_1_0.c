@@ -418,6 +418,7 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
       xhtml->out = apr_pstrcat(r->pool, xhtml->out, tdst, NULL);
     }
   }
+
   return xhtml->out;
 }
 
