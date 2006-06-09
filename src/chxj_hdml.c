@@ -365,24 +365,26 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
       hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
       hdml->out = s_hdml_end_a_tag(hdml, child);
     }
-    /*------------------------------------------------------------------------*/
-    /* <FONT>                                                                 */
-    /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "font") == 0) {
-      hdml->out = s_hdml_start_font_tag(hdml, child);
-      hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
-      hdml->out = s_hdml_end_font_tag(hdml, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <FORM>                                                                 */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "form") == 0) {
-      hdml->out = s_hdml_start_form_tag(hdml, child);
-      hdml->hdml_br_flag = 0;
-      hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
-      hdml->out = s_hdml_end_form_tag(hdml, child);
+    if (*name == 'f' || *name == 'F') {
+      /*----------------------------------------------------------------------*/
+      /* <FONT>                                                               */
+      /*----------------------------------------------------------------------*/
+      if (strcasecmp(name, "font") == 0) {
+        hdml->out = s_hdml_start_font_tag(hdml, child);
+        hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
+        hdml->out = s_hdml_end_font_tag(hdml, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <FORM>                                                               */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "form") == 0) {
+        hdml->out = s_hdml_start_form_tag(hdml, child);
+        hdml->hdml_br_flag = 0;
+        hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
+        hdml->out = s_hdml_end_form_tag(hdml, child);
+      }
     }
     /*------------------------------------------------------------------------*/
     /* <INPUT>                                                                */
