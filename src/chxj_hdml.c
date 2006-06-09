@@ -556,12 +556,10 @@ s_hdml_search_emoji(hdml_t* hdml, char* txt, char** rslt)
     hex1byte = ee->imode->hex1byte & 0xff;
     hex2byte = ee->imode->hex2byte & 0xff;
 
-    if (ee->imode->string != NULL
+    if (ee->imode->string
     &&  strlen(ee->imode->string) > 0
-    &&  strncasecmp(ee->imode->string, txt, strlen(ee->imode->string)) == 0)
-    {
-      if (spec == NULL || spec->emoji_type == NULL)
-      {
+    &&  strncasecmp(ee->imode->string, txt, strlen(ee->imode->string)) == 0) {
+      if (spec == NULL || spec->emoji_type == NULL) {
         *rslt = apr_psprintf(r->pool,
                         "<IMG ICON=%s>",
                         ee->ezweb->typeA);
