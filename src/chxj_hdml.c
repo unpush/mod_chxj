@@ -1247,11 +1247,11 @@ s_hdml_start_input_tag(hdml_t* hdml, Node* node)
       /* ignore */
     }
     else
-    if (strcasecmp(name, "size")      == 0) {
+    if ((*name == 's' || *name == 'S') && strcasecmp(name, "size")      == 0) {
       /* ignore */
     }
     else
-    if (strcasecmp(name, "maxlength") == 0) {
+    if ((*name == 'm' || *name == 'M') && strcasecmp(name, "maxlength") == 0) {
       /* ignore */
     }
     else
