@@ -1230,8 +1230,7 @@ s_hdml_start_input_tag(hdml_t* hdml, Node* node)
         s_hdml_do_input_radio_tag(hdml, node);
       }
       else 
-      if (strcasecmp(value, "checkbox") == 0) 
-      {
+      if (strcasecmp(value, "checkbox") == 0) {
         /*--------------------------------------------------------------------*/
         /* "input type='checkbox'" tag is processed.                          */
         /*--------------------------------------------------------------------*/
