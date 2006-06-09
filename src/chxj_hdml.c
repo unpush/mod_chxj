@@ -406,8 +406,7 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
     /* <DIV>                                                                  */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "div") == 0) 
-    {
+    if (strcasecmp(name, "div") == 0) {
       hdml->out = s_hdml_start_div_tag(hdml, child);
       hdml->hdml_br_flag = 0;
       hdml->out = s_hdml_node_exchange(hdml, child, indent+1);
