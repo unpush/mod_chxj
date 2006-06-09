@@ -1250,23 +1250,19 @@ s_hdml_start_input_tag(hdml_t* hdml, Node* node)
       /* ignore */
     }
     else
-    if (strcasecmp(name, "maxlength") == 0) 
-    {
+    if (strcasecmp(name, "maxlength") == 0) {
       /* ignore */
     }
     else
-    if (strcasecmp(name, "checked")   == 0) 
-    {
+    if (strcasecmp(name, "checked")   == 0) {
       /* ignore */
     }
     else 
-    if (strcasecmp(name, "accesskey") == 0) 
-    {
+    if (strcasecmp(name, "accesskey") == 0) {
       /* ignore */
     }
     else
-    if (strcasecmp(name, "istyle")    == 0) 
-    {
+    if (strcasecmp(name, "istyle")    == 0) {
       /* ignore */
     }
   }
