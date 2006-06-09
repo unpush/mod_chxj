@@ -2595,8 +2595,7 @@ s_output_to_postdata(hdml_t* hdml, char* s)
 {
   request_rec*          r = hdml->doc->r;
 
-  if (strlen(hdml->postdata[hdml->pure_form_cnt]) != 0)
-  {
+  if (strlen(hdml->postdata[hdml->pure_form_cnt])) {
     hdml->postdata[hdml->pure_form_cnt] =
                   apr_pstrcat(r->pool,
                               hdml->postdata[hdml->pure_form_cnt],
@@ -2624,16 +2623,14 @@ static void
 s_hdml_tag_output_upper_half(hdml_t* hdml, Node* node)
 {
   if (hdml->hdml_br_flag   == 1 
-  &&  hdml->div_right_flag == 1) 
-  {
+  &&  hdml->div_right_flag == 1) {
     s_output_to_hdml_out(hdml, "<RIGHT>");
     hdml->hdml_br_flag = 0;
   }
 
   if (hdml->hdml_br_flag == 1 
   &&  hdml->center > 0 
-  &&  hdml->in_center == 0) 
-  {
+  &&  hdml->in_center == 0) {
     s_output_to_hdml_out(hdml, "<CENTER>");
     hdml->in_center++;
     hdml->hdml_br_flag = 0;
@@ -2641,8 +2638,7 @@ s_hdml_tag_output_upper_half(hdml_t* hdml, Node* node)
   else
   if (hdml->hdml_br_flag == 1 
   &&  hdml->div_center_flag > 0 
-  &&  hdml->div_in_center == 0) 
-  {
+  &&  hdml->div_in_center == 0)  {
     s_output_to_hdml_out(hdml, "<CENTER>");
     hdml->div_in_center++;
     hdml->hdml_br_flag = 0;
