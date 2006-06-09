@@ -1653,12 +1653,10 @@ s_hdml_do_input_radio_tag(hdml_t* hdml, Node* tag)
   }
   r_cnt = jj;
 
-  for (jj=0; jj<r_cnt; jj++) 
-  {
-    if (hdml->radio_value_list[ii][jj] == NULL)
-    {
+  for (jj=0; jj<r_cnt; jj++) {
+    if (! hdml->radio_value_list[ii][jj])
       break;
-    }
+
     if (jj != 0) {
       s_output_to_hdml_out(hdml, apr_psprintf(r->pool, ";"));
       if (hdml->radio_out_cnt[ii] == 0) 
