@@ -1429,8 +1429,7 @@ s_chtml10_start_select_tag(chtml10_t* chtml10, Node* child)
       size = apr_pstrdup(r->pool, val);
     }
     else
-    if (strcasecmp(nm, "name") == 0)
-    {
+    if (strcasecmp(nm, "name") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0 version 2.0                                                */
       /*----------------------------------------------------------------------*/
