@@ -437,30 +437,32 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
       hdml->out = s_hdml_node_exchange(hdml, child, indent+1);
       hdml->out = s_hdml_end_div_tag(hdml, child);
     }
-    /*------------------------------------------------------------------------*/
-    /* <CENTER>                                                               */
-    /*------------------------------------------------------------------------*/
     else
-    if ((*name == 'c' || *name == 'C') && strcasecmp(name, "center") == 0) {
-      hdml->out = s_hdml_start_center_tag(hdml, child);
-      hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
-      hdml->out = s_hdml_end_center_tag(hdml, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <CHXJ:IF>                                                              */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "chxj:if") == 0) {
-      ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag found");
-      if (chxj_chxjif_is_mine(hdml->spec, doc, child)) {
-        ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag is mine");
-        char* parse_attr = NULL;
-
-        parse_attr = qs_get_parse_attr(doc, child, r);
-        if (parse_attr && strcasecmp(parse_attr, "true") == 0) 
-          hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
-        else
-          s_hdml_chxjif_tag(hdml, child);
+    if (*name == 'c' || *name == 'C') {
+      /*----------------------------------------------------------------------*/
+      /* <CENTER>                                                             */
+      /*----------------------------------------------------------------------*/
+      if (strcasecmp(name, "center") == 0) {
+        hdml->out = s_hdml_start_center_tag(hdml, child);
+        hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
+        hdml->out = s_hdml_end_center_tag(hdml, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <CHXJ:IF>                                                            */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "chxj:if") == 0) {
+        ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag found");
+        if (chxj_chxjif_is_mine(hdml->spec, doc, child)) {
+          ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag is mine");
+          char* parse_attr = NULL;
+  
+          parse_attr = qs_get_parse_attr(doc, child, r);
+          if (parse_attr && strcasecmp(parse_attr, "true") == 0) 
+            hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
+          else
+            s_hdml_chxjif_tag(hdml, child);
+        }
       }
     }
     /*------------------------------------------------------------------------*/
