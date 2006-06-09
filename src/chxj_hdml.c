@@ -328,8 +328,7 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
     /* <BODY>                                                                 */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "body") == 0) 
-    {
+    if (strcasecmp(name, "body") == 0) {
       hdml->out = s_hdml_start_body_tag(hdml, child);
       hdml->hdml_br_flag = 0;
       hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
