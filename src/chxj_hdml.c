@@ -319,36 +319,38 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
     /* <TITLE>                                                                */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "title") == 0) {
+    if ((*name == 't' || *name == 'T') && strcasecmp(name, "title") == 0) {
       hdml->out = s_hdml_start_title_tag(hdml, child);
       hdml->hdml_br_flag = 0;
       hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
       hdml->out = s_hdml_end_title_tag(hdml, child);
     }
-    /*------------------------------------------------------------------------*/
-    /* <BASE>                                                                 */
-    /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "base") == 0) {
-      hdml->out = s_hdml_start_base_tag(hdml, child);
-      hdml->hdml_br_flag = 0;
-      hdml->out = s_hdml_end_base_tag(hdml, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <BODY>                                                                 */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "body") == 0) {
-      hdml->out = s_hdml_start_body_tag(hdml, child);
-      hdml->hdml_br_flag = 0;
-      hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
-      hdml->out = s_hdml_end_body_tag(hdml, child);
+    if (*name == 'b' || *name == 'B') {
+      /*----------------------------------------------------------------------*/
+      /* <BASE>                                                               */
+      /*----------------------------------------------------------------------*/
+      if (strcasecmp(name, "base") == 0) {
+        hdml->out = s_hdml_start_base_tag(hdml, child);
+        hdml->hdml_br_flag = 0;
+        hdml->out = s_hdml_end_base_tag(hdml, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <BODY>                                                               */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "body") == 0) {
+        hdml->out = s_hdml_start_body_tag(hdml, child);
+        hdml->hdml_br_flag = 0;
+        hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
+        hdml->out = s_hdml_end_body_tag(hdml, child);
+      }
     }
     /*------------------------------------------------------------------------*/
     /* <A>                                                                    */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "a") == 0) {
+    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "a") == 0) {
       hdml->out = s_hdml_start_a_tag(hdml, child);
       hdml->hdml_br_flag = 0;
       hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
