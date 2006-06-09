@@ -603,49 +603,42 @@ s_hdml_search_emoji(hdml_t* hdml, char* txt, char** rslt)
     }
     if (len >= 2
     && ((unsigned char)txt[0] & 0xff) == ((unsigned char)hex1byte)
-    && ((unsigned char)txt[1] & 0xff) == ((unsigned char)hex2byte)) 
-    {
-      if (spec == NULL || spec->emoji_type == NULL)
-      {
+    && ((unsigned char)txt[1] & 0xff) == ((unsigned char)hex2byte)) {
+      if (spec == NULL || spec->emoji_type == NULL) {
         *rslt = apr_psprintf(r->pool,
                         "<IMG ICON=%s>",
                         ee->ezweb->typeA);
         return 2;
       }
 
-      if (strcasecmp(hdml->spec->emoji_type, "a") == 0)
-      {
+      if (strcasecmp(hdml->spec->emoji_type, "a") == 0) {
         *rslt = apr_psprintf(r->pool,
                         "<IMG ICON=%s>",
                         ee->ezweb->typeA);
         return 2;
       } 
       else
-      if (strcasecmp(hdml->spec->emoji_type, "b") == 0)
-      {
+      if (strcasecmp(hdml->spec->emoji_type, "b") == 0) {
         *rslt = apr_psprintf(r->pool,
                         "<IMG ICON=%s>",
                         ee->ezweb->typeB);
         return 2;
       }
       else
-      if (strcasecmp(hdml->spec->emoji_type, "c") == 0)
-      {
+      if (strcasecmp(hdml->spec->emoji_type, "c") == 0) {
         *rslt = apr_psprintf(r->pool,
                         "<IMG ICON=%s>",
                         ee->ezweb->typeC);
         return 2;
       }
       else
-      if (strcasecmp(hdml->spec->emoji_type, "d") == 0)
-      {
+      if (strcasecmp(hdml->spec->emoji_type, "d") == 0) {
         *rslt = apr_psprintf(r->pool,
                         "<IMG ICON=%s>",
                         ee->ezweb->typeD);
         return 2;
       }
-      else
-      {
+      else {
         *rslt = apr_psprintf(r->pool,
                         "<IMG ICON=%s>",
                         ee->ezweb->typeA);
