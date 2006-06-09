@@ -1239,11 +1239,11 @@ s_hdml_start_input_tag(hdml_t* hdml, Node* node)
       }
     }
     else 
-    if (strcasecmp(name, "name")      == 0) {
+    if ((*name == 'n' || *name == 'N') && strcasecmp(name, "name")      == 0) {
       /* ignore */
     }
     else
-    if (strcasecmp(name, "value")     == 0) {
+    if ((*name == 'v' || *name == 'V') && strcasecmp(name, "value")     == 0) {
       /* ignore */
     }
     else
