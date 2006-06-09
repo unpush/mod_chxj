@@ -309,8 +309,7 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
     /* <TITLE>                                                                */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "title") == 0) 
-    {
+    if (strcasecmp(name, "title") == 0) {
       hdml->out = s_hdml_start_title_tag(hdml, child);
       hdml->hdml_br_flag = 0;
       hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
