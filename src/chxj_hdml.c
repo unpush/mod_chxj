@@ -1681,8 +1681,7 @@ s_hdml_do_input_radio_tag(hdml_t* hdml, Node* tag)
       }
     }
     kk++;
-    if (kk >= r_cnt) 
-    {
+    if (kk >= r_cnt) {
       kk=0;
     }
   }
@@ -1690,8 +1689,7 @@ s_hdml_do_input_radio_tag(hdml_t* hdml, Node* tag)
                   apr_psprintf(r->pool, "\" >$%s_%02d</A>", 
                           nm, 
                           hdml->radio_out_cnt[ii]));
-  if (hdml->radio_out_cnt[ii] == 0) 
-  {
+  if (! hdml->radio_out_cnt[ii]) {
     s_output_to_hdml_card(hdml, "\">\n"         );
     s_output_to_hdml_card(hdml, "</NODISPLAY>\n");
 
