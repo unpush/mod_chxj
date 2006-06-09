@@ -1511,7 +1511,7 @@ s_hdml_do_input_submit_tag(hdml_t* hdml, Node* tag)
   nm  = qs_get_name_attr  (doc, tag, r);
   val = qs_get_value_attr (doc, tag, r);
 
-  if (nm != NULL && val != NULL) {
+  if (nm && val) {
     s_output_to_hdml_out(hdml, 
                     apr_psprintf(r->pool, "VARS=\"%s=%s\" ", 
                             nm, 
