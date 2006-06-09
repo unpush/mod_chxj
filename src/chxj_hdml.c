@@ -1032,9 +1032,8 @@ static char*
 s_hdml_start_br_tag(hdml_t* hdml, Node* node) 
 {
   if (hdml->in_center > 0) 
-  {
     hdml->in_center = 0;
-  }
+
   if (hdml->div_in_center > 0) 
   {
     hdml->div_in_center = 0;
