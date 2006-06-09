@@ -1318,8 +1318,7 @@ s_hdml_do_input_text_tag(hdml_t* hdml, Node* tag)
   val  = NULL;
   fmt  = NULL;
   nm = qs_get_name_attr(doc, tag, r);
-  if (nm == NULL)
-  {
+  if (! nm) {
     nm = qs_alloc_zero_byte_string(r);
   }
 
