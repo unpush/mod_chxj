@@ -1202,8 +1202,7 @@ s_hdml_start_input_tag(hdml_t* hdml, Node* node)
         /*--------------------------------------------------------------------*/
         s_hdml_do_input_text_tag(hdml, node);
       }
-      if (strcasecmp(value, "password") == 0) 
-      {
+      if (strcasecmp(value, "password") == 0) {
         /*--------------------------------------------------------------------*/
         /* "input type='password'" tag is processed.                          */
         /*--------------------------------------------------------------------*/
