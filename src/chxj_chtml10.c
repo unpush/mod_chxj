@@ -1422,7 +1422,7 @@ s_chtml10_start_select_tag(chtml10_t* chtml10, Node* child)
     char* nm  = qs_get_attr_name(doc,attr);
     char* val = qs_get_attr_value(doc,attr);
 
-    if (strcasecmp(nm, "size") == 0) {
+    if ((*nm == 's' || *nm == 'S') && strcasecmp(nm, "size") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0 version 2.0                                                */
       /*----------------------------------------------------------------------*/
