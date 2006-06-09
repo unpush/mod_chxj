@@ -855,8 +855,7 @@ s_hdml_start_body_tag(hdml_t* hdml, Node* node)
     if (strcasecmp(name, "bgcolor")     == 0) {
       /* ignore */
     }
-    else if (strcasecmp(name, "text")   == 0) 
-    {
+    else if (strcasecmp(name, "text")   == 0) {
       /* ignore */
     }
     else if (strcasecmp(name, "link")   == 0) 
