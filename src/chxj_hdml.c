@@ -963,7 +963,7 @@ s_hdml_start_a_tag(hdml_t* hdml, Node* node)
       /* ignore */
     }
     else
-    if (strcasecmp(name, "utn") == 0) {
+    if ((*name == 'u' || *name == 'U') && strcasecmp(name, "utn") == 0) {
       /* ignore */
     }
     else
