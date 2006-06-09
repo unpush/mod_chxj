@@ -2314,21 +2314,19 @@ s_hdml_start_div_tag(hdml_t* hdml, Node* node)
   /*--------------------------------------------------------------------------*/
   for (attr = qs_get_attr(doc,node); 
        attr != NULL; 
-       attr = qs_get_next_attr(doc,attr)) 
-  {
+       attr = qs_get_next_attr(doc,attr)) {
     char* name  = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
-    if (strcasecmp(name, "align") == 0) 
-    {
-      if (strcasecmp(value, "right") == 0) 
-      {
+
+    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "align") == 0) {
+      if ((*value == 'r' || *value == 'R') && strcasecmp(value, "right") == 0) {
         hdml->div_right_flag = 1;
         s_output_to_hdml_out(hdml, "<RIGHT>");
         hdml->hdml_br_flag = 0;
         break;
       }
-      else if (strcasecmp(value, "center") == 0)
-      {
+      else 
+      if ((*value == 'c' || *value == 'C') && strcasecmp(value, "center") == 0) {
         hdml->div_center_flag = 1;
         s_output_to_hdml_out(hdml, "<CENTER>");
         hdml->hdml_br_flag = 0;
@@ -2354,13 +2352,11 @@ s_hdml_end_div_tag(hdml_t* hdml,  Node* node)
   request_rec* r = hdml->doc->r;
 
 
-  if (hdml->div_right_flag == 1) 
-  {
+  if (hdml->div_right_flag == 1) {
     s_output_to_hdml_out(hdml, apr_psprintf(r->pool, "<BR>\n"));
     hdml->div_right_flag = 0;
   }
-  if (hdml->div_center_flag == 1) 
-  {
+  if (hdml->div_center_flag == 1) {
     s_output_to_hdml_out(hdml, apr_psprintf(r->pool, "<BR>\n"));
     hdml->div_center_flag = 0;
     hdml->div_in_center   = 0;
@@ -2433,8 +2429,7 @@ s_hdml_count_radio_tag(hdml_t* hdml, Node* node)
   /*--------------------------------------------------------------------------*/
   for (child =  qs_get_child_node(doc,node); 
        child != NULL; 
-       child =  qs_get_next_node(doc,child)) 
-  {
+       child =  qs_get_next_node(doc,child)) {
     char*     type;
     char*     rname;
     char*     rvalue;
@@ -2444,31 +2439,26 @@ s_hdml_count_radio_tag(hdml_t* hdml, Node* node)
     int       jj;
 
     name = qs_get_node_name(doc,child);
-    if (strcasecmp(name, "input") != 0)
-    {
+    if ((*name == 'i' || *name == 'I') && strcasecmp(name, "input") != 0) {
       s_hdml_count_radio_tag(hdml, child);
       continue;
     }
 
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "found input tag");
     type = qs_get_type_attr(doc, child, r);
-    if (type == NULL)
-    {
+    if (!type) {
       ap_log_rerror(APLOG_MARK, APLOG_ERR,0,r,
         "Oops! The input tag without the type attribute has been found."
         "Please give a type.");
       continue;
     }
-    if (strcasecmp(type, "radio") != 0)
-    {
+    if ((*type == 'r' || *type == 'R') && strcasecmp(type, "radio") != 0) 
       continue;
-    }
 
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "found type=radio");
     rname  = qs_get_name_attr (doc, child, r);
     rvalue = qs_get_value_attr(doc, child, r);
-    if (rname == NULL)
-    {
+    if (!rname) {
       /*----------------------------------------------------------------------*/
       /* Oops!. The input tag without the name attribute has been found.      */
       /*----------------------------------------------------------------------*/
@@ -2484,23 +2474,19 @@ s_hdml_count_radio_tag(hdml_t* hdml, Node* node)
     /* value is overwrited.                                                   */
     /* The value is written in a new area when not is.                        */
     /*------------------------------------------------------------------------*/
-    for (ii=0; ii<MAX_RADIO_COUNT; ii++) 
-    {
-      if (hdml->radio_name_list[ii] == NULL) 
-      {
+    for (ii=0; ii<MAX_RADIO_COUNT; ii++) {
+      if (! hdml->radio_name_list[ii]) {
         ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, 
                         "new name:[%s]", rname);
         break;
       }
-      if (strcasecmp(hdml->radio_name_list[ii], rname) == 0) 
-      {
+      if (strcasecmp(hdml->radio_name_list[ii], rname) == 0) {
         ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, 
                         "already registered name:[%s]", rname);
         break;
       }
     }
-    if (ii == MAX_RADIO_COUNT)
-    {
+    if (ii == MAX_RADIO_COUNT) {
       ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,
                       apr_psprintf(r->pool,
                         "I do not understand the name of the radiobutton "
