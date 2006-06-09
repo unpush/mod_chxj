@@ -688,14 +688,10 @@ s_hdml_end_html_tag(hdml_t* hdml, Node* child)
                   "<ACTION TYPE=ACCEPT TASK=RETURN VARS=\""
                   );
 
-  if (strlen(hdml->init_vars) != 0) 
-  {
+  if (strlen(hdml->init_vars)) 
     s_output_to_hdml_card(hdml, hdml->init_vars   );
-  }
   else 
-  {
     s_output_to_hdml_card(hdml, "_chxj_dmy="            );
-  }
 
   s_output_to_hdml_card(hdml,   
                   "\" CLEAR=TRUE>\n"
