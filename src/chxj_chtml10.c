@@ -1307,8 +1307,7 @@ s_chtml10_start_img_tag(chtml10_t* chtml10, Node* node)
     char* name  = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
 
-    if (strcasecmp(name, "src") == 0) 
-    {
+    if (strcasecmp(name, "src") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
