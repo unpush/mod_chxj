@@ -947,8 +947,7 @@ s_hdml_start_a_tag(hdml_t* hdml, Node* node)
       }
     }
     else
-    if (strcasecmp(name, "accesskey") == 0) 
-    {
+    if (strcasecmp(name, "accesskey") == 0) {
       if (strcasecmp(value, "0") != 0) {
         s_output_to_hdml_out(hdml, " ACCESSKEY="          );
         s_output_to_hdml_out(hdml, value                  );
