@@ -2303,8 +2303,7 @@ s_hdml_start_div_tag(hdml_t* hdml, Node* node)
   /* If the br tag is not output immediately before the div tag appears, the  */
   /* br tag is output.                                                        */
   /*--------------------------------------------------------------------------*/
-  if (hdml->hdml_br_flag == 0)
-  {
+  if (hdml->hdml_br_flag == 0) {
     hdml->hdml_br_flag = 1;
     s_output_to_hdml_out(hdml, "<BR>\n");
   }
