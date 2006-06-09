@@ -1605,9 +1605,7 @@ s_hdml_do_input_radio_tag(hdml_t* hdml, Node* tag)
     }
 
     if (strcasecmp(hdml->radio_name_list[ii], nm) == 0) 
-    {
       break;
-    }
   }
   if (ii == MAX_RADIO_COUNT) {
     /* @todo Oops.. */
