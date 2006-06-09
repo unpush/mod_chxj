@@ -987,7 +987,7 @@ s_hdml_start_a_tag(hdml_t* hdml, Node* node)
       /* ignore */
     }
     else
-    if (strcasecmp(name, "iswf") == 0) {
+    if ((*name == 'i' || *name == 'I') && strcasecmp(name, "iswf") == 0) {
       /* ignore */
     }
     else
