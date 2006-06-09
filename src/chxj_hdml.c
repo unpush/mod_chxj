@@ -1242,8 +1242,7 @@ s_hdml_start_input_tag(hdml_t* hdml, Node* node)
       /* ignore */
     }
     else
-    if (strcasecmp(name, "value")     == 0) 
-    {
+    if (strcasecmp(name, "value")     == 0) {
       /* ignore */
     }
     else
