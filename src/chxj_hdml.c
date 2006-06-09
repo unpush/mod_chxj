@@ -411,7 +411,7 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
     /* <SELECT>                                                               */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "select") == 0) {
+    if ((*name == 's' || *name == 'S') && strcasecmp(name, "select") == 0) {
       hdml->out = s_hdml_start_select_tag(hdml, child);
       hdml->hdml_br_flag = 0;
       hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
@@ -421,7 +421,7 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
     /* <OPTION>                                                               */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "option") == 0) {
+    if ((*name == 'o' || *name == 'O') && strcasecmp(name, "option") == 0) {
       hdml->out = s_hdml_start_option_tag(hdml, child);
       hdml->hdml_br_flag = 0;
       hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
