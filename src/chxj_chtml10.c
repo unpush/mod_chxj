@@ -1469,6 +1469,7 @@ s_chtml10_end_select_tag(chtml10_t* chtml10, Node* child)
   request_rec* r = doc->r;
 
   chtml10->out = apr_pstrcat(r->pool, chtml10->out, "</select>\n", NULL);
+
   return chtml10->out;
 }
 
