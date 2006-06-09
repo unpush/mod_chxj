@@ -447,6 +447,7 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
       if (chxj_chxjif_is_mine(hdml->spec, doc, child)) {
         ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag is mine");
         char* parse_attr = NULL;
+
         parse_attr = qs_get_parse_attr(doc, child, r);
         if (parse_attr && strcasecmp(parse_attr, "true") == 0) 
           hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
@@ -458,8 +459,7 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
     /* NORMAL TEXT                                                            */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "text") == 0) 
-    {
+    if (strcasecmp(name, "text") == 0) {
       char* textval;
       char* tmp;
       char* tdst;
@@ -470,14 +470,10 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
       textval = qs_get_node_value(doc,child);
       textval = qs_trim_string(r, textval);
       if (strlen(textval) == 0)
-      {
         continue;
-      }
 
       if (hdml->option_flag == 1) 
-      {
         continue;
-      }
 
       tmp = apr_palloc(r->pool, qs_get_node_size(doc,child)+1);
       memset(tmp, 0, qs_get_node_size(doc,child)+1);
