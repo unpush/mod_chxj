@@ -2046,15 +2046,13 @@ s_hdml_start_img_tag(hdml_t* hdml, Node* node)
       s_output_to_hdml_out(hdml, "\""     );
     }
     else 
-    if (strcasecmp(name, "align" ) == 0) 
-    {
+    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "align" ) == 0) {
       s_output_to_hdml_out(hdml, " align=\"" );
       s_output_to_hdml_out(hdml, value       );
       s_output_to_hdml_out(hdml, "\""        );
     }
     else
-    if (strcasecmp(name, "width" ) == 0) 
-    {
+    if ((*name == 'w' || *name == 'W') && strcasecmp(name, "width" ) == 0) {
       s_output_to_hdml_out(hdml, " width=\"");
       s_output_to_hdml_out(hdml, value      );
       s_output_to_hdml_out(hdml, "\""       );
