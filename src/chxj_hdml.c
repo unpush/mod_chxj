@@ -444,8 +444,7 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
     else
     if (strcasecmp(name, "chxj:if") == 0) {
       ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag found");
-      if (chxj_chxjif_is_mine(hdml->spec, doc, child))
-      {
+      if (chxj_chxjif_is_mine(hdml->spec, doc, child)) {
         ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag is mine");
         char* parse_attr = NULL;
         parse_attr = qs_get_parse_attr(doc, child, r);
