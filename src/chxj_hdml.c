@@ -991,7 +991,7 @@ s_hdml_start_a_tag(hdml_t* hdml, Node* node)
       /* ignore */
     }
     else
-    if (strcasecmp(name, "irst") == 0) {
+    if ((*name == 'i' || *name == 'I') && strcasecmp(name, "irst") == 0) {
       /* ignore */
     }
   }
