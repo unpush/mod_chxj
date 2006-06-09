@@ -1610,8 +1610,7 @@ s_chtml10_chxjif_tag(chtml10_t* chtml10, Node* node)
 
   for (child = qs_get_child_node(doc, node);
        child;
-       child = qs_get_next_node(doc, child))
-  {
+       child = qs_get_next_node(doc, child)) {
     chtml10->out = apr_pstrcat(r->pool, chtml10->out, child->otext, NULL);
     s_chtml10_chxjif_tag(chtml10, child);
   }
