@@ -955,7 +955,7 @@ s_hdml_start_a_tag(hdml_t* hdml, Node* node)
       }
     }
     else
-    if (strcasecmp(name, "cti") == 0) {
+    if ((*name == 'c' || *name == 'C') && strcasecmp(name, "cti") == 0) {
       /* ignore */
     }
     else
