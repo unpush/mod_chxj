@@ -928,15 +928,13 @@ s_hdml_start_a_tag(hdml_t* hdml, Node* node)
     }
     else 
     if (strcasecmp(name, "href") == 0) {
-      if (strncasecmp(value, "mailto:", 7) == 0) 
-      {
+      if (strncasecmp(value, "mailto:", 7) == 0) {
         s_output_to_hdml_out(hdml, " TASK=GO DEST=\""     );
         s_output_to_hdml_out(hdml, value                  );
         s_output_to_hdml_out(hdml, "\" "                  );
       }
       else 
-      if (strncasecmp(value, "tel:", 4) == 0) 
-      {
+      if (strncasecmp(value, "tel:", 4) == 0) {
 
         s_output_to_hdml_out(hdml,  " TASK=CALL NUMBER=\"");
         s_output_to_hdml_out(hdml, &value[4]              );
