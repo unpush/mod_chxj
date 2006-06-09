@@ -338,8 +338,7 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
     /* <A>                                                                    */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "a") == 0) 
-    {
+    if (strcasecmp(name, "a") == 0) {
       hdml->out = s_hdml_start_a_tag(hdml, child);
       hdml->hdml_br_flag = 0;
       hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
@@ -349,8 +348,7 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
     /* <BR>                                                                   */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "br") == 0) 
-    {
+    if (strcasecmp(name, "br") == 0) {
       hdml->out = s_hdml_start_br_tag(hdml, child);
       hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
       hdml->out = s_hdml_end_br_tag(hdml, child);
@@ -359,8 +357,7 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
     /* <FONT>                                                                 */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "font") == 0) 
-    {
+    if (strcasecmp(name, "font") == 0) {
       hdml->out = s_hdml_start_font_tag(hdml, child);
       hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
       hdml->out = s_hdml_end_font_tag(hdml, child);
@@ -369,8 +366,7 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
     /* <FORM>                                                                 */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "form") == 0) 
-    {
+    if (strcasecmp(name, "form") == 0) {
       hdml->out = s_hdml_start_form_tag(hdml, child);
       hdml->hdml_br_flag = 0;
       hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
