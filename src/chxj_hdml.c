@@ -1874,34 +1874,27 @@ char*
 qs_conv_istyle_to_format(request_rec* r, char* is)
 {
   char* fmt;
-  if (is == NULL)
-  {
+
+  if (!is)
+    return NULL;
+  
+  switch(*is) {
+  case '1':
+    fmt = apr_psprintf(r->pool, "M");
+    break;
+  case '2':
+    fmt = apr_psprintf(r->pool, "M");
+    break;
+  case '3':
+    fmt = apr_psprintf(r->pool, "m");
+    break;
+  case '4':
+    fmt = apr_psprintf(r->pool, "N");
+    break;
+  default:
     return NULL;
   }
 
-  if (strcasecmp(is, "1") == 0)
-  {
-    fmt = apr_psprintf(r->pool, "M");
-  }
-  else
-  if (strcasecmp(is, "2") == 0)
-  {
-    fmt = apr_psprintf(r->pool, "M");
-  }
-  else
-  if (strcasecmp(is, "3") == 0)
-  {
-    fmt = apr_psprintf(r->pool, "m");
-  }
-  else
-  if (strcasecmp(is, "4") == 0)
-  {
-    fmt = apr_psprintf(r->pool, "N");
-  }
-  else 
-  {
-    return NULL;
-  }
   return fmt;
 }
 
@@ -1933,8 +1926,7 @@ s_hdml_start_center_tag(hdml_t* hdml, Node* node)
   hdml->center++;
   hdml->in_center++;
 
-  if (hdml->hdml_br_flag == 0) 
-  {
+  if (hdml->hdml_br_flag == 0) {
     hdml = s_output_to_hdml_out(hdml, "<BR>\n");
   }
   hdml = s_output_to_hdml_out(hdml, "<CENTER>");
@@ -1973,18 +1965,13 @@ s_hdml_end_center_tag(hdml_t* hdml, Node* child)
 static char*
 s_hdml_start_hr_tag(hdml_t* hdml, Node* node) 
 {
-  if (hdml->hdml_br_flag == 0) 
-  {
+  if (hdml->hdml_br_flag == 0) {
     s_output_to_hdml_out(hdml, "<BR>\n");
-    if (hdml->in_center > 0) 
-    {
+    if (hdml->in_center)
       hdml->in_center--;
-    }
     else
-    if (hdml->div_in_center > 0)
-    {
+    if (hdml->div_in_center) 
       hdml->div_in_center--;
-    }
   }
 
   s_output_to_hdml_out(hdml, "<CENTER>\x81\x7c\x81\x7c\x81\x7c\x81\x7c\x81\x7c\x81\x7c\x81\x7c\x81\x7c\x81\x7c<BR>\n");
