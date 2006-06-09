@@ -416,8 +416,7 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
     /* <HR>                                                                   */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "hr") == 0) 
-    {
+    if (strcasecmp(name, "hr") == 0) {
       hdml->out = s_hdml_start_hr_tag(hdml, child);
       hdml->out = s_hdml_end_hr_tag(hdml, child);
     }
