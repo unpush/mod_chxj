@@ -1645,10 +1645,9 @@ s_hdml_do_input_radio_tag(hdml_t* hdml, Node* tag)
 
   kk = hdml->radio_out_cnt[ii];
   for (jj=0; jj<MAX_RADIO_VALUE_COUNT; jj++) 
-  {
     if (! hdml->radio_value_list[ii][jj]) 
       break;
-  }
+
   r_cnt = jj;
 
   for (jj=0; jj<r_cnt; jj++) {
