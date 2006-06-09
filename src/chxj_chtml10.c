@@ -1444,8 +1444,7 @@ s_chtml10_start_select_tag(chtml10_t* chtml10, Node* child)
     }
   }
 
-  if (size != NULL)
-  {
+  if (size != NULL) {
     chtml10->out = apr_pstrcat(r->pool, chtml10->out, " size=\"",size,"\"", NULL);
   }
   if (name != NULL)
