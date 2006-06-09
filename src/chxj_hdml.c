@@ -1465,7 +1465,7 @@ s_hdml_do_input_password_tag(hdml_t* hdml, Node* tag)
                   "<ACTION TYPE=ACCEPT TASK=RETURN RETVALS=$V>\n"
                   "</ENTRY>\n");
 
-  if (val != NULL) 
+  if (val) 
     s_output_to_init_vars(hdml, 
                     apr_psprintf(r->pool, "%s%02d=%s", 
                         s_get_form_no(r, hdml),
