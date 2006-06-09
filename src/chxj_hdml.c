@@ -1590,8 +1590,7 @@ s_hdml_do_input_radio_tag(hdml_t* hdml, Node* tag)
   /*--------------------------------------------------------------------------*/
   /* The same name is searched out from the list made beforehand.             */
   /*--------------------------------------------------------------------------*/
-  for (ii=0; ii<MAX_RADIO_COUNT; ii++) 
-  {
+  for (ii=0; ii<MAX_RADIO_COUNT; ii++) {
     if (! hdml->radio_name_list[ii]) {
       /* @todo Oops..  */
       ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, 
