@@ -1517,8 +1517,7 @@ s_hdml_do_input_submit_tag(hdml_t* hdml, Node* tag)
                     apr_psprintf(r->pool, "VARS=\"%s=%s\" ", 
                             nm, 
                             ap_escape_uri(r->pool,val)));
-    if (strstr(hdml->postdata[hdml->pure_form_cnt], nm) == NULL) 
-    {
+    if (strstr(hdml->postdata[hdml->pure_form_cnt], nm) == NULL) {
       s_output_to_postdata(hdml, 
                       apr_psprintf(r->pool,"%s%s=$%s", 
                               SUBMIT_BUTTON_PREFIX, nm, nm));
