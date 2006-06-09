@@ -1196,8 +1196,7 @@ s_hdml_start_input_tag(hdml_t* hdml, Node* node)
     char* value = qs_get_attr_value(doc,attr);
 
     if (strcasecmp(name, "type") == 0) {
-      if (strcasecmp(value, "text") == 0)
-      {
+      if (strcasecmp(value, "text") == 0) {
         /*--------------------------------------------------------------------*/
         /* "input type ='text'" tag is processed.                             */
         /*--------------------------------------------------------------------*/
