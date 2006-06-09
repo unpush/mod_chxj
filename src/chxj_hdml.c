@@ -448,7 +448,7 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
         ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag is mine");
         char* parse_attr = NULL;
         parse_attr = qs_get_parse_attr(doc, child, r);
-        if (parse_attr != NULL && strcasecmp(parse_attr, "true") == 0) 
+        if (parse_attr && strcasecmp(parse_attr, "true") == 0) 
           hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
         else
           s_hdml_chxjif_tag(hdml, child);
