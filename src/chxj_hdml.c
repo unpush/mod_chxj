@@ -442,8 +442,7 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
     /* <CHXJ:IF>                                                              */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "chxj:if") == 0) 
-    {
+    if (strcasecmp(name, "chxj:if") == 0) {
       ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag found");
       if (chxj_chxjif_is_mine(hdml->spec, doc, child))
       {
