@@ -1259,7 +1259,7 @@ s_hdml_start_input_tag(hdml_t* hdml, Node* node)
       /* ignore */
     }
     else 
-    if (strcasecmp(name, "accesskey") == 0) {
+    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "accesskey") == 0) {
       /* ignore */
     }
     else
