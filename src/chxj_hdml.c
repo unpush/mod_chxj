@@ -268,23 +268,19 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
 
   for (child = qs_get_child_node(doc,node); 
        child ; 
-       child = qs_get_next_node(doc,child)) 
-  {
+       child = qs_get_next_node(doc,child)) {
     char* name = qs_get_node_name(doc,child);
 
     /*----------------------------------------------------------------------*/
     /* When </ HDML > tag has already been output, it doesn't process it.   */
     /*----------------------------------------------------------------------*/
     if (hdml->hdml_end_flag == 1) 
-    {
       continue;
-    }
 
     /*------------------------------------------------------------------------*/
     /* <HTML>                                                                 */
     /*------------------------------------------------------------------------*/
-    if (strcasecmp(name, "html") == 0) 
-    {
+    if (strcasecmp(name, "html") == 0) {
       hdml->out = s_hdml_start_html_tag(hdml, child);
       hdml->hdml_br_flag = 0;
       hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
