@@ -1505,8 +1505,7 @@ s_chtml10_start_option_tag(chtml10_t* chtml10, Node* child)
       selected = apr_pstrdup(r->pool, val);
     }
     else
-    if (strcasecmp(nm, "value") == 0)
-    {
+    if ((*nm == 'v' || *nm == 'V') && strcasecmp(nm, "value") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0 version 2.0                                                */
       /*----------------------------------------------------------------------*/

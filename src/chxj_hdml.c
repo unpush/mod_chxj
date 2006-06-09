@@ -150,8 +150,7 @@ chxj_exchange_hdml(request_rec* r,
         );
     dst = apr_pstrdup(r->pool, hdml.out);
   }
-  else 
-  {
+  else {
     /*------------------------------------------------------------------------*/
     /* Here, the parsing of the received character string is done             */
     /*------------------------------------------------------------------------*/
@@ -184,8 +183,7 @@ chxj_exchange_hdml(request_rec* r,
   /* When there is no processing result, former character string is copied    */
   /* and it returns it.                                                       */
   /*--------------------------------------------------------------------------*/
-  if (dst == NULL) 
-  {
+  if (!dst) {
     *dstlen = srclen;
     return apr_pstrdup(r->pool,src);
   }
@@ -196,6 +194,7 @@ chxj_exchange_hdml(request_rec* r,
   /* Null is set at the end of the character string to make sure.             */
   /*--------------------------------------------------------------------------*/
   dst[hdml.out_len] = 0;
+
   return dst;
 }
 
