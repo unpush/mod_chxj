@@ -290,8 +290,7 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
     /* <META>                                                                 */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "meta") == 0) 
-    {
+    if (strcasecmp(name, "meta") == 0) {
       hdml->out = s_hdml_start_meta_tag(hdml, child);
       hdml->hdml_br_flag = 0;
       hdml->out = s_hdml_end_meta_tag(hdml, child);
@@ -300,8 +299,7 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
     /* <HEAD>                                                                 */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "head") == 0) 
-    {
+    if (strcasecmp(name, "head") == 0) {
       hdml->out = s_hdml_start_head_tag(hdml, child);
       hdml->hdml_br_flag = 0;
       hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
