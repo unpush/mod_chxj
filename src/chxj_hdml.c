@@ -1427,10 +1427,9 @@ s_hdml_do_input_password_tag(hdml_t* hdml, Node* tag)
   fmt  = NULL;
 
   nm = qs_get_name_attr(doc, tag, r);
-  if (nm == NULL)
-  {
+  if (! nm)
     nm = qs_alloc_zero_byte_string(r);
-  }
+
   s_output_to_postdata(hdml, 
                   apr_psprintf(r->pool, 
                           "%s=$%s%02d", 
