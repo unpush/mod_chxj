@@ -975,11 +975,11 @@ s_hdml_start_a_tag(hdml_t* hdml, Node* node)
       /* ignore */
     }
     else
-    if (strcasecmp(name, "email") == 0) {
+    if ((*name == 'e' || *name == 'E') && strcasecmp(name, "email") == 0) {
       /* ignore */
     }
     else
-    if (strcasecmp(name, "ista") == 0) {
+    if ((*name == 'i' || *name == 'I') && strcasecmp(name, "ista") == 0) {
       /* ignore */
     }
     else
