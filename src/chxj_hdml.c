@@ -1035,9 +1035,7 @@ s_hdml_start_br_tag(hdml_t* hdml, Node* node)
     hdml->in_center = 0;
 
   if (hdml->div_in_center > 0) 
-  {
     hdml->div_in_center = 0;
-  }
 
   s_output_to_hdml_out(hdml, "<BR>\n");
 
