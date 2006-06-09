@@ -842,17 +842,16 @@ s_hdml_start_body_tag(hdml_t* hdml, Node* node)
   Attr*        attr;
 
   if (hdml->found_title == 0)
-  {
     s_output_to_hdml_out(hdml, "<DISPLAY NAME=D2 TITLE=\"NO TITLE\">\n");
-  }
+
   s_output_to_hdml_out(hdml, "<ACTION TYPE=ACCEPT TASK=NOOP LABEL=\" \"");
 
   /*--------------------------------*/
   /* Get Attributes                 */
   /*--------------------------------*/
-  for (attr = qs_get_attr(doc,node); attr != NULL; attr = qs_get_next_attr(doc,attr)) 
-  {
+  for (attr = qs_get_attr(doc,node); attr != NULL; attr = qs_get_next_attr(doc,attr)) {
     char* name  = qs_get_attr_name(doc,attr);
+
     if (strcasecmp(name, "bgcolor")     == 0) 
     {
       /* ignore */
