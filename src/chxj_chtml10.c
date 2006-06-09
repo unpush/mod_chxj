@@ -1346,7 +1346,7 @@ s_chtml10_start_img_tag(chtml10_t* chtml10, Node* node)
                       chtml10->out, " height=\"",value,"\"", NULL);
     }
     else
-    if (strcasecmp(name, "hspace") == 0) {
+    if ((*name == 'h' || *name == 'H') && strcasecmp(name, "hspace") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
