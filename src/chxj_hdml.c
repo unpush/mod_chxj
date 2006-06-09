@@ -224,27 +224,23 @@ s_init_hdml(hdml_t* hdml, Doc* doc, request_rec* r, device_table_t* spec)
   hdml->conf     = ap_get_module_config(r->per_dir_config, &chxj_module);
   hdml->doc->parse_mode = PARSE_MODE_CHTML;
 
-  for (ii=0; ii<MAX_FORM_COUNT; ii++) 
-  {
+  for (ii=0; ii<MAX_FORM_COUNT; ii++) {
     hdml->var_cnt[ii]     = 0;
     hdml->postdata[ii]    = qs_alloc_zero_byte_string(r);
   }
 
-  for (ii=0; ii<MAX_RADIO_COUNT; ii++) 
-  {
+  for (ii=0; ii<MAX_RADIO_COUNT; ii++) {
     for (jj=0; jj<MAX_RADIO_VALUE_COUNT; jj++) 
-    {
       hdml->radio_value_list[ii][jj] = NULL;
-    }
-    hdml->radio_name_list[ii] = NULL;
-    hdml->radio_out_cnt[ii] = 0;
+
+    hdml->radio_name_list[ii]     = NULL;
+    hdml->radio_out_cnt[ii]       = 0;
     hdml->radio_checked_value[ii] = NULL;
   }
 
-  for (ii=0; ii<MAX_SUBMIT_BUTTON_COUNT; ii++)
-  {
+  for (ii=0; ii<MAX_SUBMIT_BUTTON_COUNT; ii++) 
     hdml->submit_button[ii] = NULL;
-  }
+
   hdml->init_vars      = qs_alloc_zero_byte_string(r);
 
   doc->r               = r;
