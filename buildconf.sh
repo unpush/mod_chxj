@@ -13,7 +13,7 @@ rm -f ./config.sub
 rm -f ./config.status
 rm -f ./install-sh
 rm -f ./libtool
-rm -f ./ltmain.sh
+#rm -f ./ltmain.sh
 rm -f ./missing
 rm -f ./mkinstalldirs
 aclocal 
