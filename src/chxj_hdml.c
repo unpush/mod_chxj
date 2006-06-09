@@ -1209,8 +1209,7 @@ s_hdml_start_input_tag(hdml_t* hdml, Node* node)
         s_hdml_do_input_password_tag(hdml, node);
       }
       else
-      if (strcasecmp(value, "submit") == 0) 
-      {
+      if (strcasecmp(value, "submit") == 0) {
         /*--------------------------------------------------------------------*/
         /* "input type='submit'" tag is processed.                            */
         /*--------------------------------------------------------------------*/
