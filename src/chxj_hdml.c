@@ -130,8 +130,7 @@ chxj_exchange_hdml(request_rec* r,
   /* anything when is.                                                        */
   /*--------------------------------------------------------------------------*/
   buf = (char*)apr_table_get(r->headers_out, (const char*)"Location");
-  if (buf != NULL) 
-  {
+  if (buf) {
     /*------------------------------------------------------------------------*/
     /* The Location header generates tag in an initial HDML machine for the   */
     /* uncorrespon dence.                                                     */
