@@ -2245,19 +2245,16 @@ s_hdml_start_option_tag(hdml_t* hdml, Node* node)
   /* that is the TEXT node.                                                   */
   /*--------------------------------------------------------------------------*/
   child = qs_get_child_node(doc, node);
-  if (child == NULL) 
-  {
+  if (!child) {
     txtval    = apr_palloc(r->pool, 1);
     txtval[0] = 0;
   }
-  else 
-  {
+  else {
     txtval = qs_get_node_value(doc, child);
   }
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "txtval:[%s]" , txtval);
 
-  if (val != NULL && txtval != NULL) 
-  {
+  if (val && txtval) {
     s_output_to_hdml_card(hdml, 
                     apr_psprintf(r->pool, 
                             "<CE TASK=RETURN VALUE=\"%s\" "
