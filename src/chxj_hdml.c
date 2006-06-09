@@ -482,12 +482,10 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
       one_byte[0] = '\0';
       one_byte[1] = '\0';
 
-      for (ii=0; ii<qs_get_node_size(doc,child); ii++) 
-      {
+      for (ii=0; ii<qs_get_node_size(doc,child); ii++) {
         char* out;
         int rtn = s_hdml_search_emoji(hdml, &textval[ii], &out);
-        if (rtn != 0)
-        {
+        if (rtn) {
           tdst = qs_out_apr_pstrcat(r, tdst, out, &tdst_len);
           ii += (rtn-1);
           continue;
