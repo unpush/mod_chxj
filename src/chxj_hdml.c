@@ -940,8 +940,7 @@ s_hdml_start_a_tag(hdml_t* hdml, Node* node)
         s_output_to_hdml_out(hdml, &value[4]              );
         s_output_to_hdml_out(hdml, "\" "                  );
       }
-      else 
-      {
+      else {
         s_output_to_hdml_out(hdml, " TASK=GO DEST=\""     );
         s_output_to_hdml_out(hdml, value                  );
         s_output_to_hdml_out(hdml, "\""                   );
