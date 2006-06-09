@@ -1513,21 +1513,16 @@ s_chtml10_start_option_tag(chtml10_t* chtml10, Node* child)
     }
   }
 
-  if (value != NULL)
-  {
+  if (value)
     chtml10->out = apr_pstrcat(r->pool, chtml10->out, " value=\"",value,"\"", NULL);
-  }
   else
-  {
     chtml10->out = apr_pstrcat(r->pool, chtml10->out, " value=\"\"", NULL);
-  }
 
-  if (selected != NULL)
-  {
+  if (selected)
     chtml10->out = apr_pstrcat(r->pool, chtml10->out, " selected ", NULL);
-  }
 
   chtml10->out = apr_pstrcat(r->pool, chtml10->out, ">", NULL);
+
   return chtml10->out;
 }
 
