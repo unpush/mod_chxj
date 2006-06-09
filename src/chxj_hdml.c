@@ -511,6 +511,7 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
     }
   }
   hdml->out[hdml->out_len] = 0;
+
   return hdml->out;
 }
 
