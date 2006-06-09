@@ -538,21 +538,21 @@ s_hdml_search_emoji(hdml_t* hdml, char* txt, char** rslt)
   len = strlen(txt);
   r = hdml->doc->r;
 
-  if (spec == NULL)
+  if (!spec)
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "spec is NULL");
 
   for (ee = hdml->conf->emoji;
        ee;
-       ee = ee->next) 
-  {
+       ee = ee->next) {
     unsigned char hex1byte;
     unsigned char hex2byte;
-    if (ee->imode == NULL)
-    {
+
+    if (!ee->imode) {
       ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
                       "emoji->imode is NULL");
       continue;
     }
+
     hex1byte = ee->imode->hex1byte & 0xff;
     hex2byte = ee->imode->hex2byte & 0xff;
 
