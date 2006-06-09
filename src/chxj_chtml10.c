@@ -1330,7 +1330,7 @@ s_chtml10_start_img_tag(chtml10_t* chtml10, Node* node)
                       chtml10->out, " align=\"",value,"\"", NULL);
     }
     else
-    if (strcasecmp(name, "width" ) == 0) {
+    if ((*name == 'w' || *name == 'W') && strcasecmp(name, "width" ) == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
