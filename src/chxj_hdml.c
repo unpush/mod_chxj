@@ -1444,20 +1444,16 @@ s_hdml_do_input_password_tag(hdml_t* hdml, Node* tag)
   /* Default is a figure input.                                               */
   /*--------------------------------------------------------------------------*/
   fmt = apr_psprintf(r->pool, "N");
-  if (mlen != NULL) 
-  {
+  if (mlen != NULL) {
     if (chxj_chk_numeric(mlen) != 0)
-    {
       mlen = apr_psprintf(r->pool, "0");
-    }
     s_output_to_hdml_card(hdml, 
                     apr_psprintf(r->pool, " FORMAT=%d%s", chxj_atoi(mlen), fmt));
   }
   else 
-  {
     s_output_to_hdml_card(hdml, 
                     apr_psprintf(r->pool, " FORMAT=*%s", fmt)       );
-  }
+
   s_output_to_hdml_card(hdml, apr_psprintf(r->pool, " NOECHO=TRUE "));
 
   s_output_to_hdml_card(hdml, 
