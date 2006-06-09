@@ -1635,11 +1635,12 @@ s_hdml_do_input_radio_tag(hdml_t* hdml, Node* tag)
     }
 
     s_output_to_hdml_out(hdml, apr_psprintf(r->pool, "%s_%02d", nm, kk));
-    if (hdml->radio_out_cnt[ii] == 0) 
+    if (hdml->radio_out_cnt[ii] == 0)  {
       if (jj == 0) 
         s_output_to_hdml_card(hdml, apr_psprintf(r->pool, "X"));
       else 
         s_output_to_hdml_card(hdml, apr_psprintf(r->pool, "_"));
+    }
 
     kk++;
     if (kk >= r_cnt) 
