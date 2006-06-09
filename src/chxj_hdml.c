@@ -1444,7 +1444,7 @@ s_hdml_do_input_password_tag(hdml_t* hdml, Node* tag)
   /* Default is a figure input.                                               */
   /*--------------------------------------------------------------------------*/
   fmt = apr_psprintf(r->pool, "N");
-  if (mlen != NULL) {
+  if (mlen) {
     if (chxj_chk_numeric(mlen) != 0)
       mlen = apr_psprintf(r->pool, "0");
     s_output_to_hdml_card(hdml, 
