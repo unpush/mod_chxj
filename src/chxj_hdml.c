@@ -490,16 +490,15 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
           ii += (rtn-1);
           continue;
         }
-        if (is_sjis_kanji(textval[ii])) 
-        {
+        if (is_sjis_kanji(textval[ii])) {
           one_byte[0] = textval[ii+0];
           tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
           one_byte[0] = textval[ii+1];
           tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
           ii++;
         }
-        else if (textval[ii] != '\r' && textval[ii] != '\n') 
-        {
+        else 
+        if (textval[ii] != '\r' && textval[ii] != '\n') {
           one_byte[0] = textval[ii+0];
           tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
         }
