@@ -852,8 +852,7 @@ s_hdml_start_body_tag(hdml_t* hdml, Node* node)
   for (attr = qs_get_attr(doc,node); attr != NULL; attr = qs_get_next_attr(doc,attr)) {
     char* name  = qs_get_attr_name(doc,attr);
 
-    if (strcasecmp(name, "bgcolor")     == 0) 
-    {
+    if (strcasecmp(name, "bgcolor")     == 0) {
       /* ignore */
     }
     else if (strcasecmp(name, "text")   == 0) 
