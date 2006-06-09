@@ -1550,8 +1550,7 @@ s_hdml_do_input_hidden_tag(hdml_t* hdml, Node* tag)
   nm  = qs_get_name_attr  (doc, tag, r);
   val = qs_get_value_attr (doc, tag, r);
 
-  if (nm != NULL && val != NULL) 
-  {
+  if (nm && val) {
     s_output_to_postdata(hdml, 
                     apr_psprintf(r->pool, 
                             "%s=%s", 
