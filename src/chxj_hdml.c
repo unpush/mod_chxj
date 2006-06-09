@@ -1697,22 +1697,17 @@ s_hdml_do_input_radio_tag(hdml_t* hdml, Node* tag)
 
     s_output_to_postdata(hdml,  apr_psprintf(r->pool, "%s%s=$%s", RADIO_BUTTON_PREFIX, nm, nm));
 
-    for (jj=0; jj<r_cnt; jj++) 
-    {
-      if (hdml->radio_value_list[ii][jj] != NULL 
-      &&  hdml->radio_checked_value[ii] != NULL) 
-      {
+    for (jj=0; jj<r_cnt; jj++) {
+      if (hdml->radio_value_list[ii][jj] &&  hdml->radio_checked_value[ii]) {
         if (strcasecmp(hdml->radio_value_list[ii][jj], 
-                       hdml->radio_checked_value[ii]) == 0)
-        {
+                       hdml->radio_checked_value[ii]) == 0) {
           s_output_to_init_vars(hdml, 
                           apr_psprintf(r->pool, 
                                   "%s_%02d=X", 
                                   nm, 
                                   jj));
         }
-        else 
-        {
+        else {
           s_output_to_init_vars(hdml, 
                           apr_psprintf(r->pool, 
                                   "%s_%02d=_", 
@@ -1720,8 +1715,7 @@ s_hdml_do_input_radio_tag(hdml_t* hdml, Node* tag)
                                   jj));
         }
       }
-      else 
-      {
+      else {
         s_output_to_init_vars(hdml, 
                         apr_psprintf(r->pool, 
                                 "%s_%02d=_", 
@@ -1730,8 +1724,7 @@ s_hdml_do_input_radio_tag(hdml_t* hdml, Node* tag)
       }
     }
 
-    if (hdml->radio_checked_value[ii] != NULL)
-    {
+    if (hdml->radio_checked_value[ii]) {
       ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, 
                     "radio button is checked. checked value is [%s]", 
                     hdml->radio_checked_value[ii]);
@@ -1741,8 +1734,7 @@ s_hdml_do_input_radio_tag(hdml_t* hdml, Node* tag)
                             nm, 
                             hdml->radio_checked_value[ii]));
     }
-    else
-    {
+    else {
       ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, 
                     "radio button is not checked. checked value is []");
       s_output_to_init_vars(hdml, 
