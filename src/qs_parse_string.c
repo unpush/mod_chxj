@@ -194,6 +194,7 @@ static int
 s_cut_text(const char* s, int len) 
 {
   int ii;
+
   for (ii=0;ii<len; ii++) {
     if (is_sjis_kanji(s[ii])) {
       ii++;
