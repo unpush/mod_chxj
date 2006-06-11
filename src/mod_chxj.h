@@ -58,31 +58,77 @@
 #else
 #  include "pcreposix.h"
 #  include "pcre.h"
-#  define AP_REG_ASSERT   REG_ASSERT
-#  define AP_REG_BADBR    REG_BADBR
-#  define AP_REG_BADPAT   REG_BADPAT
-#  define AP_REG_BADRPT   REG_BADRPT
-#  define AP_REG_EBRACE   REG_EBRACE
-#  define AP_REG_EBRACK   REG_EBRACK
-#  define AP_REG_ECOLLATE REG_ECOLLATE
-#  define AP_REG_ECTYPE   REG_ECTYPE
-#  define AP_REG_EESCAPE  REG_EESCAPE
-#  define AP_REG_EMPTY    REG_EMPTY
-#  define AP_REG_EPAREN   REG_EPAREN
-#  define AP_REG_ERANGE   REG_ERANGE
-#  define AP_REG_ESIZE    REG_ESIZE
-#  define AP_REG_ESPACE   REG_ESPACE
-#  define AP_REG_ESUBREG  REG_ESUBREG
-#  define AP_REG_INVARG   REG_INVARG
-#  define AP_REG_NOMATCH  REG_NOMATCH
+#  if !defined(AP_REG_ASSERT)
+#    define AP_REG_ASSERT   REG_ASSERT
+#  endif
+#  if !defined(AP_REG_BADBR)
+#    define AP_REG_BADBR    REG_BADBR
+#  endif
+#  if !defined(AP_REG_BADPAT)
+#    define AP_REG_BADPAT   REG_BADPAT
+#  endif
+#  if !defined(AP_REG_BADRPT)
+#    define AP_REG_BADRPT   REG_BADRPT
+#  endif
+#  if !defined(AP_REG_EBRACE)
+#    define AP_REG_EBRACE   REG_EBRACE
+#  endif
+#  if !defined(AP_REG_EBRACK)
+#    define AP_REG_EBRACK   REG_EBRACK
+#  endif
+#  if !defined(AP_REG_ECOLLATE)
+#    define AP_REG_ECOLLATE REG_ECOLLATE
+#  endif
+#  if !defined(AP_REG_ECTYPE)
+#    define AP_REG_ECTYPE   REG_ECTYPE
+#  endif
+#  if !defined(AP_REG_EESCAPE)
+#    define AP_REG_EESCAPE  REG_EESCAPE
+#  endif
+#  if !defined(AP_REG_EMPTY)
+#    define AP_REG_EMPTY    REG_EMPTY
+#  endif
+#  if !defined(AP_REG_EPAREN)
+#    define AP_REG_EPAREN   REG_EPAREN
+#  endif
+#  if !defined(AP_REG_ERANGE)
+#    define AP_REG_ERANGE   REG_ERANGE
+#  endif
+#  if !defined(AP_REG_ESIZE)
+#    define AP_REG_ESIZE    REG_ESIZE
+#  endif
+#  if !defined(AP_REG_ESPACE)
+#    define AP_REG_ESPACE   REG_ESPACE
+#  endif
+#  if !defined(AP_REG_ESUBREG)
+#    define AP_REG_ESUBREG  REG_ESUBREG
+#  endif
+#  if !defined(AP_REG_INVARG)
+#    define AP_REG_INVARG   REG_INVARG
+#  endif
+#  if !defined(AP_REG_NOMATCH)
+#    define AP_REG_NOMATCH  REG_NOMATCH
+#  endif
 
-#  define AP_REG_ICASE    REG_ICASE
-#  define AP_REG_NEWLINE  REG_NEWLINE
-#  define AP_REG_NOTBOL   REG_NOTBOL
-#  define AP_REG_NOTEOL   REG_NOTEOL
+#  if !defined(AP_REG_ICASE)
+#    define AP_REG_ICASE    REG_ICASE
+#  endif
+#  if !defined(AP_REG_NEWLINE)
+#    define AP_REG_NEWLINE  REG_NEWLINE
+#  endif
+#  if !defined(AP_REG_NOTBOL)
+#    define AP_REG_NOTBOL   REG_NOTBOL
+#  endif
+#  if !defined(AP_REG_NOTEOL)
+#    define AP_REG_NOTEOL   REG_NOTEOL
+#  endif
 
-#  define AP_REG_EXTENDED REG_EXTENDED
-#  define AP_REG_NOSUB    REG_NOSUB
+#  if !defined(AP_REG_EXTENDED)
+#    define AP_REG_EXTENDED REG_EXTENDED
+#  endif
+#  if !defined(AP_REG_NOSUB)
+#    define AP_REG_NOSUB    REG_NOSUB
+#  endif
 
 #  define ap_regex_t      regex_t
 #  define ap_regmatch_t   regmatch_t
