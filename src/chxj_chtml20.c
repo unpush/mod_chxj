@@ -38,6 +38,8 @@ static char* s_chtml20_start_a_tag      (chtml20_t* chtml, Node* node);
 static char* s_chtml20_end_a_tag        (chtml20_t* chtml, Node* node);
 static char* s_chtml20_start_br_tag     (chtml20_t* chtml, Node* node);
 static char* s_chtml20_end_br_tag       (chtml20_t* chtml, Node* node);
+static char* s_chtml20_start_tr_tag     (chtml20_t* chtml, Node* node);
+static char* s_chtml20_end_tr_tag       (chtml20_t* chtml, Node* node);
 static char* s_chtml20_start_font_tag   (chtml20_t* chtml, Node* node);
 static char* s_chtml20_end_font_tag     (chtml20_t* chtml, Node* node);
 static char* s_chtml20_start_form_tag   (chtml20_t* chtml, Node* node);
@@ -87,8 +89,7 @@ chxj_exchange_chtml20(
   /*--------------------------------------------------------------------------*/
   *dstlen = srclen;
   dst = chxj_qr_code_blob_handler(r, src, (size_t*)dstlen);
-  if (dst != NULL)
-  {
+  if (dst) {
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"i found qrcode xml");
     return dst;
   }
@@ -122,14 +123,11 @@ chxj_exchange_chtml20(
   qs_all_free(&doc,QX_LOGMARK);
 
   if (dst == NULL) 
-  {
     return apr_pstrdup(r->pool,ss);
-  }
 
   if (strlen(dst) == 0)
-  {
     dst = apr_psprintf(r->pool, "\n");
-  }
+
   *dstlen = strlen(dst);
 #ifdef DUMP_LOG
   chxj_dump_out("[dst] CHTML -> CHTML2.0", dst, *dstlen);
@@ -352,7 +350,9 @@ s_chtml20_node_exchange(chtml20_t* chtml20, Node* node, int indent)
     /*------------------------------------------------------------------------*/
     else
     if (strcasecmp(name, "tr") == 0) {
-      s_chtml20_node_exchange (chtml20, child, indent+1);
+      s_chtml20_start_tr_tag  (chtml20, child);
+      s_chtml20_node_exchange (chtml20, child,indent+1);
+      s_chtml20_end_tr_tag    (chtml20, child);
     }
     /*------------------------------------------------------------------------*/
     /* <TD> (for TEST)                                                        */
@@ -380,6 +380,13 @@ s_chtml20_node_exchange(chtml20_t* chtml20, Node* node, int indent)
     /*------------------------------------------------------------------------*/
     else
     if (strcasecmp(name, "li") == 0) {
+      s_chtml20_node_exchange (chtml20, child, indent+1);
+    }
+    /*------------------------------------------------------------------------*/
+    /* <SPAN> (for TEST)                                                      */
+    /*------------------------------------------------------------------------*/
+    else
+    if (strcasecmp(name, "span") == 0) {
       s_chtml20_node_exchange (chtml20, child, indent+1);
     }
     /*------------------------------------------------------------------------*/
@@ -1029,6 +1036,37 @@ s_chtml20_start_br_tag(chtml20_t* chtml20, Node* node)
 static char*
 s_chtml20_end_br_tag(chtml20_t* chtml20, Node* child) 
 {
+  return chtml20->out;
+}
+
+/**
+ * It is a handler who processes the TR tag.
+ *
+ * @param chtml20  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The TR tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml20_start_tr_tag(chtml20_t* chtml20, Node* node) 
+{
+  return chtml20->out;
+}
+
+/**
+ * It is a handler who processes the TR tag.
+ *
+ * @param chtml20  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The TR tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml20_end_tr_tag(chtml20_t* chtml20, Node* child) 
+{
+  Doc* doc = chtml20->doc;
+  request_rec* r = doc->r;
+  chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<br>\r\n", NULL);
   return chtml20->out;
 }
 
