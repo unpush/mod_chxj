@@ -183,141 +183,204 @@ s_chtml20_node_exchange(chtml20_t* chtml20, Node* node, int indent)
        child = qs_get_next_node(doc,child)) {
     char* name = qs_get_node_name(doc,child);
 
-    /*------------------------------------------------------------------------*/
-    /* <HTML>                                                                 */
-    /*------------------------------------------------------------------------*/
-    if (strcasecmp(name, "html") == 0) {
-      s_chtml20_start_html_tag(chtml20, child);
-      s_chtml20_node_exchange (chtml20, child,indent+1);
-      s_chtml20_end_html_tag  (chtml20, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <HEAD>                                                                 */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "head") == 0) {
-      s_chtml20_start_head_tag(chtml20, child);
-      s_chtml20_node_exchange (chtml20, child,indent+1);
-      s_chtml20_end_head_tag  (chtml20, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <HR>                                                                   */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "hr") == 0) {
-      s_chtml20_start_hr_tag  (chtml20, child);
-      s_chtml20_end_hr_tag    (chtml20, child);
+    if (*name == 'h' || *name == 'H') {
+      /*----------------------------------------------------------------------*/
+      /* <HTML>                                                               */
+      /*----------------------------------------------------------------------*/
+      if (strcasecmp(name, "html") == 0) {
+        s_chtml20_start_html_tag(chtml20, child);
+        s_chtml20_node_exchange (chtml20, child,indent+1);
+        s_chtml20_end_html_tag  (chtml20, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <HEAD>                                                               */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "head") == 0) {
+        s_chtml20_start_head_tag(chtml20, child);
+        s_chtml20_node_exchange (chtml20, child,indent+1);
+        s_chtml20_end_head_tag  (chtml20, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <HR>                                                                 */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "hr") == 0) {
+        s_chtml20_start_hr_tag  (chtml20, child);
+        s_chtml20_end_hr_tag    (chtml20, child);
+      }
     }
     /*------------------------------------------------------------------------*/
     /* <META>                                                                 */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "meta") == 0) {
+    if ((*name == 'm' || *name == 'M') && strcasecmp(name, "meta") == 0) {
       s_chtml20_start_meta_tag(chtml20, child);
       s_chtml20_end_meta_tag  (chtml20, child);
     }
-    /*------------------------------------------------------------------------*/
-    /* <TITLE>                                                                */
-    /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "title") == 0) {
-      s_chtml20_start_title_tag (chtml20, child);
-      s_chtml20_node_exchange   (chtml20, child,indent+1);
-      s_chtml20_end_title_tag   (chtml20, child);
+    if (*name == 't' || *name == 'T') {
+      /*----------------------------------------------------------------------*/
+      /* <TITLE>                                                              */
+      /*----------------------------------------------------------------------*/
+      if (strcasecmp(name, "title") == 0) {
+        s_chtml20_start_title_tag (chtml20, child);
+        s_chtml20_node_exchange   (chtml20, child,indent+1);
+        s_chtml20_end_title_tag   (chtml20, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <TABLE> (for TEST)                                                   */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "table") == 0) {
+        s_chtml20_node_exchange (chtml20, child, indent+1);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <TH> (for TEST)                                                      */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "th") == 0) {
+        s_chtml20_node_exchange (chtml20, child, indent+1);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <TR> (for TEST)                                                      */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "tr") == 0) {
+        s_chtml20_start_tr_tag  (chtml20, child);
+        s_chtml20_node_exchange (chtml20, child,indent+1);
+        s_chtml20_end_tr_tag    (chtml20, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <TD> (for TEST)                                                      */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "td") == 0) {
+        s_chtml20_node_exchange (chtml20, child, indent+1);
+      }
     }
-    /*------------------------------------------------------------------------*/
-    /* <BASE>                                                                 */
-    /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "base") == 0) {
-      s_chtml20_start_base_tag(chtml20, child);
-      s_chtml20_end_base_tag  (chtml20, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <BODY>                                                                 */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "body") == 0) {
-      s_chtml20_start_body_tag(chtml20, child);
-      s_chtml20_node_exchange (chtml20, child,indent+1);
-      s_chtml20_end_body_tag  (chtml20, child);
+    if (*name == 'b' || *name == 'B') {
+      /*----------------------------------------------------------------------*/
+      /* <BASE>                                                               */
+      /*----------------------------------------------------------------------*/
+      if (strcasecmp(name, "base") == 0) {
+        s_chtml20_start_base_tag(chtml20, child);
+        s_chtml20_end_base_tag  (chtml20, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <BODY>                                                               */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "body") == 0) {
+        s_chtml20_start_body_tag(chtml20, child);
+        s_chtml20_node_exchange (chtml20, child,indent+1);
+        s_chtml20_end_body_tag  (chtml20, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <BR>                                                                 */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "br") == 0) {
+        s_chtml20_start_br_tag  (chtml20, child);
+        s_chtml20_node_exchange (chtml20, child,indent+1);
+        s_chtml20_end_br_tag    (chtml20, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <BLINK>                                                              */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "blink") == 0) {
+        /* ignore */
+      }
     }
     /*------------------------------------------------------------------------*/
     /* <A>                                                                    */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "a") == 0) {
+    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "a") == 0) {
       s_chtml20_start_a_tag   (chtml20, child);
       s_chtml20_node_exchange (chtml20, child,indent+1);
       s_chtml20_end_a_tag     (chtml20, child);
     }
-    /*------------------------------------------------------------------------*/
-    /* <BR>                                                                   */
-    /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "br") == 0) {
-      s_chtml20_start_br_tag  (chtml20, child);
-      s_chtml20_node_exchange (chtml20, child,indent+1);
-      s_chtml20_end_br_tag    (chtml20, child);
+    if (*name == 'f' || *name == 'F') {
+      /*----------------------------------------------------------------------*/
+      /* <FONT>                                                               */
+      /*----------------------------------------------------------------------*/
+      if (strcasecmp(name, "font") == 0) {
+        s_chtml20_start_font_tag(chtml20, child);
+        s_chtml20_node_exchange (chtml20, child,indent+1);
+        s_chtml20_end_font_tag  (chtml20, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <FORM>                                                               */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "form") == 0) {
+        s_chtml20_start_form_tag(chtml20, child);
+        s_chtml20_node_exchange (chtml20, child,indent+1);
+        s_chtml20_end_form_tag  (chtml20, child);
+      }
     }
-    /*------------------------------------------------------------------------*/
-    /* <FONT>                                                                 */
-    /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "font") == 0) {
-      s_chtml20_start_font_tag(chtml20, child);
-      s_chtml20_node_exchange (chtml20, child,indent+1);
-      s_chtml20_end_font_tag  (chtml20, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <FORM>                                                                 */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "form") == 0) {
-      s_chtml20_start_form_tag(chtml20, child);
-      s_chtml20_node_exchange (chtml20, child,indent+1);
-      s_chtml20_end_form_tag  (chtml20, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <INPUT>                                                                */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "input") == 0) {
-      s_chtml20_start_input_tag (chtml20, child);
-      s_chtml20_node_exchange   (chtml20, child,indent+1);
-      s_chtml20_end_input_tag   (chtml20, child);
+    if (*name == 'i' || *name == 'I') {
+     /*----------------------------------------------------------------------*/
+     /* <INPUT>                                                              */
+     /*----------------------------------------------------------------------*/
+     if (strcasecmp(name, "input") == 0) {
+       s_chtml20_start_input_tag (chtml20, child);
+       s_chtml20_node_exchange   (chtml20, child,indent+1);
+       s_chtml20_end_input_tag   (chtml20, child);
+     }
+     /*----------------------------------------------------------------------*/
+     /* <IMG>                                                                */
+     /*----------------------------------------------------------------------*/
+     else
+     if (strcasecmp(name, "img") == 0) {
+       s_chtml20_start_img_tag (chtml20, child);
+       s_chtml20_end_img_tag   (chtml20, child);
+     }
     }
     /*------------------------------------------------------------------------*/
     /* <CENTER>                                                               */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "center") == 0) {
+    if ((*name == 'c' || *name == 'C') && strcasecmp(name, "center") == 0) {
       s_chtml20_start_center_tag(chtml20, child);
       s_chtml20_node_exchange   (chtml20, child,indent+1);
       s_chtml20_end_center_tag  (chtml20, child);
     }
-    /*------------------------------------------------------------------------*/
-    /* <IMG>                                                                  */
-    /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "img") == 0) {
-      s_chtml20_start_img_tag (chtml20, child);
-      s_chtml20_end_img_tag   (chtml20, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <SELECT>                                                               */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "select") == 0) {
-      s_chtml20_start_select_tag(chtml20, child);
-      s_chtml20_node_exchange   (chtml20, child, indent+1);
-      s_chtml20_end_select_tag  (chtml20, child);
+    if (*name == 's'|| *name == 'S') {
+      /*----------------------------------------------------------------------*/
+      /* <SELECT>                                                             */
+      /*----------------------------------------------------------------------*/
+      if (strcasecmp(name, "select") == 0) {
+        s_chtml20_start_select_tag(chtml20, child);
+        s_chtml20_node_exchange   (chtml20, child, indent+1);
+        s_chtml20_end_select_tag  (chtml20, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <STYLE> (for TEST)                                                   */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "style") == 0) {
+        s_chtml20_node_exchange (chtml20, child, indent+1);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <SPAN> (for TEST)                                                    */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "span") == 0) {
+        s_chtml20_node_exchange (chtml20, child, indent+1);
+      }
     }
     /*------------------------------------------------------------------------*/
     /* <OPTION>                                                               */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "option") == 0) {
+    if ((*name == 'o' || *name == 'O') && strcasecmp(name, "option") == 0) {
       s_chtml20_start_option_tag(chtml20, child);
       s_chtml20_node_exchange   (chtml20, child, indent+1);
       s_chtml20_end_option_tag  (chtml20, child);
@@ -326,81 +389,30 @@ s_chtml20_node_exchange(chtml20_t* chtml20, Node* node, int indent)
     /* <DIV>                                                                  */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "div") == 0) {
+    if ((*name == 'd' || *name == 'D') && strcasecmp(name, "div") == 0) {
       s_chtml20_start_div_tag (chtml20, child);
       s_chtml20_node_exchange (chtml20, child, indent+1);
       s_chtml20_end_div_tag   (chtml20, child);
     }
     /*------------------------------------------------------------------------*/
-    /* <TABLE> (for TEST)                                                     */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "table") == 0) {
-      s_chtml20_node_exchange (chtml20, child, indent+1);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <TH> (for TEST)                                                        */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "th") == 0) {
-      s_chtml20_node_exchange (chtml20, child, indent+1);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <TR> (for TEST)                                                        */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "tr") == 0) {
-      s_chtml20_start_tr_tag  (chtml20, child);
-      s_chtml20_node_exchange (chtml20, child,indent+1);
-      s_chtml20_end_tr_tag    (chtml20, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <TD> (for TEST)                                                        */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "td") == 0) {
-      s_chtml20_node_exchange (chtml20, child, indent+1);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <STYLE> (for TEST)                                                     */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "style") == 0) {
-      s_chtml20_node_exchange (chtml20, child, indent+1);
-    }
-    /*------------------------------------------------------------------------*/
     /* <UL> (for TEST)                                                        */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "ul") == 0) {
+    if ((*name == 'u' || *name == 'U') && strcasecmp(name, "ul") == 0) {
       s_chtml20_node_exchange (chtml20, child, indent+1);
     }
     /*------------------------------------------------------------------------*/
     /* <LI> (for TEST)                                                        */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "li") == 0) {
+    if ((*name == 'l' || *name == 'L') && strcasecmp(name, "li") == 0) {
       s_chtml20_node_exchange (chtml20, child, indent+1);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <SPAN> (for TEST)                                                      */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "span") == 0) {
-      s_chtml20_node_exchange (chtml20, child, indent+1);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <BLINK>                                                                */
-    /*------------------------------------------------------------------------*/
-    else
-    if (strcasecmp(name, "blink") == 0) {
-      /* ignore */
     }
     /*------------------------------------------------------------------------*/
     /* <CHXJ:IF>                                                              */
     /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "chxj:if") == 0) {
+    if ((*name == 'c' || *name == 'C') && strcasecmp(name, "chxj:if") == 0) {
       ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag found");
       if (chxj_chxjif_is_mine(chtml20->spec, doc, child)) {
         ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag is mine");
