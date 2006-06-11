@@ -233,47 +233,6 @@ s_chtml10_node_exchange(chtml10_t* chtml10, Node* node, int indent)
       s_chtml10_start_meta_tag(chtml10, child);
       s_chtml10_end_meta_tag  (chtml10, child);
     }
-    /*------------------------------------------------------------------------*/
-    /* <TITLE>                                                                */
-    /*------------------------------------------------------------------------*/
-    else
-    if (*name == 't' || *name == 'T') {
-      if (strcasecmp(name, "title") == 0) {
-        s_chtml10_start_title_tag (chtml10, child);
-        s_chtml10_node_exchange   (chtml10, child,indent+1);
-        s_chtml10_end_title_tag   (chtml10, child);
-      }
-      /*------------------------------------------------------------------------*/
-      /* <TABLE> (for TEST)                                                     */
-      /*------------------------------------------------------------------------*/
-      else
-      if (strcasecmp(name, "table") == 0) {
-        s_chtml10_node_exchange (chtml10, child, indent+1);
-      }
-      /*------------------------------------------------------------------------*/
-      /* <TH> (for TEST)                                                        */
-      /*------------------------------------------------------------------------*/
-      else
-      if (strcasecmp(name, "th") == 0) {
-        s_chtml10_node_exchange (chtml10, child, indent+1);
-      }
-      /*------------------------------------------------------------------------*/
-      /* <TR> (for TEST)                                                        */
-      /*------------------------------------------------------------------------*/
-      else
-      if (strcasecmp(name, "tr") == 0) {
-        s_chtml10_start_tr_tag  (chtml10, child);
-        s_chtml10_node_exchange (chtml10, child,indent+1);
-        s_chtml10_end_tr_tag    (chtml10, child);
-      }
-      /*------------------------------------------------------------------------*/
-      /* <TD> (for TEST)                                                        */
-      /*------------------------------------------------------------------------*/
-      else
-      if (strcasecmp(name, "td") == 0) {
-        s_chtml10_node_exchange (chtml10, child, indent+1);
-      }
-    }
     else
     if (*name == 'b' || *name == 'B') {
       /*----------------------------------------------------------------------*/
@@ -422,52 +381,93 @@ s_chtml10_node_exchange(chtml10_t* chtml10, Node* node, int indent)
         }
       }
     }
-    /*------------------------------------------------------------------------*/
-    /* NORMAL TEXT                                                            */
-    /*------------------------------------------------------------------------*/
     else
-    if ((*name == 't' || *name == 'T') && strcasecmp(name, "text") == 0) {
-      char*   textval;
-      char*   tmp;
-      char*   tdst;
-      char    one_byte[2];
-      int     ii;
-      int     tdst_len;
-
-      textval = qs_get_node_value(doc,child);
-      textval = qs_trim_string(chtml10->doc->r, textval);
-      if (strlen(textval) == 0)
-        continue;
-
-      tmp = apr_palloc(r->pool, qs_get_node_size(doc,child)+1);
-      memset(tmp, 0, qs_get_node_size(doc,child)+1);
-
-      tdst     = qs_alloc_zero_byte_string(r);
-      memset(one_byte, 0, sizeof(one_byte));
-      tdst_len = 0;
-
-      for (ii=0; ii<qs_get_node_size(doc,child); ii++) {
-        char* out;
-        int rtn = s_chtml10_search_emoji(chtml10, &textval[ii], &out);
-        if (rtn) {
-          tdst = qs_out_apr_pstrcat(r, tdst, out, &tdst_len);
-          ii+=(rtn - 1);
-          continue;
-        }
-
-        if (is_sjis_kanji(textval[ii])) {
-          one_byte[0] = textval[ii+0];
-          tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
-          one_byte[0] = textval[ii+1];
-          tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
-          ii++;
-        }
-        else if (textval[ii] != '\r' && textval[ii] != '\n') {
-          one_byte[0] = textval[ii+0];
-          tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
-        }
+    if (*name == 't' || *name == 'T') {
+      /*----------------------------------------------------------------------*/
+      /* <TITLE>                                                              */
+      /*----------------------------------------------------------------------*/
+      if (strcasecmp(name, "title") == 0) {
+        s_chtml10_start_title_tag (chtml10, child);
+        s_chtml10_node_exchange   (chtml10, child,indent+1);
+        s_chtml10_end_title_tag   (chtml10, child);
       }
-      chtml10->out = apr_pstrcat(r->pool, chtml10->out, tdst, NULL);
+      /*------------------------------------------------------------------------*/
+      /* <TABLE> (for TEST)                                                     */
+      /*------------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "table") == 0) {
+        s_chtml10_node_exchange (chtml10, child, indent+1);
+      }
+      /*------------------------------------------------------------------------*/
+      /* <TH> (for TEST)                                                        */
+      /*------------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "th") == 0) {
+        s_chtml10_node_exchange (chtml10, child, indent+1);
+      }
+      /*------------------------------------------------------------------------*/
+      /* <TR> (for TEST)                                                        */
+      /*------------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "tr") == 0) {
+        s_chtml10_start_tr_tag  (chtml10, child);
+        s_chtml10_node_exchange (chtml10, child,indent+1);
+        s_chtml10_end_tr_tag    (chtml10, child);
+      }
+      /*------------------------------------------------------------------------*/
+      /* <TD> (for TEST)                                                        */
+      /*------------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "td") == 0) {
+        s_chtml10_node_exchange (chtml10, child, indent+1);
+      }
+      /*------------------------------------------------------------------------*/
+      /* NORMAL TEXT                                                            */
+      /*------------------------------------------------------------------------*/
+      else
+      if ((*name == 't' || *name == 'T') && strcasecmp(name, "text") == 0) {
+        char*   textval;
+        char*   tmp;
+        char*   tdst;
+        char    one_byte[2];
+        int     ii;
+        int     tdst_len;
+  
+        textval = qs_get_node_value(doc,child);
+        textval = qs_trim_string(chtml10->doc->r, textval);
+        if (strlen(textval) == 0)
+          continue;
+  
+        tmp = apr_palloc(r->pool, qs_get_node_size(doc,child)+1);
+        memset(tmp, 0, qs_get_node_size(doc,child)+1);
+  
+        tdst     = qs_alloc_zero_byte_string(r);
+        memset(one_byte, 0, sizeof(one_byte));
+        tdst_len = 0;
+  
+        for (ii=0; ii<qs_get_node_size(doc,child); ii++) {
+          char* out;
+          int rtn = s_chtml10_search_emoji(chtml10, &textval[ii], &out);
+          if (rtn) {
+            tdst = qs_out_apr_pstrcat(r, tdst, out, &tdst_len);
+            ii+=(rtn - 1);
+            continue;
+          }
+  
+          if (is_sjis_kanji(textval[ii])) {
+            one_byte[0] = textval[ii+0];
+            tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+            one_byte[0] = textval[ii+1];
+            tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+            ii++;
+          }
+          else if (textval[ii] != '\r' && textval[ii] != '\n') {
+            one_byte[0] = textval[ii+0];
+            tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+          }
+        }
+        chtml10->out = apr_pstrcat(r->pool, chtml10->out, tdst, NULL);
+      }
     }
   }
   return chtml10->out;
