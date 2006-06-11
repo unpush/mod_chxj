@@ -44,6 +44,8 @@ static char* s_hdml_start_a_tag     (hdml_t* doc,  Node* node);
 static char* s_hdml_end_a_tag       (hdml_t* doc,  Node* node);
 static char* s_hdml_start_br_tag    (hdml_t* doc,  Node* node);
 static char* s_hdml_end_br_tag      (hdml_t* doc,  Node* node);
+static char* s_hdml_start_tr_tag    (hdml_t* doc,  Node* node);
+static char* s_hdml_end_tr_tag      (hdml_t* doc,  Node* node);
 static char* s_hdml_start_font_tag  (hdml_t* doc,  Node* node);
 static char* s_hdml_end_font_tag    (hdml_t* doc,  Node* node);
 static char* s_hdml_start_form_tag  (hdml_t* doc,  Node* node);
@@ -277,6 +279,21 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
     if (hdml->hdml_end_flag == 1) 
       continue;
 
+
+    /*------------------------------------------------------------------------*/
+    /* <UL> (for TEST)                                                        */
+    /*------------------------------------------------------------------------*/
+    if ((*name == 'u' || *name == 'U') && strcasecmp(name, "ul") == 0) {
+      s_hdml_node_exchange (hdml, child, indent+1);
+    }
+    /*------------------------------------------------------------------------*/
+    /* <LI> (for TEST)                                                        */
+    /*------------------------------------------------------------------------*/
+    else
+    if ((*name == 'l' || *name == 'L') && strcasecmp(name, "li") == 0) {
+      s_hdml_node_exchange (hdml, child, indent+1);
+    }
+    else
     if (*name == 'h' || *name == 'H') {
       /*----------------------------------------------------------------------*/
       /* <HTML>                                                               */
@@ -314,16 +331,6 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
       hdml->out = s_hdml_start_meta_tag(hdml, child);
       hdml->hdml_br_flag = 0;
       hdml->out = s_hdml_end_meta_tag(hdml, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <TITLE>                                                                */
-    /*------------------------------------------------------------------------*/
-    else
-    if ((*name == 't' || *name == 'T') && strcasecmp(name, "title") == 0) {
-      hdml->out = s_hdml_start_title_tag(hdml, child);
-      hdml->hdml_br_flag = 0;
-      hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
-      hdml->out = s_hdml_end_title_tag(hdml, child);
     }
     else
     if (*name == 'b' || *name == 'B') {
@@ -407,15 +414,31 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
         hdml->out = s_hdml_end_img_tag  (hdml, child);
       }
     }
-    /*------------------------------------------------------------------------*/
-    /* <SELECT>                                                               */
-    /*------------------------------------------------------------------------*/
     else
-    if ((*name == 's' || *name == 'S') && strcasecmp(name, "select") == 0) {
-      hdml->out = s_hdml_start_select_tag(hdml, child);
-      hdml->hdml_br_flag = 0;
-      hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
-      hdml->out = s_hdml_end_select_tag(hdml, child);
+    if (*name == 's' || *name == 'S') {
+      /*----------------------------------------------------------------------*/
+      /* <SELECT>                                                             */
+      /*----------------------------------------------------------------------*/
+      if (strcasecmp(name, "select") == 0) {
+        hdml->out = s_hdml_start_select_tag(hdml, child);
+        hdml->hdml_br_flag = 0;
+        hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
+        hdml->out = s_hdml_end_select_tag(hdml, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <STYLE> (for TEST)                                                   */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "style") == 0) {
+        s_hdml_node_exchange (hdml, child, indent+1);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <SPAN> (for TEST)                                                    */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "span") == 0) {
+        s_hdml_node_exchange (hdml, child, indent+1);
+      }
     }
     /*------------------------------------------------------------------------*/
     /* <OPTION>                                                               */
@@ -465,59 +488,101 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
         }
       }
     }
-    /*------------------------------------------------------------------------*/
-    /* NORMAL TEXT                                                            */
-    /*------------------------------------------------------------------------*/
     else
-    if ((*name == 't' || *name == 'T') && strcasecmp(name, "text") == 0) {
-      char* textval;
-      char* tmp;
-      char* tdst;
-      char one_byte[2];
-      int ii;
-      int tdst_len = 0;
-
-      textval = qs_get_node_value(doc,child);
-      textval = qs_trim_string(r, textval);
-      if (strlen(textval) == 0)
-        continue;
-
-      if (hdml->option_flag == 1) 
-        continue;
-
-      tmp = apr_palloc(r->pool, qs_get_node_size(doc,child)+1);
-      memset(tmp, 0, qs_get_node_size(doc,child)+1);
-      tdst = apr_palloc(r->pool, 1);
-      tdst[0] = '\0';
-      one_byte[0] = '\0';
-      one_byte[1] = '\0';
-
-      for (ii=0; ii<qs_get_node_size(doc,child); ii++) {
-        char* out;
-        int rtn = s_hdml_search_emoji(hdml, &textval[ii], &out);
-        if (rtn) {
-          tdst = qs_out_apr_pstrcat(r, tdst, out, &tdst_len);
-          ii += (rtn-1);
-          continue;
-        }
-        if (is_sjis_kanji(textval[ii])) {
-          one_byte[0] = textval[ii+0];
-          tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
-          one_byte[0] = textval[ii+1];
-          tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
-          ii++;
-        }
-        else 
-        if (textval[ii] != '\r' && textval[ii] != '\n') {
-          one_byte[0] = textval[ii+0];
-          tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
-        }
+    if (*name == 't' || *name == 'T') {
+      /*----------------------------------------------------------------------*/
+      /* <TITLE>                                                              */
+      /*----------------------------------------------------------------------*/
+      if (strcasecmp(name, "title") == 0) {
+        hdml->out = s_hdml_start_title_tag(hdml, child);
+        hdml->hdml_br_flag = 0;
+        hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
+        hdml->out = s_hdml_end_title_tag(hdml, child);
       }
-      memcpy(tmp, textval, strlen(textval)-1);
-
-      s_hdml_tag_output_upper_half(hdml, node);
-      s_output_to_hdml_out(hdml, tdst);
-      hdml->hdml_br_flag = 0;
+      /*----------------------------------------------------------------------*/
+      /* <TABLE> (for TEST)                                                   */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "table") == 0) {
+        s_hdml_node_exchange (hdml, child, indent+1);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <TH> (for TEST)                                                      */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "th") == 0) {
+        s_hdml_node_exchange (hdml, child, indent+1);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <TR> (for TEST)                                                      */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "tr") == 0) {
+        s_hdml_start_tr_tag  (hdml, child);
+        s_hdml_node_exchange (hdml, child,indent+1);
+        s_hdml_end_tr_tag    (hdml, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <TD> (for TEST)                                                      */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "td") == 0) {
+        s_hdml_node_exchange (hdml, child, indent+1);
+      }
+      /*----------------------------------------------------------------------*/
+      /* NORMAL TEXT                                                          */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "text") == 0) {
+        char* textval;
+        char* tmp;
+        char* tdst;
+        char one_byte[2];
+        int ii;
+        int tdst_len = 0;
+  
+        textval = qs_get_node_value(doc,child);
+        textval = qs_trim_string(r, textval);
+        if (strlen(textval) == 0)
+          continue;
+  
+        if (hdml->option_flag == 1) 
+          continue;
+  
+        tmp = apr_palloc(r->pool, qs_get_node_size(doc,child)+1);
+        memset(tmp, 0, qs_get_node_size(doc,child)+1);
+        tdst = apr_palloc(r->pool, 1);
+        tdst[0] = '\0';
+        one_byte[0] = '\0';
+        one_byte[1] = '\0';
+  
+        for (ii=0; ii<qs_get_node_size(doc,child); ii++) {
+          char* out;
+          int rtn = s_hdml_search_emoji(hdml, &textval[ii], &out);
+          if (rtn) {
+            tdst = qs_out_apr_pstrcat(r, tdst, out, &tdst_len);
+            ii += (rtn-1);
+            continue;
+          }
+          if (is_sjis_kanji(textval[ii])) {
+            one_byte[0] = textval[ii+0];
+            tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+            one_byte[0] = textval[ii+1];
+            tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+            ii++;
+          }
+          else 
+          if (textval[ii] != '\r' && textval[ii] != '\n') {
+            one_byte[0] = textval[ii+0];
+            tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+          }
+        }
+        memcpy(tmp, textval, strlen(textval)-1);
+  
+        s_hdml_tag_output_upper_half(hdml, node);
+        s_output_to_hdml_out(hdml, tdst);
+        hdml->hdml_br_flag = 0;
+      }
     }
   }
   hdml->out[hdml->out_len] = 0;
@@ -1054,6 +1119,44 @@ s_hdml_start_br_tag(hdml_t* hdml, Node* node)
  */
 static char*
 s_hdml_end_br_tag(hdml_t* hdml, Node* child) 
+{
+  return hdml->out;
+}
+
+/**
+ * It is a handler who processes the TR tag. 
+ *
+ * @param hdml   [i/o] The pointer to the HDML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The TR tag node is specified. 
+ * @return The conversion result is returned. 
+ */
+static char*
+s_hdml_start_tr_tag(hdml_t* hdml, Node* node) 
+{
+  if (hdml->in_center > 0) 
+    hdml->in_center = 0;
+
+  if (hdml->div_in_center > 0) 
+    hdml->div_in_center = 0;
+
+  s_output_to_hdml_out(hdml, "<BR>\n");
+
+  hdml->hdml_br_flag = 1;
+
+  return hdml->out;
+}
+
+/**
+ * It is a handler who processes the TR tag. 
+ *
+ * @param hdml   [i/o] The pointer to the HDML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The TR tag node is specified. 
+ * @return The conversion result is returned. 
+ */
+static char*
+s_hdml_end_tr_tag(hdml_t* hdml, Node* child) 
 {
   return hdml->out;
 }
