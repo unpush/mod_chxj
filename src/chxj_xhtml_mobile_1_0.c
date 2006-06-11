@@ -722,6 +722,7 @@ s_xhtml_1_0_start_meta_tag(xhtml_t* xhtml, Node* node)
   Attr*         attr;
   Doc*          doc   = xhtml->doc;
   request_rec*  r     = doc->r;
+  int           content_type_flag = 0;
 
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<meta", NULL);
 
@@ -753,17 +754,32 @@ s_xhtml_1_0_start_meta_tag(xhtml_t* xhtml, Node* node)
                       value,
                       "\"", 
                       NULL);
+      if ((*value == 'c' || *value == 'C') && strcasecmp(value, "content-type") == 0) {
+        content_type_flag = 1;
+      }
     }
     else
     if (strcasecmp(name, "content") == 0) {
-      xhtml->out = apr_pstrcat(r->pool,
-                      xhtml->out, 
-                      " ", 
-                      name, 
-                      "=\"", 
-                      value, 
-                      "\"", 
-                      NULL);
+      if (content_type_flag) {
+        xhtml->out = apr_pstrcat(r->pool,
+                        xhtml->out, 
+                        " ", 
+                        name, 
+                        "=\"", 
+                        "text/html; charset=Windows-31J", 
+                        "\"", 
+                        NULL);
+      }
+      else {
+        xhtml->out = apr_pstrcat(r->pool,
+                        xhtml->out, 
+                        " ", 
+                        name, 
+                        "=\"", 
+                        value, 
+                        "\"", 
+                        NULL);
+      }
     }
   }
 
