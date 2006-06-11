@@ -37,6 +37,8 @@ static char* s_jhtml_start_a_tag      (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_end_a_tag        (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_start_br_tag     (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_end_br_tag       (jhtml_t* jhtml, Node* node);
+static char* s_jhtml_start_tr_tag     (jhtml_t* jhtml, Node* node);
+static char* s_jhtml_end_tr_tag       (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_start_font_tag   (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_end_font_tag     (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_start_form_tag   (jhtml_t* jhtml, Node* node);
@@ -87,7 +89,7 @@ chxj_exchange_jhtml(
   /*--------------------------------------------------------------------------*/
   *dstlen = srclen;
   dst = chxj_qr_code_blob_handler(r, src, (size_t*)dstlen);
-  if (dst != NULL) {
+  if (dst) {
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"i found qrcode xml");
     return dst;
   }
@@ -119,17 +121,17 @@ chxj_exchange_jhtml(
   dst = s_jhtml_node_exchange(&jhtml, qs_get_root(&doc), 0);
   qs_all_free(&doc,QX_LOGMARK);
 
-  if (dst == NULL) {
+  if (dst == NULL) 
     return apr_pstrdup(r->pool,ss);
-  }
 
-  if (strlen(dst) == 0) {
+  if (strlen(dst) == 0) 
     dst = apr_psprintf(r->pool, "\n");
-  }
+
   *dstlen = strlen(dst);
 #ifdef DUMP_LOG
   chxj_dump_out("[dst] CHTML -> JHTML", dst, *dstlen);
 #endif
+
   return dst;
 }
 
@@ -181,6 +183,20 @@ s_jhtml_node_exchange(jhtml_t* jhtml, Node* node, int indent)
        child = qs_get_next_node(doc,child)) {
     char* name = qs_get_node_name(doc,child);
 
+    /*------------------------------------------------------------------------*/
+    /* <UL> (for TEST)                                                        */
+    /*------------------------------------------------------------------------*/
+    if ((*name == 'u' || *name == 'U') && strcasecmp(name, "ul") == 0) {
+      s_jhtml_node_exchange (jhtml, child, indent+1);
+    }
+    /*------------------------------------------------------------------------*/
+    /* <LI> (for TEST)                                                        */
+    /*------------------------------------------------------------------------*/
+    else
+    if ((*name == 'l' || *name == 'L') && strcasecmp(name, "li") == 0) {
+      s_jhtml_node_exchange (jhtml, child, indent+1);
+    }
+    else
     if (*name == 'h' || *name == 'H') { 
       /*----------------------------------------------------------------------*/
       /* <HTML>                                                               */
@@ -215,15 +231,6 @@ s_jhtml_node_exchange(jhtml_t* jhtml, Node* node, int indent)
     if ((*name == 'm' || *name == 'M') && strcasecmp(name, "meta") == 0) {
       s_jhtml_start_meta_tag(jhtml, child);
       s_jhtml_end_meta_tag  (jhtml, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <TITLE>                                                                */
-    /*------------------------------------------------------------------------*/
-    else
-    if ((*name == 't' || *name == 'T') && strcasecmp(name, "title") == 0) {
-      s_jhtml_start_title_tag (jhtml, child);
-      s_jhtml_node_exchange   (jhtml, child,indent+1);
-      s_jhtml_end_title_tag   (jhtml, child);
     }
     else
     if (*name == 'b' || *name == 'B') {
@@ -301,15 +308,30 @@ s_jhtml_node_exchange(jhtml_t* jhtml, Node* node, int indent)
         s_jhtml_end_img_tag   (jhtml, child);
       }
     }
-    /*------------------------------------------------------------------------*/
-    /* <SELECT>                                                               */
-    /*------------------------------------------------------------------------*/
     else
-    if ((*name == 's' || *name == 'S') 
-    &&  strcasecmp(name, "select") == 0) {
-      s_jhtml_start_select_tag(jhtml, child);
-      s_jhtml_node_exchange   (jhtml, child, indent+1);
-      s_jhtml_end_select_tag  (jhtml, child);
+    if (*name == 's' || *name == 'S') {
+      /*----------------------------------------------------------------------*/
+      /* <SELECT>                                                             */
+      /*----------------------------------------------------------------------*/
+      if (strcasecmp(name, "select") == 0) {
+        s_jhtml_start_select_tag(jhtml, child);
+        s_jhtml_node_exchange   (jhtml, child, indent+1);
+        s_jhtml_end_select_tag  (jhtml, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <STYLE> (for TEST)                                                   */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "style") == 0) {
+        s_jhtml_node_exchange (jhtml, child, indent+1);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <SPAN> (for TEST)                                                    */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "span") == 0) {
+        s_jhtml_node_exchange (jhtml, child, indent+1);
+      }
     }
     /*------------------------------------------------------------------------*/
     /* <OPTION>                                                               */
@@ -369,58 +391,94 @@ s_jhtml_node_exchange(jhtml_t* jhtml, Node* node, int indent)
         }
       }
     }
-    /*------------------------------------------------------------------------*/
-    /* NORMAL TEXT                                                            */
-    /*------------------------------------------------------------------------*/
     else
-    if (strcasecmp(name, "text") == 0) 
-    {
-      char*   textval;
-      char*   tmp;
-      char*   tdst;
-      char    one_byte[2];
-      int     ii;
-      int     tdst_len;
-
-      textval = qs_get_node_value(doc,child);
-      textval = qs_trim_string(jhtml->doc->r, textval);
-      if (strlen(textval) == 0)
-      {
-        continue;
+    if (*name == 't' || *name == 'T') {
+      /*------------------------------------------------------------------------*/
+      /* <TITLE>                                                                */
+      /*------------------------------------------------------------------------*/
+      if (strcasecmp(name, "title") == 0) {
+        s_jhtml_start_title_tag (jhtml, child);
+        s_jhtml_node_exchange   (jhtml, child,indent+1);
+        s_jhtml_end_title_tag   (jhtml, child);
       }
-
-      tmp = apr_palloc(r->pool, qs_get_node_size(doc,child)+1);
-      memset(tmp, 0, qs_get_node_size(doc,child)+1);
-
-      tdst     = qs_alloc_zero_byte_string(r);
-      memset(one_byte, 0, sizeof(one_byte));
-      tdst_len = 0;
-
-      for (ii=0; ii<qs_get_node_size(doc,child); ii++)
-      {
-        char* out;
-        int rtn = s_jhtml_search_emoji(jhtml, &textval[ii], &out);
-        if (rtn != 0)
-        {
-          tdst = qs_out_apr_pstrcat(r, tdst, out, &tdst_len);
-          ii+=(rtn - 1);
+      /*------------------------------------------------------------------------*/
+      /* <TABLE> (for TEST)                                                     */
+      /*------------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "table") == 0) {
+        s_jhtml_node_exchange (jhtml, child, indent+1);
+      }
+      /*------------------------------------------------------------------------*/
+      /* <TH> (for TEST)                                                        */
+      /*------------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "th") == 0) {
+        s_jhtml_node_exchange (jhtml, child, indent+1);
+      }
+      /*------------------------------------------------------------------------*/
+      /* <TR> (for TEST)                                                        */
+      /*------------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "tr") == 0) {
+        s_jhtml_start_tr_tag  (jhtml, child);
+        s_jhtml_node_exchange (jhtml, child,indent+1);
+        s_jhtml_end_tr_tag    (jhtml, child);
+      }
+      /*------------------------------------------------------------------------*/
+      /* <TD> (for TEST)                                                        */
+      /*------------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "td") == 0) {
+        s_jhtml_node_exchange (jhtml, child, indent+1);
+      }
+      /*------------------------------------------------------------------------*/
+      /* NORMAL TEXT                                                            */
+      /*------------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "text") == 0) {
+        char*   textval;
+        char*   tmp;
+        char*   tdst;
+        char    one_byte[2];
+        int     ii;
+        int     tdst_len;
+  
+        textval = qs_get_node_value(doc,child);
+        textval = qs_trim_string(jhtml->doc->r, textval);
+        if (strlen(textval) == 0)
           continue;
+  
+        tmp = apr_palloc(r->pool, qs_get_node_size(doc,child)+1);
+        memset(tmp, 0, qs_get_node_size(doc,child)+1);
+  
+        tdst     = qs_alloc_zero_byte_string(r);
+        memset(one_byte, 0, sizeof(one_byte));
+        tdst_len = 0;
+  
+        for (ii=0; ii<qs_get_node_size(doc,child); ii++) {
+          char* out;
+          int rtn = s_jhtml_search_emoji(jhtml, &textval[ii], &out);
+          if (rtn) {
+            tdst = qs_out_apr_pstrcat(r, tdst, out, &tdst_len);
+            ii+=(rtn - 1);
+            continue;
+          }
+
+          if (is_sjis_kanji(textval[ii])) {
+            one_byte[0] = textval[ii+0];
+            tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+            one_byte[0] = textval[ii+1];
+            tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+            ii++;
+          }
+          else 
+          if (textval[ii] != '\r' && textval[ii] != '\n') {
+            one_byte[0] = textval[ii+0];
+            tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+          }
         }
-        if (is_sjis_kanji(textval[ii]))
-        {
-          one_byte[0] = textval[ii+0];
-          tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
-          one_byte[0] = textval[ii+1];
-          tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
-          ii++;
-        }
-        else if (textval[ii] != '\r' && textval[ii] != '\n')
-        {
-          one_byte[0] = textval[ii+0];
-          tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
-        }
+        jhtml->out = apr_pstrcat(r->pool, jhtml->out, tdst, NULL);
       }
-      jhtml->out = apr_pstrcat(r->pool, jhtml->out, tdst, NULL);
     }
   }
   return jhtml->out;
@@ -1047,6 +1105,37 @@ s_jhtml_start_br_tag(jhtml_t* jhtml, Node* node)
  */
 static char*
 s_jhtml_end_br_tag(jhtml_t* jhtml, Node* child) 
+{
+  return jhtml->out;
+}
+
+/**
+ * It is a handler who processes the TR tag.
+ *
+ * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The TR tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_jhtml_start_tr_tag(jhtml_t* jhtml, Node* node) 
+{
+  Doc* doc = jhtml->doc;
+  request_rec* r = doc->r;
+  jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<br>\r\n", NULL);
+  return jhtml->out;
+}
+
+/**
+ * It is a handler who processes the TR tag.
+ *
+ * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The TR tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_jhtml_end_tr_tag(jhtml_t* jhtml, Node* child) 
 {
   return jhtml->out;
 }
