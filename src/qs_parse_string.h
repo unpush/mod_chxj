@@ -77,6 +77,7 @@
                         &&  (strcasecmp(c, "plaintext") != 0) \
                         &&  (strcasecmp(c, "?xml"     ) != 0) \
                         &&  (strcasecmp(c, "!doctype" ) != 0) \
+                        &&  (strcasecmp(c, "link"     ) != 0) \
                         &&  (strcasecmp(c, "!--"      ) != 0))
 
 /**

@@ -17,6 +17,7 @@
 #ifndef __MOD_CHXJ_H__
 #define __MOD_CHXJ_H__
 
+
 #include <string.h>
 
 #include "httpd.h"
@@ -42,7 +43,62 @@
 #include "qs_parse_string.h"
 #include "qs_parse_tag.h"
 
+#ifndef __CONFIG_H__
+#define __CONFIG_H__
+
+#undef PACKAGE_NAME
+#undef PACKAGE_STRING
+#undef PACKAGE_TARNAME
+#undef PACKAGE_VERSION
+
+#include "config.h"
+#endif
+#ifdef HAVE_AP_REGEX_H
+#  include "ap_regex.h"
+#else
+#  include "pcreposix.h"
+#  include "pcre.h"
+#  define AP_REG_ASSERT   REG_ASSERT
+#  define AP_REG_BADBR    REG_BADBR
+#  define AP_REG_BADPAT   REG_BADPAT
+#  define AP_REG_BADRPT   REG_BADRPT
+#  define AP_REG_EBRACE   REG_EBRACE
+#  define AP_REG_EBRACK   REG_EBRACK
+#  define AP_REG_ECOLLATE REG_ECOLLATE
+#  define AP_REG_ECTYPE   REG_ECTYPE
+#  define AP_REG_EESCAPE  REG_EESCAPE
+#  define AP_REG_EMPTY    REG_EMPTY
+#  define AP_REG_EPAREN   REG_EPAREN
+#  define AP_REG_ERANGE   REG_ERANGE
+#  define AP_REG_ESIZE    REG_ESIZE
+#  define AP_REG_ESPACE   REG_ESPACE
+#  define AP_REG_ESUBREG  REG_ESUBREG
+#  define AP_REG_INVARG   REG_INVARG
+#  define AP_REG_NOMATCH  REG_NOMATCH
+
+#  define AP_REG_ICASE    REG_ICASE
+#  define AP_REG_NEWLINE  REG_NEWLINE
+#  define AP_REG_NOTBOL   REG_NOTBOL
+#  define AP_REG_NOTEOL   REG_NOTEOL
+
+#  define AP_REG_EXTENDED REG_EXTENDED
+#  define AP_REG_NOSUB    REG_NOSUB
+
+#  define ap_regex_t      regex_t
+#  define ap_regmatch_t   regmatch_t
+#endif
+
+
 #include "chxj_specified_device.h"
+
+
+#ifdef HAVE_APR_GLOBAL_MUTEX_H
+#  include "apr_global_mutex.h"
+#endif
+
+#ifdef HAVE_APR_SHM_H
+#  include "apr_shm.h"
+#endif
 
 
 typedef struct _imode_emoji_t {

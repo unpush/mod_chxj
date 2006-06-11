@@ -31,7 +31,6 @@
 #include "apr_dso.h"
 #include "apr_general.h"
 #include "apr_pools.h"
-#include "ap_regex.h"
 
 #include "mod_chxj.h"
 #include "qs_ignore_sp.h"

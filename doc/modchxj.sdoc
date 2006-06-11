@@ -25,7 +25,7 @@ mod_chxjをインストールする前に、下記のものを用意する必要があります。
   <li>Apache2.0のヘッダーファイル群</li>
   <li>Apache2.0用のapxs</li>
   <li>apr(Apache Portable Runtime)ライブラリとそのヘッダファイル郡</li>
-  <li>automake、autoconf、libtool</li>
+  <li>automake、autoconf、libtool1.3.X</li>
   <li>ImageMagick(MagickWand)</li>
   <li>Linux</li>
 </ol>

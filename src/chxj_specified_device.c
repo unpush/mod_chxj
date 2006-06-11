@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 #include "mod_chxj.h"
-#include "ap_regex.h"
 
 static device_table_t  UNKNOWN_DEVICE      = {
     NULL, "","UNKNOWN", CHXJ_SPEC_UNKNOWN,  0,  0,0,0,0,0,0,0,0,0,0,0,0, ""};
@@ -38,55 +37,50 @@ chxj_specified_device(request_rec* r, const char* user_agent)
   int rtn;
   char* device_id;
 
+  if (user_agent == NULL) 
+    return returnType;
+            
+
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "start chxj_specified_device()");
   conf = ap_get_module_config(r->per_dir_config, &chxj_module);
-  for (dtl = conf->devices; dtl; dtl = dtl->next) 
-  {
-    if (dtl->pattern == NULL)
-    {
+  for (dtl = conf->devices; dtl; dtl = dtl->next) {
+    if (dtl->pattern == NULL) {
       ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "pattern is null");
       continue;
     }
 
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "pattern is [%s]", dtl->pattern);
     regexp = ap_pregcomp(r->pool, (const char*)dtl->pattern, AP_REG_EXTENDED|AP_REG_ICASE);
-    if (regexp == NULL) 
-    {
+    if (regexp == NULL) {
       ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "compile failed.");
       return returnType;
     }
 
     rtn = ap_regexec(regexp, user_agent, regexp->re_nsub + 1, match, 0);
-    if (rtn == 0) 
-    {
+    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "pattern is [%s]", dtl->pattern);
+    if (rtn == 0) {
       device_id = ap_pregsub(r->pool, "$1", user_agent, regexp->re_nsub + 1, match);
       ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "device_id:[%s]", device_id);
-      for (dt = dtl->table; dt; dt = dt->next) 
-      {
-        if (strcasecmp(device_id, dt->device_id) == 0) 
-        {
+      for (dt = dtl->table; dt; dt = dt->next) {
+        if (strcasecmp(device_id, dt->device_id) == 0) {
           ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "device_name:[%s]", dt->device_name);
           returnType = dt;
           break;
         }
       }
-      if (dt == NULL) 
-      {
-        for (dt = dtl->table; dt; dt = dt->next) 
-        {
+      if (dt == NULL) {
+        for (dt = dtl->table; dt; dt = dt->next) {
           if (dt->next == NULL) {
             break;
           }
         }
-        if (dt != NULL)
-        {
+        if (dt != NULL) {
           returnType = dt;
         }
       }
     }
     ap_pregfree(r->pool, regexp);
-    if (returnType != &UNKNOWN_DEVICE) 
-    {
+    if (returnType != &UNKNOWN_DEVICE) {
       ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "end chxj_specified_device()");
       return returnType;
     }

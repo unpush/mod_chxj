@@ -30,6 +30,24 @@ Please specify the --with-apache-header option. And, please specify the place of
 ])
 fi
 
+AC_ARG_WITH(apxs, [  --with-apxs=ARG Path of apxs program file.])
+if test "x$with_apxs" = "x" ; then
+  APXS=""
+fi
+if test "x$with_apxs" = "xyes" ; then
+    AC_MSG_ERROR([
+Please specify the --with-apxs option. And, please specify the place of the apxs program. 
+])
+fi
+
+AC_ARG_WITH(apr-config, [  --with-apr-config=ARG  Path of apr-config program file.])
+if test "x$with_apr_config" = "xyes" ; then
+    AC_MSG_ERROR([
+Please specify the --with-apr-config option. And, please specify the place of the apr-config program. 
+])
+fi
+
+
 AC_ARG_ENABLE(img-conv-f, [  --enable-img-conv-f      Please specify it when you change the file name of the image being written in the 
 source by the automatic operation.])
 if test "x$enable_img_conv_f" = "xyes"; then
@@ -48,12 +66,16 @@ else
 fi
 
 
-
-AC_PATH_PROG(APXS, apxs, no,
-    /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/usr/local/apache/bin)
-if test "x$APXS" = "xno"; then
-    AC_MSG_ERROR([apxs not found.])
+if test "x$with_apxs" = "x" ; then
+  AC_PATH_PROG(APXS, apxs, no,
+      /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/usr/local/apache/bin)
+  if test "x$APXS" = "xno"; then
+      AC_MSG_ERROR([apxs not found.])
+  fi
 fi
+if test "x$with_apxs" != "x" ; then
+  APXS=$with_apxs
+fi 
 
 AC_PATH_PROG(LIBTOOL, libtool, no,
     /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
@@ -68,16 +90,21 @@ if test "x$WAND_CONFIG" = "xno" ; then
     AC_MSG_ERROR([wand-config not found.])
 fi
 
-AC_PATH_PROG(APR_CONFIG, apr-config, no,
-   /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
-if test "x$APR_CONFIG" = "xno" ; then
-    AC_MSG_ERROR([apr-config not found.])
+if test "x$with_apr_config" = "x" ; then
+  AC_PATH_PROG(APR_CONFIG, apr-config, no,
+     /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
+  if test "x$APR_CONFIG" = "xno" ; then
+      AC_MSG_ERROR([apr-config not found.])
+  fi
+fi
+if test "x$with_apr_config" != "x" ; then
+  APR_CONFIG=$with_apr_config
 fi
 
 LIBS="${LIBS} `${WAND_CONFIG} --ldflags` `${WAND_CONFIG} --libs` "
 LIBS="${LIBS} `${APR_CONFIG} --ldflags` `${APR_CONFIG} --libs` "
 CFLAGS="${CFLAGS} `${WAND_CONFIG} --cppflags` `${WAND_CONFIG} --cflags`"
-CFLAGS="${CFLAGS} -I`${APR_CONFIG} --includedir` `${APR_CONFIG} --cflags` `${APR_CONFIG} --cppflags`"
+CFLAGS="${CFLAGS} `${APR_CONFIG} --includes` `${APR_CONFIG} --cflags` `${APR_CONFIG} --cppflags`"
 AC_SUBST(with_apache_header)
 AC_SUBST(CC)
 AC_SUBST(QDEFS)
@@ -88,6 +115,7 @@ AC_SUBST(CFLAGS)
 # Checks for header files.
 AC_HEADER_STDC
 AC_CHECK_HEADERS([string.h strings.h unistd.h fcntl.h sys/types.h sys/stat.h sys/mman.h libgen.h])
+AC_CHECK_HEADERS([apr_shm.h apr_global_mutex.h ap_regex.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
