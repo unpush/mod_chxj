@@ -188,14 +188,14 @@ s_chtml10_node_exchange(chtml10_t* chtml10, Node* node, int indent)
     /* <UL> (for TEST)                                                        */
     /*------------------------------------------------------------------------*/
     if ((*name == 'u' || *name == 'U') && strcasecmp(name, "ul") == 0) {
-      s_chtml20_node_exchange (chtml20, child, indent+1);
+      s_chtml10_node_exchange (chtml10, child, indent+1);
     }
     /*------------------------------------------------------------------------*/
     /* <LI> (for TEST)                                                        */
     /*------------------------------------------------------------------------*/
     else
     if ((*name == 'l' || *name == 'L') && strcasecmp(name, "li") == 0) {
-      s_chtml20_node_exchange (chtml20, child, indent+1);
+      s_chtml10_node_exchange (chtml10, child, indent+1);
     }
     else
     if (*name == 'h' || *name == 'H') {
@@ -248,30 +248,30 @@ s_chtml10_node_exchange(chtml10_t* chtml10, Node* node, int indent)
       /*------------------------------------------------------------------------*/
       else
       if (strcasecmp(name, "table") == 0) {
-        s_chtml20_node_exchange (chtml20, child, indent+1);
+        s_chtml10_node_exchange (chtml10, child, indent+1);
       }
       /*------------------------------------------------------------------------*/
       /* <TH> (for TEST)                                                        */
       /*------------------------------------------------------------------------*/
       else
       if (strcasecmp(name, "th") == 0) {
-        s_chtml20_node_exchange (chtml20, child, indent+1);
+        s_chtml10_node_exchange (chtml10, child, indent+1);
       }
       /*------------------------------------------------------------------------*/
       /* <TR> (for TEST)                                                        */
       /*------------------------------------------------------------------------*/
       else
       if (strcasecmp(name, "tr") == 0) {
-        s_chtml20_start_tr_tag  (chtml20, child);
-        s_chtml20_node_exchange (chtml20, child,indent+1);
-        s_chtml20_end_tr_tag    (chtml20, child);
+        s_chtml10_start_tr_tag  (chtml10, child);
+        s_chtml10_node_exchange (chtml10, child,indent+1);
+        s_chtml10_end_tr_tag    (chtml10, child);
       }
       /*------------------------------------------------------------------------*/
       /* <TD> (for TEST)                                                        */
       /*------------------------------------------------------------------------*/
       else
       if (strcasecmp(name, "td") == 0) {
-        s_chtml20_node_exchange (chtml20, child, indent+1);
+        s_chtml10_node_exchange (chtml10, child, indent+1);
       }
     }
     else
@@ -365,14 +365,14 @@ s_chtml10_node_exchange(chtml10_t* chtml10, Node* node, int indent)
       /*------------------------------------------------------------------------*/
       else
       if (strcasecmp(name, "style") == 0) {
-        s_chtml20_node_exchange (chtml20, child, indent+1);
+        s_chtml10_node_exchange (chtml10, child, indent+1);
       }
       /*------------------------------------------------------------------------*/
       /* <SPAN> (for TEST)                                                      */
       /*------------------------------------------------------------------------*/
       else
       if (strcasecmp(name, "span") == 0) {
-        s_chtml20_node_exchange (chtml20, child, indent+1);
+        s_chtml10_node_exchange (chtml10, child, indent+1);
       }
     }
     /*------------------------------------------------------------------------*/
