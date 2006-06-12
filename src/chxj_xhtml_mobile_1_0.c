@@ -27,6 +27,8 @@ static char* s_xhtml_1_0_start_html_tag   (xhtml_t* xhtml, Node* child);
 static char* s_xhtml_1_0_end_html_tag     (xhtml_t* xhtml, Node* child);
 static char* s_xhtml_1_0_start_ul_tag   (xhtml_t* xhtml, Node* child);
 static char* s_xhtml_1_0_end_ul_tag     (xhtml_t* xhtml, Node* child);
+static char* s_xhtml_1_0_start_ol_tag   (xhtml_t* xhtml, Node* child);
+static char* s_xhtml_1_0_end_ol_tag     (xhtml_t* xhtml, Node* child);
 static char* s_xhtml_1_0_start_li_tag   (xhtml_t* xhtml, Node* child);
 static char* s_xhtml_1_0_end_li_tag     (xhtml_t* xhtml, Node* child);
 static char* s_xhtml_1_0_start_meta_tag   (xhtml_t* xhtml, Node* node);
@@ -201,6 +203,15 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
       s_xhtml_1_0_start_ul_tag  (xhtml, child);
       s_xhtml_1_0_node_exchange (xhtml, child, indent+1);
       s_xhtml_1_0_end_ul_tag    (xhtml, child);
+    }
+    /*------------------------------------------------------------------------*/
+    /* <OL> (for TEST)                                                        */
+    /*------------------------------------------------------------------------*/
+    else
+    if ((*name == 'o' || *name == 'O') && strcasecmp(name, "ol") == 0) {
+      s_xhtml_1_0_start_ol_tag  (xhtml, child);
+      s_xhtml_1_0_node_exchange (xhtml, child, indent+1);
+      s_xhtml_1_0_end_ol_tag    (xhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <LI> (for TEST)                                                        */
@@ -1577,6 +1588,44 @@ s_xhtml_1_0_end_ul_tag(xhtml_t* xhtml, Node* child)
   request_rec*  r   = doc->r;
 
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</ul>", NULL);
+
+  return xhtml->out;
+}
+
+/**
+ * It is a handler who processes the OL tag.
+ *
+ * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The OL tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_xhtml_1_0_start_ol_tag(xhtml_t* xhtml, Node* node) 
+{
+  Doc*          doc = xhtml->doc;
+  request_rec*  r   = doc->r;
+
+  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<ol>", NULL);
+
+  return xhtml->out;
+}
+
+/**
+ * It is a handler who processes the OL tag.
+ *
+ * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The OL tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_xhtml_1_0_end_ol_tag(xhtml_t* xhtml, Node* child) 
+{
+  Doc*          doc = xhtml->doc;
+  request_rec*  r   = doc->r;
+
+  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</ol>", NULL);
 
   return xhtml->out;
 }
