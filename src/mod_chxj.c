@@ -329,7 +329,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
             memset(tmp, 0, ctx->len + 1);
             memcpy(tmp, ctx->buffer, ctx->len);
             ap_log_rerror(
-              APLOG_MARK, APLOG_DEBUG, 0, r, "input data=[%s]", tmp);
+              APLOG_MARK, APLOG_DEBUG, 0, r, "input data=[%s] len=[%d]", tmp, ctx->len);
             ctx->buffer = chxj_exchange(r, (const char**)&tmp, (apr_size_t*)&ctx->len);
             ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "output data=[%.*s]", ctx->len,ctx->buffer);
           }
