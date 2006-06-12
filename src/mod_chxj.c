@@ -171,7 +171,6 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
       ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "select ?????");
       ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "html_spec_type[%d]", 
                       spec->html_spec_type);
-      ap_set_content_type(r, "text/html; charset=Windows-31J");
       break;
     }
   }
@@ -349,6 +348,9 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
               APLOG_MARK, APLOG_DEBUG, 0, r, "input data=[%s]", tmp);
             ctx->buffer = 
               chxj_exchange_image(r, (const char**)&tmp,(apr_size_t*)&ctx->len);
+            if (ctx->buffer == NULL) {
+              ctx->buffer = tmp;
+            }
             ap_log_rerror(
               APLOG_MARK, APLOG_DEBUG, 0, r, "output data=[%.*s]", ctx->len,ctx->buffer);
           }
@@ -666,7 +668,11 @@ chxj_create_per_dir_config(apr_pool_t *p, char *arg)
   conf->emoji_tail       = NULL;
   conf->image            = CHXJ_IMG_OFF;
   conf->image_cache_dir  = apr_psprintf(p, "%s",DEFAULT_IMAGE_CACHE_DIR);
-  conf->server_side_encoding = apr_pstrdup(p, DEFAULT_SERVER_SIDE_ENCODING);
+  conf->server_side_encoding = apr_palloc(p, 256);
+  memset(conf->server_side_encoding, 0, 256);
+  memcpy(conf->server_side_encoding, 
+    DEFAULT_SERVER_SIDE_ENCODING,
+    strlen(DEFAULT_SERVER_SIDE_ENCODING));
 
   /* Default is copyleft */
   conf->image_copyright = NULL; 
@@ -727,6 +733,17 @@ chxj_merge_per_dir_config(apr_pool_t *p, void *basev, void *addv)
   else
   if (add->image_copyright != NULL) 
     mrg->image_copyright = apr_pstrdup(p, add->image_copyright);
+
+  if (add->server_side_encoding == NULL && base->server_side_encoding != NULL) {
+    mrg->server_side_encoding = apr_pstrdup(p, base->server_side_encoding);
+  }
+  else
+  if (add->server_side_encoding != NULL) {
+    mrg->server_side_encoding = apr_pstrdup(p, add->server_side_encoding);
+  }
+  else {
+    mrg->server_side_encoding = apr_pstrdup(p, DEFAULT_SERVER_SIDE_ENCODING);
+  }
 
   return mrg;
 }

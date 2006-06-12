@@ -284,37 +284,26 @@ chxj_exchange_image(request_rec *r, const char** src, apr_size_t* len)
   /* User-Agent to spec                                                       */
   /*--------------------------------------------------------------------------*/
   if (qsp->user_agent != NULL)
-  {
     user_agent = apr_pstrdup(r->pool, qsp->user_agent);
-  }
   else
-  {
     user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
-  }
 
   if (qsp->ua_flag == UA_IGN)
-  {
     spec = &v_ignore_spec;
-  }
   else
-  {
     spec = chxj_specified_device(r, user_agent);
-  }
 
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "found device_name=[%s]", 
                   spec->device_name);
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "User-Agent=[%s]", 
                   user_agent);
 
-  if (spec->width == 0 || spec->heigh == 0)
-  {
-    *len = 0;
+  if (spec->width == 0 || spec->heigh == 0) {
     return NULL;
   }
 
   dst = s_create_blob_data(r, spec, qsp, (char*)*src, len);
-  if (dst == NULL)
-  {
+  if (dst == NULL) {
     *len = 0;
   }
   return dst;
@@ -1498,12 +1487,14 @@ chxj_trans_name(request_rec *r)
   char*    fname;
   char*    idx;
   char*    filename_sv;
+  char*    tmpext;
 
   conf = ap_get_module_config(r->per_dir_config, &chxj_module);
   if (conf->image != CHXJ_IMG_ON) 
     return DECLINED;
 
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "Match URI[%s]", r->uri);
+
 
   if (r->filename == NULL) 
     r->filename = apr_pstrdup(r->pool, r->uri);
@@ -1548,11 +1539,11 @@ chxj_trans_name(request_rec *r)
 
     fname = NULL;
   }
+  if (fname == NULL) {
+    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "NotFound [%s]", r->filename);
+    return DECLINED;
+  }
   if (r->handler == NULL || strcasecmp(r->handler, "chxj-qrcode") != 0) {
-    if (fname == NULL) {
-      ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "NotFound [%s]", r->filename);
-      return DECLINED;
-    }
   
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "Found [%s]", fname);
     r->filename = apr_psprintf(r->pool, "%s", fname);
