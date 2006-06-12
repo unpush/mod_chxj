@@ -30,6 +30,8 @@ static void  s_init_hdml            (hdml_t* hdml, Doc* doc, request_rec* r, dev
 static char* s_hdml_node_exchange   (hdml_t* doc,  Node* node, int indent);
 static char* s_hdml_start_html_tag  (hdml_t* doc,  Node* child);
 static char* s_hdml_end_html_tag    (hdml_t* doc,  Node* child);
+static char* s_hdml_start_li_tag    (hdml_t* doc,  Node* child);
+static char* s_hdml_end_li_tag      (hdml_t* doc,  Node* child);
 static char* s_hdml_start_meta_tag  (hdml_t* doc,  Node* node);
 static char* s_hdml_end_meta_tag    (hdml_t* doc,  Node* node);
 static char* s_hdml_start_head_tag  (hdml_t* doc,  Node* node);
@@ -291,7 +293,9 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
     /*------------------------------------------------------------------------*/
     else
     if ((*name == 'l' || *name == 'L') && strcasecmp(name, "li") == 0) {
+      s_hdml_start_li_tag(hdml, child);
       s_hdml_node_exchange (hdml, child, indent+1);
+      s_hdml_end_li_tag(hdml, child);
     }
     else
     if (*name == 'h' || *name == 'H') {
@@ -2042,6 +2046,55 @@ s_hdml_start_hr_tag(hdml_t* hdml, Node* node)
 static char*
 s_hdml_end_hr_tag(hdml_t* hdml, Node* child) 
 {
+  return hdml->out;
+}
+
+/**
+ * It is a handler who processes the LI tag.
+ *
+ * @param hdml   [i/o] The pointer to the HDML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The LI tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_hdml_start_li_tag(hdml_t* hdml, Node* node) 
+{
+  if (hdml->hdml_br_flag == 0) {
+    s_output_to_hdml_out(hdml, "<BR>\n");
+    if (hdml->in_center)
+      hdml->in_center--;
+    else
+    if (hdml->div_in_center) 
+      hdml->div_in_center--;
+  }
+
+  hdml->hdml_br_flag = 1;
+
+  return hdml->out;
+}
+
+/**
+ * It is a handler who processes the LI tag.
+ *
+ * @param hdml   [i/o] The pointer to the HDML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The LI tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_hdml_end_li_tag(hdml_t* hdml, Node* child) 
+{
+  if (hdml->hdml_br_flag == 0) {
+    s_output_to_hdml_out(hdml, "<BR>\n");
+    if (hdml->in_center)
+      hdml->in_center--;
+    else
+    if (hdml->div_in_center) 
+      hdml->div_in_center--;
+  }
+
+  hdml->hdml_br_flag = 1;
   return hdml->out;
 }
 

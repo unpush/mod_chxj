@@ -418,6 +418,13 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
         s_xhtml_1_0_node_exchange (xhtml, child, indent+1);
       }
       /*----------------------------------------------------------------------*/
+      /* <TBODY> (for TEST)                                                   */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "tbody") == 0) {
+        s_xhtml_1_0_node_exchange (xhtml, child, indent+1);
+      }
+      /*----------------------------------------------------------------------*/
       /* <TH> (for TEST)                                                      */
       /*----------------------------------------------------------------------*/
       else
@@ -1607,7 +1614,7 @@ s_xhtml_1_0_end_li_tag(xhtml_t* xhtml, Node* child)
   Doc*          doc = xhtml->doc;
   request_rec*  r   = doc->r;
 
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</li>", NULL);
+  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</li><br />", NULL);
 
   return xhtml->out;
 }
