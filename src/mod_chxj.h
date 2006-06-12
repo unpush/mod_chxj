@@ -185,6 +185,7 @@ typedef struct _mod_chxj_config_t
   device_table_list_t*  devices;
   emoji_t*              emoji;
   emoji_t*              emoji_tail;
+  char*                 server_side_encoding;
 
 } mod_chxj_config_t;
 

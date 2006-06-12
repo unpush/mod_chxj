@@ -666,6 +666,7 @@ chxj_create_per_dir_config(apr_pool_t *p, char *arg)
   conf->emoji_tail       = NULL;
   conf->image            = CHXJ_IMG_OFF;
   conf->image_cache_dir  = apr_psprintf(p, "%s",DEFAULT_IMAGE_CACHE_DIR);
+  conf->server_side_encoding = apr_pstrdup(p, DEFAULT_SERVER_SIDE_ENCODING);
 
   /* Default is copyleft */
   conf->image_copyright = NULL; 
@@ -823,7 +824,7 @@ cmd_set_image_cache_dir(cmd_parms *parms, void *mconfig, const char* arg)
 }
 
 static const char* 
-cmd_set_image_copyright(cmd_parms *parms, void *mconfig, const char* arg) 
+cmd_set_image_copyright(cmd_parms *parms, void* mconfig, const char* arg) 
 {
   mod_chxj_config_t* conf;
   Doc doc;
@@ -834,6 +835,19 @@ cmd_set_image_copyright(cmd_parms *parms, void *mconfig, const char* arg)
 
   conf = (mod_chxj_config_t*)mconfig;
   conf->image_copyright = apr_pstrdup(parms->pool, arg);
+  return NULL;
+}
+
+static const char*
+cmd_set_server_side_encoding(cmd_parms *parms, void* mconfig, const char* arg)
+{
+  mod_chxj_config_t* conf;
+
+  if (strlen(arg) > 256) 
+    return "ChxjServerSideEncoding is too long.";
+
+  conf = (mod_chxj_config_t*)mconfig;
+  conf->server_side_encoding = apr_pstrdup(parms->pool, arg);
   return NULL;
 }
 
@@ -866,6 +880,12 @@ static const command_rec cmds[] = {
   AP_INIT_TAKE1(
     "ChxjImageCopyright",
     cmd_set_image_copyright,
+    NULL,
+    OR_ALL,
+    "Copyright Flag"),
+  AP_INIT_TAKE1(
+    "ChxjServerSideEncoding",
+    cmd_set_server_side_encoding,
     NULL,
     OR_ALL,
     "Copyright Flag"),

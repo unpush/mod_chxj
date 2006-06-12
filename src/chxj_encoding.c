@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "mod_chxj.h"
 #include "chxj_encoding.h"
 #include "iconv_hook/iconv.h"
 
@@ -27,9 +28,19 @@ chxj_encoding(request_rec *r, const char* src, apr_size_t* len)
   size_t result;
   apr_size_t ilen;
   apr_size_t olen;
+  mod_chxj_config_t* conf;
 
   ap_log_rerror(
     APLOG_MARK,APLOG_DEBUG, 0, r, "start chxj_encoding()");
+  conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+
+  if (! conf->server_side_encoding
+  || ((*conf->server_side_encoding == 'n' || *conf->server_side_encoding == 'N') 
+     &&   strcasecmp(conf->server_side_encoding, "NONE") == 0)) {
+    ap_log_rerror(
+      APLOG_MARK,APLOG_DEBUG, 0, r, "none encoding.");
+    return (char*)src;
+  }
 
   ilen = *len;
 
@@ -42,7 +53,9 @@ chxj_encoding(request_rec *r, const char* src, apr_size_t* len)
   }
 
   memset(obuf, 0, olen);
-  cd = iconv_open("CP932", "EUC-JP");
+  cd = iconv_open("CP932",(conf->server_side_encoding == NULL) ? 
+                             DEFAULT_SERVER_SIDE_ENCODING :
+                             conf->server_side_encoding );
   if (cd == (iconv_t)-1) {
     ap_log_rerror(
       APLOG_MARK,APLOG_DEBUG, 0, r, "end   chxj_encoding()");
