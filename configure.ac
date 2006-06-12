@@ -125,6 +125,12 @@ AC_C_CONST
 # Checks for library functions.
 AC_FUNC_MALLOC
 AC_CHECK_FUNCS([open mmap close memset memcpy strcasecmp strncasecmp strstr])
+AC_CHECK_LIB([iconv_hook], [iconv_open], [],[
+    AC_MSG_ERROR([
+Please install libiconv_hook.
+])
+],[])
+
 
 
 AC_CONFIG_FILES([Makefile src/Makefile])

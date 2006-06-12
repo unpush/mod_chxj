@@ -53,31 +53,14 @@
 
 #include "chxj_img_conv_format.h"
 #include "chxj_qr_code.h"
+#include "chxj_encoding.h"
 
-
-#ifdef PACKAGE_NAME
-#undef PACKAGE_NAME
-#endif
-
-#ifdef PACKAGE_VERSION
-#undef PACKAGE_VERSION
-#endif
-
-#ifdef PACKAGE_STRING
-#undef PACKAGE_STRING
-#endif
-
-#ifdef PACKAGE_TARNAME
-#undef PACKAGE_TARNAME
-#endif
-
-#include "config.h"
 
 #define CHXJ_VERSION_PREFIX PACKAGE_NAME "/"
 #define CHXJ_VERSION        PACKAGE_VERSION
 
 /**
- * It converts it from CHTML into ML corresponding to each model. 
+ * It converts it from CHTML into XXML corresponding to each model. 
  *
  * @param r   [i]
  * @param src [i]   It is former HTML character string. 
@@ -88,6 +71,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
 {
   char *user_agent;
   char *dst = apr_pstrcat(r->pool, (char*)*src, NULL);
+  char *tmp;
 
   /*------------------------------------------------------------------------*/
   /* get UserAgent from http header                                         */
@@ -109,76 +93,86 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
 
   if (!r->header_only) {
     device_table_t* spec = chxj_specified_device(r, user_agent);
-    if (spec->html_spec_type == CHXJ_SPEC_Chtml_1_0) {
+    switch(spec->html_spec_type) {
+    case CHXJ_SPEC_Chtml_1_0:
       /*----------------------------------------------------------------------*/
       /* DoCoMo i-Mode 1.0                                                    */
       /*----------------------------------------------------------------------*/
       ap_log_rerror(
         APLOG_MARK,APLOG_DEBUG, 0, r, "select DoCoMo i-Mode 1.0 ");
-      dst = chxj_exchange_chtml10(r, spec, *src, *len, len);
+      tmp = chxj_encoding(r, *src, (apr_size_t*)len);
+      dst = chxj_exchange_chtml10(r, spec, tmp, *len, len);
+      break;
 
-    }
-    else
-    if (spec->html_spec_type == CHXJ_SPEC_Chtml_2_0) {
+    case CHXJ_SPEC_Chtml_2_0:
       /*----------------------------------------------------------------------*/
       /* DoCoMo i-Mode 2.0                                                    */
       /*----------------------------------------------------------------------*/
       ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "select DoCoMo i-Mode 2.0 ");
-      dst = chxj_exchange_chtml20(r, spec, *src, *len, len);
-    }
-    else 
-    if (spec->html_spec_type == CHXJ_SPEC_Chtml_3_0) {
+      tmp = chxj_encoding(r, (char*)*src, (apr_size_t*)len);
+      dst = chxj_exchange_chtml20(r, spec, tmp, *len, len);
+      break;
+   
+    case CHXJ_SPEC_Chtml_3_0:
       /*----------------------------------------------------------------------*/
       /* DoCoMo i-Mode 3.0                                                    */
       /*----------------------------------------------------------------------*/
       ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "select DoCoMo i-Mode 3.0 ");
-      dst = chxj_exchange_chtml30(r, spec, *src, *len, len);
-    }
-    else
-    if (spec->html_spec_type == CHXJ_SPEC_Chtml_4_0) {
+      tmp = chxj_encoding(r, *src, (apr_size_t*)len);
+      dst = chxj_exchange_chtml30(r, spec, tmp, *len, len);
+      break;
+    
+    case CHXJ_SPEC_Chtml_4_0:
       /*----------------------------------------------------------------------*/
       /* DoCoMo i-Mode 4.0                                                    */
       /*----------------------------------------------------------------------*/
       ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "select DoCoMo i-Mode 4.0 ");
-      dst = chxj_exchange_chtml30(r, spec, *src, *len, len);
-    }
-    else 
-    if (spec->html_spec_type == CHXJ_SPEC_Chtml_5_0) {
+      tmp = chxj_encoding(r, *src, (apr_size_t*)len);
+      dst = chxj_exchange_chtml30(r, spec, tmp, *len, len);
+      break;
+
+    case CHXJ_SPEC_Chtml_5_0:
       /*----------------------------------------------------------------------*/
       /* DoCoMo i-Mode 5.0                                                    */
       /*----------------------------------------------------------------------*/
       ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "select DoCoMo i-Mode 5.0 ");
-      dst = chxj_exchange_chtml30(r, spec, *src, *len, len);
-    }
-    else
-    if (spec->html_spec_type == CHXJ_SPEC_XHtml_Mobile_1_0) {
+      tmp = chxj_encoding(r, *src, (apr_size_t*)len);
+      dst = chxj_exchange_chtml30(r, spec, tmp, *len, len);
+      break;
+
+    case CHXJ_SPEC_XHtml_Mobile_1_0:
       /*----------------------------------------------------------------------*/
       /* AU XHtml Mobile 1.0 (XHtml Basic 1.0 extended)                       */
       /*----------------------------------------------------------------------*/
       ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "select XHTML Mobile 1.0");
-      dst = chxj_exchange_xhtml_mobile_1_0(r, spec, *src, *len, len);
-    }
-    else
-    if (spec->html_spec_type == CHXJ_SPEC_Hdml) {
+      tmp = chxj_encoding(r, *src, (apr_size_t*)len);
+      dst = chxj_exchange_xhtml_mobile_1_0(r, spec, tmp, *len, len);
+      break;
+
+    case CHXJ_SPEC_Hdml:
       /*----------------------------------------------------------------------*/
       /* AU HDML Version 3.0 Only                                             */
       /*----------------------------------------------------------------------*/
       ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "select HDML");
-      dst = chxj_exchange_hdml(r, spec, *src, *len, len);
-    }
-    else
-    if (spec->html_spec_type == CHXJ_SPEC_Jhtml) {
+      tmp = chxj_encoding(r, *src, (apr_size_t*)len);
+      dst = chxj_exchange_hdml(r, spec, tmp, *len, len);
+      break;
+
+    case CHXJ_SPEC_Jhtml:
       /*----------------------------------------------------------------------*/
       /* J-Phone and Vodaphone                                                */
       /*----------------------------------------------------------------------*/
       ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "select JHTML");
-      dst = chxj_exchange_jhtml(r, spec, *src, *len, len);
-    }
-    else {
+      tmp = chxj_encoding(r, *src, (apr_size_t*)len);
+      dst = chxj_exchange_jhtml(r, spec, tmp, *len, len);
+      break;
+
+    default:
       ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "select ?????");
       ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "html_spec_type[%d]", 
                       spec->html_spec_type);
       ap_set_content_type(r, "text/html; charset=Windows-31J");
+      break;
     }
   }
 
@@ -189,6 +183,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
     *len = 1;
   }
   dst[*len] = 0;
+
   return dst;
 }
 
@@ -715,27 +710,23 @@ chxj_merge_per_dir_config(apr_pool_t *p, void *basev, void *addv)
     mrg->emoji_data_file = apr_pstrdup(p, add->emoji_data_file);
   }
 
-  if (add->image == CHXJ_IMG_OFF) {
+  if (add->image == CHXJ_IMG_OFF) 
     mrg->image = base->image;
-  }
-  else {
+  else 
     mrg->image = add->image;
-  }
 
-  if (strcasecmp(add->image_cache_dir ,DEFAULT_IMAGE_CACHE_DIR)==0) {
+
+  if (strcasecmp(add->image_cache_dir ,DEFAULT_IMAGE_CACHE_DIR)==0) 
     mrg->image_cache_dir = apr_pstrdup(p, base->image_cache_dir);
-  }
-  else {
+  else 
     mrg->image_cache_dir = apr_pstrdup(p, add->image_cache_dir);
-  }
 
-  if (add->image_copyright == NULL && base->image_copyright != NULL) {
+  if (add->image_copyright == NULL && base->image_copyright != NULL) 
     mrg->image_copyright = apr_pstrdup(p, base->image_copyright);
-  }
   else
-  if (add->image_copyright != NULL) {
+  if (add->image_copyright != NULL) 
     mrg->image_copyright = apr_pstrdup(p, add->image_copyright);
-  }
+
   return mrg;
 }
 /**
@@ -752,9 +743,7 @@ cmd_load_device_data(cmd_parms *parms, void *mconfig, const char* arg)
   Doc doc;
   doc.r = NULL;
   if (strlen(arg) > 256) 
-  {
     return "device data filename too long.";
-  }
 
   conf = (mod_chxj_config_t*)mconfig;
   conf->device_data_file = apr_pstrdup(parms->pool, arg);
@@ -785,9 +774,7 @@ cmd_load_emoji_data(cmd_parms *parms, void *mconfig, const char* arg)
   doc.r = NULL;
 
   if (strlen(arg) > 256) 
-  {
     return "emoji data filename too long.";
-  }
 
   conf = (mod_chxj_config_t*)mconfig;
   conf->emoji_data_file = apr_pstrdup(parms->pool, arg);
@@ -806,21 +793,18 @@ cmd_set_image_engine(cmd_parms *parms, void *mconfig, const char* arg)
 {
   mod_chxj_config_t* conf;
   Doc doc;
+
   doc.r = NULL;
+
   if (strlen(arg) > 256) 
-  {
     return "image uri is too long.";
-  }
 
   conf = (mod_chxj_config_t*)mconfig;
   if (strcasecmp("ON", arg) == 0)
-  {
     conf->image = CHXJ_IMG_ON;
-  }
   else
-  {
     conf->image = CHXJ_IMG_OFF;
-  }
+
   return NULL;
 }
 
@@ -831,9 +815,7 @@ cmd_set_image_cache_dir(cmd_parms *parms, void *mconfig, const char* arg)
   Doc doc;
   doc.r = NULL;
   if (strlen(arg) > 256) 
-  {
     return "cache dir name is too long.";
-  }
 
   conf = (mod_chxj_config_t*)mconfig;
   conf->image_cache_dir = apr_pstrdup(parms->pool, arg);
@@ -848,9 +830,7 @@ cmd_set_image_copyright(cmd_parms *parms, void *mconfig, const char* arg)
 
   doc.r = NULL;
   if (strlen(arg) > 256) 
-  {
     return "Copyright Flag is too long.";
-  }
 
   conf = (mod_chxj_config_t*)mconfig;
   conf->image_copyright = apr_pstrdup(parms->pool, arg);
