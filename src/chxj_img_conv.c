@@ -21,10 +21,8 @@ char*
 chxj_img_conv(request_rec* r, device_table_t* spec, const char* s)
 {
   char* dst = apr_pstrdup(r->pool, s);
-  if (spec != NULL)
-  {
-    switch (spec->color) 
-    {
+  if (spec) {
+    switch (spec->color) {
     case 2       : dst = apr_pstrcat(r->pool, dst,".10", NULL); break;
     case 4       : dst = apr_pstrcat(r->pool, dst,".20", NULL); break;
     case 256     : dst = apr_pstrcat(r->pool, dst,".30", NULL); break;
@@ -35,24 +33,16 @@ chxj_img_conv(request_rec* r, device_table_t* spec, const char* s)
     default:       dst = apr_pstrcat(r->pool, dst,".30", NULL); break;
     }
     if (spec->available_jpeg != 0)
-    {
       return apr_pstrcat(r->pool, dst,".jpg", NULL);
-    }
 
     if (spec->available_png != 0)
-    {
       return apr_pstrcat(r->pool, dst,".png", NULL);
-    }
 
     if (spec->available_gif != 0)
-    {
       return apr_pstrcat(r->pool, dst, ".gif", NULL);
-    }
 
     if (spec->available_bmp4 != 0 || spec->available_bmp2 != 0)
-    {
       return apr_pstrcat(r->pool, dst, ".bmp", NULL);
-    }
   }
   return dst;
 }

@@ -1487,7 +1487,6 @@ chxj_trans_name(request_rec *r)
   char*    fname;
   char*    idx;
   char*    filename_sv;
-  char*    tmpext;
 
   conf = ap_get_module_config(r->per_dir_config, &chxj_module);
   if (conf->image != CHXJ_IMG_ON) 

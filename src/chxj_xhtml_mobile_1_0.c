@@ -25,6 +25,10 @@
 static char* s_xhtml_1_0_node_exchange    (xhtml_t* xhtml, Node* node, int indent);
 static char* s_xhtml_1_0_start_html_tag   (xhtml_t* xhtml, Node* child);
 static char* s_xhtml_1_0_end_html_tag     (xhtml_t* xhtml, Node* child);
+static char* s_xhtml_1_0_start_ul_tag   (xhtml_t* xhtml, Node* child);
+static char* s_xhtml_1_0_end_ul_tag     (xhtml_t* xhtml, Node* child);
+static char* s_xhtml_1_0_start_li_tag   (xhtml_t* xhtml, Node* child);
+static char* s_xhtml_1_0_end_li_tag     (xhtml_t* xhtml, Node* child);
 static char* s_xhtml_1_0_start_meta_tag   (xhtml_t* xhtml, Node* node);
 static char* s_xhtml_1_0_end_meta_tag     (xhtml_t* xhtml, Node* node);
 static char* s_xhtml_1_0_start_head_tag   (xhtml_t* xhtml, Node* node);
@@ -194,14 +198,18 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
     /* <UL> (for TEST)                                                        */
     /*------------------------------------------------------------------------*/
     if ((*name == 'u' || *name == 'U') && strcasecmp(name, "ul") == 0) {
+      s_xhtml_1_0_start_ul_tag  (xhtml, child);
       s_xhtml_1_0_node_exchange (xhtml, child, indent+1);
+      s_xhtml_1_0_end_ul_tag    (xhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <LI> (for TEST)                                                        */
     /*------------------------------------------------------------------------*/
     else
     if ((*name == 'l' || *name == 'L') && strcasecmp(name, "li") == 0) {
+      s_xhtml_1_0_start_li_tag  (xhtml, child);
       s_xhtml_1_0_node_exchange (xhtml, child, indent+1);
+      s_xhtml_1_0_end_li_tag    (xhtml, child);
     }
     else
     if (*name == 'h' || *name == 'H') {
@@ -1525,6 +1533,82 @@ s_xhtml_1_0_start_hr_tag(xhtml_t* xhtml, Node* node)
 static char*
 s_xhtml_1_0_end_hr_tag(xhtml_t* xhtml, Node* child) 
 {
+  return xhtml->out;
+}
+
+/**
+ * It is a handler who processes the UL tag.
+ *
+ * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The UL tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_xhtml_1_0_start_ul_tag(xhtml_t* xhtml, Node* node) 
+{
+  Doc*          doc = xhtml->doc;
+  request_rec*  r   = doc->r;
+
+  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<ul>", NULL);
+
+  return xhtml->out;
+}
+
+/**
+ * It is a handler who processes the UL tag.
+ *
+ * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The UL tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_xhtml_1_0_end_ul_tag(xhtml_t* xhtml, Node* child) 
+{
+  Doc*          doc = xhtml->doc;
+  request_rec*  r   = doc->r;
+
+  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</ul>", NULL);
+
+  return xhtml->out;
+}
+
+/**
+ * It is a handler who processes the LI tag.
+ *
+ * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The LI tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_xhtml_1_0_start_li_tag(xhtml_t* xhtml, Node* node) 
+{
+  Doc*          doc = xhtml->doc;
+  request_rec*  r   = doc->r;
+
+  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<li>", NULL);
+
+  return xhtml->out;
+}
+
+/**
+ ** It is a handler who processes the LI tag.
+ *
+ * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The LI tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_xhtml_1_0_end_li_tag(xhtml_t* xhtml, Node* child) 
+{
+  Doc*          doc = xhtml->doc;
+  request_rec*  r   = doc->r;
+
+  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</li>", NULL);
+
   return xhtml->out;
 }
 
