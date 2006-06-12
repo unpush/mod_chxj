@@ -261,6 +261,34 @@ ChxjImageCopyright "A.Konno"
   </li>
 </ol>
 </subsection>
+
+<subsection title="文字コードを変換したい場合">
+<ol>
+<li>httpd.confに以下を追加します。
+下記は、URIが/chxjで始まる全てのコンテンツに対して動作するようmod_chxjに指示しています。
+サーバ側はEUC-JPであった場合の例です。mod_chxjによってSJISに変換するように指示しています。
+
+<program title="httpd.conf">
+&lt;Location /chxj&gt;
+ChxjServerSideEncoding "EUC-JP"
+&lt;/Location&gt;
+</program>
+
+上記の説明を以下に示します。
+
+    <ol>
+        <li>ChxjServerSideEncoding<br />
+          サーバサイドの文字コードを指定します。ここに、EUC-JPと指定してあった場合は、
+          EUC-JPからCP932に変換後、クライアントに出力されます。
+          DefaultはNONE
+     
+          <br />
+          <br />
+        </li>
+    </ol>
+</li>
+</ol>
+</subsection>
 </section>
 <section title="対応するCHTMLタグ">
 変換可能なＣＨＴＭＬタグは以下のとおりです。
