@@ -262,7 +262,7 @@ ChxjImageCopyright "A.Konno"
 </ol>
 </subsection>
 
-<subsection title="文字コードを変換したい場合">
+<subsection title="文字コードを変換したい場合(EXPERIMENTAL)">
 <ol>
 <li>httpd.confに以下を追加します。
 下記は、URIが/chxjで始まる全てのコンテンツに対して動作するようmod_chxjに指示しています。
