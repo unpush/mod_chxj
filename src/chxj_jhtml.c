@@ -1026,7 +1026,7 @@ s_jhtml_start_a_tag(jhtml_t* jhtml, Node* node)
       /* not support */
     }
     else
-    if (strcasecmp(name, "ista") == 0) {
+    if ((*name == 'i' || *name == 'I') && strcasecmp(name, "ista") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 4.0                                                            */
       /*----------------------------------------------------------------------*/
