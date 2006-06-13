@@ -1764,8 +1764,7 @@ s_jhtml_start_img_tag(jhtml_t* jhtml, Node* node)
                       jhtml->out, " alt=\"",value,"\"", NULL);
     }
     else
-    if (strcasecmp(name, "align" ) == 0) 
-    {
+    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "align" ) == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 4.0                                                            */
       /*----------------------------------------------------------------------*/
