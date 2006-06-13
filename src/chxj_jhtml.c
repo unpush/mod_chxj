@@ -1261,8 +1261,7 @@ s_jhtml_start_form_tag(jhtml_t* jhtml, Node* node)
                       NULL);
     }
     else
-    if (strcasecmp(name, "utn") == 0) 
-    {
+    if ((*name == 'u' || *name == 'U') && strcasecmp(name, "utn") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 3.0                                                            */
       /* It is special only for CHTML.                                        */
@@ -1273,7 +1272,9 @@ s_jhtml_start_form_tag(jhtml_t* jhtml, Node* node)
                       NULL);
     }
   }
+
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, ">", NULL);
+
   return jhtml->out;
 }
 
