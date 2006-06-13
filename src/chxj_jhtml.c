@@ -736,6 +736,7 @@ s_jhtml_start_title_tag(jhtml_t* jhtml, Node* node)
   request_rec* r = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<title>", NULL);
+
   return jhtml->out;
 }
 
