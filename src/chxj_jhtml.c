@@ -1628,7 +1628,7 @@ s_jhtml_start_hr_tag(jhtml_t* jhtml, Node* node)
                         " size=\"", value, "\" ", NULL);
     }
     else
-    if (strcasecmp(name, "width") == 0) {
+    if ((*name == 'w' || *name == 'W') && strcasecmp(name, "width") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
