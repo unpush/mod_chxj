@@ -1637,8 +1637,7 @@ s_jhtml_start_hr_tag(jhtml_t* jhtml, Node* node)
                         " width=\"", value, "\" ", NULL);
     }
     else
-    if (strcasecmp(name, "noshade") == 0)
-    {
+    if (strcasecmp(name, "noshade") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
