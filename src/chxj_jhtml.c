@@ -951,7 +951,7 @@ s_jhtml_start_a_tag(jhtml_t* jhtml, Node* node)
                       NULL);
     }
     else
-    if (strcasecmp(name, "href") == 0) {
+    if ((*name == 'h' || *name == 'H') && strcasecmp(name, "href") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML1.0                                                             */
       /*----------------------------------------------------------------------*/
