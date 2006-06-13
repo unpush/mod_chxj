@@ -1619,8 +1619,7 @@ s_jhtml_start_hr_tag(jhtml_t* jhtml, Node* node)
                         " align=\"", value, "\" ", NULL);
     }
     else
-    if (strcasecmp(name, "size") == 0)
-    {
+    if (strcasecmp(name, "size") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
