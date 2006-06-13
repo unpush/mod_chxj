@@ -2000,24 +2000,18 @@ static char*
 chxj_istyle_to_mode(request_rec* r, const char* s)
 {
   char* tmp;
-  if (strcasecmp(s, "1") == 0)
-  {
-    return apr_psprintf(r->pool, "hiragana");
-  }
-  else
-  if (strcasecmp(s, "2") == 0)
-  {
-    return apr_psprintf(r->pool, "hankakukana");
-  }
-  else
-  if (strcasecmp(s, "3") == 0)
-  {
-    return apr_psprintf(r->pool, "alphabet");
-  }
-  else
-  if (strcasecmp(s, "4") == 0)
-  {
-    return apr_psprintf(r->pool, "numeric");
+
+  if (s) {
+    switch (s[0]) {
+    case '1': return apr_psprintf(r->pool, "hiragana");
+    case '2': return apr_psprintf(r->pool, "hankakukana");
+    case '3': return apr_psprintf(r->pool, "alphabet");
+    case '4': return apr_psprintf(r->pool, "numeric");
+    default: 
+      tmp = apr_palloc(r->pool, 1);
+      tmp[0] = '\0';
+      return apr_pstrdup(r->pool, tmp);
+    }
   }
 
   tmp = apr_palloc(r->pool, 1);
