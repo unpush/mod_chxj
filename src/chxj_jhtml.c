@@ -1019,7 +1019,7 @@ s_jhtml_start_a_tag(jhtml_t* jhtml, Node* node)
       /* not support */
     }
     else
-    if (strcasecmp(name, "email") == 0) {
+    if ((*name == 'e' || *name == 'E') && strcasecmp(name, "email") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 3.0                                                            */
       /*----------------------------------------------------------------------*/
