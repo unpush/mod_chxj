@@ -1189,6 +1189,7 @@ s_jhtml_start_font_tag(jhtml_t* jhtml, Node* node)
   }
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, ">", NULL);
+
   return jhtml->out;
 }
 
@@ -1204,7 +1205,9 @@ static char*
 s_jhtml_end_font_tag(jhtml_t* jhtml, Node* child) 
 {
   request_rec* r = jhtml->doc->r;
+
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</font>", NULL);
+
   return jhtml->out;
 }
 
