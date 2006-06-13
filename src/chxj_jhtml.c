@@ -535,14 +535,11 @@ s_jhtml_search_emoji(jhtml_t* jhtml, char* txt, char** rslt)
   r = jhtml->doc->r;
 
   if (spec == NULL)
-  {
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "spec is NULL");
-  }
 
   for (ee = jhtml->conf->emoji;
        ee;
-       ee = ee->next) 
-  {
+       ee = ee->next) {
     unsigned char hex1byte;
     unsigned char hex2byte;
     if (ee->imode == NULL)
