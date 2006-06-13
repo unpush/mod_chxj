@@ -626,9 +626,10 @@ s_jhtml_end_html_tag(jhtml_t* jhtml, Node* child)
 static char*
 s_jhtml_start_meta_tag(jhtml_t* jhtml, Node* node) 
 {
-  Doc* doc = jhtml->doc;
-  request_rec* r = doc->r;
-  Attr* attr;
+  Doc*         doc = jhtml->doc;
+  request_rec* r   = doc->r;
+  Attr*        attr;
+  int content_type_flag = 0;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<meta", NULL);
 
@@ -651,21 +652,40 @@ s_jhtml_start_meta_tag(jhtml_t* jhtml, Node* node)
                       value,
                       "\"",
                       NULL);
+      if ((*value == 'c' || *value == 'C') && strcasecmp(value, "content-type") == 0) {
+        content_type_flag = 1;
+      }
     }
     else
     if (strcasecmp(name, "content") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 2.0                                                            */
       /*----------------------------------------------------------------------*/
-      jhtml->out = apr_pstrcat(r->pool, 
-                      jhtml->out, 
-                      " content=\"", 
-                      value,
-                      "\"",
-                      NULL);
+      if (content_type_flag) {
+        jhtml->out = apr_pstrcat(r->pool,
+                        jhtml->out,
+                        " ",
+                        name,
+                        "=\"",
+                        "text/html; charset=Windows-31J",
+                        "\"",
+                        NULL);
+      }
+      else {
+        jhtml->out = apr_pstrcat(r->pool,
+                        jhtml->out,
+                        " ",
+                        name,
+                        "=\"",
+                        value,
+                        "\"",
+                        NULL);
+      }
     }
   }
+
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, ">", NULL);
+
   return jhtml->out;
 }
 

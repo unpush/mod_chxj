@@ -685,8 +685,8 @@ s_chtml30_end_html_tag(chtml30_t* chtml30, Node* child)
 static char*
 s_chtml30_start_meta_tag(chtml30_t* chtml30, Node* node) 
 {
-  Doc* doc = chtml30->doc;
-  request_rec* r = doc->r;
+  Doc*         doc = chtml30->doc;
+  request_rec* r   = doc->r;
   Attr* attr;
   int content_type_flag = 0;
 
