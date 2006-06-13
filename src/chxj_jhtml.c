@@ -1732,8 +1732,7 @@ s_jhtml_start_img_tag(jhtml_t* jhtml, Node* node)
                       jhtml->out, " width=\"",value,"\"", NULL);
     }
     else
-    if (strcasecmp(name, "height") == 0) 
-    {
+    if ((*name == 'h' || *name == 'H') && strcasecmp(name, "height") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
