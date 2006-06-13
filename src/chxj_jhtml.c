@@ -1289,10 +1289,11 @@ s_jhtml_start_form_tag(jhtml_t* jhtml, Node* node)
 static char*
 s_jhtml_end_form_tag(jhtml_t* jhtml, Node* child) 
 {
-  Doc* doc = jhtml->doc;
-  request_rec* r = doc->r;
+  Doc*         doc = jhtml->doc;
+  request_rec* r   = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</form>", NULL);
+
   return jhtml->out;
 }
 
