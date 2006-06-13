@@ -1900,8 +1900,7 @@ s_jhtml_start_option_tag(jhtml_t* jhtml, Node* child)
       selected = apr_pstrdup(r->pool, val);
     }
     else
-    if (strcasecmp(nm, "value") == 0)
-    {
+    if (strcasecmp(nm, "value") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0 version 2.0                                                */
       /*----------------------------------------------------------------------*/
