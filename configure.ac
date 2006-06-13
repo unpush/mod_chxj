@@ -101,7 +101,22 @@ if test "x$with_apr_config" != "x" ; then
   APR_CONFIG=$with_apr_config
 fi
 
-LIBS="${LIBS} `${WAND_CONFIG} --ldflags` `${WAND_CONFIG} --libs` "
+AC_CHECK_LIB([iconv_hook], [iconv_open], [],[
+  AC_CHECK_LIB([iconv], [iconv_open], [], [
+    AC_MSG_ERROR([iconv library is not found.])
+],[])
+],[])
+
+if test "x$with_iconv" = "x" ; then
+  AC_ARG_WITH(iconv, [  --with-iconv=ARG  specify the place of the libiconv_hook or libiconv library file.])
+  if test "x$with_iconv" = "xyes" ; then
+      AC_MSG_ERROR([
+  Please specify the --with-iconv option. And, please specify the place of the libiconv_hook or libiconv program. 
+  ])
+  fi
+fi
+
+LIBS="${LIBS} `${WAND_CONFIG} --ldflags` `${WAND_CONFIG} --libs | sed -e s/-ldpstk//` "
 LIBS="${LIBS} `${APR_CONFIG} --ldflags` `${APR_CONFIG} --libs` "
 CFLAGS="${CFLAGS} `${WAND_CONFIG} --cppflags` `${WAND_CONFIG} --cflags`"
 CFLAGS="${CFLAGS} `${APR_CONFIG} --includes` `${APR_CONFIG} --cflags` `${APR_CONFIG} --cppflags`"
@@ -125,11 +140,6 @@ AC_C_CONST
 # Checks for library functions.
 AC_FUNC_MALLOC
 AC_CHECK_FUNCS([open mmap close memset memcpy strcasecmp strncasecmp strstr])
-AC_CHECK_LIB([iconv_hook], [iconv_open], [],[
-    AC_MSG_ERROR([
-Please install libiconv_hook.
-])
-],[])
 
 
 

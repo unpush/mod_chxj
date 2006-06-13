@@ -16,7 +16,15 @@
  */
 #include "mod_chxj.h"
 #include "chxj_encoding.h"
-#include "iconv_hook/iconv.h"
+#if defined(HAVE_LIBICONV_HOOK)
+#  include "iconv_hook/iconv.h"
+#else
+#  if defined(HAVE_LIBICONV)
+#    include "iconv.h"
+#  else
+#    perror asdfsadf
+#  endif
+#endif
 
 char*
 chxj_encoding(request_rec *r, const char* src, apr_size_t* len)
