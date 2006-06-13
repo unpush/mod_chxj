@@ -1033,7 +1033,7 @@ s_jhtml_start_a_tag(jhtml_t* jhtml, Node* node)
       /* ignore */
     }
     else
-    if (strcasecmp(name, "ilet") == 0) {
+    if ((*name == 'i' || *name == 'I') && strcasecmp(name, "ilet") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 5.0                                                            */
       /*----------------------------------------------------------------------*/
