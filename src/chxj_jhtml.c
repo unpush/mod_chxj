@@ -863,8 +863,7 @@ s_jhtml_start_body_tag(jhtml_t* jhtml, Node* node)
                       NULL);
     }
     else
-    if (strcasecmp(name, "link") == 0) 
-    {
+    if ((*name == 'l' || *name == 'L') && strcasecmp(name, "link") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 2.0                                                            */
       /*----------------------------------------------------------------------*/
