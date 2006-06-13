@@ -72,7 +72,6 @@
                         &&  (strcasecmp(c, "hr"       ) != 0) \
                         &&  (strcasecmp(c, "img"      ) != 0) \
                         &&  (strcasecmp(c, "input"    ) != 0) \
-                        &&  (strcasecmp(c, "li"       ) != 0) \
                         &&  (strcasecmp(c, "p"        ) != 0) \
                         &&  (strcasecmp(c, "plaintext") != 0) \
                         &&  (strcasecmp(c, "?xml"     ) != 0) \

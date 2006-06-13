@@ -235,6 +235,13 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
       s_xhtml_1_0_node_exchange (xhtml, child, indent+1);
       s_xhtml_1_0_end_li_tag    (xhtml, child);
     }
+    /*------------------------------------------------------------------------*/
+    /* <NOBR> (for TEST)                                                      */
+    /*------------------------------------------------------------------------*/
+    else
+    if ((*name == 'n' || *name == 'N') && strcasecmp(name, "nobr") == 0) {
+      s_xhtml_1_0_node_exchange (xhtml, child, indent+1);
+    }
     else
     if (*name == 'h' || *name == 'H') {
       /*----------------------------------------------------------------------*/
@@ -1958,7 +1965,7 @@ s_xhtml_1_0_end_li_tag(xhtml_t* xhtml, Node* child)
   Doc*          doc = xhtml->doc;
   request_rec*  r   = doc->r;
 
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</li><br />", NULL);
+  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</li>", NULL);
 
   return xhtml->out;
 }
