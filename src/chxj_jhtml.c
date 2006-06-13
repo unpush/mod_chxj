@@ -542,8 +542,7 @@ s_jhtml_search_emoji(jhtml_t* jhtml, char* txt, char** rslt)
        ee = ee->next) {
     unsigned char hex1byte;
     unsigned char hex2byte;
-    if (ee->imode == NULL)
-    {
+    if (ee->imode == NULL) {
       ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
                       "emoji->imode is NULL");
       continue;
