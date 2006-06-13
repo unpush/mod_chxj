@@ -1917,6 +1917,7 @@ s_jhtml_start_option_tag(jhtml_t* jhtml, Node* child)
     jhtml->out = apr_pstrcat(r->pool, jhtml->out, " selected ", NULL);
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, ">", NULL);
+
   return jhtml->out;
 }
 
