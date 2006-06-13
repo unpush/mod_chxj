@@ -939,8 +939,7 @@ s_jhtml_start_a_tag(jhtml_t* jhtml, Node* node)
     char* name  = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
 
-    if (strcasecmp(name, "name") == 0) 
-    {
+    if (strcasecmp(name, "name") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML1.0                                                             */
       /*----------------------------------------------------------------------*/
