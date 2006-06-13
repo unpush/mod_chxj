@@ -1970,7 +1970,7 @@ s_jhtml_start_option_tag(jhtml_t* jhtml, Node* child)
     }
   }
 
-  if (value) {
+  if (value) 
     jhtml->out = apr_pstrcat(r->pool, jhtml->out, " value=\"",value,"\"", NULL);
   else
     jhtml->out = apr_pstrcat(r->pool, jhtml->out, " value=\"\"", NULL);
