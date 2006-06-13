@@ -1748,8 +1748,7 @@ s_jhtml_start_img_tag(jhtml_t* jhtml, Node* node)
                       jhtml->out, " hspace=\"",value,"\"", NULL);
     }
     else
-    if (strcasecmp(name, "vspace") == 0) 
-    {
+    if ((*name == 'v' || *name == 'V') && strcasecmp(name, "vspace") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
