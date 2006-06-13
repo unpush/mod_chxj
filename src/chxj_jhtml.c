@@ -839,7 +839,7 @@ s_jhtml_start_body_tag(jhtml_t* jhtml, Node* node)
     char* name  = qs_get_attr_name(doc,attr);
     char* value  = qs_get_attr_value(doc,attr);
 
-    if (strcasecmp(name, "bgcolor") == 0) {
+    if ((*name == 'b' || *name == 'B') && strcasecmp(name, "bgcolor") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 2.0                                                            */
       /*----------------------------------------------------------------------*/
@@ -851,8 +851,7 @@ s_jhtml_start_body_tag(jhtml_t* jhtml, Node* node)
                       NULL);
     }
     else
-    if (strcasecmp(name, "text") == 0) 
-    {
+    if (strcasecmp(name, "text") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 2.0                                                            */
       /*----------------------------------------------------------------------*/
