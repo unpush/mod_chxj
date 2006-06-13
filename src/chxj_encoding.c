@@ -22,7 +22,7 @@
 #  if defined(HAVE_LIBICONV)
 #    include "iconv.h"
 #  else
-#    perror asdfsadf
+#    error "Please install libiconv or libiconv_hook. and Please set LD_LIBRARY_PATH."
 #  endif
 #endif
 
