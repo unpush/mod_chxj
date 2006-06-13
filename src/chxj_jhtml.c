@@ -1249,8 +1249,7 @@ s_jhtml_start_form_tag(jhtml_t* jhtml, Node* node)
                       NULL);
     }
     else
-    if (strcasecmp(name, "method") == 0) 
-    {
+    if ((*name == 'm' || *name == 'M') && strcasecmp(name, "method") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
