@@ -1005,7 +1005,7 @@ s_jhtml_start_a_tag(jhtml_t* jhtml, Node* node)
                       NULL);
     }
     else
-    if (strcasecmp(name, "telbook") == 0) {
+    if ((*name == 't' || *name == 'T') && strcasecmp(name, "telbook") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 3.0                                                            */
       /*----------------------------------------------------------------------*/
