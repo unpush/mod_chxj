@@ -25,6 +25,12 @@ static char* s_chtml10_start_html_tag   (chtml10_t* chtml, Node* child);
 static char* s_chtml10_end_html_tag     (chtml10_t* chtml, Node* child);
 static char* s_chtml10_start_meta_tag   (chtml10_t* chtml, Node* node);
 static char* s_chtml10_end_meta_tag     (chtml10_t* chtml, Node* node);
+static char* s_chtml10_start_ul_tag     (chtml10_t* chtml, Node* node);
+static char* s_chtml10_end_ul_tag       (chtml10_t* chtml, Node* node);
+static char* s_chtml10_start_li_tag     (chtml10_t* chtml, Node* node);
+static char* s_chtml10_end_li_tag       (chtml10_t* chtml, Node* node);
+static char* s_chtml10_start_ol_tag     (chtml10_t* chtml, Node* node);
+static char* s_chtml10_end_ol_tag       (chtml10_t* chtml, Node* node);
 static char* s_chtml10_start_head_tag   (chtml10_t* chtml, Node* node);
 static char* s_chtml10_end_head_tag     (chtml10_t* chtml, Node* node);
 static char* s_chtml10_start_title_tag  (chtml10_t* chtml, Node* node);
@@ -188,14 +194,27 @@ s_chtml10_node_exchange(chtml10_t* chtml10, Node* node, int indent)
     /* <UL> (for TEST)                                                        */
     /*------------------------------------------------------------------------*/
     if ((*name == 'u' || *name == 'U') && strcasecmp(name, "ul") == 0) {
+      s_chtml10_start_ul_tag(chtml10, child);
       s_chtml10_node_exchange (chtml10, child, indent+1);
+      s_chtml10_end_ul_tag(chtml10, child);
     }
     /*------------------------------------------------------------------------*/
     /* <LI> (for TEST)                                                        */
     /*------------------------------------------------------------------------*/
     else
     if ((*name == 'l' || *name == 'L') && strcasecmp(name, "li") == 0) {
+      s_chtml10_start_li_tag(chtml10, child);
       s_chtml10_node_exchange (chtml10, child, indent+1);
+      s_chtml10_end_li_tag(chtml10, child);
+    }
+    /*------------------------------------------------------------------------*/
+    /* <OL> (for TEST)                                                        */
+    /*------------------------------------------------------------------------*/
+    else
+    if ((*name == 'o' || *name == 'O') && strcasecmp(name, "ol") == 0) {
+      s_chtml10_start_ol_tag(chtml10, child);
+      s_chtml10_node_exchange (chtml10, child, indent+1);
+      s_chtml10_end_ol_tag(chtml10, child);
     }
     else
     if (*name == 'h' || *name == 'H') {
@@ -640,6 +659,116 @@ s_chtml10_end_head_tag(chtml10_t* chtml10, Node* child)
   request_rec*  r   = doc->r;
 
   chtml10->out = apr_pstrcat(r->pool, chtml10->out, "</head>\r\n", NULL);
+  return chtml10->out;
+}
+
+/**
+ * It is a handler who processes the OL tag.
+ *
+ * @param chtml10  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The OL tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml10_start_ol_tag(chtml10_t* chtml10, Node* node) 
+{
+  Doc*          doc = chtml10->doc;
+  request_rec*  r   = doc->r;
+  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<ol>\r\n", NULL);
+
+  return chtml10->out;
+}
+
+/**
+ * It is a handler who processes the OL tag.
+ *
+ * @param chtml10  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The OL tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml10_end_ol_tag(chtml10_t* chtml10, Node* child) 
+{
+  Doc*          doc = chtml10->doc;
+  request_rec*  r   = doc->r;
+
+  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "</ol>\r\n", NULL);
+  return chtml10->out;
+}
+
+/**
+ * It is a handler who processes the UL tag.
+ *
+ * @param chtml10  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The UL tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml10_start_ul_tag(chtml10_t* chtml10, Node* node) 
+{
+  Doc*          doc = chtml10->doc;
+  request_rec*  r   = doc->r;
+  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<ul>\r\n", NULL);
+
+  return chtml10->out;
+}
+
+/**
+ * It is a handler who processes the UL tag.
+ *
+ * @param chtml10  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The UL tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml10_end_ul_tag(chtml10_t* chtml10, Node* child) 
+{
+  Doc*          doc = chtml10->doc;
+  request_rec*  r   = doc->r;
+
+  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "</ul>\r\n", NULL);
+  return chtml10->out;
+}
+
+/**
+ * It is a handler who processes the LI tag.
+ *
+ * @param chtml10  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The LI tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml10_start_li_tag(chtml10_t* chtml10, Node* node) 
+{
+  Doc*          doc = chtml10->doc;
+  request_rec*  r   = doc->r;
+
+  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<li>\r\n", NULL);
+
+  return chtml10->out;
+}
+
+/**
+ * It is a handler who processes the LI tag.
+ *
+ * @param chtml10  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The LI tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml10_end_li_tag(chtml10_t* chtml10, Node* child) 
+{
+  Doc*          doc = chtml10->doc;
+  request_rec*  r   = doc->r;
+
+  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "</li>\r\n", NULL);
+
   return chtml10->out;
 }
 
