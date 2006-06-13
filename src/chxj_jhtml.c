@@ -1358,8 +1358,7 @@ s_jhtml_start_input_tag(jhtml_t* jhtml, Node* node)
                     "\" ", 
                     NULL);
   }
-  if (value != NULL)
-  {
+  if (value) {
     jhtml->out = apr_pstrcat(r->pool, 
                     jhtml->out, 
                     " value=\"", 
