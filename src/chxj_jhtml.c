@@ -1610,7 +1610,7 @@ s_jhtml_start_hr_tag(jhtml_t* jhtml, Node* node)
        attr = qs_get_next_attr(doc,attr)) {
     char* name = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
-    if (strcasecmp(name, "align") == 0) {
+    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "align") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
