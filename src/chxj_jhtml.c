@@ -1816,7 +1816,7 @@ s_jhtml_start_select_tag(jhtml_t* jhtml, Node* child)
     char* nm  = qs_get_attr_name(doc,attr);
     char* val = qs_get_attr_value(doc,attr);
 
-    if (strcasecmp(nm, "size") == 0) {
+    if ((*name == 's' || *name == 'S') && strcasecmp(nm, "size") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0 version 2.0                                                */
       /*----------------------------------------------------------------------*/
