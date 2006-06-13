@@ -1860,10 +1860,11 @@ s_jhtml_start_select_tag(jhtml_t* jhtml, Node* child)
 static char*
 s_jhtml_end_select_tag(jhtml_t* jhtml, Node* child)
 {
-  Doc* doc = jhtml->doc;
-  request_rec* r = doc->r;
+  Doc*         doc = jhtml->doc;
+  request_rec* r   = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</select>\n", NULL);
+
   return jhtml->out;
 }
 
