@@ -963,8 +963,7 @@ s_jhtml_start_a_tag(jhtml_t* jhtml, Node* node)
                       NULL);
     }
     else
-    if (strcasecmp(name, "accesskey") == 0) 
-    {
+    if (strcasecmp(name, "accesskey") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML1.0                                                             */
       /*----------------------------------------------------------------------*/
