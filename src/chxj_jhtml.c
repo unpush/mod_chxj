@@ -35,6 +35,12 @@ static char* s_jhtml_start_body_tag   (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_end_body_tag     (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_start_a_tag      (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_end_a_tag        (jhtml_t* jhtml, Node* node);
+static char* s_jhtml_start_ul_tag     (jhtml_t* jhtml, Node* node);
+static char* s_jhtml_end_ul_tag       (jhtml_t* jhtml, Node* node);
+static char* s_jhtml_start_ol_tag     (jhtml_t* jhtml, Node* node);
+static char* s_jhtml_end_ol_tag       (jhtml_t* jhtml, Node* node);
+static char* s_jhtml_start_li_tag     (jhtml_t* jhtml, Node* node);
+static char* s_jhtml_end_li_tag       (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_start_br_tag     (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_end_br_tag       (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_start_tr_tag     (jhtml_t* jhtml, Node* node);
@@ -187,14 +193,27 @@ s_jhtml_node_exchange(jhtml_t* jhtml, Node* node, int indent)
     /* <UL> (for TEST)                                                        */
     /*------------------------------------------------------------------------*/
     if ((*name == 'u' || *name == 'U') && strcasecmp(name, "ul") == 0) {
+      s_jhtml_start_ul_tag  (jhtml, child);
       s_jhtml_node_exchange (jhtml, child, indent+1);
+      s_jhtml_end_ul_tag    (jhtml, child);
     }
     /*------------------------------------------------------------------------*/
     /* <LI> (for TEST)                                                        */
     /*------------------------------------------------------------------------*/
     else
     if ((*name == 'l' || *name == 'L') && strcasecmp(name, "li") == 0) {
+      s_jhtml_start_li_tag  (jhtml, child);
       s_jhtml_node_exchange (jhtml, child, indent+1);
+      s_jhtml_end_li_tag    (jhtml, child);
+    }
+    /*------------------------------------------------------------------------*/
+    /* <OL> (for TEST)                                                        */
+    /*------------------------------------------------------------------------*/
+    else
+    if ((*name == 'o' || *name == 'O') && strcasecmp(name, "ol") == 0) {
+      s_jhtml_start_ol_tag  (jhtml, child);
+      s_jhtml_node_exchange (jhtml, child, indent+1);
+      s_jhtml_end_ol_tag    (jhtml, child);
     }
     else
     if (*name == 'h' || *name == 'H') { 
@@ -1482,6 +1501,120 @@ s_jhtml_end_center_tag(jhtml_t* jhtml, Node* child)
   request_rec*  r   = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</center>", NULL);
+
+  return jhtml->out;
+}
+
+/**
+ * It is a handler who processes the li tag.
+ *
+ * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The li tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_jhtml_start_li_tag(jhtml_t* jhtml, Node* node) 
+{
+  Doc*          doc = jhtml->doc;
+  request_rec*  r   = doc->r;
+
+  jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<li>", NULL);
+
+  return jhtml->out;
+}
+
+/**
+ * It is a handler who processes the li tag.
+ *
+ * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The li tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_jhtml_end_li_tag(jhtml_t* jhtml, Node* child) 
+{
+  Doc*          doc = jhtml->doc;
+  request_rec*  r   = doc->r;
+
+  jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</li>", NULL);
+
+  return jhtml->out;
+}
+
+/**
+ * It is a handler who processes the OL tag.
+ *
+ * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The OL tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_jhtml_start_ol_tag(jhtml_t* jhtml, Node* node) 
+{
+  Doc*          doc = jhtml->doc;
+  request_rec*  r   = doc->r;
+
+  jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<ol>", NULL);
+
+  return jhtml->out;
+}
+
+/**
+ * It is a handler who processes the OL tag.
+ *
+ * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The OL tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_jhtml_end_ol_tag(jhtml_t* jhtml, Node* child) 
+{
+  Doc*          doc = jhtml->doc;
+  request_rec*  r   = doc->r;
+
+  jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</ol>", NULL);
+
+  return jhtml->out;
+}
+
+/**
+ * It is a handler who processes the UL tag.
+ *
+ * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The UL tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_jhtml_start_ul_tag(jhtml_t* jhtml, Node* node) 
+{
+  Doc*          doc = jhtml->doc;
+  request_rec*  r   = doc->r;
+
+  jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<ul>", NULL);
+
+  return jhtml->out;
+}
+
+/**
+ * It is a handler who processes the UL tag.
+ *
+ * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The UL tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_jhtml_end_ul_tag(jhtml_t* jhtml, Node* child) 
+{
+  Doc*          doc = jhtml->doc;
+  request_rec*  r   = doc->r;
+
+  jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</ul>", NULL);
 
   return jhtml->out;
 }
