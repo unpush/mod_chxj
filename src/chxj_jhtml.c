@@ -793,7 +793,9 @@ s_jhtml_start_base_tag(jhtml_t* jhtml, Node* node)
                       NULL);
     }
   }
+
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, " >\r\n", NULL);
+
   return jhtml->out;
 }
 
