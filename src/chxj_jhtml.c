@@ -2028,8 +2028,7 @@ s_jhtml_chxjif_tag(jhtml_t* jhtml, Node* node)
 
   for (child = qs_get_child_node(doc, node);
        child;
-       child = qs_get_next_node(doc, child))
-  {
+       child = qs_get_next_node(doc, child)) {
     jhtml->out = apr_pstrcat(r->pool, jhtml->out, child->otext, NULL);
     s_jhtml_chxjif_tag(jhtml, child);
   }
