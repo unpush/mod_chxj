@@ -392,8 +392,15 @@ s_chtml30_node_exchange(chtml30_t* chtml30, Node* node, int indent)
     else
     if (*name == 't' || *name == 'T') {
       /*----------------------------------------------------------------------*/
+      /* <TBODY> (for TEST)                                                   */
+      /*----------------------------------------------------------------------*/
+      if (strcasecmp(name, "tbody") == 0) {
+        s_chtml30_node_exchange (chtml30, child, indent+1);
+      }
+      /*----------------------------------------------------------------------*/
       /* <TABLE> (for TEST)                                                   */
       /*----------------------------------------------------------------------*/
+      else
       if (strcasecmp(name, "table") == 0) {
         s_chtml30_node_exchange (chtml30, child, indent+1);
       }
