@@ -26,6 +26,18 @@ static char* s_chtml20_start_html_tag   (chtml20_t* chtml, Node* child);
 static char* s_chtml20_end_html_tag     (chtml20_t* chtml, Node* child);
 static char* s_chtml20_start_meta_tag   (chtml20_t* chtml, Node* node);
 static char* s_chtml20_end_meta_tag     (chtml20_t* chtml, Node* node);
+static char* s_chtml20_start_h1_tag     (chtml20_t* chtml, Node* node);
+static char* s_chtml20_end_h1_tag       (chtml20_t* chtml, Node* node);
+static char* s_chtml20_start_h2_tag     (chtml20_t* chtml, Node* node);
+static char* s_chtml20_end_h2_tag       (chtml20_t* chtml, Node* node);
+static char* s_chtml20_start_h3_tag     (chtml20_t* chtml, Node* node);
+static char* s_chtml20_end_h3_tag       (chtml20_t* chtml, Node* node);
+static char* s_chtml20_start_h4_tag     (chtml20_t* chtml, Node* node);
+static char* s_chtml20_end_h4_tag       (chtml20_t* chtml, Node* node);
+static char* s_chtml20_start_h5_tag     (chtml20_t* chtml, Node* node);
+static char* s_chtml20_end_h5_tag       (chtml20_t* chtml, Node* node);
+static char* s_chtml20_start_h6_tag     (chtml20_t* chtml, Node* node);
+static char* s_chtml20_end_h6_tag       (chtml20_t* chtml, Node* node);
 static char* s_chtml20_start_ul_tag     (chtml20_t* chtml, Node* node);
 static char* s_chtml20_end_ul_tag       (chtml20_t* chtml, Node* node);
 static char* s_chtml20_start_ol_tag     (chtml20_t* chtml, Node* node);
@@ -214,6 +226,60 @@ s_chtml20_node_exchange(chtml20_t* chtml20, Node* node, int indent)
       if (strcasecmp(name, "hr") == 0) {
         s_chtml20_start_hr_tag  (chtml20, child);
         s_chtml20_end_hr_tag    (chtml20, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <H1>                                                                 */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "h1") == 0) {
+        s_chtml20_start_h1_tag  (chtml20, child);
+        s_chtml20_node_exchange (chtml20, child,indent+1);
+        s_chtml20_end_h1_tag    (chtml20, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <H2>                                                                 */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "h2") == 0) {
+        s_chtml20_start_h2_tag  (chtml20, child);
+        s_chtml20_node_exchange (chtml20, child,indent+1);
+        s_chtml20_end_h2_tag    (chtml20, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <H3>                                                                 */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "h3") == 0) {
+        s_chtml20_start_h3_tag  (chtml20, child);
+        s_chtml20_node_exchange (chtml20, child,indent+1);
+        s_chtml20_end_h3_tag    (chtml20, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <H4>                                                                 */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "h4") == 0) {
+        s_chtml20_start_h4_tag  (chtml20, child);
+        s_chtml20_node_exchange (chtml20, child,indent+1);
+        s_chtml20_end_h4_tag    (chtml20, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <H5>                                                                 */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "h5") == 0) {
+        s_chtml20_start_h5_tag  (chtml20, child);
+        s_chtml20_node_exchange (chtml20, child,indent+1);
+        s_chtml20_end_h5_tag    (chtml20, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <H6>                                                                 */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "h6") == 0) {
+        s_chtml20_start_h6_tag  (chtml20, child);
+        s_chtml20_node_exchange (chtml20, child,indent+1);
+        s_chtml20_end_h6_tag    (chtml20, child);
       }
     }
     /*------------------------------------------------------------------------*/
@@ -1939,6 +2005,234 @@ s_chtml20_end_div_tag(chtml20_t* chtml20, Node* child)
   request_rec* r = doc->r;
 
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</div>\n", NULL);
+
+  return chtml20->out;
+}
+
+/**
+ * It is a handler who processes the H1 tag.
+ *
+ * @param chtml20  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H1 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml20_start_h1_tag(chtml20_t* chtml20, Node* node) 
+{
+  Doc*          doc = chtml20->doc;
+  request_rec*  r   = doc->r;
+
+  chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<h1>\r\n", NULL);
+
+  return chtml20->out;
+}
+
+/**
+ * It is a handler who processes the H1 tag.
+ *
+ * @param chtml20  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H1 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml20_end_h1_tag(chtml20_t* chtml20, Node* child) 
+{
+  Doc*          doc = chtml20->doc;
+  request_rec*  r   = doc->r;
+
+  chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</h1>\r\n", NULL);
+
+  return chtml20->out;
+}
+
+/**
+ * It is a handler who processes the H2 tag.
+ *
+ * @param chtml20  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H2 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml20_start_h2_tag(chtml20_t* chtml20, Node* node) 
+{
+  Doc*          doc = chtml20->doc;
+  request_rec*  r   = doc->r;
+
+  chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<h2>\r\n", NULL);
+
+  return chtml20->out;
+}
+
+/**
+ * It is a handler who processes the H2 tag.
+ *
+ * @param chtml20  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H2 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml20_end_h2_tag(chtml20_t* chtml20, Node* child) 
+{
+  Doc*          doc = chtml20->doc;
+  request_rec*  r   = doc->r;
+
+  chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</h2>\r\n", NULL);
+
+  return chtml20->out;
+}
+
+/**
+ * It is a handler who processes the H3 tag.
+ *
+ * @param chtml20  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H3 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml20_start_h3_tag(chtml20_t* chtml20, Node* node) 
+{
+  Doc*          doc = chtml20->doc;
+  request_rec*  r   = doc->r;
+
+  chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<h3>\r\n", NULL);
+
+  return chtml20->out;
+}
+
+/**
+ * It is a handler who processes the H3 tag.
+ *
+ * @param chtml20  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H3 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml20_end_h3_tag(chtml20_t* chtml20, Node* child) 
+{
+  Doc*          doc = chtml20->doc;
+  request_rec*  r   = doc->r;
+
+  chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</h3>\r\n", NULL);
+
+  return chtml20->out;
+}
+
+/**
+ * It is a handler who processes the H4 tag.
+ *
+ * @param chtml20  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H4 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml20_start_h4_tag(chtml20_t* chtml20, Node* node) 
+{
+  Doc*          doc = chtml20->doc;
+  request_rec*  r   = doc->r;
+
+  chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<h4>\r\n", NULL);
+
+  return chtml20->out;
+}
+
+/**
+ * It is a handler who processes the H4 tag.
+ *
+ * @param chtml20  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H4 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml20_end_h4_tag(chtml20_t* chtml20, Node* child) 
+{
+  Doc*          doc = chtml20->doc;
+  request_rec*  r   = doc->r;
+
+  chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</h4>\r\n", NULL);
+
+  return chtml20->out;
+}
+
+/**
+ * It is a handler who processes the H5 tag.
+ *
+ * @param chtml20  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H5 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml20_start_h5_tag(chtml20_t* chtml20, Node* node) 
+{
+  Doc*          doc = chtml20->doc;
+  request_rec*  r   = doc->r;
+
+  chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<h5>\r\n", NULL);
+
+  return chtml20->out;
+}
+
+/**
+ * It is a handler who processes the H5 tag.
+ *
+ * @param chtml20  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H5 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml20_end_h5_tag(chtml20_t* chtml20, Node* child) 
+{
+  Doc*          doc = chtml20->doc;
+  request_rec*  r   = doc->r;
+
+  chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</h5>\r\n", NULL);
+
+  return chtml20->out;
+}
+
+/**
+ * It is a handler who processes the H6 tag.
+ *
+ * @param chtml20  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H6 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml20_start_h6_tag(chtml20_t* chtml20, Node* node) 
+{
+  Doc*          doc = chtml20->doc;
+  request_rec*  r   = doc->r;
+
+  chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<h6>\r\n", NULL);
+
+  return chtml20->out;
+}
+
+/**
+ * It is a handler who processes the H6 tag.
+ *
+ * @param chtml20  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H6 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml20_end_h6_tag(chtml20_t* chtml20, Node* child) 
+{
+  Doc*          doc = chtml20->doc;
+  request_rec*  r   = doc->r;
+
+  chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</h6>\r\n", NULL);
 
   return chtml20->out;
 }
