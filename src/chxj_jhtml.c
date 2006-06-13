@@ -1968,10 +1968,9 @@ s_jhtml_start_div_tag(jhtml_t* jhtml, Node* child)
     }
   }
 
-  if (align) {
+  if (align)
     jhtml->out = apr_pstrcat(r->pool, 
                     jhtml->out, " align=\"", align, "\"", NULL);
-  }
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, ">", NULL);
 
