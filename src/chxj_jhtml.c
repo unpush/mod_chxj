@@ -1646,8 +1646,7 @@ s_jhtml_start_hr_tag(jhtml_t* jhtml, Node* node)
                         " noshade ", NULL);
     }
     else
-    if (strcasecmp(name, "color") == 0)
-    {
+    if (strcasecmp(name, "color") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 4.0                                                            */
       /*----------------------------------------------------------------------*/
