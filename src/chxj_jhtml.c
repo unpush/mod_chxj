@@ -717,6 +717,7 @@ s_jhtml_end_head_tag(jhtml_t* jhtml, Node* child)
   request_rec*  r   = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</head>\r\n", NULL);
+
   return jhtml->out;
 }
 
