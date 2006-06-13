@@ -641,8 +641,7 @@ s_jhtml_start_meta_tag(jhtml_t* jhtml, Node* node)
     char* name   = qs_get_attr_name(doc,attr);
     char* value  = qs_get_attr_value(doc,attr);
 
-    if (strcasecmp(name, "http-equiv") == 0) 
-    {
+    if (strcasecmp(name, "http-equiv") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 2.0                                                            */
       /*----------------------------------------------------------------------*/
