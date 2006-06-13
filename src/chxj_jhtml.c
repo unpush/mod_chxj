@@ -1334,8 +1334,7 @@ s_jhtml_start_input_tag(jhtml_t* jhtml, Node* node)
   accesskey  = qs_get_accesskey_attr(doc, node, r);
   size       = qs_get_size_attr(doc, node, r);
 
-  if (type != NULL)
-  {
+  if (type) {
     jhtml->out = apr_pstrcat(r->pool,
                     jhtml->out, 
                     " type=\"", 
