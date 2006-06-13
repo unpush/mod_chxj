@@ -851,7 +851,7 @@ s_jhtml_start_body_tag(jhtml_t* jhtml, Node* node)
                       NULL);
     }
     else
-    if (strcasecmp(name, "text") == 0) {
+    if ((*name == 't' || *name == 'T') && strcasecmp(name, "text") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 2.0                                                            */
       /*----------------------------------------------------------------------*/
