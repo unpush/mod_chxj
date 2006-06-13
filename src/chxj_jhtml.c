@@ -552,10 +552,8 @@ s_jhtml_search_emoji(jhtml_t* jhtml, char* txt, char** rslt)
 
     if (ee->imode->string != NULL
     &&  strlen(ee->imode->string) > 0
-    &&  strncasecmp(ee->imode->string, txt, strlen(ee->imode->string)) == 0)
-    {
-      if (spec == NULL || spec->emoji_type == NULL)
-      {
+    &&  strncasecmp(ee->imode->string, txt, strlen(ee->imode->string)) == 0) {
+      if (spec == NULL || spec->emoji_type == NULL) {
         *rslt = apr_psprintf(r->pool,"%s", ee->jphone->string);
         return strlen(ee->imode->string);
       }
@@ -564,10 +562,8 @@ s_jhtml_search_emoji(jhtml_t* jhtml, char* txt, char** rslt)
     }
     if (len >= 2
     && ((unsigned char)txt[0] & 0xff) == ((unsigned char)hex1byte)
-    && ((unsigned char)txt[1] & 0xff) == ((unsigned char)hex2byte))
-    {
-      if (spec == NULL || spec->emoji_type == NULL)
-      {
+    && ((unsigned char)txt[1] & 0xff) == ((unsigned char)hex2byte)) {
+      if (spec == NULL || spec->emoji_type == NULL) {
         *rslt = apr_psprintf(r->pool,"%s", ee->jphone->string);
         return 2;
       }
