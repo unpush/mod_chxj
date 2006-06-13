@@ -1342,8 +1342,7 @@ s_jhtml_start_input_tag(jhtml_t* jhtml, Node* node)
                     "\" ", 
                     NULL);
   }
-  if (size != NULL)
-  {
+  if (size) {
     jhtml->out = apr_pstrcat(r->pool, 
                     jhtml->out, 
                     " size=\"", 
