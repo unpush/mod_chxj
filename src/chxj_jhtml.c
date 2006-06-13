@@ -1123,9 +1123,11 @@ s_jhtml_end_br_tag(jhtml_t* jhtml, Node* child)
 static char*
 s_jhtml_start_tr_tag(jhtml_t* jhtml, Node* node) 
 {
-  Doc* doc = jhtml->doc;
-  request_rec* r = doc->r;
+  Doc*         doc = jhtml->doc;
+  request_rec* r   = doc->r;
+
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<br>\r\n", NULL);
+
   return jhtml->out;
 }
 
