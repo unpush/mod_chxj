@@ -215,6 +215,13 @@ s_jhtml_node_exchange(jhtml_t* jhtml, Node* node, int indent)
       s_jhtml_node_exchange (jhtml, child, indent+1);
       s_jhtml_end_ol_tag    (jhtml, child);
     }
+    /*------------------------------------------------------------------------*/
+    /* <NOBR> (for TEST)                                                      */
+    /*------------------------------------------------------------------------*/
+    else
+    if ((*name == 'n' || *name == 'N') && strcasecmp(name, "nobr") == 0) {
+      s_jhtml_node_exchange (jhtml, child, indent+1);
+    }
     else
     if (*name == 'h' || *name == 'H') { 
       /*----------------------------------------------------------------------*/
