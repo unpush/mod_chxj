@@ -26,6 +26,12 @@ static char* s_chtml30_start_html_tag   (chtml30_t* chtml, Node* child);
 static char* s_chtml30_end_html_tag     (chtml30_t* chtml, Node* child);
 static char* s_chtml30_start_meta_tag   (chtml30_t* chtml, Node* node);
 static char* s_chtml30_end_meta_tag     (chtml30_t* chtml, Node* node);
+static char* s_chtml30_start_ul_tag     (chtml30_t* chtml, Node* node);
+static char* s_chtml30_end_ul_tag       (chtml30_t* chtml, Node* node);
+static char* s_chtml30_start_ol_tag     (chtml30_t* chtml, Node* node);
+static char* s_chtml30_end_ol_tag       (chtml30_t* chtml, Node* node);
+static char* s_chtml30_start_li_tag     (chtml30_t* chtml, Node* node);
+static char* s_chtml30_end_li_tag       (chtml30_t* chtml, Node* node);
 static char* s_chtml30_start_head_tag   (chtml30_t* chtml, Node* node);
 static char* s_chtml30_end_head_tag     (chtml30_t* chtml, Node* node);
 static char* s_chtml30_start_title_tag  (chtml30_t* chtml, Node* node);
@@ -216,13 +222,33 @@ s_chtml30_node_exchange(chtml30_t* chtml30, Node* node, int indent)
     /*------------------------------------------------------------------------*/
     else
     if ((*name == 'u' || *name == 'U') && strcasecmp(name, "ul") == 0) {
+      s_chtml30_start_ul_tag  (chtml30, child);
       s_chtml30_node_exchange (chtml30, child, indent+1);
+      s_chtml30_end_ul_tag    (chtml30, child);
     }
     /*------------------------------------------------------------------------*/
     /* <LI> (for TEST)                                                        */
     /*------------------------------------------------------------------------*/
     else
     if ((*name == 'l' || *name == 'L') && strcasecmp(name, "li") == 0) {
+      s_chtml30_start_li_tag  (chtml30, child);
+      s_chtml30_node_exchange (chtml30, child, indent+1);
+      s_chtml30_end_li_tag    (chtml30, child);
+    }
+    /*------------------------------------------------------------------------*/
+    /* <OL> (for TEST)                                                        */
+    /*------------------------------------------------------------------------*/
+    else
+    if ((*name == 'o' || *name == 'O') && strcasecmp(name, "ol") == 0) {
+      s_chtml30_start_ol_tag  (chtml30, child);
+      s_chtml30_node_exchange (chtml30, child, indent+1);
+      s_chtml30_end_ol_tag    (chtml30, child);
+    }
+    /*------------------------------------------------------------------------*/
+    /* <NOBR> (for TEST)                                                      */
+    /*------------------------------------------------------------------------*/
+    else
+    if ((*name == 'n' || *name == 'N') && strcasecmp(name, "nobr") == 0) {
       s_chtml30_node_exchange (chtml30, child, indent+1);
     }
     else
@@ -1814,6 +1840,121 @@ s_chtml30_end_div_tag(chtml30_t* chtml30, Node* child)
   request_rec* r = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "</div>\n", NULL);
+
+  return chtml30->out;
+}
+
+/**
+ * It is a handler who processes the UL tag.
+ *
+ * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The UL tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml30_start_ul_tag(chtml30_t* chtml30, Node* node) 
+{
+  Doc*          doc = chtml30->doc;
+  request_rec*  r   = doc->r;
+
+  chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<ul>", NULL);
+
+  return chtml30->out;
+}
+
+/**
+ * It is a handler who processes the UL tag.
+ *
+ * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The UL tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml30_end_ul_tag(chtml30_t* chtml30, Node* child) 
+{
+  Doc*          doc = chtml30->doc;
+  request_rec*  r   = doc->r;
+
+  chtml30->out = apr_pstrcat(r->pool, chtml30->out, "</ul>", NULL);
+
+  return chtml30->out;
+}
+
+/**
+ * It is a handler who processes the OL tag.
+ *
+ * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The OL tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml30_start_ol_tag(chtml30_t* chtml30, Node* node) 
+{
+  Doc*          doc = chtml30->doc;
+  request_rec*  r   = doc->r;
+
+  chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<ol>", NULL);
+
+  return chtml30->out;
+}
+
+/**
+ * It is a handler who processes the OL tag.
+ *
+ * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The OL tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml30_end_ol_tag(chtml30_t* chtml30, Node* child) 
+{
+  Doc*          doc = chtml30->doc;
+  request_rec*  r   = doc->r;
+
+  chtml30->out = apr_pstrcat(r->pool, chtml30->out, "</ol>", NULL);
+
+  return chtml30->out;
+}
+
+
+/**
+ * It is a handler who processes the LI tag.
+ *
+ * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The LI tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml30_start_li_tag(chtml30_t* chtml30, Node* node) 
+{
+  Doc*          doc = chtml30->doc;
+  request_rec*  r   = doc->r;
+
+  chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<li>", NULL);
+
+  return chtml30->out;
+}
+
+/**
+ * It is a handler who processes the LI tag.
+ *
+ * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The LI tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml30_end_li_tag(chtml30_t* chtml30, Node* child) 
+{
+  Doc*          doc = chtml30->doc;
+  request_rec*  r   = doc->r;
+
+  chtml30->out = apr_pstrcat(r->pool, chtml30->out, "</li>", NULL);
 
   return chtml30->out;
 }
