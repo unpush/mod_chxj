@@ -994,8 +994,7 @@ s_jhtml_start_a_tag(jhtml_t* jhtml, Node* node)
       /* ignore */
     }
     else
-    if (strcasecmp(name, "utn") == 0) 
-    {
+    if (strcasecmp(name, "utn") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 3.0                                                            */
       /* It is special only for CHTML.                                        */
