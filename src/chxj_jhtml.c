@@ -1377,16 +1377,14 @@ s_jhtml_start_input_tag(jhtml_t* jhtml, Node* node)
     /*------------------------------------------------------------------------*/
     /* CHTML 2.0                                                              */
     /*------------------------------------------------------------------------*/
-    if (type != NULL && strcasecmp(type, "password") == 0)
-    {
+    if (type && (*type == 'p' || *type == 'P') && strcasecmp(type, "password") == 0) {
       jhtml->out = apr_pstrcat(r->pool, 
                     jhtml->out, 
                     " mode=\"", 
                     "numeric", "\" ", 
                     NULL);
     }
-    else
-    {
+    else {
       jhtml->out = apr_pstrcat(r->pool, 
                     jhtml->out, 
                     " mode=\"", 
@@ -1395,8 +1393,7 @@ s_jhtml_start_input_tag(jhtml_t* jhtml, Node* node)
     }
   }
   else
-  if (istyle == NULL && type != NULL && strcasecmp(type, "password") == 0)
-  {
+  if (istyle == NULL && type != NULL && strcasecmp(type, "password") == 0) {
     jhtml->out = apr_pstrcat(r->pool, 
                     jhtml->out, 
                     " mode=\"", 
@@ -1406,8 +1403,7 @@ s_jhtml_start_input_tag(jhtml_t* jhtml, Node* node)
   /*--------------------------------------------------------------------------*/
   /* The figure is default for the password.                                  */
   /*--------------------------------------------------------------------------*/
-  if (max_length != NULL)
-  {
+  if (max_length) {
     jhtml->out = apr_pstrcat(r->pool, 
                       jhtml->out, 
                       " maxlength=\"", 
@@ -1416,8 +1412,7 @@ s_jhtml_start_input_tag(jhtml_t* jhtml, Node* node)
                       NULL);
   }
 
-  if (checked != NULL)
-  {
+  if (checked) {
     jhtml->out = apr_pstrcat(r->pool, 
                     jhtml->out, " checked ", NULL);
   }
