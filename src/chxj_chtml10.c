@@ -191,6 +191,13 @@ s_chtml10_node_exchange(chtml10_t* chtml10, Node* node, int indent)
     char* name = qs_get_node_name(doc,child);
 
     /*------------------------------------------------------------------------*/
+    /* <NOBR> (for TEST)                                                      */
+    /*------------------------------------------------------------------------*/
+    if ((*name == 'n' || *name == 'N') && strcasecmp(name, "nobr") == 0) {
+      s_chtml10_node_exchange (chtml10, child, indent+1);
+    }
+    else
+    /*------------------------------------------------------------------------*/
     /* <UL> (for TEST)                                                        */
     /*------------------------------------------------------------------------*/
     if ((*name == 'u' || *name == 'U') && strcasecmp(name, "ul") == 0) {
