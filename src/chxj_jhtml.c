@@ -653,8 +653,7 @@ s_jhtml_start_meta_tag(jhtml_t* jhtml, Node* node)
                       NULL);
     }
     else
-    if (strcasecmp(name, "content") == 0)
-    {
+    if (strcasecmp(name, "content") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 2.0                                                            */
       /*----------------------------------------------------------------------*/
