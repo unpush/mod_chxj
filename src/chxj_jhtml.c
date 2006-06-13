@@ -987,7 +987,7 @@ s_jhtml_start_a_tag(jhtml_t* jhtml, Node* node)
                       NULL);
     }
     else
-    if (strcasecmp(name, "ijam") == 0) {
+    if ((*name == 'i' || *name == 'I') && strcasecmp(name, "ijam") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 3.0                                                            */
       /*----------------------------------------------------------------------*/
