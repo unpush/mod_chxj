@@ -1908,14 +1908,10 @@ s_jhtml_start_option_tag(jhtml_t* jhtml, Node* child)
     }
   }
 
-  if (value != NULL)
-  {
+  if (value) {
     jhtml->out = apr_pstrcat(r->pool, jhtml->out, " value=\"",value,"\"", NULL);
-  }
   else
-  {
     jhtml->out = apr_pstrcat(r->pool, jhtml->out, " value=\"\"", NULL);
-  }
 
   if (selected != NULL)
   {
