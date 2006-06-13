@@ -1830,8 +1830,7 @@ s_jhtml_start_select_tag(jhtml_t* jhtml, Node* child)
       name = apr_pstrdup(r->pool, val);
     }
     else
-    if (strcasecmp(nm, "multiple") == 0)
-    {
+    if (strcasecmp(nm, "multiple") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0 version 2.0                                                */
       /*----------------------------------------------------------------------*/
