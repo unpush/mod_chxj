@@ -1838,15 +1838,14 @@ s_jhtml_start_select_tag(jhtml_t* jhtml, Node* child)
     }
   }
 
-  if (size != NULL)
-  {
+  if (size)
     jhtml->out = apr_pstrcat(r->pool, jhtml->out, " size=\"",size,"\"", NULL);
-  }
-  if (name != NULL)
-  {
+
+  if (name)
     jhtml->out = apr_pstrcat(r->pool, jhtml->out, " name=\"",name,"\"", NULL);
-  }
+
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, ">\n", NULL);
+
   return jhtml->out;
 }
 
