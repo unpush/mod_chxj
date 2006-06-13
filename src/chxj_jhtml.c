@@ -1012,8 +1012,7 @@ s_jhtml_start_a_tag(jhtml_t* jhtml, Node* node)
       /* not support */
     }
     else
-    if (strcasecmp(name, "kana") == 0) 
-    {
+    if (strcasecmp(name, "kana") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 3.0                                                            */
       /*----------------------------------------------------------------------*/
