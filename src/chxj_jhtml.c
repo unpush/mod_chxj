@@ -1180,8 +1180,7 @@ s_jhtml_start_font_tag(jhtml_t* jhtml, Node* node)
                       NULL);
     }
     else
-    if (strcasecmp(name, "size") == 0)
-    {
+    if ((*name == 's' || *name == 'S') && strcasecmp(name, "size") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 5.0                                                            */
       /*----------------------------------------------------------------------*/
