@@ -175,6 +175,8 @@ typedef struct _emoji_t {
 
 typedef struct _mod_chxj_config_t 
 {
+  char*                 engine;
+
   int                   image;
 
   char*                 device_data_file;
@@ -186,6 +188,8 @@ typedef struct _mod_chxj_config_t
   emoji_t*              emoji;
   emoji_t*              emoji_tail;
   char*                 server_side_encoding;
+
+  char*                 dir; /* for LOG */
 
 } mod_chxj_config_t;
 

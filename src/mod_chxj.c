@@ -73,6 +73,8 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
   char *dst = apr_pstrcat(r->pool, (char*)*src, NULL);
   char *tmp;
 
+  mod_chxj_config_t* conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+
   /*------------------------------------------------------------------------*/
   /* get UserAgent from http header                                         */
   /*------------------------------------------------------------------------*/
@@ -88,6 +90,17 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
   && strncmp(r->content_type, "text/html",   9) != 0) {
     ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 
       0, r, "content type is %s", r->content_type);
+    return (char*)*src;
+  }
+  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, 
+          "conf->engine is [%s]", conf->engine);
+  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, 
+          "conf->dir is [%s]", conf->dir);
+
+  if ((*(conf->engine) == 'o' || *(conf->engine) == 'O')
+     &&   strcasecmp(conf->engine,"off") == 0) {
+    ap_log_rerror(
+      APLOG_MARK,APLOG_DEBUG, 0, r, "off engine");
     return (char*)*src;
   }
 
@@ -206,6 +219,14 @@ chxj_input_exchange(request_rec *r, const char** src, apr_size_t* len)
   char* s = apr_pstrdup(r->pool, *src);
 
   char* result;
+
+  mod_chxj_config_t* conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  if ((*(conf->engine) == 'o' || *(conf->engine) == 'O')
+     &&   strcasecmp(conf->engine, "off") == 0) {
+    ap_log_rerror(
+      APLOG_MARK,APLOG_DEBUG, 0, r, "off engine");
+    return (char*)*src;
+  }
 
   result = qs_alloc_zero_byte_string(r);
 
@@ -668,14 +689,20 @@ chxj_create_per_dir_config(apr_pool_t *p, char *arg)
   conf->emoji_tail       = NULL;
   conf->image            = CHXJ_IMG_OFF;
   conf->image_cache_dir  = apr_psprintf(p, "%s",DEFAULT_IMAGE_CACHE_DIR);
-  conf->server_side_encoding = apr_palloc(p, 256);
-  memset(conf->server_side_encoding, 0, 256);
-  memcpy(conf->server_side_encoding, 
-    DEFAULT_SERVER_SIDE_ENCODING,
-    strlen(DEFAULT_SERVER_SIDE_ENCODING));
+  conf->server_side_encoding = NULL;
+  conf->engine               = NULL;
+  if (arg == NULL) {
+    conf->dir                  = NULL;
+  }
+  else {
+    conf->dir                  = apr_pcalloc(p, strlen(arg)+1);
+    memset(conf->dir, 0, strlen(arg)+1);
+    strcpy(conf->dir, arg);
+  }
 
   /* Default is copyleft */
   conf->image_copyright = NULL; 
+
   return conf;
 }
 /*
@@ -696,6 +723,8 @@ chxj_merge_per_dir_config(apr_pool_t *p, void *basev, void *addv)
   mrg->image_copyright  = NULL;
   mrg->emoji            = NULL;
   mrg->emoji_tail       = NULL;
+
+  mrg->dir = apr_pstrdup(p, add->dir);
 
   if (! add->device_data_file) {
     mrg->devices = base->devices;
@@ -728,22 +757,33 @@ chxj_merge_per_dir_config(apr_pool_t *p, void *basev, void *addv)
   else 
     mrg->image_cache_dir = apr_pstrdup(p, add->image_cache_dir);
 
-  if (add->image_copyright == NULL && base->image_copyright != NULL) 
-    mrg->image_copyright = apr_pstrdup(p, base->image_copyright);
-  else
-  if (add->image_copyright != NULL) 
+  if (add->image_copyright) 
     mrg->image_copyright = apr_pstrdup(p, add->image_copyright);
-
-  if (add->server_side_encoding == NULL && base->server_side_encoding != NULL) {
-    mrg->server_side_encoding = apr_pstrdup(p, base->server_side_encoding);
-  }
   else
-  if (add->server_side_encoding != NULL) {
+    mrg->image_copyright = apr_pstrdup(p, base->image_copyright);
+
+  if (add->server_side_encoding) {
     mrg->server_side_encoding = apr_pstrdup(p, add->server_side_encoding);
+  }
+  else 
+  if (base->server_side_encoding) {
+    mrg->server_side_encoding = apr_pstrdup(p, base->server_side_encoding);
   }
   else {
     mrg->server_side_encoding = apr_pstrdup(p, DEFAULT_SERVER_SIDE_ENCODING);
   }
+
+  if (add->engine) {
+    mrg->engine = apr_pstrdup(p, add->engine);
+  }
+  else 
+  if (base->engine) {
+    mrg->engine = apr_pstrdup(p, base->engine);
+  }
+  else {
+    mrg->engine = apr_pstrdup(p, "off");
+  }
+
 
   return mrg;
 }
@@ -760,6 +800,7 @@ cmd_load_device_data(cmd_parms *parms, void *mconfig, const char* arg)
   mod_chxj_config_t* conf;
   Doc doc;
   doc.r = NULL;
+
   if (strlen(arg) > 256) 
     return "device data filename too long.";
 
@@ -772,6 +813,7 @@ cmd_load_device_data(cmd_parms *parms, void *mconfig, const char* arg)
   qs_parse_file((Doc*)&doc, (const char*)arg);
   chxj_load_device_data(&doc,parms->pool, conf);
   qs_all_free(&doc, QX_LOGMARK);
+
   return NULL;
 }
 
@@ -791,6 +833,7 @@ cmd_load_emoji_data(cmd_parms *parms, void *mconfig, const char* arg)
   Doc doc;
   doc.r = NULL;
 
+
   if (strlen(arg) > 256) 
     return "emoji data filename too long.";
 
@@ -803,6 +846,7 @@ cmd_load_emoji_data(cmd_parms *parms, void *mconfig, const char* arg)
   rtn = chxj_load_emoji_data(&doc,parms->pool, conf);
   qs_all_free(&doc, QX_LOGMARK);
 
+
   return rtn;
 }
 
@@ -811,6 +855,7 @@ cmd_set_image_engine(cmd_parms *parms, void *mconfig, const char* arg)
 {
   mod_chxj_config_t* conf;
   Doc doc;
+
 
   doc.r = NULL;
 
@@ -823,6 +868,7 @@ cmd_set_image_engine(cmd_parms *parms, void *mconfig, const char* arg)
   else
     conf->image = CHXJ_IMG_OFF;
 
+
   return NULL;
 }
 
@@ -832,11 +878,13 @@ cmd_set_image_cache_dir(cmd_parms *parms, void *mconfig, const char* arg)
   mod_chxj_config_t* conf;
   Doc doc;
   doc.r = NULL;
+
   if (strlen(arg) > 256) 
     return "cache dir name is too long.";
 
   conf = (mod_chxj_config_t*)mconfig;
   conf->image_cache_dir = apr_pstrdup(parms->pool, arg);
+
   return NULL;
 }
 
@@ -852,6 +900,7 @@ cmd_set_image_copyright(cmd_parms *parms, void* mconfig, const char* arg)
 
   conf = (mod_chxj_config_t*)mconfig;
   conf->image_copyright = apr_pstrdup(parms->pool, arg);
+
   return NULL;
 }
 
@@ -865,11 +914,32 @@ cmd_set_server_side_encoding(cmd_parms *parms, void* mconfig, const char* arg)
 
   conf = (mod_chxj_config_t*)mconfig;
   conf->server_side_encoding = apr_pstrdup(parms->pool, arg);
+
+  return NULL;
+}
+
+static const char*
+cmd_engine(cmd_parms *parms, void* mconfig, const char* arg)
+{
+  mod_chxj_config_t* conf;
+
+  if (strlen(arg) > 256) 
+    return "ChxjEngine is too long.";
+
+  conf = (mod_chxj_config_t*)mconfig;
+  conf->engine = apr_pstrdup(parms->pool, arg);
+
   return NULL;
 }
 
 
 static const command_rec cmds[] = {
+  AP_INIT_TAKE1(
+    "ChxjEngine",
+    cmd_engine,
+    NULL,
+    OR_ALL,
+    "CHXJ ENGINE (ON|OFF)"),
   AP_INIT_TAKE1(
     "ChxjLoadDeviceData",
     cmd_load_device_data,
