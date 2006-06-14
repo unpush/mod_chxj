@@ -191,9 +191,19 @@ typedef struct {
 } mod_chxj_config;
 
 typedef struct {
-  char    *pattern;
+  char       *pattern;
   ap_regex_t *regexp;
+  int        flags;
+  int        action;
 } chxjconvrule_entry;
+
+#define CONVRULE_ENGINE_ON_BIT        (0x00000001)
+#define CONVRULE_ENGINE_OFF_BIT       (0x00000002)
+
+#define CONVRULE_ENGINE_ON_CMD        "EngineOn"
+#define CONVRULE_ENGINE_OFF_CMD       "EngineOff"
+
+#define CONVRULE_FLAG_NOTMATCH        (0x00000001)
 
 typedef struct {
   apr_shm_t*          client_shm;

@@ -24,6 +24,7 @@ libmod_chxj_la_SOURCES = mod_chxj.c \
 	chxj_img_conv_format.c \
     chxj_qr_code.c \
     chxj_calc_ecc.c \
+    chxj_apply_convrule.c \
     chxj_encoding.c
 
 

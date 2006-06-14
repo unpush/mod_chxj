@@ -54,6 +54,7 @@
 #include "chxj_img_conv_format.h"
 #include "chxj_qr_code.h"
 #include "chxj_encoding.h"
+#include "chxj_apply_convrule.h"
 
 
 #define CHXJ_VERSION_PREFIX PACKAGE_NAME "/"
@@ -72,8 +73,11 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
   char *user_agent;
   char *dst = apr_pstrcat(r->pool, (char*)*src, NULL);
   char *tmp;
+  int  rtn;
+  mod_chxj_global_config* sconf; 
 
-  mod_chxj_config* conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  sconf = ap_get_module_config(r->server->module_config, &chxj_module);
+
 
   /*------------------------------------------------------------------------*/
   /* get UserAgent from http header                                         */
@@ -86,14 +90,19 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, 
           "content type is %s", r->content_type);
 
+  rtn = chxj_apply_convrule(r, sconf->convrules);
+  if (!(rtn & CONVRULE_ENGINE_ON_BIT)) {
+    ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 
+      0, r, "EngineOff");
+    return (char*)*src;
+  }
+
   if (*(char*)r->content_type == 't' 
   && strncmp(r->content_type, "text/html",   9) != 0) {
     ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 
       0, r, "content type is %s", r->content_type);
     return (char*)*src;
   }
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, 
-          "conf->dir is [%s]", conf->dir);
 
   if (!r->header_only) {
     device_table_t* spec = chxj_specified_device(r, user_agent);
@@ -210,6 +219,18 @@ chxj_input_exchange(request_rec *r, const char** src, apr_size_t* len)
   char* s = apr_pstrdup(r->pool, *src);
 
   char* result;
+
+  int rtn;
+  mod_chxj_global_config* sconf;
+
+  sconf = ap_get_module_config(r->server->module_config, &chxj_module);
+
+  rtn = chxj_apply_convrule(r, sconf->convrules);
+  if (!(rtn & CONVRULE_ENGINE_ON_BIT)) {
+    ap_log_rerror(APLOG_MARK,APLOG_DEBUG,
+      0, r, "EngineOff");
+    return (char*)*src;
+  }
 
   result = qs_alloc_zero_byte_string(r);
 
@@ -565,6 +586,7 @@ chxj_global_config_create(apr_pool_t* pool, server_rec* s)
     /*------------------------------------------------------------------------*/
     ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, s, 
                    "end chxj_global_config_create() reused.");
+    conf->convrules   = apr_array_make(pool, 2, sizeof(chxjconvrule_entry));
     return conf; 
   }
 
@@ -586,6 +608,22 @@ chxj_global_config_create(apr_pool_t* pool, server_rec* s)
                   "end chxj_global_config_create()");
   return conf;
 }
+
+static void *
+chxj_config_server_merge(apr_pool_t *p, void *basev, void *overridesv)
+{
+  mod_chxj_global_config *mrg, *base, *overrides;
+    
+  mrg       = (mod_chxj_global_config *)apr_pcalloc(p,
+                                                   sizeof(mod_chxj_global_config));
+  base      = (mod_chxj_global_config *)basev;
+  overrides = (mod_chxj_global_config *)overridesv;
+    
+  mrg->convrules    = apr_array_append(p, overrides->convrules, base->convrules);
+
+  return mrg;
+}
+
 /**
  * initialize chxj module
  */
@@ -759,6 +797,68 @@ chxj_merge_per_dir_config(apr_pool_t *p, void *basev, void *addv)
 
   return mrg;
 }
+
+
+static int
+chxj_command_parse_take2(const char* arg, char** prm1, char** prm2)
+{
+  int isquoted;
+  char* strp;
+
+  strp = (char*)arg;
+
+  for (;*strp == ' '||*strp == '\t'; strp++) ;
+
+  isquoted = 0; 
+  if (*strp == '"') { 
+    isquoted = 1;
+    strp++;
+  }
+
+  *prm1 = strp;
+
+  for (; *strp != '\0'; strp++) {
+    if ((isquoted && (*strp == ' ' || *strp == '\t'))
+    ||  (*strp == '\\' && (*(strp+1) == ' ' || *(strp+1) == '\t'))) {
+      strp++;
+      continue;
+    }
+
+    if ((!isquoted && (*strp == ' ' || *strp == '\t'))
+    ||  (isquoted  && *strp == '"'))
+      break;
+  }
+
+  if (! *strp)
+    return 1;
+
+  *strp++ = '\0';
+
+  for (;*strp == ' '||*strp == '\t'; strp++) ;
+
+  isquoted = 0; 
+  if (*strp == '"') { 
+    isquoted = 1;
+    strp++;
+  }
+
+  *prm2 = strp;
+  for (; *strp != '\0'; strp++) {
+    if ((isquoted && (*strp == ' ' || *strp == '\t'))
+    ||  (*strp == '\\' && (*(strp+1) == ' ' || *(strp+1) == '\t'))) {
+      strp++;
+      continue;
+    }
+
+    if ((!isquoted && (*strp == ' ' || *strp == '\t'))
+    ||  (isquoted  && *strp == '"'))
+      break;
+  }
+
+  *strp = '\0';
+  return 0;
+}
+
 /**
  * The device definition file is loaded. 
  *
@@ -890,6 +990,72 @@ cmd_set_server_side_encoding(cmd_parms *parms, void* mconfig, const char* arg)
   return NULL;
 }
 
+static const char*
+cmd_convert_rule(cmd_parms *cmd, void *in_dconf, const char *arg)
+{
+  mod_chxj_global_config* sconf;
+  char* prm1;
+  char* prm2;
+  int mode;
+  char* pstate;
+  char* action;
+  char* pp;
+  ap_regex_t *regexp;
+  chxjconvrule_entry* newrule;
+
+  if (strlen(arg) > 4096) 
+    return "ChxjConvertRule: is too long.";
+
+  sconf = ap_get_module_config(cmd->server->module_config, &chxj_module);
+  if (sconf->convrules == NULL)
+    sconf->convrules   = apr_array_make(cmd->pool, 2, sizeof(chxjconvrule_entry));
+
+  newrule = apr_array_push(sconf->convrules);
+
+  newrule->flags = 0;
+  newrule->action = 0;
+
+  if (chxj_command_parse_take2(arg, &prm1, &prm2)) {
+    return "ChxjConvertRule: bad argument line";
+  }
+
+  newrule->pattern = apr_pstrdup(cmd->pool, prm1);
+
+  /* Parse action */
+  for (;;) {
+    if ((action = apr_strtok(prm2, ",", &pstate)) == NULL)
+      break;
+    prm2 = NULL;
+    switch(*action) {
+    case 'e':
+    case 'E':
+      if (strcasecmp(CONVRULE_ENGINE_ON_CMD, action) == 0) {
+        newrule->action |= CONVRULE_ENGINE_ON_BIT;
+      }
+      else
+      if (strcasecmp(CONVRULE_ENGINE_OFF_CMD, action) == 0) {
+        newrule->action |= CONVRULE_ENGINE_OFF_BIT;
+      }
+    }
+  }
+  
+  pp = prm1;
+  if (*pp == '!') {
+    newrule->flags |= CONVRULE_FLAG_NOTMATCH;
+    pp++;
+  }
+
+  mode = AP_REG_EXTENDED;
+  if ((regexp = ap_pregcomp(cmd->pool, pp, mode)) == NULL) {
+    return "RewriteRule: cannot compile regular expression ";
+  }
+
+{FILE*fp = fopen("/tmp/erer.log", "a");fprintf(fp,"%s:%d\n", __FILE__,__LINE__);fclose(fp);}
+  newrule->regexp = regexp;
+  
+  return NULL;
+}
+
 
 static const command_rec cmds[] = {
   AP_INIT_TAKE1(
@@ -928,6 +1094,12 @@ static const command_rec cmds[] = {
     NULL,
     OR_ALL,
     "Copyright Flag"),
+  AP_INIT_RAW_ARGS(
+    "ChxjConvertRule",
+    cmd_convert_rule,
+    NULL, 
+    OR_FILEINFO,
+    "an URL-applied regexp-pattern and a substitution URL"),
   { NULL },
 };
 
@@ -941,7 +1113,7 @@ module AP_MODULE_DECLARE_DATA chxj_module =
   chxj_create_per_dir_config,          /* create per-dir    config structures */
   chxj_merge_per_dir_config,           /* merge  per-dir    config structures */
   chxj_config_server_create,           /* create per-server config structures */
-  NULL,                                /* merge  per-server config structures */
+  chxj_config_server_merge,            /* merge  per-server config structures */
   cmds,                                /* table of config file commands       */
   chxj_register_hooks                  /* register hooks                      */
 };
