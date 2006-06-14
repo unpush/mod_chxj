@@ -101,20 +101,57 @@ if test "x$with_apr_config" != "x" ; then
   APR_CONFIG=$with_apr_config
 fi
 
-AC_CHECK_LIB([iconv_hook], [iconv_open], [],[
-  AC_CHECK_LIB([iconv], [iconv_open], [], [
-    AC_MSG_ERROR([iconv library is not found.])
-],[])
-],[])
+AC_ARG_WITH(iconv, [  --with-iconv=ARG  specify the place of the libiconv directory.])
+AC_ARG_WITH(iconv_hook, [  --with-iconv_hook=ARG  specify the place of the libiconv_hook directory.])
+if test "x$with_iconv" = "x" -a "x$with_iconv_hook" = "x" ; then
+  AC_CHECK_LIB([iconv_hook], [iconv_open], [
+      with_iconv="ok"
+      AC_DEFINE([HAVE_LIBICONV_HOOK], [], [Define to 1 if you have the iconv library file.])
+  ],[
+    AC_CHECK_LIB([iconv], [iconv_open], [
+      with_iconv="ok"
+      AC_DEFINE([HAVE_LIBICONV], [], [Define to 1 if you have the iconv library file.])
+  ], [
+      witn_iconv=""
+  ],[])
+  ],[])
+fi
 
 if test "x$with_iconv" = "x" ; then
-  AC_ARG_WITH(iconv, [  --with-iconv=ARG  specify the place of the libiconv_hook or libiconv library file.])
   if test "x$with_iconv" = "xyes" ; then
       AC_MSG_ERROR([
-  Please specify the --with-iconv option. And, please specify the place of the libiconv_hook or libiconv program. 
+  Please specify the --with-iconv option. And, please specify the place of the libiconv program. 
+  ])
+  fi
+  if test "x$with_iconv" != "x" ; then
+    LIBS="${LIBS} -L$with_iconv -liconv "
+    AC_DEFINE([HAVE_LIBICONV], [], [Define to 1 if you have the iconv library file.])
+  fi
+fi
+if test "x$with_iconv" = "x" ; then
+  if test "x$with_iconv_hook" = "xyes" ; then
+      AC_MSG_ERROR([
+  Please specify the --with-iconv-hook option. And, please specify the place of the libiconv_hook program. 
+  ])
+  fi
+  if test "x$with_iconv_hook" != "x" ; then
+    LIBS="${LIBS} -L${with_iconv_hook} -liconv_hook "
+    AC_DEFINE([HAVE_LIBICONV_HOOK], [], [Define to 1 if you have the iconv_hook library file.])
+  fi
+  if test "x$with_iconv_hook" = "x" ; then
+      AC_MSG_ERROR([
+  Please specify the --with-iconv-hook option. And, please specify the place of the libiconv_hook program. 
   ])
   fi
 fi
+
+
+case $host_os in
+  freebsd*)
+    CFLAGS="${CFLAGS} -I/usr/local/include "
+    ;;
+esac
+
 
 LIBS="${LIBS} `${WAND_CONFIG} --ldflags` `${WAND_CONFIG} --libs | sed -e s/-ldpstk//` "
 LIBS="${LIBS} `${APR_CONFIG} --ldflags` `${APR_CONFIG} --libs` "
