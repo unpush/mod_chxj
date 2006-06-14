@@ -97,8 +97,6 @@ ChxjLoadEmojiData   /etc/apache2/chxj/emoji.xml
 
 # 変換させる対象の設定
 &lt;Location /chxj&gt;
-  # Chxjモジュールを有効にします
-  ChxjEngine On
   SetOutputFilter chxj_output_filter
   SetInputFilter  chxj_input_filter
 &lt;/Location&gt;
@@ -122,8 +120,6 @@ ChxjLoadDeviceData  /etc/apache2/chxj/device_data.xml
 ChxjLoadEmojiData   /etc/apache2/chxj/emoji.xml
 
 &lt;Location /chxj&gt;
-  # Chxjモジュールを有効にします
-  ChxjEngine On
   SetOutputFilter chxj_output_filter
   SetInputFilter  chxj_input_filter
 &lt;/Location&gt;
@@ -147,8 +143,6 @@ ChxjLoadDeviceData  /etc/apache2/chxj/device_data.xml
 # 絵文字データの設定
 ChxjLoadEmojiData   /etc/apache2/chxj/emoji.xml
 &lt;Location /chxj&gt;
-   # Chxjモジュールを有効にします
-   ChxjEngine On
    SetOutputFilter chxj_output_filter
 &lt;/Location&gt;
 </program>

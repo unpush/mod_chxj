@@ -28,7 +28,7 @@ typedef struct _chtml30_t {
     int                out_len;
 
     device_table_t*    spec;
-    mod_chxj_config_t* conf;
+    mod_chxj_config*   conf;
 } chtml30_t;
 
 /*----------------------------------------------------------------------------*/

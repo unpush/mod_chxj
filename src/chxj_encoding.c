@@ -37,7 +37,7 @@ chxj_encoding(request_rec *r, const char* src, apr_size_t* len)
   size_t result;
   apr_size_t ilen;
   apr_size_t olen;
-  mod_chxj_config_t* conf;
+  mod_chxj_config* conf;
 
   ap_log_rerror(
     APLOG_MARK,APLOG_DEBUG, 0, r, "start chxj_encoding()");

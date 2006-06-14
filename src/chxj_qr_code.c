@@ -588,7 +588,7 @@ chxj_qr_code_handler(request_rec* r)
   Doc                doc;
   char*              img;
   Node*              root;
-  mod_chxj_config_t* conf;
+  mod_chxj_config*   conf;
 
 #ifdef QR_CODE_DEBUG
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r,

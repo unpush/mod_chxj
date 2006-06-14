@@ -28,7 +28,7 @@ typedef struct _xhtml_t {
     int                out_len;
 
     device_table_t*    spec;
-    mod_chxj_config_t* conf;
+    mod_chxj_config*   conf;
 } xhtml_t;
 
 /*----------------------------------------------------------------------------*/

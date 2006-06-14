@@ -88,7 +88,7 @@ typedef struct _hdml_t {
 
   device_table_t* spec;
 
-  mod_chxj_config_t* conf;
+  mod_chxj_config*  conf;
 } hdml_t;
 /*============================================================================*/
 /* Prototype declaration.                                                     */

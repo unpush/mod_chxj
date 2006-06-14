@@ -155,7 +155,7 @@ static const char* HDML_FAIL_PAGE =
 /*----------------------------------------------------------------------------*/
 /* Prototype declaration                                                      */
 /*----------------------------------------------------------------------------*/
-static char*        s_create_workfile(  request_rec*, mod_chxj_config_t* , 
+static char*        s_create_workfile(  request_rec*, mod_chxj_config* , 
                                         const char*, 
                                         query_string_param_t*);
 static apr_status_t s_create_cache_file(request_rec* r, 
@@ -194,7 +194,7 @@ static char* s_create_blob_data(request_rec* r,
 
 static int s_img_conv_format_from_file(
                 request_rec*          r, 
-                mod_chxj_config_t*    conf, 
+                mod_chxj_config*    conf, 
                 const char*           user_agent,
                 query_string_param_t* qsp,
                 device_table_t*       spec);
@@ -202,7 +202,7 @@ static int s_img_conv_format_from_file(
 int 
 chxj_img_conv_format_handler(request_rec* r)
 {
-  mod_chxj_config_t*      conf;
+  mod_chxj_config*      conf;
   query_string_param_t* qsp;
   char*                 user_agent;
   device_table_t*       spec;
@@ -270,7 +270,7 @@ chxj_img_conv_format_handler(request_rec* r)
 char*
 chxj_exchange_image(request_rec *r, const char** src, apr_size_t* len)
 {
-  mod_chxj_config_t*      conf;
+  mod_chxj_config*      conf;
   query_string_param_t* qsp;
   char*                 user_agent;
   device_table_t*       spec;
@@ -312,7 +312,7 @@ chxj_exchange_image(request_rec *r, const char** src, apr_size_t* len)
 static int
 s_img_conv_format_from_file(
                 request_rec*          r, 
-                mod_chxj_config_t*    conf, 
+                mod_chxj_config*    conf, 
                 const char*           user_agent,
                 query_string_param_t* qsp,
                 device_table_t*       spec)
@@ -1120,7 +1120,7 @@ static MagickWand*
 s_add_copyright(MagickWand* magick_wand, request_rec* r, device_table_t* spec)
 {
   MagickBooleanType  status;
-  mod_chxj_config_t* conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  mod_chxj_config* conf = ap_get_module_config(r->per_dir_config, &chxj_module);
   if (conf->image_copyright != NULL) {
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "Add COPYRIGHT [%s]", conf->image_copyright);
     if (spec->html_spec_type == CHXJ_SPEC_Jhtml) {
@@ -1391,7 +1391,7 @@ s_send_cache_file(device_table_t* spec, query_string_param_t* query_string, requ
 static char*
 s_create_workfile(
                 request_rec*          r, 
-                mod_chxj_config_t*      conf, 
+                mod_chxj_config*      conf, 
                 const char*           user_agent, 
                 query_string_param_t *qsp)
 {
@@ -1475,7 +1475,7 @@ chxj_trans_name(request_rec *r)
   int len;
   apr_finfo_t st;
   apr_status_t rv;
-  mod_chxj_config_t* conf;
+  mod_chxj_config* conf;
   int ii;
   char*      ext[] = {
           "jpg",

@@ -173,10 +173,7 @@ typedef struct _emoji_t {
   jphone_emoji_t* jphone;
 } emoji_t;
 
-typedef struct _mod_chxj_config_t 
-{
-  char*                 engine;
-
+typedef struct {
   int                   image;
 
   char*                 device_data_file;
@@ -191,23 +188,27 @@ typedef struct _mod_chxj_config_t
 
   char*                 dir; /* for LOG */
 
-} mod_chxj_config_t;
+} mod_chxj_config;
 
-typedef struct _mod_chxj_global_config_t
-{
+typedef struct {
+  char    *pattern;
+  ap_regex_t *regexp;
+} chxjconvrule_entry;
+
+typedef struct {
   apr_shm_t*          client_shm;
   apr_global_mutex_t* client_lock;
   char                client_lock_file_name[256];
-} mod_chxj_global_config_t;
+  apr_array_header_t *convrules;
+} mod_chxj_global_config;
 
-typedef struct _mod_chxj_ctx_t
-{
+typedef struct {
   unsigned int len;
 
   apr_bucket_brigade *bb;
 
   char* buffer;
-} mod_chxj_ctx_t;
+} mod_chxj_ctx;
 
 #include "chxj_tag_util.h"
 

@@ -26,56 +26,33 @@
 #include "chxj_str_util.h"
 
 
-static void s_set_devices_data(Doc* doc, apr_pool_t* p, mod_chxj_config_t* conf, Node* node) ;
-static void s_set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config_t* conf, Node* node) ;
+static void s_set_devices_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node) ;
+static void s_set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node) ;
 static void s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list_t* dtl, Node* node) ;
 /**
  * load device_data.xml
  */
 void
-chxj_load_device_data(Doc* doc, apr_pool_t *p, mod_chxj_config_t* conf) 
+chxj_load_device_data(Doc* doc, apr_pool_t *p, mod_chxj_config* conf) 
 {
   conf->devices = NULL;
   s_set_devices_data(doc, p, conf,qs_get_root(doc));
-#if 0
-  do {
-    FILE* fp = fopen("/tmp/load_device.log", "a");
-    device_table_list_t* ll = conf->devices;
-    for (;ll; ll= ll->next)
-    {
-      device_table_t* dt;
-      fprintf(fp, "user_agent:[%s]\n", ll->pattern);
-      for (dt = ll->table; dt; dt = dt->next)
-      {
-        fprintf(fp, "device_id:[%s] ", dt->device_id);
-        fprintf(fp, "device_name:[%s] ", dt->device_name);
-        fprintf(fp, "html_spec_type:[%d] ", dt->html_spec_type);
-        fprintf(fp, "width:[%d] ", dt->width);
-        fprintf(fp, "heigh:[%d] ", dt->heigh);
-        fprintf(fp, "color:[%d] ", dt->color);
-        fprintf(fp, "\n");
-      }
-    }
-    fclose(fp);
-    break;
-  } while(0);
-#endif
+
 }
 
 /**
  * <devices>
  */
 static void
-s_set_devices_data(Doc* doc, apr_pool_t* p, mod_chxj_config_t* conf, Node* node) 
+s_set_devices_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node) 
 {
   Node* child;
+
   for (child = qs_get_child_node(doc,node); 
        child ; 
-       child = qs_get_next_node(doc,child)) 
-  {
+       child = qs_get_next_node(doc,child)) {
     char* name = qs_get_node_name(doc,child);
-    if (strcasecmp(name, "devices") == 0) 
-    {
+    if (strcasecmp(name, "devices") == 0) {
       s_set_user_agent_data(doc, p, conf, child);
     }
   }
@@ -85,7 +62,7 @@ s_set_devices_data(Doc* doc, apr_pool_t* p, mod_chxj_config_t* conf, Node* node)
  * <user_agent>
  */
 static void
-s_set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config_t* conf, Node* node) 
+s_set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node) 
 {
   Node* child;
   device_table_list_t* t;
