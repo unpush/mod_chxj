@@ -713,26 +713,26 @@ function setOHPHandler() {
 <li> <a href="#doc1_170" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">画像自動変換機能を使用する場合</a>
 <li> <a href="#doc1_235" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">文字コードを変換したい場合(EXPERIMENTAL)</a>
 </ul>
-<li> <a href="#doc1_260" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">対応するCHTMLタグ</a>
-<li> <a href="#doc1_968" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">独自拡張タグ</a>
-<li> <a href="#doc1_1005" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">文字コード</a>
-<li> <a href="#doc1_1008" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">絵文字について</a>
+<li> <a href="#doc1_280" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">対応するCHTMLタグ</a>
+<li> <a href="#doc1_988" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">独自拡張タグ</a>
+<li> <a href="#doc1_1025" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">文字コード</a>
+<li> <a href="#doc1_1028" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">絵文字について</a>
 <ul>
-<li> <a href="#doc1_1013" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">絵文字変換定義</a>
+<li> <a href="#doc1_1033" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">絵文字変換定義</a>
 </ul>
-<li> <a href="#doc1_1058" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">デバイス定義 device_data.xml</a>
-<li> <a href="#doc1_1061" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">イメージ画像変換機能</a>
+<li> <a href="#doc1_1078" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">デバイス定義 device_data.xml</a>
+<li> <a href="#doc1_1081" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">イメージ画像変換機能</a>
 <ul>
-<li> <a href="#doc1_1070" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">サムネイルモード</a>
-<li> <a href="#doc1_1076" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">壁紙モード</a>
-<li> <a href="#doc1_1082" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">EzGetモード</a>
-<li> <a href="#doc1_1088" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">その他の機能</a>
+<li> <a href="#doc1_1090" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">サムネイルモード</a>
+<li> <a href="#doc1_1096" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">壁紙モード</a>
+<li> <a href="#doc1_1102" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">EzGetモード</a>
+<li> <a href="#doc1_1108" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">その他の機能</a>
 </ul>
-<li> <a href="#doc1_1119" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">ＱＲコード出力機能</a>
+<li> <a href="#doc1_1139" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">ＱＲコード出力機能</a>
 <ul>
-<li> <a href="#doc1_1121" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">ＱＲコード出力ハンドラの登録</a>
-<li> <a href="#doc1_1127" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">ＱＲコードソースファイルの設置</a>
-<li> <a href="#doc1_1151" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">ＱＲコードの動的出力機能</a>
+<li> <a href="#doc1_1141" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">ＱＲコード出力ハンドラの登録</a>
+<li> <a href="#doc1_1147" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">ＱＲコードソースファイルの設置</a>
+<li> <a href="#doc1_1171" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">ＱＲコードの動的出力機能</a>
 </ul>
 </ul>
 </div>
@@ -823,14 +823,29 @@ $ cp etc/emoji.xml /etc/apache2/chxj
 <li> httpd.confに以下を追加します。
 <div id="doc1_101" class="caption">httpd.conf</div>
 <pre class="program" style="margin-top:0">
+#====================================================================================
 # モジュールをApache2.0にロード
+#====================================================================================
 LoadModule chxj_module /usr/lib/apache2/modules/mod_chxj.so
 
-# デバイスデータの設定
+#====================================================================================
+# デバイスデータファイルの設定
+#====================================================================================
 ChxjLoadDeviceData  /etc/apache2/chxj/device_data.xml
 
-# 絵文字データの設定
+#====================================================================================
+# 絵文字データファイルの設定
+#====================================================================================
 ChxjLoadEmojiData   /etc/apache2/chxj/emoji.xml
+
+#====================================================================================
+# 変換エンジン動作指示命令（下記のSetOutputFilter、SetInputFilterも必須です)
+# ChxjConvRule ==&gt; ディレクティブ
+# &quot;^/chxj.+$&quot;  ==&gt; Perl互換のURIパターン
+# EngineOn     ==&gt; 変換エンジンを動作させる指示
+# NONE         ==&gt; サーバ側の文字コード。（NONEを指定した場合は文字コード変換しない)
+#====================================================================================
+ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;NONE&quot;
 
 # 変換させる対象の設定
 &lt;Location /chxj&gt;
@@ -856,6 +871,16 @@ ChxjLoadDeviceData  /etc/apache2/chxj/device_data.xml
 
 # 絵文字データの設定
 ChxjLoadEmojiData   /etc/apache2/chxj/emoji.xml
+
+#====================================================================================
+# 変換エンジン動作指示命令（下記のSetOutputFilter、SetInputFilterも必須です)
+# ChxjConvRule ==&gt; ディレクティブ
+# &quot;^/chxj.+$&quot;  ==&gt; Perl互換のURIパターン
+# EngineOn     ==&gt; 変換エンジンを動作させる指示。動作させたく無い場合は&quot;EngineOff&quot;
+# EUC-JP       ==&gt; サーバ側の文字コード。（NONEを指定した場合は文字コード変換しない)
+#                  EUC-JPからCP932に文字コード変換します。
+#====================================================================================
+ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 
 &lt;Location /chxj&gt;
   SetOutputFilter chxj_output_filter
@@ -1000,24 +1025,26 @@ copy=&quot;NO&quot;,A.Konno
 
 <div id="doc1_241" class="caption">httpd.conf</div>
 <pre class="program" style="margin-top:0">
-&lt;Location /chxj&gt;
-ChxjServerSideEncoding &quot;EUC-JP&quot;
-&lt;/Location&gt;
+ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 </pre>
 
 <p>上記の説明を以下に示します。</p>
 
 <ol>
-<li> <p>ChxjServerSideEncoding<br></br>サーバサイドの文字コードを指定します。ここに、EUC-JPと指定してあった場合は、EUC-JPからCP932に変換後、クライアントに出力されます。DefaultはNONE</p>
-<p><br></br> <br></br></p></ol></ol>
+<li> <p>ChxjServerSideEncoding<br></br>サーバサイドの文字コードを指定します。ここに、EUC-JPと指定してあった場合は、EUC-JPからCP932に変換後、クライアントに出力されます。省略した場合はNONE</p>
+
+<ol>
+<li> 変換エンジン動作指示命令（下記のSetOutputFilter、SetInputFilterも必須です)<br></br> ChxjConvRule ==&gt;ディレクティブ<br></br>&quot;^/chxj.+$&quot; ==&gt; Perl互換のURIパターン<br></br>EngineOn ==&gt;変換エンジンを動作させる指示。動作させたく無い場合は&quot;EngineOff&quot;<br></br> EUC-JP ==&gt;サーバ側の文字コード。（NONEを指定した場合は文字コード変換しない)<br></br> <br></br> EUC-JPからCP932に文字コード変換します。(libiconvに依存します)<br></br></ol>
+
+<p><br></br><br></br></p></ol></ol>
 
 
-<h2 id="doc1_260">対応するCHTMLタグ</h2>
+<h2 id="doc1_280">対応するCHTMLタグ</h2>
 
 <p class="first_ja">変換可能なＣＨＴＭＬタグは以下のとおりです。</p>
 
 <div class="table">
-<table id="doc1_262" class="data" rules="groups">
+<table id="doc1_282" class="data" rules="groups">
 <caption>対応タグ一覧</caption>
 <colgroup span="7">
 <col>
@@ -1236,7 +1263,7 @@ ChxjServerSideEncoding &quot;EUC-JP&quot;
 <td align="center">○</td>
 <td align="center">○</td>
 <td align="center">○</td>
-<td align="left"><span class="note"><a href="#doc1_817" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="必ず閉じてください。そのうち対応します。"><sup>(6)</sup></a></span></td>
+<td align="left"><span class="note"><a href="#doc1_837" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="必ず閉じてください。そのうち対応します。"><sup>(6)</sup></a></span></td>
 </tr>
 <tr class="even">
 <td></td>
@@ -1299,18 +1326,18 @@ ChxjServerSideEncoding &quot;EUC-JP&quot;
 
 <div class="footnote">
 <ol>
-<li id="doc1_817" value="6"> 必ず閉じてください。そのうち対応します。</ol>
+<li id="doc1_837" value="6"> 必ず閉じてください。そのうち対応します。</ol>
 </div>
 
 
-<h2 id="doc1_968">独自拡張タグ</h2>
+<h2 id="doc1_988">独自拡張タグ</h2>
 
 
 <ol>
 <li> <p>&lt;CHXJ:IF&gt;<br></br></p>
-<p>&lt;CHXJ:IF&gt;タグと&lt;/CHXJ:IF&gt;タグではさまれたタグやテキストは、変換せずに<b>そのまま</b><span class="note"><a href="#doc1_978" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="変換しませんので注意が必要です"><sup>(7)</sup></a></span>出力します。必須の属性としてlangがあります。lang属性を指定することによって、例えば、<b>「HDML機の場合のみ出力させる」</b>といったことを可能にします。<br></br><br></br>ex)</p>
+<p>&lt;CHXJ:IF&gt;タグと&lt;/CHXJ:IF&gt;タグではさまれたタグやテキストは、変換せずに<b>そのまま</b><span class="note"><a href="#doc1_998" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="変換しませんので注意が必要です"><sup>(7)</sup></a></span>出力します。必須の属性としてlangがあります。lang属性を指定することによって、例えば、<b>「HDML機の場合のみ出力させる」</b>といったことを可能にします。<br></br><br></br>ex)</p>
 
-<div id="doc1_988" class="caption">HTML文書中にHDML機の場合のみ有効にしたいタグ、または文書がある場合</div>
+<div id="doc1_1008" class="caption">HTML文書中にHDML機の場合のみ有効にしたいタグ、または文書がある場合</div>
 <pre class="program" style="margin-top:0">
        &lt;CHXJ:IF lang=&quot;HDML&quot; &gt;
          &lt;NODISPLAY&gt;
@@ -1324,7 +1351,7 @@ ChxjServerSideEncoding &quot;EUC-JP&quot;
 <p><br></br></p>
 <p>ex)</p>
 
-<div id="doc1_992" class="caption">i-Modeのみ出力したい文書がある場合</div>
+<div id="doc1_1012" class="caption">i-Modeのみ出力したい文書がある場合</div>
 <pre class="program" style="margin-top:0">
        &lt;CHXJ:IF lang=&quot;chtml&quot; &gt;
          シークレットコードがどーのこーの。
@@ -1335,7 +1362,7 @@ ChxjServerSideEncoding &quot;EUC-JP&quot;
 <p><br></br></p>
 <p>また、lang属性は、複数指定することも可能です。<br></br></p>
 
-<div id="doc1_998" class="caption">HDML機,J-PHONE機は以下を出力します</div>
+<div id="doc1_1018" class="caption">HDML機,J-PHONE機は以下を出力します</div>
 <pre class="program" style="margin-top:0">
        &lt;CHXJ:IF lang=&quot;chtml&quot; lang=&quot;jhtml&quot;&gt;
        あなたの携帯は、HDML機かJ-HTML機です。
@@ -1348,30 +1375,30 @@ ChxjServerSideEncoding &quot;EUC-JP&quot;
 
 <div class="footnote">
 <ol>
-<li id="doc1_978" value="7"> 変換しませんので注意が必要です</ol>
+<li id="doc1_998" value="7"> 変換しませんので注意が必要です</ol>
 </div>
 
 
-<h2 id="doc1_1005">文字コード</h2>
+<h2 id="doc1_1025">文字コード</h2>
 
 <p class="first_ja">文字コードは、絵文字の入出力がある関係上、Shift_JISのみとしています。</p>
 
-<h2 id="doc1_1008">絵文字について</h2>
+<h2 id="doc1_1028">絵文字について</h2>
 
-<p class="first_ja">i-Mode用の絵文字を書いておけば、アクセスしたキャリアによって、mod_chxjが対応の絵文字に自動変換します。ソースに2byteのバイナリコードを直接書いても、１０進参照文字列<span class="note"><a href="#doc1_1010" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="１６進参照文字列には対応していません"><sup>(8)</sup></a></span>（&amp;#XXX;の形）で書いても、どちらでも変換対象になります。１０進参照文字列で書いた場合は、mod_chxjにより、自動で２バイトコードに変換します。</p>
+<p class="first_ja">i-Mode用の絵文字を書いておけば、アクセスしたキャリアによって、mod_chxjが対応の絵文字に自動変換します。ソースに2byteのバイナリコードを直接書いても、１０進参照文字列<span class="note"><a href="#doc1_1030" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="１６進参照文字列には対応していません"><sup>(8)</sup></a></span>（&amp;#XXX;の形）で書いても、どちらでも変換対象になります。１０進参照文字列で書いた場合は、mod_chxjにより、自動で２バイトコードに変換します。</p>
 
 <div class="footnote">
 <ol>
-<li id="doc1_1010" value="8"> １６進参照文字列には対応していません</ol>
+<li id="doc1_1030" value="8"> １６進参照文字列には対応していません</ol>
 </div>
 
 
-<h3 id="doc1_1013">絵文字変換定義</h3>
+<h3 id="doc1_1033">絵文字変換定義</h3>
 
-<p class="first_ja">絵文字の変換に関する動作を変えたい場合（例えば「ハートがあったら、ＡＵの場合はスペードに」とか、「変換定義がおかしい」といった場合）は、emoji.xmlファイルを直接編集することによって定義を変更することが可能です。emoji.xmlはXMLファイルとなっていますので、vi等で簡単に定義を変更することができます<span class="note"><a href="#doc1_1015" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="厳密にはXMLになっていないので、日本語の記述はＳＪＩＳでお願いします。"><sup>(9)</sup></a></span>。</p>
+<p class="first_ja">絵文字の変換に関する動作を変えたい場合（例えば「ハートがあったら、ＡＵの場合はスペードに」とか、「変換定義がおかしい」といった場合）は、emoji.xmlファイルを直接編集することによって定義を変更することが可能です。emoji.xmlはXMLファイルとなっていますので、vi等で簡単に定義を変更することができます<span class="note"><a href="#doc1_1035" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="厳密にはXMLになっていないので、日本語の記述はＳＪＩＳでお願いします。"><sup>(9)</sup></a></span>。</p>
 <p><br></br>以下に、emoji.xmlファイルの一部を記します。</p>
 
-<div id="doc1_1020" class="caption">emoji.xml</div>
+<div id="doc1_1040" class="caption">emoji.xml</div>
 <pre class="program" style="margin-top:0">
 &lt;?xml encoding=&quot;Shift_JIS&quot; &gt;
 
@@ -1407,52 +1434,52 @@ ChxjServerSideEncoding &quot;EUC-JP&quot;
 
 <div class="footnote">
 <ol>
-<li id="doc1_1015" value="9"> 厳密にはXMLになっていないので、日本語の記述はＳＪＩＳでお願いします。</ol>
+<li id="doc1_1035" value="9"> 厳密にはXMLになっていないので、日本語の記述はＳＪＩＳでお願いします。</ol>
 </div>
 
 
-<h2 id="doc1_1058">デバイス定義 device_data.xml</h2>
+<h2 id="doc1_1078">デバイス定義 device_data.xml</h2>
 
 <p class="first_ja">mod_chxjの動作を決定付ける重要な定義です。変換対象の端末は全て、device_data.xmlファイルに定義される必要があります。定義されていない端末は、mod_chxjとしては、認識することができません。認識できない場合には、ＣＨＴＭＬをそのまま出力します。</p>
 
-<h2 id="doc1_1061">イメージ画像変換機能</h2>
+<h2 id="doc1_1081">イメージ画像変換機能</h2>
 
 <p class="first_ja">mod_chxjには、JPEG、GIF、PNG、BMPファイルを置いておくだけで、デバイス定義に従って、それぞれのキャリア対応のフォーマットに変換する機能があります。画像のサイズ（縦Ｘ横）も、端末の画面サイズに合わせて変換します。画像のサイズ（バイト数）については、デバイス定義中のキャッシュサイズを見て、その値よりも小さくなるように<b>努力</b>しますが、元の画像が大きすぎる場合や、複雑な画像の場合には、キャッシュサイズよりも小さくできずに表示できない場合があります。<br></br>それぞれのタグで指定する場合には、ファイル名の拡張子（.jpgや.gif等）をはずした形で指定します。<br></br>本機能には３つのモードが存在します。そのモードを以下に記します。</p>
 
-<h3 id="doc1_1070">サムネイルモード</h3>
+<h3 id="doc1_1090">サムネイルモード</h3>
 
 <p class="first_ja">端末側画面サイズの約３分の１程度のサイズ（縦Ｘ横）に画像を縮小表示します。</p>
 
-<div id="doc1_1072" class="caption">サムネイルモード 使用例</div>
+<div id="doc1_1092" class="caption">サムネイルモード 使用例</div>
 <pre class="program" style="margin-top:0">
   &lt;IMG SRC=&quot;/img/logo?Mode=Thumbnail&quot;&gt;
   
 </pre>
 
 
-<h3 id="doc1_1076">壁紙モード</h3>
+<h3 id="doc1_1096">壁紙モード</h3>
 
 <p class="first_ja">端末側画面のサイズにマッチするサイズに拡大・縮小します。横長の画像の場合には、縦幅を合わせた後に左右をトリミングします。</p>
 
-<div id="doc1_1078" class="caption">壁紙モード 使用例</div>
+<div id="doc1_1098" class="caption">壁紙モード 使用例</div>
 <pre class="program" style="margin-top:0">
   &lt;IMG SRC=&quot;/img/logo?Mode=WP&quot;&gt;
   
 </pre>
 
 
-<h3 id="doc1_1082">EzGetモード</h3>
+<h3 id="doc1_1102">EzGetモード</h3>
 
 <p class="first_ja">壁紙ダウンロードを行いたい場合に使用します。EzGETモードは、壁紙モードで出力される画像サイズと同一サイズの画像が使用されます。</p>
 
-<div id="doc1_1084" class="caption">EzGetモード 使用例</div>
+<div id="doc1_1104" class="caption">EzGetモード 使用例</div>
 <pre class="program" style="margin-top:0">
   &lt;A HREF=&quot;/img/logo?Mode=EzGet&quot;&gt;
   
 </pre>
 
 
-<h3 id="doc1_1088">その他の機能</h3>
+<h3 id="doc1_1108">その他の機能</h3>
 
 <p class="first_ja">モードの他に、画像サイズ（縦Ｘ横）を直接指定することも可能です。<b>w</b>パラメータ、<b>h</b>パラメータを使用して指定します。</p>
 
@@ -1460,7 +1487,7 @@ ChxjServerSideEncoding &quot;EUC-JP&quot;
 <li> wパラメータ<br></br>横幅を指定します。
 <li> hパラメータ<br></br>縦幅を指定します。
 
-<div id="doc1_1108" class="caption">w/hパラメータ 使用例</div>
+<div id="doc1_1128" class="caption">w/hパラメータ 使用例</div>
 <pre class="program" style="margin-top:0">
   &lt;IMG SRC=&quot;/img/logo?w=100&amp;h=200&quot;&gt;
   
@@ -1470,25 +1497,25 @@ ChxjServerSideEncoding &quot;EUC-JP&quot;
 
 <p>上記全てのモード、パラメータはＧＥＴリクエストとしてのみ使用できます。</p>
 
-<h2 id="doc1_1119">ＱＲコード出力機能</h2>
+<h2 id="doc1_1139">ＱＲコード出力機能</h2>
 
 
-<h3 id="doc1_1121">ＱＲコード出力ハンドラの登録</h3>
+<h3 id="doc1_1141">ＱＲコード出力ハンドラの登録</h3>
 
 <p class="first_ja">ＱＲコード出力機能を使用するには、ＱＲコードハンドラを登録します。httpd.confに以下の記述を追加します。</p>
 
-<div id="doc1_1123" class="caption">httpd.conf</div>
+<div id="doc1_1143" class="caption">httpd.conf</div>
 <pre class="program" style="margin-top:0">
   AddHandler chxj-qrcode .qrc
 </pre>
 
 <p>なお、ハンドラを登録しないでも、出力フィルターを経由させることで、ＱＲコードを出力させることも可能です。（※ＱＲコードの動的出力を参照）</p>
 
-<h3 id="doc1_1127">ＱＲコードソースファイルの設置</h3>
+<h3 id="doc1_1147">ＱＲコードソースファイルの設置</h3>
 
 <p class="first_ja">ハンドラを登録したら、その登録した拡張子を持つファイルを用意します。</p>
 
-<div id="doc1_1129" class="caption">例：a.qrc</div>
+<div id="doc1_1149" class="caption">例：a.qrc</div>
 <pre class="program" style="margin-top:0">
   &lt;?xml version=1.0 ?&gt;
   
@@ -1511,11 +1538,11 @@ ChxjServerSideEncoding &quot;EUC-JP&quot;
 <li> dataタグdataタグは、ＱＲコードに出力するデータを指定します。改行した場合は、改行文字もＱＲコード内に符号化されます。</ol>
 
 
-<h3 id="doc1_1151">ＱＲコードの動的出力機能</h3>
+<h3 id="doc1_1171">ＱＲコードの動的出力機能</h3>
 
 <p class="first_ja">プログラム等を使用し、動的にＱＲコードを出力したい場合は、上記の.qrcファイルの内容をそのままOutputFilterに通してあげればＯＫです。</p>
 
-<div id="doc1_1153" class="caption">phpでＱＲコードを動的に出力する例</div>
+<div id="doc1_1173" class="caption">phpでＱＲコードを動的に出力する例</div>
 <pre class="program" style="margin-top:0">
     &lt;php
       $version = $_POST[&quot;version&quot;];

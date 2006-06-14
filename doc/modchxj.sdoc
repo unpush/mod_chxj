@@ -86,14 +86,29 @@ $ cp etc/emoji.xml /etc/apache2/chxj
 <li>httpd.confに以下を追加します。
 
 <program title="httpd.conf">
+#====================================================================================
 # モジュールをApache2.0にロード
+#====================================================================================
 LoadModule chxj_module /usr/lib/apache2/modules/mod_chxj.so
 
-# デバイスデータの設定
+#====================================================================================
+# デバイスデータファイルの設定
+#====================================================================================
 ChxjLoadDeviceData  /etc/apache2/chxj/device_data.xml
 
-# 絵文字データの設定
+#====================================================================================
+# 絵文字データファイルの設定
+#====================================================================================
 ChxjLoadEmojiData   /etc/apache2/chxj/emoji.xml
+
+#====================================================================================
+# 変換エンジン動作指示命令（下記のSetOutputFilter、SetInputFilterも必須です)
+# ChxjConvRule ==> ディレクティブ
+# "^/chxj.+$"  ==> Perl互換のURIパターン
+# EngineOn     ==> 変換エンジンを動作させる指示
+# NONE         ==> サーバ側の文字コード。（NONEを指定した場合は文字コード変換しない)
+#====================================================================================
+ChxjConvRule "^/chxj.+$" "EngineOn" "NONE"
 
 # 変換させる対象の設定
 &lt;Location /chxj&gt;
@@ -118,6 +133,16 @@ ChxjLoadDeviceData  /etc/apache2/chxj/device_data.xml
 
 # 絵文字データの設定
 ChxjLoadEmojiData   /etc/apache2/chxj/emoji.xml
+
+#====================================================================================
+# 変換エンジン動作指示命令（下記のSetOutputFilter、SetInputFilterも必須です)
+# ChxjConvRule ==> ディレクティブ
+# "^/chxj.+$"  ==> Perl互換のURIパターン
+# EngineOn     ==> 変換エンジンを動作させる指示。動作させたく無い場合は"EngineOff"
+# EUC-JP       ==> サーバ側の文字コード。（NONEを指定した場合は文字コード変換しない)
+#                  EUC-JPからCP932に文字コード変換します。
+#====================================================================================
+ChxjConvRule "^/chxj.+$" "EngineOn" "EUC-JP"
 
 &lt;Location /chxj&gt;
   SetOutputFilter chxj_output_filter
@@ -269,9 +294,7 @@ ChxjImageCopyright "A.Konno"
 サーバ側はEUC-JPであった場合の例です。mod_chxjによってSJISに変換するように指示しています。
 
 <program title="httpd.conf">
-&lt;Location /chxj&gt;
-ChxjServerSideEncoding "EUC-JP"
-&lt;/Location&gt;
+ChxjConvRule "^/chxj.+$" "EngineOn" "EUC-JP"
 </program>
 
 上記の説明を以下に示します。
@@ -280,7 +303,17 @@ ChxjServerSideEncoding "EUC-JP"
         <li>ChxjServerSideEncoding<br />
           サーバサイドの文字コードを指定します。ここに、EUC-JPと指定してあった場合は、
           EUC-JPからCP932に変換後、クライアントに出力されます。
-          DefaultはNONE
+          省略した場合はNONE
+          <ol>
+             <li>変換エンジン動作指示命令（下記のSetOutputFilter、SetInputFilterも必須です)<br />
+             ChxjConvRule ==> ディレクティブ<br />
+             "^/chxj.+$"  ==> Perl互換のURIパターン<br />
+             EngineOn     ==> 変換エンジンを動作させる指示。動作させたく無い場合は"EngineOff"<br />
+             EUC-JP       ==> サーバ側の文字コード。（NONEを指定した場合は文字コード変換しない)<br />
+<br />
+             EUC-JPからCP932に文字コード変換します。(libiconvに依存します)<br/>
+             </li>
+          </ol>
      
           <br />
           <br />
