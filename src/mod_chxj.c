@@ -575,6 +575,7 @@ chxj_global_config_create(apr_pool_t* pool, server_rec* s)
                   sizeof(mod_chxj_global_config));
   conf->client_shm  = NULL;
   conf->client_lock = NULL;
+  conf->convrules   = apr_array_make(pool, 2, sizeof(chxjconvrule_entry));
   memset(conf->client_lock_file_name, 0, sizeof(conf->client_lock_file_name));
 
 
