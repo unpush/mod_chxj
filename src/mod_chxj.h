@@ -195,6 +195,7 @@ typedef struct {
   ap_regex_t *regexp;
   int        flags;
   int        action;
+  char       *encoding;
 } chxjconvrule_entry;
 
 #define CONVRULE_ENGINE_ON_BIT        (0x00000001)

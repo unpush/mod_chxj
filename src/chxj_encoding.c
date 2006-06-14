@@ -16,6 +16,7 @@
  */
 #include "mod_chxj.h"
 #include "chxj_encoding.h"
+#include "chxj_apply_convrule.h"
 #if defined(HAVE_LIBICONV_HOOK)
 #  include "iconv_hook/iconv.h"
 #else
@@ -37,42 +38,33 @@ chxj_encoding(request_rec *r, const char* src, apr_size_t* len)
   size_t result;
   apr_size_t ilen;
   apr_size_t olen;
-  mod_chxj_config* conf;
+  mod_chxj_global_config* sconf;
+  chxjconvrule_entry* entryp;
 
   ap_log_rerror(
     APLOG_MARK,APLOG_DEBUG, 0, r, "start chxj_encoding()");
-  conf = ap_get_module_config(r->per_dir_config, &chxj_module);
-  ap_log_rerror(
-    APLOG_MARK,APLOG_DEBUG, 0, r, " ");
 
-  if (conf == NULL) {
+  sconf = ap_get_module_config(r->server->module_config, &chxj_module);
+
+  if (sconf == NULL) {
     ap_log_rerror(
       APLOG_MARK,APLOG_DEBUG, 0, r, "none encoding.");
     return (char*)src;
   }
-  ap_log_rerror(
-    APLOG_MARK,APLOG_DEBUG, 0, r, " ");
 
-  if (conf->server_side_encoding == NULL) {
+  entryp = chxj_apply_convrule(r, sconf->convrules);
+  if (entryp->encoding == NULL) {
     ap_log_rerror(
       APLOG_MARK,APLOG_DEBUG, 0, r, "none encoding.");
     return (char*)src;
   }
-  ap_log_rerror(
-    APLOG_MARK,APLOG_DEBUG, 0, r, " ");
 
-  ap_log_rerror(
-    APLOG_MARK,APLOG_DEBUG, 0, r, "Encoding:[%.*s]", 4, conf->server_side_encoding);
-
-  if ((*(conf->server_side_encoding) == 'n' || *(conf->server_side_encoding) == 'N') 
-     &&   strcasecmp(conf->server_side_encoding, "NONE") == 0) {
+  if ((*(entryp->encoding) == 'n' || *(entryp->encoding) == 'N') 
+  &&   strcasecmp(entryp->encoding, "NONE") == 0) {
     ap_log_rerror(
       APLOG_MARK,APLOG_DEBUG, 0, r, "none encoding.");
     return (char*)src;
   }
-  ap_log_rerror(
-    APLOG_MARK,APLOG_DEBUG, 0, r, " ");
-
   ilen = *len;
   ibuf = apr_palloc(r->pool, ilen+1);
   if (ibuf == NULL) {
@@ -82,8 +74,6 @@ chxj_encoding(request_rec *r, const char* src, apr_size_t* len)
   }
   memset(ibuf, 0, ilen+1);
   memcpy(ibuf, src, ilen);
-  ap_log_rerror(
-    APLOG_MARK,APLOG_DEBUG, 0, r, " ");
 
   olen = ilen * 4 + 1;
   spos = obuf = apr_palloc(r->pool, olen);
@@ -93,10 +83,10 @@ chxj_encoding(request_rec *r, const char* src, apr_size_t* len)
     return ibuf;
   }
   ap_log_rerror(
-      APLOG_MARK,APLOG_DEBUG, 0, r, "encode convert [%s] -> [%s]", conf->server_side_encoding, "CP932");
+      APLOG_MARK,APLOG_DEBUG, 0, r, "encode convert [%s] -> [%s]", entryp->encoding, "CP932");
 
   memset(obuf, 0, olen);
-  cd = iconv_open("CP932", conf->server_side_encoding );
+  cd = iconv_open("CP932", entryp->encoding);
   if (cd == (iconv_t)-1) {
     ap_log_rerror(
       APLOG_MARK,APLOG_DEBUG, 0, r, "end   chxj_encoding()");

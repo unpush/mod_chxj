@@ -73,8 +73,8 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
   char *user_agent;
   char *dst = apr_pstrcat(r->pool, (char*)*src, NULL);
   char *tmp;
-  int  rtn;
   mod_chxj_global_config* sconf; 
+  chxjconvrule_entry* entryp;
 
   sconf = ap_get_module_config(r->server->module_config, &chxj_module);
 
@@ -90,8 +90,8 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, 
           "content type is %s", r->content_type);
 
-  rtn = chxj_apply_convrule(r, sconf->convrules);
-  if (!(rtn & CONVRULE_ENGINE_ON_BIT)) {
+  entryp = chxj_apply_convrule(r, sconf->convrules);
+  if (!(entryp->action & CONVRULE_ENGINE_ON_BIT)) {
     ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 
       0, r, "EngineOff");
     return (char*)*src;
@@ -220,13 +220,13 @@ chxj_input_exchange(request_rec *r, const char** src, apr_size_t* len)
 
   char* result;
 
-  int rtn;
   mod_chxj_global_config* sconf;
+  chxjconvrule_entry* entryp;
 
   sconf = ap_get_module_config(r->server->module_config, &chxj_module);
 
-  rtn = chxj_apply_convrule(r, sconf->convrules);
-  if (!(rtn & CONVRULE_ENGINE_ON_BIT)) {
+  entryp = chxj_apply_convrule(r, sconf->convrules);
+  if (!(entryp->action & CONVRULE_ENGINE_ON_BIT)) {
     ap_log_rerror(APLOG_MARK,APLOG_DEBUG,
       0, r, "EngineOff");
     return (char*)*src;
@@ -800,7 +800,7 @@ chxj_merge_per_dir_config(apr_pool_t *p, void *basev, void *addv)
 
 
 static int
-chxj_command_parse_take2(const char* arg, char** prm1, char** prm2)
+chxj_command_parse_take3(const char* arg, char** prm1, char** prm2, char** prm3)
 {
   int isquoted;
   char* strp;
@@ -829,8 +829,11 @@ chxj_command_parse_take2(const char* arg, char** prm1, char** prm2)
       break;
   }
 
-  if (! *strp)
+  if (! *strp) {
+    *prm2 = strp;
+    *prm3 = strp;
     return 1;
+  }
 
   *strp++ = '\0';
 
@@ -855,7 +858,34 @@ chxj_command_parse_take2(const char* arg, char** prm1, char** prm2)
       break;
   }
 
+  if (! *strp) {
+    *prm3 = strp;
+    return 1;
+  }
+
+  *strp++ = '\0';
+
+  for (;*strp == ' '||*strp == '\t'; strp++);
+
+  isquoted = 0; 
+  if (*strp == '"') { 
+    isquoted = 1;
+    strp++;
+  }
+  *prm3 = strp;
+  for (; *strp != '\0'; strp++) {
+    if ((isquoted && (*strp == ' ' || *strp == '\t'))
+    ||  (*strp == '\\' && (*(strp+1) == ' ' || *(strp+1) == '\t'))) {
+      strp++;
+      continue;
+    }
+
+    if ((!isquoted && (*strp == ' ' || *strp == '\t'))
+    ||  (isquoted  && *strp == '"'))
+      break;
+  }
   *strp = '\0';
+
   return 0;
 }
 
@@ -996,6 +1026,7 @@ cmd_convert_rule(cmd_parms *cmd, void *in_dconf, const char *arg)
   mod_chxj_global_config* sconf;
   char* prm1;
   char* prm2;
+  char* prm3;
   int mode;
   char* pstate;
   char* action;
@@ -1015,7 +1046,7 @@ cmd_convert_rule(cmd_parms *cmd, void *in_dconf, const char *arg)
   newrule->flags = 0;
   newrule->action = 0;
 
-  if (chxj_command_parse_take2(arg, &prm1, &prm2)) {
+  if (chxj_command_parse_take3(arg, &prm1, &prm2, &prm3)) {
     return "ChxjConvertRule: bad argument line";
   }
 
@@ -1050,8 +1081,11 @@ cmd_convert_rule(cmd_parms *cmd, void *in_dconf, const char *arg)
     return "RewriteRule: cannot compile regular expression ";
   }
 
-{FILE*fp = fopen("/tmp/erer.log", "a");fprintf(fp,"%s:%d\n", __FILE__,__LINE__);fclose(fp);}
   newrule->regexp = regexp;
+  if (*prm3)
+    newrule->encoding = apr_pstrdup(cmd->pool, prm3);
+  else
+    newrule->encoding = apr_pstrdup(cmd->pool, "none");
   
   return NULL;
 }

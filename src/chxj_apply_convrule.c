@@ -19,7 +19,7 @@
 
 static int s_apply_rule(request_rec* r, chxjconvrule_entry* pp);
 
-int 
+chxjconvrule_entry*
 chxj_apply_convrule(request_rec* r, apr_array_header_t* convrules)
 {
   chxjconvrule_entry *entries;
@@ -34,9 +34,9 @@ chxj_apply_convrule(request_rec* r, apr_array_header_t* convrules)
 
     /* Match */
     if (s_apply_rule(r, pp)) 
-      return pp->action;
+      return pp;
   }
-  return 0;
+  return NULL;
 }
 
 static int
