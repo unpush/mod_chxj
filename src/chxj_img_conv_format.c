@@ -1530,35 +1530,33 @@ s_get_query_string_param(request_rec *r)
     return param;
 
   for (;;) {
-    pair = apr_strtok(s, "&", &pstate);
-    if (pair == NULL) break;
-
+    if ((pair = apr_strtok(s, "&", &pstate)) == NULL) break;
     s = NULL;
 
     name  = apr_strtok(pair, "=", &vstate);
     value = apr_strtok(NULL, "=", &vstate);
-    if ((strcasecmp(name, "mode") == 0 
+    if ((*name == 'm' || *name == 'M') && (strcasecmp(name, "mode") == 0 
       || strcasecmp(name, "m") == 0) 
-    && value != NULL) {
-      if (strcasecmp(value, "thumbnail") == 0 || strcasecmp(value, "tb") == 0) {
+    && value) {
+      if ((*value == 't' || *value == 'T') && (strcasecmp(value, "thumbnail") == 0 || strcasecmp(value, "tb") == 0)) {
         param->mode = IMG_CONV_MODE_THUMBNAIL;
       }
       else 
-      if (strcasecmp(value, "WP") == 0 || strcasecmp(value, "WallPaper") == 0) {
+      if ((*value == 'w' || *value == 'W') && (strcasecmp(value, "WP") == 0 || strcasecmp(value, "WallPaper") == 0)) {
         param->mode = IMG_CONV_MODE_WALLPAPER;
       }
       else
-      if (strcasecmp(value, "EZGET") == 0) {
+      if ((*value == 'e' || *value == 'E') && strcasecmp(value, "EZGET") == 0)
         param->mode = IMG_CONV_MODE_EZGET;
-      }
     }
     else
-    if ((strcasecmp(name, "ua") == 0 
-    || strcasecmp(name, "user-agent") == 0) && value != NULL) {
+    if (((*name == 'u' || *name == 'U') && strcasecmp(name, "ua") == 0) 
+    || ((*name == 'u' || *name == 'U') && strcasecmp(name, "user-agent") == 0) && value != NULL) {
       ap_unescape_url(value);
-      if (strcasecmp(value, "IGN") == 0) {
+
+      if ((*value == 'i' || *value == 'I') && strcasecmp(value, "IGN") == 0)
         param->ua_flag = UA_IGN;
-      }
+
       param->user_agent = apr_pstrdup(r->pool, value);
     }
     else
