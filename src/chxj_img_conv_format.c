@@ -356,7 +356,7 @@ s_create_cache_file(request_rec*       r,
   img_conv_mode_t    mode = qsp->mode;
 
   char*              writedata = NULL;
-  char*              readdata = NULL;
+  char*              readdata  = NULL;
 
   apr_file_t*        fout;
   apr_file_t*        fin;
@@ -405,50 +405,43 @@ s_create_cache_file(request_rec*       r,
                     APR_OS_DEFAULT, 
                     r->pool);
     if (rv != APR_SUCCESS) {
-      ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,
-                      "file open failed.[%s]", r->filename);
+      DBG1(r,"file open failed.[%s]", r->filename);
       return HTTP_NOT_FOUND;
     }
   
     readdata = apr_palloc(r->pool, st->size);
     rv = apr_file_read_full(fin, (void*)readdata, st->size, &readbyte);
     if (rv != APR_SUCCESS || readbyte != st->size) {
-      ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,
-                      "file read failed.[%s]", r->filename);
+      DBG1(r,"file read failed.[%s]", r->filename);
       apr_file_close(fin);
   
       return HTTP_NOT_FOUND;
     }
   }
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "start img convert");
+  DBG(r,"start img convert");
 
 
-  magick_wand=NewMagickWand();
-  status=MagickReadImageBlob(magick_wand,readdata, readbyte);
-  if (status == MagickFalse) {
+  magick_wand = NewMagickWand();
+  if (MagickReadImageBlob(magick_wand,readdata, readbyte) == MagickFalse) {
     EXIT_MAGICK_ERROR();
     return HTTP_NOT_FOUND;
   }
 
-  /*--------------------------------------------------------------------------*/
-  /* The size of the image is changed.                                        */
-  /*--------------------------------------------------------------------------*/
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
-                    "call s_fixup_size()");
-  magick_wand = s_fixup_size(magick_wand, r, spec, qsp);
-  if (magick_wand == NULL) {
-    return HTTP_NOT_FOUND;
-  }
+  /*
+   * The size of the image is changed.
+   */
+  DBG(r,"call s_fixup_size()");
 
-  /*--------------------------------------------------------------------------*/
-  /* The colors of the image is changed.                                      */
-  /*--------------------------------------------------------------------------*/
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
-                    "call s_fixup_color()");
-  magick_wand = s_fixup_color(magick_wand, r,spec, mode);
-  if (magick_wand == NULL) {
+  if ((magick_wand = s_fixup_size(magick_wand, r, spec, qsp)) == NULL) 
     return HTTP_NOT_FOUND;
-  }
+
+  /*
+   * The colors of the image is changed.
+   */
+  DBG(r,"call s_fixup_color()");
+
+  if ((magick_wand = s_fixup_color(magick_wand, r,spec, mode)) == NULL) 
+    return HTTP_NOT_FOUND;
 
   /*--------------------------------------------------------------------------*/
   /* DEPTH of the image is changed.                                           */
