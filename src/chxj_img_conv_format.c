@@ -466,13 +466,12 @@ s_create_cache_file(request_rec*       r,
       return HTTP_NOT_FOUND;
     }
 
-    status = MagickStripImage(magick_wand);
-    if (status == MagickFalse) {
+    if (MagickStripImage(magick_wand) == MagickFalse) {
       EXIT_MAGICK_ERROR();
       return HTTP_NOT_FOUND;
     }
 
-    magick_wand = s_img_down_sizing(magick_wand, r, spec);
+    if (magick_wand = s_img_down_sizing(magick_wand, r, spec);
     if (magick_wand == NULL) {
       return HTTP_NOT_FOUND;
     }
