@@ -114,11 +114,14 @@ chxj_exchange_jhtml(
   qs_init_root_node(&doc);
 
   ss = apr_pcalloc(r->pool, srclen + 1);
+
   memset(ss,   0, srclen + 1);
   memcpy(ss, src, srclen);
+
 #ifdef DUMP_LOG
   chxj_dump_out("[src] CHTML -> JHTML", ss, srclen);
 #endif
+
   qs_parse_string(&doc,ss,strlen(ss));
 
   /*--------------------------------------------------------------------------*/
@@ -127,13 +130,14 @@ chxj_exchange_jhtml(
   dst = s_jhtml_node_exchange(&jhtml, qs_get_root(&doc), 0);
   qs_all_free(&doc,QX_LOGMARK);
 
-  if (dst == NULL) 
+  if (! dst) 
     return apr_pstrdup(r->pool,ss);
 
-  if (strlen(dst) == 0) 
+  if (! strlen(dst)) 
     dst = apr_psprintf(r->pool, "\n");
 
   *dstlen = strlen(dst);
+
 #ifdef DUMP_LOG
   chxj_dump_out("[dst] CHTML -> JHTML", dst, *dstlen);
 #endif
