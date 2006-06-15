@@ -1535,54 +1535,81 @@ s_get_query_string_param(request_rec *r)
 
     name  = apr_strtok(pair, "=", &vstate);
     value = apr_strtok(NULL, "=", &vstate);
-    if ((*name == 'm' || *name == 'M') && (strcasecmp(name, "mode") == 0 
-      || strcasecmp(name, "m") == 0) 
-    && value) {
-      if ((*value == 't' || *value == 'T') && (strcasecmp(value, "thumbnail") == 0 || strcasecmp(value, "tb") == 0)) {
-        param->mode = IMG_CONV_MODE_THUMBNAIL;
+
+    switch (*name) {
+    case 'm':
+    case 'M':
+      if (value && (strcasecmp(name, "mode") == 0 || strcasecmp(name, "m") == 0)) {
+
+        switch (*value) {
+        case 't':
+        case 'T':
+          if (strcasecmp(value, "thumbnail") == 0 || strcasecmp(value, "tb") == 0)
+            param->mode = IMG_CONV_MODE_THUMBNAIL;
+          break;
+  
+        case 'w':
+        case 'W':
+          if (strcasecmp(value, "WP") == 0 || strcasecmp(value, "WallPaper") == 0)
+            param->mode = IMG_CONV_MODE_WALLPAPER;
+          break;
+  
+        case 'e':
+        case 'E':
+          if (strcasecmp(value, "EZGET") == 0)
+            param->mode = IMG_CONV_MODE_EZGET;
+          break;
+        default:
+          break;
+        }
       }
-      else 
-      if ((*value == 'w' || *value == 'W') && (strcasecmp(value, "WP") == 0 || strcasecmp(value, "WallPaper") == 0)) {
-        param->mode = IMG_CONV_MODE_WALLPAPER;
+      break;
+
+    case 'u':
+    case 'U':
+      if (value && (strcasecmp(name, "ua") == 0 || strcasecmp(name, "user-agent") == 0)) {
+        ap_unescape_url(value);
+
+        if ((*value == 'i' || *value == 'I') && strcasecmp(value, "IGN") == 0)
+          param->ua_flag = UA_IGN;
+
+        param->user_agent = apr_pstrdup(r->pool, value);
       }
-      else
-      if ((*value == 'e' || *value == 'E') && strcasecmp(value, "EZGET") == 0)
-        param->mode = IMG_CONV_MODE_EZGET;
-    }
-    else
-    if ((*name == 'u' || *name == 'U') 
-      && (strcasecmp(name, "ua") == 0 || strcasecmp(name, "user-agent") == 0) && value) {
+      break;
 
-      ap_unescape_url(value);
+    case 'n':
+    case 'N':
+      if (value && strcasecmp(name, "name") == 0)
+        param->name = apr_pstrdup(r->pool, value);
+      break;
 
-      if ((*value == 'i' || *value == 'I') && strcasecmp(value, "IGN") == 0)
-        param->ua_flag = UA_IGN;
-
-      param->user_agent = apr_pstrdup(r->pool, value);
-    }
-    else
-    if ((*name == 'n' || *name == 'N') && strcasecmp(name, "name") == 0 && value) {
-      param->name = apr_pstrdup(r->pool, value);
-    }
-    else
-    if ((*name == 'o' || *name == 'O') && strcasecmp(name, "offset") == 0 && value) {
-      if (! chxj_chk_numeric(value))
+    case 'o':
+    case 'O':
+      if (value && strcasecmp(name, "offset") == 0 && (! chxj_chk_numeric(value)))
         param->offset = chxj_atoi(value);
-    }
-    else
-    if ((*name == 'c' || *name == 'C') && strcasecmp(name, "count") == 0 && value) {
-      if (! chxj_chk_numeric(value))
+
+      break;
+
+    case 'c':
+    case 'C':
+      if (value && strcasecmp(name, "count") == 0 && (! chxj_chk_numeric(value)))
         param->count = chxj_atoi(value);
-    }
-    else
-    if ((*name == 'w' || *name == 'W') && strcasecmp(name, "w") == 0 && value) {
-      if (! chxj_chk_numeric(value)) 
+      break;
+
+    case 'w':
+    case 'W':
+      if (value && strcasecmp(name, "w") == 0 && (! chxj_chk_numeric(value)))
         param->width = chxj_atoi(value);
-    }
-    else
-    if ((*name == 'h'|| *name == 'H') && strcasecmp(name, "h") == 0 && value) {
-      if (! chxj_chk_numeric(value))
+      break;
+
+    case 'h':
+    case 'H':
+      if (value && strcasecmp(name, "h") == 0 && (! chxj_chk_numeric(value)))
         param->height = chxj_atoi(value);
+      break;
+
+    default:
+      break;
     }
   }
 
