@@ -1889,7 +1889,7 @@ fi
 
 
 
-          ac_config_headers="$ac_config_headers src/config.h"
+          ac_config_headers="$ac_config_headers include/config.h"
 
           ac_config_commands="$ac_config_commands default-1"
 
@@ -19171,9 +19171,10 @@ fi
 
 done
 
+APR_HEADER_DIR=`${APR_CONFIG} --includes | sed -e s/-I//g`
 
 
-for ac_header in apr_shm.h apr_global_mutex.h
+for ac_header in ${APR_HEADER_DIR}/apr_shm.h ${APR_HEADER}/apr_global_mutex.h
 do
 as_ac_Header=`echo "ac_cv_header_$ac_header" | $as_tr_sh`
 if eval "test \"\${$as_ac_Header+set}\" = set"; then
@@ -20465,7 +20466,7 @@ do
   "Makefile" ) CONFIG_FILES="$CONFIG_FILES Makefile" ;;
   "src/Makefile" ) CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
   "default-1" ) CONFIG_COMMANDS="$CONFIG_COMMANDS default-1" ;;
-  "src/config.h" ) CONFIG_HEADERS="$CONFIG_HEADERS src/config.h" ;;
+  "include/config.h" ) CONFIG_HEADERS="$CONFIG_HEADERS include/config.h" ;;
   *) { { echo "$as_me:$LINENO: error: invalid argument: $ac_config_target" >&5
 echo "$as_me: error: invalid argument: $ac_config_target" >&2;}
    { (exit 1); exit 1; }; };;
@@ -21183,7 +21184,7 @@ esac
   { echo "$as_me:$LINENO: executing $ac_dest commands" >&5
 echo "$as_me: executing $ac_dest commands" >&6;}
   case $ac_dest in
-    default-1 ) test -z "$CONFIG_HEADERS" || echo timestamp > src/stamp-h ;;
+    default-1 ) test -z "$CONFIG_HEADERS" || echo timestamp > include/stamp-h ;;
   esac
 done
 _ACEOF

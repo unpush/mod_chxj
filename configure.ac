@@ -167,7 +167,8 @@ AC_SUBST(CFLAGS)
 # Checks for header files.
 AC_HEADER_STDC
 AC_CHECK_HEADERS([string.h strings.h unistd.h fcntl.h sys/types.h sys/stat.h sys/mman.h libgen.h])
-AC_CHECK_HEADERS([apr_shm.h apr_global_mutex.h])
+APR_HEADER_DIR=`${APR_CONFIG} --includes | sed -e s/-I//g`
+AC_CHECK_HEADERS([${APR_HEADER_DIR}/apr_shm.h ${APR_HEADER}/apr_global_mutex.h])
 AC_CHECK_HEADERS([$with_apache_header/ap_regex.h],
   AC_DEFINE([HAVE_AP_REGEX_H], [], [Define to 1 if you have the <ap_regex.h> header file.]))
 
