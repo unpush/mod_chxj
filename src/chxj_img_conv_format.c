@@ -1400,8 +1400,7 @@ s_add_crc(const char* writedata, apr_size_t writebyte)
   apr_size_t     ii;
   unsigned char  ch;
 
-  for(ii=0;ii<writebyte;ii++)
-  {
+  for(ii=0;ii<writebyte;ii++) {
     ch = writedata[ii];
     crc = AU_CRC_TBL[(crc>>8^ch)&0xff]^(crc<<8);
   }
@@ -1430,10 +1429,11 @@ chxj_trans_name(request_rec *r)
   char*    filename_sv;
 
   conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+
   if (conf->image != CHXJ_IMG_ON) 
     return DECLINED;
 
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "Match URI[%s]", r->uri);
+  DBG1(r,"Match URI[%s]", r->uri);
 
 
   if (r->filename == NULL) 
@@ -1445,7 +1445,7 @@ chxj_trans_name(request_rec *r)
   else 
     filename_sv = r->filename;
 
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "r->filename[%s]", filename_sv);
+  DBG1(r,"r->filename[%s]", filename_sv);
 
   ccp = ap_document_root(r);
   if (ccp == NULL)
@@ -1460,18 +1460,17 @@ chxj_trans_name(request_rec *r)
 
   if (r->server->path 
   &&  *filename_sv == *r->server->path 
-  &&  strncmp(filename_sv, r->server->path, r->server->pathlen) == 0) {
+  &&  strncmp(filename_sv, r->server->path, r->server->pathlen) == 0)
     filename_sv = apr_pstrcat(r->pool, docroot, (filename_sv + r->server->pathlen), NULL);
-  }
-  else {
+  else
     filename_sv = apr_pstrcat(r->pool, docroot, filename_sv, NULL);
-  }
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "URI[%s]", filename_sv);
+
+  DBG1(r,"URI[%s]", filename_sv);
 
 
   for (ii=0; ii<5; ii++) {
     fname = apr_psprintf(r->pool, "%s.%s", filename_sv, ext[ii]);
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "search [%s]", fname);
+    DBG1(r,"search [%s]", fname);
 
     rv = apr_stat(&st, fname, APR_FINFO_MIN, r->pool);
     if (rv == APR_SUCCESS)
@@ -1480,20 +1479,19 @@ chxj_trans_name(request_rec *r)
     fname = NULL;
   }
   if (fname == NULL) {
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "NotFound [%s]", r->filename);
+    DBG1(r,"NotFound [%s]", r->filename);
     return DECLINED;
   }
+
   if (r->handler == NULL || strcasecmp(r->handler, "chxj-qrcode") != 0) {
-  
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "Found [%s]", fname);
+    DBG1(r,"Found [%s]", fname);
+
     r->filename = apr_psprintf(r->pool, "%s", fname);
   
-    if (strcasecmp("qrc", ext[ii]) == 0) {
+    if (strcasecmp("qrc", ext[ii]) == 0)
       r->handler = apr_psprintf(r->pool, "chxj-qrcode");
-    }
-    else {
+    else
       r->handler = apr_psprintf(r->pool, "chxj-picture");
-    }
   }
   return OK;
 }
@@ -1513,9 +1511,10 @@ s_get_query_string_param(request_rec *r)
   char* value;
   char* pstate;
   char* vstate;
-  char* s = apr_pstrdup(r->pool, r->parsed_uri.query);
+  char* s;
   query_string_param_t* param;
 
+  s = apr_pstrdup(r->pool, r->parsed_uri.query);
   param = apr_palloc(r->pool, sizeof(query_string_param_t));
   param->mode       = IMG_CONV_MODE_NORMAL;
   param->user_agent = NULL;
@@ -1526,8 +1525,7 @@ s_get_query_string_param(request_rec *r)
   param->width      = 0;
   param->height     = 0;
 
-  if (s == NULL)
-    return param;
+  if (s == NULL) return param;
 
   for (;;) {
     if ((pair = apr_strtok(s, "&", &pstate)) == NULL) break;
