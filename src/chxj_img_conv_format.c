@@ -539,18 +539,17 @@ s_create_cache_file(request_rec*       r,
       return HTTP_NOT_FOUND;
     }
 
-    if if (MagickStripImage(magick_wand) == MagickFalse) {
+    if (MagickStripImage(magick_wand) == MagickFalse) {
       EXIT_MAGICK_ERROR();
       return HTTP_NOT_FOUND;
     }
 
-    magick_wand = s_img_down_sizing(magick_wand, r, spec);
-    if (magick_wand == NULL) {
+    if ((magick_wand = s_img_down_sizing(magick_wand, r, spec) == NULL) 
       return HTTP_NOT_FOUND;
-    }
 
     r->content_type = apr_psprintf(r->pool, "image/bmp");
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert to bmp(unsupported)");
+
+    DBG(r, "convert to bmp(unsupported)");
   }
   /*--------------------------------------------------------------------------*/
   /* Add Comment (Copyright and so on.)                                       */
