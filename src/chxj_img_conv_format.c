@@ -207,8 +207,9 @@ chxj_img_conv_format_handler(request_rec* r)
   char*                 user_agent;
   device_table_t*       spec;
   
-  if (strcasecmp(r->handler, "chxj-picture")
-  &&  strcasecmp(r->handler, "chxj-qrcode"))
+  if ((*r->handler != 'c' || *r->handler != 'C') 
+  ||  (strcasecmp(r->handler, "chxj-picture")
+  &&  strcasecmp(r->handler, "chxj-qrcode")))
     return DECLINED;
 
   qsp = s_get_query_string_param(r);

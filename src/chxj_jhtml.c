@@ -587,23 +587,23 @@ s_jhtml_search_emoji(jhtml_t* jhtml, char* txt, char** rslt)
   len = strlen(txt);
   r = jhtml->doc->r;
 
-  if (spec == NULL)
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "spec is NULL");
+  if (! spec) DBG(r,"spec is NULL");
 
   for (ee = jhtml->conf->emoji;
        ee;
        ee = ee->next) {
     unsigned char hex1byte;
     unsigned char hex2byte;
-    if (ee->imode == NULL) {
-      ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
-                      "emoji->imode is NULL");
+
+    if (! ee->imode) { 
+      DBG(r,"emoji->imode is NULL");
       continue;
     }
+
     hex1byte = ee->imode->hex1byte & 0xff;
     hex2byte = ee->imode->hex2byte & 0xff;
 
-    if (ee->imode->string != NULL
+    if (ee->imode->string
     &&  strlen(ee->imode->string) > 0
     &&  strncasecmp(ee->imode->string, txt, strlen(ee->imode->string)) == 0) {
       if (spec == NULL || spec->emoji_type == NULL) {
@@ -613,6 +613,7 @@ s_jhtml_search_emoji(jhtml_t* jhtml, char* txt, char** rslt)
 
       return 0;
     }
+
     if (len >= 2
     && ((unsigned char)txt[0] & 0xff) == ((unsigned char)hex1byte)
     && ((unsigned char)txt[1] & 0xff) == ((unsigned char)hex2byte)) {
