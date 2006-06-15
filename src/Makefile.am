@@ -28,8 +28,8 @@ libmod_chxj_la_SOURCES = mod_chxj.c \
     chxj_encoding.c
 
 
-libmod_chxj_la_CFLAGS = -Wall -O2 -prefer-pic @QDEFS@ @DDEFS@ -I. -I@with_apache_header@ 
-CFLAGS = @CFLAGS@ -Wall -O2 -prefer-pic @QDEFS@ @DDEFS@ -I. -I@with_apache_header@ 
+libmod_chxj_la_CFLAGS = -Wall -O2 -prefer-pic @QDEFS@ @DDEFS@ -I. -I../include -I@with_apache_header@ 
+CFLAGS = @CFLAGS@ -Wall -O2 -prefer-pic @QDEFS@ @DDEFS@ -I. -I../include -I@with_apache_header@ 
 
 lib_LTLIBRARIES = libmod_chxj.la
 
