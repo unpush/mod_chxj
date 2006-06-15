@@ -638,7 +638,7 @@ s_create_blob_data(request_rec* r,
 
   magick_wand = NewMagickWand();
 
-  f (MagickReadImageBlob(magick_wand,indata, *len) == MagickFalse) {
+  if (MagickReadImageBlob(magick_wand,indata, *len) == MagickFalse) {
     EXIT_MAGICK_ERROR();
     return NULL;
   }
@@ -707,7 +707,7 @@ s_create_blob_data(request_rec* r,
       return NULL;
     }
 
-    if MagickStripImage(magick_wand) == MagickFalse) {
+    if (MagickStripImage(magick_wand) == MagickFalse) {
       EXIT_MAGICK_ERROR();
       return NULL;
     }
