@@ -377,7 +377,7 @@ s_create_cache_file(request_rec*       r,
     qr_code_t qrcode;
     int       sts;
 
-    memset(&doc, 0, sizeof(Doc));
+    memset(&doc,    0, sizeof(Doc));
     memset(&qrcode, 0, sizeof(qr_code_t));
     doc.r = r;
     doc.parse_mode  = PARSE_MODE_CHTML;
@@ -385,10 +385,13 @@ s_create_cache_file(request_rec*       r,
     qrcode.r        = r;
 
     qs_init_malloc(&doc);
+
     root = qs_parse_file(&doc, r->filename);
 
     chxj_qrcode_node_to_qrcode(&qrcode, root);
+
     qs_all_free(&doc,QX_LOGMARK);
+
     sts = chxj_qrcode_create_image_data(&qrcode, &readdata, &readbyte);
     if (sts != OK) {
       ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,

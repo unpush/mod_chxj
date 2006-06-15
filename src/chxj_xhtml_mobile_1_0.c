@@ -25,8 +25,8 @@
 static char* s_xhtml_1_0_node_exchange    (xhtml_t* xhtml, Node* node, int indent);
 static char* s_xhtml_1_0_start_html_tag   (xhtml_t* xhtml, Node* child);
 static char* s_xhtml_1_0_end_html_tag     (xhtml_t* xhtml, Node* child);
-static char* s_xhtml_1_0_start_ul_tag   (xhtml_t* xhtml, Node* child);
-static char* s_xhtml_1_0_end_ul_tag     (xhtml_t* xhtml, Node* child);
+static char* s_xhtml_1_0_start_ul_tag     (xhtml_t* xhtml, Node* child);
+static char* s_xhtml_1_0_end_ul_tag       (xhtml_t* xhtml, Node* child);
 static char* s_xhtml_1_0_start_h1_tag   (xhtml_t* xhtml, Node* child);
 static char* s_xhtml_1_0_end_h1_tag     (xhtml_t* xhtml, Node* child);
 static char* s_xhtml_1_0_start_h2_tag   (xhtml_t* xhtml, Node* child);
