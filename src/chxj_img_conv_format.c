@@ -1578,16 +1578,14 @@ s_get_query_string_param(request_rec *r)
       }
     }
     else
-    if (strcasecmp(name, "w") == 0 && value != NULL) {
-      if (chxj_chk_numeric(value) == 0) {
+    if ((*name == 'w' || *name == 'W') && strcasecmp(name, "w") == 0 && value) {
+      if (! chxj_chk_numeric(value)) 
         param->width = chxj_atoi(value);
-      }
     }
     else
-    if (strcasecmp(name, "h") == 0 && value != NULL) {
-      if (chxj_chk_numeric(value) == 0) {
+    if ((*name == 'h'|| *name == 'H') && strcasecmp(name, "h") == 0 && value) {
+      if (! chxj_chk_numeric(value))
         param->height = chxj_atoi(value);
-      }
     }
   }
 
