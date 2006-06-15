@@ -367,7 +367,8 @@ s_create_cache_file(request_rec*       r,
   MagickBooleanType  status;
   MagickWand*        magick_wand;
 
-  if (strcasecmp(r->handler, "chxj-qrcode") == 0) {
+  if ((*r->handler == 'c' || *r->handler == 'C') 
+  &&  strcasecmp(r->handler, "chxj-qrcode") == 0) {
     /*------------------------------------------------------------------------*/
     /* QRCODE用のファイルの場合                                               */
     /*------------------------------------------------------------------------*/
@@ -379,7 +380,7 @@ s_create_cache_file(request_rec*       r,
     memset(&doc, 0, sizeof(Doc));
     memset(&qrcode, 0, sizeof(qr_code_t));
     doc.r = r;
-    doc.parse_mode = PARSE_MODE_CHTML;
+    doc.parse_mode  = PARSE_MODE_CHTML;
     qrcode.doc      = &doc;
     qrcode.r        = r;
 
@@ -395,11 +396,10 @@ s_create_cache_file(request_rec*       r,
       return sts;
     }
   }
-  else
-  /*--------------------------------------------------------------------------*/
-  /* 通常のイメージファイルの場合                                             */
-  /*--------------------------------------------------------------------------*/
-  {
+  else {
+    /*------------------------------------------------------------------------*/
+    /* 通常のイメージファイルの場合                                           */
+    /*------------------------------------------------------------------------*/
     rv = apr_file_open(&fin, 
                     r->filename, 
                     APR_READ|APR_BINARY ,
