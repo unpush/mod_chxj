@@ -471,10 +471,8 @@ s_create_cache_file(request_rec*       r,
       return HTTP_NOT_FOUND;
     }
 
-    if (magick_wand = s_img_down_sizing(magick_wand, r, spec);
-    if (magick_wand == NULL) {
+    if ((magick_wand = s_img_down_sizing(magick_wand, r, spec)) == NULL)
       return HTTP_NOT_FOUND;
-    }
 
     r->content_type = apr_psprintf(r->pool, "image/jpeg");
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert to jpg");
