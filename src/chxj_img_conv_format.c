@@ -224,7 +224,7 @@ chxj_img_conv_format_handler(request_rec* r)
   /*--------------------------------------------------------------------------*/
   /* User-Agent to spec                                                       */
   /*--------------------------------------------------------------------------*/
-  if (qsp->user_agent != NULL)
+  if (qsp->user_agent)
     user_agent = apr_pstrdup(r->pool, qsp->user_agent);
   else
     user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);

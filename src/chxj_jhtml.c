@@ -680,10 +680,10 @@ s_jhtml_end_html_tag(jhtml_t* jhtml, Node* child)
 static char*
 s_jhtml_start_meta_tag(jhtml_t* jhtml, Node* node) 
 {
-  Doc*         doc = jhtml->doc;
-  request_rec* r   = doc->r;
+  Doc*         doc               = jhtml->doc;
+  request_rec* r                 = doc->r;
   Attr*        attr;
-  int content_type_flag = 0;
+  int          content_type_flag = 0;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<meta", NULL);
 
@@ -696,7 +696,7 @@ s_jhtml_start_meta_tag(jhtml_t* jhtml, Node* node)
     char* name   = qs_get_attr_name(doc,attr);
     char* value  = qs_get_attr_value(doc,attr);
 
-    if (strcasecmp(name, "http-equiv") == 0) {
+    if ((*name == 'h' || *name == H') && strcasecmp(name, "http-equiv") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 2.0                                                            */
       /*----------------------------------------------------------------------*/
@@ -711,7 +711,7 @@ s_jhtml_start_meta_tag(jhtml_t* jhtml, Node* node)
       }
     }
     else
-    if (strcasecmp(name, "content") == 0) {
+    if ((*name == 'c' || *name == 'C') &&strcasecmp(name, "content") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 2.0                                                            */
       /*----------------------------------------------------------------------*/
