@@ -1572,10 +1572,9 @@ s_get_query_string_param(request_rec *r)
       }
     }
     else
-    if (strcasecmp(name, "count") == 0 && value != NULL) {
-      if (chxj_chk_numeric(value) == 0) {
+    if ((*name == 'c' || *name == 'C') && strcasecmp(name, "count") == 0 && value) {
+      if (! chxj_chk_numeric(value))
         param->count = chxj_atoi(value);
-      }
     }
     else
     if ((*name == 'w' || *name == 'W') && strcasecmp(name, "w") == 0 && value) {
