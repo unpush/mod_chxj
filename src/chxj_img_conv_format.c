@@ -321,8 +321,8 @@ s_img_conv_format_from_file(
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"found [%s]", r->filename);
   rv = apr_stat(&cache_st, tmpfile, APR_FINFO_MIN, r->pool);
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"found [%s]", r->filename);
-  if (rv != APR_SUCCESS || cache_st.ctime < st.mtime)
-  {
+
+  if (rv != APR_SUCCESS || cache_st.ctime < st.mtime) {
     /*------------------------------------------------------------------------*/
     /* It tries to make the cash file when it doesn't exist or there is       */
     /* change time later since the making time of the cash file.              */
@@ -335,10 +335,10 @@ s_img_conv_format_from_file(
   }
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"color=[%d]", spec->color);
   rv = s_send_cache_file(spec, qsp,r, tmpfile);
-  if (rv != OK)
-  {
+  if (rv != OK) {
     return rv;
   }
+
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"end chxj_img_conv_format");
 
   return OK;
