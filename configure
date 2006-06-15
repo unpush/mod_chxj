@@ -19171,10 +19171,10 @@ fi
 
 done
 
-APR_HEADER_DIR=`${APR_CONFIG} --includes | sed -e s/-I//g`
+APR_HEADER_DIR="`${APR_CONFIG} --includes | sed -e 's/-I//g' | sed -e 's/ //g'`"
 
 
-for ac_header in ${APR_HEADER_DIR}/apr_shm.h ${APR_HEADER}/apr_global_mutex.h
+for ac_header in $APR_HEADER_DIR/apr_shm.h $APR_HEADER_DIR/apr_global_mutex.h
 do
 as_ac_Header=`echo "ac_cv_header_$ac_header" | $as_tr_sh`
 if eval "test \"\${$as_ac_Header+set}\" = set"; then
