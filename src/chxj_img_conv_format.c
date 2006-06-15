@@ -315,9 +315,9 @@ s_img_conv_format_from_file(
 
   rv = apr_stat(&st, r->filename, APR_FINFO_MIN, r->pool);
   if (rv != APR_SUCCESS)
-  {
     return HTTP_NOT_FOUND;
-  }
+
+
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"found [%s]", r->filename);
   rv = apr_stat(&cache_st, tmpfile, APR_FINFO_MIN, r->pool);
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"found [%s]", r->filename);
