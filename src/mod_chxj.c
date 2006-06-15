@@ -73,10 +73,10 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
   char *user_agent;
   char *dst = apr_pstrcat(r->pool, (char*)*src, NULL);
   char *tmp;
-  mod_chxj_global_config* sconf; 
+  mod_chxj_config* dconf; 
   chxjconvrule_entry* entryp;
 
-  sconf = ap_get_module_config(r->server->module_config, &chxj_module);
+  dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
 
 
   /*------------------------------------------------------------------------*/
@@ -88,7 +88,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "start chxj_exchange()");
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "content type is %s", r->content_type);
 
-  entryp = chxj_apply_convrule(r, sconf->convrules);
+  entryp = chxj_apply_convrule(r, dconf->convrules);
   if (!(entryp->action & CONVRULE_ENGINE_ON_BIT)) {
     ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 
       0, r, "EngineOff");
@@ -218,15 +218,14 @@ chxj_input_exchange(request_rec *r, const char** src, apr_size_t* len)
 
   char* result;
 
-  mod_chxj_global_config* sconf;
+  mod_chxj_config* dconf;
   chxjconvrule_entry* entryp;
 
-  sconf = ap_get_module_config(r->server->module_config, &chxj_module);
+  dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
 
-  entryp = chxj_apply_convrule(r, sconf->convrules);
+  entryp = chxj_apply_convrule(r, dconf->convrules);
   if (!(entryp->action & CONVRULE_ENGINE_ON_BIT)) {
-    ap_log_rerror(APLOG_MARK,APLOG_DEBUG,
-      0, r, "EngineOff");
+    DBG(r,"EngineOff");
     return (char*)*src;
   }
 
@@ -584,7 +583,6 @@ chxj_global_config_create(apr_pool_t* pool, server_rec* s)
     /*------------------------------------------------------------------------*/
     ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, s, 
                    "end chxj_global_config_create() reused.");
-    conf->convrules   = apr_array_make(pool, 2, sizeof(chxjconvrule_entry));
     return conf; 
   }
 
@@ -595,7 +593,6 @@ chxj_global_config_create(apr_pool_t* pool, server_rec* s)
                   sizeof(mod_chxj_global_config));
   conf->client_shm  = NULL;
   conf->client_lock = NULL;
-  conf->convrules   = apr_array_make(pool, 2, sizeof(chxjconvrule_entry));
   memset(conf->client_lock_file_name, 0, sizeof(conf->client_lock_file_name));
 
 
@@ -617,7 +614,6 @@ chxj_config_server_merge(apr_pool_t *p, void *basev, void *overridesv)
   base      = (mod_chxj_global_config *)basev;
   overrides = (mod_chxj_global_config *)overridesv;
     
-  mrg->convrules    = apr_array_append(p, overrides->convrules, base->convrules);
 
   return mrg;
 }
@@ -718,6 +714,7 @@ chxj_create_per_dir_config(apr_pool_t *p, char *arg)
     memset(conf->dir, 0, strlen(arg)+1);
     strcpy(conf->dir, arg);
   }
+  conf->convrules   = apr_array_make(p, 2, sizeof(chxjconvrule_entry));
 
   /* Default is copyleft */
   conf->image_copyright = NULL; 
@@ -792,6 +789,7 @@ chxj_merge_per_dir_config(apr_pool_t *p, void *basev, void *addv)
     mrg->server_side_encoding = apr_pstrdup(p, DEFAULT_SERVER_SIDE_ENCODING);
   }
 
+  mrg->convrules    = apr_array_append(p, add->convrules, base->convrules);
 
   return mrg;
 }
@@ -1007,7 +1005,7 @@ cmd_set_image_copyright(cmd_parms *parms, void* mconfig, const char* arg)
 static const char*
 cmd_convert_rule(cmd_parms *cmd, void *in_dconf, const char *arg)
 {
-  mod_chxj_global_config* sconf;
+  mod_chxj_config* dconf;
   char* prm1;
   char* prm2;
   char* prm3;
@@ -1018,21 +1016,22 @@ cmd_convert_rule(cmd_parms *cmd, void *in_dconf, const char *arg)
   ap_regex_t *regexp;
   chxjconvrule_entry* newrule;
 
+  dconf = (mod_chxj_config*)in_dconf;
+
   if (strlen(arg) > 4096) 
     return "ChxjConvertRule: is too long.";
 
-  sconf = ap_get_module_config(cmd->server->module_config, &chxj_module);
-  if (sconf->convrules == NULL)
-    sconf->convrules   = apr_array_make(cmd->pool, 2, sizeof(chxjconvrule_entry));
+  dconf = ap_get_module_config(cmd->server->module_config, &chxj_module);
+  if (dconf->convrules == NULL)
+    dconf->convrules   = apr_array_make(cmd->pool, 2, sizeof(chxjconvrule_entry));
 
-  newrule = apr_array_push(sconf->convrules);
+  newrule = apr_array_push(dconf->convrules);
 
-  newrule->flags = 0;
+  newrule->flags  = 0;
   newrule->action = 0;
 
-  if (chxj_command_parse_take3(arg, &prm1, &prm2, &prm3)) {
+  if (chxj_command_parse_take3(arg, &prm1, &prm2, &prm3))
     return "ChxjConvertRule: bad argument line";
-  }
 
   newrule->pattern = apr_pstrdup(cmd->pool, prm1);
 

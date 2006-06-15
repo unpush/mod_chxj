@@ -1060,43 +1060,46 @@ s_fixup_depth(MagickWand* magick_wand, request_rec* r, device_table_t* spec)
 static MagickWand*
 s_add_copyright(MagickWand* magick_wand, request_rec* r, device_table_t* spec)
 {
-  MagickBooleanType  status;
   mod_chxj_config* conf = ap_get_module_config(r->per_dir_config, &chxj_module);
-  if (conf->image_copyright != NULL) {
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "Add COPYRIGHT [%s]", conf->image_copyright);
+
+  if (conf->image_copyright) {
+
+    DBG1(r, "Add COPYRIGHT [%s]", conf->image_copyright);
+
     if (spec->html_spec_type == CHXJ_SPEC_Jhtml) {
       apr_table_setn(r->headers_out, "x-jphone-copyright", "no-transfer");
-      status = MagickCommentImage(magick_wand, apr_psprintf(r->pool, "Copyright(C) %s", conf->image_copyright));
-      if (status == MagickFalse) {
-        EXIT_MAGICK_ERROR();
-        return NULL;
-      }
+      if (MagickCommentImage(magick_wand, 
+                             apr_psprintf(r->pool, 
+                                          "Copyright(C) %s", 
+                                          conf->image_copyright)) == MagickFalse) 
+        goto on_error;
     }
     else
     if (spec->html_spec_type == CHXJ_SPEC_XHtml_Mobile_1_0
     ||  spec->html_spec_type == CHXJ_SPEC_Hdml) {
-      status = MagickCommentImage(magick_wand, apr_psprintf(r->pool, "kddi_copyright=on,%s", conf->image_copyright));
-      if (status == MagickFalse) {
-        EXIT_MAGICK_ERROR();
-        return NULL;
-      }
+      if (MagickCommentImage(magick_wand, 
+                             apr_psprintf(r->pool, 
+                                         "kddi_copyright=on,%s", 
+                                          conf->image_copyright)) == MagickFalse) 
+        goto on_error;
     }
     else {
-      status = MagickCommentImage(magick_wand, apr_psprintf(r->pool, "copy=\"NO\",%s", conf->image_copyright));
-      if (status == MagickFalse) {
-        EXIT_MAGICK_ERROR();
-        return NULL;
-      }
+      if (MagickCommentImage(magick_wand, 
+                            apr_psprintf(r->pool, 
+                                         "copy=\"NO\",%s",
+                                         conf->image_copyright)) == MagickFalse)
+        goto on_error;
     }
   }
   else {
-    status = MagickCommentImage(magick_wand, "mod_chxj");
-    if (status == MagickFalse) {
-      EXIT_MAGICK_ERROR();
-      return NULL;
-    }
+    if (MagickCommentImage(magick_wand, "mod_chxj") == MagickFalse)
+      goto on_error;
   }
   return magick_wand;
+
+on_error:
+  EXIT_MAGICK_ERROR();
+  return NULL;
 }
 
 static MagickWand*
@@ -1113,19 +1116,18 @@ s_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table_t* spec)
   prev_size = writebyte;
 
   do {
-    status = MagickSetImageCompressionQuality(magick_wand, quality);
-    if (status == MagickFalse) {
+    if (MagickSetImageCompressionQuality(magick_wand, quality) == MagickFalse) {
       EXIT_MAGICK_ERROR();
       return NULL;
     }
+
     writedata = (char*)MagickGetImageBlob(magick_wand, &writebyte);
-    if (writebyte >= prev_size || revers_flag == 1) {
-      ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "quality=[%ld] size=[%d]", (long)quality, writebyte);
+    if (writebyte >= prev_size || revers_flag) {
+      DBG2(r, "quality=[%ld] size=[%d]", (long)quality, writebyte);
       revers_flag = 1;
       quality += 10;
       if (quality > 100) {
-        status = MagickSetImageCompression(magick_wand,NoCompression);
-        if (status == MagickFalse) {
+        if (MagickSetImageCompression(magick_wand,NoCompression) == MagickFalse) {
           EXIT_MAGICK_ERROR();
           return NULL;
         }
@@ -1135,18 +1137,18 @@ s_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table_t* spec)
       continue;
     }
 
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "quality=[%ld] size=[%d]", (long)quality, writebyte);
+    DBG2(r, "quality=[%ld] size=[%d]", (long)quality, writebyte);
 
-    if (spec->cache == 0) {
+    if (spec->cache == 0)
       break;
-    }
-    if (writebyte <= spec->cache) {
+
+    if (writebyte <= spec->cache)
       break;
-    }
+
     quality -= 10;
-    if (quality == 0 || quality > 100) {
+
+    if (quality == 0 || quality > 100)
       break;
-    }
 
   }
   while (1);
@@ -1171,9 +1173,9 @@ s_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table_t* spec)
         now_color = 2;
         break;
       }
-      if (now_color <= 2) {
-        break;
-      }
+
+      if (now_color <= 2) break;
+
       if (now_color >= 8) {
         status = MagickQuantizeImage(magick_wand,
                              now_color,
@@ -1195,14 +1197,15 @@ s_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table_t* spec)
         EXIT_MAGICK_ERROR();
         return NULL;
       }
-      status = MagickSetImageDepth(magick_wand, depth);
-      if (status == MagickFalse) {
+
+      if (MagickSetImageDepth(magick_wand, depth) == MagickFalse) {
         EXIT_MAGICK_ERROR();
         return NULL;
       }
+
       writedata = (char*)MagickGetImageBlob(magick_wand, &writebyte);
 
-      ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "now_color=[%ld] size=[%d]", (long)now_color, writebyte);
+      DBG2(r,"now_color=[%ld] size=[%d]", (long)now_color, writebyte);
 
       /* Once per request */
       break;
@@ -1226,24 +1229,24 @@ s_send_cache_file(device_table_t* spec, query_string_param_t* query_string, requ
   if (rv != APR_SUCCESS)
     return HTTP_NOT_FOUND;
 
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"mode:[%d]", query_string->mode);
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"name:[%s]", query_string->name);
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"offset:[%ld]", query_string->offset);
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"count:[%ld]", query_string->count);
+  DBG1(r, "mode:[%d]",    query_string->mode);
+  DBG1(r, "name:[%s]",    query_string->name);
+  DBG1(r, "offset:[%ld]", query_string->offset);
+  DBG1(r, "count:[%ld]",  query_string->count);
 
-  if (spec->available_jpeg == 1) {
+  if (spec->available_jpeg) {
     r->content_type = apr_psprintf(r->pool, "image/jpeg");
   }
   else
-  if (spec->available_png == 1) {
+  if (spec->available_png) {
     r->content_type = apr_psprintf(r->pool, "image/png");
   }
   else
-  if (spec->available_gif == 1) {
+  if (spec->available_gif) {
     r->content_type = apr_psprintf(r->pool, "image/gif");
   }
   else
-  if (spec->available_bmp2 == 1 || spec->available_bmp4 == 1) {
+  if (spec->available_bmp2 || spec->available_bmp4) {
     r->content_type = apr_psprintf(r->pool, "image/bmp");
   }
 
@@ -1251,19 +1254,19 @@ s_send_cache_file(device_table_t* spec, query_string_param_t* query_string, requ
     contentLength = apr_psprintf(r->pool, "%d", (int)st.size);
     apr_table_setn(r->headers_out, "Content-Length", (const char*)contentLength);
   
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"Content-Length:[%d]", (int)st.size);
+    DBG1(r,"Content-Length:[%d]", (int)st.size);
 
     rv = apr_file_open(&fout, tmpfile, 
       APR_READ | APR_BINARY, APR_OS_DEFAULT, r->pool);
     if (rv != APR_SUCCESS) {
-      ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"tmpfile open failed[%s]", tmpfile);
+      DBG1(r, "tmpfile open failed[%s]", tmpfile);
       return HTTP_NOT_FOUND;
     }
 
     ap_send_fd(fout, r, 0, st.size, &sendbyte);
     apr_file_close(fout);
     ap_rflush(r);
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"send file data[%d]byte", sendbyte);
+    DBG1(r, "send file data[%d]byte", sendbyte);
   }
   else
   if (query_string->mode == IMG_CONV_MODE_EZGET) {
@@ -1308,19 +1311,20 @@ s_send_cache_file(device_table_t* spec, query_string_param_t* query_string, requ
       contentLength = apr_psprintf(r->pool, "%ld", query_string->count);
       apr_table_setn(r->headers_out, "Content-Length", (const char*)contentLength);
   
-      ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"Content-Length:[%d]", (int)st.size);
+      DBG1(r, "Content-Length:[%d]", (int)st.size);
 
       rv = apr_file_open(&fout, tmpfile, 
         APR_READ | APR_BINARY, APR_OS_DEFAULT, r->pool);
+
       if (rv != APR_SUCCESS) {
-        ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"tmpfile open failed[%s]", tmpfile);
+        DBG1(r,"tmpfile open failed[%s]", tmpfile);
         return HTTP_NOT_FOUND;
       }
 
       ap_send_fd(fout, r, query_string->offset, query_string->count, &sendbyte);
       apr_file_close(fout);
       ap_rflush(r);
-      ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"send file data[%d]byte", sendbyte);
+      DBG1(r, "send file data[%d]byte", sendbyte);
     }
   }
   
@@ -1346,46 +1350,42 @@ s_create_workfile(
   switch (qsp->mode) {
   case IMG_CONV_MODE_THUMBNAIL:
     fname = apr_psprintf(r->pool, "%s.%s.thumbnail", r->filename, user_agent);
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "mode=thumbnail [%s]", fname);
+    DBG1(r, "mode=thumbnail [%s]", fname);
     break;
   case IMG_CONV_MODE_WALLPAPER:
   case IMG_CONV_MODE_EZGET:
     fname = apr_psprintf(r->pool, "%s.%s.wallpaper", r->filename, user_agent);
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "mode=WallPaper [%s]", fname);
+    DBG1(r, "mode=WallPaper [%s]", fname);
     break;
   case IMG_CONV_MODE_NORMAL:
   default:
+
     fname = apr_psprintf(r->pool, "%s.%s", r->filename, user_agent);
-    if (qsp->width != 0)
-    {
+
+    if (qsp->width)
       fname = apr_psprintf(r->pool, "%s.w%d", fname, qsp->width);
-    }
-    if (qsp->height != 0)
-    {
+
+    if (qsp->height)
       fname = apr_psprintf(r->pool, "%s.h%d", fname, qsp->height);
-    }
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "mode=normal [%s]", fname);
+
+    DBG1(r,"mode=normal [%s]", fname);
     break;
   }
-  if (qsp->ua_flag == UA_IGN)
-  {
+  if (qsp->ua_flag == UA_IGN) {
     fname = apr_psprintf(r->pool, "%s.IGN", fname);
   }
 
   len = strlen(fname);
   jj=0;
-  for  (ii=0; ii<len; ii++) 
-  {
+  for  (ii=0; ii<len; ii++) {
     if (fname[ii] == '/' 
     ||  fname[ii] == ' ' 
     ||  fname[ii] == '-' 
     ||  fname[ii] == '(' 
-    ||  fname[ii] == ')')
-    {
+    ||  fname[ii] == ')') {
       w[jj++] = '_';
     }
-    else
-    {
+    else {
       w[jj++] = fname[ii];
     }
   }
@@ -1401,7 +1401,7 @@ s_add_crc(const char* writedata, apr_size_t writebyte)
   unsigned char  ch;
 
   for(ii=0;ii<writebyte;ii++) {
-    ch = writedata[ii];
+    ch  = writedata[ii];
     crc = AU_CRC_TBL[(crc>>8^ch)&0xff]^(crc<<8);
   }
   return crc;

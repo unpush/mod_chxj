@@ -174,6 +174,14 @@ typedef struct _emoji_t {
 } emoji_t;
 
 typedef struct {
+  char       *pattern;
+  ap_regex_t *regexp;
+  int        flags;
+  int        action;
+  char       *encoding;
+} chxjconvrule_entry;
+
+typedef struct {
   int                   image;
 
   char*                 device_data_file;
@@ -188,15 +196,10 @@ typedef struct {
 
   char*                 dir; /* for LOG */
 
+  apr_array_header_t   *convrules;
+
 } mod_chxj_config;
 
-typedef struct {
-  char       *pattern;
-  ap_regex_t *regexp;
-  int        flags;
-  int        action;
-  char       *encoding;
-} chxjconvrule_entry;
 
 #define CONVRULE_ENGINE_ON_BIT        (0x00000001)
 #define CONVRULE_ENGINE_OFF_BIT       (0x00000002)
@@ -210,7 +213,6 @@ typedef struct {
   apr_shm_t*          client_shm;
   apr_global_mutex_t* client_lock;
   char                client_lock_file_name[256];
-  apr_array_header_t *convrules;
 } mod_chxj_global_config;
 
 typedef struct {

@@ -38,21 +38,21 @@ chxj_encoding(request_rec *r, const char* src, apr_size_t* len)
   size_t result;
   apr_size_t ilen;
   apr_size_t olen;
-  mod_chxj_global_config* sconf;
+  mod_chxj_config* dconf;
   chxjconvrule_entry* entryp;
 
   ap_log_rerror(
     APLOG_MARK,APLOG_DEBUG, 0, r, "start chxj_encoding()");
 
-  sconf = ap_get_module_config(r->server->module_config, &chxj_module);
+  dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
 
-  if (sconf == NULL) {
+  if (dconf == NULL) {
     ap_log_rerror(
       APLOG_MARK,APLOG_DEBUG, 0, r, "none encoding.");
     return (char*)src;
   }
 
-  entryp = chxj_apply_convrule(r, sconf->convrules);
+  entryp = chxj_apply_convrule(r, dconf->convrules);
   if (entryp->encoding == NULL) {
     ap_log_rerror(
       APLOG_MARK,APLOG_DEBUG, 0, r, "none encoding.");
