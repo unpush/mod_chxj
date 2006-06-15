@@ -715,7 +715,7 @@ s_jhtml_start_meta_tag(jhtml_t* jhtml, Node* node)
       /*----------------------------------------------------------------------*/
       /* CHTML 2.0                                                            */
       /*----------------------------------------------------------------------*/
-      if (content_type_flag) {
+      if (content_type_flag) 
         jhtml->out = apr_pstrcat(r->pool,
                         jhtml->out,
                         " ",
@@ -724,8 +724,7 @@ s_jhtml_start_meta_tag(jhtml_t* jhtml, Node* node)
                         "text/html; charset=Windows-31J",
                         "\"",
                         NULL);
-      }
-      else {
+      else
         jhtml->out = apr_pstrcat(r->pool,
                         jhtml->out,
                         " ",
@@ -734,7 +733,6 @@ s_jhtml_start_meta_tag(jhtml_t* jhtml, Node* node)
                         value,
                         "\"",
                         NULL);
-      }
     }
   }
 
