@@ -232,6 +232,8 @@ module AP_MODULE_DECLARE_DATA chxj_module;
 #define CHXJ_IMG_ON     (1)
 #define CHXJ_IMG_OFF    (0)
 
+#define DBG((X),(Y))  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, (X),(Y));
+
 
 #endif
 /*
