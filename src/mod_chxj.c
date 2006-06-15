@@ -90,15 +90,13 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
 
   entryp = chxj_apply_convrule(r, dconf->convrules);
   if (!(entryp->action & CONVRULE_ENGINE_ON_BIT)) {
-    ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 
-      0, r, "EngineOff");
+    DBG(r,"EngineOff");
     return (char*)*src;
   }
 
   if (*(char*)r->content_type == 't' 
   && strncmp(r->content_type, "text/html",   9) != 0) {
-    ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 
-      0, r, "content type is %s", r->content_type);
+    DBG1(r,"content type is %s", r->content_type);
     return (char*)*src;
   }
 
@@ -109,8 +107,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
       /*----------------------------------------------------------------------*/
       /* DoCoMo i-Mode 1.0                                                    */
       /*----------------------------------------------------------------------*/
-      ap_log_rerror(
-        APLOG_MARK,APLOG_DEBUG, 0, r, "select DoCoMo i-Mode 1.0 ");
+      DBG(r,"select DoCoMo i-Mode 1.0 ");
       tmp = chxj_encoding(r, *src, (apr_size_t*)len);
       dst = chxj_exchange_chtml10(r, spec, tmp, *len, len);
       break;
@@ -119,7 +116,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
       /*----------------------------------------------------------------------*/
       /* DoCoMo i-Mode 2.0                                                    */
       /*----------------------------------------------------------------------*/
-      ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "select DoCoMo i-Mode 2.0 ");
+      DBG(r,"select DoCoMo i-Mode 2.0 ");
       tmp = chxj_encoding(r, (char*)*src, (apr_size_t*)len);
       dst = chxj_exchange_chtml20(r, spec, tmp, *len, len);
       break;
@@ -128,7 +125,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
       /*----------------------------------------------------------------------*/
       /* DoCoMo i-Mode 3.0                                                    */
       /*----------------------------------------------------------------------*/
-      ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "select DoCoMo i-Mode 3.0 ");
+      DBG(r,"select DoCoMo i-Mode 3.0 ");
       tmp = chxj_encoding(r, *src, (apr_size_t*)len);
       dst = chxj_exchange_chtml30(r, spec, tmp, *len, len);
       break;
@@ -137,7 +134,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
       /*----------------------------------------------------------------------*/
       /* DoCoMo i-Mode 4.0                                                    */
       /*----------------------------------------------------------------------*/
-      ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "select DoCoMo i-Mode 4.0 ");
+      DBG(r,"select DoCoMo i-Mode 4.0 ");
       tmp = chxj_encoding(r, *src, (apr_size_t*)len);
       dst = chxj_exchange_chtml30(r, spec, tmp, *len, len);
       break;
@@ -146,7 +143,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
       /*----------------------------------------------------------------------*/
       /* DoCoMo i-Mode 5.0                                                    */
       /*----------------------------------------------------------------------*/
-      ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "select DoCoMo i-Mode 5.0 ");
+      DBG(r,"select DoCoMo i-Mode 5.0 ");
       tmp = chxj_encoding(r, *src, (apr_size_t*)len);
       dst = chxj_exchange_chtml30(r, spec, tmp, *len, len);
       break;
@@ -155,7 +152,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
       /*----------------------------------------------------------------------*/
       /* AU XHtml Mobile 1.0 (XHtml Basic 1.0 extended)                       */
       /*----------------------------------------------------------------------*/
-      ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "select XHTML Mobile 1.0");
+      DBG(r,"select XHTML Mobile 1.0");
       tmp = chxj_encoding(r, *src, (apr_size_t*)len);
       dst = chxj_exchange_xhtml_mobile_1_0(r, spec, tmp, *len, len);
       break;
@@ -164,7 +161,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
       /*----------------------------------------------------------------------*/
       /* AU HDML Version 3.0 Only                                             */
       /*----------------------------------------------------------------------*/
-      ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "select HDML");
+      DBG(r,"select HDML");
       tmp = chxj_encoding(r, *src, (apr_size_t*)len);
       dst = chxj_exchange_hdml(r, spec, tmp, *len, len);
       break;
@@ -173,21 +170,20 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
       /*----------------------------------------------------------------------*/
       /* J-Phone and Vodaphone                                                */
       /*----------------------------------------------------------------------*/
-      ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "select JHTML");
+      DBG(r,"select JHTML");
       tmp = chxj_encoding(r, *src, (apr_size_t*)len);
       dst = chxj_exchange_jhtml(r, spec, tmp, *len, len);
       break;
 
     default:
-      ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "select ?????");
-      ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "html_spec_type[%d]", 
-                      spec->html_spec_type);
+      DBG(r, "select ?????");
+      DBG1(r,"html_spec_type[%d]", spec->html_spec_type);
       break;
     }
   }
 
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "end chxj_exchange()");
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "Length=[%d]", *len);
+  DBG(r, "end chxj_exchange()");
+  DBG1(r, "Length=[%d]", *len);
   if (*len == 0) {
     dst = apr_psprintf(r->pool, "\n");
     *len = 1;
@@ -287,7 +283,7 @@ pass_data_to_filter(ap_filter_t *f, const char *data,
   apr_bucket_brigade* bb;
   apr_bucket*         b;
 
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "start pass_data_to_filter()");
+  DBG(r, "start pass_data_to_filter()");
 
   bb = apr_brigade_create(r->pool, c->bucket_alloc);
   b  = apr_bucket_transient_create(data, len, c->bucket_alloc);
@@ -298,11 +294,11 @@ pass_data_to_filter(ap_filter_t *f, const char *data,
 
   rv = ap_pass_brigade(f->next, bb);
   if (rv != APR_SUCCESS) {
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, rv, r,
-                   "ap_pass_brigade()");
+    DBG(r, "ap_pass_brigade()");
     return rv;
   }
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, rv, r, "end pass_data_to_filter()");
+
+  DBG(r, "end pass_data_to_filter()");
   return rv;
 }
 
@@ -324,8 +320,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
   mod_chxj_ctx* ctx;
 
 
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, 
-          "start of chxj_output_filter()");
+  DBG(r, "start of chxj_output_filter()");
   if (!f->ctx) {
     if ((f->r->proto_num >= 1001) 
     &&  !f->r->main 
@@ -338,7 +333,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
        b != APR_BRIGADE_SENTINEL(bb); 
        b = APR_BUCKET_NEXT(b)) {
     if (APR_BUCKET_IS_EOS(b)) {
-      ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "eos");
+      DBG(r, "eos");
       /*----------------------------------------------------------------------*/
       /* End Of File                                                          */
       /*----------------------------------------------------------------------*/
@@ -350,10 +345,12 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
             char* tmp = apr_palloc(r->pool, ctx->len + 1);
             memset(tmp, 0, ctx->len + 1);
             memcpy(tmp, ctx->buffer, ctx->len);
-            ap_log_rerror(
-              APLOG_MARK, APLOG_DEBUG, 0, r, "input data=[%s] len=[%d]", tmp, ctx->len);
+
+            DBG2(r, "input data=[%s] len=[%d]", tmp, ctx->len);
+
             ctx->buffer = chxj_exchange(r, (const char**)&tmp, (apr_size_t*)&ctx->len);
-            ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "output data=[%.*s]", ctx->len,ctx->buffer);
+
+            DBG2(r, "output data=[%.*s]", ctx->len,ctx->buffer);
           }
           else {
             ctx->buffer = apr_psprintf(r->pool, "\n");
@@ -366,15 +363,16 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
             char* tmp = apr_palloc(r->pool, ctx->len + 1);
             memset(tmp, 0, ctx->len + 1);
             memcpy(tmp, ctx->buffer, ctx->len);
-            ap_log_rerror(
-              APLOG_MARK, APLOG_DEBUG, 0, r, "input data=[%s]", tmp);
+
+            DBG1(r, "input data=[%s]", tmp);
+
             ctx->buffer = 
               chxj_exchange_image(r, (const char**)&tmp,(apr_size_t*)&ctx->len);
             if (ctx->buffer == NULL) {
               ctx->buffer = tmp;
             }
-            ap_log_rerror(
-              APLOG_MARK, APLOG_DEBUG, 0, r, "output data=[%.*s]", ctx->len,ctx->buffer);
+
+            DBG2(r, "output data=[%.*s]", ctx->len,ctx->buffer);
           }
         }
         contentLength = apr_psprintf(r->pool, "%d", ctx->len);
@@ -394,13 +392,13 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
     }
     else
     if (apr_bucket_read(b, &data, &len, APR_BLOCK_READ) == APR_SUCCESS) {
-      ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "read data[%.*s]",len, data);
+      DBG2(r, "read data[%.*s]",len, data);
 
       if (f->ctx == NULL) {
         /*--------------------------------------------------------------------*/
         /* Start                                                              */
         /*--------------------------------------------------------------------*/
-        ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "new context");
+        DBG(r, "new context");
         ctx = (mod_chxj_ctx*)apr_palloc(r->pool, sizeof(mod_chxj_ctx));
         if (len > 0) {
           ctx->buffer = apr_palloc(r->pool, len);
@@ -418,7 +416,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
         /* append data                                                        */
         /*--------------------------------------------------------------------*/
         char* tmp;
-        ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "append data start");
+        DBG(r, "append data start");
         ctx = (mod_chxj_ctx*)f->ctx;
 
         if (len > 0) {
@@ -429,12 +427,14 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
           memcpy(&ctx->buffer[ctx->len], data, len);
           ctx->len += len;
         }
-        ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "append data end");
+        DBG(r, "append data end");
       }
     }
   }
   apr_brigade_destroy(bb);
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "end of output filter");
+
+  DBG(r, "end of output filter");
+
   return APR_SUCCESS;
 }
 
@@ -473,7 +473,7 @@ chxj_input_filter(ap_filter_t*        f,
   char*               data_bucket;
   char*               data_brigade;
 
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "start of chxj_input_filter()");
+  DBG(r, "start of chxj_input_filter()");
 
   data_brigade = qs_alloc_zero_byte_string(r);
 
@@ -483,16 +483,14 @@ chxj_input_filter(ap_filter_t*        f,
 
   rv = ap_get_brigade(f->next, ibb, mode, block, readbytes);
   if (rv != APR_SUCCESS) {
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, rv, r,
-                    "ap_get_brigade() failed");
+    DBG(r, "ap_get_brigade() failed");
     return rv;
   }
 
   APR_BRIGADE_FOREACH(b, ibb) {
     rv = apr_bucket_read(b, &data, &len, APR_BLOCK_READ);
     if (rv != APR_SUCCESS) {
-      ap_log_rerror(APLOG_MARK, APLOG_ERR, rv, r,
-                     "apr_bucket_read() failed");
+      DBG(r, "apr_bucket_read() failed");
       return rv;
     }
 
@@ -500,7 +498,7 @@ chxj_input_filter(ap_filter_t*        f,
       data_bucket = apr_palloc(r->pool, len+1);
       memset((void*)data_bucket, 0, len+1);
       memcpy(data_bucket, data, len);
-      ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, f->r, "(in)POSTDATA:[%s]", data_bucket);
+      DBG1(r, "(in)POSTDATA:[%s]", data_bucket);
   
       data_brigade = apr_pstrcat(r->pool, data_brigade, data_bucket, NULL);
     }
@@ -513,16 +511,15 @@ chxj_input_filter(ap_filter_t*        f,
 
   len = strlen(data_brigade);
   if (len == 0) {
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, rv, r,
-                    "data_brigade length is 0");
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "end of chxj_input_filter()");
+    DBG(r,"data_brigade length is 0");
+    DBG(r,"end of chxj_input_filter()");
     ap_remove_input_filter(f);
     return ap_get_brigade(f->next, bb, mode, block, readbytes);
   }
   data_brigade = chxj_input_exchange(r, (const char**)&data_brigade, (apr_size_t*)&len);
 
   if (len > 0) {
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, f->r, "(in:exchange)POSTDATA:[%s]", data_brigade);
+    DBG1(r, "(in:exchange)POSTDATA:[%s]", data_brigade);
 
     obb = apr_brigade_create(r->pool, c->bucket_alloc);
     tmp_heap = apr_bucket_heap_create(data_brigade, len, NULL, f->c->bucket_alloc);
@@ -531,7 +528,7 @@ chxj_input_filter(ap_filter_t*        f,
     APR_BRIGADE_INSERT_TAIL(obb, eos);
     APR_BRIGADE_CONCAT(bb, obb);
   }
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "end of chxj_input_filter()");
+  DBG(r, "end of chxj_input_filter()");
   return APR_SUCCESS;
 }
 
@@ -548,16 +545,15 @@ chxj_init_module_kill(void *data)
   server_rec *base_server = (server_rec *)data;
   mod_chxj_global_config* conf;
 
-  ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, base_server, 
-                  "start chxj_init_module_kill()");
+  DBG(base_server, "start chxj_init_module_kill()");
 
   /*--------------------------------------------------------------------------*/
   /* The setting of each server is acquired.                                  */
   /*--------------------------------------------------------------------------*/
   conf = ap_get_module_config(base_server->module_config, &chxj_module);
 
-  ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, base_server, 
-                  "end chxj_init_module_kill()");
+  DBG(base_server, "end chxj_init_module_kill()");
+
   return APR_SUCCESS;
 }
 
