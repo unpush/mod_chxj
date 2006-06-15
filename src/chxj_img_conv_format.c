@@ -310,7 +310,7 @@ s_img_conv_format_from_file(
   /* Create Workfile Name                                                     */
   /*--------------------------------------------------------------------------*/
   tmpfile = s_create_workfile(r, conf, user_agent, qsp);
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "workfile=[%s]", tmpfile);
+  DBG1(r,"workfile=[%s]", tmpfile);
 
   rv = apr_stat(&st, r->filename, APR_FINFO_MIN, r->pool);
   if (rv != APR_SUCCESS)
@@ -331,13 +331,12 @@ s_img_conv_format_from_file(
       return rv;
   }
 
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"color=[%d]", spec->color);
+  DBG1(r,"color=[%d]", spec->color);
   rv = s_send_cache_file(spec, qsp,r, tmpfile);
-  if (rv != OK) {
+  if (rv != OK) 
     return rv;
-  }
 
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"end chxj_img_conv_format");
+  DBG(r,"end chxj_img_conv_format");
 
   return OK;
 }
