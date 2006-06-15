@@ -634,21 +634,19 @@ s_create_blob_data(request_rec* r,
   char*              writedata = NULL;
   char*              dst       = NULL;
 
-  MagickBooleanType  status;
   MagickWand*        magick_wand;
 
-  magick_wand=NewMagickWand();
-  status=MagickReadImageBlob(magick_wand,indata, *len);
-  if (status == MagickFalse) {
+  magick_wand = NewMagickWand();
+
+  f (MagickReadImageBlob(magick_wand,indata, *len) == MagickFalse) {
     EXIT_MAGICK_ERROR();
     return NULL;
   }
 
-  /*--------------------------------------------------------------------------*/
-  /* The size of the image is changed.                                        */
-  /*--------------------------------------------------------------------------*/
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
-                    "call s_fixup_size()");
+  /*
+   * The size of the image is changed.
+   */
+  DBG(r, "call s_fixup_size()");
   magick_wand = s_fixup_size(magick_wand, r, spec, qsp);
   if (magick_wand == NULL)
     return NULL;
