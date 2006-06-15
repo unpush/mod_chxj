@@ -1550,8 +1550,9 @@ s_get_query_string_param(request_rec *r)
         param->mode = IMG_CONV_MODE_EZGET;
     }
     else
-    if (((*name == 'u' || *name == 'U') && strcasecmp(name, "ua") == 0) 
-    || ((*name == 'u' || *name == 'U') && strcasecmp(name, "user-agent") == 0) && value != NULL) {
+    if ((*name == 'u' || *name == 'U') 
+      && (strcasecmp(name, "ua") == 0 || strcasecmp(name, "user-agent") == 0) && value) {
+
       ap_unescape_url(value);
 
       if ((*value == 'i' || *value == 'I') && strcasecmp(value, "IGN") == 0)
