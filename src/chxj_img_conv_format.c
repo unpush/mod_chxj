@@ -453,19 +453,19 @@ s_create_cache_file(request_rec*       r,
 
 
 
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
-                    "start convert and compression");
-  if (spec->available_jpeg == 1) {
-    status = MagickSetImageCompression(magick_wand,JPEGCompression);
-    if (status == MagickFalse) {
+  DBG(r,"start convert and compression");
+
+  if (spec->available_jpeg) {
+    if (MagickSetImageCompression(magick_wand,JPEGCompression) == MagickFalse) {
       EXIT_MAGICK_ERROR();
       return HTTP_NOT_FOUND;
     }
-    status = MagickSetImageFormat(magick_wand, "jpg");
-    if (status == MagickFalse) {
+
+    if (MagickSetImageFormat(magick_wand, "jpg") == MagickFalse) {
       EXIT_MAGICK_ERROR();
       return HTTP_NOT_FOUND;
     }
+
     status = MagickStripImage(magick_wand);
     if (status == MagickFalse) {
       EXIT_MAGICK_ERROR();
