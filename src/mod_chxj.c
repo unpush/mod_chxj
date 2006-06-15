@@ -84,9 +84,9 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
   /*------------------------------------------------------------------------*/
   user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
 
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "User-Agent:[%s]", user_agent);
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "start chxj_exchange()");
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "content type is %s", r->content_type);
+  DBG1(r,"User-Agent:[%s]", user_agent);
+  DBG(r, "start chxj_exchange()");
+  DBG1(r,"content type is %s", r->content_type);
 
   entryp = chxj_apply_convrule(r, dconf->convrules);
   if (!(entryp->action & CONVRULE_ENGINE_ON_BIT)) {
@@ -1003,7 +1003,7 @@ cmd_set_image_copyright(cmd_parms *parms, void* mconfig, const char* arg)
 }
 
 static const char*
-cmd_convert_rule(cmd_parms *cmd, void *in_dconf, const char *arg)
+cmd_convert_rule(cmd_parms *cmd, void* mconfig, const char *arg)
 {
   mod_chxj_config* dconf;
   char* prm1;
@@ -1016,12 +1016,12 @@ cmd_convert_rule(cmd_parms *cmd, void *in_dconf, const char *arg)
   ap_regex_t *regexp;
   chxjconvrule_entry* newrule;
 
-  dconf = (mod_chxj_config*)in_dconf;
+  dconf = (mod_chxj_config*)mconfig;
 
   if (strlen(arg) > 4096) 
     return "ChxjConvertRule: is too long.";
 
-  dconf = ap_get_module_config(cmd->server->module_config, &chxj_module);
+  dconf = (mod_chxj_config*)mconfig;
   if (dconf->convrules == NULL)
     dconf->convrules   = apr_array_make(cmd->pool, 2, sizeof(chxjconvrule_entry));
 
