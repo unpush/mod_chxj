@@ -361,7 +361,6 @@ s_create_cache_file(request_rec*       r,
   apr_file_t*        fout;
   apr_file_t*        fin;
 
-  MagickBooleanType  status;
   MagickWand*        magick_wand;
 
   if ((*r->handler == 'c' || *r->handler == 'C') 
@@ -544,7 +543,7 @@ s_create_cache_file(request_rec*       r,
       return HTTP_NOT_FOUND;
     }
 
-    if ((magick_wand = s_img_down_sizing(magick_wand, r, spec) == NULL) 
+    if ((magick_wand = s_img_down_sizing(magick_wand, r, spec)) == NULL) 
       return HTTP_NOT_FOUND;
 
     r->content_type = apr_psprintf(r->pool, "image/bmp");
@@ -568,53 +567,52 @@ s_create_cache_file(request_rec*       r,
 
     return HTTP_INTERNAL_SERVER_ERROR;
   }
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
-                    "end convert and compression");
 
-
+  DBG(r, "end convert and compression");
   
   /* to cache */
   rv = apr_file_open(&fout, tmpfile,
                   APR_WRITE| APR_CREATE | APR_BINARY | APR_SHARELOCK ,APR_OS_DEFAULT,
                   r->pool);
-  if (rv != APR_SUCCESS)
-  {
+  if (rv != APR_SUCCESS) {
     DestroyMagickWand(magick_wand);
-    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,"file open error.[%s]", tmpfile);
+    ERR1(r,"file open error.[%s]", tmpfile);
     return HTTP_INTERNAL_SERVER_ERROR;
   }
+
   rv = apr_file_write(fout, (void*)writedata, &writebyte);
-  if (rv != APR_SUCCESS)
-  {
+  if (rv != APR_SUCCESS) {
     DestroyMagickWand(magick_wand);
     apr_file_close(fout);
     return HTTP_INTERNAL_SERVER_ERROR;
   }
-  /*--------------------------------------------------------------------------*/
-  /* CRC is added for AU for EzGET.                                           */
-  /*--------------------------------------------------------------------------*/
+
+  /*
+   * CRC is added for AU for EzGET.
+   */
   if (spec->html_spec_type == CHXJ_SPEC_XHtml_Mobile_1_0
-  ||  spec->html_spec_type == CHXJ_SPEC_Hdml)
-  {
+  ||  spec->html_spec_type == CHXJ_SPEC_Hdml            ) {
+
     crc = s_add_crc(writedata, writebyte);
+
     rv = apr_file_putc((crc >> 8)  & 0xff, fout);
-    if (rv != APR_SUCCESS)
-    {
+    if (rv != APR_SUCCESS) {
       DestroyMagickWand(magick_wand);
       return HTTP_INTERNAL_SERVER_ERROR;
     }
+
     rv = apr_file_putc( crc        & 0xff, fout);
-    if (rv != APR_SUCCESS)
-    {
+    if (rv != APR_SUCCESS) {
       DestroyMagickWand(magick_wand);
       return HTTP_INTERNAL_SERVER_ERROR;
     }
   }
+
   DestroyMagickWand(magick_wand);
+
   rv = apr_file_close(fout);
-  if (rv != APR_SUCCESS)
-  {
-    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,"file write error.[%s]", tmpfile);
+  if (rv != APR_SUCCESS) {
+    DBG1(r,"file write error.[%s]", tmpfile);
     return HTTP_INTERNAL_SERVER_ERROR;
   }
 
