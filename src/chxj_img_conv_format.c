@@ -721,30 +721,28 @@ s_create_blob_data(request_rec* r,
   }
   else
   if (spec->available_gif) {
-    status = MagickSetImageCompression(magick_wand,LZWCompression);
-    if (status == MagickFalse) {
+
+    if (MagickSetImageCompression(magick_wand,LZWCompression) == MagickFalse) {
       EXIT_MAGICK_ERROR();
       return NULL;
     }
 
-    status = MagickSetImageFormat(magick_wand, "gif");
-    if (status == MagickFalse) {
-      EXIT_MAGICK_ERROR();
-      return NULL;
-    }
-    status = MagickStripImage(magick_wand);
-    if (status == MagickFalse) {
+    if (MagickSetImageFormat(magick_wand, "gif") == MagickFalse) {
       EXIT_MAGICK_ERROR();
       return NULL;
     }
 
-    magick_wand = s_img_down_sizing(magick_wand, r, spec);
-    if (magick_wand == NULL) {
+    if (MagickStripImage(magick_wand) == MagickFalse) {
+      EXIT_MAGICK_ERROR();
       return NULL;
     }
+
+    if ((magick_wand = s_img_down_sizing(magick_wand, r, spec)) == NULL)
+      return NULL;
 
     r->content_type = apr_psprintf(r->pool, "image/gif");
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert to gif");
+
+    DBG(r,"convert to gif");
   }
   else
   if (spec->available_bmp2 == 1 || spec->available_bmp4 == 1) {
