@@ -551,15 +551,14 @@ s_create_cache_file(request_rec*       r,
 
     DBG(r, "convert to bmp(unsupported)");
   }
-  /*--------------------------------------------------------------------------*/
-  /* Add Comment (Copyright and so on.)                                       */
-  /*--------------------------------------------------------------------------*/
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
-                    "call s_add_copyright()");
-  magick_wand = s_add_copyright(magick_wand, r, spec);
-  if (magick_wand == NULL) {
+
+  /*
+   * Add Comment (Copyright and so on.)
+   */
+  DBG(r, "call s_add_copyright()");
+
+  if ((magick_wand = s_add_copyright(magick_wand, r, spec)) == NULL) 
     return HTTP_NOT_FOUND;
-  }
 
   writedata = (char*)MagickGetImageBlob(magick_wand, &writebyte);
 
