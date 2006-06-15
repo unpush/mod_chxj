@@ -712,16 +712,15 @@ s_create_blob_data(request_rec* r,
       return NULL;
     }
 
-    magick_wand = s_img_down_sizing(magick_wand, r, spec);
-    if (magick_wand == NULL) {
+    if ((magick_wand = s_img_down_sizing(magick_wand, r, spec)) == NULL)
       return NULL;
-    }
 
     r->content_type = apr_psprintf(r->pool, "image/png");
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert to png");
+
+    DBG(r,"convert to png");
   }
   else
-  if (spec->available_gif == 1) {
+  if (spec->available_gif) {
     status = MagickSetImageCompression(magick_wand,LZWCompression);
     if (status == MagickFalse) {
       EXIT_MAGICK_ERROR();
