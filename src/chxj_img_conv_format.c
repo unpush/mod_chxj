@@ -825,13 +825,15 @@ s_fixup_size(MagickWand* magick_wand,
 
   oldw = MagickGetImageWidth(magick_wand);
   oldh = MagickGetImageHeight(magick_wand);
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"detect width=[%d]", oldw);
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"detect heigh=[%d]", oldh);
+
+  DBG1(r,"detect width=[%d]", oldw);
+  DBG1(r,"detect heigh=[%d]", oldh);
+
   neww = oldw;
   newh = oldh;
 
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"detect spec width=[%d]", spec->width);
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"detect spec heigh=[%d]", spec->heigh);
+  DBG1(r,"detect spec width=[%d]", spec->width);
+  DBG1(r,"detect spec heigh=[%d]", spec->heigh);
 
   c_width = spec->width;
   c_heigh = spec->heigh;
