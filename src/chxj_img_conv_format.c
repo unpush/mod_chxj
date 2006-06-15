@@ -479,6 +479,7 @@ s_create_cache_file(request_rec*       r,
   }
   else
   if (spec->available_png) {
+
     if (MagickSetImageCompression(magick_wand,ZipCompression) == MagickFalse) {
       EXIT_MAGICK_ERROR();
       return HTTP_NOT_FOUND;
@@ -501,31 +502,29 @@ s_create_cache_file(request_rec*       r,
     DBG(r, "convert to png");
   }
   else
-  if (spec->available_gif == 1) {
-    status = MagickSetImageCompression(magick_wand,LZWCompression);
-    if (status == MagickFalse) {
+  if (spec->available_gif) {
+
+    if (MagickSetImageCompression(magick_wand,LZWCompression) == MagickFalse) {
       EXIT_MAGICK_ERROR();
       return HTTP_NOT_FOUND;
     }
 
-    status = MagickSetImageFormat(magick_wand, "gif");
-    if (status == MagickFalse) {
-      EXIT_MAGICK_ERROR();
-      return HTTP_NOT_FOUND;
-    }
-    status = MagickStripImage(magick_wand);
-    if (status == MagickFalse) {
+    if (MagickSetImageFormat(magick_wand, "gif") == MagickFalse) {
       EXIT_MAGICK_ERROR();
       return HTTP_NOT_FOUND;
     }
 
-    magick_wand = s_img_down_sizing(magick_wand, r, spec);
-    if (magick_wand == NULL) {
+    if (MagickStripImage(magick_wand) == MagickFalse) {
+      EXIT_MAGICK_ERROR();
       return HTTP_NOT_FOUND;
     }
+
+    if ((magick_wand = s_img_down_sizing(magick_wand, r, spec)) == NULL) 
+      return HTTP_NOT_FOUND;
 
     r->content_type = apr_psprintf(r->pool, "image/gif");
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert to gif");
+
+    DBG(r,"convert to gif");
   }
   else
   if (spec->available_bmp2 == 1 || spec->available_bmp4 == 1) {
