@@ -104,7 +104,7 @@ chxj_exchange_xhtml_mobile_1_0(
   xhtml_t   xhtml;
   Doc       doc;
 
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"start chxj_exchange_xhtml_mobile_1_0()");
+  DBG(r,"start chxj_exchange_xhtml_mobile_1_0()");
 
   /*--------------------------------------------------------------------------*/
   /* If qrcode xml                                                            */
@@ -112,7 +112,7 @@ chxj_exchange_xhtml_mobile_1_0(
   *dstlen = srclen;
   dst = chxj_qr_code_blob_handler(r, src, (size_t*)dstlen);
   if (dst != NULL) {
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"i found qrcode xml");
+    DBG(r,"i found qrcode xml");
     return dst;
   }
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"not found qrcode xml");
