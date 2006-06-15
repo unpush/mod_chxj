@@ -562,9 +562,10 @@ s_create_cache_file(request_rec*       r,
 
   writedata = (char*)MagickGetImageBlob(magick_wand, &writebyte);
 
-  if (writebyte == 0 || writedata == NULL) {
+  if (! writebyte) {
     DestroyMagickWand(magick_wand);
-    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,"convert failure to Jpeg [%s]", tmpfile);
+    ERR1(r,"convert failure to Jpeg [%s]", tmpfile);
+
     return HTTP_INTERNAL_SERVER_ERROR;
   }
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
