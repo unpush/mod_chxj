@@ -814,7 +814,6 @@ s_fixup_size(MagickWand* magick_wand,
                 device_table_t* spec, 
                 query_string_param_t *qsp)
 {
-  MagickBooleanType  status;
   img_conv_mode_t mode = qsp->mode;
   int oldw;
   int oldh;
@@ -838,117 +837,116 @@ s_fixup_size(MagickWand* magick_wand,
   c_width = spec->width;
   c_heigh = spec->heigh;
 
-  if (mode == IMG_CONV_MODE_THUMBNAIL)
-  {
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"**** detect thumbnail mode ****");
-    if (neww > c_width)
-    {
+  switch(mode) {
+  case IMG_CONV_MODE_THUMBNAIL:
+
+    DBG(r,"**** detect thumbnail mode ****");
+
+    if (neww > c_width) {
       newh = (int)((double)newh * (double)((double)c_width / (double)neww));
       neww = (int)((double)neww * (double)((double)c_width / (double)neww));
     }
-    if (newh > c_heigh)
-    {
+    if (newh > c_heigh) {
       neww = (int)((double)neww * (double)((double)c_heigh / (double)newh));
       newh = (int)((double)newh * (double)((double)c_heigh / (double)newh));
     }
 
     neww = (int)((double)(neww / 3) * 0.8);
     newh = (int)((double)(newh / 3) * 0.8);
-  }
-  else
-  if (mode == IMG_CONV_MODE_WALLPAPER || mode == IMG_CONV_MODE_EZGET)
-  {
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"**** detect wallpaper mode ****");
+    break;
 
-    if (spec->wp_width != 0 && spec->wp_heigh != 0)
-    {
+  case IMG_CONV_MODE_WALLPAPER:
+  case IMG_CONV_MODE_EZGET:
+
+    DBG(r,"**** detect wallpaper mode ****");
+
+    if (spec->wp_width && spec->wp_heigh) {
       c_width = spec->wp_width;
       c_heigh = spec->wp_heigh;
     }
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"calc new width and height");
+
+    DBG(r,"calc new width and height");
+
     neww = (int)((double)neww * (double)((double)c_heigh / (double)newh));
     newh = (int)((double)newh * (double)((double)c_heigh / (double)newh));
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"newh = [%d] neww = [%d]", newh, neww);
-  }
-  else
-  {
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"**** detect normal mode ****");
-    if (qsp->ua_flag != UA_IGN)
-    {
-      if (neww > c_width)
-      {
+
+    DBG2(r,"newh = [%d] neww = [%d]", newh, neww);
+    break;
+
+  default:
+
+    DBG(r,"**** detect normal mode ****");
+
+    if (qsp->ua_flag != UA_IGN) {
+      if (neww > c_width) {
         newh = (int)((double)newh * (double)((double)c_width / (double)neww));
         neww = (int)((double)neww * (double)((double)c_width / (double)neww));
       }
-      if (newh > c_heigh)
-      {
+
+      if (newh > c_heigh) {
         neww = (int)((double)neww * (double)((double)c_heigh / (double)newh));
         newh = (int)((double)newh * (double)((double)c_heigh / (double)newh));
       }
     }
+    break;
   }
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert width=[%d --> %d]", oldw, neww);
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert heigh=[%d --> %d]", oldh, newh);
+
+  DBG2(r,"convert width=[%d --> %d]", oldw, neww);
+  DBG2(r,"convert heigh=[%d --> %d]", oldh, newh);
 
   MagickResetIterator(magick_wand);
-  while (MagickNextImage(magick_wand) != MagickFalse)
-  {
-    if (mode == IMG_CONV_MODE_WALLPAPER || mode == IMG_CONV_MODE_EZGET)
-    {
-      status = MagickResizeImage(magick_wand,neww,newh,LanczosFilter,1.0);
-      if (status == MagickFalse)
-      {
+
+  while (MagickNextImage(magick_wand) != MagickFalse) {
+    switch (mode) {
+    case IMG_CONV_MODE_WALLPAPER:
+    case IMG_CONV_MODE_EZGET:
+
+      if (MagickResizeImage(magick_wand,neww,newh,LanczosFilter,1.0) == MagickFalse) {
         EXIT_MAGICK_ERROR();
         return NULL;
       }
-      status = MagickCropImage(magick_wand, 
+
+      if (MagickCropImage(magick_wand, 
                       (unsigned long)c_width, 
                       (unsigned long)c_heigh,
                       (long)((neww - c_width) / 2),
-                      (long)((newh - c_heigh) / 2));
-      if (status == MagickFalse)
-      {
+                      (long)((newh - c_heigh) / 2)) == MagickFalse) {
         EXIT_MAGICK_ERROR();
         return NULL;
       }
-    }
-    else
-    {
-      if (mode == IMG_CONV_MODE_NORMAL)
-      {
-        if (qsp->width != 0)
-        {
-          ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert width=[%d --> %d]", neww, qsp->width);
-          neww = qsp->width;
-        }
-        if (qsp->height != 0)
-        {
-          ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert heigh=[%d --> %d]", newh, qsp->height);
-          newh = qsp->height;
-        }
+      break;
+
+    case IMG_CONV_MODE_NORMAL:
+      if (qsp->width) {
+        ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert width=[%d --> %d]", neww, qsp->width);
+        neww = qsp->width;
       }
-      status = MagickResizeImage(magick_wand,neww,newh,LanczosFilter,1.0);
-      if (status == MagickFalse)
-      {
+      if (qsp->height) {
+        ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert heigh=[%d --> %d]", newh, qsp->height);
+        newh = qsp->height;
+      }
+
+    default:
+      if (MagickResizeImage(magick_wand,neww,newh,LanczosFilter,1.0) == MagickFalse) {
         EXIT_MAGICK_ERROR();
         return NULL;
       }
+      break;
     }
-    status = MagickSetImageUnits(magick_wand, PixelsPerInchResolution);
-    if (status == MagickFalse)
-    {
+
+    if (MagickSetImageUnits(magick_wand, PixelsPerInchResolution) == MagickFalse) {
       EXIT_MAGICK_ERROR();
       return NULL;
     }
-    status = MagickSetImageResolution(magick_wand,(double)spec->dpi_width, (double)spec->dpi_heigh);
-    if (status == MagickFalse)
-    {
+
+    if (MagickSetImageResolution(magick_wand,
+                                 (double)spec->dpi_width,
+                                 (double)spec->dpi_heigh) == MagickFalse) {
       EXIT_MAGICK_ERROR();
       return NULL;
     }
-    status = MagickSetImageDispose(magick_wand, BackgroundDispose);
-    if (status == MagickFalse)
-    {
+
+    if (MagickSetImageDispose(magick_wand, BackgroundDispose) == MagickFalse) {
       EXIT_MAGICK_ERROR();
       return NULL;
     }
@@ -956,6 +954,7 @@ s_fixup_size(MagickWand* magick_wand,
 
   return magick_wand;
 }
+
 static MagickWand*
 s_fixup_color(MagickWand* magick_wand, request_rec* r, device_table_t* spec, img_conv_mode_t mode)
 {
