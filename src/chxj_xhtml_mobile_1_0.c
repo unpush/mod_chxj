@@ -153,10 +153,12 @@ chxj_exchange_xhtml_mobile_1_0(
     dst = apr_psprintf(r->pool, "\n");
 
   *dstlen = strlen(dst);
+
 #ifdef DUMP_LOG
   chxj_dump_out("[dst] CHTML->XHTML", dst, *dstlen);
 #endif
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"end chxj_exchange_xhtml_mobile_1_0()");
+
+  DBG(r,"end chxj_exchange_xhtml_mobile_1_0()");
 
   return dst;
 }
