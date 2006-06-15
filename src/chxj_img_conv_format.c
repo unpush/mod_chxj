@@ -1591,9 +1591,9 @@ s_get_query_string_param(request_rec *r)
     }
   }
 
-  if (param->mode == IMG_CONV_MODE_NORMAL && param->name != NULL) {
+  if (param->mode == IMG_CONV_MODE_NORMAL && param->name)
     param->mode = IMG_CONV_MODE_WALLPAPER;
-  }
+
   return param;
 }
 /*
