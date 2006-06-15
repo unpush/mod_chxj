@@ -958,120 +958,104 @@ s_fixup_size(MagickWand* magick_wand,
 static MagickWand*
 s_fixup_color(MagickWand* magick_wand, request_rec* r, device_table_t* spec, img_conv_mode_t mode)
 {
-  MagickBooleanType  status;
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,r,"start chxj_fixup_clor()");
+  DBG(r,"start chxj_fixup_clor()");
 
-  if (spec->color >= 256)
-  {
-    ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,r,"call MagickQuantizeImage() spec->color=[%d]",spec->color);
-    status = MagickQuantizeImage(magick_wand,
-                               spec->color,
-                               RGBColorspace,
-                               0,
-                               1,
-                               0);
-    if (status == MagickFalse)
-    {
+  if (spec->color >= 256) {
+
+    DBG1(r,"call MagickQuantizeImage() spec->color=[%d]",spec->color);
+
+    if (MagickQuantizeImage(magick_wand,
+                           spec->color,
+                           RGBColorspace,
+                           0,
+                           1,
+                           0) == MagickFalse) {
       EXIT_MAGICK_ERROR();
       return NULL;
     }
-    ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,r,"call end MagickQuantizeImage() spec->color=[%d]",spec->color);
+
+    DBG1(r,"call end MagickQuantizeImage() spec->color=[%d]",spec->color);
+
   }
-  else 
-  {
-    ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,r,"call MagickQuantizeImage() spec->color=[%d]",spec->color);
-    status = MagickQuantizeImage(magick_wand,
-                               spec->color,
-                               GRAYColorspace,
-                               0,
-                               1,
-                               0);
-    if (status == MagickFalse)
-    {
+  else {
+    DBG1(r,"call MagickQuantizeImage() spec->color=[%d]",spec->color);
+
+    if (MagickQuantizeImage(magick_wand,
+                           spec->color,
+                           GRAYColorspace,
+                           0,
+                           1,
+                           0) == MagickFalse) {
       EXIT_MAGICK_ERROR();
       return NULL;
     }
-    ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,r,"call end MagickQuantizeImage() spec->color=[%d]",spec->color);
+
+    DBG1(r,"call end MagickQuantizeImage() spec->color=[%d]",spec->color);
   }
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,r,"end chxj_fixup_clor()");
+
+
+  DBG(r,"end chxj_fixup_clor()");
+
   return magick_wand;
 }
+
+
+
 static MagickWand*
 s_fixup_depth(MagickWand* magick_wand, request_rec* r, device_table_t* spec)
 {
-  MagickBooleanType  status;
+  if (spec->color == 15680000) {
+    if (MagickSetImageDepth(magick_wand, 24) == MagickFalse) {
+      EXIT_MAGICK_ERROR();
+      return NULL;
+    }
+  }
+  else 
+  if (spec->color == 262144) {
+    if (MagickSetImageDepth(magick_wand, 18) == MagickFalse) {
+      EXIT_MAGICK_ERROR();
+      return NULL;
+    }
+  }
+  else
+  if (spec->color == 65536) {
+    if (MagickSetImageDepth(magick_wand, 16) == MagickFalse) {
+      EXIT_MAGICK_ERROR();
+      return NULL;
+    }
+  }
+  else
+  if (spec->color == 4096) {
+    if (MagickSetImageDepth(magick_wand, 12) == MagickFalse) {
+      EXIT_MAGICK_ERROR();
+      return NULL;
+    }
+  }
+  else
+  if (spec->color == 256) {
+    if (MagickSetImageDepth(magick_wand, 8) == MagickFalse) {
+      EXIT_MAGICK_ERROR();
+      return NULL;
+    }
+  }
+  else
+  if (spec->color == 4) {
+    if (MagickSetImageDepth(magick_wand, 2) == MagickFalse) {
+      EXIT_MAGICK_ERROR();
+      return NULL;
+    }
+  }
+  else
+  if (spec->color == 2) {
+    if (MagickSetImageDepth(magick_wand, 1) == MagickFalse) {
+      EXIT_MAGICK_ERROR();
+      return NULL;
+    }
+  }
 
-  if (spec->color == 15680000)
-  {
-    status = MagickSetImageDepth(magick_wand, 24);
-    if (status == MagickFalse)
-    {
-      EXIT_MAGICK_ERROR();
-      return NULL;
-    }
-  }
-  else
-  if (spec->color == 262144)
-  {
-    status = MagickSetImageDepth(magick_wand, 18);
-    if (status == MagickFalse)
-    {
-      EXIT_MAGICK_ERROR();
-      return NULL;
-    }
-  }
-  else
-  if (spec->color == 65536)
-  {
-    status = MagickSetImageDepth(magick_wand, 16);
-    if (status == MagickFalse)
-    {
-      EXIT_MAGICK_ERROR();
-      return NULL;
-    }
-  }
-  else
-  if (spec->color == 4096)
-  {
-    status = MagickSetImageDepth(magick_wand, 12);
-    if (status == MagickFalse)
-    {
-      EXIT_MAGICK_ERROR();
-      return NULL;
-    }
-  }
-  else
-  if (spec->color == 256)
-  {
-    status = MagickSetImageDepth(magick_wand, 8);
-    if (status == MagickFalse)
-    {
-      EXIT_MAGICK_ERROR();
-      return NULL;
-    }
-  }
-  else
-  if (spec->color == 4)
-  {
-    status = MagickSetImageDepth(magick_wand, 2);
-    if (status == MagickFalse)
-    {
-      EXIT_MAGICK_ERROR();
-      return NULL;
-    }
-  }
-  else
-  if (spec->color == 2)
-  {
-    status = MagickSetImageDepth(magick_wand, 1);
-    if (status == MagickFalse)
-    {
-      EXIT_MAGICK_ERROR();
-      return NULL;
-    }
-  }
   return magick_wand;
 }
+
 
 static MagickWand*
 s_add_copyright(MagickWand* magick_wand, request_rec* r, device_table_t* spec)
