@@ -745,52 +745,51 @@ s_create_blob_data(request_rec* r,
     DBG(r,"convert to gif");
   }
   else
-  if (spec->available_bmp2 == 1 || spec->available_bmp4 == 1) {
-    status = MagickSetImageCompression(magick_wand,NoCompression);
-    if (status == MagickFalse) {
-      EXIT_MAGICK_ERROR();
-      return NULL;
-    }
-    status = MagickSetImageFormat(magick_wand, "bmp");
-    if (status == MagickFalse) {
-      EXIT_MAGICK_ERROR();
-      return NULL;
-    }
-    status = MagickStripImage(magick_wand);
-    if (status == MagickFalse) {
+  if (spec->available_bmp2 || spec->available_bmp4) {
+    if (MagickSetImageCompression(magick_wand,NoCompression) == MagickFalse) {
       EXIT_MAGICK_ERROR();
       return NULL;
     }
 
-    magick_wand = s_img_down_sizing(magick_wand, r, spec);
-    if (magick_wand == NULL)
+    if (MagickSetImageFormat(magick_wand, "bmp") == MagickFalse) {
+      EXIT_MAGICK_ERROR();
+      return NULL;
+    }
+
+    if (MagickStripImage(magick_wand) == MagickFalse) {
+      EXIT_MAGICK_ERROR();
+      return NULL;
+    }
+
+    if ((magick_wand = s_img_down_sizing(magick_wand, r, spec)) == NULL)
       return NULL;
 
     r->content_type = apr_psprintf(r->pool, "image/bmp");
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert to bmp(unsupported)");
+
+    DBG(r,"convert to bmp(unsupported)");
   }
   /*--------------------------------------------------------------------------*/
   /* Add Comment (Copyright and so on.)                                       */
   /*--------------------------------------------------------------------------*/
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
-                    "call s_add_copyright()");
-  magick_wand = s_add_copyright(magick_wand, r, spec);
-  if (magick_wand == NULL)
+  DBG(r,"call s_add_copyright()");
+
+  if ((magick_wand = s_add_copyright(magick_wand, r, spec)) == NULL)
     return NULL;
 
   writedata = (char*)MagickGetImageBlob(magick_wand, &writebyte);
 
-  if (writebyte == 0 || writedata == NULL) {
+  if (! writebyte) {
     DestroyMagickWand(magick_wand);
-    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,"convert failure to Jpeg ");
+    DBG(r,"convert failure to Jpeg ");
     return NULL;
   }
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
-                    "end convert and compression");
+
+  DBG(r,"end convert and compression");
 
 
   
   dst = apr_palloc(r->pool, writebyte+2);
+
   memcpy(dst, writedata, writebyte);
   /*--------------------------------------------------------------------------*/
   /* CRC is added for AU for EzGET.                                           */
@@ -802,6 +801,7 @@ s_create_blob_data(request_rec* r,
     dst[writebyte + 1] = (crc     ) & 0xff;
     writebyte += 2;
   }
+
   DestroyMagickWand(magick_wand);
 
   *len = writebyte;
