@@ -229,13 +229,9 @@ chxj_img_conv_format_handler(request_rec* r)
     user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
 
   if (qsp->ua_flag == UA_IGN)
-  {
     spec = &v_ignore_spec;
-  }
   else
-  {
     spec = chxj_specified_device(r, user_agent);
-  }
 
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "found device_name=[%s]", 
                   spec->device_name);
