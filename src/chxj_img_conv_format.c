@@ -1562,7 +1562,7 @@ s_get_query_string_param(request_rec *r)
       param->user_agent = apr_pstrdup(r->pool, value);
     }
     else
-    if (strcasecmp(name, "name") == 0 && value != NULL) {
+    if ((*name == 'n' || *name == 'N') && strcasecmp(name, "name") == 0 && value) {
       param->name = apr_pstrdup(r->pool, value);
     }
     else
