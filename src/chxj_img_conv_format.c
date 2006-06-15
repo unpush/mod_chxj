@@ -670,40 +670,38 @@ s_create_blob_data(request_rec* r,
 
 
 
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
-                    "start convert and compression");
-  if (spec->available_jpeg == 1) {
-    status = MagickSetImageCompression(magick_wand,JPEGCompression);
-    if (status == MagickFalse) {
-      EXIT_MAGICK_ERROR();
-      return NULL;
-    }
-    status = MagickSetImageFormat(magick_wand, "jpg");
-    if (status == MagickFalse) {
-      EXIT_MAGICK_ERROR();
-      return NULL;
-    }
-    status = MagickStripImage(magick_wand);
-    if (status == MagickFalse) {
+  DBG(r,"start convert and compression");
+
+  if (spec->available_jpeg) {
+    if (MagickSetImageCompression(magick_wand,JPEGCompression) == MagickFalse) {
       EXIT_MAGICK_ERROR();
       return NULL;
     }
 
-    magick_wand = s_img_down_sizing(magick_wand, r, spec);
-    if (magick_wand == NULL)
+    if (MagickSetImageFormat(magick_wand, "jpg") == MagickFalse) {
+      EXIT_MAGICK_ERROR();
+      return NULL;
+    }
+
+    if (MagickStripImage(magick_wand) == MagickFalse) {
+      EXIT_MAGICK_ERROR();
+      return NULL;
+    }
+
+    if ((magick_wand = s_img_down_sizing(magick_wand, r, spec)) == NULL)
       return NULL;
 
     r->content_type = apr_psprintf(r->pool, "image/jpeg");
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert to jpg");
+
+    DBG(r, "convert to jpg");
   }
   else
-  if (spec->available_png == 1)
-  {
-    status = MagickSetImageCompression(magick_wand,ZipCompression);
-    if (status == MagickFalse) {
+  if (spec->available_png) {
+    if (MagickSetImageCompression(magick_wand,ZipCompression) == MagickFalse) {
       EXIT_MAGICK_ERROR();
       return NULL;
     }
+
     status = MagickSetImageFormat(magick_wand, "png");
     if (status == MagickFalse) {
       EXIT_MAGICK_ERROR();
