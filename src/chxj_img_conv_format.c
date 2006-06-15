@@ -280,10 +280,8 @@ chxj_exchange_image(request_rec *r, const char** src, apr_size_t* len)
   else
     spec = chxj_specified_device(r, user_agent);
 
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "found device_name=[%s]", 
-                  spec->device_name);
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "User-Agent=[%s]", 
-                  user_agent);
+  DBG1(r,"found device_name=[%s]", spec->device_name);
+  DBG1(r, "User-Agent=[%s]", user_agent);
 
   if (spec->width == 0 || spec->heigh == 0) 
     return NULL;
