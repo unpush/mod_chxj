@@ -475,7 +475,7 @@ s_create_cache_file(request_rec*       r,
       return HTTP_NOT_FOUND;
 
     r->content_type = apr_psprintf(r->pool, "image/jpeg");
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert to jpg");
+    DBG(r,"convert to jpg");
   }
   else
   if (spec->available_png == 1) {
