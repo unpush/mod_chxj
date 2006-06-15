@@ -93,11 +93,11 @@ static void  s_xhtml_1_0_chxjif_tag(xhtml_t* xhtml, Node* node);
  */
 char*
 chxj_exchange_xhtml_mobile_1_0(
-  request_rec* r,
+  request_rec*    r,
   device_table_t* spec,
-  const char* src,
-  apr_size_t srclen,
-  apr_size_t *dstlen)
+  const char*     src,
+  apr_size_t      srclen,
+  apr_size_t*     dstlen)
 {
   char*     dst = NULL;
   char*     ss;
