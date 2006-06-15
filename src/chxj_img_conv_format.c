@@ -284,14 +284,13 @@ chxj_exchange_image(request_rec *r, const char** src, apr_size_t* len)
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "User-Agent=[%s]", 
                   user_agent);
 
-  if (spec->width == 0 || spec->heigh == 0) {
+  if (spec->width == 0 || spec->heigh == 0) 
     return NULL;
-  }
 
   dst = s_create_blob_data(r, spec, qsp, (char*)*src, len);
-  if (dst == NULL) {
+  if (dst == NULL) 
     *len = 0;
-  }
+
   return dst;
 }
 
