@@ -239,9 +239,7 @@ chxj_img_conv_format_handler(request_rec* r)
                   user_agent);
 
   if (spec->width == 0 || spec->heigh == 0)
-  {
     return HTTP_NOT_FOUND;
-  }
 
   return s_img_conv_format_from_file(r, conf, user_agent, qsp, spec);
 }
