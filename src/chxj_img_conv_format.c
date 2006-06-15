@@ -1566,10 +1566,9 @@ s_get_query_string_param(request_rec *r)
       param->name = apr_pstrdup(r->pool, value);
     }
     else
-    if (strcasecmp(name, "offset") == 0 && value != NULL) {
-      if (chxj_chk_numeric(value) == 0) {
+    if ((*name == 'o' || *name == 'O') && strcasecmp(name, "offset") == 0 && value) {
+      if (! chxj_chk_numeric(value))
         param->offset = chxj_atoi(value);
-      }
     }
     else
     if ((*name == 'c' || *name == 'C') && strcasecmp(name, "count") == 0 && value) {
