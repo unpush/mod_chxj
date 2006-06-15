@@ -394,8 +394,7 @@ s_create_cache_file(request_rec*       r,
 
     sts = chxj_qrcode_create_image_data(&qrcode, &readdata, &readbyte);
     if (sts != OK) {
-      ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,
-                    "qrcode create failed.");
+      ERR(r, "qrcode create failed.");
       return sts;
     }
   }

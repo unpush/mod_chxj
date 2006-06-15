@@ -21,8 +21,8 @@
 #include "chxj_qr_code.h"
 
 static char* s_jhtml_node_exchange    (jhtml_t* jhtml, Node* node, int indent);
-static char* s_jhtml_start_html_tag   (jhtml_t* jhtml, Node* child);
-static char* s_jhtml_end_html_tag     (jhtml_t* jhtml, Node* child);
+static char* s_jhtml_start_html_tag   (jhtml_t* jhtml, Node* node);
+static char* s_jhtml_end_html_tag     (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_start_meta_tag   (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_end_meta_tag     (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_start_head_tag   (jhtml_t* jhtml, Node* node);
@@ -96,10 +96,10 @@ chxj_exchange_jhtml(
   *dstlen = srclen;
   dst = chxj_qr_code_blob_handler(r, src, (size_t*)dstlen);
   if (dst) {
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"i found qrcode xml");
+    DBG(r,"I found qrcode xml");
     return dst;
   }
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"not found qrcode xml");
+  DBG(r,"not found qrcode xml");
 
   /*--------------------------------------------------------------------------*/
   /* The CHTML structure is initialized.                                      */
@@ -114,7 +114,7 @@ chxj_exchange_jhtml(
   qs_init_root_node(&doc);
 
   ss = apr_pcalloc(r->pool, srclen + 1);
-  memset(ss, 0, srclen + 1);
+  memset(ss,   0, srclen + 1);
   memcpy(ss, src, srclen);
 #ifdef DUMP_LOG
   chxj_dump_out("[src] CHTML -> JHTML", ss, srclen);
