@@ -117,7 +117,7 @@ if test "x$with_iconv" = "x" -a "x$with_iconv_hook" = "x" ; then
   ],[])
 fi
 
-if test "x$with_iconv" = "x" ; then
+if test "x$with_iconv" != "xok" ; then
   if test "x$with_iconv" = "xyes" ; then
       AC_MSG_ERROR([
   Please specify the --with-iconv option. And, please specify the place of the libiconv program. 
@@ -128,7 +128,7 @@ if test "x$with_iconv" = "x" ; then
     AC_DEFINE([HAVE_LIBICONV], [], [Define to 1 if you have the iconv library file.])
   fi
 fi
-if test "x$with_iconv" = "x" ; then
+if test "x$with_iconv" != "xok" ; then
   if test "x$with_iconv_hook" = "xyes" ; then
       AC_MSG_ERROR([
   Please specify the --with-iconv-hook option. And, please specify the place of the libiconv_hook program. 
