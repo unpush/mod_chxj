@@ -115,7 +115,7 @@ chxj_exchange_xhtml_mobile_1_0(
     DBG(r,"i found qrcode xml");
     return dst;
   }
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"not found qrcode xml");
+  DBG(r,"not found qrcode xml");
 
   /*--------------------------------------------------------------------------*/
   /* The XHTML structure is initialized.                                      */
