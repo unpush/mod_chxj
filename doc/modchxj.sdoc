@@ -48,6 +48,7 @@ $ ./buildconf.sh
 $ ./configure --with-apache-header=/usr/include/apache2.0
 </program>
 <note>--with-apache-headerは必須です。</note>
+<note>FreeBSD等の場合は--with-iconvも必須です。</note>
 </li>
 <li>mod_chxj.soを生成します
 <program title="make">
@@ -75,7 +76,6 @@ $ cp etc/emoji.xml /etc/apache2/chxj
 </subsection>
 </section>
 <section title="Configuration">
-
 以下はmod_chxjが/usr/lib/apache2/modulesディレクトリ配下に設置されたものとしています
 
 <subsection title="htmlファイルが変換対象の場合">
@@ -108,9 +108,11 @@ ChxjLoadEmojiData   /etc/apache2/chxj/emoji.xml
 # EngineOn     ==> 変換エンジンを動作させる指示
 # NONE         ==> サーバ側の文字コード。（NONEを指定した場合は文字コード変換しない)
 #====================================================================================
-ChxjConvRule "^/chxj.+$" "EngineOn" "NONE"
+ChxjConvertRule "^/chxj.+$" "EngineOn" "NONE"
 
+#====================================================================================
 # 変換させる対象の設定
+#====================================================================================
 &lt;Location /chxj&gt;
   SetOutputFilter chxj_output_filter
   SetInputFilter  chxj_input_filter
@@ -125,13 +127,19 @@ ChxjConvRule "^/chxj.+$" "EngineOn" "NONE"
 <li>httpd.confに以下を追加します
 
 <program title="httpd.conf">
+#====================================================================================
 # モジュールをApache2.0にロード
+#====================================================================================
 LoadModule chxj_module /usr/lib/apache2/modules/mod_chxj.so
 
+#====================================================================================
 # デバイスデータの設定
+#====================================================================================
 ChxjLoadDeviceData  /etc/apache2/chxj/device_data.xml
 
+#====================================================================================
 # 絵文字データの設定
+#====================================================================================
 ChxjLoadEmojiData   /etc/apache2/chxj/emoji.xml
 
 #====================================================================================
@@ -142,7 +150,7 @@ ChxjLoadEmojiData   /etc/apache2/chxj/emoji.xml
 # EUC-JP       ==> サーバ側の文字コード。（NONEを指定した場合は文字コード変換しない)
 #                  EUC-JPからCP932に文字コード変換します。
 #====================================================================================
-ChxjConvRule "^/chxj.+$" "EngineOn" "EUC-JP"
+ChxjConvertRule "^/chxj.+$" "EngineOn" "EUC-JP"
 
 &lt;Location /chxj&gt;
   SetOutputFilter chxj_output_filter
@@ -159,14 +167,31 @@ ChxjConvRule "^/chxj.+$" "EngineOn" "EUC-JP"
 <li>httpd.confに以下を追加します
 
 <program title="httpd.conf">
+#====================================================================================
 # モジュールをApache2.0にロード
+#====================================================================================
 LoadModule chxj_module /usr/lib/apache2/modules/mod_chxj.so
 
+#====================================================================================
 # デバイスデータの設定
+#====================================================================================
 ChxjLoadDeviceData  /etc/apache2/chxj/device_data.xml
 
+#====================================================================================
 # 絵文字データの設定
+#====================================================================================
 ChxjLoadEmojiData   /etc/apache2/chxj/emoji.xml
+
+#====================================================================================
+# 変換エンジン動作指示命令（下記のSetOutputFilter、SetInputFilterも必須です)
+# ChxjConvRule ==> ディレクティブ
+# "^/chxj.+$"  ==> Perl互換のURIパターン
+# EngineOn     ==> 変換エンジンを動作させる指示。動作させたく無い場合は"EngineOff"
+# EUC-JP       ==> サーバ側の文字コード。（NONEを指定した場合は文字コード変換しない)
+#                  EUC-JPからCP932に文字コード変換します。
+#====================================================================================
+ChxjConvertRule "^/chxj.+$" "EngineOn" "EUC-JP"
+
 &lt;Location /chxj&gt;
    SetOutputFilter chxj_output_filter
 &lt;/Location&gt;
@@ -275,7 +300,7 @@ ChxjImageCopyright "A.Konno"
 
        <b>Vodafone</b>の場合は、レスポンスヘッダに
 
-       <program title="Vodafone/J-Phone">
+       <program title="Vodafone/J-PHONE">
          x-jphone-copyright:no-transfer
        </program>
 
@@ -300,13 +325,13 @@ ChxjConvRule "^/chxj.+$" "EngineOn" "EUC-JP"
 上記の説明を以下に示します。
 
     <ol>
-        <li>ChxjServerSideEncoding<br />
+        <li>ChxjConvertRule<br />
           サーバサイドの文字コードを指定します。ここに、EUC-JPと指定してあった場合は、
           EUC-JPからCP932に変換後、クライアントに出力されます。
           省略した場合はNONE
           <ol>
              <li>変換エンジン動作指示命令（下記のSetOutputFilter、SetInputFilterも必須です)<br />
-             ChxjConvRule ==> ディレクティブ<br />
+             ChxjConvertRule ==> ディレクティブ<br />
              "^/chxj.+$"  ==> Perl互換のURIパターン<br />
              EngineOn     ==> 変換エンジンを動作させる指示。動作させたく無い場合は"EngineOff"<br />
              EUC-JP       ==> サーバ側の文字コード。（NONEを指定した場合は文字コード変換しない)<br />
@@ -320,6 +345,66 @@ ChxjConvRule "^/chxj.+$" "EngineOn" "EUC-JP"
         </li>
     </ol>
 </li>
+</ol>
+</subsection>
+<subsection title="ディレクティブ">
+<ol>
+  <li>ChxjLoadDeviceData<br />
+  デバイス定義ファイルを指定します。
+  <program title="ex)">
+    ChxjLoadDeviceData /etc/apache2/device.xml
+  </program> 
+  </li>
+  <li>ChxjLoadEmojiData<br />
+  絵文字変換定義ファイルを指定します。
+  <program title="ex)">
+    ChxjLoadEmojiData   /etc/apache2/chxj/emoji.xml
+  </program> 
+  </li>
+  <li>ChxjImageEngine<br />
+  画像変換エンジンを有効にします。
+  パラメータとしてOnとOffを指定できます。
+  DefaultはOffです。
+  <program title="ex)">
+    ChxjImageEngine On
+  </program>
+  </li>
+  <li>ChxjImageCacheDir<br />
+  イメージの一時ファイル保存場所を指定します。
+  <program title="ex)">
+    ChxjImageCacheDir   /tmp
+  </program> 
+  </li>
+  <li>ChxjImageCopyright<br />
+  イメージに著作権情報を付与します。
+  <program title="ex)">
+    ChxjImageCacheDir   "chosakuken jyoho"
+  </program> 
+  </li>
+  <li>ChxjConvertRule<br />
+  HTML変換エンジンの適用ルールを記述します。
+  本ディレクティブを使用し、変換エンジンのOn|Offを指定します。
+  DefaultはOFFです。
+  また、ルールは記述された順番に評価し、マッチするものがあれば、その時点で対象ルールを適用します。
+  パラメータは3つ必要です。下記にパラメータを記します。
+  <table title="パラメータ">
+  <tbody>
+    <tr>
+      <td>第1パラメータ</td><td>URIを評価するPerl互換の正規表現を指定します</td>
+    </tr>
+
+    <tr>
+      <td>第2パラメータ</td><td>HTML変換エンジンのOn|Offを指定します。Onの場合は"EngineOn"。Offの場合は"EngineOff"を指定します。</td>
+    </tr>
+    <tr>
+      <td>第3パラメータ</td><td>文字コードを指定します。ここで指定した文字コードから"CP932"に変換します。指定できる文字コードはiconv -lコマンドによって確認することができます。変換しなくて良い場合はNONEを指定してください。</td>
+    </tr>
+  </tbody>
+  </table>
+  <program title="ex)">
+    ChxjConvertRule "^/chxj.+$/" EngineOn EUC-JP
+  </program> 
+  </li>
 </ol>
 </subsection>
 </section>

@@ -83,12 +83,10 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
   /* get UserAgent from http header                                         */
   /*------------------------------------------------------------------------*/
   user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "User-Agent:[%s]", user_agent);
 
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, 
-          "start chxj_exchange()");
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, 
-          "content type is %s", r->content_type);
+  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "User-Agent:[%s]", user_agent);
+  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "start chxj_exchange()");
+  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "content type is %s", r->content_type);
 
   entryp = chxj_apply_convrule(r, sconf->convrules);
   if (!(entryp->action & CONVRULE_ENGINE_ON_BIT)) {
@@ -247,9 +245,9 @@ chxj_input_exchange(request_rec *r, const char** src, apr_size_t* len)
     name  = apr_strtok(pair, "=", &vstate);
     value = apr_strtok(NULL, "=", &vstate);
     if (strncasecmp(name, "_chxj", 5) != 0) {
-      if (strlen(result) != 0) {
+      if (strlen(result) != 0) 
         result = apr_pstrcat(r->pool, result, "&", NULL);
-      }
+
       result = apr_pstrcat(r->pool, result, name, "=", value, NULL);
     }
     else
@@ -1007,20 +1005,6 @@ cmd_set_image_copyright(cmd_parms *parms, void* mconfig, const char* arg)
 }
 
 static const char*
-cmd_set_server_side_encoding(cmd_parms *parms, void* mconfig, const char* arg)
-{
-  mod_chxj_config* conf;
-
-  if (strlen(arg) > 256) 
-    return "ChxjServerSideEncoding is too long.";
-
-  conf = (mod_chxj_config*)mconfig;
-  conf->server_side_encoding = apr_pstrdup(parms->pool, arg);
-
-  return NULL;
-}
-
-static const char*
 cmd_convert_rule(cmd_parms *cmd, void *in_dconf, const char *arg)
 {
   mod_chxj_global_config* sconf;
@@ -1119,12 +1103,6 @@ static const command_rec cmds[] = {
   AP_INIT_TAKE1(
     "ChxjImageCopyright",
     cmd_set_image_copyright,
-    NULL,
-    OR_ALL,
-    "Copyright Flag"),
-  AP_INIT_TAKE1(
-    "ChxjServerSideEncoding",
-    cmd_set_server_side_encoding,
     NULL,
     OR_ALL,
     "Copyright Flag"),

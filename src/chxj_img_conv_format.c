@@ -209,32 +209,24 @@ chxj_img_conv_format_handler(request_rec* r)
   
   if (strcasecmp(r->handler, "chxj-picture")
   &&  strcasecmp(r->handler, "chxj-qrcode"))
-  {
     return DECLINED;
-  }
+
   qsp = s_get_query_string_param(r);
   conf = ap_get_module_config(r->per_dir_config, &chxj_module);
 
   if (strcasecmp(r->handler, "chxj-qrcode") == 0 &&  conf->image == CHXJ_IMG_OFF)
-  {
     return DECLINED;
-  }
+
   if (r->header_only) 
-  {
     return DECLINED;
-  }
 
   /*--------------------------------------------------------------------------*/
   /* User-Agent to spec                                                       */
   /*--------------------------------------------------------------------------*/
   if (qsp->user_agent != NULL)
-  {
     user_agent = apr_pstrdup(r->pool, qsp->user_agent);
-  }
   else
-  {
     user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
-  }
 
   if (qsp->ua_flag == UA_IGN)
   {
