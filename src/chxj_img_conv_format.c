@@ -702,17 +702,16 @@ s_create_blob_data(request_rec* r,
       return NULL;
     }
 
-    status = MagickSetImageFormat(magick_wand, "png");
-    if (status == MagickFalse) {
+    if (MagickSetImageFormat(magick_wand, "png") == MagickFalse) {
       EXIT_MAGICK_ERROR();
       return NULL;
     }
 
-    status = MagickStripImage(magick_wand);
-    if (status == MagickFalse) {
+    if MagickStripImage(magick_wand) == MagickFalse) {
       EXIT_MAGICK_ERROR();
       return NULL;
     }
+
     magick_wand = s_img_down_sizing(magick_wand, r, spec);
     if (magick_wand == NULL) {
       return NULL;
