@@ -647,26 +647,25 @@ s_create_blob_data(request_rec* r,
    * The size of the image is changed.
    */
   DBG(r, "call s_fixup_size()");
-  magick_wand = s_fixup_size(magick_wand, r, spec, qsp);
-  if (magick_wand == NULL)
+
+  if ((magick_wand = s_fixup_size(magick_wand, r, spec, qsp)) == NULL)
     return NULL;
 
-  /*--------------------------------------------------------------------------*/
-  /* The colors of the image is changed.                                      */
-  /*--------------------------------------------------------------------------*/
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
-                    "call s_fixup_color()");
-  magick_wand = s_fixup_color(magick_wand, r,spec, mode);
-  if (magick_wand == NULL)
+  /*
+   * The colors of the image is changed.
+   */
+  DBG(r, "call s_fixup_color()");
+
+  if ((magick_wand = s_fixup_color(magick_wand, r,spec, mode)) == NULL)
     return NULL;
 
-  /*--------------------------------------------------------------------------*/
-  /* DEPTH of the image is changed.                                           */
-  /*--------------------------------------------------------------------------*/
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
-                    "call s_fixup_depth()");
-  magick_wand = s_fixup_depth(magick_wand, r, spec);
-  if (magick_wand == NULL)
+  /*
+   * DEPTH of the image is changed.
+   */
+
+  DBG(r,"call s_fixup_depth()");
+
+  if ((magick_wand = s_fixup_depth(magick_wand, r, spec)) == NULL)
     return NULL;
 
 
