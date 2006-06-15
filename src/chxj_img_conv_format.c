@@ -443,15 +443,13 @@ s_create_cache_file(request_rec*       r,
   if ((magick_wand = s_fixup_color(magick_wand, r,spec, mode)) == NULL) 
     return HTTP_NOT_FOUND;
 
-  /*--------------------------------------------------------------------------*/
-  /* DEPTH of the image is changed.                                           */
-  /*--------------------------------------------------------------------------*/
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
-                    "call s_fixup_depth()");
-  magick_wand = s_fixup_depth(magick_wand, r, spec);
-  if (magick_wand == NULL) {
+  /*
+   * DEPTH of the image is changed.
+   */
+  DBG(r,"call s_fixup_depth()");
+
+  if ((magick_wand = s_fixup_depth(magick_wand, r, spec)) == NULL) 
     return HTTP_NOT_FOUND;
-  }
 
 
 
