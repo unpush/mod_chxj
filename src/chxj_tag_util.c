@@ -216,8 +216,7 @@ qs_get_selected_value_text(Doc *doc, Node* node, request_rec* r)
           /* SELECTED Value Found                                             */
           /*------------------------------------------------------------------*/
           selchild = qs_get_child_node(doc, child);
-          if (selchild == NULL) 
-          {
+          if (selchild == NULL) {
             ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, 
                             "found selected tag but null node" );
             return NULL;
