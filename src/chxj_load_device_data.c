@@ -75,8 +75,7 @@ s_set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node
       Attr* attr;
       device_table_list_t* dtl;
 
-      if (conf->devices == NULL) 
-      {
+      if (! conf->devices) {
         conf->devices = apr_pcalloc(p, sizeof(device_table_list_t));
         conf->devices->next    = NULL;
         conf->devices->pattern = NULL;
