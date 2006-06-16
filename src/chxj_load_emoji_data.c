@@ -419,8 +419,10 @@ s_load_emoji_jphone_tag(
       Node* stringnode = qs_get_child_node(doc, child);
 
       if (stringnode) {
-        char* cname = qs_get_node_name(doc, stringnode);
+
+        char* cname  = qs_get_node_name(doc, stringnode);
         char* cvalue = qs_get_node_value(doc, stringnode);
+
         if (strcasecmp(cname, "text") == 0)
         {
           int ii;
