@@ -78,7 +78,7 @@ qs_get_checked_attr(Doc* doc, Node* tag, request_rec* r)
        attr != NULL;
        attr = qs_get_next_attr(doc,attr)) {
     char* name  = qs_get_attr_name(doc,attr);
-    if (strcasecmp(name, "checked") == 0) {
+    if ((*name == 'c' || *name == 'C') && strcasecmp(name, "checked") == 0) {
       /*----------------------------------------------------------------------*/
       /* The VALUE attribute was found.                                       */
       /*----------------------------------------------------------------------*/
@@ -94,6 +94,8 @@ qs_get_checked_attr(Doc* doc, Node* tag, request_rec* r)
 
   return qs_get_value_attr(doc, tag, r);
 }
+
+
 /**
  * The value of the type attribute is acquired.
  *
