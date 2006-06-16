@@ -533,6 +533,7 @@ s_hexstring_to_byte(char* s)
       break;
     }
   }
+
   return one_byte;
 }
 /*
