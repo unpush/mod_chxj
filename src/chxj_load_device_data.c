@@ -217,14 +217,11 @@ s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list_t* dtl, Node* node)
             continue;
           break;
         }
+
         if (ii == strlen(vv)) 
-        {
           dt->heigh = atoi(qs_get_node_value(doc,ch));
-        }
         else 
-        {
           dt->heigh = 0;
-        }
       }
     }
     else
