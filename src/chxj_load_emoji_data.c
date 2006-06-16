@@ -218,8 +218,10 @@ s_load_emoji_imode_tag(
     if ((*name == 'h' || *name == 'H') && strcasecmp(name, "hex1") == 0) {
       Node* hex1node = qs_get_child_node(doc, child);
       if (hex1node) {
-        char* cname = qs_get_node_name(doc, hex1node);
+
+        char* cname  = qs_get_node_name(doc, hex1node);
         char* cvalue = qs_get_node_value(doc, hex1node);
+
         if (strcasecmp(cname, "text") == 0)
         {
           em->imode->hex1byte = s_hexstring_to_byte(cvalue);
