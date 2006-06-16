@@ -748,9 +748,7 @@ chxj_qrcode_create_image_data(
     return HTTP_NOT_FOUND;
   }
 
-  status = MagickSetImageResolution(black_wand, 96,96);
-  if (status == MagickFalse)
-  {
+  if (MagickSetImageResolution(black_wand, 96,96) == MagickFalse) {
     EXIT_MAGICK_ERROR();
     return HTTP_NOT_FOUND;
   }
