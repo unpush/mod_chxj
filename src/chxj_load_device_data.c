@@ -369,13 +369,9 @@ s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list_t* dtl, Node* node)
           break;
         }
         if (ii == strlen(vv)) 
-        {
           dt->dpi_width = atoi(qs_get_node_value(doc,ch));
-        }
         else 
-        {
           dt->dpi_width = 0;
-        }
       }
     }
     else
