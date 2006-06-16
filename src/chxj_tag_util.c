@@ -76,11 +76,9 @@ qs_get_checked_attr(Doc* doc, Node* tag, request_rec* r)
   /*--------------------------------------------------------------------------*/
   for (attr = qs_get_attr(doc,tag);
        attr != NULL;
-       attr = qs_get_next_attr(doc,attr))
-  {
+       attr = qs_get_next_attr(doc,attr)) {
     char* name  = qs_get_attr_name(doc,attr);
-    if (strcasecmp(name, "checked") == 0)
-    {
+    if (strcasecmp(name, "checked") == 0) {
       /*----------------------------------------------------------------------*/
       /* The VALUE attribute was found.                                       */
       /*----------------------------------------------------------------------*/
