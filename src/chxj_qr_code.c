@@ -753,12 +753,11 @@ chxj_qrcode_create_image_data(
     return HTTP_NOT_FOUND;
   }
 
-  status = MagickSetImageType(magick_wand, GrayscaleType);
-  if (status == MagickFalse)
-  {
+  if (MagickSetImageType(magick_wand, GrayscaleType) == MagickFalse) {
     EXIT_MAGICK_ERROR();
     return HTTP_NOT_FOUND;
   }
+
   status = MagickSetImageType(black_wand, GrayscaleType);
   if (status == MagickFalse)
   {
