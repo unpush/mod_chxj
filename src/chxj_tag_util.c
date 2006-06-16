@@ -86,13 +86,12 @@ qs_get_checked_attr(Doc* doc, Node* tag, request_rec* r)
       break;
     }
   }
-  if (found_flag == 0)
-  {
+  if (! found_flag)
     /*------------------------------------------------------------------------*/
     /* not found                                                              */
     /*------------------------------------------------------------------------*/
     return NULL;
-  }
+
   return qs_get_value_attr(doc, tag, r);
 }
 /**
