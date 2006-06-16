@@ -546,13 +546,12 @@ qs_get_destlang_attr(Doc* doc, Node* tag, request_rec* r)
   for (attr = qs_get_attr(doc,tag);
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
+
     char* name  = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
 
-    if (strcasecmp(name, "destlang") == 0)
-    {
+    if ((*name == 'd' || *name == 'D') && strcasecmp(name, "destlang") == 0)
       return apr_pstrdup(r->pool, value);
-    }
   }
   return NULL;
 }
