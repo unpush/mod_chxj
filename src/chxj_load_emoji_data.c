@@ -313,19 +313,20 @@ s_load_emoji_ezweb_tag(
   for (child = qs_get_child_node(doc, node);
        child ;
        child = qs_get_next_node(doc, child)) {
+
     char* name  = qs_get_node_name(doc, child);
-    if (strcasecmp(name, "A") == 0) 
-    {
+
+    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "A") == 0) {
+
       Node* typeAnode = qs_get_child_node(doc, child);
 
-      if (typeAnode != NULL)
-      {
+      if (typeAnode) {
+
         char* cname = qs_get_node_name(doc, typeAnode);
         char* cvalue = qs_get_node_value(doc, typeAnode);
-        if (strcasecmp(cname, "text") == 0)
-        {
+
+        if ((*cname == 't' || *cname == 'T') && strcasecmp(cname, "text") == 0)
           em->ezweb->typeA = apr_pstrdup(p,cvalue);
-        }
       }
       else
       {
