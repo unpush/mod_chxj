@@ -48,8 +48,7 @@ chxj_atoi(const char* s)
 
   for (ii=0; ii < len; ii++) {
     result *= 10;
-    switch(s[ii]) 
-    {
+    switch(s[ii]) {
     case '0': result += 0; break; 
     case '1': result += 1; break;
     case '2': result += 2; break;
