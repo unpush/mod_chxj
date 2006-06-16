@@ -431,8 +431,7 @@ s_load_emoji_jphone_tag(
           tmp = apr_palloc(p, strlen(cvalue)+1);
           memset(tmp, 0, strlen(cvalue)+1);
 
-          for (jj=0,ii=0; ii< strlen(cvalue); ii++) 
-          {
+          for (jj=0,ii=0; ii< strlen(cvalue); ii++) {
             if (strncasecmp(&cvalue[ii] , ESCAPE_CHAR_LT, strlen(ESCAPE_CHAR_LT)) == 0)
             {
               tmp[jj] = '<';
