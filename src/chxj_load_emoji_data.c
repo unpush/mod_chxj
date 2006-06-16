@@ -426,7 +426,9 @@ s_load_emoji_jphone_tag(
         if ((*cname == 't' || *cname == 'T') && strcasecmp(cname, "text") == 0) {
           int   ii;
           int   jj;
-          char* tmp = apr_palloc(p, strlen(cvalue)+1);
+          char* tmp;
+ 
+          tmp = apr_palloc(p, strlen(cvalue)+1);
           memset(tmp, 0, strlen(cvalue)+1);
 
           for (jj=0,ii=0; ii< strlen(cvalue); ii++) 
