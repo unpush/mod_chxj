@@ -370,7 +370,6 @@ s_load_emoji_ezweb_tag(
         em->ezweb->typeC = apr_palloc(p, 1);
         em->ezweb->typeC[0] = 0;
       }
-
     }
     else
     if (strcasecmp(name, "D") == 0) {
