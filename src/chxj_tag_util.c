@@ -436,6 +436,7 @@ qs_get_maxlength_attr(Doc* doc, Node* tag, request_rec* r)
     if ((*name == 'm' || *name == 'M') && strcasecmp(name, "maxlength") == 0)
       return apr_pstrdup(r->pool, value);
   }
+
   return NULL;
 }
 
