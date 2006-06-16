@@ -372,10 +372,8 @@ qs_get_accesskey_attr(Doc* doc, Node* tag, request_rec* r)
     char* name  = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
 
-    if (strcasecmp(name, "accesskey") == 0)
-    {
+    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "accesskey") == 0)
       return apr_pstrdup(r->pool, value);
-    }
   }
 
   return NULL;
