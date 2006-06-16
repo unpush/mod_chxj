@@ -30,6 +30,7 @@ chxj_chk_numeric(const char* s)
       return -1; /* NG */
     }
   }
+
   return 0; /* OK */
 }
 

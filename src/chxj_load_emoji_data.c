@@ -136,7 +136,7 @@ s_load_emoji_set_tag(
     case 'i':
     case 'I':
       if (strcasecmp(name, "imode") == 0) {
-        if (rtn = s_load_emoji_imode_tag(doc, p, em, child)) 
+        if ((rtn = s_load_emoji_imode_tag(doc, p, em, child)) != NULL)
           return rtn;
       }
       break;
