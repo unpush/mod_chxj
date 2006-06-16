@@ -694,14 +694,9 @@ chxj_qrcode_create_image_data(
   DBG(r,"start s_create_image_file()");
 #endif
 
-
-
-
-
   module_count  = v_module_count_table[qrcode->version];
   module = (char**)apr_palloc(r->pool, sizeof(char*)*(module_count+1));
-  for (yy=0; yy<module_count; yy++)
-  {
+  for (yy=0; yy<module_count; yy++) {
     module[yy] = (char*)apr_palloc(r->pool, module_count+1);
     memset(module[yy], -1, module_count+1);
   }
