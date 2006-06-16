@@ -451,8 +451,7 @@ s_load_emoji_jphone_tag(
           em->jphone->string = apr_pstrdup(p,tmp);
         }
       }
-      else
-      {
+      else {
         em->jphone->string    = apr_palloc(p, 1);
         em->jphone->string[0] = 0;
       }
