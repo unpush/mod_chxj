@@ -200,12 +200,10 @@ s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list_t* dtl, Node* node)
             continue;
           break;
         }
-        if (ii == strlen(vv)) {
+        if (ii == strlen(vv))
           dt->width = atoi(qs_get_node_value(doc,ch));
-        }
-        else {
+        else 
           dt->width = 0;
-        }
       }
     }
     else
