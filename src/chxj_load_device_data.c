@@ -180,8 +180,7 @@ s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list_t* dtl, Node* node)
           dt->html_spec_type = CHXJ_SPEC_Chtml_5_0;
         }
         else
-        if (strcasecmp(vv, "hdml") == 0) 
-        {
+        if (strcasecmp(vv, "hdml") == 0) {
           dt->html_spec_type = CHXJ_SPEC_Hdml;
         }
         else
