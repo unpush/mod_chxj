@@ -708,69 +708,45 @@ chxj_qrcode_create_image_data(
   black_wand = NewMagickWand();
 
 
-  if (MagickSetSize(magick_wand, 24, 24) == MagickFalse) {
-    EXIT_MAGICK_ERROR();
-    return HTTP_NOT_FOUND;
-  }
+  if (MagickSetSize(magick_wand, 24, 24) == MagickFalse)
+    goto on_error;
 
-  if (MagickSetSize(black_wand, 24, 24) == MagickFalse) {
-    EXIT_MAGICK_ERROR();
-    return HTTP_NOT_FOUND;
-  }
+  if (MagickSetSize(black_wand, 24, 24) == MagickFalse)
+    goto on_error;
 
-  if (MagickReadImageBlob(magick_wand, v_white_base_pic, sizeof(v_white_base_pic)) == MagickFalse)  {
-    EXIT_MAGICK_ERROR();
-    return HTTP_NOT_FOUND;
-  }
+  if (MagickReadImageBlob(magick_wand, v_white_base_pic, sizeof(v_white_base_pic)) == MagickFalse) 
+    goto on_error;
 
-  if (MagickReadImageBlob(black_wand, v_black_pixel_pic, sizeof(v_black_pixel_pic)) == MagickFalse) {
-    EXIT_MAGICK_ERROR();
-    return HTTP_NOT_FOUND;
-  }
+  if (MagickReadImageBlob(black_wand, v_black_pixel_pic, sizeof(v_black_pixel_pic)) == MagickFalse)
+    goto on_error;
 
-  if (MagickSetImageUnits(magick_wand, PixelsPerInchResolution) == MagickFalse) {
-    EXIT_MAGICK_ERROR();
-    return HTTP_NOT_FOUND;
-  }
+  if (MagickSetImageUnits(magick_wand, PixelsPerInchResolution) == MagickFalse)
+    goto on_error;
 
-  if (MagickSetImageUnits(black_wand, PixelsPerInchResolution) == MagickFalse) {
-    EXIT_MAGICK_ERROR();
-    return HTTP_NOT_FOUND;
-  }
+  if (MagickSetImageUnits(black_wand, PixelsPerInchResolution) == MagickFalse)
+    goto on_error;
 
-  if (MagickResizeImage(magick_wand, (module_count)+6, (module_count)+6 , LanczosFilter,0.0) == MagickFalse) {
-    EXIT_MAGICK_ERROR();
-    return HTTP_NOT_FOUND;
-  }
+  if (MagickResizeImage(magick_wand, (module_count)+6, (module_count)+6 , LanczosFilter,0.0) == MagickFalse)
+    goto on_error;
 
-  if (MagickSetImageResolution(magick_wand, 96,96) == MagickFalse) {
-    EXIT_MAGICK_ERROR();
-    return HTTP_NOT_FOUND;
-  }
+  if (MagickSetImageResolution(magick_wand, 96,96) == MagickFalse) 
+    goto on_error;
 
-  if (MagickSetImageResolution(black_wand, 96,96) == MagickFalse) {
-    EXIT_MAGICK_ERROR();
-    return HTTP_NOT_FOUND;
-  }
+  if (MagickSetImageResolution(black_wand, 96,96) == MagickFalse)
+    goto on_error;
 
-  if (MagickSetImageType(magick_wand, GrayscaleType) == MagickFalse) {
-    EXIT_MAGICK_ERROR();
-    return HTTP_NOT_FOUND;
-  }
+  if (MagickSetImageType(magick_wand, GrayscaleType) == MagickFalse)
+    goto on_error;
 
-  if (MagickSetImageType(black_wand, GrayscaleType) == MagickFalse) {
-    EXIT_MAGICK_ERROR();
-    return HTTP_NOT_FOUND;
-  }
+  if (MagickSetImageType(black_wand, GrayscaleType) == MagickFalse)
+    goto on_error;
 
 
   for (yy=0; yy<module_count; yy++) {
     for (xx=0; xx<module_count; xx++) {
       if (module[yy][xx] == '1') {
-        if (MagickCompositeImage(magick_wand, black_wand, CopyCompositeOp, xx+3,yy+3) == MagickFalse) {
-          EXIT_MAGICK_ERROR();
-          return HTTP_NOT_FOUND;
-        }
+        if (MagickCompositeImage(magick_wand, black_wand, CopyCompositeOp, xx+3,yy+3) == MagickFalse)
+          goto on_error;
       }
     }
   }
