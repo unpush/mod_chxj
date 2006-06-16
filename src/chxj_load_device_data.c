@@ -96,10 +96,8 @@ s_set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node
         dtl = t->next;
       }
 
-      for (attr = qs_get_attr(doc,child); attr ; attr = qs_get_next_attr(doc,attr)) 
-      {
-        if (strcasecmp(qs_get_attr_name(doc,attr), "pattern") == 0) 
-        {
+      for (attr = qs_get_attr(doc,child); attr ; attr = qs_get_next_attr(doc,attr)) {
+        if (strcasecmp(qs_get_attr_name(doc,attr), "pattern") == 0) {
             dtl->pattern = apr_pstrdup(p, qs_get_attr_value(doc,attr));
         }
       }
