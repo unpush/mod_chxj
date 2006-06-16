@@ -667,9 +667,10 @@ chxj_qr_code_blob_handler(request_rec* r, const char* indata, size_t* len)
     DBG(r, "end chxj_qr_code_blob_handler()");
     return NULL;
   }
+
   ap_set_content_type(r, "image/jpg");
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r,
-                                    "end chxj_qr_code_blob_handler()");
+
+  DBG(r, "end chxj_qr_code_blob_handler()");
 
   return img;
 }
