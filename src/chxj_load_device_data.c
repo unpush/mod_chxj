@@ -156,8 +156,7 @@ s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list_t* dtl, Node* node)
       Node* ch = qs_get_child_node(doc, child);
       if (ch &&  strcasecmp(qs_get_node_name(doc,ch), "text") == 0) {
         char* vv = qs_get_node_value(doc, ch);
-        if (strcasecmp(vv, "xhtml_mobile_1_0") == 0) 
-        {
+        if (strcasecmp(vv, "xhtml_mobile_1_0") == 0) {
           dt->html_spec_type = CHXJ_SPEC_XHtml_Mobile_1_0;
         }
         else
