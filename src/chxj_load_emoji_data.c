@@ -163,6 +163,7 @@ s_load_emoji_set_tag(
   }
 
   s_emoji_add_to_tail(conf, em);
+
   return NULL;
 }
 
