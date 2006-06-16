@@ -266,28 +266,31 @@ s_load_emoji_imode_tag(
         }
       }
       break;
-
     
-    else
-    if (strcasecmp(name, "description") == 0)
-    {
-      Node* description_node = qs_get_child_node(doc, child);
-      if (description_node != NULL)
-      {
-        char* cname = qs_get_node_name(doc, description_node);
-        char* cvalue = qs_get_node_value(doc, description_node);
-        if (strcasecmp(cname, "text") == 0)
-        {
-          em->imode->description = apr_pstrdup(p, cvalue);
+    case 'd':
+    case 'D':
+      if (strcasecmp(name, "description") == 0) {
+        Node* description_node = qs_get_child_node(doc, child);
+  
+        if (description_node) {
+          char* cname = qs_get_node_name(doc, description_node);
+          char* cvalue = qs_get_node_value(doc, description_node);
+  
+          if ((*cname == 't' || *cname == 'T') && strcasecmp(cname, "text") == 0)
+            em->imode->description = apr_pstrdup(p, cvalue);
+        }
+        else {
+          em->imode->description    = apr_palloc(p, 1);
+          em->imode->description[0] = 0;
         }
       }
-      else
-      {
-        em->imode->description    = apr_palloc(p, 1);
-        em->imode->description[0] = 0;
-      }
+      break;
+
+    default:
+      break;
     }
   }
+
   return NULL;
 }
 
