@@ -781,15 +781,11 @@ chxj_qrcode_create_image_data(
   else {  
     status = MagickResizeImage(magick_wand, (module_count * qrcode->size + 6), (module_count * qrcode->size + 6) , LanczosFilter,0.0);
   }
-  if (status == MagickFalse) {
-    EXIT_MAGICK_ERROR();
-    return HTTP_NOT_FOUND;
-  }
+  if (status == MagickFalse) 
+    goto on_error;
 
-  if (MagickSetImageFormat(magick_wand,"jpg") == MagickFalse) {
-    EXIT_MAGICK_ERROR();
-    return HTTP_NOT_FOUND;
-  }
+  if (MagickSetImageFormat(magick_wand,"jpg") == MagickFalse)
+    goto on_error;
 
 #ifdef QR_CODE_DEBUG
   DBG(r,"convert to jpg");
@@ -809,7 +805,13 @@ chxj_qrcode_create_image_data(
 #endif
 
   return OK;
+
+on_error:
+  EXIT_MAGICK_ERROR();
+  return HTTP_NOT_FOUND;
 }
+
+
 
 static void
 chxj_qr_code(qr_code_t* qrcode, char* module[])
