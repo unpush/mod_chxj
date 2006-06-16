@@ -19,12 +19,7 @@
 #include "qs_log.h"
 #include "qs_malloc.h"
 #include "http_log.h"
-/*
-#define USE_LOG
-#ifndef DEBUG
-#define DEBUG
-#endif
-*/
+
 
 extern apr_status_t chxj_init_module_kill(void *data);
 

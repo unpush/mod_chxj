@@ -764,15 +764,10 @@ chxj_qrcode_create_image_data(
   }
 
 
-  for (yy=0; yy<module_count; yy++)
-  {
-    for (xx=0; xx<module_count; xx++)
-    {
-      if (module[yy][xx] == '1')
-      {
-        status = MagickCompositeImage(magick_wand, black_wand, CopyCompositeOp, xx+3,yy+3);
-        if (status == MagickFalse)
-        {
+  for (yy=0; yy<module_count; yy++) {
+    for (xx=0; xx<module_count; xx++) {
+      if (module[yy][xx] == '1') {
+        if (MagickCompositeImage(magick_wand, black_wand, CopyCompositeOp, xx+3,yy+3) == MagickFalse) {
           EXIT_MAGICK_ERROR();
           return HTTP_NOT_FOUND;
         }
@@ -780,28 +775,24 @@ chxj_qrcode_create_image_data(
     }
   }
 
-  if (qrcode->size <= 0)
-  {
+  if (qrcode->size <= 0) {
     status = MagickResizeImage(magick_wand, ((module_count)*4+6), ((module_count)*4+6) , LanczosFilter,0.0);
   }
-  else
-  {  
+  else {  
     status = MagickResizeImage(magick_wand, (module_count * qrcode->size + 6), (module_count * qrcode->size + 6) , LanczosFilter,0.0);
   }
-  if (status == MagickFalse)
-  {
+  if (status == MagickFalse) {
     EXIT_MAGICK_ERROR();
     return HTTP_NOT_FOUND;
   }
 
-  status = MagickSetImageFormat(magick_wand,"jpg");
-  if (status == MagickFalse)
-  {
+  if (MagickSetImageFormat(magick_wand,"jpg") == MagickFalse) {
     EXIT_MAGICK_ERROR();
     return HTTP_NOT_FOUND;
   }
+
 #ifdef QR_CODE_DEBUG
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "convert to jpg");
+  DBG(r,"convert to jpg");
 #endif
 
   tmp = (unsigned char*)MagickGetImageBlob(magick_wand,img_len);
@@ -814,9 +805,9 @@ chxj_qrcode_create_image_data(
 
 
 #ifdef QR_CODE_DEBUG
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r,
-                                    "end chxj_qr_code_handler()");
+  DBG(r, "end chxj_qr_code_handler()");
 #endif
+
   return OK;
 }
 
