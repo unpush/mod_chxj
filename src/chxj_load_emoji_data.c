@@ -204,9 +204,9 @@ s_load_emoji_imode_tag(
 {
   Node* child;
 
-  em->imode->hex1byte = 0;
-  em->imode->hex2byte = 0;
-  em->imode->string = NULL;
+  em->imode->hex1byte    = 0;
+  em->imode->hex2byte    = 0;
+  em->imode->string      = NULL;
   em->imode->description = NULL;
 
   for (child = qs_get_child_node(doc, node);
