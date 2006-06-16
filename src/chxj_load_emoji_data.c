@@ -124,8 +124,7 @@ s_load_emoji_set_tag(
 
     char* name  = qs_get_node_name(doc, child);
 
-    if (strcasecmp(name, "no") == 0) 
-    {
+    if (strcasecmp(name, "no") == 0) {
       rtn = s_load_emoji_no_tag(doc, p, em, child);
       if (rtn != NULL)
       {
