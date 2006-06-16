@@ -177,8 +177,9 @@ s_load_emoji_no_tag(
 {
   int len;
   int ii;
+
   Node* child = qs_get_child_node(doc,node);
-  char* name = qs_get_node_name(doc,  child);
+  char* name  = qs_get_node_name(doc,  child);
   char* value = qs_get_node_value(doc, child);
 
   if (strcasecmp(name, "text") == 0)
