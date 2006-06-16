@@ -713,30 +713,26 @@ chxj_qrcode_create_image_data(
     return HTTP_NOT_FOUND;
   }
 
-  status = MagickSetSize(black_wand, 24, 24);
-  if (status == MagickFalse)
-  {
+  if (MagickSetSize(black_wand, 24, 24) == MagickFalse) {
     EXIT_MAGICK_ERROR();
     return HTTP_NOT_FOUND;
   }
-  status = MagickReadImageBlob(magick_wand, v_white_base_pic, sizeof(v_white_base_pic));
-  if (status == MagickFalse)
-  {
+
+  if (MagickReadImageBlob(magick_wand, v_white_base_pic, sizeof(v_white_base_pic)) == MagickFalse)  {
     EXIT_MAGICK_ERROR();
     return HTTP_NOT_FOUND;
   }
-  status = MagickReadImageBlob(black_wand, v_black_pixel_pic, sizeof(v_black_pixel_pic));
-  if (status == MagickFalse)
-  {
+
+  if (MagickReadImageBlob(black_wand, v_black_pixel_pic, sizeof(v_black_pixel_pic)) == MagickFalse) {
     EXIT_MAGICK_ERROR();
     return HTTP_NOT_FOUND;
   }
-  status = MagickSetImageUnits(magick_wand, PixelsPerInchResolution);
-  if (status == MagickFalse)
-  {
+
+  if (MagickSetImageUnits(magick_wand, PixelsPerInchResolution) == MagickFalse) {
     EXIT_MAGICK_ERROR();
     return HTTP_NOT_FOUND;
   }
+
   status = MagickSetImageUnits(black_wand, PixelsPerInchResolution);
   if (status == MagickFalse)
   {
