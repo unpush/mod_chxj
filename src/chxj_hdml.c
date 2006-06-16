@@ -28,10 +28,10 @@
 
 static void  s_init_hdml            (hdml_t* hdml, Doc* doc, request_rec* r, device_table_t* spec);
 static char* s_hdml_node_exchange   (hdml_t* doc,  Node* node, int indent);
-static char* s_hdml_start_html_tag  (hdml_t* doc,  Node* child);
-static char* s_hdml_end_html_tag    (hdml_t* doc,  Node* child);
-static char* s_hdml_start_li_tag    (hdml_t* doc,  Node* child);
-static char* s_hdml_end_li_tag      (hdml_t* doc,  Node* child);
+static char* s_hdml_start_html_tag  (hdml_t* doc,  Node* node);
+static char* s_hdml_end_html_tag    (hdml_t* doc,  Node* node);
+static char* s_hdml_start_li_tag    (hdml_t* doc,  Node* node);
+static char* s_hdml_end_li_tag      (hdml_t* doc,  Node* node);
 static char* s_hdml_start_meta_tag  (hdml_t* doc,  Node* node);
 static char* s_hdml_end_meta_tag    (hdml_t* doc,  Node* node);
 static char* s_hdml_start_head_tag  (hdml_t* doc,  Node* node);
@@ -282,6 +282,20 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
       continue;
 
 
+    /*------------------------------------------------------------------------*/
+    /* <PRE> (for TEST)                                                       */
+    /*------------------------------------------------------------------------*/
+    if ((*name == 'p' || *name == 'P') && strcasecmp(name, "pre") == 0) {
+      s_hdml_node_exchange (hdml, child, indent+1);
+    }
+    else
+    /*------------------------------------------------------------------------*/
+    /* <P> (for TEST)                                                         */
+    /*------------------------------------------------------------------------*/
+    if ((*name == 'p' || *name == 'P') && strcasecmp(name, "p") == 0) {
+      s_hdml_node_exchange (hdml, child, indent+1);
+    }
+    else
     /*------------------------------------------------------------------------*/
     /* <UL> (for TEST)                                                        */
     /*------------------------------------------------------------------------*/

@@ -23,27 +23,31 @@
 
 
 static char* s_xhtml_1_0_node_exchange    (xhtml_t* xhtml, Node* node, int indent);
-static char* s_xhtml_1_0_start_html_tag   (xhtml_t* xhtml, Node* child);
-static char* s_xhtml_1_0_end_html_tag     (xhtml_t* xhtml, Node* child);
-static char* s_xhtml_1_0_start_ul_tag     (xhtml_t* xhtml, Node* child);
-static char* s_xhtml_1_0_end_ul_tag       (xhtml_t* xhtml, Node* child);
-static char* s_xhtml_1_0_start_h1_tag     (xhtml_t* xhtml, Node* child);
-static char* s_xhtml_1_0_end_h1_tag       (xhtml_t* xhtml, Node* child);
-static char* s_xhtml_1_0_start_h2_tag     (xhtml_t* xhtml, Node* child);
-static char* s_xhtml_1_0_end_h2_tag       (xhtml_t* xhtml, Node* child);
-static char* s_xhtml_1_0_start_h3_tag     (xhtml_t* xhtml, Node* child);
-static char* s_xhtml_1_0_end_h3_tag       (xhtml_t* xhtml, Node* child);
-static char* s_xhtml_1_0_start_h4_tag     (xhtml_t* xhtml, Node* child);
-static char* s_xhtml_1_0_end_h4_tag       (xhtml_t* xhtml, Node* child);
-static char* s_xhtml_1_0_start_h5_tag     (xhtml_t* xhtml, Node* child);
-static char* s_xhtml_1_0_end_h5_tag       (xhtml_t* xhtml, Node* child);
-static char* s_xhtml_1_0_start_h6_tag     (xhtml_t* xhtml, Node* child);
-static char* s_xhtml_1_0_end_h6_tag       (xhtml_t* xhtml, Node* child);
-static char* s_xhtml_1_0_start_ol_tag     (xhtml_t* xhtml, Node* child);
-static char* s_xhtml_1_0_start_ol_tag     (xhtml_t* xhtml, Node* child);
-static char* s_xhtml_1_0_end_ol_tag       (xhtml_t* xhtml, Node* child);
-static char* s_xhtml_1_0_start_li_tag     (xhtml_t* xhtml, Node* child);
-static char* s_xhtml_1_0_end_li_tag       (xhtml_t* xhtml, Node* child);
+static char* s_xhtml_1_0_start_html_tag   (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_end_html_tag     (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_start_p_tag      (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_end_p_tag        (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_start_pre_tag    (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_end_pre_tag      (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_start_ul_tag     (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_end_ul_tag       (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_start_h1_tag     (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_end_h1_tag       (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_start_h2_tag     (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_end_h2_tag       (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_start_h3_tag     (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_end_h3_tag       (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_start_h4_tag     (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_end_h4_tag       (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_start_h5_tag     (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_end_h5_tag       (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_start_h6_tag     (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_end_h6_tag       (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_start_ol_tag     (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_start_ol_tag     (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_end_ol_tag       (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_start_li_tag     (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_end_li_tag       (xhtml_t* xhtml, Node* node);
 static char* s_xhtml_1_0_start_meta_tag   (xhtml_t* xhtml, Node* node);
 static char* s_xhtml_1_0_end_meta_tag     (xhtml_t* xhtml, Node* node);
 static char* s_xhtml_1_0_start_head_tag   (xhtml_t* xhtml, Node* node);
@@ -211,6 +215,24 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
        child = qs_get_next_node(doc,child)) {
     char* name = qs_get_node_name(doc,child);
 
+    /*------------------------------------------------------------------------*/
+    /* <P> (for TEST)                                                         */
+    /*------------------------------------------------------------------------*/
+    if ((*name == 'p' || *name == 'P') && strcasecmp(name, "p") == 0) {
+      s_xhtml_1_0_start_p_tag   (xhtml, child);
+      s_xhtml_1_0_node_exchange (xhtml, child, indent+1);
+      s_xhtml_1_0_end_p_tag     (xhtml, child);
+    }
+    else
+    /*------------------------------------------------------------------------*/
+    /* <PRE> (for TEST)                                                       */
+    /*------------------------------------------------------------------------*/
+    if ((*name == 'p' || *name == 'P') && strcasecmp(name, "pre") == 0) {
+      s_xhtml_1_0_start_pre_tag (xhtml, child);
+      s_xhtml_1_0_node_exchange (xhtml, child, indent+1);
+      s_xhtml_1_0_end_pre_tag   (xhtml, child);
+    }
+    else
     /*------------------------------------------------------------------------*/
     /* <UL> (for TEST)                                                        */
     /*------------------------------------------------------------------------*/
@@ -574,6 +596,10 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
             one_byte[0] = textval[ii+1];
             tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
             ii++;
+          }
+          else if (xhtml->pre_flag) {
+            one_byte[0] = textval[ii+0];
+            tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
           }
           else if (textval[ii] != '\r' && textval[ii] != '\n') {
             one_byte[0] = textval[ii+0];
@@ -1627,6 +1653,84 @@ s_xhtml_1_0_start_hr_tag(xhtml_t* xhtml, Node* node)
 static char*
 s_xhtml_1_0_end_hr_tag(xhtml_t* xhtml, Node* child) 
 {
+  return xhtml->out;
+}
+
+/**
+ * It is a handler who processes the PRE tag.
+ *
+ * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The PRE tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_xhtml_1_0_start_pre_tag(xhtml_t* xhtml, Node* node) 
+{
+  Doc*          doc = xhtml->doc;
+  request_rec*  r   = doc->r;
+
+  xhtml->pre_flag++;
+  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<pre>", NULL);
+
+  return xhtml->out;
+}
+
+/**
+ * It is a handler who processes the PRE tag.
+ *
+ * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The PRE tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_xhtml_1_0_end_pre_tag(xhtml_t* xhtml, Node* child) 
+{
+  Doc*          doc = xhtml->doc;
+  request_rec*  r   = doc->r;
+
+  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</pre>", NULL);
+  xhtml->pre_flag--;
+
+  return xhtml->out;
+}
+
+/**
+ * It is a handler who processes the P tag.
+ *
+ * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The P tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_xhtml_1_0_start_p_tag(xhtml_t* xhtml, Node* node) 
+{
+  Doc*          doc = xhtml->doc;
+  request_rec*  r   = doc->r;
+
+  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<p>", NULL);
+
+  return xhtml->out;
+}
+
+/**
+ * It is a handler who processes the P tag.
+ *
+ * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The P tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_xhtml_1_0_end_p_tag(xhtml_t* xhtml, Node* child) 
+{
+  Doc*          doc = xhtml->doc;
+  request_rec*  r   = doc->r;
+
+  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</p>", NULL);
+
   return xhtml->out;
 }
 
