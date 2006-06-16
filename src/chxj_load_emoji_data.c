@@ -490,10 +490,9 @@ s_hexstring_to_byte(char* s)
   char one_byte = 0;
 
   len = strlen(s);
-  for (ii=0; ii<len; ii++)
-  {
-    switch(s[ii]) 
-    {
+
+  for (ii=0; ii<len; ii++) {
+    switch(s[ii]) {
     case '1':
     case '2':
     case '3':
