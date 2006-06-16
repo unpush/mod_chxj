@@ -26,6 +26,10 @@ static char* s_chtml30_start_html_tag   (chtml30_t* chtml, Node* child);
 static char* s_chtml30_end_html_tag     (chtml30_t* chtml, Node* child);
 static char* s_chtml30_start_meta_tag   (chtml30_t* chtml, Node* node);
 static char* s_chtml30_end_meta_tag     (chtml30_t* chtml, Node* node);
+static char* s_chtml30_start_p_tag      (chtml30_t* chtml, Node* node);
+static char* s_chtml30_end_p_tag        (chtml30_t* chtml, Node* node);
+static char* s_chtml30_start_pre_tag    (chtml30_t* chtml, Node* node);
+static char* s_chtml30_end_pre_tag      (chtml30_t* chtml, Node* node);
 static char* s_chtml30_start_h1_tag     (chtml30_t* chtml, Node* node);
 static char* s_chtml30_end_h1_tag       (chtml30_t* chtml, Node* node);
 static char* s_chtml30_start_h2_tag     (chtml30_t* chtml, Node* node);
@@ -204,8 +208,26 @@ s_chtml30_node_exchange(chtml30_t* chtml30, Node* node, int indent)
        child = qs_get_next_node(doc,child)) {
     char* name = qs_get_node_name(doc,child);
 
-
+    /*------------------------------------------------------------------------*/
+    /* <P> (for TEST)                                                         */
+    /*------------------------------------------------------------------------*/
+    if ((*name == 'p' || *name == 'P') && strcasecmp(name, "p") == 0) {
+      s_chtml30_start_p_tag   (chtml30, child);
+      s_chtml30_node_exchange (chtml30, child, indent+1);
+      s_chtml30_end_p_tag     (chtml30, child);
+    }
+    else
+    /*------------------------------------------------------------------------*/
+    /* <PRE> (for TEST)                                                       */
+    /*------------------------------------------------------------------------*/
+    if ((*name == 'p' || *name == 'P') && strcasecmp(name, "pre") == 0) {
+      s_chtml30_start_pre_tag (chtml30, child);
+      s_chtml30_node_exchange (chtml30, child, indent+1);
+      s_chtml30_end_pre_tag   (chtml30, child);
+    }
+    else
     if (*name == 's' || *name == 'S') {
+
       /*----------------------------------------------------------------------*/
       /* <STYLE> (for TEST)                                                   */
       /*----------------------------------------------------------------------*/
@@ -567,6 +589,10 @@ s_chtml30_node_exchange(chtml30_t* chtml30, Node* node, int indent)
             one_byte[0] = textval[ii+1];
             tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
             ii++;
+          }
+          else if (chtml30->pre_flag) {
+            one_byte[0] = textval[ii+0];
+            tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
           }
           else if (textval[ii] != '\r' && textval[ii] != '\n') {
             one_byte[0] = textval[ii+0];
@@ -1961,6 +1987,84 @@ s_chtml30_end_ul_tag(chtml30_t* chtml30, Node* child)
   request_rec*  r   = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "</ul>", NULL);
+
+  return chtml30->out;
+}
+
+/**
+ * It is a handler who processes the PRE tag.
+ *
+ * @param chtml30  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The PRE tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml30_start_pre_tag(chtml30_t* chtml30, Node* node) 
+{
+  Doc*          doc = chtml30->doc;
+  request_rec*  r   = doc->r;
+
+  chtml30->pre_flag++;
+  chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<pre>", NULL);
+
+  return chtml30->out;
+}
+
+/**
+ * It is a handler who processes the PRE tag.
+ *
+ * @param chtml30  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The PRE tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml30_end_pre_tag(chtml30_t* chtml30, Node* child) 
+{
+  Doc*          doc = chtml30->doc;
+  request_rec*  r   = doc->r;
+
+  chtml30->out = apr_pstrcat(r->pool, chtml30->out, "</pre>", NULL);
+  chtml30->pre_flag--;
+
+  return chtml30->out;
+}
+
+/**
+ * It is a handler who processes the P tag.
+ *
+ * @param chtml30  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The P tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml30_start_p_tag(chtml30_t* chtml30, Node* node) 
+{
+  Doc*          doc = chtml30->doc;
+  request_rec*  r   = doc->r;
+
+  chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<p>", NULL);
+
+  return chtml30->out;
+}
+
+/**
+ * It is a handler who processes the P tag.
+ *
+ * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The P tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml30_end_p_tag(chtml30_t* chtml30, Node* child) 
+{
+  Doc*          doc = chtml30->doc;
+  request_rec*  r   = doc->r;
+
+  chtml30->out = apr_pstrcat(r->pool, chtml30->out, "</p>", NULL);
 
   return chtml30->out;
 }
