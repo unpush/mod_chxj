@@ -64,15 +64,15 @@ chxj_specified_device(request_rec* r, const char* user_agent)
           break;
         }
       }
-      if (dt == NULL) {
+
+      if (! dt) {
         for (dt = dtl->table; dt; dt = dt->next) {
-          if (dt->next == NULL) {
+          if (dt->next == NULL)
             break;
-          }
         }
-        if (dt != NULL) {
+
+        if (dt)
           returnType = dt;
-        }
       }
     }
     ap_pregfree(r->pool, regexp);
