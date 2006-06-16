@@ -128,7 +128,7 @@ s_load_emoji_set_tag(
     case 'n':
     case 'N':
       if (strcasecmp(name, "no") == 0) {
-        if (rtn = s_load_emoji_no_tag(doc, p, em, child)) 
+        if ((rtn = s_load_emoji_no_tag(doc, p, em, child)) != NULL)
           return rtn;
       }
       break;

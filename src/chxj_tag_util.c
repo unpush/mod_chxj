@@ -41,8 +41,8 @@ qs_get_value_attr(Doc* doc, Node* node, request_rec* r)
 
     char* name  = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
-    if (strcasecmp(name, "value") == 0)
-    {
+
+    if (strcasecmp(name, "value") == 0) {
       /*----------------------------------------------------------------------*/
       /* The VALUE attribute was found.                                       */
       /*----------------------------------------------------------------------*/

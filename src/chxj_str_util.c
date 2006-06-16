@@ -26,8 +26,7 @@ chxj_chk_numeric(const char* s)
     if (ii == 0 && (s[ii] < '0' || s[ii] > '9') && s[ii] != '-') {
       return -1; /* NG */
     }
-    if (ii != 0 && (s[ii] < '0' || s[ii] > '9')) 
-    {
+    if (ii != 0 && (s[ii] < '0' || s[ii] > '9')) {
       return -1; /* NG */
     }
   }
