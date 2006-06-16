@@ -262,10 +262,11 @@ qs_get_selected_value(Doc* doc, Node* node, request_rec* r)
     /*------------------------------------------------------------------------*/
     if ((*name == 'o' || *name == 'O') && strcasecmp(name, "option") == 0) {
       Attr* attr;
+
       for (attr = qs_get_attr(doc,child); 
-           attr != NULL; 
-           attr = qs_get_next_attr(doc,attr)) 
-      {
+           attr; 
+           attr = qs_get_next_attr(doc,attr)) {
+
         char* name  = qs_get_attr_name(doc,attr);
 
         ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, 
