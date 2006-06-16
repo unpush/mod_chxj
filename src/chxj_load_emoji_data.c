@@ -124,24 +124,41 @@ s_load_emoji_set_tag(
 
     char* name  = qs_get_node_name(doc, child);
 
-    if ((*name == 'n' || *name == 'N') && strcasecmp(name, "no") == 0) {
-      if (rtn = s_load_emoji_no_tag(doc, p, em, child)) 
-        return rtn;
-    }
-    else 
-    if ((*name == 'i' || *name == 'I') && strcasecmp(name, "imode") == 0) {
-      if (rtn = s_load_emoji_imode_tag(doc, p, em, child)) 
-        return rtn;
-    }
-    else
-    if ((*name == 'e' || *name == 'E') && strcasecmp(name, "ezweb") == 0) {
-      if (rtn = s_load_emoji_ezweb_tag(doc, p, em, child)) 
-        return rtn;
-    }
-    else
-    if ((*name == 'j' || *name == 'J') && strcasecmp(name, "jphone") == 0)
-      if (rtn = s_load_emoji_jphone_tag(doc, p, em, child))
-        return rtn;
+    switch (*name) {
+    case 'n':
+    case 'N':
+      if (strcasecmp(name, "no") == 0) {
+        if (rtn = s_load_emoji_no_tag(doc, p, em, child)) 
+          return rtn;
+      }
+      break;
+    
+    case 'i':
+    case 'I':
+      if (strcasecmp(name, "imode") == 0) {
+        if (rtn = s_load_emoji_imode_tag(doc, p, em, child)) 
+          return rtn;
+      }
+      break;
+
+    case 'e':
+    case 'E':
+      if (strcasecmp(name, "ezweb") == 0) {
+        if (rtn = s_load_emoji_ezweb_tag(doc, p, em, child)) 
+          return rtn;
+      }
+      break;
+
+    case 'j':
+    case 'J':
+      if (strcasecmp(name, "jphone") == 0) {
+        if (rtn = s_load_emoji_jphone_tag(doc, p, em, child))
+          return rtn;
+      }
+      break;
+
+    default:
+      break;
     }
   }
 
