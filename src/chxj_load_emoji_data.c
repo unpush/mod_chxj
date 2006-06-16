@@ -139,8 +139,7 @@ s_load_emoji_set_tag(
         return rtn;
     }
     else
-    if (strcasecmp(name, "jphone") == 0)
-    {
+    if ((*name == 'j' || *name == 'J') && strcasecmp(name, "jphone") == 0)
       rtn = s_load_emoji_jphone_tag(doc, p, em, child);
       if (rtn != NULL)
       {
