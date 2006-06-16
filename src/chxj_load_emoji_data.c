@@ -457,6 +457,7 @@ s_load_emoji_jphone_tag(
       }
     }
   }
+
   return NULL;
 }
 
