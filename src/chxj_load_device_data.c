@@ -83,8 +83,7 @@ s_set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node
         conf->devices->tail    = NULL;
         dtl = conf->devices;
       }
-      else 
-      {
+      else {
         for (t = conf->devices; t ; t = t->next) 
         {
           if (t->next == NULL) 
