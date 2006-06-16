@@ -708,12 +708,11 @@ chxj_qrcode_create_image_data(
   black_wand = NewMagickWand();
 
 
-  status = MagickSetSize(magick_wand, 24, 24);
-  if (status == MagickFalse)
-  {
+  if (MagickSetSize(magick_wand, 24, 24) == MagickFalse) {
     EXIT_MAGICK_ERROR();
     return HTTP_NOT_FOUND;
   }
+
   status = MagickSetSize(black_wand, 24, 24);
   if (status == MagickFalse)
   {
