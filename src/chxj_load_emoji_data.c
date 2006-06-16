@@ -215,37 +215,37 @@ s_load_emoji_imode_tag(
 
     char* name  = qs_get_node_name(doc, child);
 
-    if ((*name == 'h' || *name == 'H') && strcasecmp(name, "hex1") == 0) {
-      Node* hex1node = qs_get_child_node(doc, child);
-      if (hex1node) {
-
-        char* cname  = qs_get_node_name(doc, hex1node);
-        char* cvalue = qs_get_node_value(doc, hex1node);
-
-        if ((*cname == 't' || *cname == 'T') && strcasecmp(cname, "text") == 0)
-          em->imode->hex1byte = s_hexstring_to_byte(cvalue);
-      }
-      else {
-        em->imode->hex1byte    = 0;
-      }
-    }
-    else
-    if ((*name == 'h' || *name == 'H') && strcasecmp(name, "hex2") == 0) {
-      Node* hex2node = qs_get_child_node(doc, child);
-      if (hex2node != NULL)
-      {
-        char* cname = qs_get_node_name(doc, hex2node);
-        char* cvalue = qs_get_node_value(doc, hex2node);
-        if (strcasecmp(cname, "text") == 0)
-        {
-          em->imode->hex2byte = s_hexstring_to_byte(cvalue);
+    switch (*name) {
+    case 'h':
+    case 'H':
+      if (strcasecmp(name, "hex1") == 0) {
+        Node* hex1node = qs_get_child_node(doc, child);
+        if (hex1node) {
+  
+          char* cname  = qs_get_node_name(doc, hex1node);
+          char* cvalue = qs_get_node_value(doc, hex1node);
+  
+          if ((*cname == 't' || *cname == 'T') && strcasecmp(cname, "text") == 0)
+            em->imode->hex1byte = s_hexstring_to_byte(cvalue);
+        }
+        else {
+          em->imode->hex1byte    = 0;
         }
       }
       else
-      {
-        em->imode->hex2byte    = 0;
+      if ((*name == 'h' || *name == 'H') && strcasecmp(name, "hex2") == 0) {
+        Node* hex2node = qs_get_child_node(doc, child);
+        if (hex2node != NULL) {
+          char* cname = qs_get_node_name(doc, hex2node);
+          char* cvalue = qs_get_node_value(doc, hex2node);
+          if (strcasecmp(cname, "text") == 0)
+            em->imode->hex2byte = s_hexstring_to_byte(cvalue);
+        }
+        else
+        {
+          em->imode->hex2byte    = 0;
+        }
       }
-    }
     else
     if (strcasecmp(name, "string") == 0)
     {
