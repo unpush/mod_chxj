@@ -290,13 +290,9 @@ s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list_t* dtl, Node* node)
       if (ch && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) {
         char *vv = qs_get_node_value(doc,ch);
         if (chxj_chk_numeric(vv) != 0)
-        {
           dt->color = 0;
-        }
         else 
-        {
           dt->color = chxj_atoi(vv);
-        }
       }
     }
     else
