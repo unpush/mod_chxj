@@ -25,6 +25,10 @@ static char* s_chtml10_start_html_tag   (chtml10_t* chtml, Node* child);
 static char* s_chtml10_end_html_tag     (chtml10_t* chtml, Node* child);
 static char* s_chtml10_start_meta_tag   (chtml10_t* chtml, Node* node);
 static char* s_chtml10_end_meta_tag     (chtml10_t* chtml, Node* node);
+static char* s_chtml10_start_p_tag      (chtml10_t* chtml, Node* node);
+static char* s_chtml10_end_p_tag        (chtml10_t* chtml, Node* node);
+static char* s_chtml10_start_pre_tag    (chtml10_t* chtml, Node* node);
+static char* s_chtml10_end_pre_tag      (chtml10_t* chtml, Node* node);
 static char* s_chtml10_start_ul_tag     (chtml10_t* chtml, Node* node);
 static char* s_chtml10_end_ul_tag       (chtml10_t* chtml, Node* node);
 static char* s_chtml10_start_li_tag     (chtml10_t* chtml, Node* node);
@@ -202,6 +206,24 @@ s_chtml10_node_exchange(chtml10_t* chtml10, Node* node, int indent)
        child = qs_get_next_node(doc,child)) {
     char* name = qs_get_node_name(doc,child);
 
+    /*------------------------------------------------------------------------*/
+    /* <P> (for TEST)                                                         */
+    /*------------------------------------------------------------------------*/
+    if ((*name == 'p' || *name == 'P') && strcasecmp(name, "p") == 0) {
+      s_chtml10_start_p_tag   (chtml10, child);
+      s_chtml10_node_exchange (chtml10, child, indent+1);
+      s_chtml10_end_p_tag     (chtml10, child);
+    }
+    else
+    /*------------------------------------------------------------------------*/
+    /* <PRE> (for TEST)                                                       */
+    /*------------------------------------------------------------------------*/
+    if ((*name == 'p' || *name == 'P') && strcasecmp(name, "pre") == 0) {
+      s_chtml10_start_pre_tag (chtml10, child);
+      s_chtml10_node_exchange (chtml10, child, indent+1);
+      s_chtml10_end_pre_tag   (chtml10, child);
+    }
+    else
     /*------------------------------------------------------------------------*/
     /* <NOBR> (for TEST)                                                      */
     /*------------------------------------------------------------------------*/
@@ -559,6 +581,10 @@ s_chtml10_node_exchange(chtml10_t* chtml10, Node* node, int indent)
             one_byte[0] = textval[ii+1];
             tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
             ii++;
+          }
+          else if (chtml10->pre_flag) {
+            one_byte[0] = textval[ii+0];
+            tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
           }
           else if (textval[ii] != '\r' && textval[ii] != '\n') {
             one_byte[0] = textval[ii+0];
@@ -2146,6 +2172,85 @@ s_chtml10_chxjif_tag(chtml10_t* chtml10, Node* node)
     chtml10->out = apr_pstrcat(r->pool, chtml10->out, child->otext, NULL);
     s_chtml10_chxjif_tag(chtml10, child);
   }
+}
+
+
+/**
+ * It is a handler who processes the PRE tag.
+ *
+ * @param chtml10  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The PRE tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml10_start_pre_tag(chtml10_t* chtml10, Node* node) 
+{
+  Doc*          doc = chtml10->doc;
+  request_rec*  r   = doc->r;
+
+  chtml10->pre_flag++;
+  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<pre>", NULL);
+
+  return chtml10->out;
+}
+
+/**
+ * It is a handler who processes the PRE tag.
+ *
+ * @param chtml10  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The PRE tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml10_end_pre_tag(chtml10_t* chtml10, Node* child) 
+{
+  Doc*          doc = chtml10->doc;
+  request_rec*  r   = doc->r;
+
+  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "</pre>", NULL);
+  chtml10->pre_flag--;
+
+  return chtml10->out;
+}
+
+/**
+ * It is a handler who processes the P tag.
+ *
+ * @param chtml10  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The P tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml10_start_p_tag(chtml10_t* chtml10, Node* node) 
+{
+  Doc*          doc = chtml10->doc;
+  request_rec*  r   = doc->r;
+
+  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<p>", NULL);
+
+  return chtml10->out;
+}
+
+/**
+ * It is a handler who processes the P tag.
+ *
+ * @param chtml10  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The P tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml10_end_p_tag(chtml10_t* chtml10, Node* child) 
+{
+  Doc*          doc = chtml10->doc;
+  request_rec*  r   = doc->r;
+
+  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "</p>", NULL);
+
+  return chtml10->out;
 }
 /*
  * vim:ts=2 et
