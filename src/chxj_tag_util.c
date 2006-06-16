@@ -116,18 +116,16 @@ qs_get_type_attr(Doc* doc, Node* tag, request_rec* r)
   /*--------------------------------------------------------------------------*/
   for (attr = qs_get_attr(doc,tag);
        attr != NULL;
-       attr = qs_get_next_attr(doc,attr))
-  {
+       attr = qs_get_next_attr(doc,attr)) {
+
     char* name  = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
 
-    if (strcasecmp(name, "type") == 0)
-    {
+    if ((*name == 't' || *name == 'T') && strcasecmp(name, "type") == 0) 
       /*----------------------------------------------------------------------*/
       /* The VALUE attribute was found.                                       */
       /*----------------------------------------------------------------------*/
       return apr_pstrdup(r->pool, value);
-    }
   }
   /*--------------------------------------------------------------------------*/
   /* not found                                                                */
