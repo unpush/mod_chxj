@@ -31,16 +31,18 @@ chxj_specified_device(request_rec* r, const char* user_agent)
   ap_regmatch_t        match[10];
   device_table_t*      returnType = &UNKNOWN_DEVICE;
   device_table_list_t* dtl;
-  device_table_t* dt;
-  mod_chxj_config* conf; 
-  char* device_id;
+  device_table_t*      dt;
+  mod_chxj_config*     conf; 
+  char*                device_id;
 
   if (! user_agent) 
     return returnType;
             
 
   DBG(r, "start chxj_specified_device()");
+
   conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+
   for (dtl = conf->devices; dtl; dtl = dtl->next) {
     if (! dtl->pattern) {
       DBG(r, "pattern is null");
@@ -74,6 +76,7 @@ chxj_specified_device(request_rec* r, const char* user_agent)
           returnType = dt;
       }
     }
+
     if (returnType != &UNKNOWN_DEVICE) {
       DBG(r,"end chxj_specified_device()");
       return returnType;

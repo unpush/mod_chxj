@@ -64,11 +64,11 @@ s_set_emoji_data(
 
   for (child = qs_get_child_node(doc,node);
        child;
-       child = qs_get_next_node(doc,child)) 
-  {
+       child = qs_get_next_node(doc,child)) {
+
     char* name = qs_get_node_name(doc,child);
-    if (strcasecmp(name, "emoji") == 0) 
-    {
+
+    if ((*name == 'e' || *name == 'E') && strcasecmp(name, "emoji") == 0) {
       rtn = s_load_emoji_emoji_tag(doc, p, conf, child);
       if (rtn != NULL)
       {
