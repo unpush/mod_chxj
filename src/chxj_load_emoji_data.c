@@ -182,8 +182,7 @@ s_load_emoji_no_tag(
   char* name  = qs_get_node_name(doc,  child);
   char* value = qs_get_node_value(doc, child);
 
-  if (strcasecmp(name, "text") == 0)
-  {
+  if ((*name == 't' || *name == 'T') && strcasecmp(name, "text") == 0) {
     len = strlen(value);
 
     for (ii=0; ii<len; ii++)
