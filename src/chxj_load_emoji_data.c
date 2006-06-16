@@ -395,12 +395,13 @@ s_load_emoji_ezweb_tag(
   return NULL;
 }
 
+
 static char*
 s_load_emoji_jphone_tag(
-  Doc* doc,
+  Doc*        doc,
   apr_pool_t* p,
-  emoji_t* em,
-  Node* node)
+  emoji_t*    em,
+  Node*       node)
 {
   Node* child;
 
