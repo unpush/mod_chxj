@@ -135,11 +135,8 @@ s_load_emoji_set_tag(
     }
     else
     if ((*name == 'e' || *name == 'E') && strcasecmp(name, "ezweb") == 0) {
-      rtn = s_load_emoji_ezweb_tag(doc, p, em, child);
-      if (rtn != NULL)
-      {
+      if (rtn = s_load_emoji_ezweb_tag(doc, p, em, child)) 
         return rtn;
-      }
     }
     else
     if (strcasecmp(name, "jphone") == 0)
