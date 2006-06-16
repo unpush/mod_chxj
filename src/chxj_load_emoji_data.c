@@ -104,10 +104,10 @@ s_load_emoji_emoji_tag(
 
 static char*
 s_load_emoji_set_tag(
-  Doc* doc,
-  apr_pool_t* p,
+  Doc*             doc,
+  apr_pool_t*      p,
   mod_chxj_config* conf,
-  Node* node)
+  Node*            node)
 {
   Node*    child;
   emoji_t* em;
