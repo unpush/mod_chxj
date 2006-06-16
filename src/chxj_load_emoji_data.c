@@ -411,11 +411,14 @@ s_load_emoji_jphone_tag(
   for (child = qs_get_child_node(doc, node);
        child ;
        child = qs_get_next_node(doc, child)) {
+
     char* name  = qs_get_node_name(doc, child);
+
     if ((*name == 's' || *name == 'S') && strcasecmp(name, "string") == 0) {
+
       Node* stringnode = qs_get_child_node(doc, child);
-      if (stringnode != NULL)
-      {
+
+      if (stringnode) {
         char* cname = qs_get_node_name(doc, stringnode);
         char* cvalue = qs_get_node_value(doc, stringnode);
         if (strcasecmp(cname, "text") == 0)
