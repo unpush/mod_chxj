@@ -383,6 +383,7 @@ s_load_emoji_ezweb_tag(
 
         if ((*cname == 't' || *cname == 'T') && strcasecmp(cname, "text") == 0)
           em->ezweb->typeD = apr_pstrdup(p,cvalue);
+
       }
       else {
         em->ezweb->typeD = apr_palloc(p, 1);
@@ -390,6 +391,7 @@ s_load_emoji_ezweb_tag(
       }
     }
   }
+
   return NULL;
 }
 
