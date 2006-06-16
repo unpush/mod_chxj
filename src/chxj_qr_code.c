@@ -591,13 +591,10 @@ chxj_qr_code_handler(request_rec* r)
   mod_chxj_config*   conf;
 
 #ifdef QR_CODE_DEBUG
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r,
-                                    "start chxj_qr_code_handler()");
+  DBG(r,"start chxj_qr_code_handler()");
 #endif
-  if (strcasecmp(r->handler, "chxj-qrcode"))
-  {
-    ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r,
-                                    "end chxj_qr_code_handler()");
+  if (strcasecmp(r->handler, "chxj-qrcode")) {
+    DBG(r, "end chxj_qr_code_handler()");
     return DECLINED;
   }
 
@@ -606,9 +603,7 @@ chxj_qr_code_handler(request_rec* r)
   /*--------------------------------------------------------------------------*/
   conf = ap_get_module_config(r->per_dir_config, &chxj_module);
   if (conf->image == CHXJ_IMG_ON)
-  {
     return DECLINED;
-  }
 
   memset(&doc, 0, sizeof(Doc));
   memset(&qrcode, 0, sizeof(qr_code_t));
@@ -622,17 +617,16 @@ chxj_qr_code_handler(request_rec* r)
   root = qs_parse_file(&doc, r->filename);
   qrcode.found = QR_NOT_FOUND;
   chxj_qrcode_node_to_qrcode(&qrcode, root);
+
   if (qrcode.found == QR_NOT_FOUND)
-  {
     return HTTP_NOT_FOUND;
-  }
+
   qs_all_free(&doc,QX_LOGMARK);
 
   sts = chxj_qrcode_create_image_data(&qrcode, &img, &len);
   if (sts != OK)
-  {
     return sts;
-  }
+
   ap_set_content_type(r, "image/jpg");
 
   ap_rwrite((void*)img, len, r);
