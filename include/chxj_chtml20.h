@@ -26,6 +26,7 @@ typedef struct _ctml20_t {
     Doc*               doc;
     char*              out;
     int                out_len;
+    int                pre_flag;
 
     device_table_t*    spec;
     mod_chxj_config*   conf;
