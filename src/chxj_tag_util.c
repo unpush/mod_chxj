@@ -461,11 +461,10 @@ qs_is_checked_checkbox_attr(Doc* doc, Node* tag, request_rec* r)
 
     char* name  = qs_get_attr_name(doc,attr);
 
-    if (strcasecmp(name, "checked") == 0)
-    {
+    if ((*name == 'c' || *name == 'C') && strcasecmp(name, "checked") == 0)
       return 1;
-    }
   }
+
   return 0;
 }
 
