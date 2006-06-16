@@ -134,8 +134,7 @@ s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list_t* dtl, Node* node)
        child ;
        child = qs_get_next_node(doc,child)) {
     char* name = qs_get_node_name(doc,child);
-    if (strcasecmp(name, "device") == 0) 
-    {
+    if (strcasecmp(name, "device") == 0) {
       s_set_device_data(doc,p, dtl, child);
     }
     else
