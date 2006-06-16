@@ -466,9 +466,10 @@ s_load_emoji_jphone_tag(
 static void
 s_emoji_add_to_tail(
   mod_chxj_config* conf,
-  emoji_t* emoji)
+  emoji_t*         emoji)
 {
   emoji->next = NULL;
+
   if (conf->emoji == NULL) {
     conf->emoji      = emoji;
     conf->emoji_tail = emoji;
@@ -476,7 +477,7 @@ s_emoji_add_to_tail(
   }
 
   conf->emoji_tail->next = emoji;
-  conf->emoji_tail = emoji;
+  conf->emoji_tail       = emoji;
 }
 
 static char 
