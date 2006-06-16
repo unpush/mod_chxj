@@ -89,10 +89,10 @@ s_set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node
             break;
         }
         t->next = apr_pcalloc(p, sizeof(device_table_list_t));
-        t->next->next = NULL;
+        t->next->next    = NULL;
         t->next->pattern = NULL;
-        t->next->table = NULL;
-        t->next->tail = NULL;
+        t->next->table   = NULL;
+        t->next->tail    = NULL;
         dtl = t->next;
       }
 
