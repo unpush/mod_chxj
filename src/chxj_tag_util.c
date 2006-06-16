@@ -305,8 +305,10 @@ qs_get_name_attr(Doc* doc, Node* tag, request_rec* r)
 {
   Attr* attr;
 
-  for (attr = qs_get_attr(doc,tag); attr != NULL; attr = qs_get_next_attr(doc,attr))
-  {
+  for (attr = qs_get_attr(doc,tag); 
+       attr; 
+       attr = qs_get_next_attr(doc,attr)) {
+
     char* name  = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
 
