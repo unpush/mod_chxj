@@ -222,10 +222,8 @@ s_load_emoji_imode_tag(
         char* cname  = qs_get_node_name(doc, hex1node);
         char* cvalue = qs_get_node_value(doc, hex1node);
 
-        if (strcasecmp(cname, "text") == 0)
-        {
+        if ((*cname == 't' || *cname == 'T') && strcasecmp(cname, "text") == 0)
           em->imode->hex1byte = s_hexstring_to_byte(cvalue);
-        }
       }
       else
       {
