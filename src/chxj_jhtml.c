@@ -35,6 +35,10 @@ static char* s_jhtml_start_body_tag   (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_end_body_tag     (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_start_a_tag      (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_end_a_tag        (jhtml_t* jhtml, Node* node);
+static char* s_jhtml_start_pre_tag    (jhtml_t* jhtml, Node* node);
+static char* s_jhtml_end_pre_tag      (jhtml_t* jhtml, Node* node);
+static char* s_jhtml_start_p_tag      (jhtml_t* jhtml, Node* node);
+static char* s_jhtml_end_p_tag        (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_start_ul_tag     (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_end_ul_tag       (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_start_ol_tag     (jhtml_t* jhtml, Node* node);
@@ -193,6 +197,24 @@ s_jhtml_node_exchange(jhtml_t* jhtml, Node* node, int indent)
        child = qs_get_next_node(doc,child)) {
     char* name = qs_get_node_name(doc,child);
 
+    /*------------------------------------------------------------------------*/
+    /* <PRE> (for TEST)                                                       */
+    /*------------------------------------------------------------------------*/
+    if ((*name == 'p' || *name == 'P') && strcasecmp(name, "pre") == 0) {
+      s_jhtml_start_pre_tag (jhtml, child);
+      s_jhtml_node_exchange (jhtml, child, indent+1);
+      s_jhtml_end_pre_tag   (jhtml, child);
+    }
+    else
+    /*------------------------------------------------------------------------*/
+    /* <P> (for TEST)                                                         */
+    /*------------------------------------------------------------------------*/
+    if ((*name == 'p' || *name == 'P') && strcasecmp(name, "p") == 0) {
+      s_jhtml_start_p_tag  (jhtml, child);
+      s_jhtml_node_exchange (jhtml, child, indent+1);
+      s_jhtml_end_p_tag    (jhtml, child);
+    }
+    else
     /*------------------------------------------------------------------------*/
     /* <UL> (for TEST)                                                        */
     /*------------------------------------------------------------------------*/
@@ -551,9 +573,15 @@ s_jhtml_node_exchange(jhtml_t* jhtml, Node* node, int indent)
             ii++;
           }
           else 
-          if (textval[ii] != '\r' && textval[ii] != '\n') {
+          if (jhtml->pre_flag) {
             one_byte[0] = textval[ii+0];
             tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+          }
+          else {
+            if (textval[ii] != '\r' && textval[ii] != '\n') {
+              one_byte[0] = textval[ii+0];
+              tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+            }
           }
         }
         jhtml->out = apr_pstrcat(r->pool, jhtml->out, tdst, NULL);
@@ -1618,6 +1646,84 @@ s_jhtml_end_ol_tag(jhtml_t* jhtml, Node* child)
   request_rec*  r   = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</ol>", NULL);
+
+  return jhtml->out;
+}
+
+/**
+ * It is a handler who processes the P tag.
+ *
+ * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The P tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_jhtml_start_p_tag(jhtml_t* jhtml, Node* node) 
+{
+  Doc*          doc = jhtml->doc;
+  request_rec*  r   = doc->r;
+
+  jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<p>", NULL);
+
+  return jhtml->out;
+}
+
+/**
+ * It is a handler who processes the P tag.
+ *
+ * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The P tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_jhtml_end_p_tag(jhtml_t* jhtml, Node* child) 
+{
+  Doc*          doc = jhtml->doc;
+  request_rec*  r   = doc->r;
+
+  jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</p>", NULL);
+
+  return jhtml->out;
+}
+
+/**
+ * It is a handler who processes the PRE tag.
+ *
+ * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The PRE tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_jhtml_start_pre_tag(jhtml_t* jhtml, Node* node) 
+{
+  Doc*          doc = jhtml->doc;
+  request_rec*  r   = doc->r;
+
+  jhtml->pre_flag++;
+  jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<pre>", NULL);
+
+  return jhtml->out;
+}
+
+/**
+ * It is a handler who processes the PRE tag.
+ *
+ * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The PRE tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_jhtml_end_pre_tag(jhtml_t* jhtml, Node* child) 
+{
+  Doc*          doc = jhtml->doc;
+  request_rec*  r   = doc->r;
+
+  jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</pre>", NULL);
+  jhtml->pre_flag--;
 
   return jhtml->out;
 }

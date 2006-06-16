@@ -545,14 +545,11 @@ chxj_init_module_kill(void *data)
   server_rec *base_server = (server_rec *)data;
   mod_chxj_global_config* conf;
 
-  DBG(base_server, "start chxj_init_module_kill()");
 
   /*--------------------------------------------------------------------------*/
   /* The setting of each server is acquired.                                  */
   /*--------------------------------------------------------------------------*/
   conf = ap_get_module_config(base_server->module_config, &chxj_module);
-
-  DBG(base_server, "end chxj_init_module_kill()");
 
   return APR_SUCCESS;
 }
