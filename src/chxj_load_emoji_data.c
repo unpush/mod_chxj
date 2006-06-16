@@ -230,7 +230,7 @@ s_load_emoji_imode_tag(
       }
     }
     else
-    if (strcasecmp(name, "hex2") == 0) {
+    if ((*name == 'h' || *name == 'H') && strcasecmp(name, "hex2") == 0) {
       Node* hex2node = qs_get_child_node(doc, child);
       if (hex2node != NULL)
       {
