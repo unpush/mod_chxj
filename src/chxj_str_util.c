@@ -68,10 +68,10 @@ chxj_atoi(const char* s)
 
     }
   }
+
   if (mflag)
-  {
     result *= -1;
-  }
+
   return result;
 }
 /*
