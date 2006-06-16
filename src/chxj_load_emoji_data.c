@@ -294,12 +294,13 @@ s_load_emoji_imode_tag(
   return NULL;
 }
 
+
 static char*
 s_load_emoji_ezweb_tag(
-  Doc* doc,
+  Doc*        doc,
   apr_pool_t* p,
-  emoji_t* em,
-  Node* node)
+  emoji_t*    em,
+  Node*       node)
 {
   Node* child;
 
@@ -311,8 +312,7 @@ s_load_emoji_ezweb_tag(
 
   for (child = qs_get_child_node(doc, node);
        child ;
-       child = qs_get_next_node(doc, child))
-  {
+       child = qs_get_next_node(doc, child)) {
     char* name  = qs_get_node_name(doc, child);
     if (strcasecmp(name, "A") == 0) 
     {
