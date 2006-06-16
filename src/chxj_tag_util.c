@@ -507,7 +507,7 @@ chxj_chxjif_is_mine(device_table_t* spec, Doc* doc, Node* tag)
         }
       }
       else
-      if (strcasecmp(value, "chtml") == 0) {
+      if ((*value == 'c' || *value == 'C') && strcasecmp(value, "chtml") == 0) {
         switch (spec->html_spec_type) {
         case CHXJ_SPEC_Chtml_1_0:
         case CHXJ_SPEC_Chtml_2_0:
