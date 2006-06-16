@@ -104,7 +104,7 @@ s_set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node
 
         char* attr_name = qs_get_attr_name(doc,attr);
 
-        if ((attr_name == 'p' && attr_name == 'P') && strcasecmp(attr_name,attr), "pattern") == 0) {
+        if ((*attr_name == 'p' || *attr_name == 'P') && strcasecmp(attr_name, "pattern") == 0) {
             dtl->pattern = apr_pstrdup(p, qs_get_attr_value(doc,attr));
             dtl->regexp = ap_pregcomp(p, dtl->pattern, AP_REG_EXTENDED);
         }

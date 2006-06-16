@@ -37,7 +37,7 @@ chxj_specified_device(request_rec* r, const char* user_agent)
   int rtn;
   char* device_id;
 
-  if (user_agent == NULL) 
+  if (! user_agent) 
     return returnType;
             
 
