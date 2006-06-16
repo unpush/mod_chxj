@@ -423,10 +423,9 @@ s_load_emoji_jphone_tag(
         char* cname  = qs_get_node_name(doc, stringnode);
         char* cvalue = qs_get_node_value(doc, stringnode);
 
-        if (strcasecmp(cname, "text") == 0)
-        {
-          int ii;
-          int jj;
+        if ((*cname == 't' || *cname == 'T') && strcasecmp(cname, "text") == 0) {
+          int   ii;
+          int   jj;
           char* tmp = apr_palloc(p, strlen(cvalue)+1);
           memset(tmp, 0, strlen(cvalue)+1);
 
