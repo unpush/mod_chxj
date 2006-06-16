@@ -355,6 +355,7 @@ s_load_emoji_ezweb_tag(
     }
     else
     if ((*name == 'c' || *name == 'C') && strcasecmp(name, "C") == 0) {
+
       Node* typeCnode = qs_get_child_node(doc, child);
 
       if (typeCnode != NULL)
