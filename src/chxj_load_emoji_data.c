@@ -215,8 +215,7 @@ s_load_emoji_imode_tag(
 
     char* name  = qs_get_node_name(doc, child);
 
-    if (strcasecmp(name, "hex1") == 0) 
-    {
+    if (strcasecmp(name, "hex1") == 0) {
       Node* hex1node = qs_get_child_node(doc, child);
       if (hex1node != NULL)
       {
