@@ -500,8 +500,7 @@ chxj_chxjif_is_mine(device_table_t* spec, Doc* doc, Node* tag)
         }
       }
       else
-      if (strcasecmp(value, "jhtml") == 0)
-      {
+      if (strcasecmp(value, "jhtml") == 0) {
         if (spec->html_spec_type == CHXJ_SPEC_Jhtml)
         {
           /* Yes , it is mine */
