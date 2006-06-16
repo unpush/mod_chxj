@@ -49,7 +49,7 @@ chxj_specified_device(request_rec* r, const char* user_agent)
       continue;
     }
 
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "pattern is [%s]", dtl->pattern);
+    DBG1(r, "pattern is [%s]", dtl->pattern);
     regexp = ap_pregcomp(r->pool, (const char*)dtl->pattern, AP_REG_EXTENDED|AP_REG_ICASE);
     if (regexp == NULL) {
       ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "compile failed.");
