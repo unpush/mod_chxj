@@ -658,14 +658,13 @@ chxj_qr_code_blob_handler(request_rec* r, const char* indata, size_t* len)
   qrcode.found = QR_NOT_FOUND;
   chxj_qrcode_node_to_qrcode(&qrcode, root);
   qs_all_free(&doc,QX_LOGMARK);
+
   if (qrcode.found == QR_NOT_FOUND)
     return NULL;
 
   sts = chxj_qrcode_create_image_data(&qrcode, &img, len);
-  if (sts != OK)
-  {
-    ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r,
-                                    "end chxj_qr_code_blob_handler()");
+  if (sts != OK) {
+    DBG(r, "end chxj_qr_code_blob_handler()");
     return NULL;
   }
   ap_set_content_type(r, "image/jpg");
