@@ -193,8 +193,8 @@ qs_get_selected_value_text(Doc *doc, Node* node, request_rec* r)
 
   for (child = qs_get_child_node(doc,node);
        child != NULL; 
-       child = qs_get_next_node(doc,child))
-  {
+       child = qs_get_next_node(doc,child)) {
+
     char* name = qs_get_node_name(doc,child);
 
     /*------------------------------------------------------------------------*/
