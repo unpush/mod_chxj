@@ -190,8 +190,7 @@ s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list_t* dtl, Node* node)
       }
     }
     else 
-    if (strcasecmp(name, "width") == 0) 
-    {
+    if (strcasecmp(name, "width") == 0) {
       Node* ch = qs_get_child_node(doc, child);
       if (ch != NULL && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) 
       {
