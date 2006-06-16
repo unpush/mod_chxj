@@ -691,7 +691,7 @@ chxj_qrcode_create_image_data(
   char**             module;
 
 #ifdef QR_CODE_DEBUG
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "start s_create_image_file()");
+  DBG(r,"start s_create_image_file()");
 #endif
 
 
