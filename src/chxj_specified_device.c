@@ -41,11 +41,11 @@ chxj_specified_device(request_rec* r, const char* user_agent)
     return returnType;
             
 
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "start chxj_specified_device()");
+  DBG(r, "start chxj_specified_device()");
   conf = ap_get_module_config(r->per_dir_config, &chxj_module);
   for (dtl = conf->devices; dtl; dtl = dtl->next) {
-    if (dtl->pattern == NULL) {
-      ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "pattern is null");
+    if (! dtl->pattern) {
+      DBG(r, "pattern is null");
       continue;
     }
 
