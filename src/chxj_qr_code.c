@@ -738,18 +738,16 @@ chxj_qrcode_create_image_data(
     return HTTP_NOT_FOUND;
   }
 
-  status = MagickResizeImage(magick_wand, (module_count)+6, (module_count)+6 , LanczosFilter,0.0);
-  if (status == MagickFalse)
-  {
+  if (MagickResizeImage(magick_wand, (module_count)+6, (module_count)+6 , LanczosFilter,0.0) == MagickFalse) {
     EXIT_MAGICK_ERROR();
     return HTTP_NOT_FOUND;
   }
-  status = MagickSetImageResolution(magick_wand, 96,96);
-  if (status == MagickFalse)
-  {
+
+  if (MagickSetImageResolution(magick_wand, 96,96) == MagickFalse) {
     EXIT_MAGICK_ERROR();
     return HTTP_NOT_FOUND;
   }
+
   status = MagickSetImageResolution(black_wand, 96,96);
   if (status == MagickFalse)
   {
