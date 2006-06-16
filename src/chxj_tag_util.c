@@ -553,6 +553,7 @@ qs_get_destlang_attr(Doc* doc, Node* tag, request_rec* r)
     if ((*name == 'd' || *name == 'D') && strcasecmp(name, "destlang") == 0)
       return apr_pstrdup(r->pool, value);
   }
+
   return NULL;
 }
 /**
