@@ -93,7 +93,7 @@ s_load_emoji_emoji_tag(
     char* name = qs_get_node_name(doc, child);
 
     if ((*name == 's' || *name == 'S') && strcasecmp(name, "set") == 0) {
-      if (rtn = s_load_emoji_set_tag(doc, p, conf, child)) 
+      if ((rtn = s_load_emoji_set_tag(doc, p, conf, child)) != NULL) 
         return rtn;
     }
   }

@@ -36,8 +36,9 @@ qs_get_value_attr(Doc* doc, Node* node, request_rec* r)
   /* The object tag node is scanned.                                          */
   /*--------------------------------------------------------------------------*/
   for (attr = qs_get_attr(doc,node);
-       attr != NULL;
+       attr;
        attr = qs_get_next_attr(doc,attr)) {
+
     char* name  = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
     if (strcasecmp(name, "value") == 0)
