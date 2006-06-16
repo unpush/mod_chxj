@@ -52,9 +52,8 @@ s_set_devices_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node)
        child ; 
        child = qs_get_next_node(doc,child)) {
     char* name = qs_get_node_name(doc,child);
-    if (strcasecmp(name, "devices") == 0) {
+    if (strcasecmp(name, "devices") == 0)
       s_set_user_agent_data(doc, p, conf, child);
-    }
   }
 }
 
