@@ -270,8 +270,8 @@ qs_get_selected_value(Doc* doc, Node* node, request_rec* r)
         char* name  = qs_get_attr_name(doc,attr);
 
         DBG1(r, "qs_get_selected_value name::[%s]" , name);
-        if (strcasecmp(name, "selected") == 0) 
-        {
+
+        if ((*name == 's' || *name == 'S') && strcasecmp(name, "selected") == 0) {
           /*------------------------------------------------------------------*/
           /* SELECTED Value Found                                             */
           /*------------------------------------------------------------------*/
