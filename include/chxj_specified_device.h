@@ -33,9 +33,11 @@ typedef enum _spec_type_t {
 #define CHXJ_PIC_OK                (0x01)
 #define CHXJ_PIC_NG                (0x00)
 
+#include "mod_chxj.h"
 
-typedef struct device_table_t {
-  struct device_table_t* next;
+
+typedef struct _device_table_t {
+  struct _device_table_t* next;
   const char* device_id;
   const char* device_name;
   spec_type_t html_spec_type;
@@ -77,11 +79,13 @@ typedef struct device_table_t {
   /*--------------------------------------------------------------------------*/
   int color;
   char* emoji_type;
+
 } device_table_t;
 
 typedef struct device_table_list_t {
   struct device_table_list_t* next;
   char* pattern;
+  ap_regex_t* regexp;
   device_table_t* table;
   device_table_t* tail;
 } device_table_list_t;
