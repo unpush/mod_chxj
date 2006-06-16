@@ -432,21 +432,18 @@ s_load_emoji_jphone_tag(
           memset(tmp, 0, strlen(cvalue)+1);
 
           for (jj=0,ii=0; ii< strlen(cvalue); ii++) {
-            if (strncasecmp(&cvalue[ii] , ESCAPE_CHAR_LT, strlen(ESCAPE_CHAR_LT)) == 0)
-            {
+            if (strncasecmp(&cvalue[ii] , ESCAPE_CHAR_LT, strlen(ESCAPE_CHAR_LT)) == 0) {
               tmp[jj] = '<';
               jj++;
               ii += (strlen(ESCAPE_CHAR_LT) - 1);
             }
             else
-            if (strncasecmp(&cvalue[ii] , ESCAPE_CHAR_GT, strlen(ESCAPE_CHAR_GT)) == 0)
-            {
+            if (strncasecmp(&cvalue[ii] , ESCAPE_CHAR_GT, strlen(ESCAPE_CHAR_GT)) == 0) {
               tmp[jj] = '>';
               jj++;
               ii += (strlen(ESCAPE_CHAR_GT) - 1);
             }
-            else
-            {
+            else {
               tmp[jj] = cvalue[ii];
               jj++;
             }
