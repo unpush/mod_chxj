@@ -733,12 +733,11 @@ chxj_qrcode_create_image_data(
     return HTTP_NOT_FOUND;
   }
 
-  status = MagickSetImageUnits(black_wand, PixelsPerInchResolution);
-  if (status == MagickFalse)
-  {
+  if (MagickSetImageUnits(black_wand, PixelsPerInchResolution) == MagickFalse) {
     EXIT_MAGICK_ERROR();
     return HTTP_NOT_FOUND;
   }
+
   status = MagickResizeImage(magick_wand, (module_count)+6, (module_count)+6 , LanczosFilter,0.0);
   if (status == MagickFalse)
   {
