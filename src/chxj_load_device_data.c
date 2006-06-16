@@ -71,8 +71,7 @@ s_set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node
        child = qs_get_next_node(doc,child)) {
     char* name = qs_get_node_name(doc,child);
 
-    if (strcasecmp(name, "user_agent") == 0 ) 
-    {
+    if (strcasecmp(name, "user_agent") == 0 ) {
       Attr* attr;
       device_table_list_t* dtl;
 
