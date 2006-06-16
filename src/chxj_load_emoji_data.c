@@ -185,12 +185,9 @@ s_load_emoji_no_tag(
   if ((*name == 't' || *name == 'T') && strcasecmp(name, "text") == 0) {
     len = strlen(value);
 
-    for (ii=0; ii<len; ii++)
-    {
+    for (ii=0; ii<len; ii++) {
       if (value[ii] < '0' || value[ii] > '9')
-      {
         return apr_psprintf(p, "invalid data <no> tag [%s]", value);
-      }
     }
     em->no = atoi(value);
   }
