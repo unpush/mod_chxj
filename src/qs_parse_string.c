@@ -51,7 +51,6 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
   int ilen;
   iconv_t cd;
 
-#if 1
   memset(encoding, 0, 256);
 
   doc->now_parent_node = qs_init_root_node(doc);
@@ -139,7 +138,6 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
       iconv_close(cd);
     }
   }
-#endif
 
   /*
    * Now, true parsing is done here. 
