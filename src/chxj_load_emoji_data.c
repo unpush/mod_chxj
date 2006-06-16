@@ -372,7 +372,7 @@ s_load_emoji_ezweb_tag(
       }
     }
     else
-    if (strcasecmp(name, "D") == 0) {
+    if ((*name == 'd' || *name == 'D') && strcasecmp(name, "D") == 0) {
       Node* typeDnode = qs_get_child_node(doc, child);
 
       if (typeDnode != NULL)
