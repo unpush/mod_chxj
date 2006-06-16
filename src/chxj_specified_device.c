@@ -28,7 +28,6 @@ static device_table_t  UNKNOWN_DEVICE      = {
 device_table_t*
 chxj_specified_device(request_rec* r, const char* user_agent) 
 {
-  ap_regex_t*          regexp;
   ap_regmatch_t        match[10];
   device_table_t*      returnType = &UNKNOWN_DEVICE;
   device_table_list_t* dtl;
@@ -54,8 +53,8 @@ chxj_specified_device(request_rec* r, const char* user_agent)
       return returnType;
     }
 
-    if (ap_regexec(regexp, user_agent, regexp->re_nsub + 1, match, 0) == 0) {
-      device_id = ap_pregsub(r->pool, "$1", user_agent, regexp->re_nsub + 1, match);
+    if (ap_regexec(dtl->regexp, user_agent, dtl->regexp->re_nsub + 1, match, 0) == 0) {
+      device_id = ap_pregsub(r->pool, "$1", user_agent, dtl->regexp->re_nsub + 1, match);
       DBG1(r, "device_id:[%s]", device_id);
       for (dt = dtl->table; dt; dt = dt->next) {
         if (strcasecmp(device_id, dt->device_id) == 0) {
@@ -75,13 +74,13 @@ chxj_specified_device(request_rec* r, const char* user_agent)
           returnType = dt;
       }
     }
-    ap_pregfree(r->pool, regexp);
     if (returnType != &UNKNOWN_DEVICE) {
-      ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "end chxj_specified_device()");
+      DBG(r,"end chxj_specified_device()");
       return returnType;
     }
   }
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "end chxj_specified_device()");
+
+  DBG(r,"end chxj_specified_device()");
 
   return returnType;
 }

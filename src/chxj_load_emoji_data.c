@@ -40,13 +40,11 @@ chxj_load_emoji_data(
 {
   char* rtn;
 
-  conf->emoji = NULL;
+  conf->emoji      = NULL;
   conf->emoji_tail = NULL;
-  rtn = s_set_emoji_data(doc, p, conf,qs_get_root(doc));
-  if (rtn != NULL)
-  {
+
+  if (rtn = s_set_emoji_data(doc, p, conf,qs_get_root(doc))
     return rtn;
-  }
 
   return NULL;
 }
