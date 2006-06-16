@@ -134,8 +134,7 @@ s_load_emoji_set_tag(
         return rtn;
     }
     else
-    if (strcasecmp(name, "ezweb") == 0)
-    {
+    if ((*name == 'e' || *name == 'E') && strcasecmp(name, "ezweb") == 0) {
       rtn = s_load_emoji_ezweb_tag(doc, p, em, child);
       if (rtn != NULL)
       {
