@@ -482,9 +482,9 @@ chxj_chxjif_is_mine(device_table_t* spec, Doc* doc, Node* tag)
     char* name  = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
 
-    if (strcasecmp(name, "lang") == 0)
-    {
-      ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "lang found [%s] spec [%d]", value, spec->html_spec_type);
+    if ((*name == 'l' || *name == 'L') && strcasecmp(name, "lang") == 0) {
+
+      DBG2(r, "lang found [%s] spec [%d]", value, spec->html_spec_type);
       if (strcasecmp(value, "xhtml") == 0) 
       {
         if (spec->html_spec_type == CHXJ_SPEC_XHtml_Mobile_1_0)
