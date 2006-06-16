@@ -61,11 +61,11 @@ chxj_atoi(const char* s)
     case '9': result += 9; break;
     case '-': 
       if (ii == 0)
-      {
         mflag = 1;
-      }
       break;
+
     default: break;
+
     }
   }
   if (mflag)
