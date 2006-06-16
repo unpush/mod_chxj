@@ -34,7 +34,6 @@ chxj_specified_device(request_rec* r, const char* user_agent)
   device_table_list_t* dtl;
   device_table_t* dt;
   mod_chxj_config* conf; 
-  int rtn;
   char* device_id;
 
   if (! user_agent) 
@@ -55,9 +54,7 @@ chxj_specified_device(request_rec* r, const char* user_agent)
       return returnType;
     }
 
-    rtn = ap_regexec(regexp, user_agent, regexp->re_nsub + 1, match, 0);
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "pattern is [%s]", dtl->pattern);
-    if (rtn == 0) {
+    if (ap_regexec(regexp, user_agent, regexp->re_nsub + 1, match, 0) == 0) {
       device_id = ap_pregsub(r->pool, "$1", user_agent, regexp->re_nsub + 1, match);
       ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "device_id:[%s]", device_id);
       for (dt = dtl->table; dt; dt = dt->next) {
