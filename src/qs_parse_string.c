@@ -16,11 +16,24 @@
  */
 #include <stdio.h>
 #include <strings.h>
+#include <stdlib.h>
 #include "httpd.h"
 #include "http_log.h"
 #include "qs_parse_string.h"
 #include "qs_parse_tag.h"
 #include "qs_log.h"
+
+#include "mod_chxj.h"
+
+#if defined(HAVE_LIBICONV_HOOK)
+#  include "iconv_hook/iconv.h"
+#else
+#  if defined(HAVE_LIBICONV)
+#    include "iconv.h"
+#  else
+#    error "Please install libiconv or libiconv_hook. and Please set LD_LIBRARY_PATH."
+#  endif
+#endif
 
 static int s_cut_tag (const char* s, int len) ;
 static int s_cut_text(const char* s, int len) ;
@@ -31,9 +44,106 @@ Node*
 qs_parse_string(Doc* doc, const char* src, int srclen) 
 {
   int ii;
+  char encoding[256];
+  char* osrc = NULL;
+  char* ibuf = NULL;
+  int olen;
+  int ilen;
+  iconv_t cd;
+
+#if 1
+  memset(encoding, 0, 256);
 
   doc->now_parent_node = qs_init_root_node(doc);
+  /* 
+   * It is the pre reading. 
+   * Because I want to specify encoding.
+   */
+  for (ii=0; ii<srclen; ii++) {
+    if (is_white_space(src[ii]))
+      continue;
 
+    if ((unsigned char)'<' == src[ii]) {
+      int endpoint = s_cut_tag(&src[ii], srclen - ii);
+      Node* node   = NULL;
+      node = qs_parse_tag(doc, &src[ii], endpoint);
+      ii += endpoint;
+
+      if (node->name[0] != '?') break; 
+
+      if (strcasecmp(node->name, "?xml") == 0) {
+        Attr* parse_attr;
+        for(parse_attr = node->attr;
+            parse_attr && *encoding == '\0'; 
+            parse_attr = parse_attr->next) {
+          if ((*parse_attr->name == 'e' || *parse_attr->name == 'E')
+          &&   strcasecmp(parse_attr->name, "encoding") == 0) {
+            switch (*parse_attr->value) {
+            case 'S':
+            case 's':
+              if ((strcasecmp(parse_attr->value, "Shift_JIS") == 0)
+              ||  (strcasecmp(parse_attr->value, "sjis"     ) == 0)
+              ||  (strcasecmp(parse_attr->value, "Shift-JIS") == 0)
+              ||  (strcasecmp(parse_attr->value, "x-sjis"   ) == 0)) {
+                strcpy((char*)encoding, (char*)"NONE");
+              }
+              break;
+
+            case 'e':
+            case 'E':
+              if ((strcasecmp(parse_attr->value, "EUC_JP") == 0)
+              ||  (strcasecmp(parse_attr->value, "EUC-JP") == 0)
+              ||  (strcasecmp(parse_attr->value, "EUCJP" ) == 0)) {
+                strcpy((char*)encoding, "EUC-JP");
+              }
+              break;
+
+            case 'u':
+            case 'U':
+              if ((strcasecmp(parse_attr->value, "UTF-8") == 0)
+              ||  (strcasecmp(parse_attr->value, "UTF8") == 0)) {
+                strcpy((char*)encoding, "UTF-8");
+              }
+              break;
+
+            default:
+              strcpy((char*)encoding, "NONE");
+              break;
+            }
+          }
+        }
+        break;
+      }
+      break;
+    }
+  }
+
+  if (strcasecmp(encoding, "NONE") != 0 && strlen(encoding) != 0) {
+    char* sv_osrc;
+    olen = srclen * 4 + 1;
+    sv_osrc = osrc =(char*)apr_palloc(doc->pool, olen);
+    memset((char*)osrc, 0, olen);
+    if ((cd = iconv_open("CP932", encoding)) != (iconv_t) -1) {
+      ilen = srclen;
+      ibuf = apr_palloc(doc->pool, ilen+1);
+      memset(ibuf, 0, ilen+1);
+      memcpy(ibuf, src, ilen);
+      while (ilen > 0) {
+        size_t result = iconv(cd, &ibuf, (size_t*)&ilen, &osrc, (size_t*)&olen);
+        if (result == (size_t)(-1)) {
+          break;
+        }
+      }
+      srclen = olen;
+      src = sv_osrc;
+      iconv_close(cd);
+    }
+  }
+#endif
+
+  /*
+   * Now, true parsing is done here. 
+   */
   for (ii=0; ii<srclen; ii++) {
     if (doc->parse_mode != PARSE_MODE_NO_PARSE 
     && is_white_space(src[ii])) {
