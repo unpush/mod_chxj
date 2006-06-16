@@ -487,17 +487,14 @@ chxj_chxjif_is_mine(device_table_t* spec, Doc* doc, Node* tag)
       DBG2(r, "lang found [%s] spec [%d]", value, spec->html_spec_type);
 
       if ((*value == 'x' || *value == 'X') && strcasecmp(value, "xhtml") == 0) {
-        if (spec->html_spec_type == CHXJ_SPEC_XHtml_Mobile_1_0)
-        {
+        if (spec->html_spec_type == CHXJ_SPEC_XHtml_Mobile_1_0) {
           /* Yes , it is mine */
           return 1;
         }
       }
       else
-      if (strcasecmp(value, "hdml") == 0)
-      {
-        if (spec->html_spec_type == CHXJ_SPEC_Hdml)
-        {
+      if ((*value == 'h' || *value == 'H') && strcasecmp(value, "hdml") == 0) {
+        if (spec->html_spec_type == CHXJ_SPEC_Hdml) {
           /* Yes , it is mine */
           return 1;
         }
