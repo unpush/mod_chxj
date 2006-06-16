@@ -88,7 +88,9 @@ s_load_emoji_emoji_tag(
   for (child = qs_get_child_node(doc, node);
        child ;
        child = qs_get_next_node(doc, child)) {
+
     char* name = qs_get_node_name(doc, child);
+
     if ((*name == 's' || *name == 'S') && strcasecmp(name, "set") == 0) {
       if (rtn = s_load_emoji_set_tag(doc, p, conf, child)) 
         return rtn;
