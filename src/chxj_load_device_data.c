@@ -85,10 +85,8 @@ s_set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node
       }
       else {
         for (t = conf->devices; t ; t = t->next) {
-          if (t->next == NULL) 
-          {
+          if (! t->next)
             break;
-          }
         }
         t->next = apr_pcalloc(p, sizeof(device_table_list_t));
         t->next->next = NULL;
