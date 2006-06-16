@@ -363,13 +363,10 @@ s_load_emoji_ezweb_tag(
         char* cname  = qs_get_node_name(doc, typeCnode);
         char* cvalue = qs_get_node_value(doc, typeCnode);
 
-        if (strcasecmp(cname, "text") == 0)
-        {
+        if ((*cname == 't' || *cname == 'T') && strcasecmp(cname, "text") == 0)
           em->ezweb->typeC = apr_pstrdup(p,cvalue);
-        }
       }
-      else
-      {
+      else {
         em->ezweb->typeC = apr_palloc(p, 1);
         em->ezweb->typeC[0] = 0;
       }
