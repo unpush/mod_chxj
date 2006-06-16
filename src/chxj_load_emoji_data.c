@@ -43,7 +43,7 @@ chxj_load_emoji_data(
   conf->emoji      = NULL;
   conf->emoji_tail = NULL;
 
-  if (rtn = s_set_emoji_data(doc, p, conf,qs_get_root(doc))
+  if ((rtn = s_set_emoji_data(doc, p, conf,qs_get_root(doc))) != NULL)
     return rtn;
 
   return NULL;
