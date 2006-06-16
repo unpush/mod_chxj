@@ -381,9 +381,8 @@ s_load_emoji_ezweb_tag(
         char* cname  = qs_get_node_name(doc, typeDnode);
         char* cvalue = qs_get_node_value(doc, typeDnode);
 
-        if (strcasecmp(cname, "text") == 0) {
+        if ((*cname == 't' || *cname == 'T') && strcasecmp(cname, "text") == 0)
           em->ezweb->typeD = apr_pstrdup(p,cvalue);
-        }
       }
       else
       {
