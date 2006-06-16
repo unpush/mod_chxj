@@ -191,6 +191,7 @@ s_load_emoji_no_tag(
     }
     em->no = atoi(value);
   }
+
   return NULL;
 }
 
