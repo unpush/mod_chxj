@@ -271,19 +271,16 @@ qs_get_selected_value(Doc* doc, Node* node, request_rec* r)
 
         DBG1(r, "qs_get_selected_value name::[%s]" , name);
 
-        if ((*name == 's' || *name == 'S') && strcasecmp(name, "selected") == 0) {
+        if ((*name == 's' || *name == 'S') && strcasecmp(name, "selected") == 0)
           /*------------------------------------------------------------------*/
           /* SELECTED Value Found                                             */
           /*------------------------------------------------------------------*/
           return qs_get_value_attr(doc, child, r);
-        }
       }
     }
-    result = qs_get_selected_value(doc, child, r);
-    if (result != NULL)
-    {
+
+    if ((result = qs_get_selected_value(doc, child, r)) != NULL)
       return result;
-    }
   }
 
   /*--------------------------------------------------------------------------*/
