@@ -260,8 +260,7 @@ qs_get_selected_value(Doc* doc, Node* node, request_rec* r)
     /*------------------------------------------------------------------------*/
     /* <OPTION> tag                                                           */
     /*------------------------------------------------------------------------*/
-    if (strcasecmp(name, "option") == 0) 
-    {
+    if ((*name == 'o' || *name == 'O') && strcasecmp(name, "option") == 0) {
       Attr* attr;
       for (attr = qs_get_attr(doc,child); 
            attr != NULL; 
