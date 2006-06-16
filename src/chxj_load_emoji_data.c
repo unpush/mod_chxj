@@ -347,8 +347,7 @@ s_load_emoji_ezweb_tag(
         if ((*cname == 't' || *cname == 'T') && strcasecmp(cname, "text") == 0)
           em->ezweb->typeB = apr_pstrdup(p,cvalue);
       }
-      else
-      {
+      else {
         em->ezweb->typeB    = apr_palloc(p, 1);
         em->ezweb->typeB[0] = 0;
       }
