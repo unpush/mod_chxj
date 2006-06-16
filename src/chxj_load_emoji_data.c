@@ -109,9 +109,9 @@ s_load_emoji_set_tag(
   mod_chxj_config* conf,
   Node* node)
 {
-  Node* child;
+  Node*    child;
   emoji_t* em;
-  char* rtn;
+  char*    rtn;
 
   em = apr_palloc(p, sizeof(emoji_t));
   em->imode = apr_palloc(p, sizeof(imode_emoji_t));
