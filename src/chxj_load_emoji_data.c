@@ -480,6 +480,8 @@ s_emoji_add_to_tail(
   conf->emoji_tail       = emoji;
 }
 
+
+
 static char 
 s_hexstring_to_byte(char* s)
 {
