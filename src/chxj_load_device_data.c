@@ -68,8 +68,7 @@ s_set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node
 
   for (child = qs_get_child_node(doc,node);
        child ;
-       child = qs_get_next_node(doc,child)) 
-  {
+       child = qs_get_next_node(doc,child)) {
     char* name = qs_get_node_name(doc,child);
 
     if (strcasecmp(name, "user_agent") == 0 ) 
