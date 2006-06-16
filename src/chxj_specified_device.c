@@ -59,7 +59,7 @@ chxj_specified_device(request_rec* r, const char* user_agent)
       DBG1(r, "device_id:[%s]", device_id);
       for (dt = dtl->table; dt; dt = dt->next) {
         if (strcasecmp(device_id, dt->device_id) == 0) {
-          ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "device_name:[%s]", dt->device_name);
+          DBG1(r, "device_name:[%s]", dt->device_name);
           returnType = dt;
           break;
         }
