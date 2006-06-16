@@ -235,36 +235,39 @@ s_load_emoji_imode_tag(
       else
       if ((*name == 'h' || *name == 'H') && strcasecmp(name, "hex2") == 0) {
         Node* hex2node = qs_get_child_node(doc, child);
-        if (hex2node != NULL) {
-          char* cname = qs_get_node_name(doc, hex2node);
+        if (hex2node) {
+          char* cname  = qs_get_node_name(doc, hex2node);
           char* cvalue = qs_get_node_value(doc, hex2node);
-          if (strcasecmp(cname, "text") == 0)
+
+          if ((*cname == 't' || *cname == 'T') && strcasecmp(cname, "text") == 0)
             em->imode->hex2byte = s_hexstring_to_byte(cvalue);
         }
-        else
-        {
+        else {
           em->imode->hex2byte    = 0;
         }
       }
-    else
-    if (strcasecmp(name, "string") == 0)
-    {
-      Node* string_node = qs_get_child_node(doc, child);
-      if (string_node != NULL)
-      {
-        char* cname = qs_get_node_name(doc, string_node);
-        char* cvalue = qs_get_node_value(doc, string_node);
-        if (strcasecmp(cname, "text") == 0)
-        {
-          em->imode->string = apr_pstrdup(p, cvalue);
+      break;
+
+    case 's':
+    case 'S':
+      if (strcasecmp(name, "string") == 0) {
+        Node* string_node = qs_get_child_node(doc, child);
+
+        if (string_node) {
+          char* cname = qs_get_node_name(doc, string_node);
+          char* cvalue = qs_get_node_value(doc, string_node);
+
+          if ((*cname == 't' || *cname == 'T') && strcasecmp(cname, "text") == 0)
+            em->imode->string = apr_pstrdup(p, cvalue);
+        }
+        else {
+          em->imode->string    = apr_palloc(p, 1);
+          em->imode->string[0] = 0;
         }
       }
-      else
-      {
-        em->imode->string    = apr_palloc(p, 1);
-        em->imode->string[0] = 0;
-      }
-    }
+      break;
+
+    
     else
     if (strcasecmp(name, "description") == 0)
     {
