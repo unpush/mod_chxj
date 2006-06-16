@@ -224,11 +224,9 @@ qs_get_selected_value_text(Doc *doc, Node* node, request_rec* r)
         }
       }
     }
-    result = qs_get_selected_value_text(doc, child, r);
-    if (result != NULL)
-    {
+
+    if ((result = qs_get_selected_value_text(doc, child, r)) != NULL)
       return result;
-    }
   }
 
   /*--------------------------------------------------------------------------*/
