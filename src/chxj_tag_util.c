@@ -209,8 +209,8 @@ qs_get_selected_value_text(Doc *doc, Node* node, request_rec* r)
 
         char* name  = qs_get_attr_name(doc,attr);
 
-        ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, 
-                        "qs_get_selected_value name::[%s]" , name);
+        DBG1(r, "qs_get_selected_value name::[%s]" , name);
+
         if ((*name == 's'|| *name == 'S') && strcasecmp(name, "selected") == 0) {
           /*------------------------------------------------------------------*/
           /* SELECTED Value Found                                             */
