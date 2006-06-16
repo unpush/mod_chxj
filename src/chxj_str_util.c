@@ -34,6 +34,8 @@ chxj_chk_numeric(const char* s)
   return 0; /* OK */
 }
 
+
+
 int
 chxj_atoi(const char* s)
 {
@@ -43,8 +45,8 @@ chxj_atoi(const char* s)
   int mflag = 0;
 
   result = 0;
-  for (ii=0; ii < len; ii++) 
-  {
+
+  for (ii=0; ii < len; ii++) {
     result *= 10;
     switch(s[ii]) 
     {

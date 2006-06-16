@@ -144,7 +144,7 @@ s_load_emoji_set_tag(
     case 'e':
     case 'E':
       if (strcasecmp(name, "ezweb") == 0) {
-        if (rtn = s_load_emoji_ezweb_tag(doc, p, em, child)) 
+        if ((rtn = s_load_emoji_ezweb_tag(doc, p, em, child)) != NULL)
           return rtn;
       }
       break;
@@ -152,7 +152,7 @@ s_load_emoji_set_tag(
     case 'j':
     case 'J':
       if (strcasecmp(name, "jphone") == 0) {
-        if (rtn = s_load_emoji_jphone_tag(doc, p, em, child))
+        if ((rtn = s_load_emoji_jphone_tag(doc, p, em, child)) != NULL)
           return rtn;
       }
       break;
