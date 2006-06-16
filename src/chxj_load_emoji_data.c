@@ -85,6 +85,7 @@ s_load_emoji_emoji_tag(
 {
   Node* child;
   char* rtn;
+
   for (child = qs_get_child_node(doc, node);
        child ;
        child = qs_get_next_node(doc, child)) {
@@ -96,6 +97,7 @@ s_load_emoji_emoji_tag(
         return rtn;
     }
   }
+
   return NULL;
 }
 
