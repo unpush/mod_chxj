@@ -579,11 +579,11 @@ qs_get_parse_attr(Doc* doc, Node* tag, request_rec* r)
   for (attr = qs_get_attr(doc,tag);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
+
     char* name  = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
 
-    if (strcasecmp(name, "parse") == 0)
-    {
+    if ((*name == 'p' || *name == 'P') && strcasecmp(name, "parse") == 0) {
       /*----------------------------------------------------------------------*/
       /* The VALUE attribute was found.                                       */
       /*----------------------------------------------------------------------*/
