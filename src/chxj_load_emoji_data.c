@@ -377,7 +377,7 @@ s_load_emoji_ezweb_tag(
       Node* typeDnode = qs_get_child_node(doc, child);
 
       if (typeDnode) {
-        char* cname = qs_get_node_name(doc, typeDnode);
+        char* cname  = qs_get_node_name(doc, typeDnode);
         char* cvalue = qs_get_node_value(doc, typeDnode);
         if (strcasecmp(cname, "text") == 0)
         {
