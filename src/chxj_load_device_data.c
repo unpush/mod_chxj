@@ -394,8 +394,7 @@ s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list_t* dtl, Node* node)
     }
   }
 
-  if (dt->device_id != NULL) 
-  {
+  if (dt->device_id) {
     if (dtl->table == NULL) 
     {
       dtl->table = dt;
