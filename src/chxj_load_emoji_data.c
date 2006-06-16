@@ -346,6 +346,7 @@ s_load_emoji_ezweb_tag(
 
         if ((*cname == 't' || *cname == 'T') && strcasecmp(cname, "text") == 0)
           em->ezweb->typeB = apr_pstrdup(p,cvalue);
+
       }
       else {
         em->ezweb->typeB    = apr_palloc(p, 1);
@@ -353,8 +354,7 @@ s_load_emoji_ezweb_tag(
       }
     }
     else
-    if (strcasecmp(name, "C") == 0) 
-    {
+    if (strcasecmp(name, "C") == 0) {
       Node* typeCnode = qs_get_child_node(doc, child);
 
       if (typeCnode != NULL)
