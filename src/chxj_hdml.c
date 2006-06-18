@@ -2598,14 +2598,16 @@ s_hdml_count_radio_tag(hdml_t* hdml, Node* node)
       }
     }
     if (ii == MAX_RADIO_COUNT) {
-      DBG1(r, apr_psprintf(r->pool,
+      DBG(r, apr_psprintf(r->pool,
                         "I do not understand the name of the radiobutton "
                         "of %d piece or more. Please decrease "
                         "the number of radiobuttons.",
                         MAX_RADIO_COUNT));
       continue;
     }
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "add radio name:[%s]" ,rname);
+
+    DBG1(r,"add radio name:[%s]" ,rname);
+
     hdml->radio_name_list[ii] = apr_pstrdup(r->pool, rname);
 
     /*------------------------------------------------------------------------*/
@@ -2616,8 +2618,7 @@ s_hdml_count_radio_tag(hdml_t* hdml, Node* node)
         break;
     }
     if (jj == MAX_RADIO_VALUE_COUNT) {
-      ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,
-                      apr_psprintf(r->pool,
+      DBG(r, apr_psprintf(r->pool,
                         "I do not understand the value of the radiobutton "
                         "of %d piece or more. Please decrease "
                         "the number of radiobuttons.",
