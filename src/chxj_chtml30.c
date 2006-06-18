@@ -26,6 +26,8 @@ static char* s_chtml30_start_html_tag   (chtml30_t* chtml, Node* child);
 static char* s_chtml30_end_html_tag     (chtml30_t* chtml, Node* child);
 static char* s_chtml30_start_meta_tag   (chtml30_t* chtml, Node* node);
 static char* s_chtml30_end_meta_tag     (chtml30_t* chtml, Node* node);
+static char* s_chtml30_start_textarea_tag(chtml30_t* chtml,Node* node);
+static char* s_chtml30_end_textarea_tag (chtml30_t* chtml, Node* node);
 static char* s_chtml30_start_p_tag      (chtml30_t* chtml, Node* node);
 static char* s_chtml30_end_p_tag        (chtml30_t* chtml, Node* node);
 static char* s_chtml30_start_pre_tag    (chtml30_t* chtml, Node* node);
@@ -213,6 +215,15 @@ s_chtml30_node_exchange(chtml30_t* chtml30, Node* node, int indent)
        child = qs_get_next_node(doc,child)) {
     char* name = qs_get_node_name(doc,child);
 
+    /*------------------------------------------------------------------------*/
+    /* <TEXTAREA> (for TEST)                                                  */
+    /*------------------------------------------------------------------------*/
+    if ((*name == 't' || *name == 'T') && strcasecmp(name, "textarea") == 0) {
+      s_chtml30_start_textarea_tag   (chtml30, child);
+      s_chtml30_node_exchange        (chtml30, child, indent+1);
+      s_chtml30_end_textarea_tag     (chtml30, child);
+    }
+    else
     /*------------------------------------------------------------------------*/
     /* <P> (for TEST)                                                         */
     /*------------------------------------------------------------------------*/
@@ -596,6 +607,10 @@ s_chtml30_node_exchange(chtml30_t* chtml30, Node* node, int indent)
             ii++;
           }
           else if (chtml30->pre_flag) {
+            one_byte[0] = textval[ii+0];
+            tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+          }
+          else if (chtml30->textarea_flag) {
             one_byte[0] = textval[ii+0];
             tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
           }
@@ -2375,6 +2390,69 @@ s_chtml30_end_h6_tag(chtml30_t* chtml30, Node* child)
   request_rec*  r   = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "</h6>\r\n", NULL);
+
+  return chtml30->out;
+}
+
+/**
+ * It is a handler who processes the TEXTARE tag.
+ *
+ * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The TEXTAREA tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml30_start_textarea_tag(chtml30_t* chtml30, Node* node) 
+{
+  Doc*          doc = chtml30->doc;
+  request_rec*  r   = doc->r;
+  Attr* attr;
+
+  chtml30->textarea_flag++;
+  chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<textarea ", NULL);
+
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+
+    char* name  = qs_get_attr_name(doc,attr);
+    char* value = qs_get_attr_value(doc,attr);
+
+    if ((*name == 'n' || *name == 'N') && strcasecmp(name, "name") == 0) {
+      chtml30->out = apr_pstrcat(r->pool, chtml30->out, " name=\"",value,"\"", NULL);
+    }
+    else 
+    if ((*name == 'r' || *name == 'R') && strcasecmp(name, "rows") == 0) {
+      chtml30->out = apr_pstrcat(r->pool, chtml30->out, " rows=\"",value,"\"", NULL);
+    }
+    else 
+    if ((*name == 'c' || *name == 'C') && strcasecmp(name, "cols") == 0) {
+      chtml30->out = apr_pstrcat(r->pool, chtml30->out, " cols=\"",value,"\"", NULL);
+    }
+  }
+
+  chtml30->out = apr_pstrcat(r->pool, chtml30->out, ">\r\n", NULL);
+
+  return chtml30->out;
+}
+
+/**
+ * It is a handler who processes the TEXTAREA tag.
+ *
+ * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The TEXTAREA tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_chtml30_end_textarea_tag(chtml30_t* chtml30, Node* child) 
+{
+  Doc*          doc = chtml30->doc;
+  request_rec*  r   = doc->r;
+
+  chtml30->out = apr_pstrcat(r->pool, chtml30->out, "</textarea>\r\n", NULL);
+  chtml30->textarea_flag--;
 
   return chtml30->out;
 }
