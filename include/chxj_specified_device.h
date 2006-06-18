@@ -17,7 +17,7 @@
 #ifndef __CHXJ_SPECIFIED_DEVICE_H__
 #define __CHXJ_SPECIFIED_DEVICE_H__
 
-typedef enum _spec_type_t {
+typedef enum {
   CHXJ_SPEC_UNKNOWN=0,
   CHXJ_SPEC_Chtml_1_0,
   CHXJ_SPEC_Chtml_2_0,
@@ -28,7 +28,7 @@ typedef enum _spec_type_t {
   CHXJ_SPEC_Hdml,
   CHXJ_SPEC_Jhtml,
   CHXJ_SPEC_HTML,
-} spec_type_t;
+} spec_type;
 
 #define CHXJ_PIC_OK                (0x01)
 #define CHXJ_PIC_NG                (0x00)
@@ -40,7 +40,7 @@ typedef struct _device_table_t {
   struct _device_table_t* next;
   const char* device_id;
   const char* device_name;
-  spec_type_t html_spec_type;
+  spec_type html_spec_type;
   int width;
   int heigh;
   /*--------------------------------------------------------------------------*/
