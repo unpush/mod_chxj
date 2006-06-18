@@ -2251,10 +2251,8 @@ s_count_11311_pattern(qr_ver_t ver, char* dst[])
 
   point = 0;
   /* 横方向のチェック */
-  for (yy = 0; yy < module_count; yy++)
-  {
-    for (xx = 0; xx < module_count-6; xx++)
-    {
+  for (yy = 0; yy < module_count; yy++) {
+    for (xx = 0; xx < module_count-6; xx++) {
       if (dst[yy][xx+0] == '1'
       &&  dst[yy][xx+1] == '0'
       &&  dst[yy][xx+2] == '1'
