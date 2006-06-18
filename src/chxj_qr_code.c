@@ -1985,8 +1985,7 @@ s_setup_type_info(qr_code_t* qrcode, char* dst[], qr_mask_pattern_t pat)
     dst[8][module_count - xx - 1] = (((typedata >> xx) & 0x01) == 1) ? '1' : '0';
   }
 
-  for (; xx<9; xx++)
-  {
+  for (; xx<9; xx++) {
     assert(15 - xx >= 0 && 15 - xx < module_count);
     dst[8][15 - xx] = (((typedata >> xx) & 0x01) == 1) ? '1' : '0';
   }
