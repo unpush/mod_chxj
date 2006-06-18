@@ -2201,10 +2201,10 @@ s_count_same_module(qr_ver_t ver, char* dst[])
       else {
         same_count = 0;
       }
+
       if (same_count >= 5)
-      {
         point++;
-      }
+
       prev_value = (unsigned char)dst[yy][xx];
     }
   }
