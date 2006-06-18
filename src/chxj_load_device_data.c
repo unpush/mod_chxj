@@ -118,9 +118,9 @@ static void
 s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list_t* dtl, Node* node) 
 {
   Node* child;
-  device_table_t* dt;
+  device_table* dt;
 
-  dt = apr_pcalloc(p, sizeof(device_table_t));
+  dt = apr_pcalloc(p, sizeof(device_table));
   dt->next           = NULL;
   dt->device_id      = NULL;
   dt->device_name    = NULL;

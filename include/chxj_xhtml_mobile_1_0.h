@@ -28,13 +28,13 @@ typedef struct _xhtml_t {
     int                out_len;
     int                pre_flag;
 
-    device_table_t*    spec;
+    device_table*    spec;
     mod_chxj_config*   conf;
 } xhtml_t;
 
 /*----------------------------------------------------------------------------*/
 /* Prototype                                                                  */
 /*----------------------------------------------------------------------------*/
-char* chxj_exchange_xhtml_mobile_1_0(request_rec* r, device_table_t* spec, const char* src, apr_size_t srclen, apr_size_t *dstlen);
+char* chxj_exchange_xhtml_mobile_1_0(request_rec* r, device_table* spec, const char* src, apr_size_t srclen, apr_size_t *dstlen);
 
 #endif

@@ -189,7 +189,7 @@ typedef struct {
 
   char*                 image_cache_dir;
   char*                 image_copyright;
-  device_table_list_t*  devices;
+  device_table_list*    devices;
   emoji_t*              emoji;
   emoji_t*              emoji_tail;
   char*                 server_side_encoding;

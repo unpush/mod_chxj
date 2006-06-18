@@ -67,7 +67,7 @@ static char* s_jhtml_start_option_tag (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_end_option_tag   (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_start_div_tag    (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_end_div_tag      (jhtml_t* jhtml, Node* node);
-static void  s_init_jhtml(jhtml_t* jhtml, Doc* doc, request_rec* r, device_table_t* spec);
+static void  s_init_jhtml(jhtml_t* jhtml, Doc* doc, request_rec* r, device_table* spec);
 static int   s_jhtml_search_emoji(jhtml_t* jhtml, char* txt, char** rslt);
 static char* chxj_istyle_to_mode(request_rec* r, const char* s);
 static void  s_jhtml_chxjif_tag(jhtml_t* jhtml, Node* node); 
@@ -84,7 +84,7 @@ static void  s_jhtml_chxjif_tag(jhtml_t* jhtml, Node* node);
 char*
 chxj_exchange_jhtml(
   request_rec* r,
-  device_table_t* spec,
+  device_table* spec,
   const char* src,
   apr_size_t srclen,
   apr_size_t *dstlen)
@@ -160,7 +160,7 @@ chxj_exchange_jhtml(
  * @param spec  [i]   The pointer to the device_table
  */
 static void
-s_init_jhtml(jhtml_t* jhtml, Doc* doc, request_rec* r, device_table_t* spec)
+s_init_jhtml(jhtml_t* jhtml, Doc* doc, request_rec* r, device_table* spec)
 {
   memset(doc,   0, sizeof(Doc));
   memset(jhtml, 0, sizeof(jhtml_t));
@@ -607,7 +607,7 @@ s_jhtml_search_emoji(jhtml_t* jhtml, char* txt, char** rslt)
 {
   emoji_t*      ee;
   request_rec*  r;
-  device_table_t* spec;
+  device_table* spec;
   int           len;
 
   spec = jhtml->spec;
@@ -1865,7 +1865,7 @@ s_jhtml_start_img_tag(jhtml_t* jhtml, Node* node)
   request_rec*  r   = doc->r;
   Attr* attr;
 #ifndef IMG_NOT_CONVERT_FILENAME
-  device_table_t* spec = jhtml->spec;
+  device_table* spec = jhtml->spec;
 #endif
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<img", NULL);

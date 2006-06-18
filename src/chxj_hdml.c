@@ -26,7 +26,7 @@
 #define RADIO_BUTTON_PREFIX  "_chxj_r_"
 #define SUBMIT_BUTTON_PREFIX "_chxj_s_"
 
-static void  s_init_hdml            (hdml_t* hdml, Doc* doc, request_rec* r, device_table_t* spec);
+static void  s_init_hdml            (hdml_t* hdml, Doc* doc, request_rec* r, device_table* spec);
 static char* s_hdml_node_exchange   (hdml_t* doc,  Node* node, int indent);
 static char* s_hdml_start_html_tag  (hdml_t* doc,  Node* node);
 static char* s_hdml_end_html_tag    (hdml_t* doc,  Node* node);
@@ -95,7 +95,7 @@ static void  s_hdml_chxjif_tag           (hdml_t* hdml, Node* node);
  */
 char*
 chxj_exchange_hdml(request_rec* r, 
-                   device_table_t* spec, 
+                   device_table* spec, 
                    const char* src, 
                    apr_size_t srclen, 
                    apr_size_t* dstlen)
@@ -213,7 +213,7 @@ chxj_exchange_hdml(request_rec* r,
  * @param spec [i]   The pointer to the device_table
  */
 static void 
-s_init_hdml(hdml_t* hdml, Doc* doc, request_rec* r, device_table_t* spec)
+s_init_hdml(hdml_t* hdml, Doc* doc, request_rec* r, device_table* spec)
 {
   int     ii;
   int     jj;
@@ -620,7 +620,7 @@ s_hdml_search_emoji(hdml_t* hdml, char* txt, char** rslt)
 {
   emoji_t* ee;
   request_rec* r;
-  device_table_t* spec;
+  device_table* spec;
   int len;
 
   spec = hdml->spec;

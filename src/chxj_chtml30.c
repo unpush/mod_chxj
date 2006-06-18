@@ -80,7 +80,7 @@ static char* s_chtml30_start_option_tag (chtml30_t* chtml, Node* node);
 static char* s_chtml30_end_option_tag   (chtml30_t* chtml, Node* node);
 static char* s_chtml30_start_div_tag    (chtml30_t* chtml, Node* node);
 static char* s_chtml30_end_div_tag      (chtml30_t* chtml, Node* node);
-static void  s_init_chtml30(chtml30_t* chtml, Doc* doc, request_rec* r, device_table_t* spec);
+static void  s_init_chtml30(chtml30_t* chtml, Doc* doc, request_rec* r, device_table* spec);
 static int   s_chtml30_search_emoji(chtml30_t* chtml, char* txt, char** rslt);
 static void  s_chtml30_chxjif_tag(chtml30_t* chtml, Node* node); 
 
@@ -96,7 +96,7 @@ static void  s_chtml30_chxjif_tag(chtml30_t* chtml, Node* node);
 char*
 chxj_exchange_chtml30(
   request_rec* r,
-  device_table_t* spec,
+  device_table* spec,
   const char* src,
   apr_size_t srclen,
   apr_size_t *dstlen)
@@ -171,7 +171,7 @@ chxj_exchange_chtml30(
  * @param spec  [i]   The pointer to the device_table
  */
 static void
-s_init_chtml30(chtml30_t* chtml30, Doc* doc, request_rec* r, device_table_t* spec)
+s_init_chtml30(chtml30_t* chtml30, Doc* doc, request_rec* r, device_table* spec)
 {
   memset(doc,   0, sizeof(Doc));
   memset(chtml30, 0, sizeof(chtml30_t));
@@ -622,7 +622,7 @@ s_chtml30_search_emoji(chtml30_t* chtml30, char* txt, char** rslt)
 {
   emoji_t*      ee;
   request_rec*  r;
-  device_table_t* spec;
+  device_table* spec;
   int           len;
 
   spec = chtml30->spec;
@@ -1644,7 +1644,7 @@ s_chtml30_start_img_tag(chtml30_t* chtml30, Node* node)
   request_rec*  r   = doc->r;
   Attr* attr;
 #ifndef IMG_NOT_CONVERT_FILENAME
-  device_table_t* spec = chtml30->spec;
+  device_table* spec = chtml30->spec;
 #endif
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<img", NULL);

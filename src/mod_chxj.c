@@ -101,7 +101,8 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
   }
 
   if (!r->header_only) {
-    device_table_t* spec = chxj_specified_device(r, user_agent);
+    device_table* spec = chxj_specified_device(r, user_agent);
+
     switch(spec->html_spec_type) {
     case CHXJ_SPEC_Chtml_1_0:
       /*----------------------------------------------------------------------*/
