@@ -2267,8 +2267,7 @@ s_count_11311_pattern(qr_ver_t ver, char* dst[])
   }
 
   /* 縦方向のチェック */
-  for (xx = 0; xx < module_count; xx++)
-  {
+  for (xx = 0; xx < module_count; xx++) {
     for (yy = 0; yy < module_count-6; yy++)
     {
       if (dst[yy+0][xx] == '1'
