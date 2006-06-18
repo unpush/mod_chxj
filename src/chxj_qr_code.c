@@ -1713,13 +1713,10 @@ s_str_to_bin(qr_code_t* qrcode, char* indata, int data_code_count)
   memset(result, 0, data_code_count);
 
   pos = 0;
-  for (ii=0; ii<len; ii++)
-  {
+  for (ii=0; ii<len; ii++) {
     result[pos] = (result[pos] << 1) | (indata[ii] - '0');
     if ((ii % 8) == 7)
-    {
       pos ++;
-    }
   }
   return result;
 }
