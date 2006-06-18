@@ -1667,9 +1667,9 @@ s_tidy_8bit_code(qr_code_t* qrcode, const char* indata, int data_code_count)
     assert (len + n <= data_code_count * 8);
 
     tmp = (char*)apr_palloc(qrcode->r->pool, n);
-    for (ii=0; ii<n; ii++) {
+    for (ii=0; ii<n; ii++)
       tmp[ii] = '0';
-    }
+
     tmp[ii] = 0;
   }
 
@@ -1677,9 +1677,7 @@ s_tidy_8bit_code(qr_code_t* qrcode, const char* indata, int data_code_count)
   memset(result, 0, data_code_count * 8+ 1);
   memcpy(result, indata, len);
   if (len % 8)
-  {
     memcpy(&result[len], tmp, strlen(tmp));
-  }
 
   len = strlen(result);
   rest = data_code_count - (len / 8);
