@@ -99,7 +99,9 @@ chxj_exchange_chtml10(
   device_table* spec,
   const char* src,
   apr_size_t srclen,
-  apr_size_t *dstlen)
+  apr_size_t *dstlen,
+  chxjconvrule_entry* entryp
+)
 {
   char*     dst = NULL;
   char*     ss;
@@ -121,6 +123,8 @@ chxj_exchange_chtml10(
   /* The CHTML structure is initialized.                                      */
   /*--------------------------------------------------------------------------*/
   s_init_chtml10(&chtml10, &doc, r, spec);
+  chtml10.entryp = entryp;
+
   ap_set_content_type(r, "text/html; charset=Windows-31J");
 
   /*--------------------------------------------------------------------------*/

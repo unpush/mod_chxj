@@ -87,7 +87,9 @@ chxj_exchange_jhtml(
   device_table* spec,
   const char* src,
   apr_size_t srclen,
-  apr_size_t *dstlen)
+  apr_size_t *dstlen,
+  chxjconvrule_entry* entryp
+)
 {
   char*     dst = NULL;
   char*     ss;
@@ -109,6 +111,9 @@ chxj_exchange_jhtml(
   /* The CHTML structure is initialized.                                      */
   /*--------------------------------------------------------------------------*/
   s_init_jhtml(&jhtml, &doc, r, spec);
+
+  jhtml.entryp = entryp;
+
   ap_set_content_type(r, "text/html; charset=Windows-31J");
 
   /*--------------------------------------------------------------------------*/
@@ -1477,7 +1482,8 @@ s_jhtml_start_input_tag(jhtml_t* jhtml, Node* node)
     /*------------------------------------------------------------------------*/
     /* CHTML 2.0                                                              */
     /*------------------------------------------------------------------------*/
-    if (type && (*type == 'p' || *type == 'P') && strcasecmp(type, "password") == 0) {
+    if (type && (*type == 'p' || *type == 'P') && strcasecmp(type, "password") == 0
+    && ! jhtml->entryp->pc_flag ) {
       jhtml->out = apr_pstrcat(r->pool, 
                     jhtml->out, 
                     " mode=\"", 

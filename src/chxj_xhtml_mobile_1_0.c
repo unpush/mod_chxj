@@ -101,7 +101,9 @@ chxj_exchange_xhtml_mobile_1_0(
   device_table*   spec,
   const char*     src,
   apr_size_t      srclen,
-  apr_size_t*     dstlen)
+  apr_size_t*     dstlen,
+  chxjconvrule_entry* entryp
+)
 {
   char*     dst = NULL;
   char*     ss;
@@ -125,6 +127,9 @@ chxj_exchange_xhtml_mobile_1_0(
   /* The XHTML structure is initialized.                                      */
   /*--------------------------------------------------------------------------*/
   s_init_xhtml(&xhtml, &doc, r, spec);
+
+  xhtml.entryp = entryp;
+
   ap_set_content_type(r, "text/html; charset=Windows-31J");
 
   /*--------------------------------------------------------------------------*/
@@ -1546,7 +1551,8 @@ s_xhtml_1_0_start_input_tag(xhtml_t* xhtml, Node* node)
   /*--------------------------------------------------------------------------*/
   if (type && istyle == NULL 
   && (*type == 'p' || *type == 'P') 
-  && strcasecmp(type, "password") == 0) {
+  && strcasecmp(type, "password") == 0
+  && ! xhtml->entryp->pc_flag) {
     if (max_length) {
       xhtml->out = apr_pstrcat(r->pool, 
                       xhtml->out, 

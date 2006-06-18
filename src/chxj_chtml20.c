@@ -99,7 +99,9 @@ chxj_exchange_chtml20(
   device_table* spec,
   const char* src,
   apr_size_t srclen,
-  apr_size_t *dstlen)
+  apr_size_t *dstlen,
+  chxjconvrule_entry* entryp
+)
 {
   char*     dst = NULL;
   char*     ss;
@@ -121,6 +123,9 @@ chxj_exchange_chtml20(
   /* The CHTML structure is initialized.                                      */
   /*--------------------------------------------------------------------------*/
   s_init_chtml20(&chtml20, &doc, r, spec);
+
+  chtml20.entryp = entryp;
+
   ap_set_content_type(r, "text/html; charset=Windows-31J");
 
   /*--------------------------------------------------------------------------*/
@@ -1445,10 +1450,10 @@ s_chtml20_start_input_tag(chtml20_t* chtml20, Node* node)
     /* CHTML 2.0                                                              */
     /*------------------------------------------------------------------------*/
     chtml20->out = apr_pstrcat(r->pool, 
-                    chtml20->out, 
-                    " istyle=\"", 
-                    istyle, "\" ", 
-                    NULL);
+                      chtml20->out, 
+                      " istyle=\"", 
+                      istyle, "\" ", 
+                      NULL);
 
   /*--------------------------------------------------------------------------*/
   /* The figure is default for the password.                                  */

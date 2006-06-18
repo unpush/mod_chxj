@@ -179,6 +179,7 @@ typedef struct {
   int        flags;
   int        action;
   char       *encoding;
+  int        pc_flag;
 } chxjconvrule_entry;
 
 typedef struct {
@@ -208,6 +209,11 @@ typedef struct {
 #define CONVRULE_ENGINE_OFF_CMD       "EngineOff"
 
 #define CONVRULE_FLAG_NOTMATCH        (0x00000001)
+
+#define CONVRULE_PC_FLAG_ON_CMD       "PC"
+
+#define CONVRULE_PC_FLAG_ON_BIT       (0x00000001)
+#define CONVRULE_PC_FLAG_OFF_BIT      (0x00000002)
 
 typedef struct {
   apr_shm_t*          client_shm;

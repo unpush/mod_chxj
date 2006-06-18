@@ -20,7 +20,7 @@
 /* #define DUMP_JHTML "" */
 #include "mod_chxj.h"
 /*----------------------------------------------------------------------------*/
-/* Structure for HDML                                                         */
+/* Structure for J-PHONE HTML                                                 */
 /*----------------------------------------------------------------------------*/
 typedef struct _jhtml_t {
     Doc* doc;
@@ -30,6 +30,7 @@ typedef struct _jhtml_t {
 
     device_table*    spec;
     mod_chxj_config* conf;
+    chxjconvrule_entry* entryp;
 } jhtml_t;
 
 /*----------------------------------------------------------------------------*/
@@ -41,5 +42,6 @@ chxj_exchange_jhtml(
   device_table* spec,
   const char* src,
   apr_size_t srclen,
-  apr_size_t *dstlen);
+  apr_size_t *dstlen,
+  chxjconvrule_entry* entryp) ;
 #endif

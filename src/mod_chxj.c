@@ -110,7 +110,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
       /*----------------------------------------------------------------------*/
       DBG(r,"select DoCoMo i-Mode 1.0 ");
       tmp = chxj_encoding(r, *src, (apr_size_t*)len);
-      dst = chxj_exchange_chtml10(r, spec, tmp, *len, len);
+      dst = chxj_exchange_chtml10(r, spec, tmp, *len, len, entryp);
       break;
 
     case CHXJ_SPEC_Chtml_2_0:
@@ -119,7 +119,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
       /*----------------------------------------------------------------------*/
       DBG(r,"select DoCoMo i-Mode 2.0 ");
       tmp = chxj_encoding(r, (char*)*src, (apr_size_t*)len);
-      dst = chxj_exchange_chtml20(r, spec, tmp, *len, len);
+      dst = chxj_exchange_chtml20(r, spec, tmp, *len, len, entryp);
       break;
    
     case CHXJ_SPEC_Chtml_3_0:
@@ -128,7 +128,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
       /*----------------------------------------------------------------------*/
       DBG(r,"select DoCoMo i-Mode 3.0 ");
       tmp = chxj_encoding(r, *src, (apr_size_t*)len);
-      dst = chxj_exchange_chtml30(r, spec, tmp, *len, len);
+      dst = chxj_exchange_chtml30(r, spec, tmp, *len, len, entryp);
       break;
     
     case CHXJ_SPEC_Chtml_4_0:
@@ -137,7 +137,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
       /*----------------------------------------------------------------------*/
       DBG(r,"select DoCoMo i-Mode 4.0 ");
       tmp = chxj_encoding(r, *src, (apr_size_t*)len);
-      dst = chxj_exchange_chtml30(r, spec, tmp, *len, len);
+      dst = chxj_exchange_chtml30(r, spec, tmp, *len, len, entryp);
       break;
 
     case CHXJ_SPEC_Chtml_5_0:
@@ -146,7 +146,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
       /*----------------------------------------------------------------------*/
       DBG(r,"select DoCoMo i-Mode 5.0 ");
       tmp = chxj_encoding(r, *src, (apr_size_t*)len);
-      dst = chxj_exchange_chtml30(r, spec, tmp, *len, len);
+      dst = chxj_exchange_chtml30(r, spec, tmp, *len, len, entryp);
       break;
 
     case CHXJ_SPEC_XHtml_Mobile_1_0:
@@ -155,7 +155,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
       /*----------------------------------------------------------------------*/
       DBG(r,"select XHTML Mobile 1.0");
       tmp = chxj_encoding(r, *src, (apr_size_t*)len);
-      dst = chxj_exchange_xhtml_mobile_1_0(r, spec, tmp, *len, len);
+      dst = chxj_exchange_xhtml_mobile_1_0(r, spec, tmp, *len, len, entryp);
       break;
 
     case CHXJ_SPEC_Hdml:
@@ -164,7 +164,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
       /*----------------------------------------------------------------------*/
       DBG(r,"select HDML");
       tmp = chxj_encoding(r, *src, (apr_size_t*)len);
-      dst = chxj_exchange_hdml(r, spec, tmp, *len, len);
+      dst = chxj_exchange_hdml(r, spec, tmp, *len, len, entryp);
       break;
 
     case CHXJ_SPEC_Jhtml:
@@ -173,7 +173,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
       /*----------------------------------------------------------------------*/
       DBG(r,"select JHTML");
       tmp = chxj_encoding(r, *src, (apr_size_t*)len);
-      dst = chxj_exchange_jhtml(r, spec, tmp, *len, len);
+      dst = chxj_exchange_jhtml(r, spec, tmp, *len, len, entryp);
       break;
 
     default:
@@ -790,7 +790,7 @@ chxj_merge_per_dir_config(apr_pool_t *p, void *basev, void *addv)
 
 
 static int
-chxj_command_parse_take3(const char* arg, char** prm1, char** prm2, char** prm3)
+chxj_command_parse_take4(const char* arg, char** prm1, char** prm2, char** prm3, char** prm4)
 {
   int isquoted;
   char* strp;
@@ -822,6 +822,7 @@ chxj_command_parse_take3(const char* arg, char** prm1, char** prm2, char** prm3)
   if (! *strp) {
     *prm2 = strp;
     *prm3 = strp;
+    *prm4 = strp;
     return 1;
   }
 
@@ -850,7 +851,8 @@ chxj_command_parse_take3(const char* arg, char** prm1, char** prm2, char** prm3)
 
   if (! *strp) {
     *prm3 = strp;
-    return 1;
+    *prm4 = strp;
+    return 0;
   }
 
   *strp++ = '\0';
@@ -863,6 +865,34 @@ chxj_command_parse_take3(const char* arg, char** prm1, char** prm2, char** prm3)
     strp++;
   }
   *prm3 = strp;
+  for (; *strp != '\0'; strp++) {
+    if ((isquoted && (*strp == ' ' || *strp == '\t'))
+    ||  (*strp == '\\' && (*(strp+1) == ' ' || *(strp+1) == '\t'))) {
+      strp++;
+      continue;
+    }
+
+    if ((!isquoted && (*strp == ' ' || *strp == '\t'))
+    ||  (isquoted  && *strp == '"'))
+      break;
+  }
+  *strp = '\0';
+
+  if (! *strp) {
+    *prm4 = strp;
+    return 0;
+  }
+
+  *strp++ = '\0';
+
+  for (;*strp == ' '||*strp == '\t'; strp++);
+
+  isquoted = 0; 
+  if (*strp == '"') { 
+    isquoted = 1;
+    strp++;
+  }
+  *prm4 = strp;
   for (; *strp != '\0'; strp++) {
     if ((isquoted && (*strp == ' ' || *strp == '\t'))
     ||  (*strp == '\\' && (*(strp+1) == ' ' || *(strp+1) == '\t'))) {
@@ -1003,6 +1033,7 @@ cmd_convert_rule(cmd_parms *cmd, void* mconfig, const char *arg)
   char* prm1;
   char* prm2;
   char* prm3;
+  char* prm4;
   int mode;
   char* pstate;
   char* action;
@@ -1024,7 +1055,7 @@ cmd_convert_rule(cmd_parms *cmd, void* mconfig, const char *arg)
   newrule->flags  = 0;
   newrule->action = 0;
 
-  if (chxj_command_parse_take3(arg, &prm1, &prm2, &prm3))
+  if (chxj_command_parse_take4(arg, &prm1, &prm2, &prm3, &prm4))
     return "ChxjConvertRule: bad argument line";
 
   newrule->pattern = apr_pstrdup(cmd->pool, prm1);
@@ -1063,6 +1094,11 @@ cmd_convert_rule(cmd_parms *cmd, void* mconfig, const char *arg)
     newrule->encoding = apr_pstrdup(cmd->pool, prm3);
   else
     newrule->encoding = apr_pstrdup(cmd->pool, "none");
+
+  newrule->pc_flag = CONVRULE_PC_FLAG_OFF_BIT;
+  if (*prm4)
+    if (strcasecmp(CONVRULE_PC_FLAG_ON_CMD, prm4) == 0)
+      newrule->pc_flag = CONVRULE_PC_FLAG_ON_BIT;
   
   return NULL;
 }

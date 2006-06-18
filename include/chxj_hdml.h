@@ -89,11 +89,19 @@ typedef struct _hdml_t {
   device_table* spec;
 
   mod_chxj_config*  conf;
+
+  chxjconvrule_entry* entryp;
 } hdml_t;
 /*============================================================================*/
 /* Prototype declaration.                                                     */
 /*============================================================================*/
-char* chxj_exchange_hdml(request_rec* r, device_table* spec, const char* src, apr_size_t srclen, apr_size_t* dstlen) ;
+char* chxj_exchange_hdml(
+  request_rec*        r, 
+  device_table*       spec,
+  const char*         src,
+  apr_size_t          srclen,
+  apr_size_t*         dstlen,
+  chxjconvrule_entry* entryp) ;
 char* qs_out_apr_pstrcat(request_rec* r, char* o, char* s, int* len);
 char* qs_conv_istyle_to_format(request_rec* r, char* is);
 

@@ -98,7 +98,9 @@ chxj_exchange_hdml(request_rec* r,
                    device_table* spec, 
                    const char* src, 
                    apr_size_t srclen, 
-                   apr_size_t* dstlen)
+                   apr_size_t* dstlen,
+                   chxjconvrule_entry* entryp
+)
 {
   char*     dst = NULL;
   char*     buf = NULL;
@@ -120,6 +122,9 @@ chxj_exchange_hdml(request_rec* r,
   /* initialize hdml structure                                                */
   /*--------------------------------------------------------------------------*/
   s_init_hdml(&hdml,&doc,r, spec);
+
+  hdml.entryp = entryp;
+
   ap_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
   /*--------------------------------------------------------------------------*/
   /* DEBUG                                                                    */
