@@ -1283,8 +1283,7 @@ s_get_char_bit_count(qr_code_t* qrcode, int len)
   DBG1(qrcode->r, "len [%d]", len);
 
   tmp = (char*)apr_palloc(qrcode->r->pool, bit_count + 1);
-  for (ii=0; ii<bit_count; ii++)
-  {
+  for (ii=0; ii<bit_count; ii++) {
     tmp[ii] = (len & 0x01) ? '1' : '0';
     len = len >> 1;
   }
