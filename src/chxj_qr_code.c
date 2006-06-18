@@ -1248,7 +1248,7 @@ s_get_mode_spec(qr_code_t *qrcode)
   memset(result, 0, 5);
   memcpy(result, v_mode_table[qrcode->mode], 4);
 #ifdef QR_CODE_DEBUG
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, qrcode->r, "Mode Spec[%s]", result);
+  DBG1(r,"Mode Spec[%s]", result);
 #endif
 
   return result;
@@ -1267,14 +1267,12 @@ s_get_char_bit_count(qr_code_t* qrcode, int len)
   char* result;
   int data_capacity   = v_capacity_table[qrcode->version*4+qrcode->level].size[qrcode->mode];
 
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, qrcode->r, "len [%d]", len);
-  if (qrcode->mode == QR_KANJI_MODE && data_capacity * 2 < len)
-  {
+  DBG1(qrcode->r, "len [%d]", len);
+  if (qrcode->mode == QR_KANJI_MODE && data_capacity * 2 < len) {
     len = data_capacity * 2;
   }
   else
-  if (qrcode->mode != QR_KANJI_MODE && data_capacity < len)
-  {
+  if (qrcode->mode != QR_KANJI_MODE && data_capacity < len) {
     len = data_capacity;
   }
 
