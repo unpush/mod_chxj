@@ -1858,8 +1858,9 @@ s_setup_timing_pattern(qr_code_t* qrcode, char* dst[])
 
     dst[yy][xx] = (yy % 2 == 0) ? '1' : '0';
   }
+
 #ifdef QR_CODE_DEBUG
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, qrcode->r, "start s_setup_timing_pattern()");
+  DBG(qrcode->r, "start s_setup_timing_pattern()");
 #endif
 }
 
