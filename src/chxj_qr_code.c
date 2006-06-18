@@ -1276,11 +1276,11 @@ s_get_char_bit_count(qr_code_t* qrcode, int len)
     len = data_capacity;
   }
 
-  if (qrcode->mode == QR_KANJI_MODE)
-  {
+  if (qrcode->mode == QR_KANJI_MODE) {
     len /= 2;
   }
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, qrcode->r, "len [%d]", len);
+
+  DBG1(qrcode->r, "len [%d]", len);
 
   tmp = (char*)apr_palloc(qrcode->r->pool, bit_count + 1);
   for (ii=0; ii<bit_count; ii++)
