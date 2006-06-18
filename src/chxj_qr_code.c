@@ -2036,8 +2036,7 @@ s_setup_version_info(qr_code_t* qrcode, char* dst[])
   }
   
   /* 左下の型番情報の配置 */
-  for (yy=0; yy<strlen(bits); yy++) 
-  {
+  for (yy=0; yy<strlen(bits); yy++) {
     dst[(yy % 3) + module_count - 8 - 3][(int)((double)yy/3.0)] = bits[yy];
   } 
 }
