@@ -2179,8 +2179,7 @@ s_count_same_module(qr_ver_t ver, char* dst[])
       if (prev_value == (unsigned char)dst[yy][xx]) {
         same_count++;
       }
-      else
-      {
+      else {
         same_count = 0;
       }
       if (same_count >= 5)
