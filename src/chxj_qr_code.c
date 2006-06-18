@@ -1682,12 +1682,10 @@ s_tidy_8bit_code(qr_code_t* qrcode, const char* indata, int data_code_count)
   len = strlen(result);
   rest = data_code_count - (len / 8);
   n = 0;
-  while(rest>0)
-  {
+  while(rest>0) {
     for (ii=0; ii<8; ii++)
-    {
       result[len++] = v_pend_bit[n][ii];
-    }
+
     n = (n == 0) ? 1 : 0;
     rest--;
   }
