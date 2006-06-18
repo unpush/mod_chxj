@@ -1902,8 +1902,7 @@ s_setup_position_adjust(qr_code_t* qrcode, char* dst[])
             assert(myy+dyy < module_count);
             dst[myy+dyy][mxx+dxx] = '1';
           }
-          else
-          {
+          else {
             assert(myy+dyy >= 0);
             assert(myy+dyy < module_count);
             dst[myy+dyy][mxx+dxx] = '0';
@@ -1912,10 +1911,12 @@ s_setup_position_adjust(qr_code_t* qrcode, char* dst[])
       }
     }
   }
+
 #ifdef QR_CODE_DEBUG
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, qrcode->r, "end s_setup_position_adjust()");
+  DBG(qrcode->r, "end s_setup_position_adjust()");
 #endif
 }
+
 static void
 s_setup_type_info(qr_code_t* qrcode, char* dst[], qr_mask_pattern_t pat)
 {
