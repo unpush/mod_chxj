@@ -1833,8 +1833,8 @@ s_setup_timing_pattern(qr_code_t* qrcode, char* dst[])
   int module_count = v_module_count_table[qrcode->version];
   int xx, yy;
 #ifdef QR_CODE_DEBUG
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, qrcode->r, "start s_setup_timing_pattern()");
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, qrcode->r, "module_count[%d]", module_count);
+  DBG(qrcode->r, "start s_setup_timing_pattern()");
+  DBG1(qrcode->r, "module_count[%d]", module_count);
 #endif
 
   yy=6;
