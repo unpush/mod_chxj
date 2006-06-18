@@ -2641,6 +2641,7 @@ s_hdml_count_radio_tag(hdml_t* hdml, Node* node)
   }
 }
 
+
 /**
  * The character string is added, and output to the out member of the HDML 
  * structure.
