@@ -1294,10 +1294,11 @@ s_get_char_bit_count(qr_code_t* qrcode, int len)
   for (jj=0,ii=bit_count-1; ii>=0 && jj < bit_count; ii--, jj++) {
     result[ii] = tmp[jj];
   }
+
   result[bit_count] = '\0';
 
 #ifdef QR_CODE_DEBUG
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, qrcode->r, "Character Count bit [%s]", result);
+  DBG1(qrcode->r, "Character Count bit [%s]", result);
 #endif
 
   return result;
