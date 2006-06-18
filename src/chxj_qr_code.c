@@ -1689,8 +1689,9 @@ s_tidy_8bit_code(qr_code_t* qrcode, const char* indata, int data_code_count)
     n = (n == 0) ? 1 : 0;
     rest--;
   }
+
 #ifdef QR_CODE_DEBUG
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, qrcode->r, "tidy len[%d] data_code_count[%d]", strlen(result)/8, data_code_count);
+  DBG2(qrcode->r, "tidy len[%d] data_code_count[%d]", strlen(result)/8, data_code_count);
 #endif
 
   return result;
