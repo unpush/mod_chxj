@@ -1322,16 +1322,14 @@ s_data_to_bin_num(qr_code_t* qrcode, int data_code_count)
   char  tmp_bit[11];
   int data_capacity   = v_capacity_table[qrcode->version*4+qrcode->level].size[qrcode->mode];
 
-  if (data_capacity < len)
-  {
-    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, qrcode->r, "input data is too long");
+  if (data_capacity < len) {
+    DBG(qrcode->r, "input data is too long");
     len = data_capacity;
   }
   setn = len / 3;
   modn = len % 3;
 
-  if (chxj_chk_numeric(qrcode->indata) != 0)
-  {
+  if (chxj_chk_numeric(qrcode->indata) != 0) {
     qrcode->mode_change = QR_CHANGE;
     qrcode->mode        = QR_8BIT_MODE;
     return NULL;
