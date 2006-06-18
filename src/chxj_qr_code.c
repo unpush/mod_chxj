@@ -1637,8 +1637,9 @@ s_data_to_bin_kanji(qr_code_t* qrcode, int data_code_count)
   result[kk] = 0;
 
 #ifdef QR_CODE_DEBUG
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, qrcode->r, "input data --> 2bin result[%s] len:[%d]", result, strlen(result));
+  DBG2(qrcode->r, "input data --> 2bin result[%s] len:[%d]", result, strlen(result));
 #endif
+
   return result;
 }
 
