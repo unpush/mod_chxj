@@ -2288,19 +2288,17 @@ s_hdml_start_select_tag(hdml_t* hdml, Node* node)
                               hdml->var_cnt[hdml->pure_form_cnt]));
       selval = qs_get_selected_value(doc, node, r);
       if (! selval) {
-        ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, 
-                        "selected value not found");
+        DBG(r, "selected value not found");
         selval = qs_alloc_zero_byte_string(r);
       }
       else {
-        ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, 
-                        "selected value found[%s]" , selval);
+        DBG1(r, "selected value found[%s]" , selval);
       }
       selvaltxt = qs_get_selected_value_text(doc, node, r);
-      if (!selvaltxt) {
+      if (!selvaltxt)
         selvaltxt = qs_alloc_zero_byte_string(r);
-      }
-      ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "selvaltxt:[%s]" ,selvaltxt);
+
+      DBG1(r, "selvaltxt:[%s]" ,selvaltxt);
 
       s_output_to_init_vars(hdml, 
                       apr_psprintf(r->pool, 
@@ -2316,6 +2314,7 @@ s_hdml_start_select_tag(hdml_t* hdml, Node* node)
       break;
     }
   }
+
   return hdml->out;
 }
 
@@ -2366,10 +2365,10 @@ s_hdml_start_option_tag(hdml_t* hdml, Node* node)
     txtval    = apr_palloc(r->pool, 1);
     txtval[0] = 0;
   }
-  else {
+  else
     txtval = qs_get_node_value(doc, child);
-  }
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "txtval:[%s]" , txtval);
+
+  DBG1(r, "txtval:[%s]" , txtval);
 
   if (val && txtval) {
     s_output_to_hdml_card(hdml, 
@@ -2541,8 +2540,9 @@ s_hdml_count_radio_tag(hdml_t* hdml, Node* node)
   /* All the child nodes of the specified node are scanned.                   */
   /*--------------------------------------------------------------------------*/
   for (child =  qs_get_child_node(doc,node); 
-       child != NULL; 
+       child; 
        child =  qs_get_next_node(doc,child)) {
+
     char*     type;
     char*     rname;
     char*     rvalue;
@@ -2560,9 +2560,7 @@ s_hdml_count_radio_tag(hdml_t* hdml, Node* node)
     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "found input tag");
     type = qs_get_type_attr(doc, child, r);
     if (!type) {
-      ap_log_rerror(APLOG_MARK, APLOG_ERR,0,r,
-        "Oops! The input tag without the type attribute has been found."
-        "Please give a type.");
+      ERR(r, "Oops! The input tag without the type attribute has been found.Please give a type.");
       continue;
     }
     if ((*type == 'r' || *type == 'R') && strcasecmp(type, "radio") != 0) 
