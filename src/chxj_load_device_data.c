@@ -28,7 +28,7 @@
 
 static void s_set_devices_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node) ;
 static void s_set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node) ;
-static void s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list_t* dtl, Node* node) ;
+static void s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node) ;
 /**
  * load device_data.xml
  */
@@ -66,7 +66,7 @@ static void
 s_set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node) 
 {
   Node* child;
-  device_table_list_t* t;
+  device_table_list* t;
 
   for (child = qs_get_child_node(doc,node);
        child ;
@@ -75,10 +75,10 @@ s_set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node
 
     if ((*name == 'u' || *name == 'U') && strcasecmp(name, "user_agent") == 0 ) {
       Attr* attr;
-      device_table_list_t* dtl;
+      device_table_list* dtl;
 
       if (! conf->devices) {
-        conf->devices = apr_pcalloc(p, sizeof(device_table_list_t));
+        conf->devices = apr_pcalloc(p, sizeof(device_table_list));
         conf->devices->next    = NULL;
         conf->devices->pattern = NULL;
         conf->devices->table   = NULL;
@@ -90,7 +90,7 @@ s_set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node
           if (! t->next)
             break;
         }
-        t->next = apr_pcalloc(p, sizeof(device_table_list_t));
+        t->next = apr_pcalloc(p, sizeof(device_table_list));
         t->next->next    = NULL;
         t->next->pattern = NULL;
         t->next->table   = NULL;
@@ -115,7 +115,7 @@ s_set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node
 }
 
 static void
-s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list_t* dtl, Node* node) 
+s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node) 
 {
   Node* child;
   device_table* dt;
