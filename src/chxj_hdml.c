@@ -2655,8 +2655,10 @@ static hdml_t*
 s_output_to_hdml_out(hdml_t* hdml, char* s)
 {
   hdml->out = qs_out_apr_pstrcat(hdml->doc->r, hdml->out, s, &hdml->out_len);
+
   return hdml;
 }
+
 
 /**
  * The character string is added, and output to the card member of the HDML 
