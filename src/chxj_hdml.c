@@ -2593,8 +2593,7 @@ s_hdml_count_radio_tag(hdml_t* hdml, Node* node)
         break;
       }
       if (strcasecmp(hdml->radio_name_list[ii], rname) == 0) {
-        ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, 
-                        "already registered name:[%s]", rname);
+        DBG1(r, "already registered name:[%s]", rname);
         break;
       }
     }
