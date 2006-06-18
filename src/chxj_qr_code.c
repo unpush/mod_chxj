@@ -2259,8 +2259,7 @@ s_count_11311_pattern(qr_ver_t ver, char* dst[])
       &&  dst[yy][xx+3] == '1'
       &&  dst[yy][xx+4] == '1'
       &&  dst[yy][xx+5] == '0'
-      &&  dst[yy][xx+6] == '1')
-      {
+      &&  dst[yy][xx+6] == '1') {
         point += 40;
       }
     }
@@ -2275,8 +2274,7 @@ s_count_11311_pattern(qr_ver_t ver, char* dst[])
       &&  dst[yy+3][xx] == '1'
       &&  dst[yy+4][xx] == '1'
       &&  dst[yy+5][xx] == '0'
-      &&  dst[yy+6][xx] == '1')
-      {
+      &&  dst[yy+6][xx] == '1') {
         point += 40;
       }
     }
