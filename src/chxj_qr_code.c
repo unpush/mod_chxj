@@ -1392,43 +1392,38 @@ s_data_to_bin_alpha(qr_code_t* qrcode, int data_code_count)
   char  tmp_bit[11+1];
   int data_capacity   = v_capacity_table[qrcode->version*4+qrcode->level].size[qrcode->mode];
 
-  if (data_capacity < len)
-  {
-    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, qrcode->r, "input data is too long");
+  if (data_capacity < len) {
+    DBG(qrcode->r, "input data is too long");
     len = data_capacity;
   }
   setn = len / 2;
   modn = len % 2;
 
   result = (char*)apr_palloc(qrcode->r->pool, setn*11 + ((modn == 1) ? 6 : 0) + 1); 
+
   kk = 0;
-  for (ii=0; ii<len; ii++)
-  {
+  for (ii=0; ii<len; ii++) {
     tmp[ii % 2] = qrcode->indata[ii];
-    if ((ii % 2) == 1)
-    {
+    if ((ii % 2) == 1) {
       tmp[3] = 0;
       int n = s_char_to_num_alpha(qrcode,tmp[0])*45;
+
       if (qrcode->mode_change == QR_CHANGE)
-      {
         return NULL;
-      }
 
       n += s_char_to_num_alpha(qrcode,tmp[1]);
       if (qrcode->mode_change == QR_CHANGE)
-      {
         return NULL;
-      }
-      for (jj=0; jj<11; jj++)
-      {
+
+      for (jj=0; jj<11; jj++) {
         tmp_bit[jj] = (n & 0x01) ?  '1'  : '0';
         n = n >> 1;
       }
+
       tmp_bit[11] = 0;
+
       for (jj=11-1; jj>=0; jj--)
-      {
         result[kk++] = tmp_bit[jj];
-      }
     }
   }
   if (modn != 0)
