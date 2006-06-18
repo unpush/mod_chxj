@@ -2632,8 +2632,7 @@ s_hdml_count_radio_tag(hdml_t* hdml, Node* node)
     /*------------------------------------------------------------------------*/
     chkd = qs_get_checked_attr(hdml->doc, child, hdml->doc->r);
     if (chkd) {
-      ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
-                      apr_psprintf(r->pool,
+      DBG(r,apr_psprintf(r->pool,
                               "The tag scanned now had the checked "
                               "attribute. The value is [%s].",
                               rvalue));
