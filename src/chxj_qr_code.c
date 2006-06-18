@@ -2025,15 +2025,13 @@ s_setup_version_info(qr_code_t* qrcode, char* dst[])
   int xx;
   int yy;
 
-  if (bits == NULL)
-  {
+  if (bits == NULL) {
     /* バージョン７以降のみ対象 */
     return;
   }
 
   /* 右上の型番情報の配置 */
-  for (xx=0; xx<strlen(bits); xx++)
-  {
+  for (xx=0; xx<strlen(bits); xx++) {
     dst[(int)((double)xx/3.0)][(xx % 3) + module_count - 8 - 3] = bits[xx];
   }
   
