@@ -1655,19 +1655,19 @@ s_tidy_8bit_code(qr_code_t* qrcode, const char* indata, int data_code_count)
   int rest;
   char* tmp = NULL;
   char* result;
+
 #ifdef QR_CODE_DEBUG
   DBG2(qrcode->r, "len[%d] data_code_count * 8 [%d]", len, data_code_count * 8);
 #endif
+
   assert (len <= data_code_count * 8);
   /* 8bitで割れない場合は、残りを０埋めし、8で割れるようにする */
-  if (len % 8)
-  {
+  if (len % 8) {
     n = 8 - (len % 8);
     assert (len + n <= data_code_count * 8);
 
     tmp = (char*)apr_palloc(qrcode->r->pool, n);
-    for (ii=0; ii<n; ii++)
-    {
+    for (ii=0; ii<n; ii++) {
       tmp[ii] = '0';
     }
     tmp[ii] = 0;
