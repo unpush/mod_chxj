@@ -1342,25 +1342,22 @@ s_data_to_bin_num(qr_code_t* qrcode, int data_code_count)
     if ((ii % 3) == 2) {
       tmp[4] = 0;
       int n = atoi(tmp);
-      for (jj=0; jj<10; jj++)
-      {
+      for (jj=0; jj<10; jj++) {
         tmp_bit[jj] = (n & 0x01) ?  '1'  : '0';
         n = n >> 1;
       }
       tmp_bit[10] = 0;
-      for (jj=10-1; jj>=0; jj--)
-      {
+      for (jj=10-1; jj>=0; jj--) {
         result[kk++] = tmp_bit[jj];
       }
     }
   }
-  if (modn != 0)
-  {
+
+  if (modn != 0) {
     tmp[modn] = 0;
     int n = atoi(tmp);
     int bb = (modn == 1) ? 4 : 7;
-    for (jj=0; jj< bb; jj++)
-    {
+    for (jj=0; jj< bb; jj++) {
       tmp_bit[jj] = (n & 0x01) ?  '1'  : '0';
       n = n >> 1;
     }
