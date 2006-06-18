@@ -164,8 +164,9 @@ chxj_exchange_hdml(request_rec* r,
     /* Here, the parsing of the received character string is done             */
     /*------------------------------------------------------------------------*/
     char *ss = apr_pstrdup(r->pool, src);
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
-                    "input srclen=[%d]\n", srclen);
+
+    DBG1(r, "input srclen=[%d]\n", srclen);
+
     qs_init_malloc(&doc); 
     qs_init_root_node(&doc);
     ss[srclen] = '\0';
@@ -177,7 +178,7 @@ chxj_exchange_hdml(request_rec* r,
     s_hdml_count_radio_tag(&hdml, qs_get_root(&doc));
 
     dst = s_hdml_node_exchange(&hdml, qs_get_root(&doc), 0);
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "tmp=[%s]", dst);
+    DBG1(r,"tmp=[%s]", dst);
     qs_all_free(&doc,QX_LOGMARK);
   }
 
@@ -512,9 +513,9 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
       /*----------------------------------------------------------------------*/
       else
       if (strcasecmp(name, "chxj:if") == 0) {
-        ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag found");
+        DBG(r,"chxj:if tag found");
         if (chxj_chxjif_is_mine(hdml->spec, doc, child)) {
-          ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag is mine");
+          DBG(r,"chxj:if tag is mine");
           char* parse_attr = NULL;
   
           parse_attr = qs_get_parse_attr(doc, child, r);
@@ -648,7 +649,7 @@ s_hdml_search_emoji(hdml_t* hdml, char* txt, char** rslt)
   r = hdml->doc->r;
 
   if (!spec)
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "spec is NULL");
+    DBG(r,"spec is NULL");
 
   for (ee = hdml->conf->emoji;
        ee;
@@ -657,8 +658,7 @@ s_hdml_search_emoji(hdml_t* hdml, char* txt, char** rslt)
     unsigned char hex2byte;
 
     if (!ee->imode) {
-      ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
-                      "emoji->imode is NULL");
+      DBG(r, "emoji->imode is NULL");
       continue;
     }
 
@@ -1482,7 +1482,7 @@ s_hdml_do_input_text_tag(hdml_t* hdml, Node* tag)
   val  = qs_get_value_attr      (doc, tag, r);
 
   fmt  = qs_conv_istyle_to_format(r, is);
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "qs_conv_istyle_to_format end");
+  DBG(r,"qs_conv_istyle_to_format end");
         
   if (fmt) {
     if (mlen) {
@@ -1720,9 +1720,7 @@ s_hdml_do_input_radio_tag(hdml_t* hdml, Node* tag)
   for (ii=0; ii<MAX_RADIO_COUNT; ii++) {
     if (! hdml->radio_name_list[ii]) {
       /* @todo Oops..  */
-      ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, 
-                      "%s:%d Oops... radio list is null", 
-                      APLOG_MARK);
+      DBG(r, "Oops... radio list is null");
       /*----------------------------------------------------------------------*/
       /* Processing is ended because it doesn't happen off the fly.           */
       /*----------------------------------------------------------------------*/
@@ -1734,9 +1732,7 @@ s_hdml_do_input_radio_tag(hdml_t* hdml, Node* tag)
   }
   if (ii == MAX_RADIO_COUNT) {
     /* @todo Oops.. */
-    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, 
-                    "%s:%d Oops... The same name was not in the list. ", 
-                    APLOG_MARK);
+    DBG(r,"Oops... The same name was not in the list. ");
     /*------------------------------------------------------------------------*/
     /* Processing is ended because it doesn't happen off the fly.             */
     /*------------------------------------------------------------------------*/

@@ -696,6 +696,7 @@ chxj_global_config_create(apr_pool_t* pool, server_rec* s)
                               apr_pool_cleanup_null,
                               pool);
   DBG(s, "end chxj_global_config_create()");
+
   return conf;
 }
 
@@ -722,8 +723,7 @@ chxj_init_module(apr_pool_t *p,
                   apr_pool_t *ptemp, 
                   server_rec *s)
 {
-  ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, s,
-                  "start chxj_init_module()");
+  DBG(s,"start chxj_init_module()");
 
   ap_add_version_component(p, CHXJ_VERSION_PREFIX CHXJ_VERSION);
 
