@@ -1426,20 +1426,22 @@ s_data_to_bin_alpha(qr_code_t* qrcode, int data_code_count)
         result[kk++] = tmp_bit[jj];
     }
   }
-  if (modn != 0)
-  {
+
+  if (modn) {
+
     tmp[modn] = 0;
     int n = s_char_to_num_alpha(qrcode,tmp[0]);
+
     if (qrcode->mode_change == QR_CHANGE)
-    {
       return NULL;
-    }
-    for (jj=0; jj< 6; jj++)
-    {
+
+    for (jj=0; jj< 6; jj++) {
       tmp_bit[jj] = (n & 0x01) ?  '1'  : '0';
       n = n >> 1;
     }
+
     tmp_bit[6] = 0;
+
     for (jj=6-1; jj>=0; jj--)
     {
       result[kk++] = tmp_bit[jj];
