@@ -1965,13 +1965,12 @@ s_setup_type_info(qr_code_t* qrcode, char* dst[], qr_mask_pattern_t pat)
 
   typedata ^= gfmask;
 
-  for (yy=0; yy<6; yy++)
-  {
+  for (yy=0; yy<6; yy++) {
     assert(yy >= 0 && yy < module_count);
     dst[yy][8] = (((typedata >> yy) & 0x01) == 1) ?  '1' : '0';
   }
-  for (; yy<8; yy++)
-  {
+
+  for (; yy<8; yy++) {
     assert(yy + 1 >= 0 && yy + 1 < module_count);
     dst[yy+1][8] = (((typedata >> yy) & 0x01) == 1) ?  '1' : '0';
   }
