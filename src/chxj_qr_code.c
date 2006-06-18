@@ -2071,10 +2071,10 @@ s_map_data(qr_code_t* qrcode,
     }
     do {
       for (ii=0; ii < 2; ii++) {
-        if (dst[yy][xx - ii] != -1) {
+        if (dst[yy][xx - ii] != -1)
           /* 既に配置されている場合 */
           continue;
-        }
+
         if (in_pos < data_count)
         {
           assert(yy >= 0 && yy < module_count);
