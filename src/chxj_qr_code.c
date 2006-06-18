@@ -2081,10 +2081,8 @@ s_map_data(qr_code_t* qrcode,
 
           dst[yy][xx-ii] = (((indata[in_pos] >> now_bit) & 0x01) == 1) ? '1' : '0';
           mask = s_get_mask(pat, yy, xx - ii);
-          if (mask == 1)
-          {
-            if (dst[yy][xx-ii] == '1')
-            {
+          if (mask == 1) {
+            if (dst[yy][xx-ii] == '1') {
               dst[yy][xx-ii] = '0';
             }
             else
