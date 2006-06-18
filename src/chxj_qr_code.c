@@ -1557,9 +1557,11 @@ s_data_to_bin_8bit(qr_code_t* qrcode, int data_code_count)
       result[kk++] = tmp_bit[jj];
   }
   result[kk] = 0;
+
 #ifdef QR_CODE_DEBUG
   DBG2(qrcode->r, "input data --> 2bin result[%s] len:[%d]", result, strlen(result));
 #endif
+
   return result;
 }
 
