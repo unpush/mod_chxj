@@ -1533,29 +1533,28 @@ s_data_to_bin_8bit(qr_code_t* qrcode, int data_code_count)
   char* result;
   char  tmp_bit[8+1];
   int data_capacity   = v_capacity_table[qrcode->version*4+qrcode->level].size[qrcode->mode];
-  if (data_capacity < len)
-  {
-    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, qrcode->r, "input data is too long");
+
+  if (data_capacity < len) {
+    DBG(qrcode->r, "input data is too long");
     len = data_capacity;
   }
 
   result = (char*)apr_palloc(qrcode->r->pool, len*8 + 1); 
+
   kk = 0;
-  for (ii=0; ii<len; ii++)
-  {
+  for (ii=0; ii<len; ii++) {
     int n;
 
     n = (int)qrcode->indata[ii];
-    for (jj=0; jj<8; jj++)
-    {
+    for (jj=0; jj<8; jj++) {
       tmp_bit[jj] = (n & 0x01) ? '1' : '0';
       n = n >> 1;
     }
+
     tmp_bit[8] = 0;
+
     for (jj=8-1; jj>=0; jj--)
-    {
       result[kk++] = tmp_bit[jj];
-    }
   }
   result[kk] = 0;
 #ifdef QR_CODE_DEBUG
