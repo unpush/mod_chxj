@@ -243,6 +243,7 @@ module AP_MODULE_DECLARE_DATA chxj_module;
 #define DBG(X,Y)  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(X),(Y))
 #define DBG1(X,Y,Za)  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za))
 #define DBG2(X,Y,Za,Zb)  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za),(Zb))
+#define DBG3(X,Y,Za,Zb,Zc)  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za),(Zb),(Zc))
 #define ERR(X,Y)  ap_log_rerror(APLOG_MARK,APLOG_ERR,0,(X),(Y))
 #define ERR1(X,Y,Za)  ap_log_rerror(APLOG_MARK,APLOG_ERR,0,(X),(Y),(Za))
 

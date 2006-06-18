@@ -805,7 +805,7 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
   int               module_count = v_module_count_table[qrcode->version];
 
 #ifdef QR_CODE_DEBUG
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "start chxj_qr_code()");
+  DBG(r,"start chxj_qr_code()");
 #endif
   do {
     /*------------------------------------------------------------------------*/
@@ -813,7 +813,7 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
     /*------------------------------------------------------------------------*/
     binstr = apr_psprintf(r->pool, "%s", s_get_mode_spec(qrcode));
 #ifdef QR_CODE_DEBUG
-    ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "s_get_mode_spec()");
+    DBG(r,"s_get_mode_spec()");
 #endif
 
     /*------------------------------------------------------------------------*/
