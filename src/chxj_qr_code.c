@@ -902,7 +902,7 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
     for (ii=0; ii<data_code_count; ii++) {
       rows = apr_pstrcat(r->pool, rows, apr_psprintf(r->pool, "[%02x]\n", (unsigned char)decstr[ii]), NULL);
     }
-    ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "decstr[%s]", rows);
+    DBG1(r,"decstr[%s]", rows);
   }while(0);
 #endif
 
