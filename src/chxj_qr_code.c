@@ -1958,8 +1958,7 @@ s_setup_type_info(qr_code_t* qrcode, char* dst[], qr_mask_pattern_t pat)
 
 
   typedata = sdata << 10;
-  while (s_get_bit_count(typedata) - s_get_bit_count(gf) >= 0)
-  {
+  while (s_get_bit_count(typedata) - s_get_bit_count(gf) >= 0) {
     typedata ^= (gf << (s_get_bit_count(typedata) - s_get_bit_count(gf)));
   }
   typedata = (sdata << 10 | typedata);
