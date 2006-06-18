@@ -113,7 +113,7 @@ chxj_exchange_hdml(request_rec* r,
   *dstlen = srclen;
   dst = chxj_qr_code_blob_handler(r, src, (size_t*)dstlen);
   if (dst) {
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"i found qrcode xml");
+    DBG(r,"i found qrcode xml");
     return dst;
   }
   ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"not found qrcode xml");

@@ -666,8 +666,7 @@ chxj_global_config_create(apr_pool_t* pool, server_rec* s)
   mod_chxj_global_config* conf;
   void*           param;
 
-  ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, s,
-                  "start chxj_global_config_create()");
+  DBG(s, "start chxj_global_config_create()");
 
 
   apr_pool_userdata_get(&param, CHXJ_MOD_CONFIG_KEY, pool);
@@ -679,8 +678,7 @@ chxj_global_config_create(apr_pool_t* pool, server_rec* s)
     /*------------------------------------------------------------------------*/
     /* reused for lifetime of the server                                      */
     /*------------------------------------------------------------------------*/
-    ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, s, 
-                   "end chxj_global_config_create() reused.");
+    DBG(s, "end chxj_global_config_create() reused.");
     return conf; 
   }
 
