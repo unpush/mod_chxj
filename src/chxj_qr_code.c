@@ -1891,16 +1891,13 @@ s_setup_position_adjust(qr_code_t* qrcode, char* dst[])
       if (dst[myy][mxx] != -1)
         continue;
 
-      for (dyy = -2; dyy <= 2; dyy++)
-      {
-        for (dxx= -2; dxx <= 2; dxx++)
-        {
+      for (dyy = -2; dyy <= 2; dyy++) {
+        for (dxx= -2; dxx <= 2; dxx++) {
           if (dyy == -2 
           ||  dxx == -2
           ||  dyy == 2
           ||  dxx == 2
-          ||  (dyy == 0 && dxx == 0))
-          {
+          ||  (dyy == 0 && dxx == 0)) {
             assert(myy+dyy >= 0);
             assert(myy+dyy < module_count);
             dst[myy+dyy][mxx+dxx] = '1';
