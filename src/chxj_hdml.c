@@ -2692,13 +2692,13 @@ s_output_to_postdata(hdml_t* hdml, char* s)
 {
   request_rec*          r = hdml->doc->r;
 
-  if (strlen(hdml->postdata[hdml->pure_form_cnt])) {
+  if (strlen(hdml->postdata[hdml->pure_form_cnt]))
     hdml->postdata[hdml->pure_form_cnt] =
                   apr_pstrcat(r->pool,
                               hdml->postdata[hdml->pure_form_cnt],
                               "&",
                               NULL);
-  }
+
   hdml->postdata[hdml->pure_form_cnt] =
           apr_pstrcat(r->pool, 
                           hdml->postdata[hdml->pure_form_cnt],
