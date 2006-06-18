@@ -77,10 +77,10 @@ static void  s_hdml_do_input_checkbox_tag(hdml_t* hdml, Node* tag);
 static void  s_hdml_tag_output_upper_half(hdml_t* hdml, Node* node);
 static hdml_t* s_output_to_hdml_out       (hdml_t* hdml, char* s);
 static hdml_t* s_output_to_hdml_card      (hdml_t* hdml, char* s);
-static void  s_output_to_postdata       (hdml_t* hdml, char* s);
-static void  s_output_to_init_vars      (hdml_t* hdml, char* s);
-static int   s_hdml_search_emoji         (hdml_t* hdml, char* txt, char** rslt);
-static void  s_hdml_chxjif_tag           (hdml_t* hdml, Node* node);
+static void  s_output_to_postdata         (hdml_t* hdml, char* s);
+static void  s_output_to_init_vars        (hdml_t* hdml, char* s);
+static int   s_hdml_search_emoji          (hdml_t* hdml, char* txt, char** rslt);
+static void  s_hdml_chxjif_tag            (hdml_t* hdml, Node* node);
 
 
 

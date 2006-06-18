@@ -82,6 +82,8 @@ static char* s_xhtml_1_0_start_option_tag (xhtml_t* xhtml, Node* node);
 static char* s_xhtml_1_0_end_option_tag   (xhtml_t* xhtml, Node* node);
 static char* s_xhtml_1_0_start_div_tag    (xhtml_t* xhtml, Node* node);
 static char* s_xhtml_1_0_end_div_tag      (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_start_textarea_tag(xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_end_textarea_tag(xhtml_t* xhtml, Node* node);
 static void  s_init_xhtml(xhtml_t* xhtml, Doc* doc, request_rec* r, device_table* spec);
 static int   s_xhtml_search_emoji(xhtml_t* xhtml, char* txt, char** rslt);
 static void  s_xhtml_1_0_chxjif_tag(xhtml_t* xhtml, Node* node);
@@ -220,6 +222,15 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
        child = qs_get_next_node(doc,child)) {
     char* name = qs_get_node_name(doc,child);
 
+    /*------------------------------------------------------------------------*/
+    /* <TEXTAREA> (for TEST)                                                  */
+    /*------------------------------------------------------------------------*/
+    if ((*name == 't' || *name == 'T') && strcasecmp(name, "textarea") == 0) {
+      s_xhtml_1_0_start_textarea_tag  (xhtml, child);
+      s_xhtml_1_0_node_exchange       (xhtml, child, indent+1);
+      s_xhtml_1_0_end_textarea_tag    (xhtml, child);
+    }
+    else
     /*------------------------------------------------------------------------*/
     /* <P> (for TEST)                                                         */
     /*------------------------------------------------------------------------*/
@@ -603,6 +614,10 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
             ii++;
           }
           else if (xhtml->pre_flag) {
+            one_byte[0] = textval[ii+0];
+            tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+          }
+          else if (xhtml->textarea_flag) {
             one_byte[0] = textval[ii+0];
             tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
           }
@@ -2393,6 +2408,69 @@ s_xhtml_1_0_chxjif_tag(xhtml_t* xhtml, Node* node)
     xhtml->out = apr_pstrcat(r->pool, xhtml->out, child->otext, NULL);
     s_xhtml_1_0_chxjif_tag(xhtml, child);
   }
+}
+
+/**
+ * It is a handler who processes the TEXTARE tag.
+ *
+ * @param xhtml_1_0  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The TEXTAREA tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_xhtml_1_0_start_textarea_tag(xhtml_t* xhtml, Node* node) 
+{
+  Doc*          doc = xhtml->doc;
+  request_rec*  r   = doc->r;
+  Attr* attr;
+
+  xhtml->textarea_flag++;
+  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<textarea ", NULL);
+
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+
+    char* name  = qs_get_attr_name(doc,attr);
+    char* value = qs_get_attr_value(doc,attr);
+
+    if ((*name == 'n' || *name == 'N') && strcasecmp(name, "name") == 0) {
+      xhtml->out = apr_pstrcat(r->pool, xhtml->out, " name=\"",value,"\"", NULL);
+    }
+    else 
+    if ((*name == 'r' || *name == 'R') && strcasecmp(name, "rows") == 0) {
+      xhtml->out = apr_pstrcat(r->pool, xhtml->out, " rows=\"",value,"\"", NULL);
+    }
+    else 
+    if ((*name == 'c' || *name == 'C') && strcasecmp(name, "cols") == 0) {
+      xhtml->out = apr_pstrcat(r->pool, xhtml->out, " cols=\"",value,"\"", NULL);
+    }
+  }
+
+  xhtml->out = apr_pstrcat(r->pool, xhtml->out, ">\r\n", NULL);
+
+  return xhtml->out;
+}
+
+/**
+ * It is a handler who processes the TEXTAREA tag.
+ *
+ * @param xhtml_1_0  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The TEXTAREA tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_xhtml_1_0_end_textarea_tag(xhtml_t* xhtml, Node* child) 
+{
+  Doc*          doc = xhtml->doc;
+  request_rec*  r   = doc->r;
+
+  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</textarea>\r\n", NULL);
+  xhtml->textarea_flag--;
+
+  return xhtml->out;
 }
 /*
  * vim:ts=2 et
