@@ -1337,11 +1337,9 @@ s_data_to_bin_num(qr_code_t* qrcode, int data_code_count)
 
   result = (char*)apr_palloc(qrcode->r->pool, setn*10 + ((modn == 1) ? 4 : (modn == 2) ? 7 : 0) + 1); 
   kk = 0;
-  for (ii=0; ii<len; ii++)
-  {
+  for (ii=0; ii<len; ii++) {
     tmp[ii % 3] = qrcode->indata[ii];
-    if ((ii % 3) == 2)
-    {
+    if ((ii % 3) == 2) {
       tmp[4] = 0;
       int n = atoi(tmp);
       for (jj=0; jj<10; jj++)
