@@ -78,8 +78,7 @@ qs_log(Doc* doc, int log_level,const char* f, int l, char* msg)
     }
     while(0);
 #endif
-    if (doc->r != NULL)
-    {
+    if (doc->r) {
       ap_log_rerror(f,l, APLOG_CRIT, 0, doc->r, msg);
       chxj_init_module_kill((void*)doc->r->server);
     }
