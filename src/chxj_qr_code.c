@@ -2116,7 +2116,7 @@ s_map_data(qr_code_t* qrcode,
     }
   }
 #ifdef QR_CODE_DEBUG
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, qrcode->r, "end s_map_data()");
+  DBG(qrcode->r, "end s_map_data()");
 #endif
 }
 
