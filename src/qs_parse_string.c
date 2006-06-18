@@ -244,14 +244,12 @@ qs_dump_node(Doc* doc, Node* node, int indent)
   for (;p;p = (Node*)qs_get_next_node(doc,p)) {
     Attr* attr;
     if ((char*)qs_get_node_value(doc,p) != NULL) {
-      ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0, doc->r,
-        "%*.*sNode:[%s][%s]\n", indent,indent," ",
+      DBG5(doc->r,"%*.*sNode:[%s][%s]\n", indent,indent," ",
                       (char*)qs_get_node_name(doc,p),
                       (char*)qs_get_node_value(doc,p));
     }
     else {
-      ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0, doc->r,
-        "%*.*sNode:[%s]\n", indent,indent," ", qs_get_node_name(doc,p));
+      DBG4(doc->r,"%*.*sNode:[%s]\n", indent,indent," ", qs_get_node_name(doc,p));
     }
     for (attr = (Attr*)qs_get_attr(doc,p); attr; attr = (Attr*)qs_get_next_attr(doc,attr)) {
       ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0, doc->r,

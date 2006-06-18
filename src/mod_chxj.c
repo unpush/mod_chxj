@@ -33,6 +33,7 @@
 #include "apr_pools.h"
 
 #include "mod_chxj.h"
+#include "chxj_encoding.h"
 #include "qs_ignore_sp.h"
 #include "qs_log.h"
 #include "qs_malloc.h"

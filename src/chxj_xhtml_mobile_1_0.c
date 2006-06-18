@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 #include "mod_chxj.h"
+#include "chxj_encoding.h"
 #include "chxj_xhtml_mobile_1_0.h"
 #include "chxj_hdml.h"
 #include "chxj_dump.h"
@@ -1197,12 +1198,27 @@ s_xhtml_1_0_start_a_tag(xhtml_t* xhtml, Node* node)
     }
     else
     if ((*name == 'h' || *name == 'H') && strcasecmp(name, "href") == 0) {
+#if 0
+      apr_size_t ilen;
+      char* dbuf;
+      ap_unescape_url(value);
+      ilen = strlen(value); 
+      dbuf = chxj_encoding(r, (const char*)value, (apr_size_t*)&ilen);
+      dbuf = ap_escape_uri(r->pool,dbuf);
+      xhtml->out = apr_pstrcat(r->pool, 
+                      xhtml->out, 
+                      " href=\"", 
+                      dbuf, 
+                      "\"", 
+                      NULL);
+#else
       xhtml->out = apr_pstrcat(r->pool, 
                       xhtml->out, 
                       " href=\"", 
                       value, 
                       "\"", 
                       NULL);
+#endif
     }
     else
     if ((*name == 'a' || *name == 'A') && strcasecmp(name, "accesskey") == 0) {
