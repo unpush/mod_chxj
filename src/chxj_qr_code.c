@@ -1443,9 +1443,7 @@ s_data_to_bin_alpha(qr_code_t* qrcode, int data_code_count)
     tmp_bit[6] = 0;
 
     for (jj=6-1; jj>=0; jj--)
-    {
       result[kk++] = tmp_bit[jj];
-    }
   }
   result[kk] = 0;
   return result;
