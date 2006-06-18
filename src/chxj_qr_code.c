@@ -1974,17 +1974,17 @@ s_setup_type_info(qr_code_t* qrcode, char* dst[], qr_mask_pattern_t pat)
     assert(yy + 1 >= 0 && yy + 1 < module_count);
     dst[yy+1][8] = (((typedata >> yy) & 0x01) == 1) ?  '1' : '0';
   }
-  for (; yy<15; yy++)
-  {
+
+  for (; yy<15; yy++) {
     assert(module_count - 15 + yy >= 0 && module_count - 15 + yy < module_count);
     dst[module_count - 15 + yy][8] = (((typedata >> yy) & 0x01) == 1) ?  '1' : '0';
   }
 
-  for (xx = 0; xx < 8; xx++)
-  {
+  for (xx = 0; xx < 8; xx++) {
     assert(module_count - xx -1 >= 0 && module_count - xx - 1 < module_count);
     dst[8][module_count - xx - 1] = (((typedata >> xx) & 0x01) == 1) ? '1' : '0';
   }
+
   for (; xx<9; xx++)
   {
     assert(15 - xx >= 0 && 15 - xx < module_count);
