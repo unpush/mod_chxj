@@ -1999,7 +1999,7 @@ s_setup_type_info(qr_code_t* qrcode, char* dst[], qr_mask_pattern_t pat)
   dst[module_count - 8][8] = '1';
 
 #ifdef QR_CODE_DEBUG
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, qrcode->r, "start s_setup_type_info()");
+  DBG(qrcode->r, "start s_setup_type_info()");
 #endif
 }
 
@@ -2008,8 +2008,7 @@ s_get_bit_count(int data)
 {
   int count = 0;
 
-  while (data != 0) 
-  {
+  while (data != 0) {
     count++;
     data >>= 1;
   }
