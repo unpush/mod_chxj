@@ -1,0 +1,11 @@
+mod-chxj-0.6.1 stable; urgency=low
+
+  * Addition of ChxjConvertRule directive
+  * To execute regcomp when the definition file is read, it changes. 
+  * Input and output character-code conversion function addition
+  * h tag p tag pre tag textarea tag ul (Excluding HDML) tag ol tag li tag addition. 
+  * Some bug fix. 
+  * For some FreeBSD
+
+ -- Atsushi Konno (konn@user.sourceforge.jp) Sun Jun 18 18:27:52 JST 2006
+
