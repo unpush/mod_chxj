@@ -2056,9 +2056,9 @@ s_map_data(qr_code_t* qrcode,
   int mask;
 
 #ifdef QR_CODE_DEBUG
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, qrcode->r, "start s_map_data()");
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, qrcode->r, "module_count[%d]", module_count);
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, qrcode->r, "data_count[%d]", data_count);
+  DBG(qrcode->r, "start s_map_data()");
+  DBG1(qrcode->r, "module_count[%d]", module_count);
+  DBG1(qrcode->r, "data_count[%d]", data_count);
 #endif
   in_pos = 0;
   now_bit = 7;
