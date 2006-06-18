@@ -822,8 +822,7 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
     binstr = apr_pstrcat(r->pool, binstr, 
                   s_get_char_bit_count(qrcode, strlen(qrcode->indata)), NULL);
 #ifdef QR_CODE_DEBUG
-    ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, 
-                  "s_get_char_bit_count()[%s]", binstr);
+    DBG1(r, "s_get_char_bit_count()[%s]", binstr);
 #endif
 
     /*------------------------------------------------------------------------*/
@@ -831,8 +830,7 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
     /*------------------------------------------------------------------------*/
     data_code_count = v_data_code_count[qrcode->version][qrcode->level];
 #ifdef QR_CODE_DEBUG
-    ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, 
-                  "data_code_count=[%d]", data_code_count);
+    DBG1(r,"data_code_count=[%d]", data_code_count);
 #endif
 
     /*------------------------------------------------------------------------*/
@@ -865,7 +863,7 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
   /*--------------------------------------------------------------------------*/
   binstr = apr_pstrcat(r->pool, binstr, real_data, NULL);
 #ifdef QR_CODE_DEBUG
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "Before TERM BIT[%s]", binstr);
+  DBG1(r,"Before TERM BIT[%s]", binstr);
 #endif
   if (data_code_count * 8 > strlen(binstr)) {
     int binstr_len = strlen(binstr);
@@ -874,7 +872,7 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
     }
   }
 #ifdef QR_CODE_DEBUG
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "After TERM BIT[%s] len[%d]bit [%f]byte", binstr, strlen(binstr), (float)(((float)strlen(binstr))/8.0));
+  DBG3(r, "After TERM BIT[%s] len[%d]bit [%f]byte", binstr, strlen(binstr), (float)(((float)strlen(binstr))/8.0));
   ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "add term data");
 #endif
 
