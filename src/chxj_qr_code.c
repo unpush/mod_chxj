@@ -914,8 +914,7 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
   eccstr = apr_palloc(r->pool, module_count* module_count);
   data_total_count = chxj_calc_ecc(qrcode, (unsigned char*)decstr, eccstr);
 #ifdef QR_CODE_DEBUG
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, 
-                  "chxj_calc_ecc() total_count[%d]", data_total_count);
+  DBG1(r,"chxj_calc_ecc() total_count[%d]", data_total_count);
 #endif
 
   /*--------------------------------------------------------------------------*/
@@ -949,7 +948,7 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
   /* 最適マスクで再度作りなおし                                               */
   /*--------------------------------------------------------------------------*/
 #ifdef QR_CODE_DEBUG
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "selected mask[%d]", min_mask_pattern);
+  DBG1(r, "selected mask[%d]", min_mask_pattern);
 #endif
   s_init_modules(qrcode, min_mask_pattern, module);
   s_map_data(qrcode, 
@@ -966,7 +965,7 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
   do {
     int xx, yy;
     int module_count = v_module_count_table[qrcode->version];
-    ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "loop to [%d]", module_count);
+    DBG1(r,"loop to [%d]", module_count);
     for (yy=0; yy<module_count; yy++)
     {
       char *rows ;
@@ -977,14 +976,14 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
       {
         rows = apr_pstrcat(r->pool, rows, "[", apr_psprintf(r->pool, "%c", module[yy][xx]), "]", NULL);
       }
-      ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "%d:%s", yy,rows);
+      DBG2(r,"%d:%s", yy,rows);
     }
   } while(0);
   /* DEBUG END */
 #endif
 
 #ifdef QR_CODE_DEBUG
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "end chxj_qr_code()");
+  DBG(r,"end chxj_qr_code()");
 #endif
 }
 
@@ -1230,10 +1229,10 @@ chxj_qrcode_node_to_qrcode(qr_code_t* qrcode, Node* node)
     }
   }
 #ifdef QR_CODE_DEBUG
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "qrcode->version[%d]", qrcode->version);
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "qrcode->level[%d]", qrcode->level);
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "qrcode->mode[%d]", qrcode->mode);
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "qrcode->indata[%s]", qrcode->indata);
+  DBG1(r,"qrcode->version[%d]", qrcode->version);
+  DBG1(r,"qrcode->level[%d]", qrcode->level);
+  DBG1(r,"qrcode->mode[%d]", qrcode->mode);
+  DBG1(r,"qrcode->indata[%s]", qrcode->indata);
 #endif
 }
 
