@@ -881,8 +881,8 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
   /*--------------------------------------------------------------------------*/
   binstr = s_tidy_8bit_code(qrcode, binstr, data_code_count);
 #ifdef QR_CODE_DEBUG
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "After Tidy 8 BIT[%s]", binstr);
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "s_tidy_8bit_code()");
+  DBG1(r,"After Tidy 8 BIT[%s]", binstr);
+  DBG(r,"s_tidy_8bit_code()");
 #endif
 
   /*--------------------------------------------------------------------------*/
