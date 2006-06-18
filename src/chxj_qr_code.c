@@ -1838,12 +1838,9 @@ s_setup_timing_pattern(qr_code_t* qrcode, char* dst[])
 #endif
 
   yy=6;
-  for (xx=8; xx < module_count-8; xx++)
-  {
+  for (xx=8; xx < module_count-8; xx++) {
     if (dst[yy][xx] != -1)
-    {
       continue;
-    }
 
     assert(yy >= 0 && yy < module_count);
     assert(xx >= 0 && xx < module_count);
@@ -1852,12 +1849,9 @@ s_setup_timing_pattern(qr_code_t* qrcode, char* dst[])
   }
 
   xx=6;
-  for (yy=8; yy < module_count-8; yy++)
-  {
+  for (yy=8; yy < module_count-8; yy++) {
     if (dst[yy][xx] != -1)
-    {
       continue;
-    }
 
     assert(yy >= 0 && yy < module_count);
     assert(xx >= 0 && xx < module_count);
