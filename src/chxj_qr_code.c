@@ -1731,17 +1731,15 @@ s_init_modules(qr_code_t* qrcode, qr_mask_pattern_t pat, char* dst[])
 {
   int module_count = v_module_count_table[qrcode->version];
   int yy;
-#ifdef QR_CODE_DEBUG
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, qrcode->r,
-                                    "start s_init_modules()");
 
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, qrcode->r,
-                                    "module_count[%d]", module_count);
+#ifdef QR_CODE_DEBUG
+  DBG(qrcode->r, "start s_init_modules()");
+
+  DBG(qrcode->r, "module_count[%d]", module_count);
 #endif
+
   for (yy=0; yy<module_count; yy++)
-  {
     memset(&dst[yy][0], -1, module_count+1);
-  }
 
   s_setup_probe_position(qrcode, dst, 0, 0);
   s_setup_probe_position(qrcode, dst, 0, module_count - 7);
