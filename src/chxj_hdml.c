@@ -2704,9 +2704,8 @@ s_output_to_postdata(hdml_t* hdml, char* s)
                           hdml->postdata[hdml->pure_form_cnt],
                           qs_trim_string(r, s),
                           NULL);
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, 
-                  "POSTDATA:[%s]", 
-                  hdml->postdata[hdml->pure_form_cnt] );
+
+  DBG1(r, "POSTDATA:[%s]", hdml->postdata[hdml->pure_form_cnt] );
 }
 
 /**
