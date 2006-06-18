@@ -2234,8 +2234,7 @@ s_count_same_block(qr_ver_t ver, char* dst[])
       if (dst[yy+0][xx+1] == '1') count++;
       if (dst[yy+1][xx+0] == '1') count++;
       if (dst[yy+1][xx+1] == '1') count++;
-      if (count == 0 || count == 4)
-      {
+      if (count == 0 || count == 4) {
         point += 3;
       }
     }
