@@ -2188,9 +2188,9 @@ s_count_same_module(qr_ver_t ver, char* dst[])
       prev_value = (unsigned char)dst[yy][xx];
     }
   }
+
   /* 縦方向でチェック */
-  for (xx=0; xx<module_count; xx++)
-  {
+  for (xx=0; xx<module_count; xx++) {
     prev_value = -1;
     same_count = 0;
     for (yy=0; yy<module_count; yy++)
