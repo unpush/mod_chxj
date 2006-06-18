@@ -2673,8 +2673,11 @@ static hdml_t*
 s_output_to_hdml_card(hdml_t* hdml, char* s)
 {
   hdml->card = qs_out_apr_pstrcat(hdml->doc->r, hdml->card, s, &hdml->card_len);
+
   return hdml;
 }
+
+
 
 /**
  * The data for the post is added, and output. 
