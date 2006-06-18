@@ -2085,14 +2085,12 @@ s_map_data(qr_code_t* qrcode,
             if (dst[yy][xx-ii] == '1') {
               dst[yy][xx-ii] = '0';
             }
-            else
-            {
+            else {
               dst[yy][xx-ii] = '1';
             }
           }
         } 
-        if (--now_bit < 0)
-        {
+        if (--now_bit < 0) {
           in_pos++;
           now_bit = 7;
         }
