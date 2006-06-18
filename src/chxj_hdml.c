@@ -2557,7 +2557,8 @@ s_hdml_count_radio_tag(hdml_t* hdml, Node* node)
       continue;
     }
 
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "found input tag");
+    DBG(r,"found input tag");
+
     type = qs_get_type_attr(doc, child, r);
     if (!type) {
       ERR(r, "Oops! The input tag without the type attribute has been found.Please give a type.");
@@ -2566,20 +2567,21 @@ s_hdml_count_radio_tag(hdml_t* hdml, Node* node)
     if ((*type == 'r' || *type == 'R') && strcasecmp(type, "radio") != 0) 
       continue;
 
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "found type=radio");
+    DBG(r, "found type=radio");
+
     rname  = qs_get_name_attr (doc, child, r);
     rvalue = qs_get_value_attr(doc, child, r);
+
     if (!rname) {
       /*----------------------------------------------------------------------*/
       /* Oops!. The input tag without the name attribute has been found.      */
       /*----------------------------------------------------------------------*/
-      ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,
-        "Oops!. The input tag without the name attribute has been found."
-        "Please give a name.");
+      DBG(r, "Oops!. The input tag without the name attribute has been found. Please give a name.");
       continue;
     }
 
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "found name attribute");
+    DBG(r, "found name attribute");
+
     /*------------------------------------------------------------------------*/
     /* It scans in radio_name_list. When the same value exists, the           */
     /* value is overwrited.                                                   */
@@ -2587,8 +2589,7 @@ s_hdml_count_radio_tag(hdml_t* hdml, Node* node)
     /*------------------------------------------------------------------------*/
     for (ii=0; ii<MAX_RADIO_COUNT; ii++) {
       if (! hdml->radio_name_list[ii]) {
-        ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, 
-                        "new name:[%s]", rname);
+        DBG1(r, "new name:[%s]", rname);
         break;
       }
       if (strcasecmp(hdml->radio_name_list[ii], rname) == 0) {
