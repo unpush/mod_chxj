@@ -1884,14 +1884,13 @@ s_setup_position_adjust(qr_code_t* qrcode, char* dst[])
     for (xx=0; xx<7; xx++) {
       mxx = pos_list[xx];
       myy = pos_list[yy];
+
       if (mxx == 0 || myy == 0)
-      {
         continue;
-      }
+
       if (dst[myy][mxx] != -1)
-      {
         continue;
-      }
+
       for (dyy = -2; dyy <= 2; dyy++)
       {
         for (dxx= -2; dxx <= 2; dxx++)
