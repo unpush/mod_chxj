@@ -105,6 +105,85 @@ chxj_encoding(request_rec *r, const char* src, apr_size_t* len)
     APLOG_MARK,APLOG_DEBUG, 0, r, "end   chxj_encoding() len=[%d] obuf=[%.*s]", *len, *len, obuf);
   return spos;
 }
+
+char*
+chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
+{
+  char* obuf;
+  char* ibuf;
+  char* spos;
+  
+  iconv_t cd;
+  size_t result;
+  apr_size_t ilen;
+  apr_size_t olen;
+  mod_chxj_config* dconf;
+  chxjconvrule_entry* entryp;
+
+  ap_log_rerror(
+    APLOG_MARK,APLOG_DEBUG, 0, r, "start chxj_rencoding()");
+
+  dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
+
+  if (dconf == NULL) {
+    ap_log_rerror(
+      APLOG_MARK,APLOG_DEBUG, 0, r, "none encoding.");
+    return (char*)src;
+  }
+
+  entryp = chxj_apply_convrule(r, dconf->convrules);
+  if (entryp->encoding == NULL) {
+    ap_log_rerror(
+      APLOG_MARK,APLOG_DEBUG, 0, r, "none encoding.");
+    return (char*)src;
+  }
+
+  if ((*(entryp->encoding) == 'n' || *(entryp->encoding) == 'N') 
+  &&   strcasecmp(entryp->encoding, "NONE") == 0) {
+    ap_log_rerror(
+      APLOG_MARK,APLOG_DEBUG, 0, r, "none encoding.");
+    return (char*)src;
+  }
+  ilen = *len;
+  ibuf = apr_palloc(r->pool, ilen+1);
+  if (ibuf == NULL) {
+    ap_log_rerror(
+      APLOG_MARK,APLOG_DEBUG, 0, r, "end   chxj_rencoding()");
+    return (char*)src;
+  }
+  memset(ibuf, 0, ilen+1);
+  memcpy(ibuf, src, ilen);
+
+  olen = ilen * 4 + 1;
+  spos = obuf = apr_palloc(r->pool, olen);
+  if (obuf == NULL) {
+    ap_log_rerror(
+      APLOG_MARK,APLOG_DEBUG, 0, r, "end   chxj_rencoding()");
+    return ibuf;
+  }
+  ap_log_rerror(
+      APLOG_MARK,APLOG_DEBUG, 0, r, "encode convert [%s] -> [%s]", "CP932", entryp->encoding);
+
+  memset(obuf, 0, olen);
+  cd = iconv_open(entryp->encoding, "CP932");
+  if (cd == (iconv_t)-1) {
+    ap_log_rerror(
+      APLOG_MARK,APLOG_DEBUG, 0, r, "end   chxj_rencoding()");
+    return ibuf;
+  }
+  while (ilen > 0) {
+    result = iconv(cd, &ibuf, &ilen, &obuf, &olen);
+    if (result == (size_t)(-1)) {
+      break;
+    }
+  }
+  *len = olen;
+  iconv_close(cd);
+
+  ap_log_rerror(
+    APLOG_MARK,APLOG_DEBUG, 0, r, "end   chxj_rencoding() len=[%d] obuf=[%.*s]", *len, *len, obuf);
+  return spos;
+}
 /*
  * vim:ts=2 et
  */

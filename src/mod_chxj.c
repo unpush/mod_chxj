@@ -195,6 +195,89 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
 }
 
 
+/**
+ * It converts it from HEADER.
+ *
+ * @param r   [i]
+ */
+static int
+chxj_exchange_input_header(request_rec *r,chxjconvrule_entry* entryp) 
+{
+
+  char *buff;
+  apr_size_t urilen;
+  char* result;
+  char* pair;
+  char* name;
+  char* value;
+  char* pstate;
+  char* vstate;
+
+  ap_unescape_url(r->unparsed_uri);
+  urilen = strlen(r->unparsed_uri);
+
+  result = qs_alloc_zero_byte_string(r);
+
+  buff = apr_pstrdup(r->pool, r->unparsed_uri);
+
+  /* _chxj_dmy */
+  /* _chxj_c_ */
+  /* _chxj_r_ */
+  /* _chxj_s_ */
+  for (;;) {
+    pair = apr_strtok(buff, "&", &pstate);
+    if (pair == NULL)
+      break;
+    buff = NULL;
+
+    name  = apr_strtok(pair, "=", &vstate);
+    value = apr_strtok(NULL, "=", &vstate);
+    if (strncasecmp(name, "_chxj", 5) != 0) {
+      if (strlen(result) != 0) 
+        result = apr_pstrcat(r->pool, result, "&", NULL);
+
+      if (strcasecmp(entryp->encoding, "NONE") != 0 && value && strlen(value)) {
+        apr_size_t dlen;
+        char* dvalue;
+
+        dlen   = strlen(value);
+        ap_unescape_url(value);
+        DBG1(r, "************ before encoding[%s]", value);
+
+        dvalue = chxj_rencoding(r, value, &dlen);
+        dvalue = ap_escape_uri(r->pool,dvalue);
+
+        DBG1(r, "************ after encoding[%s]", dvalue);
+
+        result = apr_pstrcat(r->pool, result, name, "=", dvalue, NULL);
+
+      }
+      else {
+        result = apr_pstrcat(r->pool, result, name, "=", value, NULL);
+      }
+    }
+    else
+    if (strncasecmp(name, "_chxj_c_", 8) == 0 
+    ||  strncasecmp(name, "_chxj_r_", 8) == 0
+    ||  strncasecmp(name, "_chxj_s_", 8) == 0) {
+      if (value == NULL)
+        continue;
+
+      if (strlen(value) == 0)
+        continue;
+
+      if (strlen(result) != 0)
+        result = apr_pstrcat(r->pool, result, "&", NULL);
+
+      result = apr_pstrcat(r->pool, result, &name[8], "=", value, NULL);
+    }
+  }
+  ap_parse_uri(r, result);
+  ap_getparents(r->uri); /* normalize given path for security */
+
+  return 0;
+}
+
 
 /**
  * It converts it from POSTDATA .
@@ -226,6 +309,8 @@ chxj_input_exchange(request_rec *r, const char** src, apr_size_t* len)
     return (char*)*src;
   }
 
+  chxj_exchange_input_header(r, entryp);
+
   result = qs_alloc_zero_byte_string(r);
 
   /* _chxj_dmy */
@@ -244,7 +329,25 @@ chxj_input_exchange(request_rec *r, const char** src, apr_size_t* len)
       if (strlen(result) != 0) 
         result = apr_pstrcat(r->pool, result, "&", NULL);
 
-      result = apr_pstrcat(r->pool, result, name, "=", value, NULL);
+      if (strcasecmp(entryp->encoding, "NONE") != 0 && value && strlen(value)) {
+        apr_size_t dlen;
+        char* dvalue;
+
+        dlen   = strlen(value);
+        ap_unescape_url(value);
+        DBG1(r, "************ before encoding[%s]", value);
+
+        dvalue = chxj_rencoding(r, value, &dlen);
+        dvalue = ap_escape_uri(r->pool,dvalue);
+
+        DBG1(r, "************ after encoding[%s]", dvalue);
+
+        result = apr_pstrcat(r->pool, result, name, "=", dvalue, NULL);
+
+      }
+      else {
+        result = apr_pstrcat(r->pool, result, name, "=", value, NULL);
+      }
     }
     else
     if (strncasecmp(name, "_chxj_c_", 8) == 0 
