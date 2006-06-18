@@ -1578,31 +1578,30 @@ s_data_to_bin_kanji(qr_code_t* qrcode, int data_code_count)
   int kk;
   char* result;
   char  tmp_bit[13+1];
+
   int data_capacity   = v_capacity_table[qrcode->version*4+qrcode->level].size[qrcode->mode];
-  if (data_capacity * 2 < len)
-  {
-    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, qrcode->r, "input data is too long");
+
+  if (data_capacity * 2 < len) {
+    DBG(qrcode->r, "input data is too long");
     len = data_capacity * 2;
   }
-  if ((len % 2) != 0)
-  {
-    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, qrcode->r, "invalid data.");
+
+  if ((len % 2) != 0) {
+    DBG(qrcode->r, "invalid data.");
     qrcode->mode_change = QR_CHANGE;
     qrcode->mode        = QR_8BIT_MODE;
     return NULL;
   }
 
   result = (char*)apr_palloc(qrcode->r->pool, (len/2)*13 + 1); 
-  for (kk=0,ii=0; ii<len-1; ii++)
-  {
+  for (kk=0,ii=0; ii<len-1; ii++) {
     int c;
     int up_c;
     int dn_c;
     c = (qrcode->indata[ii+0] & 0xff)<< 8;
     c +=(qrcode->indata[ii+1] & 0xff);
 
-    if (c >= 0x8140 && c <= 0x9FFC)
-    {
+    if (c >= 0x8140 && c <= 0x9FFC) {
       c -= 0x8140;
       up_c = ((c >> 8) & 0xff) * 0xC0;
       dn_c = ( c       & 0xff);
@@ -1610,32 +1609,29 @@ s_data_to_bin_kanji(qr_code_t* qrcode, int data_code_count)
       c += dn_c;
     }
     else
-    if (c >= 0xE040 && c <= 0xEBBF)
-    {
+    if (c >= 0xE040 && c <= 0xEBBF) {
       c -= 0xC140;
       up_c = ((c >> 8) & 0xff) * 0xC0;
       dn_c = ( c       & 0xff);
       c  = up_c;
       c += dn_c;
     }
-    else
-    {
+    else {
       qrcode->mode_change = QR_CHANGE;
       qrcode->mode        = QR_8BIT_MODE;
       return NULL;
     }
 
     memset(tmp_bit, 0, 13+1);
-    for (jj=0; jj<13; jj++)
-    {
+    for (jj=0; jj<13; jj++) {
       tmp_bit[jj] = (c & 0x01) ? '1' : '0';
       c = c >> 1;
     }
+
     tmp_bit[13] = 0;
     for (jj=13-1; jj>=0; jj--)
-    {
       result[kk++] = tmp_bit[jj];
-    }
+
     ii++;
   }
   result[kk] = 0;
