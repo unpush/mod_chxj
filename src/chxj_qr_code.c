@@ -2075,8 +2075,7 @@ s_map_data(qr_code_t* qrcode,
           /* 既に配置されている場合 */
           continue;
 
-        if (in_pos < data_count)
-        {
+        if (in_pos < data_count) {
           assert(yy >= 0 && yy < module_count);
           assert(xx-ii >= 0 && xx-ii < module_count);
 
