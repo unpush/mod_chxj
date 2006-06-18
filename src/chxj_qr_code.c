@@ -2066,8 +2066,7 @@ s_map_data(qr_code_t* qrcode,
   yy = module_count - 1;
 
   for (xx = module_count - 1; xx > 0 ; xx -= 2) {
-    if (xx == 6)
-    {
+    if (xx == 6) {
       xx--;
     }
     do 
