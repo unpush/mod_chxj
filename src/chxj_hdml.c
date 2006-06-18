@@ -2598,8 +2598,7 @@ s_hdml_count_radio_tag(hdml_t* hdml, Node* node)
       }
     }
     if (ii == MAX_RADIO_COUNT) {
-      ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,
-                      apr_psprintf(r->pool,
+      DBG1(r, apr_psprintf(r->pool,
                         "I do not understand the name of the radiobutton "
                         "of %d piece or more. Please decrease "
                         "the number of radiobuttons.",
