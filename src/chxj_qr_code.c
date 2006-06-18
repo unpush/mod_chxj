@@ -2069,8 +2069,7 @@ s_map_data(qr_code_t* qrcode,
     if (xx == 6) {
       xx--;
     }
-    do 
-    {
+    do {
       for (ii=0; ii < 2; ii++)
       {
         if (dst[yy][xx - ii] != -1)
