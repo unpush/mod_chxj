@@ -1837,8 +1837,7 @@ s_hdml_do_input_radio_tag(hdml_t* hdml, Node* tag)
                             hdml->radio_checked_value[ii]));
     }
     else {
-      ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, 
-                    "radio button is not checked. checked value is []");
+      DBG(r,"radio button is not checked. checked value is []");
       s_output_to_init_vars(hdml, 
                     apr_psprintf(r->pool, 
                             "%s=", 
@@ -2016,9 +2015,9 @@ s_hdml_start_center_tag(hdml_t* hdml, Node* node)
   hdml->center++;
   hdml->in_center++;
 
-  if (hdml->hdml_br_flag == 0) {
+  if (hdml->hdml_br_flag == 0)
     hdml = s_output_to_hdml_out(hdml, "<BR>\n");
-  }
+
   hdml = s_output_to_hdml_out(hdml, "<CENTER>");
 
   return hdml->out;

@@ -727,8 +727,8 @@ chxj_init_module(apr_pool_t *p,
 
   ap_add_version_component(p, CHXJ_VERSION_PREFIX CHXJ_VERSION);
 
-  ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, s,
-                  "end chxj_init_module()");
+  DBG(s,"end chxj_init_module()");
+
   return OK;
 }
 /**
