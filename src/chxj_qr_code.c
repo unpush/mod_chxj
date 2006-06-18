@@ -1750,9 +1750,9 @@ s_init_modules(qr_code_t* qrcode, qr_mask_pattern_t pat, char* dst[])
   s_setup_version_info(qrcode, dst);
 
 #ifdef QR_CODE_DEBUG
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, qrcode->r,
-                                    "end s_init_modules()");
+  DBG(qrcode->r, "end s_init_modules()");
 #endif
+
 }
 
 /* 
@@ -1765,17 +1765,14 @@ s_setup_probe_position(qr_code_t* qrcode, char* dst[], int pos_x, int pos_y)
   int xx;
   int yy;
 #ifdef QR_CODE_DEBUG
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, qrcode->r, "start s_setup_probe_position()");
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, qrcode->r, "module_count[%d]", module_count);
+  DBG(qrcode->r, "start s_setup_probe_position()");
+  DBG(qrcode->r, "module_count[%d]", module_count);
 #endif
 
-  for (yy=-1; yy<=7; yy++)
-  {
-    for (xx=-1; xx<=7; xx++)
-    {
+  for (yy=-1; yy<=7; yy++) {
+    for (xx=-1; xx<=7; xx++) {
       /* 位置検出パターン */
-      if ((yy==0 || yy == 6) && xx != -1 && xx != 7)
-      {
+      if ((yy==0 || yy == 6) && xx != -1 && xx != 7) {
         assert(yy+pos_y >= 0 && yy+pos_y < module_count);
         assert(xx+pos_x >= 0 && xx+pos_x < module_count);
         dst[yy+pos_y][xx+pos_x] = '1';
@@ -1783,14 +1780,12 @@ s_setup_probe_position(qr_code_t* qrcode, char* dst[], int pos_x, int pos_y)
       else
       if ((xx == 0 && yy != -1 && yy != 7)
       ||  (xx >= 2 && xx <= 4 && yy >=2 && yy <= 4)
-      ||  (xx == 6 && yy != -1 && yy != 7))
-      {
+      ||  (xx == 6 && yy != -1 && yy != 7)) {
         assert(yy+pos_y >= 0 && yy+pos_y < module_count);
         assert(xx+pos_x >= 0 && xx+pos_x < module_count);
         dst[yy+pos_y][xx+pos_x] = '1';
       }
-      else
-      {
+      else {
         /* 分離パターン */
         if ((yy == 7  
         &&   yy + pos_y >= 0 
@@ -1811,15 +1806,13 @@ s_setup_probe_position(qr_code_t* qrcode, char* dst[], int pos_x, int pos_y)
         &&   xx + pos_x < module_count 
         &&   xx + pos_x >= 0
         &&   yy + pos_y >= 0 
-        &&   yy + pos_y < module_count))
-        {
+        &&   yy + pos_y < module_count)) {
           assert(yy+pos_y >= 0 && yy+pos_y < module_count);
           assert(xx+pos_x >= 0 && xx+pos_x < module_count);
           dst[yy+pos_y][xx+pos_x] = '0';
         }
         else
-        if (yy != -1 && yy != 7 && xx != -1 && xx != 7)
-        {
+        if (yy != -1 && yy != 7 && xx != -1 && xx != 7) {
           assert(yy+pos_y >= 0 && yy+pos_y < module_count);
           assert(xx+pos_x >= 0 && xx+pos_x < module_count);
           dst[yy+pos_y][xx+pos_x] = '0';
@@ -1828,7 +1821,7 @@ s_setup_probe_position(qr_code_t* qrcode, char* dst[], int pos_x, int pos_y)
     }
   }
 #ifdef QR_CODE_DEBUG
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, qrcode->r, "end s_setup_probe_position()");
+  DBG(qrcode->r, "end s_setup_probe_position()");
 #endif
 }
 /* 
