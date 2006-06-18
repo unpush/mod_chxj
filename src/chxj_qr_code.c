@@ -2208,10 +2208,9 @@ s_count_same_module(qr_ver_t ver, char* dst[])
       prev_value = (unsigned char)dst[yy][xx];
     }
   }
+
   if (point > 0)
-  {
     point += 3;
-  }
 
   return point;
 }
