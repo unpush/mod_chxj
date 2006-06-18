@@ -1656,7 +1656,7 @@ s_tidy_8bit_code(qr_code_t* qrcode, const char* indata, int data_code_count)
   char* tmp = NULL;
   char* result;
 #ifdef QR_CODE_DEBUG
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, qrcode->r, "len[%d] data_code_count * 8 [%d]", len, data_code_count * 8);
+  DBG2(qrcode->r, "len[%d] data_code_count * 8 [%d]", len, data_code_count * 8);
 #endif
   assert (len <= data_code_count * 8);
   /* 8bitで割れない場合は、残りを０埋めし、8で割れるようにする */
