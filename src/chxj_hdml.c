@@ -2708,6 +2708,8 @@ s_output_to_postdata(hdml_t* hdml, char* s)
   DBG1(r, "POSTDATA:[%s]", hdml->postdata[hdml->pure_form_cnt] );
 }
 
+
+
 /**
  * The tag output upper half.
  *
@@ -2741,6 +2743,8 @@ s_hdml_tag_output_upper_half(hdml_t* hdml, Node* node)
   }
 }
 
+
+
 /**
  * The data for the init_vars is added, and output.
  *
@@ -2758,9 +2762,8 @@ s_output_to_init_vars(hdml_t* hdml, char* s)
     hdml->init_vars = apr_pstrcat(r->pool, hdml->init_vars, "&", NULL);
 
   hdml->init_vars = apr_pstrcat(r->pool, hdml->init_vars, qs_trim_string(r,s), NULL);
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
-                  "INIT_VARS:[%s]",
-                  hdml->init_vars);
+
+  DBG1(r, "INIT_VARS:[%s]", hdml->init_vars);
 }
 
 static void
