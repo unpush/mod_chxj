@@ -2228,8 +2228,7 @@ s_count_same_block(qr_ver_t ver, char* dst[])
 
   point = 0;
   for (yy = 0; yy < module_count-1; yy++) {
-    for (xx = 0; xx < module_count-1; xx++)
-    {
+    for (xx = 0; xx < module_count-1; xx++) {
       count = 0;
       if (dst[yy+0][xx+0] == '1') count++;
       if (dst[yy+0][xx+1] == '1') count++;
