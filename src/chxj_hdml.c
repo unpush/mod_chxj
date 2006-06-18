@@ -2766,6 +2766,8 @@ s_output_to_init_vars(hdml_t* hdml, char* s)
   DBG1(r, "INIT_VARS:[%s]", hdml->init_vars);
 }
 
+
+
 static void
 s_hdml_chxjif_tag(hdml_t* hdml, Node* node)
 {
