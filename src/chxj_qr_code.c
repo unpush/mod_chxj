@@ -1929,8 +1929,8 @@ s_setup_type_info(qr_code_t* qrcode, char* dst[], qr_mask_pattern_t pat)
   int yy;
 
 #ifdef QR_CODE_DEBUG
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, qrcode->r, "start s_setup_type_info()");
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, qrcode->r, "module_count[%d]", module_count);
+  DBG(qrcode->r, "start s_setup_type_info()");
+  DBG1(qrcode->r, "module_count[%d]", module_count);
 #endif
 
   /* 形式情報データの生成 */
