@@ -890,7 +890,7 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
   /*--------------------------------------------------------------------------*/
   decstr = s_str_to_bin(qrcode, binstr, data_code_count);
 #ifdef QR_CODE_DEBUG
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "s_str_to_bin()");
+  DBG(r,"s_str_to_bin()");
 #endif
 
 #ifdef QR_CODE_DEBUG
