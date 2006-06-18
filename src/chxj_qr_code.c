@@ -2172,8 +2172,7 @@ s_count_same_module(qr_ver_t ver, char* dst[])
   int prev_value = -1;
 
   /* 横方向でチェック */
-  for (yy=0; yy<module_count; yy++)
-  {
+  for (yy=0; yy<module_count; yy++) {
     prev_value = -1;
     same_count = 0;
     for (xx=0; xx<module_count; xx++)
