@@ -1287,11 +1287,11 @@ s_get_char_bit_count(qr_code_t* qrcode, int len)
     tmp[ii] = (len & 0x01) ? '1' : '0';
     len = len >> 1;
   }
+
   tmp[bit_count] = '\0';
 
   result = (char*)apr_palloc(qrcode->r->pool, bit_count+1);
-  for (jj=0,ii=bit_count-1; ii>=0 && jj < bit_count; ii--, jj++)
-  {
+  for (jj=0,ii=bit_count-1; ii>=0 && jj < bit_count; ii--, jj++) {
     result[ii] = tmp[jj];
   }
   result[bit_count] = '\0';
