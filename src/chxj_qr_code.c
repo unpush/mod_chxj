@@ -2104,8 +2104,7 @@ s_map_data(qr_code_t* qrcode,
   } 
 
   /* ??? */
-  for (yy=0; yy<module_count; yy++)
-  {
+  for (yy=0; yy<module_count; yy++) {
     for (xx=0; xx<module_count; xx++)
     {
       if (dst[yy][xx] == -1)
