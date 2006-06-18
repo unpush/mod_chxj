@@ -695,8 +695,7 @@ chxj_global_config_create(apr_pool_t* pool, server_rec* s)
   apr_pool_userdata_set(conf, CHXJ_MOD_CONFIG_KEY,
                               apr_pool_cleanup_null,
                               pool);
-  ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, s,
-                  "end chxj_global_config_create()");
+  DBG(s, "end chxj_global_config_create()");
   return conf;
 }
 

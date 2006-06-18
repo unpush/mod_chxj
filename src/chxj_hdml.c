@@ -116,7 +116,7 @@ chxj_exchange_hdml(request_rec* r,
     DBG(r,"i found qrcode xml");
     return dst;
   }
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"not found qrcode xml");
+  DBG(r,"not found qrcode xml");
 
   /*--------------------------------------------------------------------------*/
   /* initialize hdml structure                                                */
