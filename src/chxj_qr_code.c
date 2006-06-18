@@ -2123,8 +2123,7 @@ s_map_data(qr_code_t* qrcode,
 static int
 s_get_mask(qr_mask_pattern_t pat, int yy, int xx)
 {
-  switch (pat) 
-  {
+  switch (pat) {
   case QR_MASK_1: return ((yy + xx) % 2 == 0) ? 1 : 0;
   case QR_MASK_2: return (yy % 2 == 0) ? 1 : 0;
   case QR_MASK_3: return (xx % 3 == 0) ? 1 : 0;
