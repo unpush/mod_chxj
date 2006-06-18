@@ -1877,13 +1877,11 @@ s_setup_position_adjust(qr_code_t* qrcode, char* dst[])
   int dxx, dyy;
 
 #ifdef QR_CODE_DEBUG
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, qrcode->r, "start s_setup_position_adjust()");
+  DBG(qrcode->r, "start s_setup_position_adjust()");
 #endif
 
-  for (yy=0; yy<7; yy++)
-  {
-    for (xx=0; xx<7; xx++)
-    {
+  for (yy=0; yy<7; yy++) {
+    for (xx=0; xx<7; xx++) {
       mxx = pos_list[xx];
       myy = pos_list[yy];
       if (mxx == 0 || myy == 0)
