@@ -252,10 +252,8 @@ qs_dump_node(Doc* doc, Node* node, int indent)
       DBG4(doc->r,"%*.*sNode:[%s]\n", indent,indent," ", qs_get_node_name(doc,p));
     }
     for (attr = (Attr*)qs_get_attr(doc,p); attr; attr = (Attr*)qs_get_next_attr(doc,attr)) {
-      ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0, doc->r,
-        "%*.*s  ATTR:[%s]\n", indent,indent," ", (char *)qs_get_attr_name(doc,attr));
-      ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0, doc->r,
-        "%*.*s  VAL :[%s]\n", indent,indent," ", (char *)qs_get_attr_value(doc,attr));
+      DBG4(doc->r,"%*.*s  ATTR:[%s]\n", indent,indent," ", (char *)qs_get_attr_name(doc,attr));
+      DBG4(doc->r,"%*.*s  VAL :[%s]\n", indent,indent," ", (char *)qs_get_attr_value(doc,attr));
     }
     qs_dump_node(doc,p, indent+4);
   }
