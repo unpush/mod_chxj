@@ -2298,9 +2298,7 @@ s_count_dark_ratio(qr_ver_t ver, char* dst[])
   for (yy=0; yy<module_count; yy++) {
     for (xx=0; xx < module_count; xx++) {
       if (dst[yy][xx] == '1')
-      {
         dark_count++;
-      }
     }
   }
 
