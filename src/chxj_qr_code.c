@@ -1457,8 +1457,7 @@ s_data_to_bin_alpha(qr_code_t* qrcode, int data_code_count)
 static int
 s_char_to_num_alpha(qr_code_t* qrcode, char src)
 {
-  switch(src)
-  {
+  switch(src) {
   case '0': return 0;
   case '1': return 1;
   case '2': return 2;
