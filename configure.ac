@@ -1,6 +1,6 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
-AC_INIT(mod_chxj, 0.6.2-stable)
+AC_INIT(mod_chxj, 0.6.1-stable)
 AC_PREREQ(2.59)
 AC_CONFIG_SRCDIR([src/mod_chxj.c])
 AC_CANONICAL_TARGET
@@ -107,10 +107,12 @@ if test "x$with_iconv" = "x" -a "x$with_iconv_hook" = "x" ; then
   AC_CHECK_LIB([iconv_hook], [iconv_open], [
       with_iconv="ok"
       AC_DEFINE([HAVE_LIBICONV_HOOK], [], [Define to 1 if you have the iconv library file.])
+      LIBS="${LIBS} -liconv_hook"
   ],[
     AC_CHECK_LIB([iconv], [iconv_open], [
       with_iconv="ok"
       AC_DEFINE([HAVE_LIBICONV], [], [Define to 1 if you have the iconv library file.])
+      LIBS="${LIBS} -liconv"
   ], [
       witn_iconv=""
   ],[])
