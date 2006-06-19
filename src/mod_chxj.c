@@ -684,8 +684,6 @@ chxj_global_config_create(apr_pool_t* pool, server_rec* s)
   mod_chxj_global_config* conf;
   void*           param;
 
-  DBG(s, "start chxj_global_config_create()");
-
 
   apr_pool_userdata_get(&param, CHXJ_MOD_CONFIG_KEY, pool);
   conf = (mod_chxj_global_config*)param;
@@ -696,7 +694,6 @@ chxj_global_config_create(apr_pool_t* pool, server_rec* s)
     /*------------------------------------------------------------------------*/
     /* reused for lifetime of the server                                      */
     /*------------------------------------------------------------------------*/
-    DBG(s, "end chxj_global_config_create() reused.");
     return conf; 
   }
 
@@ -713,8 +710,6 @@ chxj_global_config_create(apr_pool_t* pool, server_rec* s)
   apr_pool_userdata_set(conf, CHXJ_MOD_CONFIG_KEY,
                               apr_pool_cleanup_null,
                               pool);
-  DBG(s, "end chxj_global_config_create()");
-
   return conf;
 }
 
