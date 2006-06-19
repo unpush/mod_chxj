@@ -167,6 +167,11 @@ static apr_status_t s_send_cache_file(  device_table* spec,
                                         query_string_param_t* query_string,
                                         request_rec* r,
                                         const char* tmpfile);
+static apr_status_t s_header_only_cache_file(
+  device_table* spec, 
+  query_string_param_t* query_string, 
+  request_rec* r, 
+  const char* tmpfile);
 static query_string_param_t* s_get_query_string_param(request_rec *r);
 static unsigned short s_add_crc(        const char* writedata, 
                                         apr_size_t witebyte);
@@ -218,8 +223,6 @@ chxj_img_conv_format_handler(request_rec* r)
   if (strcasecmp(r->handler, "chxj-qrcode") == 0 &&  conf->image == CHXJ_IMG_OFF)
     return DECLINED;
 
-  if (r->header_only) 
-    return DECLINED;
 
   /*--------------------------------------------------------------------------*/
   /* User-Agent to spec                                                       */
@@ -332,9 +335,16 @@ s_img_conv_format_from_file(
   }
 
   DBG1(r,"color=[%d]", spec->color);
-  rv = s_send_cache_file(spec, qsp,r, tmpfile);
-  if (rv != OK) 
-    return rv;
+  if (! r->header_only)  {
+    rv = s_send_cache_file(spec, qsp,r, tmpfile);
+    if (rv != OK) 
+      return rv;
+  }
+  else {
+    rv = s_header_only_cache_file(spec, qsp, r, tmpfile);
+    if (rv != OK) 
+      return rv;
+  }
 
   DBG(r,"end chxj_img_conv_format");
 
@@ -1331,6 +1341,86 @@ s_send_cache_file(device_table* spec, query_string_param_t* query_string, reques
   return OK;
 }
 
+static apr_status_t 
+s_header_only_cache_file(device_table* spec, query_string_param_t* query_string, request_rec* r, const char* tmpfile)
+{
+  apr_status_t rv;
+  apr_finfo_t  st;
+  char*        contentLength;
+
+  rv = apr_stat(&st, tmpfile, APR_FINFO_MIN, r->pool);
+  if (rv != APR_SUCCESS)
+    return HTTP_NOT_FOUND;
+
+  DBG1(r, "mode:[%d]",    query_string->mode);
+  DBG1(r, "name:[%s]",    query_string->name);
+  DBG1(r, "offset:[%ld]", query_string->offset);
+  DBG1(r, "count:[%ld]",  query_string->count);
+
+  if (spec->available_jpeg) {
+    r->content_type = apr_psprintf(r->pool, "image/jpeg");
+  }
+  else
+  if (spec->available_png) {
+    r->content_type = apr_psprintf(r->pool, "image/png");
+  }
+  else
+  if (spec->available_gif) {
+    r->content_type = apr_psprintf(r->pool, "image/gif");
+  }
+  else
+  if (spec->available_bmp2 || spec->available_bmp4) {
+    r->content_type = apr_psprintf(r->pool, "image/bmp");
+  }
+
+  if (query_string->mode != IMG_CONV_MODE_EZGET && query_string->name == NULL) {
+    contentLength = apr_psprintf(r->pool, "%d", (int)st.size);
+    apr_table_setn(r->headers_out, "Content-Length", (const char*)contentLength);
+  
+    DBG1(r,"Content-Length:[%d]", (int)st.size);
+  }
+  else
+  if (query_string->mode == IMG_CONV_MODE_EZGET) {
+    char* name = apr_pstrdup(r->pool, basename(r->filename));
+    name[strlen(name)-4] = 0;
+    if (strcasecmp(r->content_type, "image/jpeg") == 0) {
+
+      ap_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
+    }
+    else
+    if (strcasecmp(r->content_type, "image/bmp") == 0) {
+      ap_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
+    }
+    else
+    if (strcasecmp(r->content_type, "image/png") == 0) {
+      ap_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
+    }
+    else
+    if (strcasecmp(r->content_type, "image/gif") == 0) {
+      ap_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
+    }
+  }
+  else
+  if (query_string->mode == IMG_CONV_MODE_WALLPAPER && query_string->name != NULL) {
+    if (query_string->count == -1 && query_string->offset == -1) {
+      ap_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
+    }
+    else
+    if (query_string->count == -2 && query_string->offset == -1) {
+      ap_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
+    }
+    else { 
+      ap_set_content_type(r, "application/x-up-download");
+      contentLength = apr_psprintf(r->pool, "%ld", query_string->count);
+      apr_table_setn(r->headers_out, "Content-Length", (const char*)contentLength);
+  
+      DBG1(r, "Content-Length:[%d]", (int)st.size);
+    }
+  }
+  
+  return OK;
+}
+
 
 
 static char*
@@ -1423,6 +1513,7 @@ chxj_trans_name(request_rec *r)
           "bmp",
           "gif",
           "qrc",    /* QRCode出力用ファイルの拡張子 */
+          "",
   };
   char*    fname;
   char*    idx;
@@ -1468,8 +1559,12 @@ chxj_trans_name(request_rec *r)
   DBG1(r,"URI[%s]", filename_sv);
 
 
-  for (ii=0; ii<5; ii++) {
-    fname = apr_psprintf(r->pool, "%s.%s", filename_sv, ext[ii]);
+  for (ii=0; ii<6; ii++) {
+    if (strlen(ext[ii]) == 0) 
+      fname = apr_psprintf(r->pool, "%s", filename_sv);
+    else 
+      fname = apr_psprintf(r->pool, "%s.%s", filename_sv, ext[ii]);
+
     DBG1(r,"search [%s]", fname);
 
     rv = apr_stat(&st, fname, APR_FINFO_MIN, r->pool);

@@ -1,3 +1,10 @@
+libapache2-mod-chxj (0.6.3-1) unstable; urgency=low
+
+  * bug fix which the size before it converts it into Content-Length when HEAD of 
+    the image conversion is requested is returned is corrected. 
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Mon, 19 Jun 2006 17:29:48 +0900
+
 libapache2-mod-chxj (0.6.2-1) unstable; urgency=low
 
   * Fix bug which operates the character-code conversion when PC
