@@ -668,11 +668,11 @@ chxj_init_module_kill(void *data)
   server_rec *base_server = (server_rec *)data;
   mod_chxj_global_config* conf;
 
-
   /*--------------------------------------------------------------------------*/
   /* The setting of each server is acquired.                                  */
   /*--------------------------------------------------------------------------*/
-  conf = ap_get_module_config(base_server->module_config, &chxj_module);
+  if (base_server)
+    conf = ap_get_module_config(base_server->module_config, &chxj_module);
 
   return APR_SUCCESS;
 }
