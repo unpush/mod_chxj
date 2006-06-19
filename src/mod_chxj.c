@@ -295,6 +295,8 @@ chxj_input_exchange(request_rec *r, const char** src, apr_size_t* len)
   char* value;
   char* pstate;
   char* vstate;
+  char* user_agent;
+  device_table* spec ;
   char* s = apr_pstrdup(r->pool, *src);
 
   char* result;
@@ -307,6 +309,22 @@ chxj_input_exchange(request_rec *r, const char** src, apr_size_t* len)
   entryp = chxj_apply_convrule(r, dconf->convrules);
   if (!(entryp->action & CONVRULE_ENGINE_ON_BIT)) {
     DBG(r,"EngineOff");
+    return (char*)*src;
+  }
+  user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
+  spec = chxj_specified_device(r, user_agent);
+
+  switch(spec->html_spec_type) {
+  case CHXJ_SPEC_Chtml_1_0:
+  case CHXJ_SPEC_Chtml_2_0:
+  case CHXJ_SPEC_Chtml_3_0:
+  case CHXJ_SPEC_Chtml_4_0:
+  case CHXJ_SPEC_Chtml_5_0:
+  case CHXJ_SPEC_XHtml_Mobile_1_0:
+  case CHXJ_SPEC_Hdml:
+  case CHXJ_SPEC_Jhtml:
+    break;
+  default:
     return (char*)*src;
   }
 
