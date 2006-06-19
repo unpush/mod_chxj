@@ -1,0 +1,21 @@
+Source: libapache2-mod-chxj
+Priority: optional
+Maintainer: Atsushi Konno <konn@users.sourceforge.jp>
+Build-Depends: debhelper (>= 4.0.0), autotools-dev, apache2 (>=2.0.54-5), libapr0 (>=2.0.54-5), libmagick9-dev (>=6.2.4.5-0.6), libiconv-hook1 (>=0.0.20021209-6.1)
+Standards-Version: 3.6.2
+Section: libs
+
+Package: libapache2-mod-chxj-dev
+Section: libdevel
+Architecture: any
+Depends: libapache2-mod-chxj (= ${Source-Version})
+Description: CHTML to HDML,XHTML,JHTML convert module.
+  The contents conversion middleware for domestic main carrying (three careers) is made as a module for Apache2.0. UserAgent is seen when contents made with CHTML are output and it converts it into HDML, XHTML, and JHTML (The image : to JPG, GIF, JPG, GIF from PNG, and PNG and BMP). With QR code generation function. 
+
+
+Package: libapache2-mod-chxj
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: CHTML to HDML,XHTML,JHTML convert module.
+  The contents conversion middleware for domestic main carrying (three careers) is made as a module for Apache2.0. UserAgent is seen when contents made with CHTML are output and it converts it into HDML, XHTML, and JHTML (The image : to JPG, GIF, JPG, GIF from PNG, and PNG and BMP). With QR code generation function. 
