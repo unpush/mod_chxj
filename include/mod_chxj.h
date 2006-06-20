@@ -135,7 +135,6 @@
 #endif
 
 
-#include "chxj_specified_device.h"
 
 
 #ifdef HAVE_APR_GLOBAL_MUTEX_H
@@ -173,7 +172,7 @@ typedef struct _emoji_t {
   jphone_emoji_t* jphone;
 } emoji_t;
 
-typedef struct {
+typedef struct _chxjconvrule_entry {
   char       *pattern;
   ap_regex_t *regexp;
   int        flags;
@@ -181,6 +180,8 @@ typedef struct {
   char       *encoding;
   int        pc_flag;
 } chxjconvrule_entry;
+
+#include "chxj_specified_device.h"
 
 typedef struct {
   int                   image;
@@ -248,6 +249,7 @@ module AP_MODULE_DECLARE_DATA chxj_module;
 #define DBG5(X,Y,Za,Zb,Zc,Zd,Ze)  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za),(Zb),(Zc),(Zd),(Ze))
 #define ERR(X,Y)  ap_log_rerror(APLOG_MARK,APLOG_ERR,0,(X),(Y))
 #define ERR1(X,Y,Za)  ap_log_rerror(APLOG_MARK,APLOG_ERR,0,(X),(Y),(Za))
+
 
 
 #endif

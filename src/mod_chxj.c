@@ -61,6 +61,62 @@
 #define CHXJ_VERSION_PREFIX PACKAGE_NAME "/"
 #define CHXJ_VERSION        PACKAGE_VERSION
 
+exchange_t exchange_routine[] = {
+  {
+    /* CHXJ_SPEC_UNKNOWN          */
+    .exchange = NULL,
+    .encoder  = NULL,
+  },
+  {
+    /* CHXJ_SPEC_Chtml_1_0        */
+    .exchange = chxj_exchange_chtml10,
+    .encoder  = chxj_encoding,
+  },
+  {
+    /* CHXJ_SPEC_Chtml_2_0        */
+    .exchange = chxj_exchange_chtml20,
+    .encoder  = chxj_encoding,
+  },
+  {
+    /* CHXJ_SPEC_Chtml_3_0        */
+    .exchange = chxj_exchange_chtml30,
+    .encoder  = chxj_encoding,
+  },
+  {
+    /* CHXJ_SPEC_Chtml_4_0        */
+    .exchange = chxj_exchange_chtml30,
+    .encoder  = chxj_encoding,
+  },
+  {
+    /* CHXJ_SPEC_Chtml_5_0        */
+    .exchange = chxj_exchange_chtml30,
+    .encoder  = chxj_encoding,
+  },
+  {
+    /* CHXJ_SPEC_XHtml_Mobile_1_0 */
+    .exchange = chxj_exchange_xhtml_mobile_1_0,
+    .encoder  = chxj_encoding,
+  },
+  {
+    /* CHXJ_SPEC_Hdml             */
+    .exchange = chxj_exchange_hdml,
+    .encoder  = chxj_encoding,
+  },
+  {
+    /* CHXJ_SPEC_Jhtml            */
+    .exchange = chxj_exchange_jhtml,
+    .encoder  = chxj_encoding,
+  },
+  {
+    /* CHXJ_SPEC_HTML             */
+    .exchange = NULL,
+    .encoder  = NULL,
+  },
+  {
+    NULL
+  }
+};
+
 /**
  * It converts it from CHTML into XXML corresponding to each model. 
  *
@@ -104,6 +160,19 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
   if (!r->header_only) {
     device_table* spec = chxj_specified_device(r, user_agent);
 
+    tmp = NULL;
+    if (exchange_routine[spec->html_spec_type].encoder)
+      tmp = exchange_routine[spec->html_spec_type].encoder(r, *src, (apr_size_t*)len);
+
+    if (exchange_routine[spec->html_spec_type].exchange) {
+      if (tmp)
+        dst = exchange_routine[spec->html_spec_type].exchange(r, spec, tmp, *len, len, entryp);
+      else
+        dst = exchange_routine[spec->html_spec_type].exchange(r, spec, *src, *len, len, entryp);
+    }
+
+
+#if 0
     switch(spec->html_spec_type) {
     case CHXJ_SPEC_Chtml_1_0:
       /*----------------------------------------------------------------------*/
@@ -182,6 +251,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
       DBG1(r,"html_spec_type[%d]", spec->html_spec_type);
       break;
     }
+#endif
   }
 
   DBG(r, "end chxj_exchange()");

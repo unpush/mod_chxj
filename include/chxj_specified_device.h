@@ -80,6 +80,7 @@ typedef struct _device_table_t {
   int color;
   char* emoji_type;
 
+
 } device_table;
 
 typedef struct _device_table_list_t {
@@ -89,6 +90,20 @@ typedef struct _device_table_list_t {
   device_table* table;
   device_table* tail;
 } device_table_list;
+
+typedef struct _exchange_t {
+  /* convert routine */
+  char* (*exchange)(request_rec* r,
+                    struct _device_table_t* spec,
+                    const char* src, 
+                    apr_size_t srclen, 
+                    apr_size_t *dstlen,
+                    struct _chxjconvrule_entry* entryp);
+
+  char* (*encoder)(request_rec *r, const char* src, apr_size_t* len);
+} exchange_t;
+
+extern exchange_t exchange_routine[];
 
 device_table* chxj_specified_device(request_rec* r, const char* user_agent);
 

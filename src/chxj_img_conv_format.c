@@ -1509,6 +1509,7 @@ chxj_trans_name(request_rec *r)
   int ii;
   char*      ext[] = {
           "jpg",
+          "jpeg",
           "png",
           "bmp",
           "gif",
@@ -1518,6 +1519,8 @@ chxj_trans_name(request_rec *r)
   char*    fname;
   char*    idx;
   char*    filename_sv;
+  int      do_ext_check = TRUE;
+  int      next_ok      = FALSE;
 
   conf = ap_get_module_config(r->per_dir_config, &chxj_module);
 
@@ -1558,22 +1561,52 @@ chxj_trans_name(request_rec *r)
 
   DBG1(r,"URI[%s]", filename_sv);
 
+  do_ext_check = TRUE;
+  for (ii=0; ii<7-1; ii++) {
+    char* pos = strrchr(filename_sv, '.');
+    if (pos && pos++) {
+      if (strcasecmp(pos, ext[ii]) == 0) {
+        do_ext_check = FALSE;
+        fname = apr_psprintf(r->pool, "%s", filename_sv);
+        break;
+      }
+    }
+  }
 
-  for (ii=0; ii<6; ii++) {
-    if (strlen(ext[ii]) == 0) 
-      fname = apr_psprintf(r->pool, "%s", filename_sv);
-    else 
-      fname = apr_psprintf(r->pool, "%s.%s", filename_sv, ext[ii]);
-
-    DBG1(r,"search [%s]", fname);
-
-    rv = apr_stat(&st, fname, APR_FINFO_MIN, r->pool);
-    if (rv == APR_SUCCESS)
-      break;
-
-    fname = NULL;
+  if (do_ext_check) {
+    for (ii=0; ii<7; ii++) {
+      if (strlen(ext[ii]) == 0) {
+        fname = apr_psprintf(r->pool, "%s", filename_sv);
+      }
+      else 
+        fname = apr_psprintf(r->pool, "%s.%s", filename_sv, ext[ii]);
+  
+      DBG1(r,"search [%s]", fname);
+  
+      rv = apr_stat(&st, fname, APR_FINFO_MIN, r->pool);
+      if (rv == APR_SUCCESS) {
+        if (st.filetype != APR_DIR)
+          break;
+      }
+  
+      fname = NULL;
+    }
   }
   if (fname == NULL) {
+    DBG1(r,"NotFound [%s]", r->filename);
+    return DECLINED;
+  }
+  for (ii=0; ii<7-1; ii++) {
+    char* pos = strrchr(fname, '.');
+    if (pos && pos++) {
+      if (strcasecmp(pos, ext[ii]) == 0) {
+        next_ok = TRUE;
+        break;
+      }
+    }
+  }
+
+  if (! next_ok)  {
     DBG1(r,"NotFound [%s]", r->filename);
     return DECLINED;
   }

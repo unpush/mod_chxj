@@ -2,6 +2,8 @@ libapache2-mod-chxj (0.6.3-1) unstable; urgency=low
 
   * bug fix which the size before it converts it into Content-Length when HEAD of 
     the image conversion is requested is returned. 
+  * change to acquire it even if the extension is attached by the image acquisition 
+    request.
 
  -- Atsushi Konno <konn@users.sourceforge.jp>  Mon, 19 Jun 2006 17:29:48 +0900
 
