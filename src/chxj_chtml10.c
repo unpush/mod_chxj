@@ -21,16 +21,16 @@
 #include "chxj_qr_code.h"
 
 static char* s_chtml10_node_exchange    (chtml10_t* chtml, Node* node, int indent);
-static char* s_chtml10_start_html_tag   (void* pdoc, Node* node);
-static char* s_chtml10_end_html_tag     (void* pdoc, Node* node);
-static char* s_chtml10_start_meta_tag   (void* pdoc, Node* node);
-static char* s_chtml10_end_meta_tag     (void* pdoc, Node* node);
 
-static char* s_chtml10_start_textarea_tag(void* pdoc,Node* node);
-static char* s_chtml10_end_textarea_tag (void* pdoc, Node* node);
+static char* s_chtml10_start_html_tag     (void* pdoc, Node* node);
+static char* s_chtml10_end_html_tag       (void* pdoc, Node* node);
+static char* s_chtml10_start_meta_tag     (void* pdoc, Node* node);
+static char* s_chtml10_end_meta_tag       (void* pdoc, Node* node);
+static char* s_chtml10_start_textarea_tag (void* pdoc, Node* node);
+static char* s_chtml10_end_textarea_tag   (void* pdoc, Node* node);
+static char* s_chtml10_start_p_tag        (void* pdoc, Node* node);
+static char* s_chtml10_end_p_tag          (void* pdoc, Node* node);
 
-static char* s_chtml10_start_p_tag      (chtml10_t* chtml, Node* node);
-static char* s_chtml10_end_p_tag        (chtml10_t* chtml, Node* node);
 static char* s_chtml10_start_pre_tag    (chtml10_t* chtml, Node* node);
 static char* s_chtml10_end_pre_tag      (chtml10_t* chtml, Node* node);
 static char* s_chtml10_start_ul_tag     (chtml10_t* chtml, Node* node);
@@ -102,6 +102,11 @@ tag_handler chtml10_handler[] = {
     "textarea",
     s_chtml10_start_textarea_tag,
     s_chtml10_end_textarea_tag,
+  },
+  {
+    "p",
+    s_chtml10_start_p_tag,
+    s_chtml10_end_p_tag,
   },
 };
 
@@ -2276,16 +2281,21 @@ s_chtml10_end_pre_tag(chtml10_t* chtml10, Node* child)
 /**
  * It is a handler who processes the P tag.
  *
- * @param chtml10  [i/o] The pointer to the XHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The P tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_start_p_tag(chtml10_t* chtml10, Node* node) 
+s_chtml10_start_p_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = chtml10->doc;
-  request_rec*  r   = doc->r;
+  Doc*          doc;
+  request_rec*  r;
+  chtml10_t*    chtml10;
+
+  chtml10 = (chtml10_t*)pdoc;
+  doc     = chtml10->doc;
+  r       = doc->r;
 
   chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<p>", NULL);
 
@@ -2295,16 +2305,21 @@ s_chtml10_start_p_tag(chtml10_t* chtml10, Node* node)
 /**
  * It is a handler who processes the P tag.
  *
- * @param chtml10  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The P tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_p_tag(chtml10_t* chtml10, Node* child) 
+s_chtml10_end_p_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = chtml10->doc;
-  request_rec*  r   = doc->r;
+  Doc*          doc;
+  request_rec*  r;
+  chtml10_t*    chtml10;
+
+  chtml10 = (chtml10_t*)pdoc;
+  doc     = chtml10->doc;
+  r       = doc->r;
 
   chtml10->out = apr_pstrcat(r->pool, chtml10->out, "</p>", NULL);
 
