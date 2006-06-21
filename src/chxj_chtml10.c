@@ -80,9 +80,9 @@ static char* s_chtml10_start_img_tag      (void* pdoc, Node* node);
 static char* s_chtml10_end_img_tag        (void* pdoc, Node* node);
 static char* s_chtml10_start_select_tag   (void* pdoc, Node* node);
 static char* s_chtml10_end_select_tag     (void* pdoc, Node* node);
+static char* s_chtml10_start_option_tag   (void* pdoc, Node* node);
+static char* s_chtml10_end_option_tag     (void* pdoc, Node* node);
 
-static char* s_chtml10_start_option_tag (chtml10_t* chtml, Node* node);
-static char* s_chtml10_end_option_tag   (chtml10_t* chtml, Node* node);
 static char* s_chtml10_start_div_tag    (chtml10_t* chtml, Node* node);
 static char* s_chtml10_end_div_tag      (chtml10_t* chtml, Node* node);
 static void  s_init_chtml10(chtml10_t* chtml, Doc* doc, request_rec* r, device_table* spec);
@@ -245,8 +245,12 @@ tag_handler chtml10_handler[] = {
     s_chtml10_start_select_tag,
     s_chtml10_end_select_tag,
   },
+  /* tagOPTION */
+  {
+    s_chtml10_start_option_tag,
+    s_chtml10_end_option_tag,
+  },
 #if 0
-  tagOPTION,
   tagDIV,
   tagCHXJIF,  
 #endif
@@ -2499,20 +2503,25 @@ s_chtml10_end_select_tag(void* pdoc, Node* child)
 /**
  * It is a handler who processes the OPTION tag.
  *
- * @param chtml10  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The OPTION tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_start_option_tag(chtml10_t* chtml10, Node* child)
+s_chtml10_start_option_tag(void* pdoc, Node* child)
 {
-  Doc* doc = chtml10->doc;
-  request_rec* r = doc->r;
-  Attr* attr;
+  chtml10_t*   chtml10;
+  Doc*         doc;
+  request_rec* r;
+  Attr*        attr;
 
   char* selected   = NULL;
   char* value      = NULL;
+
+  chtml10 = GET_CHTML10(pdoc);
+  doc     = chtml10->doc;
+  r       = doc->r;
 
   chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<option", NULL);
   for (attr = qs_get_attr(doc,child);
@@ -2549,20 +2558,27 @@ s_chtml10_start_option_tag(chtml10_t* chtml10, Node* child)
   return chtml10->out;
 }
 
+
 /**
  * It is a handler who processes the OPTION tag.
  *
- * @param chtml10  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The OPTION tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_option_tag(chtml10_t* chtml10, Node* child)
+s_chtml10_end_option_tag(void* pdoc, Node* child)
 {
+  chtml10_t* chtml10;
+ 
+  chtml10 = GET_CHTML10(pdoc);
+
   /* Don't close */
+
   return chtml10->out;
 }
+
 
 /**
  * It is a handler who processes the DIV tag.
