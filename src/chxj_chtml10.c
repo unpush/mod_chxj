@@ -62,9 +62,9 @@ static char* s_chtml10_start_body_tag     (void* pdoc, Node* node);
 static char* s_chtml10_end_body_tag       (void* pdoc, Node* node);
 static char* s_chtml10_start_a_tag        (void* pdoc, Node* node);
 static char* s_chtml10_end_a_tag          (void* pdoc, Node* node);
+static char* s_chtml10_start_br_tag       (void* pdoc, Node* node);
+static char* s_chtml10_end_br_tag         (void* pdoc, Node* node);
 
-static char* s_chtml10_start_br_tag     (chtml10_t* chtml, Node* node);
-static char* s_chtml10_end_br_tag       (chtml10_t* chtml, Node* node);
 static char* s_chtml10_start_tr_tag     (chtml10_t* chtml, Node* node);
 static char* s_chtml10_end_tr_tag       (chtml10_t* chtml, Node* node);
 static char* s_chtml10_start_font_tag   (chtml10_t* chtml, Node* node);
@@ -204,8 +204,13 @@ tag_handler chtml10_handler[] = {
     s_chtml10_start_a_tag,
     s_chtml10_end_a_tag,
   },
+  /* tagBR */
+  {
+    "br",
+    s_chtml10_start_br_tag,
+    s_chtml10_end_br_tag,
+  },
 #if 0
-  tagBR,
   tagTR,
   tagFONT,
   tagFORM,
@@ -1767,33 +1772,44 @@ s_chtml10_end_a_tag(void* pdoc, Node* child)
 /**
  * It is a handler who processes the BR tag.
  *
- * @param chtml10  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The BR tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_start_br_tag(chtml10_t* chtml10, Node* node) 
+s_chtml10_start_br_tag(void* pdoc, Node* node) 
 {
-  Doc* doc = chtml10->doc;
-  request_rec* r = doc->r;
+  chtml10_t*   chtml10;
+  Doc*         doc;
+  request_rec* r;
+
+  chtml10 = GET_CHTML10(pdoc);
+  doc     = chtml10->doc;
+  r       = doc->r;
+
   chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<br>\r\n", NULL);
+
   return chtml10->out;
 }
+
 
 /**
  * It is a handler who processes the BR tag.
  *
- * @param chtml10  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The BR tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_br_tag(chtml10_t* chtml10, Node* child) 
+s_chtml10_end_br_tag(void* pdoc, Node* child) 
 {
+  chtml10_t* chtml10 = GET_CHTML10(pdoc);
+
   return chtml10->out;
 }
+
 
 /**
  * It is a handler who processes the TR tag.
