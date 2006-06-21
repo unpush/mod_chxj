@@ -66,9 +66,9 @@ static char* s_chtml10_start_br_tag       (void* pdoc, Node* node);
 static char* s_chtml10_end_br_tag         (void* pdoc, Node* node);
 static char* s_chtml10_start_tr_tag       (void* pdoc, Node* node);
 static char* s_chtml10_end_tr_tag         (void* pdoc, Node* node);
+static char* s_chtml10_start_font_tag     (void* pdoc, Node* node);
+static char* s_chtml10_end_font_tag       (void* pdoc, Node* node);
 
-static char* s_chtml10_start_font_tag   (chtml10_t* chtml, Node* node);
-static char* s_chtml10_end_font_tag     (chtml10_t* chtml, Node* node);
 static char* s_chtml10_start_form_tag   (chtml10_t* chtml, Node* node);
 static char* s_chtml10_end_form_tag     (chtml10_t* chtml, Node* node);
 static char* s_chtml10_start_input_tag  (chtml10_t* chtml, Node* node);
@@ -92,132 +92,130 @@ static void  s_chtml10_chxjif_tag(chtml10_t* chtml, Node* node);
 tag_handler chtml10_handler[] = {
   /* tagHTML */
   {
-    "html",
     s_chtml10_start_html_tag,
     s_chtml10_end_html_tag,
   },
   /* tagMETA */
   {
-    "meta",
     s_chtml10_start_meta_tag,
     s_chtml10_end_meta_tag,
   },
   /* tagTEXTAREA */
   {
-    "textarea",
     s_chtml10_start_textarea_tag,
     s_chtml10_end_textarea_tag,
   },
   /* tagP */
   {
-    "p",
     s_chtml10_start_p_tag,
     s_chtml10_end_p_tag,
   },
   /* tagPRE */
   {
-    "pre",
     s_chtml10_start_pre_tag,
     s_chtml10_end_pre_tag,
   },
   /* tagUL */
   {
-    "ul",
     s_chtml10_start_ul_tag,
     s_chtml10_end_ul_tag,
   },
   /* tagLI */
   {
-    "li",
     s_chtml10_start_li_tag,
     s_chtml10_end_li_tag,
   },
   /* tagOL */
   {
-    "ol",
     s_chtml10_start_ol_tag,
     s_chtml10_end_ol_tag,
   },
   /* tagH1 */
   {
-    "h1",
     s_chtml10_start_h1_tag,
     s_chtml10_end_h1_tag,
   },
   /* tagH2 */
   {
-    "h2",
     s_chtml10_start_h2_tag,
     s_chtml10_end_h2_tag,
   },
   /* tagH3 */
   {
-    "h3",
     s_chtml10_start_h3_tag,
     s_chtml10_end_h3_tag,
   },
   /* tagH4 */
   {
-    "h4",
     s_chtml10_start_h4_tag,
     s_chtml10_end_h4_tag,
   },
   /* tagH5 */
   {
-    "h5",
     s_chtml10_start_h5_tag,
     s_chtml10_end_h5_tag,
   },
   /* tagH6 */
   {
-    "h6",
     s_chtml10_start_h6_tag,
     s_chtml10_end_h6_tag,
   },
   /* tagHEAD */
   {
-    "head",
     s_chtml10_start_head_tag,
     s_chtml10_end_head_tag,
   },
   /* tagTITLE */
   {
-    "title",
     s_chtml10_start_title_tag,
     s_chtml10_end_title_tag,
   },
   /* tagBASE */
   {
-    "base",
     s_chtml10_start_base_tag,
     s_chtml10_end_base_tag,
   },
   /* tagBODY */
   {
-    "base",
     s_chtml10_start_body_tag,
     s_chtml10_end_body_tag,
   },
   /* tagA */
   {
-    "a",
     s_chtml10_start_a_tag,
     s_chtml10_end_a_tag,
   },
   /* tagBR */
   {
-    "br",
     s_chtml10_start_br_tag,
     s_chtml10_end_br_tag,
   },
+  /* tagTABLE */
+  {
+    NULL,
+    NULL,
+  },
   /* tagTR */
   {
-    "tr",
     s_chtml10_start_tr_tag,
     s_chtml10_end_tr_tag,
   },
+  /* tagTD */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagTBODY */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagFONT */
+  {
+    s_chtml10_start_font_tag,
+    s_chtml10_end_font_tag,
+  },
 #if 0
-  tagFONT,
   tagFORM,
   tagINPUT,
   tagCENTER,
@@ -1861,33 +1859,40 @@ s_chtml10_end_tr_tag(void* pdoc, Node* child)
 /**
  * It is a handler who processes the FONT tag.
  *
- * @param chtml10  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The FONT tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_start_font_tag(chtml10_t* chtml10, Node* node) 
+s_chtml10_start_font_tag(void* pdoc, Node* node) 
 {
+  chtml10_t* chtml10 = GET_CHTML10(pdoc);
+
   /* Ignore */
 
   return chtml10->out;
 }
 
+
 /**
  * It is a handler who processes the FONT tag.
  *
- * @param chtml10  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The FONT tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_font_tag(chtml10_t* chtml10, Node* child) 
+s_chtml10_end_font_tag(void* pdoc, Node* child) 
 {
+  chtml10_t* chtml10 = GET_CHTML10(pdoc);
+
   /* ignore */
+
   return chtml10->out;
 }
+
 
 /**
  * It is a handler who processes the FORM tag.

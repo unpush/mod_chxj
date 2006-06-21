@@ -182,7 +182,6 @@ typedef struct _chxjconvrule_entry {
 } chxjconvrule_entry;
 
 typedef struct {
-  char* tagname;
   char* (*start_tag_handler)(void* doc, Node* node); 
   char* (*end_tag_handler)(void* doc, Node* node); 
 } tag_handler;
@@ -215,7 +214,10 @@ typedef enum {
   tagBODY,
   tagA,
   tagBR,
+  tagTABLE,
   tagTR,
+  tagTD,
+  tagTBODY,
   tagFONT,
   tagFORM,
   tagINPUT,
