@@ -89,6 +89,7 @@ static void  s_init_chtml10(chtml10_t* chtml, Doc* doc, request_rec* r, device_t
 
 static int   s_chtml10_search_emoji(chtml10_t* chtml, char* txt, char** rslt);
 static char* s_chtml10_chxjif_tag        (void* pdoc, Node* node);
+static char* s_chtml10_text              (void* pdoc, Node* node);
 
 tag_handler chtml10_handler[] = {
   /* tagHTML */
@@ -261,6 +262,36 @@ tag_handler chtml10_handler[] = {
     s_chtml10_chxjif_tag,
     NULL,
   },
+  /* tagNOBR */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagSMALL */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagSTYLE */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagSPAN */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagTEXT */
+  {
+    s_chtml10_text,
+    NULL,
+  },
+  /* tagTH */
+  {
+    NULL,
+    NULL,
+  },
 };
 
 
@@ -325,7 +356,12 @@ chxj_exchange_chtml10(
   /*--------------------------------------------------------------------------*/
   /* It converts it from CHTML to CHTML.                                      */
   /*--------------------------------------------------------------------------*/
+#if 0
   dst = s_chtml10_node_exchange(&chtml10, qs_get_root(&doc), 0);
+#else
+  chxj_node_exchange(spec,r,(void*)&chtml10, &doc, qs_get_root(&doc), 0);
+  dst = chtml10.out;
+#endif
   qs_all_free(&doc,QX_LOGMARK);
 
   if (!dst)
@@ -2658,6 +2694,15 @@ s_chtml10_end_div_tag(void* pdoc, Node* child)
   return chtml10->out;
 }
 
+
+/**
+ * It is a handler who processes the CHXJ:IF tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The CHXJ:IF tag node is specified.
+ * @return The conversion result is returned.
+ */
 static char* 
 s_chtml10_chxjif_tag(void* pdoc, Node* node)
 {
@@ -2705,6 +2750,7 @@ s_chtml10_start_pre_tag(void* pdoc, Node* node)
 
   return chtml10->out;
 }
+
 
 /**
  * It is a handler who processes the PRE tag.
@@ -2849,6 +2895,73 @@ s_chtml10_end_textarea_tag(void* pdoc, Node* child)
 
   chtml10->out = apr_pstrcat(r->pool, chtml10->out, "</textarea>\r\n", NULL);
   chtml10->textarea_flag--;
+
+  return chtml10->out;
+}
+
+
+static char*
+s_chtml10_text(void* pdoc, Node* child)
+{
+  char*        textval;
+  char*        tmp;
+  char*        tdst;
+  char         one_byte[2];
+  int          ii;
+  int          tdst_len;
+  chtml10_t*   chtml10;
+  Doc*         doc;
+  request_rec* r;
+
+  chtml10 = GET_CHTML10(pdoc);
+  doc     = chtml10->doc;
+  r       = doc->r;
+  
+  textval = qs_get_node_value(doc,child);
+  textval = qs_trim_string(r, textval);
+  if (strlen(textval) == 0)
+    return chtml10->out;
+  
+  tmp = apr_palloc(r->pool, qs_get_node_size(doc,child)+1);
+  memset(tmp, 0, qs_get_node_size(doc,child)+1);
+  
+  tdst     = qs_alloc_zero_byte_string(r);
+  memset(one_byte, 0, sizeof(one_byte));
+  tdst_len = 0;
+  
+  for (ii=0; ii<qs_get_node_size(doc,child); ii++) {
+    char* out;
+    int rtn = s_chtml10_search_emoji(chtml10, &textval[ii], &out);
+    if (rtn) {
+      tdst = qs_out_apr_pstrcat(r, tdst, out, &tdst_len);
+      ii+=(rtn - 1);
+      continue;
+    }
+  
+    if (is_sjis_kanji(textval[ii])) {
+      one_byte[0] = textval[ii+0];
+      tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+      one_byte[0] = textval[ii+1];
+      tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+      ii++;
+    }
+    else 
+    if (chtml10->pre_flag) {
+      one_byte[0] = textval[ii+0];
+      tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+    }
+    else 
+    if (chtml10->textarea_flag) {
+      one_byte[0] = textval[ii+0];
+      tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+    }
+    else 
+    if (textval[ii] != '\r' && textval[ii] != '\n') {
+      one_byte[0] = textval[ii+0];
+      tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+    }
+  }
+  chtml10->out = apr_pstrcat(r->pool, chtml10->out, tdst, NULL);
 
   return chtml10->out;
 }
