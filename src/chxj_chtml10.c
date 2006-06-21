@@ -44,9 +44,9 @@ static char* s_chtml10_start_h1_tag       (void* pdoc, Node* node);
 static char* s_chtml10_end_h1_tag         (void* pdoc, Node* node);
 static char* s_chtml10_start_h2_tag       (void* pdoc, Node* node);
 static char* s_chtml10_end_h2_tag         (void* pdoc, Node* node);
+static char* s_chtml10_start_h3_tag       (void* pdoc, Node* node);
+static char* s_chtml10_end_h3_tag         (void* pdoc, Node* node);
 
-static char* s_chtml10_start_h3_tag     (chtml10_t* chtml, Node* node);
-static char* s_chtml10_end_h3_tag       (chtml10_t* chtml, Node* node);
 static char* s_chtml10_start_h4_tag     (chtml10_t* chtml, Node* node);
 static char* s_chtml10_end_h4_tag       (chtml10_t* chtml, Node* node);
 static char* s_chtml10_start_h5_tag     (chtml10_t* chtml, Node* node);
@@ -149,9 +149,14 @@ tag_handler chtml10_handler[] = {
     "h2",
     s_chtml10_start_h2_tag,
     s_chtml10_end_h2_tag,
-  }
+  },
+  /* tagH3 */
+  {
+    "h3",
+    s_chtml10_start_h3_tag,
+    s_chtml10_end_h3_tag,
+  },
 #if 0
-  tagH3,
   tagH4,
   tagH5,
   tagH6,
@@ -1137,16 +1142,21 @@ s_chtml10_end_h2_tag(void* pdoc, Node* child)
 /**
  * It is a handler who processes the H3 tag.
  *
- * @param chtml10  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The H3 tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_start_h3_tag(chtml10_t* chtml10, Node* node) 
+s_chtml10_start_h3_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = chtml10->doc;
-  request_rec*  r   = doc->r;
+  Doc*          doc;
+  request_rec*  r;
+  chtml10_t*    chtml10;
+
+  chtml10 = GET_CHTML10(pdoc);
+  doc     = chtml10->doc;
+  r       = doc->r;
 
   chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<h3>\r\n", NULL);
 
@@ -1156,16 +1166,21 @@ s_chtml10_start_h3_tag(chtml10_t* chtml10, Node* node)
 /**
  * It is a handler who processes the H3 tag.
  *
- * @param chtml10  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The H3 tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_h3_tag(chtml10_t* chtml10, Node* child) 
+s_chtml10_end_h3_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = chtml10->doc;
-  request_rec*  r   = doc->r;
+  chtml10_t*    chtml10;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml10 = GET_CHTML10(pdoc);
+  doc     = chtml10->doc;
+  r       = doc->r;
 
   chtml10->out = apr_pstrcat(r->pool, chtml10->out, "</h3>\r\n", NULL);
 
