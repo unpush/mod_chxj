@@ -21,10 +21,12 @@
 #include "chxj_qr_code.h"
 
 static char* s_chtml10_node_exchange    (chtml10_t* chtml, Node* node, int indent);
-static char* s_chtml10_start_html_tag   (void* doc, Node* child);
-static char* s_chtml10_end_html_tag     (void* doc, Node* child);
-static char* s_chtml10_start_meta_tag   (chtml10_t* chtml, Node* node);
-static char* s_chtml10_end_meta_tag     (chtml10_t* chtml, Node* node);
+static char* s_chtml10_start_html_tag   (void* pdoc, Node* child);
+static char* s_chtml10_end_html_tag     (void* pdoc, Node* child);
+
+static char* s_chtml10_start_meta_tag   (void* pdoc, Node* node);
+static char* s_chtml10_end_meta_tag     (void* pdoc, Node* node);
+
 static char* s_chtml10_start_textarea_tag(chtml10_t* chtml,Node* node);
 static char* s_chtml10_end_textarea_tag (chtml10_t* chtml, Node* node);
 static char* s_chtml10_start_p_tag      (chtml10_t* chtml, Node* node);
@@ -90,6 +92,11 @@ tag_handler chtml10_handler[] = {
     "html",
     s_chtml10_start_html_tag,
     s_chtml10_end_html_tag,
+  },
+  {
+    "meta",
+    s_chtml10_start_meta_tag,
+    s_chtml10_end_meta_tag,
   },
 };
 
@@ -737,14 +744,18 @@ s_chtml10_end_html_tag(void* pdoc, Node* child)
 /**
  * It is a handler who processes the META tag.
  *
- * @param chtml10  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The META tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_start_meta_tag(chtml10_t* chtml10, Node* node) 
+s_chtml10_start_meta_tag(void* pdoc, Node* node) 
 {
+  chtml10_t* chtml10;
+
+  chtml10 = (chtml10_t*)pdoc;
+
   /* ignore */
   return chtml10->out;
 }
@@ -752,14 +763,18 @@ s_chtml10_start_meta_tag(chtml10_t* chtml10, Node* node)
 /**
  * It is a handler who processes the META tag.
  *
- * @param chtml10  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The META tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_meta_tag(chtml10_t* chtml10, Node* child) 
+s_chtml10_end_meta_tag(void* pdoc, Node* child) 
 {
+  chtml10_t* chtml10;
+
+  chtml10 = (chtml10_t*)pdoc;
+
   return chtml10->out;
 }
 
