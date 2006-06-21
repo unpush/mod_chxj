@@ -72,9 +72,9 @@ static char* s_chtml10_start_input_tag    (void* pdoc, Node* node);
 static char* s_chtml10_end_input_tag      (void* pdoc, Node* node);
 static char* s_chtml10_start_form_tag     (void* pdoc, Node* node);
 static char* s_chtml10_end_form_tag       (void* pdoc, Node* node);
+static char* s_chtml10_start_center_tag   (void* pdoc, Node* node);
+static char* s_chtml10_end_center_tag     (void* pdoc, Node* node);
 
-static char* s_chtml10_start_center_tag (chtml10_t* chtml, Node* node);
-static char* s_chtml10_end_center_tag   (chtml10_t* chtml, Node* node);
 static char* s_chtml10_start_hr_tag     (chtml10_t* chtml, Node* node);
 static char* s_chtml10_end_hr_tag       (chtml10_t* chtml, Node* node);
 static char* s_chtml10_start_img_tag    (chtml10_t* chtml, Node* node);
@@ -225,8 +225,12 @@ tag_handler chtml10_handler[] = {
     s_chtml10_start_input_tag,
     s_chtml10_end_input_tag,
   },
+  /* tagCENTER */
+  {
+    s_chtml10_start_center_tag,
+    s_chtml10_end_center_tag,
+  },
 #if 0
-  tagCENTER,
   tagHR,
   tagIMG,
   tagSELECT,
@@ -2121,35 +2125,46 @@ s_chtml10_end_input_tag(void* pdoc, Node* child)
 /**
  * It is a handler who processes the CENTER tag.
  *
- * @param chtml10  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The CENTER tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_start_center_tag(chtml10_t* chtml10, Node* node) 
+s_chtml10_start_center_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = chtml10->doc;
-  request_rec*  r   = doc->r;
+  chtml10_t*   chtml10;
+  Doc*         doc;
+  request_rec* r;
+
+  chtml10 = GET_CHTML10(pdoc);
+  doc     = chtml10->doc;
+  r       = doc->r;
 
   chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<center>", NULL);
 
   return chtml10->out;
 }
 
+
 /**
  * It is a handler who processes the CENTER tag.
  *
- * @param chtml10  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The CENTER tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_center_tag(chtml10_t* chtml10, Node* child) 
+s_chtml10_end_center_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = chtml10->doc;
-  request_rec*  r   = doc->r;
+  chtml10_t*    chtml10;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml10 = GET_CHTML10(pdoc);
+  doc     = chtml10->doc;
+  r       = doc->r;
 
   chtml10->out = apr_pstrcat(r->pool, chtml10->out, "</center>", NULL);
 
