@@ -181,7 +181,19 @@ typedef struct _chxjconvrule_entry {
   int        pc_flag;
 } chxjconvrule_entry;
 
+typedef struct {
+  char* tagname;
+  char* (*start_tag_handler)(void* doc, Node* node); 
+  char* (*end_tag_handler)(void* doc, Node* node); 
+} tag_handler;
+
 #include "chxj_specified_device.h"
+
+typedef struct {
+  spec_type    type; 
+  tag_handler* handler;
+} tag_handlers;
+
 
 typedef struct {
   int                   image;
