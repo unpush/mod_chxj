@@ -228,6 +228,12 @@ typedef enum {
   tagOPTION,
   tagDIV,
   tagCHXJIF,  
+  tagNOBR,  
+  tagSMALL,  
+  tagSTYLE,  
+  tagSPAN,  
+  tagTEXT,  
+  tagTH,  
 } tag_type;
 
 typedef struct {
@@ -297,7 +303,17 @@ module AP_MODULE_DECLARE_DATA chxj_module;
 #define ERR(X,Y)  ap_log_rerror(APLOG_MARK,APLOG_ERR,0,(X),(Y))
 #define ERR1(X,Y,Za)  ap_log_rerror(APLOG_MARK,APLOG_ERR,0,(X),(Y),(Za))
 
+extern tag_handlers chxj_tag_handlers[];
+extern tag_handler chtml10_handler[];
 
+extern char* chxj_node_exchange( 
+  device_table* spec,
+  request_rec*  r,
+  void*         pdoc,
+  Doc*          doc,
+  Node*         node,
+  int           indent
+);
 
 #endif
 /*
