@@ -82,12 +82,13 @@ static char* s_chtml10_start_select_tag   (void* pdoc, Node* node);
 static char* s_chtml10_end_select_tag     (void* pdoc, Node* node);
 static char* s_chtml10_start_option_tag   (void* pdoc, Node* node);
 static char* s_chtml10_end_option_tag     (void* pdoc, Node* node);
+static char* s_chtml10_start_div_tag      (void* pdoc, Node* node);
+static char* s_chtml10_end_div_tag        (void* pdoc, Node* node);
 
-static char* s_chtml10_start_div_tag    (chtml10_t* chtml, Node* node);
-static char* s_chtml10_end_div_tag      (chtml10_t* chtml, Node* node);
 static void  s_init_chtml10(chtml10_t* chtml, Doc* doc, request_rec* r, device_table* spec);
+
 static int   s_chtml10_search_emoji(chtml10_t* chtml, char* txt, char** rslt);
-static void  s_chtml10_chxjif_tag(chtml10_t* chtml, Node* node);
+static char* s_chtml10_chxjif_tag        (void* pdoc, Node* node);
 
 tag_handler chtml10_handler[] = {
   /* tagHTML */
@@ -250,10 +251,16 @@ tag_handler chtml10_handler[] = {
     s_chtml10_start_option_tag,
     s_chtml10_end_option_tag,
   },
-#if 0
-  tagDIV,
-  tagCHXJIF,  
-#endif
+  /* tagDIV */
+  {
+    s_chtml10_start_div_tag,
+    s_chtml10_end_div_tag,
+  },
+  /* tagCHXJIF */
+  {
+    s_chtml10_chxjif_tag,
+    NULL,
+  },
 };
 
 
@@ -667,14 +674,15 @@ s_chtml10_node_exchange(chtml10_t* chtml10, Node* node, int indent)
       /*------------------------------------------------------------------------*/
       else
       if (strcasecmp(name, "chxj:if") == 0) {
-        ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag found");
+        DBG(r,"chxj:if tag found");
 
         if (chxj_chxjif_is_mine(chtml10->spec, doc, child)) {
-          ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag is mine");
           char* parse_attr = NULL;
+          DBG(r,"chxj:if tag is mine");
+
           parse_attr = qs_get_parse_attr(doc, child, r);
 
-          if (parse_attr != NULL && strcasecmp(parse_attr, "true") == 0)
+          if (parse_attr && strcasecmp(parse_attr, "true") == 0)
             s_chtml10_node_exchange (chtml10, child, indent+1);
           else 
             s_chtml10_chxjif_tag(chtml10, child);
@@ -2583,19 +2591,24 @@ s_chtml10_end_option_tag(void* pdoc, Node* child)
 /**
  * It is a handler who processes the DIV tag.
  *
- * @param chtml10  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The DIV tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_start_div_tag(chtml10_t* chtml10, Node* child)
+s_chtml10_start_div_tag(void* pdoc, Node* child)
 {
-  Doc* doc = chtml10->doc;
-  request_rec* r = doc->r;
-  Attr* attr;
+  chtml10_t*   chtml10;
+  Doc*         doc;
+  request_rec* r;
+  Attr*        attr;
 
-  char* align   = NULL;
+  char* align = NULL;
+
+  chtml10 = GET_CHTML10(pdoc);
+  doc     = chtml10->doc;
+  r       = doc->r;
 
   chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<div", NULL);
   for (attr = qs_get_attr(doc,child);
@@ -2624,28 +2637,38 @@ s_chtml10_start_div_tag(chtml10_t* chtml10, Node* child)
 /**
  * It is a handler who processes the DIV tag.
  *
- * @param chtml10  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The DIV tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_div_tag(chtml10_t* chtml10, Node* child)
+s_chtml10_end_div_tag(void* pdoc, Node* child)
 {
-  Doc* doc = chtml10->doc;
-  request_rec* r = doc->r;
+  chtml10_t*   chtml10;
+  Doc*         doc;
+  request_rec* r;
+
+  chtml10 = GET_CHTML10(pdoc);
+  doc     = chtml10->doc;
+  r       = doc->r;
 
   chtml10->out = apr_pstrcat(r->pool, chtml10->out, "</div>\n", NULL);
 
   return chtml10->out;
 }
 
-static void
-s_chtml10_chxjif_tag(chtml10_t* chtml10, Node* node)
+static char* 
+s_chtml10_chxjif_tag(void* pdoc, Node* node)
 {
-  Doc*         doc   = chtml10->doc;
+  chtml10_t*   chtml10;
+  Doc*         doc;
   Node*        child;
-  request_rec* r     = doc->r;
+  request_rec* r;
+
+  chtml10 = GET_CHTML10(pdoc);
+  doc     = chtml10->doc;
+  r       = doc->r;
 
   for (child = qs_get_child_node(doc, node);
        child;
@@ -2653,6 +2676,8 @@ s_chtml10_chxjif_tag(chtml10_t* chtml10, Node* node)
     chtml10->out = apr_pstrcat(r->pool, chtml10->out, child->otext, NULL);
     s_chtml10_chxjif_tag(chtml10, child);
   }
+
+  return chtml10->out;
 }
 
 
