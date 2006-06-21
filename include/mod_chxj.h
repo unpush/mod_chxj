@@ -194,6 +194,39 @@ typedef struct {
   tag_handler* handler;
 } tag_handlers;
 
+typedef enum {
+  tagHTML = 0,
+  tagMETA,  
+  tagTEXTAREA,
+  tagP,
+  tagPRE,
+  tagUL,
+  tagLI,
+  tagOL,
+  tagH1,
+  tagH2,
+  tagH3,
+  tagH4,
+  tagH5,
+  tagH6,
+  tagHEAD,
+  tagTITLE,
+  tagBASE,
+  tagBODY,
+  tagA,
+  tagBR,
+  tagTR,
+  tagFONT,
+  tagFORM,
+  tagINPUT,
+  tagCENTER,
+  tagHR,
+  tagIMG,
+  tagSELECT,
+  tagOPTION,
+  tagDIV,
+  tagCHXJIF,  
+} tag_type;
 
 typedef struct {
   int                   image;
