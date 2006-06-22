@@ -425,17 +425,16 @@ s_chtml30_search_emoji(chtml30_t* chtml30, char* txt, char** rslt)
   spec = chtml30->spec;
 
   len = strlen(txt);
-  r = chtml30->doc->r;
+  r   = chtml30->doc->r;
 
   if (spec == NULL)
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "spec is NULL");
+    DBG(r,"spec is NULL");
 
   for (ee = chtml30->conf->emoji;
        ee;
        ee = ee->next) {
     if (ee->imode == NULL) {
-      ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
-                      "emoji->imode is NULL");
+      DBG(r, "emoji->imode is NULL");
       continue;
     }
 
