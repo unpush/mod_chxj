@@ -328,7 +328,7 @@ chxj_exchange_chtml30(
     DBG(r,"i found qrcode xml");
     return dst;
   }
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"not found qrcode xml");
+  DBG(r,"not found qrcode xml");
 
   /*--------------------------------------------------------------------------*/
   /* The CHTML structure is initialized.                                      */
