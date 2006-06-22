@@ -429,7 +429,7 @@ s_chtml20_search_emoji(chtml20_t* chtml20, char* txt, char** rslt)
   r = chtml20->doc->r;
 
   if (spec == NULL)
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "spec is NULL");
+    DBG(r,"spec is NULL");
 
   for (ee = chtml20->conf->emoji;
        ee;

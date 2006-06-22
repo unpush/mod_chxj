@@ -433,6 +433,7 @@ s_chtml30_search_emoji(chtml30_t* chtml30, char* txt, char** rslt)
   for (ee = chtml30->conf->emoji;
        ee;
        ee = ee->next) {
+
     if (ee->imode == NULL) {
       DBG(r, "emoji->imode is NULL");
       continue;
@@ -441,6 +442,7 @@ s_chtml30_search_emoji(chtml30_t* chtml30, char* txt, char** rslt)
     if (ee->imode->string != NULL
     &&  strlen(ee->imode->string) > 0
     &&  strncasecmp(ee->imode->string, txt, strlen(ee->imode->string)) == 0) {
+
       if (spec == NULL || spec->emoji_type == NULL) {
         *rslt = apr_palloc(r->pool, 3);
         (*rslt)[0] = ee->imode->hex1byte & 0xff;
