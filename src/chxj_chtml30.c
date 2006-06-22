@@ -21,70 +21,278 @@
 #include "chxj_img_conv.h"
 #include "chxj_qr_code.h"
 
-static char* s_chtml30_node_exchange    (chtml30_t* chtml, Node* node, int indent);
-static char* s_chtml30_start_html_tag   (chtml30_t* chtml, Node* child);
-static char* s_chtml30_end_html_tag     (chtml30_t* chtml, Node* child);
-static char* s_chtml30_start_meta_tag   (chtml30_t* chtml, Node* node);
-static char* s_chtml30_end_meta_tag     (chtml30_t* chtml, Node* node);
-static char* s_chtml30_start_textarea_tag(chtml30_t* chtml,Node* node);
-static char* s_chtml30_end_textarea_tag (chtml30_t* chtml, Node* node);
-static char* s_chtml30_start_p_tag      (chtml30_t* chtml, Node* node);
-static char* s_chtml30_end_p_tag        (chtml30_t* chtml, Node* node);
-static char* s_chtml30_start_pre_tag    (chtml30_t* chtml, Node* node);
-static char* s_chtml30_end_pre_tag      (chtml30_t* chtml, Node* node);
-static char* s_chtml30_start_h1_tag     (chtml30_t* chtml, Node* node);
-static char* s_chtml30_end_h1_tag       (chtml30_t* chtml, Node* node);
-static char* s_chtml30_start_h2_tag     (chtml30_t* chtml, Node* node);
-static char* s_chtml30_end_h2_tag       (chtml30_t* chtml, Node* node);
-static char* s_chtml30_start_h3_tag     (chtml30_t* chtml, Node* node);
-static char* s_chtml30_end_h3_tag       (chtml30_t* chtml, Node* node);
-static char* s_chtml30_start_h4_tag     (chtml30_t* chtml, Node* node);
-static char* s_chtml30_end_h4_tag       (chtml30_t* chtml, Node* node);
-static char* s_chtml30_start_h5_tag     (chtml30_t* chtml, Node* node);
-static char* s_chtml30_end_h5_tag       (chtml30_t* chtml, Node* node);
-static char* s_chtml30_start_h6_tag     (chtml30_t* chtml, Node* node);
-static char* s_chtml30_end_h6_tag       (chtml30_t* chtml, Node* node);
-static char* s_chtml30_start_ul_tag     (chtml30_t* chtml, Node* node);
-static char* s_chtml30_end_ul_tag       (chtml30_t* chtml, Node* node);
-static char* s_chtml30_start_ol_tag     (chtml30_t* chtml, Node* node);
-static char* s_chtml30_end_ol_tag       (chtml30_t* chtml, Node* node);
-static char* s_chtml30_start_li_tag     (chtml30_t* chtml, Node* node);
-static char* s_chtml30_end_li_tag       (chtml30_t* chtml, Node* node);
-static char* s_chtml30_start_head_tag   (chtml30_t* chtml, Node* node);
-static char* s_chtml30_end_head_tag     (chtml30_t* chtml, Node* node);
-static char* s_chtml30_start_title_tag  (chtml30_t* chtml, Node* node);
-static char* s_chtml30_end_title_tag    (chtml30_t* chtml, Node* node);
-static char* s_chtml30_start_base_tag   (chtml30_t* chtml, Node* node);
-static char* s_chtml30_end_base_tag     (chtml30_t* chtml, Node* node);
-static char* s_chtml30_start_body_tag   (chtml30_t* chtml, Node* node);
-static char* s_chtml30_end_body_tag     (chtml30_t* chtml, Node* node);
-static char* s_chtml30_start_a_tag      (chtml30_t* chtml, Node* node);
-static char* s_chtml30_end_a_tag        (chtml30_t* chtml, Node* node);
-static char* s_chtml30_start_br_tag     (chtml30_t* chtml, Node* node);
-static char* s_chtml30_end_br_tag       (chtml30_t* chtml, Node* node);
-static char* s_chtml30_start_tr_tag     (chtml30_t* chtml, Node* node);
-static char* s_chtml30_end_tr_tag       (chtml30_t* chtml, Node* node);
-static char* s_chtml30_start_font_tag   (chtml30_t* chtml, Node* node);
-static char* s_chtml30_end_font_tag     (chtml30_t* chtml, Node* node);
-static char* s_chtml30_start_form_tag   (chtml30_t* chtml, Node* node);
-static char* s_chtml30_end_form_tag     (chtml30_t* chtml, Node* node);
-static char* s_chtml30_start_input_tag  (chtml30_t* chtml, Node* node);
-static char* s_chtml30_end_input_tag    (chtml30_t* chtml, Node* node);
-static char* s_chtml30_start_center_tag (chtml30_t* chtml, Node* node);
-static char* s_chtml30_end_center_tag   (chtml30_t* chtml, Node* node);
-static char* s_chtml30_start_hr_tag     (chtml30_t* chtml, Node* node);
-static char* s_chtml30_end_hr_tag       (chtml30_t* chtml, Node* node);
-static char* s_chtml30_start_img_tag    (chtml30_t* chtml, Node* node);
-static char* s_chtml30_end_img_tag      (chtml30_t* chtml, Node* node);
-static char* s_chtml30_start_select_tag (chtml30_t* chtml, Node* node);
-static char* s_chtml30_end_select_tag   (chtml30_t* chtml, Node* node);
-static char* s_chtml30_start_option_tag (chtml30_t* chtml, Node* node);
-static char* s_chtml30_end_option_tag   (chtml30_t* chtml, Node* node);
-static char* s_chtml30_start_div_tag    (chtml30_t* chtml, Node* node);
-static char* s_chtml30_end_div_tag      (chtml30_t* chtml, Node* node);
+#define GET_CHTML30(X) ((chtml30_t*)(X))
+
+static char* s_chtml30_start_html_tag     (void* pdoc, Node* node);
+static char* s_chtml30_end_html_tag       (void* pdoc, Node* node);
+static char* s_chtml30_start_meta_tag     (void* pdoc, Node* node);
+static char* s_chtml30_end_meta_tag       (void* pdoc, Node* node);
+static char* s_chtml30_start_textarea_tag (void* pdoc, Node* node);
+static char* s_chtml30_end_textarea_tag   (void* pdoc, Node* node);
+static char* s_chtml30_start_p_tag        (void* pdoc, Node* node);
+static char* s_chtml30_end_p_tag          (void* pdoc, Node* node);
+static char* s_chtml30_start_pre_tag      (void* pdoc, Node* node);
+static char* s_chtml30_end_pre_tag        (void* pdoc, Node* node);
+static char* s_chtml30_start_h1_tag       (void* pdoc, Node* node);
+static char* s_chtml30_end_h1_tag         (void* pdoc, Node* node);
+static char* s_chtml30_start_h2_tag       (void* pdoc, Node* node);
+static char* s_chtml30_end_h2_tag         (void* pdoc, Node* node);
+static char* s_chtml30_start_h3_tag       (void* pdoc, Node* node);
+static char* s_chtml30_end_h3_tag         (void* pdoc, Node* node);
+static char* s_chtml30_start_h4_tag       (void* pdoc, Node* node);
+static char* s_chtml30_end_h4_tag         (void* pdoc, Node* node);
+static char* s_chtml30_start_h5_tag       (void* pdoc, Node* node);
+static char* s_chtml30_end_h5_tag         (void* pdoc, Node* node);
+static char* s_chtml30_start_h6_tag       (void* pdoc, Node* node);
+static char* s_chtml30_end_h6_tag         (void* pdoc, Node* node);
+static char* s_chtml30_start_ul_tag       (void* pdoc, Node* node);
+static char* s_chtml30_end_ul_tag         (void* pdoc, Node* node);
+static char* s_chtml30_start_ol_tag       (void* pdoc, Node* node);
+static char* s_chtml30_end_ol_tag         (void* pdoc, Node* node);
+static char* s_chtml30_start_li_tag       (void* pdoc, Node* node);
+static char* s_chtml30_end_li_tag         (void* pdoc, Node* node);
+static char* s_chtml30_start_head_tag     (void* pdoc, Node* node);
+static char* s_chtml30_end_head_tag       (void* pdoc, Node* node);
+static char* s_chtml30_start_title_tag    (void* pdoc, Node* node);
+static char* s_chtml30_end_title_tag      (void* pdoc, Node* node);
+static char* s_chtml30_start_base_tag     (void* pdoc, Node* node);
+static char* s_chtml30_end_base_tag       (void* pdoc, Node* node);
+static char* s_chtml30_start_body_tag     (void* pdoc, Node* node);
+static char* s_chtml30_end_body_tag       (void* pdoc, Node* node);
+static char* s_chtml30_start_a_tag        (void* pdoc, Node* node);
+static char* s_chtml30_end_a_tag          (void* pdoc, Node* node);
+static char* s_chtml30_start_br_tag       (void* pdoc, Node* node);
+static char* s_chtml30_end_br_tag         (void* pdoc, Node* node);
+static char* s_chtml30_start_tr_tag       (void* pdoc, Node* node);
+static char* s_chtml30_end_tr_tag         (void* pdoc, Node* node);
+static char* s_chtml30_start_font_tag     (void* pdoc, Node* node);
+static char* s_chtml30_end_font_tag       (void* pdoc, Node* node);
+static char* s_chtml30_start_form_tag     (void* pdoc, Node* node);
+static char* s_chtml30_end_form_tag       (void* pdoc, Node* node);
+static char* s_chtml30_start_input_tag    (void* pdoc, Node* node);
+static char* s_chtml30_end_input_tag      (void* pdoc, Node* node);
+static char* s_chtml30_start_center_tag   (void* pdoc, Node* node);
+static char* s_chtml30_end_center_tag     (void* pdoc, Node* node);
+static char* s_chtml30_start_hr_tag       (void* pdoc, Node* node);
+static char* s_chtml30_end_hr_tag         (void* pdoc, Node* node);
+static char* s_chtml30_start_img_tag      (void* pdoc, Node* node);
+static char* s_chtml30_end_img_tag        (void* pdoc, Node* node);
+static char* s_chtml30_start_select_tag   (void* pdoc, Node* node);
+static char* s_chtml30_end_select_tag     (void* pdoc, Node* node);
+static char* s_chtml30_start_option_tag   (void* pdoc, Node* node);
+static char* s_chtml30_end_option_tag     (void* pdoc, Node* node);
+static char* s_chtml30_start_div_tag      (void* pdoc, Node* node);
+static char* s_chtml30_end_div_tag        (void* pdoc, Node* node);
+static char* s_chtml30_chxjif_tag         (void* pdoc, Node* node); 
+static char* s_chtml30_text_tag           (void* pdoc, Node* node);
+
 static void  s_init_chtml30(chtml30_t* chtml, Doc* doc, request_rec* r, device_table* spec);
+
 static int   s_chtml30_search_emoji(chtml30_t* chtml, char* txt, char** rslt);
-static void  s_chtml30_chxjif_tag(chtml30_t* chtml, Node* node); 
+
+
+tag_handler chtml30_handler[] = {
+  /* tagHTML */
+  {
+    s_chtml30_start_html_tag,
+    s_chtml30_end_html_tag,
+  },
+  /* tagMETA */
+  {
+    s_chtml30_start_meta_tag,
+    s_chtml30_end_meta_tag,
+  },
+  /* tagTEXTAREA */
+  {
+    s_chtml30_start_textarea_tag,
+    s_chtml30_end_textarea_tag,
+  },
+  /* tagP */
+  {
+    s_chtml30_start_p_tag,
+    s_chtml30_end_p_tag,
+  },
+  /* tagPRE */
+  {
+    s_chtml30_start_pre_tag,
+    s_chtml30_end_pre_tag,
+  },
+  /* tagUL */
+  {
+    s_chtml30_start_ul_tag,
+    s_chtml30_end_ul_tag,
+  },
+  /* tagLI */
+  {
+    s_chtml30_start_li_tag,
+    s_chtml30_end_li_tag,
+  },
+  /* tagOL */
+  {
+    s_chtml30_start_ol_tag,
+    s_chtml30_end_ol_tag,
+  },
+  /* tagH1 */
+  {
+    s_chtml30_start_h1_tag,
+    s_chtml30_end_h1_tag,
+  },
+  /* tagH2 */
+  {
+    s_chtml30_start_h2_tag,
+    s_chtml30_end_h2_tag,
+  },
+  /* tagH3 */
+  {
+    s_chtml30_start_h3_tag,
+    s_chtml30_end_h3_tag,
+  },
+  /* tagH4 */
+  {
+    s_chtml30_start_h4_tag,
+    s_chtml30_end_h4_tag,
+  },
+  /* tagH5 */
+  {
+    s_chtml30_start_h5_tag,
+    s_chtml30_end_h5_tag,
+  },
+  /* tagH6 */
+  {
+    s_chtml30_start_h6_tag,
+    s_chtml30_end_h6_tag,
+  },
+  /* tagHEAD */
+  {
+    s_chtml30_start_head_tag,
+    s_chtml30_end_head_tag,
+  },
+  /* tagTITLE */
+  {
+    s_chtml30_start_title_tag,
+    s_chtml30_end_title_tag,
+  },
+  /* tagBASE */
+  {
+    s_chtml30_start_base_tag,
+    s_chtml30_end_base_tag,
+  },
+  /* tagBODY */
+  {
+    s_chtml30_start_body_tag,
+    s_chtml30_end_body_tag,
+  },
+  /* tagA */
+  {
+    s_chtml30_start_a_tag,
+    s_chtml30_end_a_tag,
+  },
+  /* tagBR */
+  {
+    s_chtml30_start_br_tag,
+    s_chtml30_end_br_tag,
+  },
+  /* tagTABLE */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagTR */
+  {
+    s_chtml30_start_tr_tag,
+    s_chtml30_end_tr_tag,
+  },
+  /* tagTD */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagTBODY */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagFONT */
+  {
+    s_chtml30_start_font_tag,
+    s_chtml30_end_font_tag,
+  },
+  /* tagFORM */
+  {
+    s_chtml30_start_form_tag,
+    s_chtml30_end_form_tag,
+  },
+  /* tagINPUT */
+  {
+    s_chtml30_start_input_tag,
+    s_chtml30_end_input_tag,
+  },
+  /* tagCENTER */
+  {
+    s_chtml30_start_center_tag,
+    s_chtml30_end_center_tag,
+  },
+  /* tagHR */
+  {
+    s_chtml30_start_hr_tag,
+    s_chtml30_end_hr_tag,
+  },
+  /* tagIMG */
+  {
+    s_chtml30_start_img_tag,
+    s_chtml30_end_img_tag,
+  },
+  /* tagSELECT */
+  {
+    s_chtml30_start_select_tag,
+    s_chtml30_end_select_tag,
+  },
+  /* tagOPTION */
+  {
+    s_chtml30_start_option_tag,
+    s_chtml30_end_option_tag,
+  },
+  /* tagDIV */
+  {
+    s_chtml30_start_div_tag,
+    s_chtml30_end_div_tag,
+  },
+  /* tagCHXJIF */
+  {
+    s_chtml30_chxjif_tag,
+    NULL,
+  },
+  /* tagNOBR */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagSMALL */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagSTYLE */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagSPAN */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagTEXT */
+  {
+    s_chtml30_text_tag,
+    NULL,
+  },
+  /* tagTH */
+  {
+    NULL,
+    NULL,
+  },
+};
 
 /**
  * converts from CHTML5.0 to CHTML3.0.
@@ -150,7 +358,9 @@ chxj_exchange_chtml30(
   /*--------------------------------------------------------------------------*/
   /* It converts it from CHTML to CHTML.                                      */
   /*--------------------------------------------------------------------------*/
-  dst = s_chtml30_node_exchange(&chtml30, qs_get_root(&doc), 0);
+  chxj_node_exchange(spec,r,(void*)&chtml30, &doc, qs_get_root(&doc), 0);
+  dst = chtml30.out;
+
   qs_all_free(&doc,QX_LOGMARK);
 
   if (dst == NULL) 
@@ -166,6 +376,7 @@ chxj_exchange_chtml30(
 
   return dst;
 }
+
 
 /**
  * The CHTML structure is initialized.
@@ -191,440 +402,6 @@ s_init_chtml30(chtml30_t* chtml30, Doc* doc, request_rec* r, device_table* spec)
   chtml30->doc->parse_mode = PARSE_MODE_CHTML;
 }
 
-/**
- * It is main processing of conversion from CHTML to CHTML. 
- *
- * @param chtml30   [i/o] The pointer to the CHTML structure is specified. 
- * @param node    [i]   The pointer to a current node is specified. 
- * @param indent  [i]   The depth of the node processing it now is specified. 
- *
- * @return The character string after it converts it is returned. 
- */
-static char*
-s_chtml30_node_exchange(chtml30_t* chtml30, Node* node, int indent) 
-{
-  Node*         child;
-  Doc*          doc   = chtml30->doc;
-  request_rec*  r     = doc->r;
-
-  /*--------------------------------------------------------------------------*/
-  /* It is the main loop of the conversion processing.                        */
-  /*--------------------------------------------------------------------------*/
-  for (child = qs_get_child_node(doc,node);
-       child ;
-       child = qs_get_next_node(doc,child)) {
-    char* name = qs_get_node_name(doc,child);
-
-    /*------------------------------------------------------------------------*/
-    /* <TEXTAREA> (for TEST)                                                  */
-    /*------------------------------------------------------------------------*/
-    if ((*name == 't' || *name == 'T') && strcasecmp(name, "textarea") == 0) {
-      s_chtml30_start_textarea_tag   (chtml30, child);
-      s_chtml30_node_exchange        (chtml30, child, indent+1);
-      s_chtml30_end_textarea_tag     (chtml30, child);
-    }
-    else
-    /*------------------------------------------------------------------------*/
-    /* <P> (for TEST)                                                         */
-    /*------------------------------------------------------------------------*/
-    if ((*name == 'p' || *name == 'P') && strcasecmp(name, "p") == 0) {
-      s_chtml30_start_p_tag   (chtml30, child);
-      s_chtml30_node_exchange (chtml30, child, indent+1);
-      s_chtml30_end_p_tag     (chtml30, child);
-    }
-    else
-    /*------------------------------------------------------------------------*/
-    /* <PRE> (for TEST)                                                       */
-    /*------------------------------------------------------------------------*/
-    if ((*name == 'p' || *name == 'P') && strcasecmp(name, "pre") == 0) {
-      s_chtml30_start_pre_tag (chtml30, child);
-      s_chtml30_node_exchange (chtml30, child, indent+1);
-      s_chtml30_end_pre_tag   (chtml30, child);
-    }
-    else
-    if (*name == 's' || *name == 'S') {
-
-      /*----------------------------------------------------------------------*/
-      /* <STYLE> (for TEST)                                                   */
-      /*----------------------------------------------------------------------*/
-      if (strcasecmp(name, "style") == 0) {
-        s_chtml30_node_exchange (chtml30, child, indent+1);
-      }
-      else
-      /*----------------------------------------------------------------------*/
-      /* <SELECT>                                                             */
-      /*----------------------------------------------------------------------*/
-      if (strcasecmp(name, "select") == 0) {
-        s_chtml30_start_select_tag(chtml30, child);
-        s_chtml30_node_exchange   (chtml30, child, indent+1);
-        s_chtml30_end_select_tag  (chtml30, child);
-      }
-      else
-      /*----------------------------------------------------------------------*/
-      /* <SPAN> (for TEST)                                                    */
-      /*----------------------------------------------------------------------*/
-      if (strcasecmp(name, "span") == 0) {
-        s_chtml30_node_exchange (chtml30, child, indent+1);
-      }
-    }
-    /*------------------------------------------------------------------------*/
-    /* <UL> (for TEST)                                                        */
-    /*------------------------------------------------------------------------*/
-    else
-    if ((*name == 'u' || *name == 'U') && strcasecmp(name, "ul") == 0) {
-      s_chtml30_start_ul_tag  (chtml30, child);
-      s_chtml30_node_exchange (chtml30, child, indent+1);
-      s_chtml30_end_ul_tag    (chtml30, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <LI> (for TEST)                                                        */
-    /*------------------------------------------------------------------------*/
-    else
-    if ((*name == 'l' || *name == 'L') && strcasecmp(name, "li") == 0) {
-      s_chtml30_start_li_tag  (chtml30, child);
-      s_chtml30_node_exchange (chtml30, child, indent+1);
-      s_chtml30_end_li_tag    (chtml30, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <OL> (for TEST)                                                        */
-    /*------------------------------------------------------------------------*/
-    else
-    if ((*name == 'o' || *name == 'O') && strcasecmp(name, "ol") == 0) {
-      s_chtml30_start_ol_tag  (chtml30, child);
-      s_chtml30_node_exchange (chtml30, child, indent+1);
-      s_chtml30_end_ol_tag    (chtml30, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <NOBR> (for TEST)                                                      */
-    /*------------------------------------------------------------------------*/
-    else
-    if ((*name == 'n' || *name == 'N') && strcasecmp(name, "nobr") == 0) {
-      s_chtml30_node_exchange (chtml30, child, indent+1);
-    }
-    else
-    if (*name == 'h' || *name == 'H') {
-      /*----------------------------------------------------------------------*/
-      /* <HTML>                                                               */
-      /*----------------------------------------------------------------------*/
-      if (strcasecmp(name, "html") == 0) {
-        s_chtml30_start_html_tag(chtml30, child);
-        s_chtml30_node_exchange (chtml30, child,indent+1);
-        s_chtml30_end_html_tag  (chtml30, child);
-      }
-      /*----------------------------------------------------------------------*/
-      /* <HEAD>                                                               */
-      /*----------------------------------------------------------------------*/
-      else
-      if (strcasecmp(name, "head") == 0) {
-        s_chtml30_start_head_tag(chtml30, child);
-        s_chtml30_node_exchange (chtml30, child,indent+1);
-        s_chtml30_end_head_tag  (chtml30, child);
-      }
-      /*----------------------------------------------------------------------*/
-      /* <HR>                                                                 */
-      /*----------------------------------------------------------------------*/
-      else
-      if (strcasecmp(name, "hr") == 0) {
-        s_chtml30_start_hr_tag  (chtml30, child);
-        s_chtml30_end_hr_tag    (chtml30, child);
-      }
-      /*----------------------------------------------------------------------*/
-      /* <H1>                                                                 */
-      /*----------------------------------------------------------------------*/
-      else
-      if (strcasecmp(name, "h1") == 0) {
-        s_chtml30_start_h1_tag  (chtml30, child);
-        s_chtml30_node_exchange (chtml30, child,indent+1);
-        s_chtml30_end_h1_tag    (chtml30, child);
-      }
-      /*----------------------------------------------------------------------*/
-      /* <H2>                                                                 */
-      /*----------------------------------------------------------------------*/
-      else
-      if (strcasecmp(name, "h2") == 0) {
-        s_chtml30_start_h2_tag  (chtml30, child);
-        s_chtml30_node_exchange (chtml30, child,indent+1);
-        s_chtml30_end_h2_tag    (chtml30, child);
-      }
-      /*----------------------------------------------------------------------*/
-      /* <H3>                                                                 */
-      /*----------------------------------------------------------------------*/
-      else
-      if (strcasecmp(name, "h3") == 0) {
-        s_chtml30_start_h3_tag  (chtml30, child);
-        s_chtml30_node_exchange (chtml30, child,indent+1);
-        s_chtml30_end_h3_tag    (chtml30, child);
-      }
-      /*----------------------------------------------------------------------*/
-      /* <H4>                                                                 */
-      /*----------------------------------------------------------------------*/
-      else
-      if (strcasecmp(name, "h4") == 0) {
-        s_chtml30_start_h4_tag  (chtml30, child);
-        s_chtml30_node_exchange (chtml30, child,indent+1);
-        s_chtml30_end_h4_tag    (chtml30, child);
-      }
-      /*----------------------------------------------------------------------*/
-      /* <H5>                                                                 */
-      /*----------------------------------------------------------------------*/
-      else
-      if (strcasecmp(name, "h5") == 0) {
-        s_chtml30_start_h5_tag  (chtml30, child);
-        s_chtml30_node_exchange (chtml30, child,indent+1);
-        s_chtml30_end_h5_tag    (chtml30, child);
-      }
-      /*----------------------------------------------------------------------*/
-      /* <H6>                                                                 */
-      /*----------------------------------------------------------------------*/
-      else
-      if (strcasecmp(name, "h6") == 0) {
-        s_chtml30_start_h6_tag  (chtml30, child);
-        s_chtml30_node_exchange (chtml30, child,indent+1);
-        s_chtml30_end_h6_tag    (chtml30, child);
-      }
-    }
-    /*------------------------------------------------------------------------*/
-    /* <META>                                                                 */
-    /*------------------------------------------------------------------------*/
-    else
-    if ((*name == 'm' || *name == 'M') && strcasecmp(name, "meta") == 0) {
-      s_chtml30_start_meta_tag(chtml30, child);
-      s_chtml30_end_meta_tag  (chtml30, child);
-    }
-    else
-    if (*name == 'b' || *name == 'B') {
-      /*----------------------------------------------------------------------*/
-      /* <BASE>                                                               */
-      /*----------------------------------------------------------------------*/
-      if (strcasecmp(name, "base") == 0) {
-        s_chtml30_start_base_tag(chtml30, child);
-        s_chtml30_end_base_tag  (chtml30, child);
-      }
-      /*----------------------------------------------------------------------*/
-      /* <BODY>                                                               */
-      /*----------------------------------------------------------------------*/
-      else
-      if (strcasecmp(name, "body") == 0) {
-        s_chtml30_start_body_tag(chtml30, child);
-        s_chtml30_node_exchange (chtml30, child,indent+1);
-        s_chtml30_end_body_tag  (chtml30, child);
-      }
-      /*----------------------------------------------------------------------*/
-      /* <BR>                                                                 */
-      /*----------------------------------------------------------------------*/
-      else
-      if (strcasecmp(name, "br") == 0) {
-        s_chtml30_start_br_tag  (chtml30, child);
-        s_chtml30_node_exchange (chtml30, child,indent+1);
-        s_chtml30_end_br_tag    (chtml30, child);
-      }
-      /*----------------------------------------------------------------------*/
-      /* <BLINK>                                                              */
-      /*----------------------------------------------------------------------*/
-      else
-      if (strcasecmp(name, "blink") == 0) {
-        /* ignore */
-      }
-    }
-    /*------------------------------------------------------------------------*/
-    /* <A>                                                                    */
-    /*------------------------------------------------------------------------*/
-    else
-    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "a") == 0) {
-      s_chtml30_start_a_tag   (chtml30, child);
-      s_chtml30_node_exchange (chtml30, child,indent+1);
-      s_chtml30_end_a_tag     (chtml30, child);
-    }
-    else
-    if (*name == 'f' || *name == 'F') {
-      /*----------------------------------------------------------------------*/
-      /* <FONT>                                                               */
-      /*----------------------------------------------------------------------*/
-      if (strcasecmp(name, "font") == 0) {
-        s_chtml30_start_font_tag(chtml30, child);
-        s_chtml30_node_exchange (chtml30, child,indent+1);
-        s_chtml30_end_font_tag  (chtml30, child);
-      }
-      /*----------------------------------------------------------------------*/
-      /* <FORM>                                                               */
-      /*----------------------------------------------------------------------*/
-      else
-      if (strcasecmp(name, "form") == 0) {
-        s_chtml30_start_form_tag(chtml30, child);
-        s_chtml30_node_exchange (chtml30, child,indent+1);
-        s_chtml30_end_form_tag  (chtml30, child);
-      }
-    }
-    else
-    if (*name == 'i' || *name == 'I') {
-      /*----------------------------------------------------------------------*/
-      /* <INPUT>                                                              */
-      /*----------------------------------------------------------------------*/
-      if (strcasecmp(name, "input") == 0) {
-        s_chtml30_start_input_tag (chtml30, child);
-        s_chtml30_node_exchange   (chtml30, child,indent+1);
-        s_chtml30_end_input_tag   (chtml30, child);
-      }
-      /*----------------------------------------------------------------------*/
-      /* <IMG>                                                                */
-      /*----------------------------------------------------------------------*/
-      else
-      if (strcasecmp(name, "img") == 0) {
-        s_chtml30_start_img_tag (chtml30, child);
-        s_chtml30_end_img_tag   (chtml30, child);
-      }
-    }
-    else
-    if (*name == 'c' || *name == 'C') {
-      /*----------------------------------------------------------------------*/
-      /* <CENTER>                                                             */
-      /*----------------------------------------------------------------------*/
-      if (strcasecmp(name, "center") == 0) {
-        s_chtml30_start_center_tag(chtml30, child);
-        s_chtml30_node_exchange   (chtml30, child,indent+1);
-        s_chtml30_end_center_tag  (chtml30, child);
-      }
-      /*----------------------------------------------------------------------*/
-      /* <CHXJ:IF>                                                            */
-      /*----------------------------------------------------------------------*/
-      else
-      if (strcasecmp(name, "chxj:if") == 0) {
-        ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag found");
-        if (chxj_chxjif_is_mine(chtml30->spec, doc, child)) {
-          ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "chxj:if tag is mine");
-          char* parse_attr = NULL;
-          parse_attr = qs_get_parse_attr(doc, child, r);
-          if (parse_attr != NULL && strcasecmp(parse_attr, "true") == 0) 
-            s_chtml30_node_exchange (chtml30, child, indent+1);
-          else
-            s_chtml30_chxjif_tag(chtml30, child);
-        }
-      }
-    }
-    /*------------------------------------------------------------------------*/
-    /* <OPTION>                                                               */
-    /*------------------------------------------------------------------------*/
-    else
-    if ((*name == 'o' || *name == 'O') && strcasecmp(name, "option") == 0) {
-      s_chtml30_start_option_tag(chtml30, child);
-      s_chtml30_node_exchange   (chtml30, child, indent+1);
-      s_chtml30_end_option_tag  (chtml30, child);
-    }
-    /*------------------------------------------------------------------------*/
-    /* <DIV>                                                                  */
-    /*------------------------------------------------------------------------*/
-    else
-    if ((*name == 'd' || *name == 'D') && strcasecmp(name, "div") == 0) {
-      s_chtml30_start_div_tag (chtml30, child);
-      s_chtml30_node_exchange (chtml30, child, indent+1);
-      s_chtml30_end_div_tag   (chtml30, child);
-    }
-    else
-    if (*name == 't' || *name == 'T') {
-      /*----------------------------------------------------------------------*/
-      /* <TBODY> (for TEST)                                                   */
-      /*----------------------------------------------------------------------*/
-      if (strcasecmp(name, "tbody") == 0) {
-        s_chtml30_node_exchange (chtml30, child, indent+1);
-      }
-      /*----------------------------------------------------------------------*/
-      /* <TABLE> (for TEST)                                                   */
-      /*----------------------------------------------------------------------*/
-      else
-      if (strcasecmp(name, "table") == 0) {
-        s_chtml30_node_exchange (chtml30, child, indent+1);
-      }
-      /*----------------------------------------------------------------------*/
-      /* <TH> (for TEST)                                                      */
-      /*----------------------------------------------------------------------*/
-      else
-      if (strcasecmp(name, "th") == 0) {
-        s_chtml30_node_exchange (chtml30, child, indent+1);
-      }
-      /*----------------------------------------------------------------------*/
-      /* <TR> (for TEST)                                                      */
-      /*----------------------------------------------------------------------*/
-      else
-      if (strcasecmp(name, "tr") == 0) {
-        s_chtml30_start_tr_tag  (chtml30, child);
-        s_chtml30_node_exchange (chtml30, child,indent+1);
-        s_chtml30_end_tr_tag    (chtml30, child);
-      }
-      /*----------------------------------------------------------------------*/
-      /* <TD> (for TEST)                                                      */
-      /*----------------------------------------------------------------------*/
-      else
-      if (strcasecmp(name, "td") == 0) {
-        s_chtml30_node_exchange (chtml30, child, indent+1);
-      }
-      /*----------------------------------------------------------------------*/
-      /* <TITLE>                                                              */
-      /*----------------------------------------------------------------------*/
-      else
-      if (strcasecmp(name, "title") == 0) {
-        s_chtml30_start_title_tag (chtml30, child);
-        s_chtml30_node_exchange   (chtml30, child,indent+1);
-        s_chtml30_end_title_tag   (chtml30, child);
-      }
-      /*------------------------------------------------------------------------*/
-      /* NORMAL TEXT                                                            */
-      /*------------------------------------------------------------------------*/
-      else
-      if (strcasecmp(name, "text") == 0) {
-        char*   textval;
-        char*   tmp;
-        char*   tdst;
-        char    one_byte[2];
-        int     ii;
-        int     tdst_len;
-  
-        textval = qs_get_node_value(doc,child);
-        textval = qs_trim_string(chtml30->doc->r, textval);
-        if (strlen(textval) == 0)
-          continue;
-  
-        tmp = apr_palloc(r->pool, qs_get_node_size(doc,child)+1);
-        memset(tmp, 0, qs_get_node_size(doc,child)+1);
-  
-        tdst     = qs_alloc_zero_byte_string(r);
-        memset(one_byte, 0, sizeof(one_byte));
-        tdst_len = 0;
-  
-        for (ii=0; ii<qs_get_node_size(doc,child); ii++) {
-          char* out;
-          int rtn = s_chtml30_search_emoji(chtml30, &textval[ii], &out);
-          if (rtn) {
-            tdst = qs_out_apr_pstrcat(r, tdst, out, &tdst_len);
-            ii+=(rtn - 1);
-            continue;
-          }
-  
-          if (is_sjis_kanji(textval[ii])) {
-            one_byte[0] = textval[ii+0];
-            tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
-            one_byte[0] = textval[ii+1];
-            tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
-            ii++;
-          }
-          else if (chtml30->pre_flag) {
-            one_byte[0] = textval[ii+0];
-            tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
-          }
-          else if (chtml30->textarea_flag) {
-            one_byte[0] = textval[ii+0];
-            tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
-          }
-          else if (textval[ii] != '\r' && textval[ii] != '\n') {
-            one_byte[0] = textval[ii+0];
-            tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
-          }
-        }
-        chtml30->out = apr_pstrcat(r->pool, chtml30->out, tdst, NULL);
-      }
-    }
-  }
-  return chtml30->out;
-}
 
 /**
  * Corresponding EMOJI to a current character-code is retrieved. 
@@ -682,16 +459,21 @@ s_chtml30_search_emoji(chtml30_t* chtml30, char* txt, char** rslt)
 /**
  * It is a handler who processes the HTML tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The HTML tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_start_html_tag(chtml30_t* chtml30, Node* node) 
+s_chtml30_start_html_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc   = chtml30->doc;
-  request_rec*  r     = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc   = chtml30->doc;
+  r     = doc->r;
 
   /*--------------------------------------------------------------------------*/
   /* start HTML tag                                                           */
@@ -701,40 +483,52 @@ s_chtml30_start_html_tag(chtml30_t* chtml30, Node* node)
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the HTML tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The HTML tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_end_html_tag(chtml30_t* chtml30, Node* child) 
+s_chtml30_end_html_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = chtml30->doc;
-  request_rec*  r   = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc   = chtml30->doc;
+  r     = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "</html>\n", NULL);
 
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the META tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The META tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_start_meta_tag(chtml30_t* chtml30, Node* node) 
+s_chtml30_start_meta_tag(void* pdoc, Node* node) 
 {
-  Doc*         doc = chtml30->doc;
-  request_rec* r   = doc->r;
-  Attr* attr;
-  int content_type_flag = 0;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+  Attr*         attr;
+  int           content_type_flag = 0;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<meta", NULL);
 
@@ -791,107 +585,145 @@ s_chtml30_start_meta_tag(chtml30_t* chtml30, Node* node)
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the META tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The META tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_end_meta_tag(chtml30_t* chtml30, Node* child) 
+s_chtml30_end_meta_tag(void* pdoc, Node* child) 
 {
+  chtml30_t*    chtml30;
+
+  chtml30 = GET_CHTML30(pdoc);
+
   return chtml30->out;
 }
+
 
 /**
  * It is a handler who processes the HEAD tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The HEAD tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_start_head_tag(chtml30_t* chtml30, Node* node) 
+s_chtml30_start_head_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = chtml30->doc;
-  request_rec*  r   = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
+
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<head>\r\n", NULL);
 
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the HEAD tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The HEAD tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_end_head_tag(chtml30_t* chtml30, Node* child) 
+s_chtml30_end_head_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = chtml30->doc;
-  request_rec*  r   = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "</head>\r\n", NULL);
+
   return chtml30->out;
 }
+
 
 /**
  * It is a handler who processes the TITLE tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The TITLE tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_start_title_tag(chtml30_t* chtml30, Node* node) 
+s_chtml30_start_title_tag(void* pdoc, Node* node) 
 {
-  Doc* doc = chtml30->doc;
-  request_rec* r = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<title>", NULL);
+
   return chtml30->out;
 }
+
 
 /**
  * It is a handler who processes the TITLE tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The TITLE tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_end_title_tag(chtml30_t* chtml30, Node* child) 
+s_chtml30_end_title_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = chtml30->doc;
-  request_rec*  r   = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "</title>\r\n", NULL);
 
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the BASE tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The BASE tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_start_base_tag(chtml30_t* chtml30, Node* node) 
+s_chtml30_start_base_tag(void* pdoc, Node* node) 
 {
   Attr*         attr;
-  Doc*          doc   = chtml30->doc;
-  request_rec*  r     = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<base", NULL);
 
@@ -912,38 +744,51 @@ s_chtml30_start_base_tag(chtml30_t* chtml30, Node* node)
                       NULL);
     }
   }
+
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, " >\r\n", NULL);
+
   return chtml30->out;
 }
+
 
 /**
  * It is a handler who processes the BASE tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The BASE tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_end_base_tag(chtml30_t* chtml30, Node* child) 
+s_chtml30_end_base_tag(void* pdoc, Node* child) 
 {
+  chtml30_t*    chtml30;
+
+  chtml30 = GET_CHTML30(pdoc);
+
   return chtml30->out;
 }
+
 
 /**
  * It is a handler who processes the BODY tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The BODY tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_start_body_tag(chtml30_t* chtml30, Node* node) 
+s_chtml30_start_body_tag(void* pdoc, Node* node) 
 {
-  Doc* doc = chtml30->doc;
-  request_rec* r = doc->r;
-  Attr* attr;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+  Attr*         attr;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<body", NULL);
 
@@ -1006,44 +851,57 @@ s_chtml30_start_body_tag(chtml30_t* chtml30, Node* node)
       /* ignore */
     }
   }
+
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, ">\r\n", NULL);
 
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the BODY tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The BODY tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_end_body_tag(chtml30_t* chtml30, Node* child) 
+s_chtml30_end_body_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = chtml30->doc;
-  request_rec*  r = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "</body>\r\n", NULL);
 
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the A tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The A tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_start_a_tag(chtml30_t* chtml30, Node* node) 
+s_chtml30_start_a_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc   = chtml30->doc;
-  request_rec*  r     = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
   Attr*         attr;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<a", NULL);
 
@@ -1172,57 +1030,79 @@ s_chtml30_start_a_tag(chtml30_t* chtml30, Node* node)
     }
   }
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, ">", NULL);
+
   return chtml30->out;
 }
+
 
 /**
  * It is a handler who processes the A tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The A tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_end_a_tag(chtml30_t* chtml30, Node* child) 
+s_chtml30_end_a_tag(void* pdoc, Node* child) 
 {
-  Doc* doc = chtml30->doc;
-  request_rec* r = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "</a>", NULL);
+
   return chtml30->out;
 }
+
 
 /**
  * It is a handler who processes the BR tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The BR tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_start_br_tag(chtml30_t* chtml30, Node* node) 
+s_chtml30_start_br_tag(void* pdoc, Node* node) 
 {
-  Doc* doc = chtml30->doc;
-  request_rec* r = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
+
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<br>\r\n", NULL);
+
   return chtml30->out;
 }
+
 
 /**
  * It is a handler who processes the BR tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The BR tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_end_br_tag(chtml30_t* chtml30, Node* child) 
+s_chtml30_end_br_tag(void* pdoc, Node* child) 
 {
+  chtml30_t*    chtml30;
+
+  chtml30 = GET_CHTML30(pdoc);
+
   return chtml30->out;
 }
+
 
 /**
  * It is a handler who processes the TR tag.
@@ -1233,42 +1113,60 @@ s_chtml30_end_br_tag(chtml30_t* chtml30, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_start_tr_tag(chtml30_t* chtml30, Node* node) 
+s_chtml30_start_tr_tag(void* pdoc, Node* node) 
 {
+  chtml30_t*    chtml30;
+
+  chtml30 = GET_CHTML30(pdoc);
+
   return chtml30->out;
 }
+
 
 /**
  * It is a handler who processes the TR tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The TR tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_end_tr_tag(chtml30_t* chtml30, Node* child) 
+s_chtml30_end_tr_tag(void* pdoc, Node* child) 
 {
-  Doc* doc = chtml30->doc;
-  request_rec* r = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
+
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<br>\r\n", NULL);
+
   return chtml30->out;
 }
+
 
 /**
  * It is a handler who processes the FONT tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The FONT tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_start_font_tag(chtml30_t* chtml30, Node* node) 
+s_chtml30_start_font_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc   = chtml30->doc;
-  request_rec*  r     = doc->r;
   Attr*         attr;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<font", NULL);
 
@@ -1299,39 +1197,55 @@ s_chtml30_start_font_tag(chtml30_t* chtml30, Node* node)
   }
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, ">", NULL);
+
   return chtml30->out;
 }
+
 
 /**
  * It is a handler who processes the FONT tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The FONT tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_end_font_tag(chtml30_t* chtml30, Node* child) 
+s_chtml30_end_font_tag(void* pdoc, Node* child) 
 {
-  request_rec* r = chtml30->doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
+
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "</font>", NULL);
+
   return chtml30->out;
 }
+
 
 /**
  * It is a handler who processes the FORM tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The FORM tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_start_form_tag(chtml30_t* chtml30, Node* node) 
+s_chtml30_start_form_tag(void* pdoc, Node* node) 
 {
-  Doc* doc = chtml30->doc;
-  request_rec* r = doc->r;
-  Attr* attr;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+  Attr*         attr;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<form", NULL);
 
@@ -1379,40 +1293,50 @@ s_chtml30_start_form_tag(chtml30_t* chtml30, Node* node)
     }
   }
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, ">", NULL);
+
   return chtml30->out;
 }
+
 
 /**
  * It is a handler who processes the FORM tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The FORM tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_end_form_tag(chtml30_t* chtml30, Node* child) 
+s_chtml30_end_form_tag(void* pdoc, Node* child) 
 {
-  Doc* doc = chtml30->doc;
-  request_rec* r = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "</form>", NULL);
+
   return chtml30->out;
 }
+
 
 /**
  * It is a handler who processes the INPUT tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The INPUT tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_start_input_tag(chtml30_t* chtml30, Node* node) 
+s_chtml30_start_input_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc         = chtml30->doc;
-  request_rec*  r           = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
   char*         max_length  = NULL;
   char*         type        = NULL;
   char*         name        = NULL;
@@ -1421,6 +1345,11 @@ s_chtml30_start_input_tag(chtml30_t* chtml30, Node* node)
   char*         size        = NULL;
   char*         checked     = NULL;
   char*         accesskey   = NULL;
+
+  chtml30   = GET_CHTML30(pdoc);
+  doc       = chtml30->doc;
+  r         = doc->r;
+
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<input", NULL);
 
@@ -1513,72 +1442,95 @@ s_chtml30_start_input_tag(chtml30_t* chtml30, Node* node)
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the INPUT tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The INPUT tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_end_input_tag(chtml30_t* chtml30, Node* child) 
+s_chtml30_end_input_tag(void* pdoc, Node* child) 
 {
+  chtml30_t*    chtml30;
+
+  chtml30 = GET_CHTML30(pdoc);
+
   return chtml30->out;
 }
+
 
 /**
  * It is a handler who processes the CENTER tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The CENTER tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_start_center_tag(chtml30_t* chtml30, Node* node) 
+s_chtml30_start_center_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = chtml30->doc;
-  request_rec*  r   = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<center>", NULL);
 
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the CENTER tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The CENTER tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_end_center_tag(chtml30_t* chtml30, Node* child) 
+s_chtml30_end_center_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = chtml30->doc;
-  request_rec*  r   = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "</center>", NULL);
 
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the HR tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The HR tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_start_hr_tag(chtml30_t* chtml30, Node* node) 
+s_chtml30_start_hr_tag(void* pdoc, Node* node) 
 {
-  Doc* doc = chtml30->doc;
-  request_rec* r = doc->r;
-  Attr* attr;
+  Attr*         attr;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<hr ", NULL);
  
@@ -1635,36 +1587,50 @@ s_chtml30_start_hr_tag(chtml30_t* chtml30, Node* node)
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the HR tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The HR tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_end_hr_tag(chtml30_t* chtml30, Node* child) 
+s_chtml30_end_hr_tag(void* pdoc, Node* child) 
 {
+  chtml30_t*    chtml30;
+
+  chtml30 = GET_CHTML30(pdoc);
+
   return chtml30->out;
 }
+
 
 /**
  * It is a handler who processes the IMG tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The IMG tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_start_img_tag(chtml30_t* chtml30, Node* node) 
+s_chtml30_start_img_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = chtml30->doc;
-  request_rec*  r   = doc->r;
-  Attr* attr;
 #ifndef IMG_NOT_CONVERT_FILENAME
-  device_table* spec = chtml30->spec;
+  device_table* spec;
+#endif
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+  Attr*         attr;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
+#ifndef IMG_NOT_CONVERT_FILENAME
+  spec    = chtml30->spec;
 #endif
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<img", NULL);
@@ -1755,37 +1721,50 @@ s_chtml30_start_img_tag(chtml30_t* chtml30, Node* node)
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the IMG tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The IMG tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_end_img_tag(chtml30_t* chtml30, Node* child) 
+s_chtml30_end_img_tag(void* pdoc, Node* child) 
 {
+  chtml30_t*    chtml30;
+
+  chtml30 = GET_CHTML30(pdoc);
+
   return chtml30->out;
 }
+
 
 /**
  * It is a handler who processes the SELECT tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The SELECT tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_start_select_tag(chtml30_t* chtml30, Node* child)
+s_chtml30_start_select_tag(void* pdoc, Node* child)
 {
-  Doc* doc = chtml30->doc;
-  request_rec* r = doc->r;
-  Attr* attr;
 
-  char* size      = NULL;
-  char* name      = NULL;
+  char*         size;
+  char*         name;
+  Attr*         attr;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
+  size    = NULL;
+  name    = NULL;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<select", NULL);
   for (attr = qs_get_attr(doc,child);
@@ -1827,41 +1806,55 @@ s_chtml30_start_select_tag(chtml30_t* chtml30, Node* child)
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the SELECT tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The SELECT tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_end_select_tag(chtml30_t* chtml30, Node* child)
+s_chtml30_end_select_tag(void* pdoc, Node* child)
 {
-  Doc* doc = chtml30->doc;
-  request_rec* r = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc   = chtml30->doc;
+  r     = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "</select>\n", NULL);
+
   return chtml30->out;
 }
+
 
 /**
  * It is a handler who processes the OPTION tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The OPTION tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_start_option_tag(chtml30_t* chtml30, Node* child)
+s_chtml30_start_option_tag(void* pdoc, Node* child)
 {
-  Doc* doc = chtml30->doc;
-  request_rec* r = doc->r;
-  Attr* attr;
+  Attr*         attr;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+  char*         selected;
+  char*         value;
 
-  char* selected   = NULL;
-  char* value      = NULL;
+  chtml30    = GET_CHTML30(pdoc);
+  doc        = chtml30->doc;
+  r          = doc->r;
+  selected   = NULL;
+  value      = NULL;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<option", NULL);
   for (attr = qs_get_attr(doc,child);
@@ -1898,37 +1891,50 @@ s_chtml30_start_option_tag(chtml30_t* chtml30, Node* child)
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the OPTION tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The OPTION tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_end_option_tag(chtml30_t* chtml30, Node* child)
+s_chtml30_end_option_tag(void* pdoc, Node* child)
 {
+  chtml30_t*    chtml30;
+
+  chtml30 = GET_CHTML30(pdoc);
+
   /* Don't close */
+
   return chtml30->out;
 }
+
 
 /**
  * It is a handler who processes the DIV tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The DIV tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_start_div_tag(chtml30_t* chtml30, Node* child)
+s_chtml30_start_div_tag(void* pdoc, Node* child)
 {
-  Doc* doc = chtml30->doc;
-  request_rec* r = doc->r;
-  Attr* attr;
+  Attr*         attr;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+  char*         align;
 
-  char* align   = NULL;
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
+  align   = NULL;
+
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<div", NULL);
   for (attr = qs_get_attr(doc,child);
@@ -1954,76 +1960,100 @@ s_chtml30_start_div_tag(chtml30_t* chtml30, Node* child)
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the DIV tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The DIV tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_end_div_tag(chtml30_t* chtml30, Node* child)
+s_chtml30_end_div_tag(void* pdoc, Node* node)
 {
-  Doc* doc = chtml30->doc;
-  request_rec* r = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "</div>\n", NULL);
 
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the UL tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The UL tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_start_ul_tag(chtml30_t* chtml30, Node* node) 
+s_chtml30_start_ul_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = chtml30->doc;
-  request_rec*  r   = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<ul>", NULL);
 
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the UL tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The UL tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_end_ul_tag(chtml30_t* chtml30, Node* child) 
+s_chtml30_end_ul_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = chtml30->doc;
-  request_rec*  r   = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "</ul>", NULL);
 
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the PRE tag.
  *
- * @param chtml30  [i/o] The pointer to the XHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The PRE tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_start_pre_tag(chtml30_t* chtml30, Node* node) 
+s_chtml30_start_pre_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = chtml30->doc;
-  request_rec*  r   = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->pre_flag++;
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<pre>", NULL);
@@ -2034,16 +2064,21 @@ s_chtml30_start_pre_tag(chtml30_t* chtml30, Node* node)
 /**
  * It is a handler who processes the PRE tag.
  *
- * @param chtml30  [i/o] The pointer to the XHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The PRE tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_end_pre_tag(chtml30_t* chtml30, Node* child) 
+s_chtml30_end_pre_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = chtml30->doc;
-  request_rec*  r   = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "</pre>", NULL);
   chtml30->pre_flag--;
@@ -2051,76 +2086,100 @@ s_chtml30_end_pre_tag(chtml30_t* chtml30, Node* child)
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the P tag.
  *
- * @param chtml30  [i/o] The pointer to the XHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The P tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_start_p_tag(chtml30_t* chtml30, Node* node) 
+s_chtml30_start_p_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = chtml30->doc;
-  request_rec*  r   = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<p>", NULL);
 
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the P tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The P tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_end_p_tag(chtml30_t* chtml30, Node* child) 
+s_chtml30_end_p_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = chtml30->doc;
-  request_rec*  r   = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "</p>", NULL);
 
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the OL tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The OL tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_start_ol_tag(chtml30_t* chtml30, Node* node) 
+s_chtml30_start_ol_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = chtml30->doc;
-  request_rec*  r   = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<ol>", NULL);
 
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the OL tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The OL tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_end_ol_tag(chtml30_t* chtml30, Node* child) 
+s_chtml30_end_ol_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = chtml30->doc;
-  request_rec*  r   = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "</ol>", NULL);
 
@@ -2131,283 +2190,372 @@ s_chtml30_end_ol_tag(chtml30_t* chtml30, Node* child)
 /**
  * It is a handler who processes the LI tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The LI tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_start_li_tag(chtml30_t* chtml30, Node* node) 
+s_chtml30_start_li_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = chtml30->doc;
-  request_rec*  r   = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<li>", NULL);
 
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the LI tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The LI tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_end_li_tag(chtml30_t* chtml30, Node* child) 
+s_chtml30_end_li_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = chtml30->doc;
-  request_rec*  r   = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "</li>", NULL);
 
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the H1 tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The H1 tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_start_h1_tag(chtml30_t* chtml30, Node* node) 
+s_chtml30_start_h1_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = chtml30->doc;
-  request_rec*  r   = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<h1>\r\n", NULL);
 
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the H1 tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The H1 tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_end_h1_tag(chtml30_t* chtml30, Node* child) 
+s_chtml30_end_h1_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = chtml30->doc;
-  request_rec*  r   = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "</h1>\r\n", NULL);
 
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the H2 tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The H2 tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_start_h2_tag(chtml30_t* chtml30, Node* node) 
+s_chtml30_start_h2_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = chtml30->doc;
-  request_rec*  r   = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<h2>\r\n", NULL);
 
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the H2 tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The H2 tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_end_h2_tag(chtml30_t* chtml30, Node* child) 
+s_chtml30_end_h2_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = chtml30->doc;
-  request_rec*  r   = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "</h2>\r\n", NULL);
 
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the H3 tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The H3 tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_start_h3_tag(chtml30_t* chtml30, Node* node) 
+s_chtml30_start_h3_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = chtml30->doc;
-  request_rec*  r   = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<h3>\r\n", NULL);
 
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the H3 tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The H3 tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_end_h3_tag(chtml30_t* chtml30, Node* child) 
+s_chtml30_end_h3_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = chtml30->doc;
-  request_rec*  r   = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc   = chtml30->doc;
+  r     = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "</h3>\r\n", NULL);
 
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the H4 tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The H4 tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_start_h4_tag(chtml30_t* chtml30, Node* node) 
+s_chtml30_start_h4_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = chtml30->doc;
-  request_rec*  r   = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<h4>\r\n", NULL);
 
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the H4 tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The H4 tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_end_h4_tag(chtml30_t* chtml30, Node* child) 
+s_chtml30_end_h4_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = chtml30->doc;
-  request_rec*  r   = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "</h4>\r\n", NULL);
 
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the H5 tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The H5 tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_start_h5_tag(chtml30_t* chtml30, Node* node) 
+s_chtml30_start_h5_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = chtml30->doc;
-  request_rec*  r   = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<h5>\r\n", NULL);
 
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the H5 tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The H5 tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_end_h5_tag(chtml30_t* chtml30, Node* child) 
+s_chtml30_end_h5_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = chtml30->doc;
-  request_rec*  r   = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "</h5>\r\n", NULL);
 
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the H6 tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The H6 tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_start_h6_tag(chtml30_t* chtml30, Node* node) 
+s_chtml30_start_h6_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = chtml30->doc;
-  request_rec*  r   = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<h6>\r\n", NULL);
 
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the H6 tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The H6 tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_end_h6_tag(chtml30_t* chtml30, Node* child) 
+s_chtml30_end_h6_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = chtml30->doc;
-  request_rec*  r   = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "</h6>\r\n", NULL);
 
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the TEXTARE tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The TEXTAREA tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_start_textarea_tag(chtml30_t* chtml30, Node* node) 
+s_chtml30_start_textarea_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = chtml30->doc;
-  request_rec*  r   = doc->r;
-  Attr* attr;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+  Attr*         attr;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->textarea_flag++;
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<textarea ", NULL);
@@ -2437,19 +2585,25 @@ s_chtml30_start_textarea_tag(chtml30_t* chtml30, Node* node)
   return chtml30->out;
 }
 
+
 /**
  * It is a handler who processes the TEXTAREA tag.
  *
- * @param chtml30  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The TEXTAREA tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_chtml30_end_textarea_tag(chtml30_t* chtml30, Node* child) 
+s_chtml30_end_textarea_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = chtml30->doc;
-  request_rec*  r   = doc->r;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "</textarea>\r\n", NULL);
   chtml30->textarea_flag--;
@@ -2458,12 +2612,17 @@ s_chtml30_end_textarea_tag(chtml30_t* chtml30, Node* child)
 }
 
 
-static void
-s_chtml30_chxjif_tag(chtml30_t* chtml30, Node* node)
+static char*
+s_chtml30_chxjif_tag(void* pdoc, Node* node)
 {
-  Doc*         doc   = chtml30->doc;
-  Node*        child;
-  request_rec* r     = doc->r;
+  Node*         child;
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
 
   for (child = qs_get_child_node(doc, node);
        child;
@@ -2471,7 +2630,74 @@ s_chtml30_chxjif_tag(chtml30_t* chtml30, Node* node)
     chtml30->out = apr_pstrcat(r->pool, chtml30->out, child->otext, NULL);
     s_chtml30_chxjif_tag(chtml30, child);
   }
+
+  return NULL;
 }
+
+static char*
+s_chtml30_text_tag(void* pdoc, Node* child)
+{
+  chtml30_t*    chtml30;
+  Doc*          doc;
+  request_rec*  r;
+
+  char*   textval;
+  char*   tmp;
+  char*   tdst;
+  char    one_byte[2];
+  int     ii;
+  int     tdst_len;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
+  
+  textval = qs_get_node_value(doc,child);
+  textval = qs_trim_string(chtml30->doc->r, textval);
+  if (strlen(textval) == 0)
+    return chtml30->out;
+  
+  tmp = apr_palloc(r->pool, qs_get_node_size(doc,child)+1);
+  memset(tmp, 0, qs_get_node_size(doc,child)+1);
+  
+  tdst     = qs_alloc_zero_byte_string(r);
+  memset(one_byte, 0, sizeof(one_byte));
+  tdst_len = 0;
+  
+  for (ii=0; ii<qs_get_node_size(doc,child); ii++) {
+    char* out;
+    int rtn = s_chtml30_search_emoji(chtml30, &textval[ii], &out);
+    if (rtn) {
+      tdst = qs_out_apr_pstrcat(r, tdst, out, &tdst_len);
+      ii+=(rtn - 1);
+      continue;
+    }
+  
+    if (is_sjis_kanji(textval[ii])) {
+      one_byte[0] = textval[ii+0];
+      tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+      one_byte[0] = textval[ii+1];
+      tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+      ii++;
+    }
+    else if (chtml30->pre_flag) {
+      one_byte[0] = textval[ii+0];
+      tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+    }
+    else if (chtml30->textarea_flag) {
+      one_byte[0] = textval[ii+0];
+      tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+    }
+    else if (textval[ii] != '\r' && textval[ii] != '\n') {
+      one_byte[0] = textval[ii+0];
+      tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+    }
+  }
+  chtml30->out = apr_pstrcat(r->pool, chtml30->out, tdst, NULL);
+
+  return chtml30->out;
+}
+
 /*
  * vim:ts=2 et
  */
