@@ -25,8 +25,11 @@ tag_handlers chxj_tag_handlers[] = {
     .type    = CHXJ_SPEC_Chtml_1_0,
     .handler = chtml10_handler,
   },
+  {
+    .type    = CHXJ_SPEC_Chtml_2_0,
+    .handler = chtml20_handler,
+  },
 #if 0
-  CHXJ_SPEC_Chtml_2_0,
   CHXJ_SPEC_Chtml_3_0,
   CHXJ_SPEC_Chtml_4_0,
   CHXJ_SPEC_Chtml_5_0,

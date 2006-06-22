@@ -22,8 +22,6 @@
 
 #define GET_CHTML10(X) ((chtml10_t*)(X))
 
-static char* s_chtml10_node_exchange    (chtml10_t* chtml, Node* node, int indent);
-
 static char* s_chtml10_start_html_tag     (void* pdoc, Node* node);
 static char* s_chtml10_end_html_tag       (void* pdoc, Node* node);
 static char* s_chtml10_start_meta_tag     (void* pdoc, Node* node);
