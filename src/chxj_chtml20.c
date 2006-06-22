@@ -434,9 +434,9 @@ s_chtml20_search_emoji(chtml20_t* chtml20, char* txt, char** rslt)
   for (ee = chtml20->conf->emoji;
        ee;
        ee = ee->next) {
+
     if (ee->imode == NULL) {
-      ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
-                      "emoji->imode is NULL");
+      DBG(r,"emoji->imode is NULL");
       continue;
     }
 
