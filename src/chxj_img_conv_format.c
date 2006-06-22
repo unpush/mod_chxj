@@ -23,6 +23,7 @@
 #include "qs_parse_string.h"
 
 #include "http_core.h"
+
 #include <wand/magick_wand.h>
 
 #define EXIT_MAGICK_ERROR() \

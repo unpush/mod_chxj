@@ -323,10 +323,10 @@ chxj_exchange_chtml10(
   *dstlen = srclen;
   dst = chxj_qr_code_blob_handler(r, src, (size_t*)dstlen);
   if (dst) {
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"i found qrcode xml");
+    DBG(r,"i found qrcode xml");
     return dst;
   }
-  ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"not found qrcode xml");
+  DBG(r,"not found qrcode xml");
 
   /*--------------------------------------------------------------------------*/
   /* The CHTML structure is initialized.                                      */
@@ -424,7 +424,7 @@ s_chtml10_search_emoji(chtml10_t* chtml10, char* txt, char** rslt)
   r = chtml10->doc->r;
 
   if (!spec) {
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "spec is NULL");
+    DBG(r,"spec is NULL");
   }
 
   for (ee = chtml10->conf->emoji;
@@ -432,8 +432,7 @@ s_chtml10_search_emoji(chtml10_t* chtml10, char* txt, char** rslt)
        ee = ee->next) {
 
     if (!ee->imode) {
-      ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
-                      "emoji->imode is NULL");
+      DBG(r,"emoji->imode is NULL");
       continue;
     }
 
