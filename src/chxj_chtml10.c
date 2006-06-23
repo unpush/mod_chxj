@@ -638,6 +638,7 @@ s_chtml10_end_ol_tag(void* pdoc, Node* child)
   r       = doc->r;
 
   chtml10->out = apr_pstrcat(r->pool, chtml10->out, "</ol>\r\n", NULL);
+
   return chtml10->out;
 }
 

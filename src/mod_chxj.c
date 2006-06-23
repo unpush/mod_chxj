@@ -320,6 +320,8 @@ chxj_input_exchange(request_rec *r, const char** src, apr_size_t* len)
 
   result = qs_alloc_zero_byte_string(r);
 
+  DBG1(r, "BEFORE input exchange source = [%s]", s);
+
   /* _chxj_dmy */
   /* _chxj_c_ */
   /* _chxj_r_ */
@@ -369,10 +371,31 @@ chxj_input_exchange(request_rec *r, const char** src, apr_size_t* len)
       if (strlen(result) != 0)
         result = apr_pstrcat(r->pool, result, "&", NULL);
 
-      result = apr_pstrcat(r->pool, result, &name[8], "=", value, NULL);
+      if (strcasecmp(entryp->encoding, "NONE") != 0 && value && strlen(value)) {
+        apr_size_t dlen;
+        char* dvalue;
+
+        dlen   = strlen(value);
+        ap_unescape_url(value);
+        DBG1(r, "************ before encoding[%s]", value);
+
+        dvalue = chxj_rencoding(r, value, &dlen);
+        dvalue = ap_escape_uri(r->pool,dvalue);
+
+        DBG1(r, "************ after encoding[%s]", dvalue);
+
+        result = apr_pstrcat(r->pool, result, &name[8], "=", dvalue, NULL);
+
+      }
+      else {
+        result = apr_pstrcat(r->pool, result, &name[8], "=", value, NULL);
+      }
     }
   }
   *len = strlen(result);
+
+  DBG1(r, "AFTER input exchange result = [%s]", result);
+
   return result;
 }
 

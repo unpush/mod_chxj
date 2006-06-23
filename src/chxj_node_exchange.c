@@ -41,6 +41,22 @@ tag_handlers chxj_tag_handlers[] = {
     .type    = CHXJ_SPEC_Chtml_5_0,
     .handler = chtml30_handler,
   },
+  {
+    .type    = CHXJ_SPEC_XHtml_Mobile_1_0,
+    .handler = NULL,
+  },
+  {
+    .type    = CHXJ_SPEC_Hdml,
+    .handler = hdml_handler,
+  },
+  {
+    .type    = CHXJ_SPEC_Jhtml,
+    .handler = NULL,
+  },
+  {
+    .type    = CHXJ_SPEC_HTML,
+    .handler = NULL,
+  },
 #if 0
   CHXJ_SPEC_Chtml_3_0,
   CHXJ_SPEC_Chtml_4_0,

@@ -26,48 +26,55 @@
 #define RADIO_BUTTON_PREFIX  "_chxj_r_"
 #define SUBMIT_BUTTON_PREFIX "_chxj_s_"
 
+#define GET_HDML(X) ((hdml_t*)(X))
+
 static void  s_init_hdml            (hdml_t* hdml, Doc* doc, request_rec* r, device_table* spec);
+
 static char* s_hdml_node_exchange   (hdml_t* doc,  Node* node, int indent);
-static char* s_hdml_start_html_tag  (hdml_t* doc,  Node* node);
-static char* s_hdml_end_html_tag    (hdml_t* doc,  Node* node);
-static char* s_hdml_start_li_tag    (hdml_t* doc,  Node* node);
-static char* s_hdml_end_li_tag      (hdml_t* doc,  Node* node);
-static char* s_hdml_start_meta_tag  (hdml_t* doc,  Node* node);
-static char* s_hdml_end_meta_tag    (hdml_t* doc,  Node* node);
-static char* s_hdml_start_head_tag  (hdml_t* doc,  Node* node);
-static char* s_hdml_end_head_tag    (hdml_t* doc,  Node* node);
-static char* s_hdml_start_title_tag (hdml_t* doc,  Node* node);
-static char* s_hdml_end_title_tag   (hdml_t* doc,  Node* node);
-static char* s_hdml_start_base_tag  (hdml_t* doc,  Node* node);
-static char* s_hdml_end_base_tag    (hdml_t* doc,  Node* node);
-static char* s_hdml_start_body_tag  (hdml_t* doc,  Node* node);
-static char* s_hdml_end_body_tag    (hdml_t* doc,  Node* node);
-static char* s_hdml_start_a_tag     (hdml_t* doc,  Node* node);
-static char* s_hdml_end_a_tag       (hdml_t* doc,  Node* node);
-static char* s_hdml_start_br_tag    (hdml_t* doc,  Node* node);
-static char* s_hdml_end_br_tag      (hdml_t* doc,  Node* node);
-static char* s_hdml_start_tr_tag    (hdml_t* doc,  Node* node);
-static char* s_hdml_end_tr_tag      (hdml_t* doc,  Node* node);
-static char* s_hdml_start_font_tag  (hdml_t* doc,  Node* node);
-static char* s_hdml_end_font_tag    (hdml_t* doc,  Node* node);
-static char* s_hdml_start_form_tag  (hdml_t* doc,  Node* node);
-static char* s_hdml_end_form_tag    (hdml_t* doc,  Node* node);
-static char* s_hdml_start_input_tag (hdml_t* doc,  Node* node);
-static char* s_hdml_end_input_tag   (hdml_t* doc,  Node* node);
-static char* s_hdml_start_select_tag(hdml_t* doc,  Node* node);
-static char* s_hdml_end_select_tag  (hdml_t* doc,  Node* node);
-static char* s_hdml_start_option_tag(hdml_t* doc,  Node* node);
-static char* s_hdml_end_option_tag  (hdml_t* doc,  Node* node);
-static char* s_hdml_start_center_tag(hdml_t* doc,  Node* node);
-static char* s_hdml_end_center_tag  (hdml_t* doc,  Node* node);
-static char* s_hdml_start_hr_tag    (hdml_t* doc,  Node* node);
-static char* s_hdml_end_hr_tag      (hdml_t* doc,  Node* node);
-static char* s_hdml_start_img_tag   (hdml_t* doc,  Node* node);
-static char* s_hdml_end_img_tag     (hdml_t* doc,  Node* node);
-static char* s_hdml_start_div_tag   (hdml_t* doc,  Node* node);
-static char* s_hdml_end_div_tag     (hdml_t* doc,  Node* node);
+
+static char* s_hdml_start_html_tag    (void* pdoc,  Node* node);
+static char* s_hdml_end_html_tag      (void* pdoc,  Node* node);
+static char* s_hdml_start_meta_tag    (void* pdoc,  Node* node);
+static char* s_hdml_end_meta_tag      (void* pdoc,  Node* node);
+static char* s_hdml_start_li_tag      (void* pdoc,  Node* node);
+static char* s_hdml_end_li_tag        (void* pdoc,  Node* node);
+static char* s_hdml_start_head_tag    (void* pdoc,  Node* node);
+static char* s_hdml_end_head_tag      (void* pdoc,  Node* node);
+static char* s_hdml_start_title_tag   (void* pdoc,  Node* node);
+static char* s_hdml_end_title_tag     (void* pdoc,  Node* node);
+static char* s_hdml_start_base_tag    (void* pdoc,  Node* node);
+static char* s_hdml_end_base_tag      (void* pdoc,  Node* node);
+static char* s_hdml_start_body_tag    (void* pdoc,  Node* node);
+static char* s_hdml_end_body_tag      (void* pdoc,  Node* node);
+static char* s_hdml_start_a_tag       (void* pdoc,  Node* node);
+static char* s_hdml_end_a_tag         (void* pdoc,  Node* node);
+static char* s_hdml_start_br_tag      (void* pdoc,  Node* node);
+static char* s_hdml_end_br_tag        (void* pdoc,  Node* node);
+static char* s_hdml_start_tr_tag      (void* pdoc,  Node* node);
+static char* s_hdml_end_tr_tag        (void* pdoc,  Node* node);
+static char* s_hdml_start_font_tag    (void* pdoc,  Node* node);
+static char* s_hdml_end_font_tag      (void* pdoc,  Node* node);
+static char* s_hdml_start_form_tag    (void* pdoc,  Node* node);
+static char* s_hdml_end_form_tag      (void* pdoc,  Node* node);
+static char* s_hdml_start_input_tag   (void* pdoc,  Node* node);
+static char* s_hdml_end_input_tag     (void* pdoc,  Node* node);
+static char* s_hdml_start_select_tag  (void* pdoc,  Node* node);
+static char* s_hdml_end_select_tag    (void* pdoc,  Node* node);
+static char* s_hdml_start_option_tag  (void* pdoc,  Node* node);
+static char* s_hdml_end_option_tag    (void* pdoc,  Node* node);
+static char* s_hdml_start_center_tag  (void* pdoc,  Node* node);
+static char* s_hdml_end_center_tag    (void* pdoc,  Node* node);
+static char* s_hdml_start_hr_tag      (void* pdoc,  Node* node);
+static char* s_hdml_end_hr_tag        (void* pdoc,  Node* node);
+static char* s_hdml_start_img_tag     (void* pdoc,  Node* node);
+static char* s_hdml_end_img_tag       (void* pdoc,  Node* node);
+static char* s_hdml_start_div_tag     (void* pdoc,  Node* node);
+static char* s_hdml_end_div_tag       (void* pdoc,  Node* node);
+
 static char* s_get_form_no          (request_rec* r, hdml_t* hdml);
+
 static void  s_hdml_count_radio_tag (hdml_t* hdml, Node* node) ;
+
 static void  s_hdml_do_input_text_tag    (hdml_t* hdml, Node* tag);
 static void  s_hdml_do_input_password_tag(hdml_t* hdml, Node* tag);
 static void  s_hdml_do_input_submit_tag  (hdml_t* hdml, Node* tag);
@@ -75,14 +82,219 @@ static void  s_hdml_do_input_hidden_tag  (hdml_t* hdml, Node* tag);
 static void  s_hdml_do_input_radio_tag   (hdml_t* hdml, Node* tag);
 static void  s_hdml_do_input_checkbox_tag(hdml_t* hdml, Node* tag);
 static void  s_hdml_tag_output_upper_half(hdml_t* hdml, Node* node);
+
 static hdml_t* s_output_to_hdml_out       (hdml_t* hdml, char* s);
 static hdml_t* s_output_to_hdml_card      (hdml_t* hdml, char* s);
 static void  s_output_to_postdata         (hdml_t* hdml, char* s);
 static void  s_output_to_init_vars        (hdml_t* hdml, char* s);
 static int   s_hdml_search_emoji          (hdml_t* hdml, char* txt, char** rslt);
-static void  s_hdml_chxjif_tag            (hdml_t* hdml, Node* node);
+
+static char* s_hdml_chxjif_tag            (void* pdoc, Node* node);
+static char* s_hdml_text_tag              (void* pdoc, Node* node) ;
 
 
+tag_handler hdml_handler[] = {
+  /* tagHTML */
+  {
+    s_hdml_start_html_tag,
+    s_hdml_end_html_tag,
+  },
+  /* tagMETA */
+  {
+    s_hdml_start_meta_tag,
+    s_hdml_end_meta_tag,
+  },
+  /* tagTEXTAREA */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagP */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagPRE */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagUL */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagLI */
+  {
+    s_hdml_start_li_tag,
+    s_hdml_end_li_tag,
+  },
+  /* tagOL */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagH1 */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagH2 */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagH3 */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagH4 */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagH5 */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagH6 */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagHEAD */
+  {
+    s_hdml_start_head_tag,
+    s_hdml_end_head_tag,
+  },
+  /* tagTITLE */
+  {
+    s_hdml_start_title_tag,
+    s_hdml_end_title_tag,
+  },
+  /* tagBASE */
+  {
+    s_hdml_start_base_tag,
+    s_hdml_end_base_tag,
+  },
+  /* tagBODY */
+  {
+    s_hdml_start_body_tag,
+    s_hdml_end_body_tag,
+  },
+  /* tagA */
+  {
+    s_hdml_start_a_tag,
+    s_hdml_end_a_tag,
+  },
+  /* tagBR */
+  {
+    s_hdml_start_br_tag,
+    s_hdml_end_br_tag,
+  },
+  /* tagTABLE */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagTR */
+  {
+    s_hdml_start_tr_tag,
+    s_hdml_end_tr_tag,
+  },
+  /* tagTD */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagTBODY */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagFONT */
+  {
+    s_hdml_start_font_tag,
+    s_hdml_end_font_tag,
+  },
+  /* tagFORM */
+  {
+    s_hdml_start_form_tag,
+    s_hdml_end_form_tag,
+  },
+  /* tagINPUT */
+  {
+    s_hdml_start_input_tag,
+    s_hdml_end_input_tag,
+  },
+  /* tagCENTER */
+  {
+    s_hdml_start_center_tag,
+    s_hdml_end_center_tag,
+  },
+  /* tagHR */
+  {
+    s_hdml_start_hr_tag,
+    s_hdml_end_hr_tag,
+  },
+  /* tagIMG */
+  {
+    s_hdml_start_img_tag,
+    s_hdml_end_img_tag,
+  },
+  /* tagSELECT */
+  {
+    s_hdml_start_select_tag,
+    s_hdml_end_select_tag,
+  },
+  /* tagOPTION */
+  {
+    s_hdml_start_option_tag,
+    s_hdml_end_option_tag,
+  },
+  /* tagDIV */
+  {
+    s_hdml_start_div_tag,
+    s_hdml_end_div_tag,
+  },
+  /* tagCHXJIF */
+  {
+    s_hdml_chxjif_tag,
+    NULL,
+  },
+  /* tagNOBR */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagSMALL */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagSTYLE */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagSPAN */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagTEXT */
+  {
+    s_hdml_text_tag,
+    NULL,
+  },
+  /* tagTH */
+  {
+    NULL,
+    NULL,
+  },
+};
 
 /**
  * converts from CHTML to hdml.
@@ -177,7 +389,12 @@ chxj_exchange_hdml(request_rec* r,
     /*------------------------------------------------------------------------*/
     s_hdml_count_radio_tag(&hdml, qs_get_root(&doc));
 
+#if 0
     dst = s_hdml_node_exchange(&hdml, qs_get_root(&doc), 0);
+#else
+    chxj_node_exchange(spec,r,(void*)&hdml, &doc, qs_get_root(&doc), 0);
+    dst = hdml.out;
+#endif
     DBG1(r,"tmp=[%s]", dst);
     qs_all_free(&doc,QX_LOGMARK);
   }
@@ -188,6 +405,14 @@ chxj_exchange_hdml(request_rec* r,
 #ifdef DUMP_LOG
   chxj_dump_out("[dst] CHTML->HDML", hdml.out, hdml.out_len);
 #endif
+  DBG(r, " ");
+#if 0
+  { FILE* fp = fopen("/tmp/erer.log", "a"); 
+    fprintf(fp, "\n============================================\n");
+    fprintf(fp, ">>>%s\n", dst);
+    fclose(fp);}
+#endif
+  DBG(r, " ");
 
   /*--------------------------------------------------------------------------*/
   /* When there is no processing result, former character string is copied    */
@@ -338,7 +563,6 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
       /*----------------------------------------------------------------------*/
       if (strcasecmp(name, "html") == 0) {
         hdml->out = s_hdml_start_html_tag(hdml, child);
-        hdml->hdml_br_flag = 0;
         hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
         hdml->out = s_hdml_end_html_tag(hdml, child);
       }
@@ -348,7 +572,6 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
       else
       if (strcasecmp(name, "head") == 0) {
         hdml->out = s_hdml_start_head_tag(hdml, child);
-        hdml->hdml_br_flag = 0;
         hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
         hdml->out = s_hdml_end_head_tag(hdml, child);
       }
@@ -367,7 +590,6 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
     else
     if ((*name == 'm' || *name == 'M') && strcasecmp(name, "meta") == 0) {
       hdml->out = s_hdml_start_meta_tag(hdml, child);
-      hdml->hdml_br_flag = 0;
       hdml->out = s_hdml_end_meta_tag(hdml, child);
     }
     else
@@ -377,7 +599,6 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
       /*----------------------------------------------------------------------*/
       if (strcasecmp(name, "base") == 0) {
         hdml->out = s_hdml_start_base_tag(hdml, child);
-        hdml->hdml_br_flag = 0;
         hdml->out = s_hdml_end_base_tag(hdml, child);
       }
       /*----------------------------------------------------------------------*/
@@ -386,7 +607,6 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
       else
       if (strcasecmp(name, "body") == 0) {
         hdml->out = s_hdml_start_body_tag(hdml, child);
-        hdml->hdml_br_flag = 0;
         hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
         hdml->out = s_hdml_end_body_tag(hdml, child);
       }
@@ -406,7 +626,6 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
     else
     if ((*name == 'a' || *name == 'A') && strcasecmp(name, "a") == 0) {
       hdml->out = s_hdml_start_a_tag(hdml, child);
-      hdml->hdml_br_flag = 0;
       hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
       hdml->out = s_hdml_end_a_tag(hdml, child);
     }
@@ -426,7 +645,6 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
       else
       if (strcasecmp(name, "form") == 0) {
         hdml->out = s_hdml_start_form_tag(hdml, child);
-        hdml->hdml_br_flag = 0;
         hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
         hdml->out = s_hdml_end_form_tag(hdml, child);
       }
@@ -438,7 +656,6 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
       /*----------------------------------------------------------------------*/
       if (strcasecmp(name, "input") == 0) {
         hdml->out = s_hdml_start_input_tag(hdml, child);
-        hdml->hdml_br_flag = 0;
         hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
         hdml->out = s_hdml_end_input_tag(hdml, child);
       }
@@ -448,7 +665,6 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
       else
       if (strcasecmp(name, "img") == 0) {
         hdml->out = s_hdml_start_img_tag(hdml, child);
-        hdml->hdml_br_flag = 0;
         hdml->out = s_hdml_end_img_tag  (hdml, child);
       }
     }
@@ -459,7 +675,6 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
       /*----------------------------------------------------------------------*/
       if (strcasecmp(name, "select") == 0) {
         hdml->out = s_hdml_start_select_tag(hdml, child);
-        hdml->hdml_br_flag = 0;
         hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
         hdml->out = s_hdml_end_select_tag(hdml, child);
       }
@@ -484,7 +699,6 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
     else
     if ((*name == 'o' || *name == 'O') && strcasecmp(name, "option") == 0) {
       hdml->out = s_hdml_start_option_tag(hdml, child);
-      hdml->hdml_br_flag = 0;
       hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
       hdml->out = s_hdml_end_option_tag(hdml, child);
     }
@@ -494,7 +708,6 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
     else
     if ((*name == 'd' || *name == 'D') && strcasecmp(name, "div") == 0) {
       hdml->out = s_hdml_start_div_tag(hdml, child);
-      hdml->hdml_br_flag = 0;
       hdml->out = s_hdml_node_exchange(hdml, child, indent+1);
       hdml->out = s_hdml_end_div_tag(hdml, child);
     }
@@ -533,7 +746,6 @@ s_hdml_node_exchange(hdml_t* hdml, Node* node,  int indent)
       /*----------------------------------------------------------------------*/
       if (strcasecmp(name, "title") == 0) {
         hdml->out = s_hdml_start_title_tag(hdml, child);
-        hdml->hdml_br_flag = 0;
         hdml->out = s_hdml_node_exchange(hdml, child,indent+1);
         hdml->out = s_hdml_end_title_tag(hdml, child);
       }
@@ -758,17 +970,23 @@ s_hdml_search_emoji(hdml_t* hdml, char* txt, char** rslt)
   }
   return 0;
 }
+
+
 /**
  * It is a handler who processes the HTML tag. 
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The HTML tag node is specified. 
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_start_html_tag(hdml_t* hdml, Node* node) 
+s_hdml_start_html_tag(void* pdoc, Node* node) 
 {
+  hdml_t* hdml;
+ 
+  hdml = GET_HDML(pdoc);
+
   s_output_to_hdml_out(hdml, 
     "<HDML VERSION=3.0 TTL=0 MARKABLE=TRUE>\n"
     "<NODISPLAY NAME=D0>\n"
@@ -777,21 +995,27 @@ s_hdml_start_html_tag(hdml_t* hdml, Node* node)
     );
 
   hdml->card_cnt = 2;
+  hdml->hdml_br_flag = 0;
 
   return hdml->out;
 }
 
+
 /**
  * It is a handler who processes the HTML tag. 
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The HTML tag node is specified. 
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_end_html_tag(hdml_t* hdml, Node* child) 
+s_hdml_end_html_tag(void* pdoc, Node* child) 
 {
+  hdml_t* hdml;
+
+  hdml = GET_HDML(pdoc);
+
   s_output_to_hdml_card(hdml, 
                   "<NODISPLAY NAME=D1>\n"
                   "<ACTION TYPE=ACCEPT TASK=RETURN VARS=\""
@@ -815,109 +1039,154 @@ s_hdml_end_html_tag(hdml_t* hdml, Node* child)
   return hdml->out;
 }
 
+
 /**
  * It is a handler who processes the META tag. 
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The META tag node is specified. 
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_start_meta_tag(hdml_t* hdml, Node* node) 
+s_hdml_start_meta_tag(void* pdoc, Node* node) 
 {
+  hdml_t* hdml;
+
+  hdml = GET_HDML(pdoc);
+
+  hdml->hdml_br_flag = 0;
+
   /* ignore */
+
   return hdml->out;
 }
+
 
 /**
  * It is a handler who processes the META tag. 
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The META tag node is specified. 
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_end_meta_tag(hdml_t* hdml, Node* child) 
+s_hdml_end_meta_tag(void* pdoc, Node* child) 
 {
+  hdml_t* hdml;
+
+  hdml = GET_HDML(pdoc);
+
   return hdml->out;
 }
+
 
 /**
  * It is a handler who processes the HEAD tag. 
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The HEAD tag node is specified. 
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_start_head_tag(hdml_t* hdml, Node* node) 
+s_hdml_start_head_tag(void* pdoc, Node* node) 
 {
+  hdml_t* hdml;
+
+  hdml = GET_HDML(pdoc);
+
   /* ignore */
+
+  hdml->hdml_br_flag = 0;
+
   return hdml->out;
 }
+
 
 /**
  * It is a handler who processes the HEAD tag. 
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The HEAD tag node is specified. 
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_end_head_tag(hdml_t* hdml, Node* child) 
+s_hdml_end_head_tag(void* pdoc, Node* child) 
 {
+  hdml_t* hdml;
+
+  hdml = GET_HDML(pdoc);
   /* ignore */
+
   return hdml->out;
 }
+
 
 /**
  * It is a handler who processes the TITLE tag. 
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The TITLE tag node is specified. 
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_start_title_tag(hdml_t* hdml, Node* node) 
+s_hdml_start_title_tag(void* pdoc, Node* node) 
 {
+  hdml_t* hdml;
+
+  hdml = GET_HDML(pdoc);
+
   s_output_to_hdml_out(hdml, "<DISPLAY NAME=D2 TITLE=\"");
+
   hdml->found_title = 1;
+  hdml->hdml_br_flag = 0;
 
   return hdml->out;
 }
 
+
 /**
  * It is a handler who processes the TITLE tag. 
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The TITLE tag node is specified. 
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_end_title_tag(hdml_t* hdml, Node* child) 
+s_hdml_end_title_tag(void* pdoc, Node* child) 
 {
+  hdml_t* hdml;
+
+  hdml = GET_HDML(pdoc);
+
   s_output_to_hdml_out(hdml, "\">\n");
 
   return hdml->out;
 }
 
+
 /**
  * It is a handler who processes the BASE tag. 
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The BASE tag node is specified. 
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_start_base_tag(hdml_t* hdml, Node* node) 
+s_hdml_start_base_tag(void* pdoc, Node* node) 
 {
+  hdml_t* hdml;
+
+  hdml = GET_HDML(pdoc);
+
+  hdml->hdml_br_flag = 0;
+
   return hdml->out;
 }
 
@@ -925,30 +1194,40 @@ s_hdml_start_base_tag(hdml_t* hdml, Node* node)
 /**
  * It is a handler who processes the BASE tag. 
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The BASE tag node is specified. 
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_end_base_tag(hdml_t* hdml, Node* child) 
+s_hdml_end_base_tag(void* pdoc, Node* child) 
 {
+  hdml_t* hdml;
+
+  hdml = GET_HDML(pdoc);
+
   return hdml->out;
 }
+
 
 /**
  * It is a handler who processes the BODY tag. 
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The BODY tag node is specified. 
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_start_body_tag(hdml_t* hdml, Node* node) 
+s_hdml_start_body_tag(void* pdoc, Node* node) 
 {
-  Doc*         doc  = hdml->doc;
+  hdml_t*      hdml;
+  Doc*         doc;
   Attr*        attr;
+
+  hdml = GET_HDML(pdoc);
+
+  doc  = hdml->doc;
 
   if (hdml->found_title == 0)
     s_output_to_hdml_out(hdml, "<DISPLAY NAME=D2 TITLE=\"NO TITLE\">\n");
@@ -986,38 +1265,50 @@ s_hdml_start_body_tag(hdml_t* hdml, Node* node)
 
   s_output_to_hdml_out(hdml, ">\n");
 
+  hdml->hdml_br_flag = 0;
+
   return hdml->out;
 }
+
 
 /**
  * It is a handler who processes the BODY tag. 
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The BODY tag node is specified. 
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_end_body_tag(hdml_t* hdml, Node* child) 
+s_hdml_end_body_tag(void* pdoc, Node* child) 
 {
+  hdml_t* hdml;
+
+  hdml = GET_HDML(pdoc);
+
   s_output_to_hdml_out(hdml, "\n</DISPLAY>\n");
 
   return hdml->out;
 }
 
+
 /**
  * It is a handler who processes the A tag. 
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The A tag node is specified. 
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_start_a_tag(hdml_t* hdml, Node* node) 
+s_hdml_start_a_tag(void* pdoc, Node* node) 
 {
-  Doc*         doc  = hdml->doc;
+  hdml_t*      hdml;
+  Doc*         doc;
   Attr*        attr;
+
+  hdml = GET_HDML(pdoc);
+  doc  = hdml->doc;
 
   s_hdml_tag_output_upper_half(hdml,node);
 
@@ -1108,20 +1399,27 @@ s_hdml_start_a_tag(hdml_t* hdml, Node* node)
 
   hdml->hdml_a_flag = 1;
 
+  hdml->hdml_br_flag = 0;
+
   return hdml->out;
 }
+
 
 /**
  * It is a handler who processes the A tag. 
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The A tag node is specified. 
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_end_a_tag(hdml_t* hdml, Node* child) 
+s_hdml_end_a_tag(void* pdoc, Node* child) 
 {
+  hdml_t* hdml;
+
+  hdml = GET_HDML(pdoc);
+
   s_output_to_hdml_out(hdml, "</A>\n");
 
   hdml->hdml_a_flag = 0;
@@ -1129,17 +1427,22 @@ s_hdml_end_a_tag(hdml_t* hdml, Node* child)
   return hdml->out;
 }
 
+
 /**
  * It is a handler who processes the BR tag. 
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The BR tag node is specified. 
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_start_br_tag(hdml_t* hdml, Node* node) 
+s_hdml_start_br_tag(void* pdoc, Node* node) 
 {
+  hdml_t* hdml;
+
+  hdml = GET_HDML(pdoc);
+
   if (hdml->in_center > 0) 
     hdml->in_center = 0;
 
@@ -1153,31 +1456,41 @@ s_hdml_start_br_tag(hdml_t* hdml, Node* node)
   return hdml->out;
 }
 
+
 /**
  * It is a handler who processes the BR tag. 
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The BR tag node is specified. 
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_end_br_tag(hdml_t* hdml, Node* child) 
+s_hdml_end_br_tag(void* pdoc, Node* child) 
 {
+  hdml_t* hdml;
+
+  hdml = GET_HDML(pdoc);
+
   return hdml->out;
 }
+
 
 /**
  * It is a handler who processes the TR tag. 
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The TR tag node is specified. 
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_start_tr_tag(hdml_t* hdml, Node* node) 
+s_hdml_start_tr_tag(void* pdoc, Node* node) 
 {
+  hdml_t* hdml;
+
+  hdml = GET_HDML(pdoc);
+
   if (hdml->in_center > 0) 
     hdml->in_center = 0;
 
@@ -1191,63 +1504,84 @@ s_hdml_start_tr_tag(hdml_t* hdml, Node* node)
   return hdml->out;
 }
 
+
 /**
  * It is a handler who processes the TR tag. 
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The TR tag node is specified. 
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_end_tr_tag(hdml_t* hdml, Node* child) 
+s_hdml_end_tr_tag(void* pdoc, Node* child) 
 {
+  hdml_t* hdml;
+
+  hdml = GET_HDML(pdoc);
+
   return hdml->out;
 }
+
 
 /**
  * It is a handler who processes the FONT tag. 
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The FONT tag node is specified. 
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_start_font_tag(hdml_t* hdml, Node* node) 
+s_hdml_start_font_tag(void* pdoc, Node* node) 
 {
+  hdml_t* hdml;
+
+  hdml = GET_HDML(pdoc);
+
   return hdml->out;
 }
+
 
 /**
  * It is a handler who processes the FONT tag. 
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The FONT tag node is specified. 
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_end_font_tag(hdml_t* hdml, Node* child) 
+s_hdml_end_font_tag(void* pdoc, Node* child) 
 {
+  hdml_t* hdml;
+
+  hdml = GET_HDML(pdoc);
+
   return hdml->out;
 }
+
 
 /**
  * It is a handler who processes the FORM tag. 
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The FORM tag node is specified. 
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_start_form_tag(hdml_t* hdml, Node* node) 
+s_hdml_start_form_tag(void* pdoc, Node* node) 
 {
-  request_rec* r = hdml->doc->r;
-  Attr* attr;
-  Doc* doc = hdml->doc;
-  char* act = NULL;
+  hdml_t*      hdml;
+  request_rec* r;
+  Attr*        attr;
+  Doc*         doc;
+  char*        act = NULL;
+
+  hdml = GET_HDML(pdoc);
+  doc  = hdml->doc;
+  r    = hdml->doc->r;
 
   hdml->form_tmp = apr_psprintf(r->pool,
                   "<NODISPLAY NAME=F%d>\n",
@@ -1280,21 +1614,28 @@ s_hdml_start_form_tag(hdml_t* hdml, Node* node)
                            hdml->form_tmp,
                            "POSTDATA=\"", NULL);
 
+  hdml->hdml_br_flag = 0;
+
   return hdml->out;
 }
+
 
 /**
  * handler of the form end tag. 
  *
- * @param hdml [i/o] The pointer to the HDML structure at the output
+ * @param pdoc [i/o] The pointer to the HDML structure at the output
  *                   destination is specified.
  * @param child [i]  unused.
  * @return The HDML output result after it edits it is returned. 
  */
 static char*
-s_hdml_end_form_tag(hdml_t* hdml, Node* child) 
+s_hdml_end_form_tag(void* pdoc, Node* child) 
 {
-  request_rec* r = hdml->doc->r;
+  hdml_t*      hdml;
+  request_rec* r;
+
+  hdml = GET_HDML(pdoc);
+  r    = hdml->doc->r;
 
   s_output_to_postdata(hdml, "_chxj_dmy=");
 
@@ -1323,15 +1664,19 @@ s_hdml_end_form_tag(hdml_t* hdml, Node* child)
 /**
  * It is a handler that takes charge of the processing of the input tag. 
  *
- * @param hdml [i/o] The pointer to the HDML structure at the output
+ * @param pdoc [i/o] The pointer to the HDML structure at the output
  *                   destination is specified.
  * @param node [i]   The tag node to be processed is specified. 
  */
 static char*
-s_hdml_start_input_tag(hdml_t* hdml, Node* node) 
+s_hdml_start_input_tag(void* pdoc, Node* node) 
 {
-  Doc* doc = hdml->doc;
-  Attr* attr;
+  hdml_t*    hdml;
+  Doc*       doc;
+  Attr*      attr;
+
+  hdml = GET_HDML(pdoc);
+  doc = hdml->doc;
 
   /*--------------------------------------------------------------------------*/
   /* The attribute of the input tag is acquired.                              */
@@ -1414,8 +1759,12 @@ s_hdml_start_input_tag(hdml_t* hdml, Node* node)
       /* ignore */
     }
   }
+
+  hdml->hdml_br_flag = 0;
+
   return hdml->out;
 }
+
 
 /**
  * The substitution processing of tag "input type = text" is done. 
@@ -1720,7 +2069,7 @@ s_hdml_do_input_radio_tag(hdml_t* hdml, Node* tag)
   for (ii=0; ii<MAX_RADIO_COUNT; ii++) {
     if (! hdml->radio_name_list[ii]) {
       /* @todo Oops..  */
-      DBG(r, "Oops... radio list is null");
+      DBG1(r, "Oops... radio list is null[%d]", ii);
       /*----------------------------------------------------------------------*/
       /* Processing is ended because it doesn't happen off the fly.           */
       /*----------------------------------------------------------------------*/
@@ -1879,6 +2228,7 @@ s_hdml_do_input_checkbox_tag(hdml_t* hdml, Node* tag)
                                              "RETVALS=\"_chk;;_\" >\n"
                     "</NODISPLAY>\n"
                     );
+    DBG(r, "wrote checkbox hdml card.");
   }
         
   /*--------------------------------------------------------------------------*/
@@ -1987,31 +2337,41 @@ qs_conv_istyle_to_format(request_rec* r, char* is)
   return fmt;
 }
 
+
 /**
  * It is a handler who processes the INPUT tag.
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The INPUT tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_hdml_end_input_tag(hdml_t* hdml, Node* child) 
+s_hdml_end_input_tag(void* pdoc, Node* child) 
 {
+  hdml_t* hdml;
+
+  hdml = GET_HDML(pdoc);
+
   return hdml->out;
 }
+
 
 /**
  * It is a handler who processes the CENTER tag.
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The CENTER tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_hdml_start_center_tag(hdml_t* hdml, Node* node) 
+s_hdml_start_center_tag(void* pdoc, Node* node) 
 {
+  hdml_t* hdml;
+
+  hdml = GET_HDML(pdoc);
+
   hdml->center++;
   hdml->in_center++;
 
@@ -2023,17 +2383,22 @@ s_hdml_start_center_tag(hdml_t* hdml, Node* node)
   return hdml->out;
 }
 
+
 /**
  * It is a handler who processes the CENTER tag.
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The CENTER tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_hdml_end_center_tag(hdml_t* hdml, Node* child) 
+s_hdml_end_center_tag(void* pdoc, Node* child) 
 {
+  hdml_t* hdml;
+
+  hdml = GET_HDML(pdoc);
+
   hdml->center = 0;
   hdml->in_center = 0;
 
@@ -2043,17 +2408,22 @@ s_hdml_end_center_tag(hdml_t* hdml, Node* child)
   return hdml->out;
 }
 
+
 /**
  * It is a handler who processes the HR tag.
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The HR tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_hdml_start_hr_tag(hdml_t* hdml, Node* node) 
+s_hdml_start_hr_tag(void* pdoc, Node* node) 
 {
+  hdml_t* hdml;
+
+  hdml = GET_HDML(pdoc);
+
   if (hdml->hdml_br_flag == 0) {
     s_output_to_hdml_out(hdml, "<BR>\n");
     if (hdml->in_center)
@@ -2070,31 +2440,41 @@ s_hdml_start_hr_tag(hdml_t* hdml, Node* node)
   return hdml->out;
 }
 
+
 /**
  * It is a handler who processes the HR tag.
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The HR tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_hdml_end_hr_tag(hdml_t* hdml, Node* child) 
+s_hdml_end_hr_tag(void* pdoc, Node* child) 
 {
+  hdml_t* hdml;
+
+  hdml = GET_HDML(pdoc);
+
   return hdml->out;
 }
+
 
 /**
  * It is a handler who processes the LI tag.
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The LI tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_hdml_start_li_tag(hdml_t* hdml, Node* node) 
+s_hdml_start_li_tag(void* pdoc, Node* node) 
 {
+  hdml_t* hdml;
+
+  hdml = GET_HDML(pdoc);
+
   if (hdml->hdml_br_flag == 0) {
     s_output_to_hdml_out(hdml, "<BR>\n");
     if (hdml->in_center)
@@ -2109,17 +2489,22 @@ s_hdml_start_li_tag(hdml_t* hdml, Node* node)
   return hdml->out;
 }
 
+
 /**
  * It is a handler who processes the LI tag.
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The LI tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_hdml_end_li_tag(hdml_t* hdml, Node* child) 
+s_hdml_end_li_tag(void* pdoc, Node* child) 
 {
+  hdml_t* hdml;
+
+  hdml = GET_HDML(pdoc);
+
   if (hdml->hdml_br_flag == 0) {
     s_output_to_hdml_out(hdml, "<BR>\n");
     if (hdml->in_center)
@@ -2130,25 +2515,34 @@ s_hdml_end_li_tag(hdml_t* hdml, Node* child)
   }
 
   hdml->hdml_br_flag = 1;
+
   return hdml->out;
 }
+
 
 /**
  * It is a handler who processes the IMG tag.
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The IMG tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_hdml_start_img_tag(hdml_t* hdml, Node* node) 
+s_hdml_start_img_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc  = hdml->doc;
+  hdml_t*       hdml;
+  Doc*          doc;
 #ifndef IMG_NOT_CONVERT_FILENAME
-  device_table_t* spec = hdml->spec;
+  device_table_t* spec;
 #endif
   Attr*         attr;
+
+  hdml = GET_HDML(pdoc);
+  doc  = hdml->doc;
+#ifndef IMG_NOT_CONVERT_FILENAME
+  spec = hdml->spec;
+#endif
 
   s_hdml_tag_output_upper_half(hdml, node);
 
@@ -2210,37 +2604,50 @@ s_hdml_start_img_tag(hdml_t* hdml, Node* node)
   }
   s_output_to_hdml_out(hdml, ">"             );
 
+  hdml->hdml_br_flag = 0;
+
   return hdml->out;
 }
+
 
 /**
  * It is a handler who processes the IMG tag.
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The IMG tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_hdml_end_img_tag(hdml_t* hdml, Node* child) 
+s_hdml_end_img_tag(void* pdoc, Node* child) 
 {
+  hdml_t* hdml;
+
+  hdml = GET_HDML(pdoc);
+
   return hdml->out;
 }
+
 
 /**
  * It is a handler who processes the SELECT tag.
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The SELECT tag node is specified.
  * @return The conversion result is returned.
  */
 static char* 
-s_hdml_start_select_tag(hdml_t* hdml, Node* node)  
+s_hdml_start_select_tag(void* pdoc, Node* node)  
 {
-  Doc*         doc = hdml->doc;
-  request_rec* r   = doc->r;
+  Doc*         doc;
+  request_rec* r;
   Attr*        attr;
+  hdml_t*      hdml;
+
+  hdml = GET_HDML(pdoc);
+  doc  = hdml->doc;
+  r    = doc->r;
 
   s_hdml_tag_output_upper_half(hdml, node);
 
@@ -2315,41 +2722,53 @@ s_hdml_start_select_tag(hdml_t* hdml, Node* node)
     }
   }
 
+  hdml->hdml_br_flag = 0;
+
   return hdml->out;
 }
 
 /**
  * It is a handler who processes the SELECT tag.
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The SELECT tag node is specified.
  * @return The conversion result is returned.
  */
 static char* 
-s_hdml_end_select_tag(hdml_t* hdml,  Node* node)  
+s_hdml_end_select_tag(void* pdoc,  Node* node)  
 {
+  hdml_t* hdml;
+
+  hdml = GET_HDML(pdoc);
+
   s_output_to_hdml_card(hdml, "</CHOICE>\n");
 
   return hdml->out;
 }
 
+
 /**
  * It is a handler who processes the OPTION tag.
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The OPTION tag node is specified.
  * @return The conversion result is returned.
  */
 static char* 
-s_hdml_start_option_tag(hdml_t* hdml, Node* node) 
+s_hdml_start_option_tag(void* pdoc, Node* node) 
 {
-  request_rec* r     = hdml->doc->r;
-  Doc*         doc   = hdml->doc;
+  request_rec* r;
+  Doc*         doc;
   Node*        child;
   char*        val;
   char*        txtval;
+  hdml_t*      hdml;
+
+  hdml  = GET_HDML(pdoc);
+  r     = hdml->doc->r;
+  doc   = hdml->doc;
 
   hdml->card_cnt++;
 
@@ -2380,37 +2799,50 @@ s_hdml_start_option_tag(hdml_t* hdml, Node* node)
                             qs_trim_string(r,txtval)));
   }
  
+  hdml->hdml_br_flag = 0;
+
   return hdml->out;
 }
+
 
 /**
  * It is a handler who processes the OPTION tag.
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The OPTION tag node is specified.
  * @return The conversion result is returned.
  */
 static char* 
-s_hdml_end_option_tag(hdml_t* hdml,  Node* node)  
+s_hdml_end_option_tag(void* pdoc,  Node* node)  
 {
+  hdml_t* hdml;
+
+  hdml = GET_HDML(pdoc);
+
   hdml->option_flag = 0;
+
   return hdml->out;
 }
+
 
 /**
  * It is a handler who processes the DIV tag.
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The DIV tag node is specified.
  * @return The conversion result is returned.
  */
 static char* 
-s_hdml_start_div_tag(hdml_t* hdml, Node* node) 
+s_hdml_start_div_tag(void* pdoc, Node* node) 
 {
-  Doc*    doc   = hdml->doc;
+  hdml_t* hdml;
+  Doc*    doc;
   Attr*   attr;
+
+  hdml = GET_HDML(pdoc);
+  doc  = hdml->doc;
 
   /*--------------------------------------------------------------------------*/
   /* If the br tag is not output immediately before the div tag appears, the  */
@@ -2446,23 +2878,28 @@ s_hdml_start_div_tag(hdml_t* hdml, Node* node)
       }
     }
   }
+  hdml->hdml_br_flag = 0;
  
   return hdml->out;
 }
 
+
 /**
  * It is a handler who processes the DIV tag.
  *
- * @param hdml   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The DIV tag node is specified.
  * @return The conversion result is returned.
  */
 static char* 
-s_hdml_end_div_tag(hdml_t* hdml,  Node* node)  
+s_hdml_end_div_tag(void* pdoc,  Node* node)  
 {
-  request_rec* r = hdml->doc->r;
+  hdml_t*      hdml;
+  request_rec* r;
 
+  hdml = GET_HDML(pdoc);
+  r    = hdml->doc->r;
 
   if (hdml->div_right_flag == 1) {
     s_output_to_hdml_out(hdml, apr_psprintf(r->pool, "<BR>\n"));
@@ -2473,6 +2910,7 @@ s_hdml_end_div_tag(hdml_t* hdml,  Node* node)
     hdml->div_center_flag = 0;
     hdml->div_in_center   = 0;
   }
+
   return hdml->out;
 }
 
@@ -2551,8 +2989,9 @@ s_hdml_count_radio_tag(hdml_t* hdml, Node* node)
     int       ii;
     int       jj;
 
+
     name = qs_get_node_name(doc,child);
-    if ((*name == 'i' || *name == 'I') && strcasecmp(name, "input") != 0) {
+    if (strcasecmp(name, "input") != 0) {
       s_hdml_count_radio_tag(hdml, child);
       continue;
     }
@@ -2564,7 +3003,8 @@ s_hdml_count_radio_tag(hdml_t* hdml, Node* node)
       ERR(r, "Oops! The input tag without the type attribute has been found.Please give a type.");
       continue;
     }
-    if ((*type == 'r' || *type == 'R') && strcasecmp(type, "radio") != 0) 
+
+    if (strcasecmp(type, "radio") != 0) 
       continue;
 
     DBG(r, "found type=radio");
@@ -2768,11 +3208,15 @@ s_output_to_init_vars(hdml_t* hdml, char* s)
 
 
 
-static void
-s_hdml_chxjif_tag(hdml_t* hdml, Node* node)
+static char* 
+s_hdml_chxjif_tag(void* pdoc, Node* node)
 {
-  Doc*         doc   = hdml->doc;
+  hdml_t*      hdml;
+  Doc*         doc;
   Node*        child;
+
+  hdml = GET_HDML(pdoc);
+  doc  = hdml->doc;
 
   for (child = qs_get_child_node(doc, node);
        child;
@@ -2780,8 +3224,71 @@ s_hdml_chxjif_tag(hdml_t* hdml, Node* node)
     s_output_to_hdml_out(hdml, child->otext);
     s_hdml_chxjif_tag(hdml, child);
   }
-
+  return NULL;
 }
+
+static char*
+s_hdml_text_tag(void* pdoc, Node* child) 
+{
+  hdml_t* hdml;
+  Doc*    doc;
+  char*   textval;
+  char*   tmp;
+  char*   tdst;
+  char    one_byte[2];
+  int     ii;
+  int     tdst_len = 0;
+  request_rec* r;
+
+  hdml = GET_HDML(pdoc);
+  doc  = hdml->doc;
+  r    = doc->r;
+  
+  textval = qs_get_node_value(doc,child);
+  textval = qs_trim_string(r, textval);
+  if (strlen(textval) == 0)
+    return hdml->out;
+  
+  if (hdml->option_flag == 1) 
+    return hdml->out;
+  
+  tmp = apr_palloc(r->pool, qs_get_node_size(doc,child)+1);
+  memset(tmp, 0, qs_get_node_size(doc,child)+1);
+  tdst = apr_palloc(r->pool, 1);
+  tdst[0] = '\0';
+  one_byte[0] = '\0';
+  one_byte[1] = '\0';
+  
+  for (ii=0; ii<qs_get_node_size(doc,child); ii++) {
+    char* out;
+    int rtn = s_hdml_search_emoji(hdml, &textval[ii], &out);
+    if (rtn) {
+      tdst = qs_out_apr_pstrcat(r, tdst, out, &tdst_len);
+      ii += (rtn-1);
+      continue;
+    }
+    if (is_sjis_kanji(textval[ii])) {
+      one_byte[0] = textval[ii+0];
+      tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+      one_byte[0] = textval[ii+1];
+      tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+      ii++;
+    }
+    else 
+    if (textval[ii] != '\r' && textval[ii] != '\n') {
+      one_byte[0] = textval[ii+0];
+      tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+    }
+  }
+  memcpy(tmp, textval, strlen(textval)-1);
+  
+  s_hdml_tag_output_upper_half(hdml, child->parent);
+  s_output_to_hdml_out(hdml, tdst);
+  hdml->hdml_br_flag = 0;
+
+  return hdml->out;
+}
+
 /*
  * vim:ts=2 et
  */

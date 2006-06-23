@@ -181,7 +181,7 @@ chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
   iconv_close(cd);
 
   ap_log_rerror(
-    APLOG_MARK,APLOG_DEBUG, 0, r, "end   chxj_rencoding() len=[%d] obuf=[%.*s]", *len, *len, obuf);
+    APLOG_MARK,APLOG_DEBUG, 0, r, "end   chxj_rencoding() len=[%d] obuf=[%.*s]", *len, *len, spos);
   return spos;
 }
 /*
