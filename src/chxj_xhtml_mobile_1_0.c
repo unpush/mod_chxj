@@ -41,16 +41,15 @@ static char* s_xhtml_1_0_start_h3_tag     (void* pdoc, Node* node);
 static char* s_xhtml_1_0_end_h3_tag       (void* pdoc, Node* node);
 static char* s_xhtml_1_0_start_h4_tag     (void* pdoc, Node* node);
 static char* s_xhtml_1_0_end_h4_tag       (void* pdoc, Node* node);
+static char* s_xhtml_1_0_start_h5_tag     (void* pdoc, Node* node);
+static char* s_xhtml_1_0_end_h5_tag       (void* pdoc, Node* node);
+static char* s_xhtml_1_0_start_h6_tag     (void* pdoc, Node* node);
+static char* s_xhtml_1_0_end_h6_tag       (void* pdoc, Node* node);
+static char* s_xhtml_1_0_start_ol_tag     (void* pdoc, Node* node);
+static char* s_xhtml_1_0_end_ol_tag       (void* pdoc, Node* node);
+static char* s_xhtml_1_0_start_li_tag     (void* pdoc, Node* node);
+static char* s_xhtml_1_0_end_li_tag       (void* pdoc, Node* node);
 
-static char* s_xhtml_1_0_start_h5_tag     (xhtml_t* xhtml, Node* node);
-static char* s_xhtml_1_0_end_h5_tag       (xhtml_t* xhtml, Node* node);
-static char* s_xhtml_1_0_start_h6_tag     (xhtml_t* xhtml, Node* node);
-static char* s_xhtml_1_0_end_h6_tag       (xhtml_t* xhtml, Node* node);
-static char* s_xhtml_1_0_start_ol_tag     (xhtml_t* xhtml, Node* node);
-static char* s_xhtml_1_0_start_ol_tag     (xhtml_t* xhtml, Node* node);
-static char* s_xhtml_1_0_end_ol_tag       (xhtml_t* xhtml, Node* node);
-static char* s_xhtml_1_0_start_li_tag     (xhtml_t* xhtml, Node* node);
-static char* s_xhtml_1_0_end_li_tag       (xhtml_t* xhtml, Node* node);
 static char* s_xhtml_1_0_start_meta_tag   (xhtml_t* xhtml, Node* node);
 static char* s_xhtml_1_0_end_meta_tag     (xhtml_t* xhtml, Node* node);
 static char* s_xhtml_1_0_start_head_tag   (xhtml_t* xhtml, Node* node);
@@ -125,18 +124,16 @@ tag_handler xhtml_handler[] = {
     s_xhtml_1_0_start_ul_tag,
     s_xhtml_1_0_end_ul_tag,
   },
-#if 0
   /* tagLI */
   {
-    s_chtml10_start_li_tag,
-    s_chtml10_end_li_tag,
+    s_xhtml_1_0_start_li_tag,
+    s_xhtml_1_0_end_li_tag,
   },
   /* tagOL */
   {
-    s_chtml10_start_ol_tag,
-    s_chtml10_end_ol_tag,
+    s_xhtml_1_0_start_ol_tag,
+    s_xhtml_1_0_end_ol_tag,
   },
-#endif
   /* tagH1 */
   {
     s_xhtml_1_0_start_h1_tag,
@@ -157,17 +154,17 @@ tag_handler xhtml_handler[] = {
     s_xhtml_1_0_start_h4_tag,
     s_xhtml_1_0_end_h4_tag,
   },
-#if 0
   /* tagH5 */
   {
-    s_chtml10_start_h5_tag,
-    s_chtml10_end_h5_tag,
+    s_xhtml_1_0_start_h5_tag,
+    s_xhtml_1_0_end_h5_tag,
   },
   /* tagH6 */
   {
-    s_chtml10_start_h6_tag,
-    s_chtml10_end_h6_tag,
+    s_xhtml_1_0_start_h6_tag,
+    s_xhtml_1_0_end_h6_tag,
   },
+#if 0
   /* tagHEAD */
   {
     s_chtml10_start_head_tag,
@@ -2209,16 +2206,17 @@ s_xhtml_1_0_end_h4_tag(void* pdoc, Node* child)
 /**
  * It is a handler who processes the H5 tag.
  *
- * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The H5 tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_h5_tag(xhtml_t* xhtml, Node* node) 
+s_xhtml_1_0_start_h5_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = xhtml->doc;
-  request_rec*  r   = doc->r;
+  xhtml_t*      xhtml = GET_XHTML(pdoc);
+  Doc*          doc   = xhtml->doc;
+  request_rec*  r     = doc->r;
 
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<h5>", NULL);
 
@@ -2228,130 +2226,143 @@ s_xhtml_1_0_start_h5_tag(xhtml_t* xhtml, Node* node)
 /**
  * It is a handler who processes the H5 tag.
  *
- * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The H5 tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_h5_tag(xhtml_t* xhtml, Node* child) 
+s_xhtml_1_0_end_h5_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = xhtml->doc;
-  request_rec*  r   = doc->r;
+  xhtml_t*      xhtml = GET_XHTML(pdoc);
+  Doc*          doc   = xhtml->doc;
+  request_rec*  r     = doc->r;
 
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</h5>", NULL);
 
   return xhtml->out;
 }
 
+
 /**
  * It is a handler who processes the H6 tag.
  *
- * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The H6 tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_h6_tag(xhtml_t* xhtml, Node* node) 
+s_xhtml_1_0_start_h6_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = xhtml->doc;
-  request_rec*  r   = doc->r;
+  xhtml_t*      xhtml = GET_XHTML(pdoc);
+  Doc*          doc   = xhtml->doc;
+  request_rec*  r     = doc->r;
 
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<h6>", NULL);
 
   return xhtml->out;
 }
 
+
 /**
  * It is a handler who processes the H6 tag.
  *
- * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The H6 tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_h6_tag(xhtml_t* xhtml, Node* child) 
+s_xhtml_1_0_end_h6_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = xhtml->doc;
-  request_rec*  r   = doc->r;
+  xhtml_t*      xhtml = GET_XHTML(pdoc);
+  Doc*          doc   = xhtml->doc;
+  request_rec*  r     = doc->r;
 
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</h6>", NULL);
 
   return xhtml->out;
 }
 
+
 /**
  * It is a handler who processes the OL tag.
  *
- * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The OL tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_ol_tag(xhtml_t* xhtml, Node* node) 
+s_xhtml_1_0_start_ol_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = xhtml->doc;
-  request_rec*  r   = doc->r;
+  xhtml_t*      xhtml = GET_XHTML(pdoc);
+  Doc*          doc   = xhtml->doc;
+  request_rec*  r     = doc->r;
 
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<ol>", NULL);
 
   return xhtml->out;
 }
 
+
 /**
  * It is a handler who processes the OL tag.
  *
- * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The OL tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_ol_tag(xhtml_t* xhtml, Node* child) 
+s_xhtml_1_0_end_ol_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = xhtml->doc;
-  request_rec*  r   = doc->r;
+  xhtml_t*      xhtml = GET_XHTML(pdoc);
+  Doc*          doc   = xhtml->doc;
+  request_rec*  r     = doc->r;
 
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</ol>", NULL);
 
   return xhtml->out;
 }
 
+
 /**
  * It is a handler who processes the LI tag.
  *
- * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The LI tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_li_tag(xhtml_t* xhtml, Node* node) 
+s_xhtml_1_0_start_li_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = xhtml->doc;
-  request_rec*  r   = doc->r;
+  xhtml_t*      xhtml = GET_XHTML(pdoc);
+  Doc*          doc   = xhtml->doc;
+  request_rec*  r     = doc->r;
 
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<li>", NULL);
 
   return xhtml->out;
 }
 
+
 /**
  ** It is a handler who processes the LI tag.
  *
- * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The LI tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_li_tag(xhtml_t* xhtml, Node* child) 
+s_xhtml_1_0_end_li_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = xhtml->doc;
-  request_rec*  r   = doc->r;
+  xhtml_t*      xhtml = GET_XHTML(pdoc);
+  Doc*          doc   = xhtml->doc;
+  request_rec*  r     = doc->r;
 
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</li>", NULL);
 
