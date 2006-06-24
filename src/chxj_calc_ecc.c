@@ -1041,7 +1041,7 @@ chxj_calc_ecc(qr_code_t* qrcode,
           for (jj=ecc_count + data_count - 1; jj>=0; jj--) {
             debug_rows = apr_pstrcat(r->pool, debug_rows, apr_psprintf(r->pool, "[%d]", tmp[jj]), NULL);
           }
-          ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "rows [%s]", debug_rows);
+          DBG1(r,"rows [%s]", debug_rows);
         } while(0);
         /* for DEBUG END */
 #endif
@@ -1057,7 +1057,7 @@ chxj_calc_ecc(qr_code_t* qrcode,
 #ifdef QR_CODE_DEBUG
   /* for DEBUG */
   do {
-    ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "######### RS BLOCK DUMP ###############");
+    DBG(r,"######### RS BLOCK DUMP ###############");
     for (jj=0; jj<rs_total_block_count; jj++) {
        char* rows = apr_psprintf(r->pool, "%02d size:[%d] rest:[%d]",jj, rs_block_size[jj], rs_block_rest[jj]);
        for (ii=0; ii<rs_block_size[jj]; ii++) {
