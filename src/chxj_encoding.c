@@ -111,8 +111,7 @@ chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
   mod_chxj_config* dconf;
   chxjconvrule_entry* entryp;
 
-  ap_log_rerror(
-    APLOG_MARK,APLOG_DEBUG, 0, r, "start chxj_rencoding()");
+  DBG(r,"start chxj_rencoding()");
 
   dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
 
