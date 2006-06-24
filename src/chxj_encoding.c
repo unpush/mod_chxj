@@ -122,8 +122,7 @@ chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
 
   entryp = chxj_apply_convrule(r, dconf->convrules);
   if (entryp->encoding == NULL) {
-    ap_log_rerror(
-      APLOG_MARK,APLOG_DEBUG, 0, r, "none encoding.");
+    DBG(r,"none encoding.");
     return (char*)src;
   }
 
