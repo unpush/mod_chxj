@@ -146,8 +146,7 @@ chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
     DBG(r,"end   chxj_rencoding()");
     return ibuf;
   }
-  ap_log_rerror(
-      APLOG_MARK,APLOG_DEBUG, 0, r, "encode convert [%s] -> [%s]", "CP932", entryp->encoding);
+  DBG2(r,"encode convert [%s] -> [%s]", "CP932", entryp->encoding);
 
   memset(obuf, 0, olen);
   cd = iconv_open(entryp->encoding, "CP932");
