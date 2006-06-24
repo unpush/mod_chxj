@@ -55,11 +55,11 @@ static char* s_xhtml_1_0_start_head_tag   (void* pdoc, Node* node);
 static char* s_xhtml_1_0_end_head_tag     (void* pdoc, Node* node);
 static char* s_xhtml_1_0_start_title_tag  (void* pdoc, Node* node);
 static char* s_xhtml_1_0_end_title_tag    (void* pdoc, Node* node);
+static char* s_xhtml_1_0_start_base_tag   (void* pdoc, Node* node);
+static char* s_xhtml_1_0_end_base_tag     (void* pdoc, Node* node);
+static char* s_xhtml_1_0_start_body_tag   (void* pdoc, Node* node);
+static char* s_xhtml_1_0_end_body_tag     (void* pdoc, Node* node);
 
-static char* s_xhtml_1_0_start_base_tag   (xhtml_t* xhtml, Node* node);
-static char* s_xhtml_1_0_end_base_tag     (xhtml_t* xhtml, Node* node);
-static char* s_xhtml_1_0_start_body_tag   (xhtml_t* xhtml, Node* node);
-static char* s_xhtml_1_0_end_body_tag     (xhtml_t* xhtml, Node* node);
 static char* s_xhtml_1_0_start_a_tag      (xhtml_t* xhtml, Node* node);
 static char* s_xhtml_1_0_end_a_tag        (xhtml_t* xhtml, Node* node);
 static char* s_xhtml_1_0_start_br_tag     (xhtml_t* xhtml, Node* node);
@@ -174,17 +174,17 @@ tag_handler xhtml_handler[] = {
     s_xhtml_1_0_start_title_tag,
     s_xhtml_1_0_end_title_tag,
   },
-#if 0
   /* tagBASE */
   {
-    s_chtml10_start_base_tag,
-    s_chtml10_end_base_tag,
+    s_xhtml_1_0_start_base_tag,
+    s_xhtml_1_0_end_base_tag,
   },
   /* tagBODY */
   {
-    s_chtml10_start_body_tag,
-    s_chtml10_end_body_tag,
+    s_xhtml_1_0_start_body_tag,
+    s_xhtml_1_0_end_body_tag,
   },
+#if 0
   /* tagA */
   {
     s_chtml10_start_a_tag,
@@ -1258,14 +1258,15 @@ s_xhtml_1_0_end_title_tag(void* pdoc, Node* child)
 /**
  * It is a handler who processes the BASE tag.
  *
- * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The BASE tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_base_tag(xhtml_t* xhtml, Node* node) 
+s_xhtml_1_0_start_base_tag(void* pdoc, Node* node) 
 {
+  xhtml_t*      xhtml = GET_XHTML(pdoc);
   Attr*         attr;
   Doc*          doc   = xhtml->doc;
   request_rec*  r     = doc->r;
@@ -1290,37 +1291,43 @@ s_xhtml_1_0_start_base_tag(xhtml_t* xhtml, Node* node)
     }
   }
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, " />\r\n", NULL);
+
   return xhtml->out;
 }
+
 
 /**
  * It is a handler who processes the BASE tag.
  *
- * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The BASE tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_base_tag(xhtml_t* xhtml, Node* child) 
+s_xhtml_1_0_end_base_tag(void* pdoc, Node* child) 
 {
+  xhtml_t* xhtml = GET_XHTML(pdoc);
+
   return xhtml->out;
 }
+
 
 /**
  * It is a handler who processes the BODY tag.
  *
- * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The BODY tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_body_tag(xhtml_t* xhtml, Node* node) 
+s_xhtml_1_0_start_body_tag(void* pdoc, Node* node) 
 {
-  Doc* doc = xhtml->doc;
-  request_rec* r = doc->r;
-  Attr* attr;
+  xhtml_t*     xhtml = GET_XHTML(pdoc);
+  Doc*         doc   = xhtml->doc;
+  request_rec* r     = doc->r;
+  Attr*        attr;
 
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<body", NULL);
 
@@ -1368,27 +1375,31 @@ s_xhtml_1_0_start_body_tag(xhtml_t* xhtml, Node* node)
     }
   }
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, ">\r\n", NULL);
+
   return xhtml->out;
 }
+
 
 /**
  * It is a handler who processes the BODY tag.
  *
- * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The BODY tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_body_tag(xhtml_t* xhtml, Node* child) 
+s_xhtml_1_0_end_body_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = xhtml->doc;
-  request_rec*  r = doc->r;
+  xhtml_t*      xhtml = GET_XHTML(pdoc);
+  Doc*          doc   = xhtml->doc;
+  request_rec*  r     = doc->r;
 
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</body>\r\n", NULL);
 
   return xhtml->out;
 }
+
 
 /**
  * It is a handler who processes the A tag.
