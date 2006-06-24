@@ -440,8 +440,7 @@ s_xhtml_search_emoji(xhtml_t* xhtml, char* txt, char** rslt)
     unsigned char hex1byte;
     unsigned char hex2byte;
     if (!ee->imode) {
-      ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,
-                      "emoji->imode is NULL");
+      DBG(r,"emoji->imode is NULL");
       continue;
     }
 
