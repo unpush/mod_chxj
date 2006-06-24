@@ -45,8 +45,9 @@ static char* s_jhtml_end_p_tag          (void* pdoc, Node* node);
 static char* s_jhtml_start_ul_tag       (void* pdoc, Node* node);
 static char* s_jhtml_end_ul_tag         (void* pdoc, Node* node);
 
-static char* s_jhtml_start_ol_tag     (jhtml_t* jhtml, Node* node);
-static char* s_jhtml_end_ol_tag       (jhtml_t* jhtml, Node* node);
+static char* s_jhtml_start_ol_tag       (void* pdoc, Node* node);
+static char* s_jhtml_end_ol_tag         (void* pdoc, Node* node);
+
 static char* s_jhtml_start_li_tag     (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_end_li_tag       (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_start_br_tag     (jhtml_t* jhtml, Node* node);
@@ -117,11 +118,13 @@ tag_handler jhtml_handler[] = {
     s_chtml10_start_li_tag,
     s_chtml10_end_li_tag,
   },
+#endif
   /* tagOL */
   {
-    s_chtml10_start_ol_tag,
-    s_chtml10_end_ol_tag,
+    s_jhtml_start_ol_tag,
+    s_jhtml_end_ol_tag,
   },
+#if 0
   /* tagH1 */
   {
     s_chtml10_start_h1_tag,
@@ -1876,38 +1879,42 @@ s_jhtml_end_li_tag(jhtml_t* jhtml, Node* child)
   return jhtml->out;
 }
 
+
 /**
  * It is a handler who processes the OL tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The OL tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_start_ol_tag(jhtml_t* jhtml, Node* node) 
+s_jhtml_start_ol_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = jhtml->doc;
-  request_rec*  r   = doc->r;
+  jhtml_t*      jhtml = GET_JHTML(pdoc);
+  Doc*          doc   = jhtml->doc;
+  request_rec*  r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<ol>", NULL);
 
   return jhtml->out;
 }
 
+
 /**
  * It is a handler who processes the OL tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The OL tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_end_ol_tag(jhtml_t* jhtml, Node* child) 
+s_jhtml_end_ol_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = jhtml->doc;
-  request_rec*  r   = doc->r;
+  jhtml_t*      jhtml = GET_JHTML(pdoc);
+  Doc*          doc   = jhtml->doc;
+  request_rec*  r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</ol>", NULL);
 
