@@ -54,13 +54,13 @@ static char* s_jhtml_start_tr_tag       (void* pdoc, Node* node);
 static char* s_jhtml_end_tr_tag         (void* pdoc, Node* node);
 static char* s_jhtml_start_font_tag     (void* pdoc, Node* node);
 static char* s_jhtml_end_font_tag       (void* pdoc, Node* node);
+static char* s_jhtml_start_form_tag     (void* pdoc, Node* node);
+static char* s_jhtml_end_form_tag       (void* pdoc, Node* node);
+static char* s_jhtml_start_input_tag    (void* pdoc, Node* node);
+static char* s_jhtml_end_input_tag      (void* pdoc, Node* node);
+static char* s_jhtml_start_center_tag   (void* pdoc, Node* node);
+static char* s_jhtml_end_center_tag     (void* pdoc, Node* node);
 
-static char* s_jhtml_start_form_tag   (jhtml_t* jhtml, Node* node);
-static char* s_jhtml_end_form_tag     (jhtml_t* jhtml, Node* node);
-static char* s_jhtml_start_input_tag  (jhtml_t* jhtml, Node* node);
-static char* s_jhtml_end_input_tag    (jhtml_t* jhtml, Node* node);
-static char* s_jhtml_start_center_tag (jhtml_t* jhtml, Node* node);
-static char* s_jhtml_end_center_tag   (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_start_hr_tag     (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_end_hr_tag       (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_start_img_tag    (jhtml_t* jhtml, Node* node);
@@ -208,22 +208,22 @@ tag_handler jhtml_handler[] = {
     s_jhtml_start_font_tag,
     s_jhtml_end_font_tag,
   },
-#if 0
   /* tagFORM */
   {
-    s_chtml10_start_form_tag,
-    s_chtml10_end_form_tag,
+    s_jhtml_start_form_tag,
+    s_jhtml_end_form_tag,
   },
   /* tagINPUT */
   {
-    s_chtml10_start_input_tag,
-    s_chtml10_end_input_tag,
+    s_jhtml_start_input_tag,
+    s_jhtml_end_input_tag,
   },
   /* tagCENTER */
   {
-    s_chtml10_start_center_tag,
-    s_chtml10_end_center_tag,
+    s_jhtml_start_center_tag,
+    s_jhtml_end_center_tag,
   },
+#if 0
   /* tagHR */
   {
     s_chtml10_start_hr_tag,
@@ -1591,17 +1591,18 @@ s_jhtml_end_font_tag(void* pdoc, Node* child)
 /**
  * It is a handler who processes the FORM tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The FORM tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_start_form_tag(jhtml_t* jhtml, Node* node) 
+s_jhtml_start_form_tag(void* pdoc, Node* node) 
 {
-  Doc*         doc = jhtml->doc;
-  request_rec* r   = doc->r;
-  Attr* attr;
+  jhtml_t*     jhtml = GET_JHTML(pdoc);
+  Doc*         doc   = jhtml->doc;
+  request_rec* r     = doc->r;
+  Attr*        attr;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<form", NULL);
 
@@ -1655,36 +1656,40 @@ s_jhtml_start_form_tag(jhtml_t* jhtml, Node* node)
   return jhtml->out;
 }
 
+
 /**
  * It is a handler who processes the FORM tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The FORM tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_end_form_tag(jhtml_t* jhtml, Node* child) 
+s_jhtml_end_form_tag(void* pdoc, Node* child) 
 {
-  Doc*         doc = jhtml->doc;
-  request_rec* r   = doc->r;
+  jhtml_t*     jhtml = GET_JHTML(pdoc);
+  Doc*         doc   = jhtml->doc;
+  request_rec* r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</form>", NULL);
 
   return jhtml->out;
 }
 
+
 /**
  * It is a handler who processes the INPUT tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The INPUT tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_start_input_tag(jhtml_t* jhtml, Node* node) 
+s_jhtml_start_input_tag(void* pdoc, Node* node) 
 {
+  jhtml_t*      jhtml       = GET_JHTML(pdoc);
   Doc*          doc         = jhtml->doc;
   request_rec*  r           = doc->r;
   char*         max_length  = NULL;
@@ -1800,57 +1805,65 @@ s_jhtml_start_input_tag(jhtml_t* jhtml, Node* node)
   return jhtml->out;
 }
 
+
 /**
  * It is a handler who processes the INPUT tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The INPUT tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_end_input_tag(jhtml_t* jhtml, Node* child) 
+s_jhtml_end_input_tag(void* pdoc, Node* child) 
 {
+  jhtml_t*  jhtml = GET_JHTML(pdoc);
+
   return jhtml->out;
 }
+
 
 /**
  * It is a handler who processes the CENTER tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The CENTER tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_start_center_tag(jhtml_t* jhtml, Node* node) 
+s_jhtml_start_center_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = jhtml->doc;
-  request_rec*  r   = doc->r;
+  jhtml_t*      jhtml = GET_JHTML(pdoc);
+  Doc*          doc   = jhtml->doc;
+  request_rec*  r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<center>", NULL);
 
   return jhtml->out;
 }
 
+
 /**
  * It is a handler who processes the CENTER tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The CENTER tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_end_center_tag(jhtml_t* jhtml, Node* child) 
+s_jhtml_end_center_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = jhtml->doc;
-  request_rec*  r   = doc->r;
+  jhtml_t*      jhtml = GET_JHTML(pdoc);
+  Doc*          doc   = jhtml->doc;
+  request_rec*  r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</center>", NULL);
 
   return jhtml->out;
 }
+
 
 /**
  * It is a handler who processes the li tag.
