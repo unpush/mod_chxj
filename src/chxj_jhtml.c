@@ -124,38 +124,36 @@ tag_handler jhtml_handler[] = {
     s_jhtml_start_ol_tag,
     s_jhtml_end_ol_tag,
   },
-#if 0
   /* tagH1 */
   {
-    s_chtml10_start_h1_tag,
-    s_chtml10_end_h1_tag,
+    NULL,
+    NULL,
   },
   /* tagH2 */
   {
-    s_chtml10_start_h2_tag,
-    s_chtml10_end_h2_tag,
+    NULL,
+    NULL,
   },
   /* tagH3 */
   {
-    s_chtml10_start_h3_tag,
-    s_chtml10_end_h3_tag,
+    NULL,
+    NULL,
   },
   /* tagH4 */
   {
-    s_chtml10_start_h4_tag,
-    s_chtml10_end_h4_tag,
+    NULL,
+    NULL,
   },
   /* tagH5 */
   {
-    s_chtml10_start_h5_tag,
-    s_chtml10_end_h5_tag,
+    NULL,
+    NULL,
   },
   /* tagH6 */
   {
-    s_chtml10_start_h6_tag,
-    s_chtml10_end_h6_tag,
+    NULL,
+    NULL,
   },
-#endif
   /* tagHEAD */
   {
     s_jhtml_start_head_tag,
