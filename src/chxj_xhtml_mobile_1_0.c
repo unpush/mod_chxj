@@ -2434,8 +2434,7 @@ s_xhtml_1_0_text_tag(void* pdoc, Node* child)
     char* out;
     int rtn = s_xhtml_search_emoji(xhtml, &textval[ii], &out);
     if (rtn != 0) {
-      ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0, r,
-                      "[%s][%d]", out, rtn);
+      DBG2(r,"[%s][%d]", out, rtn);
       tdst = qs_out_apr_pstrcat(r, tdst, out, &tdst_len);
       ii+=(rtn - 1);
       continue;
