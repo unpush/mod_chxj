@@ -35,9 +35,9 @@ static char* s_xhtml_1_0_start_ul_tag     (void* pdoc, Node* node);
 static char* s_xhtml_1_0_end_ul_tag       (void* pdoc, Node* node);
 static char* s_xhtml_1_0_start_h1_tag     (void* pdoc, Node* node);
 static char* s_xhtml_1_0_end_h1_tag       (void* pdoc, Node* node);
+static char* s_xhtml_1_0_start_h2_tag     (void* pdoc, Node* node);
+static char* s_xhtml_1_0_end_h2_tag       (void* pdoc, Node* node);
 
-static char* s_xhtml_1_0_start_h2_tag     (xhtml_t* xhtml, Node* node);
-static char* s_xhtml_1_0_end_h2_tag       (xhtml_t* xhtml, Node* node);
 static char* s_xhtml_1_0_start_h3_tag     (xhtml_t* xhtml, Node* node);
 static char* s_xhtml_1_0_end_h3_tag       (xhtml_t* xhtml, Node* node);
 static char* s_xhtml_1_0_start_h4_tag     (xhtml_t* xhtml, Node* node);
@@ -142,12 +142,12 @@ tag_handler xhtml_handler[] = {
     s_xhtml_1_0_start_h1_tag,
     s_xhtml_1_0_end_h1_tag,
   },
-#if 0
   /* tagH2 */
   {
-    s_chtml10_start_h2_tag,
-    s_chtml10_end_h2_tag,
+    s_xhtml_1_0_start_h2_tag,
+    s_xhtml_1_0_end_h2_tag,
   },
+#if 0
   /* tagH3 */
   {
     s_chtml10_start_h3_tag,
@@ -2083,14 +2083,15 @@ s_xhtml_1_0_end_h1_tag(void* pdoc, Node* child)
 /**
  * It is a handler who processes the H2 tag.
  *
- * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The H2 tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_h2_tag(xhtml_t* xhtml, Node* node) 
+s_xhtml_1_0_start_h2_tag(void* pdoc, Node* node) 
 {
+  xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc = xhtml->doc;
   request_rec*  r   = doc->r;
 
@@ -2099,24 +2100,27 @@ s_xhtml_1_0_start_h2_tag(xhtml_t* xhtml, Node* node)
   return xhtml->out;
 }
 
+
 /**
  * It is a handler who processes the H2 tag.
  *
- * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The H2 tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_h2_tag(xhtml_t* xhtml, Node* child) 
+s_xhtml_1_0_end_h2_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = xhtml->doc;
-  request_rec*  r   = doc->r;
+  xhtml_t*      xhtml = GET_XHTML(pdoc);
+  Doc*          doc   = xhtml->doc;
+  request_rec*  r     = doc->r;
 
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</h2>", NULL);
 
   return xhtml->out;
 }
+
 
 /**
  * It is a handler who processes the H3 tag.
