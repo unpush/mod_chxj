@@ -68,11 +68,11 @@ static char* s_jhtml_start_select_tag   (void* pdoc, Node* node);
 static char* s_jhtml_end_select_tag     (void* pdoc, Node* node);
 static char* s_jhtml_start_option_tag   (void* pdoc, Node* node);
 static char* s_jhtml_end_option_tag     (void* pdoc, Node* node);
+static char* s_jhtml_start_div_tag      (void* pdoc, Node* node);
+static char* s_jhtml_end_div_tag        (void* pdoc, Node* node);
+static char* s_jhtml_start_textarea_tag (void* pdoc, Node* child);
+static char* s_jhtml_end_textarea_tag   (void* pdoc, Node* child);
 
-static char* s_jhtml_start_div_tag    (jhtml_t* jhtml, Node* node);
-static char* s_jhtml_end_div_tag      (jhtml_t* jhtml, Node* node);
-static char* s_jhtml_start_textarea_tag(jhtml_t* jhtml, Node* child);
-static char* s_jhtml_end_textarea_tag(jhtml_t* jhtml, Node* child);
 static void  s_init_jhtml(jhtml_t* jhtml, Doc* doc, request_rec* r, device_table* spec);
 static int   s_jhtml_search_emoji(jhtml_t* jhtml, char* txt, char** rslt);
 static char* chxj_istyle_to_mode(request_rec* r, const char* s);
@@ -89,13 +89,11 @@ tag_handler jhtml_handler[] = {
     s_jhtml_start_meta_tag,
     s_jhtml_end_meta_tag,
   },
-#if 0
   /* tagTEXTAREA */
   {
-    s_chtml10_start_textarea_tag,
-    s_chtml10_end_textarea_tag,
+    s_jhtml_start_textarea_tag,
+    s_jhtml_end_textarea_tag,
   },
-#endif
   /* tagP */
   {
     s_jhtml_start_p_tag,
@@ -243,12 +241,12 @@ tag_handler jhtml_handler[] = {
     s_jhtml_start_option_tag,
     s_jhtml_end_option_tag,
   },
-#if 0
   /* tagDIV */
   {
-    s_chtml10_start_div_tag,
-    s_chtml10_end_div_tag,
+    s_jhtml_start_div_tag,
+    s_jhtml_end_div_tag,
   },
+#if 0
   /* tagCHXJIF */
   {
     s_chtml10_chxjif_tag,
@@ -2446,17 +2444,18 @@ s_jhtml_end_option_tag(void* pdoc, Node* child)
 /**
  * It is a handler who processes the DIV tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The DIV tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_start_div_tag(jhtml_t* jhtml, Node* child)
+s_jhtml_start_div_tag(void* pdoc, Node* child)
 {
-  Doc* doc = jhtml->doc;
-  request_rec* r = doc->r;
-  Attr* attr;
+  jhtml_t*     jhtml = GET_JHTML(pdoc);
+  Doc*         doc   = jhtml->doc;
+  request_rec* r     = doc->r;
+  Attr*        attr;
 
   char* align   = NULL;
 
@@ -2484,24 +2483,27 @@ s_jhtml_start_div_tag(jhtml_t* jhtml, Node* child)
   return jhtml->out;
 }
 
+
 /**
  * It is a handler who processes the DIV tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The DIV tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_end_div_tag(jhtml_t* jhtml, Node* child)
+s_jhtml_end_div_tag(void* pdoc, Node* child)
 {
-  Doc*         doc = jhtml->doc;
-  request_rec* r   = doc->r;
+  jhtml_t*     jhtml = GET_JHTML(pdoc);
+  Doc*         doc   = jhtml->doc;
+  request_rec* r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</div>\n", NULL);
 
   return jhtml->out;
 }
+
 
 static char*
 chxj_istyle_to_mode(request_rec* r, const char* s)
@@ -2544,17 +2546,18 @@ s_jhtml_chxjif_tag(jhtml_t* jhtml, Node* node)
 /**
  * It is a handler who processes the TEXTARE tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The TEXTAREA tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_start_textarea_tag(jhtml_t* jhtml, Node* node) 
+s_jhtml_start_textarea_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = jhtml->doc;
-  request_rec*  r   = doc->r;
-  Attr* attr;
+  jhtml_t*      jhtml = GET_JHTML(pdoc);
+  Doc*          doc   = jhtml->doc;
+  request_rec*  r     = doc->r;
+  Attr*         attr;
 
   jhtml->textarea_flag++;
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<textarea ", NULL);
@@ -2584,19 +2587,21 @@ s_jhtml_start_textarea_tag(jhtml_t* jhtml, Node* node)
   return jhtml->out;
 }
 
+
 /**
  * It is a handler who processes the TEXTAREA tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The TEXTAREA tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_end_textarea_tag(jhtml_t* jhtml, Node* child) 
+s_jhtml_end_textarea_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = jhtml->doc;
-  request_rec*  r   = doc->r;
+  jhtml_t*      jhtml = GET_JHTML(pdoc);
+  Doc*          doc   = jhtml->doc;
+  request_rec*  r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</textarea>\r\n", NULL);
   jhtml->textarea_flag--;
