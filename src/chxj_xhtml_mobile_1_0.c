@@ -83,8 +83,8 @@ static char* s_xhtml_1_0_start_option_tag (void* pdoc, Node* node);
 static char* s_xhtml_1_0_end_option_tag   (void* pdoc, Node* node);
 static char* s_xhtml_1_0_start_div_tag    (void* pdoc, Node* node);
 static char* s_xhtml_1_0_end_div_tag      (void* pdoc, Node* node);
-static char* s_xhtml_1_0_start_textarea_tag(xhtml_t* xhtml, Node* node);
-static char* s_xhtml_1_0_end_textarea_tag(xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_start_textarea_tag(void* pdoc, Node* node);
+static char* s_xhtml_1_0_end_textarea_tag  (void* pdoc, Node* node);
 
 static void  s_init_xhtml(xhtml_t* xhtml, Doc* doc, request_rec* r, device_table* spec);
 static int   s_xhtml_search_emoji(xhtml_t* xhtml, char* txt, char** rslt);
@@ -102,13 +102,11 @@ tag_handler xhtml_handler[] = {
     s_xhtml_1_0_start_meta_tag,
     s_xhtml_1_0_end_meta_tag,
   },
-#if 0
   /* tagTEXTAREA */
   {
-    s_chtml10_start_textarea_tag,
-    s_chtml10_end_textarea_tag,
+    s_xhtml_1_0_start_textarea_tag,
+    s_xhtml_1_0_end_textarea_tag,
   },
-#endif
   /* tagP */
   {
     s_xhtml_1_0_start_p_tag,
@@ -2776,17 +2774,18 @@ s_xhtml_1_0_chxjif_tag(xhtml_t* xhtml, Node* node)
 /**
  * It is a handler who processes the TEXTARE tag.
  *
- * @param xhtml_1_0  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The TEXTAREA tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_textarea_tag(xhtml_t* xhtml, Node* node) 
+s_xhtml_1_0_start_textarea_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = xhtml->doc;
-  request_rec*  r   = doc->r;
-  Attr* attr;
+  xhtml_t*      xhtml = GET_XHTML(pdoc);
+  Doc*          doc   = xhtml->doc;
+  request_rec*  r     = doc->r;
+  Attr*         attr;
 
   xhtml->textarea_flag++;
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<textarea ", NULL);
@@ -2816,19 +2815,21 @@ s_xhtml_1_0_start_textarea_tag(xhtml_t* xhtml, Node* node)
   return xhtml->out;
 }
 
+
 /**
  * It is a handler who processes the TEXTAREA tag.
  *
- * @param xhtml_1_0  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The TEXTAREA tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_textarea_tag(xhtml_t* xhtml, Node* child) 
+s_xhtml_1_0_end_textarea_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = xhtml->doc;
-  request_rec*  r   = doc->r;
+  xhtml_t*      xhtml = GET_XHTML(pdoc);
+  Doc*          doc   = xhtml->doc;
+  request_rec*  r     = doc->r;
 
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</textarea>\r\n", NULL);
   xhtml->textarea_flag--;
