@@ -1063,7 +1063,7 @@ chxj_calc_ecc(qr_code_t* qrcode,
        for (ii=0; ii<rs_block_size[jj]; ii++) {
          rows = apr_pstrcat(r->pool, rows, apr_psprintf(r->pool, "[%d]", rs_block[jj][ii]), NULL);
        }
-       ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "%s", rows);
+       DBG(r,"%s", rows);
     }
   } while(0);
 #endif
