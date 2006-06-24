@@ -70,13 +70,18 @@ static char* s_jhtml_start_option_tag   (void* pdoc, Node* node);
 static char* s_jhtml_end_option_tag     (void* pdoc, Node* node);
 static char* s_jhtml_start_div_tag      (void* pdoc, Node* node);
 static char* s_jhtml_end_div_tag        (void* pdoc, Node* node);
-static char* s_jhtml_start_textarea_tag (void* pdoc, Node* child);
-static char* s_jhtml_end_textarea_tag   (void* pdoc, Node* child);
+static char* s_jhtml_start_textarea_tag (void* pdoc, Node* node);
+static char* s_jhtml_end_textarea_tag   (void* pdoc, Node* node);
+static char* s_jhtml_chxjif_tag         (void* pdoc, Node* node); 
+static char* s_jhtml_text_tag           (void* pdoc, Node* node);
 
 static void  s_init_jhtml(jhtml_t* jhtml, Doc* doc, request_rec* r, device_table* spec);
+
 static int   s_jhtml_search_emoji(jhtml_t* jhtml, char* txt, char** rslt);
+
 static char* chxj_istyle_to_mode(request_rec* r, const char* s);
-static void  s_jhtml_chxjif_tag(jhtml_t* jhtml, Node* node); 
+
+
 
 tag_handler jhtml_handler[] = {
   /* tagHTML */
@@ -246,10 +251,9 @@ tag_handler jhtml_handler[] = {
     s_jhtml_start_div_tag,
     s_jhtml_end_div_tag,
   },
-#if 0
   /* tagCHXJIF */
   {
-    s_chtml10_chxjif_tag,
+    s_jhtml_chxjif_tag,
     NULL,
   },
   /* tagNOBR */
@@ -274,7 +278,7 @@ tag_handler jhtml_handler[] = {
   },
   /* tagTEXT */
   {
-    s_chtml10_text,
+    s_jhtml_text_tag,
     NULL,
   },
   /* tagTH */
@@ -282,7 +286,6 @@ tag_handler jhtml_handler[] = {
     NULL,
     NULL,
   },
-#endif
 };
 
 /**
@@ -2528,9 +2531,11 @@ chxj_istyle_to_mode(request_rec* r, const char* s)
   return apr_pstrdup(r->pool,tmp);
 }
 
-static void
-s_jhtml_chxjif_tag(jhtml_t* jhtml, Node* node)
+
+static char*
+s_jhtml_chxjif_tag(void* pdoc, Node* node)
 {
+  jhtml_t*     jhtml = GET_JHTML(pdoc);
   Doc*         doc   = jhtml->doc;
   Node*        child;
   request_rec* r     = doc->r;
@@ -2541,7 +2546,9 @@ s_jhtml_chxjif_tag(jhtml_t* jhtml, Node* node)
     jhtml->out = apr_pstrcat(r->pool, jhtml->out, child->otext, NULL);
     s_jhtml_chxjif_tag(jhtml, child);
   }
+  return NULL;
 }
+
 
 /**
  * It is a handler who processes the TEXTARE tag.
@@ -2605,6 +2612,69 @@ s_jhtml_end_textarea_tag(void* pdoc, Node* child)
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</textarea>\r\n", NULL);
   jhtml->textarea_flag--;
+
+  return jhtml->out;
+}
+
+static char*
+s_jhtml_text_tag(void* pdoc, Node* child)
+{
+  jhtml_t*     jhtml = GET_JHTML(pdoc);
+  Doc*         doc = jhtml->doc;
+  char*        textval;
+  char*        tmp;
+  char*        tdst;
+  char         one_byte[2];
+  int          ii;
+  int          tdst_len;
+  request_rec* r = doc->r;
+
+  textval = qs_get_node_value(doc,child);
+  textval = qs_trim_string(jhtml->doc->r, textval);
+  if (strlen(textval) == 0)
+    return jhtml->out;
+
+  tmp = apr_palloc(r->pool, qs_get_node_size(doc,child)+1);
+  memset(tmp, 0, qs_get_node_size(doc,child)+1);
+
+  tdst     = qs_alloc_zero_byte_string(r);
+  memset(one_byte, 0, sizeof(one_byte));
+  tdst_len = 0;
+
+  for (ii=0; ii<qs_get_node_size(doc,child); ii++) {
+    char* out;
+    int rtn = s_jhtml_search_emoji(jhtml, &textval[ii], &out);
+    if (rtn) {
+      tdst = qs_out_apr_pstrcat(r, tdst, out, &tdst_len);
+      ii+=(rtn - 1);
+      continue;
+    }
+
+    if (is_sjis_kanji(textval[ii])) {
+      one_byte[0] = textval[ii+0];
+      tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+      one_byte[0] = textval[ii+1];
+      tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+      ii++;
+    }
+    else 
+    if (jhtml->pre_flag) {
+      one_byte[0] = textval[ii+0];
+      tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+    }
+    else
+    if (jhtml->textarea_flag) {
+      one_byte[0] = textval[ii+0];
+      tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+    }
+    else {
+      if (textval[ii] != '\r' && textval[ii] != '\n') {
+        one_byte[0] = textval[ii+0];
+        tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+      }
+    }
+  }
+  jhtml->out = apr_pstrcat(r->pool, jhtml->out, tdst, NULL);
 
   return jhtml->out;
 }
