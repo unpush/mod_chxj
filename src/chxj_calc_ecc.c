@@ -1013,7 +1013,7 @@ chxj_calc_ecc(qr_code_t* qrcode,
         for (jj=ecc_count + data_count - 1; jj>=0; jj--) {
           debug_rows = apr_pstrcat(r->pool, debug_rows, apr_psprintf(r->pool, "[%d]", tmp[jj]), NULL);
         }
-        ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "rows [%s]", debug_rows);
+        DBG1(r,"rows [%s]", debug_rows);
       } while(0);
       /* for DEBUG END */
 #endif
