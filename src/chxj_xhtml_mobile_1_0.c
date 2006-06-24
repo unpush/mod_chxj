@@ -88,7 +88,7 @@ static char* s_xhtml_1_0_end_textarea_tag  (void* pdoc, Node* node);
 
 static void  s_init_xhtml(xhtml_t* xhtml, Doc* doc, request_rec* r, device_table* spec);
 static int   s_xhtml_search_emoji(xhtml_t* xhtml, char* txt, char** rslt);
-static void  s_xhtml_1_0_chxjif_tag(xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_chxjif_tag       (void* pdoc, Node* node);
 
 
 tag_handler xhtml_handler[] = {
@@ -257,10 +257,9 @@ tag_handler xhtml_handler[] = {
     s_xhtml_1_0_start_div_tag,
     s_xhtml_1_0_end_div_tag,
   },
-#if 0
   /* tagCHXJIF */
   {
-    s_chtml10_chxjif_tag,
+    s_xhtml_1_0_chxjif_tag,
     NULL,
   },
   /* tagNOBR */
@@ -283,6 +282,7 @@ tag_handler xhtml_handler[] = {
     NULL,
     NULL,
   },
+#if 0
   /* tagTEXT */
   {
     s_chtml10_text,
@@ -2752,13 +2752,14 @@ s_xhtml_1_0_end_div_tag(void* pdoc, Node* child)
 /**
  * It is a handler who processes the CHXJ:IF tag.
  *
- * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The CHXJ:IF tag node is specified.
  */
-static void
-s_xhtml_1_0_chxjif_tag(xhtml_t* xhtml, Node* node)
+static char*
+s_xhtml_1_0_chxjif_tag(void* pdoc, Node* node)
 {
+  xhtml_t*     xhtml = GET_XHTML(pdoc);
   Doc*         doc   = xhtml->doc;
   Node*        child;
   request_rec* r = xhtml->doc->r;
@@ -2769,7 +2770,10 @@ s_xhtml_1_0_chxjif_tag(xhtml_t* xhtml, Node* node)
     xhtml->out = apr_pstrcat(r->pool, xhtml->out, child->otext, NULL);
     s_xhtml_1_0_chxjif_tag(xhtml, child);
   }
+
+  return NULL;
 }
+
 
 /**
  * It is a handler who processes the TEXTARE tag.
