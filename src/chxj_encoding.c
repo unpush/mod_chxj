@@ -143,8 +143,7 @@ chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
   olen = ilen * 4 + 1;
   spos = obuf = apr_palloc(r->pool, olen);
   if (obuf == NULL) {
-    ap_log_rerror(
-      APLOG_MARK,APLOG_DEBUG, 0, r, "end   chxj_rencoding()");
+    DBG(r,"end   chxj_rencoding()");
     return ibuf;
   }
   ap_log_rerror(
