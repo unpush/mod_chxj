@@ -67,9 +67,9 @@ static char* s_xhtml_1_0_start_tr_tag     (void* pdoc, Node* node);
 static char* s_xhtml_1_0_end_tr_tag       (void* pdoc, Node* node);
 static char* s_xhtml_1_0_start_font_tag   (void* pdoc, Node* node);
 static char* s_xhtml_1_0_end_font_tag     (void* pdoc, Node* node);
+static char* s_xhtml_1_0_start_form_tag   (void* pdoc, Node* node);
+static char* s_xhtml_1_0_end_form_tag     (void* pdoc, Node* node);
 
-static char* s_xhtml_1_0_start_form_tag   (xhtml_t* xhtml, Node* node);
-static char* s_xhtml_1_0_end_form_tag     (xhtml_t* xhtml, Node* node);
 static char* s_xhtml_1_0_start_input_tag  (xhtml_t* xhtml, Node* node);
 static char* s_xhtml_1_0_end_input_tag    (xhtml_t* xhtml, Node* node);
 static char* s_xhtml_1_0_start_center_tag (xhtml_t* xhtml, Node* node);
@@ -219,12 +219,12 @@ tag_handler xhtml_handler[] = {
     s_xhtml_1_0_start_font_tag,
     s_xhtml_1_0_end_font_tag,
   },
-#if 0
   /* tagFORM */
   {
-    s_chtml10_start_form_tag,
-    s_chtml10_end_form_tag,
+    s_xhtml_1_0_start_form_tag,
+    s_xhtml_1_0_end_form_tag,
   },
+#if 0
   /* tagINPUT */
   {
     s_chtml10_start_input_tag,
@@ -1674,17 +1674,18 @@ s_xhtml_1_0_end_font_tag(void* pdoc, Node* child)
 /**
  * It is a handler who processes the FORM tag.
  *
- * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The FORM tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_form_tag(xhtml_t* xhtml, Node* node) 
+s_xhtml_1_0_start_form_tag(void* pdoc, Node* node) 
 {
-  Doc* doc = xhtml->doc;
-  request_rec* r = doc->r;
-  Attr* attr;
+  xhtml_t*     xhtml = GET_XHTML(pdoc);
+  Doc*         doc   = xhtml->doc;
+  request_rec* r     = doc->r;
+  Attr*        attr;
 
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<form", NULL);
 
@@ -1719,26 +1720,30 @@ s_xhtml_1_0_start_form_tag(xhtml_t* xhtml, Node* node)
     }
   }
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, ">", NULL);
+
   return xhtml->out;
 }
 
 /**
  * It is a handler who processes the FORM tag.
  *
- * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The FORM tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_form_tag(xhtml_t* xhtml, Node* child) 
+s_xhtml_1_0_end_form_tag(void* pdoc, Node* child) 
 {
-  Doc* doc = xhtml->doc;
-  request_rec* r = doc->r;
+  xhtml_t*     xhtml = GET_XHTML(pdoc);
+  Doc*         doc   = xhtml->doc;
+  request_rec* r     = doc->r;
 
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</form>", NULL);
+
   return xhtml->out;
 }
+
 
 /**
  * It is a handler who processes the INPUT tag.
