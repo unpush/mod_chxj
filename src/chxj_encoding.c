@@ -116,8 +116,7 @@ chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
   dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
 
   if (dconf == NULL) {
-    ap_log_rerror(
-      APLOG_MARK,APLOG_DEBUG, 0, r, "none encoding.");
+    DBG(r,"none encoding.");
     return (char*)src;
   }
 
