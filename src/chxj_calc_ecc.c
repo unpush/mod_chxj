@@ -977,7 +977,7 @@ chxj_calc_ecc(qr_code_t* qrcode,
       ecc_count = v_ecc_spec_table[qrcode->version*4+qrcode->level].rs[rs_pos].total_code_count - data_count;
 
 #ifdef QR_CODE_DEBUG
-      ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "data_count[%d] ecc_count[%d]", data_count, ecc_count);
+      DBG2(r,"data_count[%d] ecc_count[%d]", data_count, ecc_count);
 #endif
 
       rs_block[now_rs_num] = (unsigned char*)apr_palloc(qrcode->r->pool, data_count + ecc_count + 1);
@@ -987,7 +987,7 @@ chxj_calc_ecc(qr_code_t* qrcode,
       rs_block_ecc_size[now_rs_num] = ecc_count;
 
 #ifdef QR_CODE_DEBUG
-      ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "apr_palloc() tmp");
+      DBG(r,"apr_palloc() tmp");
 #endif
 
       memset(tmp, 0, data_count + ecc_count + 1);
