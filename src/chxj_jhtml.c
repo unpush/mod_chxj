@@ -52,9 +52,9 @@ static char* s_jhtml_start_br_tag       (void* pdoc, Node* node);
 static char* s_jhtml_end_br_tag         (void* pdoc, Node* node);
 static char* s_jhtml_start_tr_tag       (void* pdoc, Node* node);
 static char* s_jhtml_end_tr_tag         (void* pdoc, Node* node);
+static char* s_jhtml_start_font_tag     (void* pdoc, Node* node);
+static char* s_jhtml_end_font_tag       (void* pdoc, Node* node);
 
-static char* s_jhtml_start_font_tag   (jhtml_t* jhtml, Node* node);
-static char* s_jhtml_end_font_tag     (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_start_form_tag   (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_end_form_tag     (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_start_input_tag  (jhtml_t* jhtml, Node* node);
@@ -193,7 +193,6 @@ tag_handler jhtml_handler[] = {
     s_jhtml_start_tr_tag,
     s_jhtml_end_tr_tag,
   },
-#if 0
   /* tagTD */
   {
     NULL,
@@ -206,9 +205,10 @@ tag_handler jhtml_handler[] = {
   },
   /* tagFONT */
   {
-    s_chtml10_start_font_tag,
-    s_chtml10_end_font_tag,
+    s_jhtml_start_font_tag,
+    s_jhtml_end_font_tag,
   },
+#if 0
   /* tagFORM */
   {
     s_chtml10_start_form_tag,
@@ -1521,14 +1521,15 @@ s_jhtml_end_tr_tag(void* pdoc, Node* child)
 /**
  * It is a handler who processes the FONT tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The FONT tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_start_font_tag(jhtml_t* jhtml, Node* node) 
+s_jhtml_start_font_tag(void* pdoc, Node* node) 
 {
+  jhtml_t*      jhtml = GET_JHTML(pdoc);
   Doc*          doc   = jhtml->doc;
   request_rec*  r     = doc->r;
   Attr*         attr;
@@ -1566,23 +1567,26 @@ s_jhtml_start_font_tag(jhtml_t* jhtml, Node* node)
   return jhtml->out;
 }
 
+
 /**
  * It is a handler who processes the FONT tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The FONT tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_end_font_tag(jhtml_t* jhtml, Node* child) 
+s_jhtml_end_font_tag(void* pdoc, Node* child) 
 {
+  jhtml_t* jhtml = GET_JHTML(pdoc);
   request_rec* r = jhtml->doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</font>", NULL);
 
   return jhtml->out;
 }
+
 
 /**
  * It is a handler who processes the FORM tag.
