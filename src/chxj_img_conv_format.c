@@ -927,11 +927,11 @@ s_fixup_size(MagickWand* magick_wand,
 
     case IMG_CONV_MODE_NORMAL:
       if (qsp->width) {
-        ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert width=[%d --> %d]", neww, qsp->width);
+        DBG2(r,"convert width=[%d --> %d]", neww, qsp->width);
         neww = qsp->width;
       }
       if (qsp->height) {
-        ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r,"convert heigh=[%d --> %d]", newh, qsp->height);
+        DBG2(r,"convert heigh=[%d --> %d]", newh, qsp->height);
         newh = qsp->height;
       }
 

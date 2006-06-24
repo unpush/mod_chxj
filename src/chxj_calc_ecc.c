@@ -947,7 +947,7 @@ chxj_calc_ecc(qr_code_t* qrcode,
   int exist_flag = 0;
   unsigned char** rs_block;
 #ifdef QR_CODE_DEBUG
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "start chxj_calc_ecc()");
+  DBG(r,"start chxj_calc_ecc()");
 #endif
 
   rs_total_block_count = v_ecc_spec_table[qrcode->version*4+qrcode->level].rs[0].rs_block_count +

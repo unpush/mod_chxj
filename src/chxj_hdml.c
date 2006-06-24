@@ -355,8 +355,7 @@ chxj_exchange_hdml(request_rec* r,
     /* The Location header generates tag in an initial HDML machine for the   */
     /* uncorrespon dence.                                                     */
     /*------------------------------------------------------------------------*/
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, 
-                    "Location is not null[Location:%s]", buf);
+    DBG1(r, "Location is not null[Location:%s]", buf);
     s_output_to_hdml_out(&hdml, 
         "<HDML VERSION=3.0 MARKABLE=TRUE PUBLIC=TRUE>\n"
         "<NODISPLAY MARKABLE=TRUE PUBLIC=TRUE TITLE=\" \">\n"
@@ -1801,9 +1800,8 @@ s_hdml_do_input_radio_tag(hdml_t* hdml, Node* tag)
     }
 
     if (hdml->radio_checked_value[ii]) {
-      ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, 
-                    "radio button is checked. checked value is [%s]", 
-                    hdml->radio_checked_value[ii]);
+      DBG1(r,"radio button is checked. checked value is [%s]", 
+        hdml->radio_checked_value[ii]);
       s_output_to_init_vars(hdml, 
                     apr_psprintf(r->pool, 
                             "%s=%s", 
