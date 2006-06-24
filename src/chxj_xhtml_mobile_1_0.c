@@ -25,8 +25,9 @@
 #define GET_XHTML(X) ((xhtml_t*)(X))
 
 static char* s_xhtml_1_0_node_exchange    (xhtml_t* xhtml, Node* node, int indent);
-static char* s_xhtml_1_0_start_html_tag   (xhtml_t* xhtml, Node* node);
-static char* s_xhtml_1_0_end_html_tag     (xhtml_t* xhtml, Node* node);
+static char* s_xhtml_1_0_start_html_tag   (void* pdoc, Node* node);
+static char* s_xhtml_1_0_end_html_tag     (void* pdoc, Node* node);
+
 static char* s_xhtml_1_0_start_p_tag      (xhtml_t* xhtml, Node* node);
 static char* s_xhtml_1_0_end_p_tag        (xhtml_t* xhtml, Node* node);
 static char* s_xhtml_1_0_start_pre_tag    (xhtml_t* xhtml, Node* node);
@@ -92,12 +93,12 @@ static void  s_xhtml_1_0_chxjif_tag(xhtml_t* xhtml, Node* node);
 
 
 tag_handler xhtml_handler[] = {
-#if 0
   /* tagHTML */
   {
-    s_chtml10_start_html_tag,
-    s_chtml10_end_html_tag,
+    s_xhtml_1_0_start_html_tag,
+    s_xhtml_1_0_end_html_tag,
   },
+#if 0
   /* tagMETA */
   {
     s_chtml10_start_meta_tag,
@@ -979,14 +980,15 @@ s_xhtml_search_emoji(xhtml_t* xhtml, char* txt, char** rslt)
 /**
  * It is a handler who processes the HTML tag.
  *
- * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The HTML tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_html_tag(xhtml_t* xhtml, Node* node) 
+s_xhtml_1_0_start_html_tag(void* pdoc, Node* node) 
 {
+  xhtml_t*      xhtml = GET_XHTML(pdoc);
   Attr*         attr;
   Doc*          doc   = xhtml->doc;
   request_rec*  r     = doc->r;
@@ -1048,16 +1050,17 @@ s_xhtml_1_0_start_html_tag(xhtml_t* xhtml, Node* node)
 /**
  * It is a handler who processes the HTML tag.
  *
- * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The HTML tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_html_tag(xhtml_t* xhtml, Node* child) 
+s_xhtml_1_0_end_html_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = xhtml->doc;
-  request_rec*  r   = doc->r;
+  xhtml_t*      xhtml = GET_XHTML(pdoc);
+  Doc*          doc   = xhtml->doc;
+  request_rec*  r     = doc->r;
 
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</html>\r\n", NULL);
 
