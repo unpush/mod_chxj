@@ -1024,11 +1024,10 @@ chxj_calc_ecc(qr_code_t* qrcode,
         int tgt = tmp[ii--];
         int shisu = v_galois_int_to_log[tgt];
 #ifdef QR_CODE_DEBUG
-        ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, "tgt[%d] shisu[%d]", tgt, shisu);
+        DBG2(r,"tgt[%d] shisu[%d]", tgt, shisu);
 #endif
-        if (tgt == 0) {
+        if (tgt == 0)
           continue;
-        }
 
         for (jj=ecc_count; jj>=0;jj--) {
           assert(v_poly_ecc[ecc_count] != NULL);
