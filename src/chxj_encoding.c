@@ -41,35 +41,30 @@ chxj_encoding(request_rec *r, const char* src, apr_size_t* len)
   mod_chxj_config* dconf;
   chxjconvrule_entry* entryp;
 
-  ap_log_rerror(
-    APLOG_MARK,APLOG_DEBUG, 0, r, "start chxj_encoding()");
+  DBG(r,"start chxj_encoding()");
 
   dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
 
   if (dconf == NULL) {
-    ap_log_rerror(
-      APLOG_MARK,APLOG_DEBUG, 0, r, "none encoding.");
+    DBG(r,"none encoding.");
     return (char*)src;
   }
 
   entryp = chxj_apply_convrule(r, dconf->convrules);
   if (entryp->encoding == NULL) {
-    ap_log_rerror(
-      APLOG_MARK,APLOG_DEBUG, 0, r, "none encoding.");
+    DBG(r,"none encoding.");
     return (char*)src;
   }
 
   if ((*(entryp->encoding) == 'n' || *(entryp->encoding) == 'N') 
   &&   strcasecmp(entryp->encoding, "NONE") == 0) {
-    ap_log_rerror(
-      APLOG_MARK,APLOG_DEBUG, 0, r, "none encoding.");
+    DBG(r,"none encoding.");
     return (char*)src;
   }
   ilen = *len;
   ibuf = apr_palloc(r->pool, ilen+1);
   if (ibuf == NULL) {
-    ap_log_rerror(
-      APLOG_MARK,APLOG_DEBUG, 0, r, "end   chxj_encoding()");
+    DBG(r,"end   chxj_encoding()");
     return (char*)src;
   }
   memset(ibuf, 0, ilen+1);
@@ -78,18 +73,15 @@ chxj_encoding(request_rec *r, const char* src, apr_size_t* len)
   olen = ilen * 4 + 1;
   spos = obuf = apr_palloc(r->pool, olen);
   if (obuf == NULL) {
-    ap_log_rerror(
-      APLOG_MARK,APLOG_DEBUG, 0, r, "end   chxj_encoding()");
+    DBG(r,"end   chxj_encoding()");
     return ibuf;
   }
-  ap_log_rerror(
-      APLOG_MARK,APLOG_DEBUG, 0, r, "encode convert [%s] -> [%s]", entryp->encoding, "CP932");
+  DBG2(r,"encode convert [%s] -> [%s]", entryp->encoding, "CP932");
 
   memset(obuf, 0, olen);
   cd = iconv_open("CP932", entryp->encoding);
   if (cd == (iconv_t)-1) {
-    ap_log_rerror(
-      APLOG_MARK,APLOG_DEBUG, 0, r, "end   chxj_encoding()");
+    DBG(r,"end   chxj_encoding()");
     return ibuf;
   }
   while (ilen > 0) {
@@ -101,8 +93,7 @@ chxj_encoding(request_rec *r, const char* src, apr_size_t* len)
   *len = olen;
   iconv_close(cd);
 
-  ap_log_rerror(
-    APLOG_MARK,APLOG_DEBUG, 0, r, "end   chxj_encoding() len=[%d] obuf=[%.*s]", *len, *len, obuf);
+  DBG3(r,"end   chxj_encoding() len=[%d] obuf=[%.*s]", *len, *len, spos);
   return spos;
 }
 

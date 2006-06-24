@@ -20,7 +20,7 @@
 #include "chxj_img_conv.h"
 #include "chxj_qr_code.h"
 
-#define GET_JHTML(X) ((jhtml_t*)jhtml)
+#define GET_JHTML(X) ((jhtml_t*)(X))
 
 static char* s_jhtml_node_exchange    (jhtml_t* jhtml, Node* node, int indent);
 
@@ -350,7 +350,9 @@ chxj_exchange_jhtml(
   /*--------------------------------------------------------------------------*/
   /* It converts it from CHTML to JHTML.                                      */
   /*--------------------------------------------------------------------------*/
-  dst = s_jhtml_node_exchange(&jhtml, qs_get_root(&doc), 0);
+  chxj_node_exchange(spec,r,(void*)&jhtml, &doc, qs_get_root(&doc), 0);
+  dst = jhtml.out;
+
   qs_all_free(&doc,QX_LOGMARK);
 
   if (! dst) 
@@ -901,14 +903,22 @@ s_jhtml_search_emoji(jhtml_t* jhtml, char* txt, char** rslt)
 static char*
 s_jhtml_start_html_tag(void* pdoc, Node* node) 
 {
-  jhtml_t*      jhtml = GET_JHTML(pdoc);
-  Doc*          doc   = jhtml->doc;
-  request_rec*  r     = doc->r;
+  jhtml_t*      jhtml;
+  Doc*          doc;
+  request_rec*  r;
+
+
+  jhtml  = GET_JHTML(pdoc);
+  doc    = jhtml->doc;
+  r      = doc->r;
+  DBG(r, "start s_jhtml_start_html_tag()");
 
   /*--------------------------------------------------------------------------*/
   /* start HTML tag                                                           */
   /*--------------------------------------------------------------------------*/
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<html>\n", NULL);
+
+  DBG(r, "end s_jhtml_start_html_tag()");
 
   return jhtml->out;
 }

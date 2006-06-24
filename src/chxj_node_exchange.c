@@ -51,7 +51,7 @@ tag_handlers chxj_tag_handlers[] = {
   },
   {
     .type    = CHXJ_SPEC_Jhtml,
-    .handler = NULL,
+    .handler = jhtml_handler,
   },
   {
     .type    = CHXJ_SPEC_HTML,
@@ -92,6 +92,7 @@ chxj_node_exchange(
 {
   Node*         child;
   tag_handler*  handlers;
+
 
   handlers = chxj_tag_handlers[spec->html_spec_type].handler;
 
@@ -674,6 +675,7 @@ chxj_node_exchange(
       chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
     }
   }
+
 
   return NULL;
 }
