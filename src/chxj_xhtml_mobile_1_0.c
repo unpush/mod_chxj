@@ -77,9 +77,9 @@ static char* s_xhtml_1_0_start_hr_tag     (void* pdoc, Node* node);
 static char* s_xhtml_1_0_end_hr_tag       (void* pdoc, Node* node);
 static char* s_xhtml_1_0_start_img_tag    (void* pdoc, Node* node);
 static char* s_xhtml_1_0_end_img_tag      (void* pdoc, Node* node);
+static char* s_xhtml_1_0_start_select_tag (void* pdoc, Node* node);
+static char* s_xhtml_1_0_end_select_tag   (void* pdoc, Node* node);
 
-static char* s_xhtml_1_0_start_select_tag (xhtml_t* xhtml, Node* node);
-static char* s_xhtml_1_0_end_select_tag   (xhtml_t* xhtml, Node* node);
 static char* s_xhtml_1_0_start_option_tag (xhtml_t* xhtml, Node* node);
 static char* s_xhtml_1_0_end_option_tag   (xhtml_t* xhtml, Node* node);
 static char* s_xhtml_1_0_start_div_tag    (xhtml_t* xhtml, Node* node);
@@ -244,12 +244,12 @@ tag_handler xhtml_handler[] = {
     s_xhtml_1_0_start_img_tag,
     s_xhtml_1_0_end_img_tag,
   },
-#if 0
   /* tagSELECT */
   {
-    s_chtml10_start_select_tag,
-    s_chtml10_end_select_tag,
+    s_xhtml_1_0_start_select_tag,
+    s_xhtml_1_0_end_select_tag,
   },
+#if 0
   /* tagOPTION */
   {
     s_chtml10_start_option_tag,
@@ -2545,17 +2545,18 @@ s_xhtml_1_0_end_img_tag(void* pdoc, Node* child)
 /**
  * It is a handler who processes the SELECT tag.
  *
- * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The SELECT tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_select_tag(xhtml_t* xhtml, Node* child)
+s_xhtml_1_0_start_select_tag(void* pdoc, Node* child)
 {
-  Doc* doc = xhtml->doc;
-  request_rec* r = doc->r;
-  Attr* attr;
+  xhtml_t*     xhtml = GET_XHTML(pdoc);
+  Doc*         doc   = xhtml->doc;
+  request_rec* r     = doc->r;
+  Attr*        attr;
 
   char* size      = NULL;
   char* name      = NULL;
@@ -2594,23 +2595,27 @@ s_xhtml_1_0_start_select_tag(xhtml_t* xhtml, Node* child)
   return xhtml->out;
 }
 
+
 /**
  * It is a handler who processes the SELECT tag.
  *
- * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The SELECT tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_select_tag(xhtml_t* xhtml, Node* child)
+s_xhtml_1_0_end_select_tag(void* pdoc, Node* child)
 {
-  Doc* doc = xhtml->doc;
-  request_rec* r = doc->r;
+  xhtml_t*     xhtml = GET_XHTML(pdoc);
+  Doc*         doc   = xhtml->doc;
+  request_rec* r     = doc->r;
 
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</select>\n", NULL);
+
   return xhtml->out;
 }
+
 
 /**
  * It is a handler who processes the OPTION tag.
