@@ -128,8 +128,7 @@ chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
 
   if ((*(entryp->encoding) == 'n' || *(entryp->encoding) == 'N') 
   &&   strcasecmp(entryp->encoding, "NONE") == 0) {
-    ap_log_rerror(
-      APLOG_MARK,APLOG_DEBUG, 0, r, "none encoding.");
+    DBG(r,"none encoding.");
     return (char*)src;
   }
   ilen = *len;
