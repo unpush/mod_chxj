@@ -89,6 +89,212 @@ static char* s_xhtml_1_0_end_textarea_tag(xhtml_t* xhtml, Node* node);
 static void  s_init_xhtml(xhtml_t* xhtml, Doc* doc, request_rec* r, device_table* spec);
 static int   s_xhtml_search_emoji(xhtml_t* xhtml, char* txt, char** rslt);
 static void  s_xhtml_1_0_chxjif_tag(xhtml_t* xhtml, Node* node);
+
+
+tag_handler xhtml_handler[] = {
+#if 0
+  /* tagHTML */
+  {
+    s_chtml10_start_html_tag,
+    s_chtml10_end_html_tag,
+  },
+  /* tagMETA */
+  {
+    s_chtml10_start_meta_tag,
+    s_chtml10_end_meta_tag,
+  },
+  /* tagTEXTAREA */
+  {
+    s_chtml10_start_textarea_tag,
+    s_chtml10_end_textarea_tag,
+  },
+  /* tagP */
+  {
+    s_chtml10_start_p_tag,
+    s_chtml10_end_p_tag,
+  },
+  /* tagPRE */
+  {
+    s_chtml10_start_pre_tag,
+    s_chtml10_end_pre_tag,
+  },
+  /* tagUL */
+  {
+    s_chtml10_start_ul_tag,
+    s_chtml10_end_ul_tag,
+  },
+  /* tagLI */
+  {
+    s_chtml10_start_li_tag,
+    s_chtml10_end_li_tag,
+  },
+  /* tagOL */
+  {
+    s_chtml10_start_ol_tag,
+    s_chtml10_end_ol_tag,
+  },
+  /* tagH1 */
+  {
+    s_chtml10_start_h1_tag,
+    s_chtml10_end_h1_tag,
+  },
+  /* tagH2 */
+  {
+    s_chtml10_start_h2_tag,
+    s_chtml10_end_h2_tag,
+  },
+  /* tagH3 */
+  {
+    s_chtml10_start_h3_tag,
+    s_chtml10_end_h3_tag,
+  },
+  /* tagH4 */
+  {
+    s_chtml10_start_h4_tag,
+    s_chtml10_end_h4_tag,
+  },
+  /* tagH5 */
+  {
+    s_chtml10_start_h5_tag,
+    s_chtml10_end_h5_tag,
+  },
+  /* tagH6 */
+  {
+    s_chtml10_start_h6_tag,
+    s_chtml10_end_h6_tag,
+  },
+  /* tagHEAD */
+  {
+    s_chtml10_start_head_tag,
+    s_chtml10_end_head_tag,
+  },
+  /* tagTITLE */
+  {
+    s_chtml10_start_title_tag,
+    s_chtml10_end_title_tag,
+  },
+  /* tagBASE */
+  {
+    s_chtml10_start_base_tag,
+    s_chtml10_end_base_tag,
+  },
+  /* tagBODY */
+  {
+    s_chtml10_start_body_tag,
+    s_chtml10_end_body_tag,
+  },
+  /* tagA */
+  {
+    s_chtml10_start_a_tag,
+    s_chtml10_end_a_tag,
+  },
+  /* tagBR */
+  {
+    s_chtml10_start_br_tag,
+    s_chtml10_end_br_tag,
+  },
+  /* tagTABLE */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagTR */
+  {
+    s_chtml10_start_tr_tag,
+    s_chtml10_end_tr_tag,
+  },
+  /* tagTD */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagTBODY */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagFONT */
+  {
+    s_chtml10_start_font_tag,
+    s_chtml10_end_font_tag,
+  },
+  /* tagFORM */
+  {
+    s_chtml10_start_form_tag,
+    s_chtml10_end_form_tag,
+  },
+  /* tagINPUT */
+  {
+    s_chtml10_start_input_tag,
+    s_chtml10_end_input_tag,
+  },
+  /* tagCENTER */
+  {
+    s_chtml10_start_center_tag,
+    s_chtml10_end_center_tag,
+  },
+  /* tagHR */
+  {
+    s_chtml10_start_hr_tag,
+    s_chtml10_end_hr_tag,
+  },
+  /* tagIMG */
+  {
+    s_chtml10_start_img_tag,
+    s_chtml10_end_img_tag,
+  },
+  /* tagSELECT */
+  {
+    s_chtml10_start_select_tag,
+    s_chtml10_end_select_tag,
+  },
+  /* tagOPTION */
+  {
+    s_chtml10_start_option_tag,
+    s_chtml10_end_option_tag,
+  },
+  /* tagDIV */
+  {
+    s_chtml10_start_div_tag,
+    s_chtml10_end_div_tag,
+  },
+  /* tagCHXJIF */
+  {
+    s_chtml10_chxjif_tag,
+    NULL,
+  },
+  /* tagNOBR */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagSMALL */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagSTYLE */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagSPAN */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagTEXT */
+  {
+    s_chtml10_text,
+    NULL,
+  },
+  /* tagTH */
+  {
+    NULL,
+    NULL,
+  },
+#endif
+};
  
 /**
  * converts from CHTML to XHTML.
