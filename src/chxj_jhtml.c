@@ -66,9 +66,9 @@ static char* s_jhtml_start_img_tag      (void* pdoc, Node* node);
 static char* s_jhtml_end_img_tag        (void* pdoc, Node* node);
 static char* s_jhtml_start_select_tag   (void* pdoc, Node* node);
 static char* s_jhtml_end_select_tag     (void* pdoc, Node* node);
+static char* s_jhtml_start_option_tag   (void* pdoc, Node* node);
+static char* s_jhtml_end_option_tag     (void* pdoc, Node* node);
 
-static char* s_jhtml_start_option_tag (jhtml_t* jhtml, Node* node);
-static char* s_jhtml_end_option_tag   (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_start_div_tag    (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_end_div_tag      (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_start_textarea_tag(jhtml_t* jhtml, Node* child);
@@ -238,12 +238,12 @@ tag_handler jhtml_handler[] = {
     s_jhtml_start_select_tag,
     s_jhtml_end_select_tag,
   },
-#if 0
   /* tagOPTION */
   {
-    s_chtml10_start_option_tag,
-    s_chtml10_end_option_tag,
+    s_jhtml_start_option_tag,
+    s_jhtml_end_option_tag,
   },
+#if 0
   /* tagDIV */
   {
     s_chtml10_start_div_tag,
@@ -2372,17 +2372,18 @@ s_jhtml_end_select_tag(void* pdoc, Node* child)
 /**
  * It is a handler who processes the OPTION tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The OPTION tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_start_option_tag(jhtml_t* jhtml, Node* child)
+s_jhtml_start_option_tag(void* pdoc, Node* child)
 {
-  Doc*         doc = jhtml->doc;
-  request_rec* r   = doc->r;
-  Attr* attr;
+  jhtml_t*     jhtml = GET_JHTML(pdoc);
+  Doc*         doc   = jhtml->doc;
+  request_rec* r     = doc->r;
+  Attr*        attr;
 
   char* selected   = NULL;
   char* value      = NULL;
@@ -2422,20 +2423,25 @@ s_jhtml_start_option_tag(jhtml_t* jhtml, Node* child)
   return jhtml->out;
 }
 
+
 /**
  * It is a handler who processes the OPTION tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The OPTION tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_end_option_tag(jhtml_t* jhtml, Node* child)
+s_jhtml_end_option_tag(void* pdoc, Node* child)
 {
+  jhtml_t*  jhtml = GET_JHTML(pdoc);
+
   /* Don't close */
+
   return jhtml->out;
 }
+
 
 /**
  * It is a handler who processes the DIV tag.
