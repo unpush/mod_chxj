@@ -20,27 +20,31 @@
 #include "chxj_img_conv.h"
 #include "chxj_qr_code.h"
 
+#define GET_JHTML(X) ((jhtml_t*)jhtml)
+
 static char* s_jhtml_node_exchange    (jhtml_t* jhtml, Node* node, int indent);
-static char* s_jhtml_start_html_tag   (jhtml_t* jhtml, Node* node);
-static char* s_jhtml_end_html_tag     (jhtml_t* jhtml, Node* node);
-static char* s_jhtml_start_meta_tag   (jhtml_t* jhtml, Node* node);
-static char* s_jhtml_end_meta_tag     (jhtml_t* jhtml, Node* node);
-static char* s_jhtml_start_head_tag   (jhtml_t* jhtml, Node* node);
-static char* s_jhtml_end_head_tag     (jhtml_t* jhtml, Node* node);
-static char* s_jhtml_start_title_tag  (jhtml_t* jhtml, Node* node);
-static char* s_jhtml_end_title_tag    (jhtml_t* jhtml, Node* node);
-static char* s_jhtml_start_base_tag   (jhtml_t* jhtml, Node* node);
-static char* s_jhtml_end_base_tag     (jhtml_t* jhtml, Node* node);
-static char* s_jhtml_start_body_tag   (jhtml_t* jhtml, Node* node);
-static char* s_jhtml_end_body_tag     (jhtml_t* jhtml, Node* node);
-static char* s_jhtml_start_a_tag      (jhtml_t* jhtml, Node* node);
-static char* s_jhtml_end_a_tag        (jhtml_t* jhtml, Node* node);
-static char* s_jhtml_start_pre_tag    (jhtml_t* jhtml, Node* node);
-static char* s_jhtml_end_pre_tag      (jhtml_t* jhtml, Node* node);
-static char* s_jhtml_start_p_tag      (jhtml_t* jhtml, Node* node);
-static char* s_jhtml_end_p_tag        (jhtml_t* jhtml, Node* node);
-static char* s_jhtml_start_ul_tag     (jhtml_t* jhtml, Node* node);
-static char* s_jhtml_end_ul_tag       (jhtml_t* jhtml, Node* node);
+
+static char* s_jhtml_start_html_tag     (void* pdoc, Node* node);
+static char* s_jhtml_end_html_tag       (void* pdoc, Node* node);
+static char* s_jhtml_start_meta_tag     (void* pdoc, Node* node);
+static char* s_jhtml_end_meta_tag       (void* pdoc, Node* node);
+static char* s_jhtml_start_head_tag     (void* pdoc, Node* node);
+static char* s_jhtml_end_head_tag       (void* pdoc, Node* node);
+static char* s_jhtml_start_title_tag    (void* pdoc, Node* node);
+static char* s_jhtml_end_title_tag      (void* pdoc, Node* node);
+static char* s_jhtml_start_base_tag     (void* pdoc, Node* node);
+static char* s_jhtml_end_base_tag       (void* pdoc, Node* node);
+static char* s_jhtml_start_body_tag     (void* pdoc, Node* node);
+static char* s_jhtml_end_body_tag       (void* pdoc, Node* node);
+static char* s_jhtml_start_a_tag        (void* pdoc, Node* node);
+static char* s_jhtml_end_a_tag          (void* pdoc, Node* node);
+static char* s_jhtml_start_pre_tag      (void* pdoc, Node* node);
+static char* s_jhtml_end_pre_tag        (void* pdoc, Node* node);
+static char* s_jhtml_start_p_tag        (void* pdoc, Node* node);
+static char* s_jhtml_end_p_tag          (void* pdoc, Node* node);
+static char* s_jhtml_start_ul_tag       (void* pdoc, Node* node);
+static char* s_jhtml_end_ul_tag         (void* pdoc, Node* node);
+
 static char* s_jhtml_start_ol_tag     (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_end_ol_tag       (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_start_li_tag     (jhtml_t* jhtml, Node* node);
@@ -73,6 +77,215 @@ static void  s_init_jhtml(jhtml_t* jhtml, Doc* doc, request_rec* r, device_table
 static int   s_jhtml_search_emoji(jhtml_t* jhtml, char* txt, char** rslt);
 static char* chxj_istyle_to_mode(request_rec* r, const char* s);
 static void  s_jhtml_chxjif_tag(jhtml_t* jhtml, Node* node); 
+
+tag_handler jhtml_handler[] = {
+  /* tagHTML */
+  {
+    s_jhtml_start_html_tag,
+    s_jhtml_end_html_tag,
+  },
+  /* tagMETA */
+  {
+    s_jhtml_start_meta_tag,
+    s_jhtml_end_meta_tag,
+  },
+#if 0
+  /* tagTEXTAREA */
+  {
+    s_chtml10_start_textarea_tag,
+    s_chtml10_end_textarea_tag,
+  },
+#endif
+  /* tagP */
+  {
+    s_jhtml_start_p_tag,
+    s_jhtml_end_p_tag,
+  },
+  /* tagPRE */
+  {
+    s_jhtml_start_pre_tag,
+    s_jhtml_end_pre_tag,
+  },
+  /* tagUL */
+  {
+    s_jhtml_start_ul_tag,
+    s_jhtml_end_ul_tag,
+  },
+#if 0
+  /* tagLI */
+  {
+    s_chtml10_start_li_tag,
+    s_chtml10_end_li_tag,
+  },
+  /* tagOL */
+  {
+    s_chtml10_start_ol_tag,
+    s_chtml10_end_ol_tag,
+  },
+  /* tagH1 */
+  {
+    s_chtml10_start_h1_tag,
+    s_chtml10_end_h1_tag,
+  },
+  /* tagH2 */
+  {
+    s_chtml10_start_h2_tag,
+    s_chtml10_end_h2_tag,
+  },
+  /* tagH3 */
+  {
+    s_chtml10_start_h3_tag,
+    s_chtml10_end_h3_tag,
+  },
+  /* tagH4 */
+  {
+    s_chtml10_start_h4_tag,
+    s_chtml10_end_h4_tag,
+  },
+  /* tagH5 */
+  {
+    s_chtml10_start_h5_tag,
+    s_chtml10_end_h5_tag,
+  },
+  /* tagH6 */
+  {
+    s_chtml10_start_h6_tag,
+    s_chtml10_end_h6_tag,
+  },
+#endif
+  /* tagHEAD */
+  {
+    s_jhtml_start_head_tag,
+    s_jhtml_end_head_tag,
+  },
+  /* tagTITLE */
+  {
+    s_jhtml_start_title_tag,
+    s_jhtml_end_title_tag,
+  },
+  /* tagBASE */
+  {
+    s_jhtml_start_base_tag,
+    s_jhtml_end_base_tag,
+  },
+  /* tagBODY */
+  {
+    s_jhtml_start_body_tag,
+    s_jhtml_end_body_tag,
+  },
+  /* tagA */
+  {
+    s_jhtml_start_a_tag,
+    s_jhtml_end_a_tag,
+  },
+#if 0
+  /* tagBR */
+  {
+    s_chtml10_start_br_tag,
+    s_chtml10_end_br_tag,
+  },
+  /* tagTABLE */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagTR */
+  {
+    s_chtml10_start_tr_tag,
+    s_chtml10_end_tr_tag,
+  },
+  /* tagTD */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagTBODY */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagFONT */
+  {
+    s_chtml10_start_font_tag,
+    s_chtml10_end_font_tag,
+  },
+  /* tagFORM */
+  {
+    s_chtml10_start_form_tag,
+    s_chtml10_end_form_tag,
+  },
+  /* tagINPUT */
+  {
+    s_chtml10_start_input_tag,
+    s_chtml10_end_input_tag,
+  },
+  /* tagCENTER */
+  {
+    s_chtml10_start_center_tag,
+    s_chtml10_end_center_tag,
+  },
+  /* tagHR */
+  {
+    s_chtml10_start_hr_tag,
+    s_chtml10_end_hr_tag,
+  },
+  /* tagIMG */
+  {
+    s_chtml10_start_img_tag,
+    s_chtml10_end_img_tag,
+  },
+  /* tagSELECT */
+  {
+    s_chtml10_start_select_tag,
+    s_chtml10_end_select_tag,
+  },
+  /* tagOPTION */
+  {
+    s_chtml10_start_option_tag,
+    s_chtml10_end_option_tag,
+  },
+  /* tagDIV */
+  {
+    s_chtml10_start_div_tag,
+    s_chtml10_end_div_tag,
+  },
+  /* tagCHXJIF */
+  {
+    s_chtml10_chxjif_tag,
+    NULL,
+  },
+  /* tagNOBR */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagSMALL */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagSTYLE */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagSPAN */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagTEXT */
+  {
+    s_chtml10_text,
+    NULL,
+  },
+  /* tagTH */
+  {
+    NULL,
+    NULL,
+  },
+#endif
+};
 
 /**
  * converts from CHTML5.0 to JHTML.
@@ -677,17 +890,19 @@ s_jhtml_search_emoji(jhtml_t* jhtml, char* txt, char** rslt)
   return 0;
 }
 
+
 /**
  * It is a handler who processes the HTML tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The HTML tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_start_html_tag(jhtml_t* jhtml, Node* node) 
+s_jhtml_start_html_tag(void* pdoc, Node* node) 
 {
+  jhtml_t*      jhtml = GET_JHTML(pdoc);
   Doc*          doc   = jhtml->doc;
   request_rec*  r     = doc->r;
 
@@ -699,17 +914,19 @@ s_jhtml_start_html_tag(jhtml_t* jhtml, Node* node)
   return jhtml->out;
 }
 
+
 /**
  * It is a handler who processes the HTML tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The HTML tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_end_html_tag(jhtml_t* jhtml, Node* child) 
+s_jhtml_end_html_tag(void* pdoc, Node* child) 
 {
+  jhtml_t*      jhtml = GET_JHTML(pdoc);
   Doc*          doc = jhtml->doc;
   request_rec*  r   = doc->r;
 
@@ -718,17 +935,19 @@ s_jhtml_end_html_tag(jhtml_t* jhtml, Node* child)
   return jhtml->out;
 }
 
+
 /**
  * It is a handler who processes the META tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The META tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_start_meta_tag(jhtml_t* jhtml, Node* node) 
+s_jhtml_start_meta_tag(void* pdoc, Node* node) 
 {
+  jhtml_t*     jhtml             = GET_JHTML(pdoc);
   Doc*         doc               = jhtml->doc;
   request_rec* r                 = doc->r;
   Attr*        attr;
@@ -790,107 +1009,119 @@ s_jhtml_start_meta_tag(jhtml_t* jhtml, Node* node)
   return jhtml->out;
 }
 
+
 /**
  * It is a handler who processes the META tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The META tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_end_meta_tag(jhtml_t* jhtml, Node* child) 
+s_jhtml_end_meta_tag(void* pdoc, Node* child) 
 {
+  jhtml_t* jhtml = GET_JHTML(pdoc);
   return jhtml->out;
 }
+
 
 /**
  * It is a handler who processes the HEAD tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The HEAD tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_start_head_tag(jhtml_t* jhtml, Node* node) 
+s_jhtml_start_head_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = jhtml->doc;
-  request_rec*  r   = doc->r;
+  jhtml_t*      jhtml = GET_JHTML(pdoc);
+  Doc*          doc   = jhtml->doc;
+  request_rec*  r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<head>\r\n", NULL);
 
   return jhtml->out;
 }
 
+
 /**
  * It is a handler who processes the HEAD tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The HEAD tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_end_head_tag(jhtml_t* jhtml, Node* child) 
+s_jhtml_end_head_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = jhtml->doc;
-  request_rec*  r   = doc->r;
+  jhtml_t*      jhtml = GET_JHTML(pdoc);
+  Doc*          doc   = jhtml->doc;
+  request_rec*  r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</head>\r\n", NULL);
 
   return jhtml->out;
 }
 
+
 /**
  * It is a handler who processes the TITLE tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The TITLE tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_start_title_tag(jhtml_t* jhtml, Node* node) 
+s_jhtml_start_title_tag(void* pdoc, Node* node) 
 {
-  Doc* doc = jhtml->doc;
-  request_rec* r = doc->r;
+  jhtml_t*     jhtml = GET_JHTML(pdoc);
+  Doc*         doc   = jhtml->doc;
+  request_rec* r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<title>", NULL);
 
   return jhtml->out;
 }
 
+
 /**
  * It is a handler who processes the TITLE tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The TITLE tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_end_title_tag(jhtml_t* jhtml, Node* child) 
+s_jhtml_end_title_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = jhtml->doc;
-  request_rec*  r   = doc->r;
+  jhtml_t*      jhtml = GET_JHTML(pdoc);
+  Doc*          doc   = jhtml->doc;
+  request_rec*  r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</title>\r\n", NULL);
 
   return jhtml->out;
 }
 
+
 /**
  * It is a handler who processes the BASE tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The BASE tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_start_base_tag(jhtml_t* jhtml, Node* node) 
+s_jhtml_start_base_tag(void* pdoc, Node* node) 
 {
+  jhtml_t*      jhtml = GET_JHTML(pdoc);
   Attr*         attr;
   Doc*          doc   = jhtml->doc;
   request_rec*  r     = doc->r;
@@ -920,34 +1151,39 @@ s_jhtml_start_base_tag(jhtml_t* jhtml, Node* node)
   return jhtml->out;
 }
 
+
 /**
  * It is a handler who processes the BASE tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The BASE tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_end_base_tag(jhtml_t* jhtml, Node* child) 
+s_jhtml_end_base_tag(void* pdoc, Node* child) 
 {
+  jhtml_t* jhtml = GET_JHTML(pdoc);
+
   return jhtml->out;
 }
+
 
 /**
  * It is a handler who processes the BODY tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The BODY tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_start_body_tag(jhtml_t* jhtml, Node* node) 
+s_jhtml_start_body_tag(void* pdoc, Node* node) 
 {
-  Doc* doc = jhtml->doc;
-  request_rec* r = doc->r;
-  Attr* attr;
+  jhtml_t*     jhtml = GET_JHTML(pdoc);
+  Doc*         doc   = jhtml->doc;
+  request_rec* r     = doc->r;
+  Attr*        attr;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<body", NULL);
 
@@ -1015,19 +1251,21 @@ s_jhtml_start_body_tag(jhtml_t* jhtml, Node* node)
   return jhtml->out;
 }
 
+
 /**
  * It is a handler who processes the BODY tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The BODY tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_end_body_tag(jhtml_t* jhtml, Node* child) 
+s_jhtml_end_body_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = jhtml->doc;
-  request_rec*  r = doc->r;
+  jhtml_t*      jhtml = GET_JHTML(pdoc);
+  Doc*          doc   = jhtml->doc;
+  request_rec*  r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</body>\r\n", NULL);
 
@@ -1037,14 +1275,15 @@ s_jhtml_end_body_tag(jhtml_t* jhtml, Node* child)
 /**
  * It is a handler who processes the A tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The A tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_start_a_tag(jhtml_t* jhtml, Node* node) 
+s_jhtml_start_a_tag(void* pdoc, Node* node) 
 {
+  jhtml_t*      jhtml = GET_JHTML(pdoc);
   Doc*          doc   = jhtml->doc;
   request_rec*  r     = doc->r;
   Attr*         attr;
@@ -1181,24 +1420,27 @@ s_jhtml_start_a_tag(jhtml_t* jhtml, Node* node)
   return jhtml->out;
 }
 
+
 /**
  * It is a handler who processes the A tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The A tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_end_a_tag(jhtml_t* jhtml, Node* child) 
+s_jhtml_end_a_tag(void* pdoc, Node* child) 
 {
-  Doc*         doc = jhtml->doc;
-  request_rec* r   = doc->r;
+  jhtml_t*     jhtml = GET_JHTML(pdoc);
+  Doc*         doc   = jhtml->doc;
+  request_rec* r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</a>", NULL);
 
   return jhtml->out;
 }
+
 
 /**
  * It is a handler who processes the BR tag.
@@ -1672,57 +1914,63 @@ s_jhtml_end_ol_tag(jhtml_t* jhtml, Node* child)
   return jhtml->out;
 }
 
+
 /**
  * It is a handler who processes the P tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The P tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_start_p_tag(jhtml_t* jhtml, Node* node) 
+s_jhtml_start_p_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = jhtml->doc;
-  request_rec*  r   = doc->r;
+  jhtml_t*      jhtml = GET_JHTML(pdoc);
+  Doc*          doc   = jhtml->doc;
+  request_rec*  r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<p>", NULL);
 
   return jhtml->out;
 }
 
+
 /**
  * It is a handler who processes the P tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The P tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_end_p_tag(jhtml_t* jhtml, Node* child) 
+s_jhtml_end_p_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = jhtml->doc;
-  request_rec*  r   = doc->r;
+  jhtml_t*      jhtml = GET_JHTML(pdoc);
+  Doc*          doc   = jhtml->doc;
+  request_rec*  r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</p>", NULL);
 
   return jhtml->out;
 }
 
+
 /**
  * It is a handler who processes the PRE tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The PRE tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_start_pre_tag(jhtml_t* jhtml, Node* node) 
+s_jhtml_start_pre_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = jhtml->doc;
-  request_rec*  r   = doc->r;
+  jhtml_t*      jhtml = GET_JHTML(pdoc);
+  Doc*          doc   = jhtml->doc;
+  request_rec*  r     = doc->r;
 
   jhtml->pre_flag++;
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<pre>", NULL);
@@ -1730,19 +1978,21 @@ s_jhtml_start_pre_tag(jhtml_t* jhtml, Node* node)
   return jhtml->out;
 }
 
+
 /**
  * It is a handler who processes the PRE tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The PRE tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_end_pre_tag(jhtml_t* jhtml, Node* child) 
+s_jhtml_end_pre_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = jhtml->doc;
-  request_rec*  r   = doc->r;
+  jhtml_t*      jhtml = GET_JHTML(pdoc);
+  Doc*          doc   = jhtml->doc;
+  request_rec*  r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</pre>", NULL);
   jhtml->pre_flag--;
@@ -1750,43 +2000,48 @@ s_jhtml_end_pre_tag(jhtml_t* jhtml, Node* child)
   return jhtml->out;
 }
 
+
 /**
  * It is a handler who processes the UL tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The UL tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_start_ul_tag(jhtml_t* jhtml, Node* node) 
+s_jhtml_start_ul_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = jhtml->doc;
-  request_rec*  r   = doc->r;
+  jhtml_t*      jhtml = GET_JHTML(pdoc);
+  Doc*          doc   = jhtml->doc;
+  request_rec*  r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<ul>", NULL);
 
   return jhtml->out;
 }
 
+
 /**
  * It is a handler who processes the UL tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The UL tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_end_ul_tag(jhtml_t* jhtml, Node* child) 
+s_jhtml_end_ul_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = jhtml->doc;
-  request_rec*  r   = doc->r;
+  jhtml_t*      jhtml = GET_JHTML(pdoc);
+  Doc*          doc   = jhtml->doc;
+  request_rec*  r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</ul>", NULL);
 
   return jhtml->out;
 }
+
 
 /**
  * It is a handler who processes the HR tag.
