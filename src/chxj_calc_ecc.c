@@ -994,7 +994,7 @@ chxj_calc_ecc(qr_code_t* qrcode,
       memset(rs_block[now_rs_num], 0, data_count + ecc_count + 1);
 
 #ifdef QR_CODE_DEBUG
-      ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "memset end");
+      DBG(r,"memset end");
 #endif
 
       /* 元データをコピー */
