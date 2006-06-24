@@ -29,11 +29,11 @@ static char* s_xhtml_1_0_start_html_tag   (void* pdoc, Node* node);
 static char* s_xhtml_1_0_end_html_tag     (void* pdoc, Node* node);
 static char* s_xhtml_1_0_start_p_tag      (void* pdoc, Node* node);
 static char* s_xhtml_1_0_end_p_tag        (void* pdoc, Node* node);
+static char* s_xhtml_1_0_start_pre_tag    (void* pdoc, Node* node);
+static char* s_xhtml_1_0_end_pre_tag      (void* pdoc, Node* node);
+static char* s_xhtml_1_0_start_ul_tag     (void* pdoc, Node* node);
+static char* s_xhtml_1_0_end_ul_tag       (void* pdoc, Node* node);
 
-static char* s_xhtml_1_0_start_pre_tag    (xhtml_t* xhtml, Node* node);
-static char* s_xhtml_1_0_end_pre_tag      (xhtml_t* xhtml, Node* node);
-static char* s_xhtml_1_0_start_ul_tag     (xhtml_t* xhtml, Node* node);
-static char* s_xhtml_1_0_end_ul_tag       (xhtml_t* xhtml, Node* node);
 static char* s_xhtml_1_0_start_h1_tag     (xhtml_t* xhtml, Node* node);
 static char* s_xhtml_1_0_end_h1_tag       (xhtml_t* xhtml, Node* node);
 static char* s_xhtml_1_0_start_h2_tag     (xhtml_t* xhtml, Node* node);
@@ -115,17 +115,17 @@ tag_handler xhtml_handler[] = {
     s_xhtml_1_0_start_p_tag,
     s_xhtml_1_0_end_p_tag,
   },
-#if 0
   /* tagPRE */
   {
-    s_chtml10_start_pre_tag,
-    s_chtml10_end_pre_tag,
+    s_xhtml_1_0_start_pre_tag,
+    s_xhtml_1_0_end_pre_tag,
   },
   /* tagUL */
   {
-    s_chtml10_start_ul_tag,
-    s_chtml10_end_ul_tag,
+    s_xhtml_1_0_start_ul_tag,
+    s_xhtml_1_0_end_ul_tag,
   },
+#if 0
   /* tagLI */
   {
     s_chtml10_start_li_tag,
@@ -1907,19 +1907,21 @@ s_xhtml_1_0_end_hr_tag(xhtml_t* xhtml, Node* child)
   return xhtml->out;
 }
 
+
 /**
  * It is a handler who processes the PRE tag.
  *
- * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The PRE tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_pre_tag(xhtml_t* xhtml, Node* node) 
+s_xhtml_1_0_start_pre_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = xhtml->doc;
-  request_rec*  r   = doc->r;
+  xhtml_t*      xhtml = GET_XHTML(pdoc);
+  Doc*          doc   = xhtml->doc;
+  request_rec*  r     = doc->r;
 
   xhtml->pre_flag++;
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<pre>", NULL);
@@ -1927,19 +1929,21 @@ s_xhtml_1_0_start_pre_tag(xhtml_t* xhtml, Node* node)
   return xhtml->out;
 }
 
+
 /**
  * It is a handler who processes the PRE tag.
  *
- * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The PRE tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_pre_tag(xhtml_t* xhtml, Node* child) 
+s_xhtml_1_0_end_pre_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = xhtml->doc;
-  request_rec*  r   = doc->r;
+  xhtml_t*      xhtml = GET_XHTML(pdoc);
+  Doc*          doc   = xhtml->doc;
+  request_rec*  r     = doc->r;
 
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</pre>", NULL);
   xhtml->pre_flag--;
@@ -1993,40 +1997,44 @@ s_xhtml_1_0_end_p_tag(void* pdoc, Node* child)
 /**
  * It is a handler who processes the UL tag.
  *
- * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The UL tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_ul_tag(xhtml_t* xhtml, Node* node) 
+s_xhtml_1_0_start_ul_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = xhtml->doc;
-  request_rec*  r   = doc->r;
+  xhtml_t*      xhtml = GET_XHTML(pdoc);
+  Doc*          doc   = xhtml->doc;
+  request_rec*  r     = doc->r;
 
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<ul>", NULL);
 
   return xhtml->out;
 }
 
+
 /**
  * It is a handler who processes the UL tag.
  *
- * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The UL tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_ul_tag(xhtml_t* xhtml, Node* child) 
+s_xhtml_1_0_end_ul_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = xhtml->doc;
-  request_rec*  r   = doc->r;
+  xhtml_t*      xhtml = GET_XHTML(pdoc);
+  Doc*          doc   = xhtml->doc;
+  request_rec*  r     = doc->r;
 
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</ul>", NULL);
 
   return xhtml->out;
 }
+
 
 /**
  * It is a handler who processes the H1 tag.
