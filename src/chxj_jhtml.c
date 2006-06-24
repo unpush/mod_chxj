@@ -44,16 +44,15 @@ static char* s_jhtml_start_p_tag        (void* pdoc, Node* node);
 static char* s_jhtml_end_p_tag          (void* pdoc, Node* node);
 static char* s_jhtml_start_ul_tag       (void* pdoc, Node* node);
 static char* s_jhtml_end_ul_tag         (void* pdoc, Node* node);
-
 static char* s_jhtml_start_ol_tag       (void* pdoc, Node* node);
 static char* s_jhtml_end_ol_tag         (void* pdoc, Node* node);
+static char* s_jhtml_start_li_tag       (void* pdoc, Node* node);
+static char* s_jhtml_end_li_tag         (void* pdoc, Node* node);
+static char* s_jhtml_start_br_tag       (void* pdoc, Node* node);
+static char* s_jhtml_end_br_tag         (void* pdoc, Node* node);
+static char* s_jhtml_start_tr_tag       (void* pdoc, Node* node);
+static char* s_jhtml_end_tr_tag         (void* pdoc, Node* node);
 
-static char* s_jhtml_start_li_tag     (jhtml_t* jhtml, Node* node);
-static char* s_jhtml_end_li_tag       (jhtml_t* jhtml, Node* node);
-static char* s_jhtml_start_br_tag     (jhtml_t* jhtml, Node* node);
-static char* s_jhtml_end_br_tag       (jhtml_t* jhtml, Node* node);
-static char* s_jhtml_start_tr_tag     (jhtml_t* jhtml, Node* node);
-static char* s_jhtml_end_tr_tag       (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_start_font_tag   (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_end_font_tag     (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_start_form_tag   (jhtml_t* jhtml, Node* node);
@@ -112,13 +111,11 @@ tag_handler jhtml_handler[] = {
     s_jhtml_start_ul_tag,
     s_jhtml_end_ul_tag,
   },
-#if 0
   /* tagLI */
   {
-    s_chtml10_start_li_tag,
-    s_chtml10_end_li_tag,
+    s_jhtml_start_li_tag,
+    s_jhtml_end_li_tag,
   },
-#endif
   /* tagOL */
   {
     s_jhtml_start_ol_tag,
@@ -181,11 +178,10 @@ tag_handler jhtml_handler[] = {
     s_jhtml_start_a_tag,
     s_jhtml_end_a_tag,
   },
-#if 0
   /* tagBR */
   {
-    s_chtml10_start_br_tag,
-    s_chtml10_end_br_tag,
+    s_jhtml_start_br_tag,
+    s_jhtml_end_br_tag,
   },
   /* tagTABLE */
   {
@@ -194,9 +190,10 @@ tag_handler jhtml_handler[] = {
   },
   /* tagTR */
   {
-    s_chtml10_start_tr_tag,
-    s_chtml10_end_tr_tag,
+    s_jhtml_start_tr_tag,
+    s_jhtml_end_tr_tag,
   },
+#if 0
   /* tagTD */
   {
     NULL,
@@ -1448,68 +1445,78 @@ s_jhtml_end_a_tag(void* pdoc, Node* child)
 /**
  * It is a handler who processes the BR tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The BR tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_start_br_tag(jhtml_t* jhtml, Node* node) 
+s_jhtml_start_br_tag(void* pdoc, Node* node) 
 {
-  Doc*         doc = jhtml->doc;
-  request_rec* r   = doc->r;
+  jhtml_t*     jhtml = GET_JHTML(pdoc);
+  Doc*         doc   = jhtml->doc;
+  request_rec* r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<br>\r\n", NULL);
 
   return jhtml->out;
 }
+
 
 /**
  * It is a handler who processes the BR tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The BR tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_end_br_tag(jhtml_t* jhtml, Node* child) 
+s_jhtml_end_br_tag(void* pdoc, Node* child) 
 {
+  jhtml_t*  jhtml = GET_JHTML(pdoc);
+
   return jhtml->out;
 }
+
 
 /**
  * It is a handler who processes the TR tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The TR tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_start_tr_tag(jhtml_t* jhtml, Node* node) 
+s_jhtml_start_tr_tag(void* pdoc, Node* node) 
 {
-  Doc*         doc = jhtml->doc;
-  request_rec* r   = doc->r;
+  jhtml_t*     jhtml = GET_JHTML(pdoc);
+  Doc*         doc   = jhtml->doc;
+  request_rec* r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<br>\r\n", NULL);
 
   return jhtml->out;
 }
 
+
 /**
  * It is a handler who processes the TR tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The TR tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_end_tr_tag(jhtml_t* jhtml, Node* child) 
+s_jhtml_end_tr_tag(void* pdoc, Node* child) 
 {
+  jhtml_t* jhtml = GET_JHTML(pdoc);
+
   return jhtml->out;
 }
+
 
 /**
  * It is a handler who processes the FONT tag.
@@ -1844,35 +1851,38 @@ s_jhtml_end_center_tag(jhtml_t* jhtml, Node* child)
 /**
  * It is a handler who processes the li tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The li tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_start_li_tag(jhtml_t* jhtml, Node* node) 
+s_jhtml_start_li_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = jhtml->doc;
-  request_rec*  r   = doc->r;
+  jhtml_t*      jhtml = GET_JHTML(pdoc);
+  Doc*          doc   = jhtml->doc;
+  request_rec*  r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<li>", NULL);
 
   return jhtml->out;
 }
 
+
 /**
  * It is a handler who processes the li tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The li tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_end_li_tag(jhtml_t* jhtml, Node* child) 
+s_jhtml_end_li_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = jhtml->doc;
-  request_rec*  r   = doc->r;
+  jhtml_t*      jhtml = GET_JHTML(pdoc);
+  Doc*          doc   = jhtml->doc;
+  request_rec*  r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</li>", NULL);
 
