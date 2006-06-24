@@ -85,10 +85,10 @@ static char* s_xhtml_1_0_start_div_tag    (void* pdoc, Node* node);
 static char* s_xhtml_1_0_end_div_tag      (void* pdoc, Node* node);
 static char* s_xhtml_1_0_start_textarea_tag(void* pdoc, Node* node);
 static char* s_xhtml_1_0_end_textarea_tag  (void* pdoc, Node* node);
+static char* s_xhtml_1_0_chxjif_tag       (void* pdoc, Node* node);
 
 static void  s_init_xhtml(xhtml_t* xhtml, Doc* doc, request_rec* r, device_table* spec);
 static int   s_xhtml_search_emoji(xhtml_t* xhtml, char* txt, char** rslt);
-static char* s_xhtml_1_0_chxjif_tag       (void* pdoc, Node* node);
 
 
 tag_handler xhtml_handler[] = {
