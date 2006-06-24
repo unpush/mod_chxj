@@ -432,7 +432,7 @@ s_xhtml_search_emoji(xhtml_t* xhtml, char* txt, char** rslt)
   r = xhtml->doc->r;
 
   if (spec == NULL)
-    ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0,r, "spec is NULL");
+    DBG(r,"spec is NULL");
 
   for (ee = xhtml->conf->emoji;
        ee;
