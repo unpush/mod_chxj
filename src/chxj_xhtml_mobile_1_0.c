@@ -22,6 +22,7 @@
 #include "chxj_img_conv.h"
 #include "chxj_qr_code.h"
 
+#define GET_XHTML(X) ((xhtml_t*)(X))
 
 static char* s_xhtml_1_0_node_exchange    (xhtml_t* xhtml, Node* node, int indent);
 static char* s_xhtml_1_0_start_html_tag   (xhtml_t* xhtml, Node* node);

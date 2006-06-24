@@ -307,6 +307,7 @@ extern tag_handlers chxj_tag_handlers[];
 extern tag_handler chtml10_handler[];
 extern tag_handler chtml20_handler[];
 extern tag_handler chtml30_handler[];
+extern tag_handler xhtml_handler[];
 extern tag_handler hdml_handler[];
 extern tag_handler jhtml_handler[];
 

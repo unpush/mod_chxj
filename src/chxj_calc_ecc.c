@@ -1104,7 +1104,7 @@ chxj_calc_ecc(qr_code_t* qrcode,
   do {
     DBG(r,"######### AFTER BLOCK DUMP ###############");
     for (ii=0; ii<rslt_pos; ii++) {
-      ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "[%d]", dst[ii]);
+      DBG1(r,"[%d]", dst[ii]);
     }
   } while(0);
 #endif
