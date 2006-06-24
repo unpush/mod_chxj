@@ -151,8 +151,7 @@ chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
   memset(obuf, 0, olen);
   cd = iconv_open(entryp->encoding, "CP932");
   if (cd == (iconv_t)-1) {
-    ap_log_rerror(
-      APLOG_MARK,APLOG_DEBUG, 0, r, "end   chxj_rencoding()");
+    DBG(r,"end   chxj_rencoding()");
     return ibuf;
   }
   while (ilen > 0) {
@@ -164,8 +163,8 @@ chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
   *len = olen;
   iconv_close(cd);
 
-  ap_log_rerror(
-    APLOG_MARK,APLOG_DEBUG, 0, r, "end   chxj_rencoding() len=[%d] obuf=[%.*s]", *len, *len, spos);
+  DBG3(r,"end   chxj_rencoding() len=[%d] obuf=[%.*s]", *len, *len, spos);
+
   return spos;
 }
 /*
