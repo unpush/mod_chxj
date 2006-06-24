@@ -49,11 +49,11 @@ static char* s_xhtml_1_0_start_ol_tag     (void* pdoc, Node* node);
 static char* s_xhtml_1_0_end_ol_tag       (void* pdoc, Node* node);
 static char* s_xhtml_1_0_start_li_tag     (void* pdoc, Node* node);
 static char* s_xhtml_1_0_end_li_tag       (void* pdoc, Node* node);
+static char* s_xhtml_1_0_start_meta_tag   (void* pdoc, Node* node);
+static char* s_xhtml_1_0_end_meta_tag     (void* pdoc, Node* node);
+static char* s_xhtml_1_0_start_head_tag   (void* pdoc, Node* node);
+static char* s_xhtml_1_0_end_head_tag     (void* pdoc, Node* node);
 
-static char* s_xhtml_1_0_start_meta_tag   (xhtml_t* xhtml, Node* node);
-static char* s_xhtml_1_0_end_meta_tag     (xhtml_t* xhtml, Node* node);
-static char* s_xhtml_1_0_start_head_tag   (xhtml_t* xhtml, Node* node);
-static char* s_xhtml_1_0_end_head_tag     (xhtml_t* xhtml, Node* node);
 static char* s_xhtml_1_0_start_title_tag  (xhtml_t* xhtml, Node* node);
 static char* s_xhtml_1_0_end_title_tag    (xhtml_t* xhtml, Node* node);
 static char* s_xhtml_1_0_start_base_tag   (xhtml_t* xhtml, Node* node);
@@ -97,12 +97,12 @@ tag_handler xhtml_handler[] = {
     s_xhtml_1_0_start_html_tag,
     s_xhtml_1_0_end_html_tag,
   },
-#if 0
   /* tagMETA */
   {
     s_xhtml_1_0_start_meta_tag,
     s_xhtml_1_0_end_meta_tag,
   },
+#if 0
   /* tagTEXTAREA */
   {
     s_chtml10_start_textarea_tag,
@@ -164,12 +164,12 @@ tag_handler xhtml_handler[] = {
     s_xhtml_1_0_start_h6_tag,
     s_xhtml_1_0_end_h6_tag,
   },
-#if 0
   /* tagHEAD */
   {
-    s_chtml10_start_head_tag,
-    s_chtml10_end_head_tag,
+    s_xhtml_1_0_start_head_tag,
+    s_xhtml_1_0_end_head_tag,
   },
+#if 0
   /* tagTITLE */
   {
     s_chtml10_start_title_tag,
@@ -1073,14 +1073,15 @@ s_xhtml_1_0_end_html_tag(void* pdoc, Node* child)
 /**
  * It is a handler who processes the META tag.
  *
- * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The META tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_meta_tag(xhtml_t* xhtml, Node* node) 
+s_xhtml_1_0_start_meta_tag(void* pdoc, Node* node) 
 {
+  xhtml_t*      xhtml = GET_XHTML(pdoc);
   Attr*         attr;
   Doc*          doc   = xhtml->doc;
   request_rec*  r     = doc->r;
@@ -1156,52 +1157,61 @@ s_xhtml_1_0_start_meta_tag(xhtml_t* xhtml, Node* node)
 /**
  * It is a handler who processes the META tag.
  *
- * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The META tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_meta_tag(xhtml_t* xhtml, Node* child) 
+s_xhtml_1_0_end_meta_tag(void* pdoc, Node* child) 
 {
+  xhtml_t*  xhtml = GET_XHTML(pdoc);
+
   return xhtml->out;
 }
+
 
 /**
  * It is a handler who processes the HEAD tag.
  *
- * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The HEAD tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_head_tag(xhtml_t* xhtml, Node* node) 
+s_xhtml_1_0_start_head_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = xhtml->doc;
-  request_rec*  r   = doc->r;
+  xhtml_t*      xhtml = GET_XHTML(pdoc);
+  Doc*          doc   = xhtml->doc;
+  request_rec*  r     = doc->r;
+
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<head>\r\n", NULL);
 
   return xhtml->out;
 }
 
+
 /**
  * It is a handler who processes the HEAD tag.
  *
- * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The HEAD tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_head_tag(xhtml_t* xhtml, Node* child) 
+s_xhtml_1_0_end_head_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = xhtml->doc;
-  request_rec*  r   = doc->r;
+  xhtml_t*      xhtml = GET_XHTML(pdoc);
+  Doc*          doc   = xhtml->doc;
+  request_rec*  r     = doc->r;
 
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</head>\r\n", NULL);
+
   return xhtml->out;
 }
+
 
 /**
  * It is a handler who processes the TITLE tag.
