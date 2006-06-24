@@ -89,6 +89,7 @@ static char* s_xhtml_1_0_chxjif_tag       (void* pdoc, Node* node);
 
 static void  s_init_xhtml(xhtml_t* xhtml, Doc* doc, request_rec* r, device_table* spec);
 static int   s_xhtml_search_emoji(xhtml_t* xhtml, char* txt, char** rslt);
+static char* s_xhtml_1_0_text_tag(void* pdoc, Node* child);
 
 
 tag_handler xhtml_handler[] = {
@@ -282,10 +283,9 @@ tag_handler xhtml_handler[] = {
     NULL,
     NULL,
   },
-#if 0
   /* tagTEXT */
   {
-    s_chtml10_text,
+    s_xhtml_1_0_text_tag,
     NULL,
   },
   /* tagTH */
@@ -293,7 +293,6 @@ tag_handler xhtml_handler[] = {
     NULL,
     NULL,
   },
-#endif
 };
  
 /**
@@ -428,6 +427,7 @@ s_xhtml_1_0_node_exchange(xhtml_t* xhtml, Node* node, int indent)
   for (child = qs_get_child_node(doc,node);
        child ;
        child = qs_get_next_node(doc,child)) {
+
     char* name = qs_get_node_name(doc,child);
 
     /*------------------------------------------------------------------------*/
@@ -2837,6 +2837,66 @@ s_xhtml_1_0_end_textarea_tag(void* pdoc, Node* child)
 
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</textarea>\r\n", NULL);
   xhtml->textarea_flag--;
+
+  return xhtml->out;
+}
+
+static char*
+s_xhtml_1_0_text_tag(void* pdoc, Node* child)
+{
+  xhtml_t*     xhtml   = GET_XHTML(pdoc);
+  Doc*         doc     = xhtml->doc;
+  request_rec* r       = doc->r;
+  char*    textval;
+  char*    tmp;
+  char*    tdst;
+  char     one_byte[2];
+  int      ii;
+  int      tdst_len;
+  
+  textval = qs_get_node_value(doc,child);
+  textval = qs_trim_string(xhtml->doc->r, textval);
+  if (strlen(textval) == 0)
+    return xhtml->out;
+  
+  tmp = apr_palloc(r->pool, qs_get_node_size(doc,child)+1);
+  memset(tmp, 0, qs_get_node_size(doc,child)+1);
+  
+  tdst     = qs_alloc_zero_byte_string(r);
+  memset(one_byte, 0, sizeof(one_byte));
+  tdst_len = 0;
+  
+  for (ii=0; ii<qs_get_node_size(doc,child); ii++) {
+    char* out;
+    int rtn = s_xhtml_search_emoji(xhtml, &textval[ii], &out);
+    if (rtn != 0) {
+      ap_log_rerror(APLOG_MARK, APLOG_DEBUG,0, r,
+                      "[%s][%d]", out, rtn);
+      tdst = qs_out_apr_pstrcat(r, tdst, out, &tdst_len);
+      ii+=(rtn - 1);
+      continue;
+    }
+    if (is_sjis_kanji(textval[ii])) {
+      one_byte[0] = textval[ii+0];
+      tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+      one_byte[0] = textval[ii+1];
+      tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+      ii++;
+    }
+    else if (xhtml->pre_flag) {
+      one_byte[0] = textval[ii+0];
+      tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+    }
+    else if (xhtml->textarea_flag) {
+      one_byte[0] = textval[ii+0];
+      tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+    }
+    else if (textval[ii] != '\r' && textval[ii] != '\n') {
+      one_byte[0] = textval[ii+0];
+      tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+    }
+  }
+  xhtml->out = apr_pstrcat(r->pool, xhtml->out, tdst, NULL);
 
   return xhtml->out;
 }
