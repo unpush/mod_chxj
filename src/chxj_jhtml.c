@@ -62,9 +62,9 @@ static char* s_jhtml_start_center_tag   (void* pdoc, Node* node);
 static char* s_jhtml_end_center_tag     (void* pdoc, Node* node);
 static char* s_jhtml_start_hr_tag       (void* pdoc, Node* node);
 static char* s_jhtml_end_hr_tag         (void* pdoc, Node* node);
+static char* s_jhtml_start_img_tag      (void* pdoc, Node* node);
+static char* s_jhtml_end_img_tag        (void* pdoc, Node* node);
 
-static char* s_jhtml_start_img_tag    (jhtml_t* jhtml, Node* node);
-static char* s_jhtml_end_img_tag      (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_start_select_tag (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_end_select_tag   (jhtml_t* jhtml, Node* node);
 static char* s_jhtml_start_option_tag (jhtml_t* jhtml, Node* node);
@@ -228,12 +228,12 @@ tag_handler jhtml_handler[] = {
     s_jhtml_start_hr_tag,
     s_jhtml_end_hr_tag,
   },
-#if 0
   /* tagIMG */
   {
-    s_chtml10_start_img_tag,
-    s_chtml10_end_img_tag,
+    s_jhtml_start_img_tag,
+    s_jhtml_end_img_tag,
   },
+#if 0
   /* tagSELECT */
   {
     s_chtml10_start_select_tag,
@@ -2169,17 +2169,18 @@ s_jhtml_end_hr_tag(void* pdoc, Node* child)
 /**
  * It is a handler who processes the IMG tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The IMG tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_start_img_tag(jhtml_t* jhtml, Node* node) 
+s_jhtml_start_img_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = jhtml->doc;
-  request_rec*  r   = doc->r;
-  Attr* attr;
+  jhtml_t*      jhtml = GET_JHTML(pdoc);
+  Doc*          doc   = jhtml->doc;
+  request_rec*  r     = doc->r;
+  Attr*         attr;
 #ifndef IMG_NOT_CONVERT_FILENAME
   device_table* spec = jhtml->spec;
 #endif
@@ -2271,19 +2272,23 @@ s_jhtml_start_img_tag(jhtml_t* jhtml, Node* node)
   return jhtml->out;
 }
 
+
 /**
  * It is a handler who processes the IMG tag.
  *
- * @param jhtml  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The IMG tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_end_img_tag(jhtml_t* jhtml, Node* child) 
+s_jhtml_end_img_tag(void* pdoc, Node* child) 
 {
+  jhtml_t*  jhtml = GET_JHTML(pdoc);
+
   return jhtml->out;
 }
+
 
 /**
  * It is a handler who processes the SELECT tag.
