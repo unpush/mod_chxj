@@ -71,9 +71,9 @@ static char* s_xhtml_1_0_start_form_tag   (void* pdoc, Node* node);
 static char* s_xhtml_1_0_end_form_tag     (void* pdoc, Node* node);
 static char* s_xhtml_1_0_start_input_tag  (void* pdoc, Node* node);
 static char* s_xhtml_1_0_end_input_tag    (void* pdoc, Node* node);
+static char* s_xhtml_1_0_start_center_tag (void* pdoc, Node* node);
+static char* s_xhtml_1_0_end_center_tag   (void* pdoc, Node* node);
 
-static char* s_xhtml_1_0_start_center_tag (xhtml_t* xhtml, Node* node);
-static char* s_xhtml_1_0_end_center_tag   (xhtml_t* xhtml, Node* node);
 static char* s_xhtml_1_0_start_hr_tag     (xhtml_t* xhtml, Node* node);
 static char* s_xhtml_1_0_end_hr_tag       (xhtml_t* xhtml, Node* node);
 static char* s_xhtml_1_0_start_img_tag    (xhtml_t* xhtml, Node* node);
@@ -229,12 +229,12 @@ tag_handler xhtml_handler[] = {
     s_xhtml_1_0_start_input_tag,
     s_xhtml_1_0_end_input_tag,
   },
-#if 0
   /* tagCENTER */
   {
-    s_chtml10_start_center_tag,
-    s_chtml10_end_center_tag,
+    s_xhtml_1_0_start_center_tag,
+    s_xhtml_1_0_end_center_tag,
   },
+#if 0
   /* tagHR */
   {
     s_chtml10_start_hr_tag,
@@ -1903,40 +1903,44 @@ s_xhtml_1_0_end_input_tag(void* pdoc, Node* child)
 /**
  * It is a handler who processes the CENTER tag.
  *
- * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The CENTER tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_center_tag(xhtml_t* xhtml, Node* node) 
+s_xhtml_1_0_start_center_tag(void* pdoc, Node* node) 
 {
-  Doc*          doc = xhtml->doc;
-  request_rec*  r   = doc->r;
+  xhtml_t*      xhtml = GET_XHTML(pdoc);
+  Doc*          doc   = xhtml->doc;
+  request_rec*  r     = doc->r;
 
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<center>", NULL);
 
   return xhtml->out;
 }
 
+
 /**
  * It is a handler who processes the CENTER tag.
  *
- * @param xhtml  [i/o] The pointer to the XHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The CENTER tag node is specified.
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_center_tag(xhtml_t* xhtml, Node* child) 
+s_xhtml_1_0_end_center_tag(void* pdoc, Node* child) 
 {
-  Doc*          doc = xhtml->doc;
-  request_rec*  r   = doc->r;
+  xhtml_t*      xhtml = GET_XHTML(pdoc);
+  Doc*          doc   = xhtml->doc;
+  request_rec*  r     = doc->r;
 
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</center>", NULL);
 
   return xhtml->out;
 }
+
 
 /**
  * It is a handler who processes the HR tag.
