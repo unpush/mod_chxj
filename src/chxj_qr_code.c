@@ -873,7 +873,7 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
   }
 #ifdef QR_CODE_DEBUG
   DBG3(r, "After TERM BIT[%s] len[%d]bit [%f]byte", binstr, strlen(binstr), (float)(((float)strlen(binstr))/8.0));
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r, "add term data");
+  DBG(r,"add term data");
 #endif
 
   /*--------------------------------------------------------------------------*/
