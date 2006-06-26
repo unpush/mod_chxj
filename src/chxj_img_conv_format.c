@@ -14,6 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include <wand/magick_wand.h>
+
+#undef PACKAGE_BUGREPORT
+#undef PACKAGE_NAME
+#undef PACKAGE_STRING
+#undef PACKAGE_TARNAME
+#undef PACKAGE_VERSION
+
 #include <libgen.h>
 #include "mod_chxj.h"
 #include "chxj_img_conv_format.h"
@@ -25,7 +33,6 @@
 
 #include "http_core.h"
 
-#include <wand/magick_wand.h>
 
 #define EXIT_MAGICK_ERROR() \
   do { \
