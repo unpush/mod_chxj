@@ -57,15 +57,6 @@ tag_handlers chxj_tag_handlers[] = {
     .type    = CHXJ_SPEC_HTML,
     .handler = NULL,
   },
-#if 0
-  CHXJ_SPEC_Chtml_3_0,
-  CHXJ_SPEC_Chtml_4_0,
-  CHXJ_SPEC_Chtml_5_0,
-  CHXJ_SPEC_XHtml_Mobile_1_0,
-  CHXJ_SPEC_Hdml,
-  CHXJ_SPEC_Jhtml,
-  CHXJ_SPEC_HTML,
-#endif
 };
 
 /**
@@ -559,11 +550,12 @@ chxj_node_exchange(
 
           parse_attr = qs_get_parse_attr(doc, child, r);
 
-          if (parse_attr && strcasecmp(parse_attr, "true") == 0)
+          if (parse_attr && strcasecmp(parse_attr, "true") == 0) {
             chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+          }
           else {
             if (handlers[tagCHXJIF].start_tag_handler)
-              handlers[tagCHXJIF].end_tag_handler(pdoc, child);
+              handlers[tagCHXJIF].start_tag_handler(pdoc, child);
           }
         }
       }

@@ -123,17 +123,34 @@ chxj_headers_fixup(request_rec *r)
   mod_chxj_config* dconf; 
   chxjconvrule_entry* entryp;
   char* user_agent;
+  device_table* spec;
 
   dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
 
-  entryp = chxj_apply_convrule(r, dconf->convrules);
-  if (! entryp) return DECLINED;
-
   user_agent = (char*)apr_table_get(r->headers_in, "User-Agent");
-  apr_table_setn(r->headers_in, "CHXJ_HTTP_USER_AGENT", user_agent);
+  spec = chxj_specified_device(r, user_agent);
 
-  if (entryp->user_agent)
-    apr_table_setn(r->headers_in, "User-Agent", entryp->user_agent);
+  switch(spec->html_spec_type) {
+  case CHXJ_SPEC_Chtml_1_0:
+  case CHXJ_SPEC_Chtml_2_0:
+  case CHXJ_SPEC_Chtml_3_0:
+  case CHXJ_SPEC_Chtml_4_0:
+  case CHXJ_SPEC_Chtml_5_0:
+  case CHXJ_SPEC_XHtml_Mobile_1_0:
+  case CHXJ_SPEC_Hdml:
+  case CHXJ_SPEC_Jhtml:
+    entryp = chxj_apply_convrule(r, dconf->convrules);
+    if (! entryp) return DECLINED;
+  
+    apr_table_setn(r->headers_in, "CHXJ_HTTP_USER_AGENT", user_agent);
+  
+    if (entryp->user_agent)
+      apr_table_setn(r->headers_in, "User-Agent", entryp->user_agent);
+    break;
+  
+  default:
+    break;
+  }
 
   return DECLINED;
 }
