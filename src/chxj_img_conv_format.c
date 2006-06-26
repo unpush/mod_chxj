@@ -59,7 +59,7 @@ typedef struct _query_string_param_t {
   char*             user_agent;
   ua_use_flag_t     ua_flag;
 
-  char*             name;     /* for EZGET */
+  char*             name;      /* for EZGET */
   long              offset;    /* for EZGET */
   long              count;     /* for EZGET */
   int               width;

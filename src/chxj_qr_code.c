@@ -14,6 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include <wand/magick_wand.h>
+
+#undef PACKAGE_BUGREPORT
+#undef PACKAGE_NAME
+#undef PACKAGE_STRING
+#undef PACKAGE_TARNAME
+#undef PACKAGE_VERSION
+
 #include <unistd.h>
 #include <assert.h>
 #include "apr_strings.h"
@@ -30,7 +38,6 @@
 #include "qs_log.h"
 #include "qs_parse_file.h"
 
-#include <wand/magick_wand.h>
 
 /*
 #define QR_CODE_DEBUG
