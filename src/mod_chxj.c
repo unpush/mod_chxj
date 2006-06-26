@@ -606,6 +606,7 @@ chxj_input_filter(ap_filter_t*        f,
   const char*         data;
   char*               data_bucket;
   char*               data_brigade;
+  char*               content_type;
 
   DBG(r, "start of chxj_input_filter()");
 
@@ -614,6 +615,13 @@ chxj_input_filter(ap_filter_t*        f,
 
   ibb = apr_brigade_create(r->pool, c->bucket_alloc);
   obb = apr_brigade_create(r->pool, c->bucket_alloc);
+
+  content_type = (char*)apr_table_get(r->headers_in, "Content-Type");
+  if (content_type && strncasecmp("multipart/form-data", content_type, 19) == 0) {
+    DBG(r, "detect multipart/form-data");
+    ap_remove_input_filter(f);
+    return ap_get_brigade(f->next, bb, mode, block, readbytes);
+  }
 
   rv = ap_get_brigade(f->next, ibb, mode, block, readbytes);
   if (rv != APR_SUCCESS) {
@@ -642,6 +650,7 @@ chxj_input_filter(ap_filter_t*        f,
     }
   }
   apr_brigade_cleanup(ibb);
+
 
   len = strlen(data_brigade);
   if (len == 0) {
