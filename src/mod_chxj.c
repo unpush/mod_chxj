@@ -125,6 +125,7 @@ chxj_headers_fixup(request_rec *r)
   char*               user_agent;
   device_table*       spec;
 
+  DBG(r, "start chxj_headers_fixup()");
   dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
 
   user_agent = (char*)apr_table_get(r->headers_in, "User-Agent");
@@ -140,7 +141,10 @@ chxj_headers_fixup(request_rec *r)
   case CHXJ_SPEC_Hdml:
   case CHXJ_SPEC_Jhtml:
     entryp = chxj_apply_convrule(r, dconf->convrules);
-    if (! entryp) return DECLINED;
+    if (! entryp) {
+      DBG(r, "end chxj_headers_fixup() no pattern");
+      return DECLINED;
+    }
   
     apr_table_setn(r->headers_in, "CHXJ_HTTP_USER_AGENT", user_agent);
   
@@ -151,6 +155,8 @@ chxj_headers_fixup(request_rec *r)
   default:
     break;
   }
+
+  DBG(r, "end chxj_headers_fixup()");
 
   return DECLINED;
 }

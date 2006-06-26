@@ -1552,10 +1552,15 @@ chxj_trans_name(request_rec *r)
   int      do_ext_check = TRUE;
   int      next_ok      = FALSE;
 
+  DBG(r, "start chxj_trans_name()");
+
   conf = ap_get_module_config(r->per_dir_config, &chxj_module);
 
-  if (conf->image != CHXJ_IMG_ON) 
+  if (!conf || conf->image != CHXJ_IMG_ON) {
+    DBG(r, "end chxj_trans_name() conf not found");
     return DECLINED;
+  }
+
 
   DBG1(r,"Match URI[%s]", r->uri);
 
@@ -1651,6 +1656,7 @@ chxj_trans_name(request_rec *r)
     else
       r->handler = apr_psprintf(r->pool, "chxj-picture");
   }
+  DBG(r, "end chxj_trans_name()");
   return OK;
 }
 
