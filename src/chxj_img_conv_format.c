@@ -221,16 +221,24 @@ chxj_img_conv_format_handler(request_rec* r)
   char*                 user_agent;
   device_table*       spec;
   chxjconvrule_entry* entryp;
+
+  DBG(r, "start chxj_img_conv_format_handler()");
   
   if ((*r->handler != 'c' && *r->handler != 'C') 
   ||  (strcasecmp(r->handler, "chxj-picture")
-  &&  strcasecmp(r->handler, "chxj-qrcode")))
+  &&  strcasecmp(r->handler, "chxj-qrcode"))) {
+    DBG(r, "end chxj_img_conv_format_handler()");
     return DECLINED;
+  }
 
   qsp = s_get_query_string_param(r);
   conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  if (conf == NULL) {
+    DBG(r, "end chxj_img_conv_format_handler() conf is null");
+    return DECLINED;
+  }
 
-  if (strcasecmp(r->handler, "chxj-qrcode") == 0 &&  conf->image == CHXJ_IMG_OFF)
+  if (strcasecmp(r->handler, "chxj-qrcode") == 0 &&  conf->image == CHXJ_IMG_OFF) 
     return DECLINED;
 
 
@@ -288,9 +296,15 @@ chxj_exchange_image(request_rec *r, const char** src, apr_size_t* len)
   char*                 dst;
   chxjconvrule_entry* entryp;
 
+  DBG(r, "start chxj_exchange_image()");
+
 
   qsp = s_get_query_string_param(r);
   conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  if (conf == NULL) {
+    DBG(r, "end chxj_exchange_image()");
+    return NULL;
+  }
 
   /*--------------------------------------------------------------------------*/
   /* User-Agent to spec                                                       */
@@ -322,6 +336,8 @@ chxj_exchange_image(request_rec *r, const char** src, apr_size_t* len)
   dst = s_create_blob_data(r, spec, qsp, (char*)*src, len);
   if (dst == NULL) 
     *len = 0;
+
+  DBG(r, "end chxj_exchange_image()");
 
   return dst;
 }
@@ -1557,7 +1573,7 @@ chxj_trans_name(request_rec *r)
   conf = ap_get_module_config(r->per_dir_config, &chxj_module);
 
   if (conf == NULL) {
-    DBG(r, "end chxj_trans_name() conf is null");
+    DBG1(r, "end chxj_trans_name() conf is null[%s]", r->uri);
     return DECLINED;
   }
 

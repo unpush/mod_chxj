@@ -609,7 +609,7 @@ chxj_qr_code_handler(request_rec* r)
   /* もし、イメージ変換ハンドラ中であれば、ここでは処理しない                 */
   /*--------------------------------------------------------------------------*/
   conf = ap_get_module_config(r->per_dir_config, &chxj_module);
-  if (conf->image == CHXJ_IMG_ON)
+  if (!conf || conf->image == CHXJ_IMG_ON)
     return DECLINED;
 
   memset(&doc, 0, sizeof(Doc));
