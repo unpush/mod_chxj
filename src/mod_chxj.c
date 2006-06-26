@@ -135,21 +135,28 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
 
   dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
 
-
-  /*------------------------------------------------------------------------*/
-  /* get UserAgent from http header                                         */
-  /*------------------------------------------------------------------------*/
-  user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
-
-  DBG1(r,"User-Agent:[%s]", user_agent);
-  DBG(r, "start chxj_exchange()");
-  DBG1(r,"content type is %s", r->content_type);
-
   entryp = chxj_apply_convrule(r, dconf->convrules);
   if (!(entryp->action & CONVRULE_ENGINE_ON_BIT)) {
     DBG(r,"EngineOff");
     return (char*)*src;
   }
+
+
+  /*------------------------------------------------------------------------*/
+  /* get UserAgent from http header                                         */
+  /*------------------------------------------------------------------------*/
+  if (entryp->user_agent) {
+    user_agent = (char*)apr_table_get(r->headers_in, "CHXJ_HTTP_USER_AGENT");
+    apr_table_set(r->headers_in, HTTP_USER_AGENT, user_agent);
+  }
+  else {
+    user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
+  }
+
+  DBG1(r,"User-Agent:[%s]", user_agent);
+  DBG(r, "start chxj_exchange()");
+  DBG1(r,"content type is %s", r->content_type);
+
 
   if (*(char*)r->content_type == 't' 
   && strncmp(r->content_type, "text/html",   9) != 0) {
@@ -301,6 +308,11 @@ chxj_input_exchange(request_rec *r, const char** src, apr_size_t* len)
   }
   user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
   spec = chxj_specified_device(r, user_agent);
+
+  if (entryp->user_agent) {
+    apr_table_set(r->headers_in, HTTP_USER_AGENT, entryp->user_agent);
+    apr_table_set(r->headers_in, "CHXJ_HTTP_USER_AGENT", user_agent);
+  }
 
   switch(spec->html_spec_type) {
   case CHXJ_SPEC_Chtml_1_0:
@@ -926,7 +938,13 @@ chxj_merge_per_dir_config(apr_pool_t *p, void *basev, void *addv)
 
 
 static int
-chxj_command_parse_take4(const char* arg, char** prm1, char** prm2, char** prm3, char** prm4)
+chxj_command_parse_take5(
+  const char* arg, 
+  char** prm1, 
+  char** prm2, 
+  char** prm3, 
+  char** prm4, 
+  char** prm5)
 {
   int isquoted;
   char* strp;
@@ -959,6 +977,7 @@ chxj_command_parse_take4(const char* arg, char** prm1, char** prm2, char** prm3,
     *prm2 = strp;
     *prm3 = strp;
     *prm4 = strp;
+    *prm5 = strp;
     return 1;
   }
 
@@ -988,6 +1007,7 @@ chxj_command_parse_take4(const char* arg, char** prm1, char** prm2, char** prm3,
   if (! *strp) {
     *prm3 = strp;
     *prm4 = strp;
+    *prm5 = strp;
     return 0;
   }
 
@@ -1016,6 +1036,7 @@ chxj_command_parse_take4(const char* arg, char** prm1, char** prm2, char** prm3,
 
   if (! *strp) {
     *prm4 = strp;
+    *prm5 = strp;
     return 0;
   }
 
@@ -1029,6 +1050,27 @@ chxj_command_parse_take4(const char* arg, char** prm1, char** prm2, char** prm3,
     strp++;
   }
   *prm4 = strp;
+  for (; *strp != '\0'; strp++) {
+    if ((isquoted && (*strp == ' ' || *strp == '\t'))
+    ||  (*strp == '\\' && (*(strp+1) == ' ' || *(strp+1) == '\t'))) {
+      strp++;
+      continue;
+    }
+
+    if ((!isquoted && (*strp == ' ' || *strp == '\t'))
+    ||  (isquoted  && *strp == '"'))
+      break;
+  }
+  *strp++ = '\0';
+
+  for (;*strp == ' '||*strp == '\t'; strp++);
+
+  isquoted = 0; 
+  if (*strp == '"') { 
+    isquoted = 1;
+    strp++;
+  }
+  *prm5 = strp;
   for (; *strp != '\0'; strp++) {
     if ((isquoted && (*strp == ' ' || *strp == '\t'))
     ||  (*strp == '\\' && (*(strp+1) == ' ' || *(strp+1) == '\t'))) {
@@ -1170,6 +1212,7 @@ cmd_convert_rule(cmd_parms *cmd, void* mconfig, const char *arg)
   char* prm2;
   char* prm3;
   char* prm4;
+  char* prm5;
   int mode;
   char* pstate;
   char* action;
@@ -1191,7 +1234,7 @@ cmd_convert_rule(cmd_parms *cmd, void* mconfig, const char *arg)
   newrule->flags  = 0;
   newrule->action = 0;
 
-  if (chxj_command_parse_take4(arg, &prm1, &prm2, &prm3, &prm4))
+  if (chxj_command_parse_take5(arg, &prm1, &prm2, &prm3, &prm4, &prm5))
     return "ChxjConvertRule: bad argument line";
 
   newrule->pattern = apr_pstrdup(cmd->pool, prm1);
@@ -1235,7 +1278,12 @@ cmd_convert_rule(cmd_parms *cmd, void* mconfig, const char *arg)
   if (*prm4)
     if (strcasecmp(CONVRULE_PC_FLAG_ON_CMD, prm4) == 0)
       newrule->pc_flag = CONVRULE_PC_FLAG_ON_BIT;
-  
+
+  if (*prm5)
+    newrule->user_agent = apr_pstrdup(cmd->pool, prm5);
+  else 
+    newrule->user_agent = NULL;
+    
   return NULL;
 }
 

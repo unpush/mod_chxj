@@ -179,6 +179,7 @@ typedef struct _chxjconvrule_entry {
   int        action;
   char       *encoding;
   int        pc_flag;
+  char       *user_agent;
 } chxjconvrule_entry;
 
 typedef struct {
