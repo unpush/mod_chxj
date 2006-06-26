@@ -499,7 +499,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
       if (f->ctx) {
         DBG(r, " ");
         ctx = (mod_chxj_ctx*)f->ctx;
-        DBG(r, " ");
+        DBG1(r, "content_type=[%s]", r->content_type);
         if (r->content_type 
         && *(char*)r->content_type == 't' 
         && strncmp(r->content_type, "text/html",   9) == 0) {
@@ -893,9 +893,7 @@ chxj_register_hooks(apr_pool_t *p)
   ap_hook_handler(chxj_img_conv_format_handler, NULL, NULL, APR_HOOK_MIDDLE);
   ap_hook_handler(chxj_qr_code_handler, NULL, NULL, APR_HOOK_MIDDLE);
   ap_hook_translate_name(chxj_translate_name, NULL, NULL, APR_HOOK_MIDDLE);
-#if 0
   ap_hook_fixups(chxj_headers_fixup, NULL, NULL, APR_HOOK_LAST);
-#endif
 }
 
 /**
