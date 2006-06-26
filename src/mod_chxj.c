@@ -497,10 +497,15 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
       /* End Of File                                                          */
       /*----------------------------------------------------------------------*/
       if (f->ctx) {
+        DBG(r, " ");
         ctx = (mod_chxj_ctx*)f->ctx;
-        if (*(char*)r->content_type == 't' 
+        DBG(r, " ");
+        if (r->content_type 
+        && *(char*)r->content_type == 't' 
         && strncmp(r->content_type, "text/html",   9) == 0) {
+          DBG(r, " ");
           if (ctx->len) {
+            DBG(r, " ");
             char* tmp = apr_palloc(r->pool, ctx->len + 1);
             memset(tmp, 0, ctx->len + 1);
             memcpy(tmp, ctx->buffer, ctx->len);
@@ -512,13 +517,19 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
             DBG2(r, "output data=[%.*s]", ctx->len,ctx->buffer);
           }
           else {
+            DBG(r, " ");
             ctx->buffer = apr_psprintf(r->pool, "\n");
             ctx->len += 1;
+            DBG(r, " ");
           }
         }
-        if (*(char*)r->content_type == 'i' && 
-        strncmp(r->content_type, "image/", 6) == 0) {
+        DBG(r, " ");
+        if (r->content_type 
+        && *(char*)r->content_type == 'i' 
+        && strncmp(r->content_type, "image/", 6) == 0) {
+          DBG(r, " ");
           if (ctx->len) {
+            DBG(r, " ");
             char* tmp = apr_palloc(r->pool, ctx->len + 1);
             memset(tmp, 0, ctx->len + 1);
             memcpy(tmp, ctx->buffer, ctx->len);
@@ -533,19 +544,25 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
 
             DBG2(r, "output data=[%.*s]", ctx->len,ctx->buffer);
           }
+          DBG(r, " ");
         }
+        DBG(r, " ");
         contentLength = apr_psprintf(r->pool, "%d", ctx->len);
         apr_table_setn(r->headers_out, "Content-Length", contentLength);
+        DBG(r, " ");
         
         if (ctx->len > 0) {
           rv = pass_data_to_filter(f, (const char*)ctx->buffer, (apr_size_t)ctx->len);
         }
         f->ctx = NULL;
+        DBG(r, " ");
         return rv;
       }
       else {
+        DBG(r, " ");
         apr_table_setn(r->headers_out, "Content-Length", "0");
         rv = pass_data_to_filter(f, (const char*)"", (apr_size_t)0);
+        DBG(r, " ");
         return rv;
       }
     }
@@ -634,6 +651,8 @@ chxj_input_filter(ap_filter_t*        f,
   char*               content_type;
   device_table*       spec ;
   char*               user_agent;
+  mod_chxj_config* dconf;
+  chxjconvrule_entry* entryp;
 
   DBG(r, "start of chxj_input_filter()");
 
@@ -649,13 +668,11 @@ chxj_input_filter(ap_filter_t*        f,
     ap_remove_input_filter(f);
     return ap_get_brigade(f->next, bb, mode, block, readbytes);
   }
-  mod_chxj_config* dconf;
-  chxjconvrule_entry* entryp;
 
   dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
 
   entryp = chxj_apply_convrule(r, dconf->convrules);
-  if (!(entryp->action & CONVRULE_ENGINE_ON_BIT)) {
+  if (!entryp || !(entryp->action & CONVRULE_ENGINE_ON_BIT)) {
     DBG(r,"EngineOff");
     ap_remove_input_filter(f);
     return ap_get_brigade(f->next, bb, mode, block, readbytes);
@@ -876,7 +893,9 @@ chxj_register_hooks(apr_pool_t *p)
   ap_hook_handler(chxj_img_conv_format_handler, NULL, NULL, APR_HOOK_MIDDLE);
   ap_hook_handler(chxj_qr_code_handler, NULL, NULL, APR_HOOK_MIDDLE);
   ap_hook_translate_name(chxj_translate_name, NULL, NULL, APR_HOOK_MIDDLE);
+#if 0
   ap_hook_fixups(chxj_headers_fixup, NULL, NULL, APR_HOOK_LAST);
+#endif
 }
 
 /**
@@ -1284,6 +1303,7 @@ cmd_convert_rule(cmd_parms *cmd, void* mconfig, const char *arg)
   dconf = (mod_chxj_config*)mconfig;
   if (dconf->convrules == NULL)
     dconf->convrules   = apr_array_make(cmd->pool, 2, sizeof(chxjconvrule_entry));
+
 
   newrule = apr_array_push(dconf->convrules);
 
