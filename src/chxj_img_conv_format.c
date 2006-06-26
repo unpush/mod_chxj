@@ -298,11 +298,18 @@ chxj_exchange_image(request_rec *r, const char** src, apr_size_t* len)
   mod_chxj_config*      conf;
   query_string_param_t* qsp;
   char*                 user_agent;
-  device_table*       spec;
+  device_table*         spec;
   char*                 dst;
+  char*                 conv_check;
   chxjconvrule_entry* entryp;
 
   DBG(r, "start chxj_exchange_image()");
+
+  conv_check = (char*)apr_table_get(r->headers_in, "CHXJ_IMG_CONV");
+  if (conv_check) {
+    DBG(r, "end chxj_exchnage_image() already convert.");
+    return NULL;
+  }
 
 
   qsp = s_get_query_string_param(r);
@@ -397,6 +404,7 @@ s_img_conv_format_from_file(
     if (rv != OK) 
       return rv;
   }
+  apr_table_setn(r->headers_in, "CHXJ_IMG_CONV", "done");
 
   DBG(r,"end chxj_img_conv_format");
 
