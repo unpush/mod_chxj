@@ -6,7 +6,7 @@ libapache2-mod-chxj (0.6.3-1) unstable; urgency=low
     request.
   * bug fix into which the submit value had not converted the character-code for HDML. 
   * bug fix #8585.
-  * add user_agent exchange function.
+  * add user_agent rewrite function.
 
  -- Atsushi Konno <konn@users.sourceforge.jp>  Mon, 19 Jun 2006 17:29:48 +0900
 
