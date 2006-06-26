@@ -20,6 +20,7 @@
 #include "chxj_specified_device.h"
 #include "chxj_str_util.h"
 #include "chxj_qr_code.h"
+#include "chxj_apply_convrule.h"
 #include "qs_parse_string.h"
 
 #include "http_core.h"
@@ -212,6 +213,7 @@ chxj_img_conv_format_handler(request_rec* r)
   query_string_param_t* qsp;
   char*                 user_agent;
   device_table*       spec;
+  chxjconvrule_entry* entryp;
   
   if ((*r->handler != 'c' && *r->handler != 'C') 
   ||  (strcasecmp(r->handler, "chxj-picture")
@@ -225,13 +227,26 @@ chxj_img_conv_format_handler(request_rec* r)
     return DECLINED;
 
 
+  /*------------------------------------------------------------------------*/
+  /* get UserAgent from http header                                         */
+  /*------------------------------------------------------------------------*/
   /*--------------------------------------------------------------------------*/
   /* User-Agent to spec                                                       */
   /*--------------------------------------------------------------------------*/
-  if (qsp->user_agent)
+  if (qsp->user_agent) {
     user_agent = apr_pstrdup(r->pool, qsp->user_agent);
-  else
-    user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
+  }
+  else {
+    entryp = chxj_apply_convrule(r, conf->convrules);
+    if (entryp && entryp->user_agent) {
+      user_agent = (char*)apr_table_get(r->headers_in, "CHXJ_HTTP_USER_AGENT");
+    }
+    else {
+      user_agent = (char*)apr_table_get(r->headers_in, "User-Agent");
+    }
+  }
+
+
 
   if (qsp->ua_flag == UA_IGN)
     spec = &v_ignore_spec;
@@ -242,7 +257,7 @@ chxj_img_conv_format_handler(request_rec* r)
   DBG1(r,"User-Agent=[%s]", user_agent);
 
   if (spec->width == 0 || spec->heigh == 0)
-    return HTTP_NOT_FOUND;
+    return DECLINED;
 
   return s_img_conv_format_from_file(r, conf, user_agent, qsp, spec);
 }
@@ -264,6 +279,7 @@ chxj_exchange_image(request_rec *r, const char** src, apr_size_t* len)
   char*                 user_agent;
   device_table*       spec;
   char*                 dst;
+  chxjconvrule_entry* entryp;
 
 
   qsp = s_get_query_string_param(r);
@@ -272,10 +288,18 @@ chxj_exchange_image(request_rec *r, const char** src, apr_size_t* len)
   /*--------------------------------------------------------------------------*/
   /* User-Agent to spec                                                       */
   /*--------------------------------------------------------------------------*/
-  if (qsp->user_agent != NULL)
+  if (qsp->user_agent) {
     user_agent = apr_pstrdup(r->pool, qsp->user_agent);
-  else
-    user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
+  }
+  else {
+    entryp = chxj_apply_convrule(r, conf->convrules);
+    if (entryp && entryp->user_agent) {
+      user_agent = (char*)apr_table_get(r->headers_in, "CHXJ_HTTP_USER_AGENT");
+    }
+    else {
+      user_agent = (char*)apr_table_get(r->headers_in, "User-Agent");
+    }
+  }
 
   if (qsp->ua_flag == UA_IGN)
     spec = &v_ignore_spec;

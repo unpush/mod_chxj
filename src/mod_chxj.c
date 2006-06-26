@@ -117,6 +117,27 @@ exchange_t exchange_routine[] = {
   }
 };
 
+static apr_status_t 
+chxj_headers_fixup(request_rec *r)
+{
+  mod_chxj_config* dconf; 
+  chxjconvrule_entry* entryp;
+  char* user_agent;
+
+  dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
+
+  entryp = chxj_apply_convrule(r, dconf->convrules);
+  if (! entryp) return DECLINED;
+
+  user_agent = (char*)apr_table_get(r->headers_in, "User-Agent");
+  apr_table_setn(r->headers_in, "CHXJ_HTTP_USER_AGENT", user_agent);
+
+  if (entryp->user_agent)
+    apr_table_setn(r->headers_in, "User-Agent", entryp->user_agent);
+
+  return DECLINED;
+}
+
 /**
  * It converts it from CHTML into XXML corresponding to each model. 
  *
@@ -147,10 +168,9 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
   /*------------------------------------------------------------------------*/
   if (entryp->user_agent) {
     user_agent = (char*)apr_table_get(r->headers_in, "CHXJ_HTTP_USER_AGENT");
-    apr_table_set(r->headers_in, HTTP_USER_AGENT, user_agent);
   }
   else {
-    user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
+    user_agent = (char*)apr_table_get(r->headers_in, "User-Agent");
   }
 
   DBG1(r,"User-Agent:[%s]", user_agent);
@@ -283,50 +303,20 @@ chxj_exchange_input_header(request_rec *r,chxjconvrule_entry* entryp)
  * @param len [i/o] It is length of former HTML character string.
  */
 static char*
-chxj_input_exchange(request_rec *r, const char** src, apr_size_t* len)
+chxj_input_exchange(
+  request_rec *r, 
+  const char** src, 
+  apr_size_t* len, 
+  chxjconvrule_entry* entryp)
 {
   char* pair;
   char* name;
   char* value;
   char* pstate;
   char* vstate;
-  char* user_agent;
-  device_table* spec ;
   char* s = apr_pstrdup(r->pool, *src);
 
   char* result;
-
-  mod_chxj_config* dconf;
-  chxjconvrule_entry* entryp;
-
-  dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
-
-  entryp = chxj_apply_convrule(r, dconf->convrules);
-  if (!(entryp->action & CONVRULE_ENGINE_ON_BIT)) {
-    DBG(r,"EngineOff");
-    return (char*)*src;
-  }
-  user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
-  spec = chxj_specified_device(r, user_agent);
-
-  if (entryp->user_agent) {
-    apr_table_set(r->headers_in, HTTP_USER_AGENT, entryp->user_agent);
-    apr_table_set(r->headers_in, "CHXJ_HTTP_USER_AGENT", user_agent);
-  }
-
-  switch(spec->html_spec_type) {
-  case CHXJ_SPEC_Chtml_1_0:
-  case CHXJ_SPEC_Chtml_2_0:
-  case CHXJ_SPEC_Chtml_3_0:
-  case CHXJ_SPEC_Chtml_4_0:
-  case CHXJ_SPEC_Chtml_5_0:
-  case CHXJ_SPEC_XHtml_Mobile_1_0:
-  case CHXJ_SPEC_Hdml:
-  case CHXJ_SPEC_Jhtml:
-    break;
-  default:
-    return (char*)*src;
-  }
 
   chxj_exchange_input_header(r, entryp);
 
@@ -619,6 +609,8 @@ chxj_input_filter(ap_filter_t*        f,
   char*               data_bucket;
   char*               data_brigade;
   char*               content_type;
+  device_table*       spec ;
+  char*               user_agent;
 
   DBG(r, "start of chxj_input_filter()");
 
@@ -634,6 +626,36 @@ chxj_input_filter(ap_filter_t*        f,
     ap_remove_input_filter(f);
     return ap_get_brigade(f->next, bb, mode, block, readbytes);
   }
+  mod_chxj_config* dconf;
+  chxjconvrule_entry* entryp;
+
+  dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
+
+  entryp = chxj_apply_convrule(r, dconf->convrules);
+  if (!(entryp->action & CONVRULE_ENGINE_ON_BIT)) {
+    DBG(r,"EngineOff");
+    ap_remove_input_filter(f);
+    return ap_get_brigade(f->next, bb, mode, block, readbytes);
+  }
+
+  user_agent = (char*)apr_table_get(r->headers_in, "User-Agent");
+  spec = chxj_specified_device(r, user_agent);
+
+  switch(spec->html_spec_type) {
+  case CHXJ_SPEC_Chtml_1_0:
+  case CHXJ_SPEC_Chtml_2_0:
+  case CHXJ_SPEC_Chtml_3_0:
+  case CHXJ_SPEC_Chtml_4_0:
+  case CHXJ_SPEC_Chtml_5_0:
+  case CHXJ_SPEC_XHtml_Mobile_1_0:
+  case CHXJ_SPEC_Hdml:
+  case CHXJ_SPEC_Jhtml:
+    break;
+  default:
+    ap_remove_input_filter(f);
+    return ap_get_brigade(f->next, bb, mode, block, readbytes);
+  }
+
 
   rv = ap_get_brigade(f->next, ibb, mode, block, readbytes);
   if (rv != APR_SUCCESS) {
@@ -671,7 +693,12 @@ chxj_input_filter(ap_filter_t*        f,
     ap_remove_input_filter(f);
     return ap_get_brigade(f->next, bb, mode, block, readbytes);
   }
-  data_brigade = chxj_input_exchange(r, (const char**)&data_brigade, (apr_size_t*)&len);
+  data_brigade = chxj_input_exchange(
+    r, 
+    (const char**)&data_brigade, 
+    (apr_size_t*)&len,
+    entryp
+    );
 
   if (len > 0) {
     DBG1(r, "(in:exchange)POSTDATA:[%s]", data_brigade);
@@ -826,6 +853,7 @@ chxj_register_hooks(apr_pool_t *p)
   ap_hook_handler(chxj_img_conv_format_handler, NULL, NULL, APR_HOOK_MIDDLE);
   ap_hook_handler(chxj_qr_code_handler, NULL, NULL, APR_HOOK_MIDDLE);
   ap_hook_translate_name(chxj_translate_name, NULL, NULL, APR_HOOK_MIDDLE);
+  ap_hook_fixups(chxj_headers_fixup, NULL, NULL, APR_HOOK_LAST);
 }
 
 /**
@@ -1032,7 +1060,6 @@ chxj_command_parse_take5(
     ||  (isquoted  && *strp == '"'))
       break;
   }
-  *strp = '\0';
 
   if (! *strp) {
     *prm4 = strp;
@@ -1061,6 +1088,12 @@ chxj_command_parse_take5(
     ||  (isquoted  && *strp == '"'))
       break;
   }
+
+  if (! *strp) {
+    *prm5 = strp;
+    return 0;
+  }
+
   *strp++ = '\0';
 
   for (;*strp == ' '||*strp == '\t'; strp++);
@@ -1279,10 +1312,9 @@ cmd_convert_rule(cmd_parms *cmd, void* mconfig, const char *arg)
     if (strcasecmp(CONVRULE_PC_FLAG_ON_CMD, prm4) == 0)
       newrule->pc_flag = CONVRULE_PC_FLAG_ON_BIT;
 
+  newrule->user_agent = NULL;
   if (*prm5)
     newrule->user_agent = apr_pstrdup(cmd->pool, prm5);
-  else 
-    newrule->user_agent = NULL;
     
   return NULL;
 }
