@@ -223,9 +223,11 @@ ChxjConvertRule "^/modules/wordpress/.*$"  "EngineOn"  "NONE" "PC" "DoCoMo/1.0/D
 ChxjConvertRule "^/.+$" "EngineOn" "EUC-JP" 
 
 
-&lt;Location /chxj&gt;
+&lt;Location /&gt;
   SetOutputFilter chxj_output_filter
   SetInputFilter  chxj_input_filter
+  ChxjImageEngine On
+  AllowOverride All
 &lt;/Location&gt;
 </program>
 </li>

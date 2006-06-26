@@ -966,9 +966,11 @@ ChxjConvertRule &quot;^/modules/wordpress/.*$&quot; &quot;EngineOn&quot; &quot;N
 ChxjConvertRule &quot;^/.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot; 
 
 
-&lt;Location /chxj&gt;
+&lt;Location /&gt;
   SetOutputFilter chxj_output_filter
   SetInputFilter  chxj_input_filter
+  ChxjImageEngine On
+  AllowOverride All
 &lt;/Location&gt;
 </pre>
 <li> apacheÇÃçƒãNìÆÅB</ol>
