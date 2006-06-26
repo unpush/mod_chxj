@@ -120,7 +120,7 @@ exchange_t exchange_routine[] = {
 static apr_status_t 
 chxj_headers_fixup(request_rec *r)
 {
-  mod_chxj_config* dconf; 
+  mod_chxj_config*    dconf; 
   chxjconvrule_entry* entryp;
   char* user_agent;
   device_table* spec;
