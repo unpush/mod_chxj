@@ -1556,7 +1556,12 @@ chxj_trans_name(request_rec *r)
 
   conf = ap_get_module_config(r->per_dir_config, &chxj_module);
 
-  if (!conf || conf->image != CHXJ_IMG_ON) {
+  if (conf == NULL) {
+    DBG(r, "end chxj_trans_name() conf is null");
+    return DECLINED;
+  }
+
+  if (conf->image != CHXJ_IMG_ON) {
     DBG(r, "end chxj_trans_name() conf not found");
     return DECLINED;
   }
