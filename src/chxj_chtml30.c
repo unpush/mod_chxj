@@ -292,6 +292,11 @@ tag_handler chtml30_handler[] = {
     NULL,
     NULL,
   },
+  /* tagB */
+  {
+    NULL,
+    NULL,
+  },
 };
 
 /**

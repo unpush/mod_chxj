@@ -293,6 +293,11 @@ tag_handler hdml_handler[] = {
     NULL,
     NULL,
   },
+  /* tagB */
+  {
+    NULL,
+    NULL,
+  },
 };
 
 /**

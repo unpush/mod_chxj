@@ -70,6 +70,8 @@ static char* s_jhtml_start_div_tag      (void* pdoc, Node* node);
 static char* s_jhtml_end_div_tag        (void* pdoc, Node* node);
 static char* s_jhtml_start_textarea_tag (void* pdoc, Node* node);
 static char* s_jhtml_end_textarea_tag   (void* pdoc, Node* node);
+static char* s_jhtml_start_b_tag        (void* pdoc, Node* node);
+static char* s_jhtml_end_b_tag          (void* pdoc, Node* node);
 static char* s_jhtml_chxjif_tag         (void* pdoc, Node* node); 
 static char* s_jhtml_text_tag           (void* pdoc, Node* node);
 
@@ -281,6 +283,11 @@ tag_handler jhtml_handler[] = {
   {
     NULL,
     NULL,
+  },
+  /* tagB */
+  {
+    s_jhtml_start_b_tag,
+    s_jhtml_end_b_tag,
   },
 };
 
@@ -2186,6 +2193,48 @@ s_jhtml_end_textarea_tag(void* pdoc, Node* child)
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</textarea>\r\n", NULL);
   jhtml->textarea_flag--;
+
+  return jhtml->out;
+}
+
+/**
+ * It is a handler who processes the B tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The B tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_jhtml_start_b_tag(void* pdoc, Node* node) 
+{
+  jhtml_t*      jhtml = GET_JHTML(pdoc);
+  Doc*          doc   = jhtml->doc;
+  request_rec*  r     = doc->r;
+  Attr*         attr;
+
+  jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<b>", NULL);
+
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the B tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The B tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_jhtml_end_b_tag(void* pdoc, Node* child) 
+{
+  jhtml_t*      jhtml = GET_JHTML(pdoc);
+  Doc*          doc   = jhtml->doc;
+  request_rec*  r     = doc->r;
+
+  jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</b>\r\n", NULL);
 
   return jhtml->out;
 }

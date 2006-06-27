@@ -235,6 +235,7 @@ typedef enum {
   tagSPAN,  
   tagTEXT,  
   tagTH,  
+  tagB,
 } tag_type;
 
 typedef struct {

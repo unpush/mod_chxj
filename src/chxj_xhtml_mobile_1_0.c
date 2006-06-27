@@ -84,6 +84,8 @@ static char* s_xhtml_1_0_start_div_tag    (void* pdoc, Node* node);
 static char* s_xhtml_1_0_end_div_tag      (void* pdoc, Node* node);
 static char* s_xhtml_1_0_start_textarea_tag(void* pdoc, Node* node);
 static char* s_xhtml_1_0_end_textarea_tag  (void* pdoc, Node* node);
+static char* s_xhtml_1_0_start_b_tag       (void* pdoc, Node* node);
+static char* s_xhtml_1_0_end_b_tag         (void* pdoc, Node* node);
 static char* s_xhtml_1_0_chxjif_tag       (void* pdoc, Node* node);
 
 static void  s_init_xhtml(xhtml_t* xhtml, Doc* doc, request_rec* r, device_table* spec);
@@ -291,6 +293,11 @@ tag_handler xhtml_handler[] = {
   {
     NULL,
     NULL,
+  },
+  /* tagB */
+  {
+    s_xhtml_1_0_start_b_tag,
+    s_xhtml_1_0_end_b_tag,
   },
 };
  
@@ -2308,6 +2315,49 @@ s_xhtml_1_0_end_div_tag(void* pdoc, Node* child)
   request_rec* r     = doc->r;
 
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</div>\n", NULL);
+
+  return xhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the B tag.
+ *
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The B tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_xhtml_1_0_start_b_tag(void* pdoc, Node* child)
+{
+  xhtml_t*     xhtml = GET_XHTML(pdoc);
+  Doc*         doc   = xhtml->doc;
+  request_rec* r     = doc->r;
+
+
+  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<b>", NULL);
+
+  return xhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the B tag.
+ *
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The B tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char*
+s_xhtml_1_0_end_b_tag(void* pdoc, Node* child)
+{
+  xhtml_t*     xhtml = GET_XHTML(pdoc);
+  Doc*         doc   = xhtml->doc;
+  request_rec* r     = doc->r;
+
+  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</b>\n", NULL);
 
   return xhtml->out;
 }

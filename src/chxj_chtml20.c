@@ -293,6 +293,11 @@ tag_handler chtml20_handler[] = {
     NULL,
     NULL,
   },
+  /* tagB */
+  {
+    NULL,
+    NULL,
+  },
 };
 
 /**

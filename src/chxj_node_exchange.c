@@ -342,6 +342,19 @@ chxj_node_exchange(
     case 'b':
     case 'B':
       /*----------------------------------------------------------------------*/
+      /* <B>                                                                  */
+      /*----------------------------------------------------------------------*/
+      if (strlen(name) == 1) {
+        if (handlers[tagB].start_tag_handler) 
+          handlers[tagB].start_tag_handler(pdoc, child);
+
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+
+        if (handlers[tagB].end_tag_handler)
+          handlers[tagB].end_tag_handler(pdoc, child);
+      }
+      else
+      /*----------------------------------------------------------------------*/
       /* <BASE>                                                               */
       /*----------------------------------------------------------------------*/
       if (strcasecmp(name, "base") == 0) {
