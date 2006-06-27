@@ -63,6 +63,7 @@ qs_parse_attr(Doc* doc, const char*s, int len, int *pos)
   name = (char*)apr_palloc(doc->pool,size+1);
   memset(name, 0, size+1);
   memcpy(name, &s[start_pos], size);
+
   QX_LOGGER_DEBUG((char*)name);
 
   novalue = 0;
@@ -100,9 +101,8 @@ qs_parse_attr(Doc* doc, const char*s, int len, int *pos)
         ii++;
         break;
       }
-      if (!is_white_space(s[ii])) {
+      if (!is_white_space(s[ii]))
         break;
-      }
     }
   
     start_pos = ii;
