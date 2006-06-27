@@ -249,7 +249,7 @@ static int
 chxj_exchange_input_header(request_rec *r,chxjconvrule_entry* entryp) 
 {
 
-  char *buff;
+  char*      buff;
   apr_size_t urilen;
   char* result;
   char* pair;
