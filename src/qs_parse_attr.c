@@ -140,7 +140,8 @@ qs_parse_attr(Doc* doc, const char*s, int len, int *pos)
     memcpy(value, &s[start_pos], size);
 
   attr = qs_new_attr(doc);
-  attr->name = name;
+
+  attr->name  = name;
   attr->value = value;
 
   QX_LOGGER_DEBUG(attr->name);
