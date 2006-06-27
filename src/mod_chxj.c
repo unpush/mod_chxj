@@ -162,6 +162,7 @@ chxj_headers_fixup(request_rec *r)
   return DECLINED;
 }
 
+
 /**
  * It converts it from CHTML into XXML corresponding to each model. 
  *
