@@ -199,7 +199,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
     user_agent = (char*)apr_table_get(r->headers_in, CHXJ_HTTP_USER_AGENT);
   }
   else {
-    user_agent = (char*)apr_table_get(r->headers_in, "User-Agent");
+    user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
   }
 
   DBG1(r,"User-Agent:[%s]", user_agent);
