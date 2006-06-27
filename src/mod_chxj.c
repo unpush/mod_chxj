@@ -335,9 +335,9 @@ chxj_exchange_input_header(request_rec *r,chxjconvrule_entry* entryp)
  */
 static char*
 chxj_input_exchange(
-  request_rec *r, 
-  const char** src, 
-  apr_size_t* len, 
+  request_rec*        r, 
+  const char**        src, 
+  apr_size_t*         len, 
   chxjconvrule_entry* entryp)
 {
   char* pair;
