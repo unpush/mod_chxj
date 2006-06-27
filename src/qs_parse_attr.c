@@ -45,9 +45,8 @@ qs_parse_attr(Doc* doc, const char*s, int len, int *pos)
     if (is_white_space(s[ii])) 
       break;
 
-    if (s[ii] == '=') {
+    if (s[ii] == '=')
       break;
-    }
   }
 
   size = ii - start_pos;
