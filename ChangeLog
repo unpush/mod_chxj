@@ -1,4 +1,4 @@
-libapache2-mod-chxj (0.6.3-1) unstable; urgency=low
+libapache2-mod-chxj (0.7.0-1) unstable; urgency=low
 
   * bug fix which the size before it converts it into Content-Length when HEAD of 
     the image conversion is requested is returned. 
