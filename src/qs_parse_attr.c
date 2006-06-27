@@ -121,8 +121,10 @@ qs_parse_attr(Doc* doc, const char*s, int len, int *pos)
         if (! use_quote) 
           break;
       }
-      if (s[ii] == '\\') 
+      if (s[ii] == '\\') {
+        ii++;
         continue;
+      }
 
       if (s[ii] == '"') 
         break;
