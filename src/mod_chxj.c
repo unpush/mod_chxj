@@ -408,7 +408,7 @@ chxj_input_exchange(
 
       if (strcasecmp(entryp->encoding, "NONE") != 0 && value && strlen(value)) {
         apr_size_t dlen;
-        char* dvalue;
+        char*      dvalue;
 
         dlen   = strlen(value);
         ap_unescape_url(value);
