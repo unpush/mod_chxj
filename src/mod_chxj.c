@@ -334,7 +334,7 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp)
  * @param len [i/o] It is length of former HTML character string.
  */
 static char*
-chxj_input_exchange(
+chxj_input_convert(
   request_rec*        r, 
   const char**        src, 
   apr_size_t*         len, 
@@ -743,7 +743,7 @@ chxj_input_filter(ap_filter_t*        f,
     ap_remove_input_filter(f);
     return ap_get_brigade(f->next, bb, mode, block, readbytes);
   }
-  data_brigade = chxj_input_exchange(
+  data_brigade = chxj_input_convert(
     r, 
     (const char**)&data_brigade, 
     (apr_size_t*)&len,
