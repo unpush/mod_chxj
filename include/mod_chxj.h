@@ -289,11 +289,13 @@ typedef struct {
 #define CHXJ_MOD_CONFIG_KEY   "chxj_module"
 
 #define HTTP_USER_AGENT       "User-Agent"
+#define CHXJ_HTTP_USER_AGENT  "CHXJ_HTTP_USER_AGENT"
 
 module AP_MODULE_DECLARE_DATA chxj_module;
 
 #define CHXJ_IMG_ON     (1)
 #define CHXJ_IMG_OFF    (0)
+
 
 #define DBG(X,Y)  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(request_rec*)(X),(Y))
 #define DBG1(X,Y,Za)  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za))
