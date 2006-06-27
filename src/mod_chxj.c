@@ -61,55 +61,55 @@
 #define CHXJ_VERSION_PREFIX PACKAGE_NAME "/"
 #define CHXJ_VERSION        PACKAGE_VERSION
 
-exchange_t exchange_routine[] = {
+converter_t convert_routine[] = {
   {
     /* CHXJ_SPEC_UNKNOWN          */
-    .exchange = NULL,
+    .converter = NULL,
     .encoder  = NULL,
   },
   {
     /* CHXJ_SPEC_Chtml_1_0        */
-    .exchange = chxj_exchange_chtml10,
+    .converter = chxj_exchange_chtml10,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_Chtml_2_0        */
-    .exchange = chxj_exchange_chtml20,
+    .converter = chxj_exchange_chtml20,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_Chtml_3_0        */
-    .exchange = chxj_exchange_chtml30,
+    .converter = chxj_exchange_chtml30,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_Chtml_4_0        */
-    .exchange = chxj_exchange_chtml30,
+    .converter = chxj_exchange_chtml30,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_Chtml_5_0        */
-    .exchange = chxj_exchange_chtml30,
+    .converter = chxj_exchange_chtml30,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_XHtml_Mobile_1_0 */
-    .exchange = chxj_exchange_xhtml_mobile_1_0,
+    .converter = chxj_exchange_xhtml_mobile_1_0,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_Hdml             */
-    .exchange = chxj_exchange_hdml,
+    .converter = chxj_exchange_hdml,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_Jhtml            */
-    .exchange = chxj_exchange_jhtml,
+    .converter = chxj_exchange_jhtml,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_HTML             */
-    .exchange = NULL,
+    .converter = NULL,
     .encoder  = NULL,
   },
   {
@@ -217,14 +217,14 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
     device_table* spec = chxj_specified_device(r, user_agent);
 
     tmp = NULL;
-    if (exchange_routine[spec->html_spec_type].encoder)
-      tmp = exchange_routine[spec->html_spec_type].encoder(r, *src, (apr_size_t*)len);
+    if (convert_routine[spec->html_spec_type].encoder)
+      tmp = convert_routine[spec->html_spec_type].encoder(r, *src, (apr_size_t*)len);
 
-    if (exchange_routine[spec->html_spec_type].exchange) {
+    if (convert_routine[spec->html_spec_type].converter) {
       if (tmp)
-        dst = exchange_routine[spec->html_spec_type].exchange(r, spec, tmp, *len, len, entryp);
+        dst = convert_routine[spec->html_spec_type].converter(r, spec, tmp, *len, len, entryp);
       else
-        dst = exchange_routine[spec->html_spec_type].exchange(r, spec, *src, *len, len, entryp);
+        dst = convert_routine[spec->html_spec_type].converter(r, spec, *src, *len, len, entryp);
     }
   }
 
@@ -354,7 +354,7 @@ chxj_input_convert(
 
   result = qs_alloc_zero_byte_string(r);
 
-  DBG1(r, "BEFORE input exchange source = [%s]", s);
+  DBG1(r, "BEFORE input convert source = [%s]", s);
 
   /* _chxj_dmy */
   /* _chxj_c_ */
@@ -429,7 +429,7 @@ chxj_input_convert(
   }
   *len = strlen(result);
 
-  DBG1(r, "AFTER input exchange result = [%s]", result);
+  DBG1(r, "AFTER input convert result = [%s]", result);
 
   return result;
 }
