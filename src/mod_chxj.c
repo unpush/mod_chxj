@@ -183,30 +183,30 @@ chxj_headers_fixup(request_rec *r)
 static char* 
 chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
 {
-  char *user_agent;
-  char *dst = apr_pstrcat(r->pool, (char*)*src, NULL);
-  char *tmp;
-  mod_chxj_config* dconf; 
+  char*               user_agent;
+  char*               dst;
+  char*               tmp;
+  mod_chxj_config*    dconf; 
   chxjconvrule_entry* entryp;
+
+  dst  = apr_pstrcat(r->pool, (char*)*src, NULL);
 
   dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
 
+
   entryp = chxj_apply_convrule(r, dconf->convrules);
-  if (!(entryp->action & CONVRULE_ENGINE_ON_BIT)) {
-    DBG(r,"EngineOff");
+
+  if (!entryp || !(entryp->action & CONVRULE_ENGINE_ON_BIT))
     return (char*)*src;
-  }
 
 
   /*------------------------------------------------------------------------*/
   /* get UserAgent from http header                                         */
   /*------------------------------------------------------------------------*/
-  if (entryp->user_agent) {
+  if (entryp->user_agent)
     user_agent = (char*)apr_table_get(r->headers_in, CHXJ_HTTP_USER_AGENT);
-  }
-  else {
+  else
     user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
-  }
 
   DBG1(r,"User-Agent:[%s]", user_agent);
   DBG(r, "start chxj_exchange()");

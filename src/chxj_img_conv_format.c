@@ -316,10 +316,10 @@ chxj_exchange_image(request_rec *r, const char** src, apr_size_t* len)
   else {
     entryp = chxj_apply_convrule(r, conf->convrules);
     if (entryp && entryp->user_agent) {
-      user_agent = (char*)apr_table_get(r->headers_in, "CHXJ_HTTP_USER_AGENT");
+      user_agent = (char*)apr_table_get(r->headers_in, CHXJ_HTTP_USER_AGENT);
     }
     else {
-      user_agent = (char*)apr_table_get(r->headers_in, "User-Agent");
+      user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
     }
   }
 
