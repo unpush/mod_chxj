@@ -51,11 +51,15 @@ qs_parse_attr(Doc* doc, const char*s, int len, int *pos)
 
   size = ii - start_pos;
   QX_LOGGER_DEBUG_INT("size", size);
-  /* not found */
+
+  /* 
+   * not found 
+   */
   if (size == 0) {
     *pos = ii;
     return NULL;
   }
+
   name = (char*)apr_palloc(doc->pool,size+1);
   memset(name, 0, size+1);
   memcpy(name, &s[start_pos], size);
