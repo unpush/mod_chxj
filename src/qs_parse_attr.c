@@ -159,6 +159,7 @@ qs_parse_attr(Doc* doc, const char*s, int len, int *pos)
   return attr;
 }
 
+
 Attr*
 qs_new_attr(Doc* doc) 
 {
