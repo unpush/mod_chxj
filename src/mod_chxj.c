@@ -345,9 +345,10 @@ chxj_input_exchange(
   char* value;
   char* pstate;
   char* vstate;
-  char* s = apr_pstrdup(r->pool, *src);
-
+  char* s;
   char* result;
+
+  s = apr_pstrdup(r->pool, *src);
 
   chxj_exchange_input_header(r, entryp);
 
