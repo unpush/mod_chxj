@@ -147,7 +147,8 @@ chxj_headers_fixup(request_rec *r)
     }
   
     apr_table_setn(r->headers_in, 
-                   CHXJ_HTTP_USER_AGENT, user_agent);
+                   CHXJ_HTTP_USER_AGENT, 
+                   user_agent);
   
     if (entryp->user_agent)
       apr_table_setn(r->headers_in, 
