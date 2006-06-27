@@ -246,7 +246,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
  * @param r   [i]
  */
 static int
-chxj_exchange_input_header(request_rec *r,chxjconvrule_entry* entryp) 
+chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp) 
 {
 
   char*      buff;
@@ -350,7 +350,7 @@ chxj_input_exchange(
 
   s = apr_pstrdup(r->pool, *src);
 
-  chxj_exchange_input_header(r, entryp);
+  chxj_convert_input_header(r, entryp);
 
   result = qs_alloc_zero_byte_string(r);
 
