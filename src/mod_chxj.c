@@ -150,6 +150,7 @@ chxj_headers_fixup(request_rec *r)
   
     if (entryp->user_agent)
       apr_table_setn(r->headers_in, "User-Agent", entryp->user_agent);
+
     break;
   
   default:
