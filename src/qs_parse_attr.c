@@ -118,12 +118,15 @@ qs_parse_attr(Doc* doc, const char*s, int len, int *pos)
         ii++;
         continue;
       }
+
       if (is_sjis_kana(s[ii])) 
         continue;
+
       if (is_white_space(s[ii])) {
         if (! use_quote) 
           break;
       }
+
       if (s[ii] == '\\') 
         continue;
 
@@ -134,6 +137,7 @@ qs_parse_attr(Doc* doc, const char*s, int len, int *pos)
         break;
     }
     size = ii - start_pos;
+
     QX_LOGGER_DEBUG_INT("size",size);
   }
 
