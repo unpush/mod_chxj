@@ -42,9 +42,9 @@ qs_parse_attr(Doc* doc, const char*s, int len, int *pos)
 
   /* get attr name */
   for (;ii<len; ii++) {
-    if (is_white_space(s[ii])) {
+    if (is_white_space(s[ii])) 
       break;
-    }
+
     if (s[ii] == '=') {
       break;
     }
