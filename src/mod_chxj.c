@@ -61,55 +61,55 @@
 #define CHXJ_VERSION_PREFIX PACKAGE_NAME "/"
 #define CHXJ_VERSION        PACKAGE_VERSION
 
-exchange_t exchange_routine[] = {
+converter_t convert_routine[] = {
   {
     /* CHXJ_SPEC_UNKNOWN          */
-    .exchange = NULL,
+    .converter = NULL,
     .encoder  = NULL,
   },
   {
     /* CHXJ_SPEC_Chtml_1_0        */
-    .exchange = chxj_exchange_chtml10,
+    .converter = chxj_exchange_chtml10,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_Chtml_2_0        */
-    .exchange = chxj_exchange_chtml20,
+    .converter = chxj_exchange_chtml20,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_Chtml_3_0        */
-    .exchange = chxj_exchange_chtml30,
+    .converter = chxj_exchange_chtml30,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_Chtml_4_0        */
-    .exchange = chxj_exchange_chtml30,
+    .converter = chxj_exchange_chtml30,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_Chtml_5_0        */
-    .exchange = chxj_exchange_chtml30,
+    .converter = chxj_exchange_chtml30,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_XHtml_Mobile_1_0 */
-    .exchange = chxj_exchange_xhtml_mobile_1_0,
+    .converter = chxj_exchange_xhtml_mobile_1_0,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_Hdml             */
-    .exchange = chxj_exchange_hdml,
+    .converter = chxj_exchange_hdml,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_Jhtml            */
-    .exchange = chxj_exchange_jhtml,
+    .converter = chxj_exchange_jhtml,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_HTML             */
-    .exchange = NULL,
+    .converter = NULL,
     .encoder  = NULL,
   },
   {
@@ -117,6 +117,12 @@ exchange_t exchange_routine[] = {
   }
 };
 
+
+/**
+ * Only when User-Agent is specified, the User-Agent header is camouflaged. 
+ *
+ * @param r   [i]
+ */
 static apr_status_t 
 chxj_headers_fixup(request_rec *r)
 {
@@ -128,7 +134,7 @@ chxj_headers_fixup(request_rec *r)
   DBG(r, "start chxj_headers_fixup()");
   dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
 
-  user_agent = (char*)apr_table_get(r->headers_in, "User-Agent");
+  user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
   spec = chxj_specified_device(r, user_agent);
 
   switch(spec->html_spec_type) {
@@ -146,10 +152,15 @@ chxj_headers_fixup(request_rec *r)
       return DECLINED;
     }
   
-    apr_table_setn(r->headers_in, "CHXJ_HTTP_USER_AGENT", user_agent);
+    apr_table_setn(r->headers_in, 
+                   CHXJ_HTTP_USER_AGENT, 
+                   user_agent);
   
     if (entryp->user_agent)
-      apr_table_setn(r->headers_in, "User-Agent", entryp->user_agent);
+      apr_table_setn(r->headers_in, 
+                     HTTP_USER_AGENT, 
+                     entryp->user_agent);
+
     break;
   
   default:
@@ -161,6 +172,7 @@ chxj_headers_fixup(request_rec *r)
   return DECLINED;
 }
 
+
 /**
  * It converts it from CHTML into XXML corresponding to each model. 
  *
@@ -171,30 +183,30 @@ chxj_headers_fixup(request_rec *r)
 static char* 
 chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
 {
-  char *user_agent;
-  char *dst = apr_pstrcat(r->pool, (char*)*src, NULL);
-  char *tmp;
-  mod_chxj_config* dconf; 
+  char*               user_agent;
+  char*               dst;
+  char*               tmp;
+  mod_chxj_config*    dconf; 
   chxjconvrule_entry* entryp;
+
+  dst  = apr_pstrcat(r->pool, (char*)*src, NULL);
 
   dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
 
+
   entryp = chxj_apply_convrule(r, dconf->convrules);
-  if (!(entryp->action & CONVRULE_ENGINE_ON_BIT)) {
-    DBG(r,"EngineOff");
+
+  if (!entryp || !(entryp->action & CONVRULE_ENGINE_ON_BIT))
     return (char*)*src;
-  }
 
 
   /*------------------------------------------------------------------------*/
   /* get UserAgent from http header                                         */
   /*------------------------------------------------------------------------*/
-  if (entryp->user_agent) {
-    user_agent = (char*)apr_table_get(r->headers_in, "CHXJ_HTTP_USER_AGENT");
-  }
-  else {
-    user_agent = (char*)apr_table_get(r->headers_in, "User-Agent");
-  }
+  if (entryp->user_agent)
+    user_agent = (char*)apr_table_get(r->headers_in, CHXJ_HTTP_USER_AGENT);
+  else
+    user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
 
   DBG1(r,"User-Agent:[%s]", user_agent);
   DBG(r, "start chxj_exchange()");
@@ -211,14 +223,14 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
     device_table* spec = chxj_specified_device(r, user_agent);
 
     tmp = NULL;
-    if (exchange_routine[spec->html_spec_type].encoder)
-      tmp = exchange_routine[spec->html_spec_type].encoder(r, *src, (apr_size_t*)len);
+    if (convert_routine[spec->html_spec_type].encoder)
+      tmp = convert_routine[spec->html_spec_type].encoder(r, *src, (apr_size_t*)len);
 
-    if (exchange_routine[spec->html_spec_type].exchange) {
+    if (convert_routine[spec->html_spec_type].converter) {
       if (tmp)
-        dst = exchange_routine[spec->html_spec_type].exchange(r, spec, tmp, *len, len, entryp);
+        dst = convert_routine[spec->html_spec_type].converter(r, spec, tmp, *len, len, entryp);
       else
-        dst = exchange_routine[spec->html_spec_type].exchange(r, spec, *src, *len, len, entryp);
+        dst = convert_routine[spec->html_spec_type].converter(r, spec, *src, *len, len, entryp);
     }
   }
 
@@ -240,17 +252,17 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
  * @param r   [i]
  */
 static int
-chxj_exchange_input_header(request_rec *r,chxjconvrule_entry* entryp) 
+chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp) 
 {
 
-  char *buff;
+  char*      buff;
   apr_size_t urilen;
-  char* result;
-  char* pair;
-  char* name;
-  char* value;
-  char* pstate;
-  char* vstate;
+  char*      result;
+  char*      pair;
+  char*      name;
+  char*      value;
+  char*      pstate;
+  char*      vstate;
 
   ap_unescape_url(r->unparsed_uri);
   urilen = strlen(r->unparsed_uri);
@@ -264,9 +276,11 @@ chxj_exchange_input_header(request_rec *r,chxjconvrule_entry* entryp)
   /* _chxj_r_ */
   /* _chxj_s_ */
   for (;;) {
+
     pair = apr_strtok(buff, "&", &pstate);
     if (pair == NULL)
       break;
+
     buff = NULL;
 
     name  = apr_strtok(pair, "=", &vstate);
@@ -326,10 +340,10 @@ chxj_exchange_input_header(request_rec *r,chxjconvrule_entry* entryp)
  * @param len [i/o] It is length of former HTML character string.
  */
 static char*
-chxj_input_exchange(
-  request_rec *r, 
-  const char** src, 
-  apr_size_t* len, 
+chxj_input_convert(
+  request_rec*        r, 
+  const char**        src, 
+  apr_size_t*         len, 
   chxjconvrule_entry* entryp)
 {
   char* pair;
@@ -337,15 +351,16 @@ chxj_input_exchange(
   char* value;
   char* pstate;
   char* vstate;
-  char* s = apr_pstrdup(r->pool, *src);
-
+  char* s;
   char* result;
 
-  chxj_exchange_input_header(r, entryp);
+  s = apr_pstrdup(r->pool, *src);
+
+  chxj_convert_input_header(r, entryp);
 
   result = qs_alloc_zero_byte_string(r);
 
-  DBG1(r, "BEFORE input exchange source = [%s]", s);
+  DBG1(r, "BEFORE input convert source = [%s]", s);
 
   /* _chxj_dmy */
   /* _chxj_c_ */
@@ -363,9 +378,10 @@ chxj_input_exchange(
       if (strlen(result) != 0) 
         result = apr_pstrcat(r->pool, result, "&", NULL);
 
-      if (strcasecmp(entryp->encoding, "NONE") != 0 && value && strlen(value)) {
+      if (strcasecmp(entryp->encoding, "NONE") != 0 
+      &&  value && strlen(value)) {
         apr_size_t dlen;
-        char* dvalue;
+        char*      dvalue;
 
         dlen   = strlen(value);
         ap_unescape_url(value);
@@ -398,7 +414,7 @@ chxj_input_exchange(
 
       if (strcasecmp(entryp->encoding, "NONE") != 0 && value && strlen(value)) {
         apr_size_t dlen;
-        char* dvalue;
+        char*      dvalue;
 
         dlen   = strlen(value);
         ap_unescape_url(value);
@@ -419,7 +435,7 @@ chxj_input_exchange(
   }
   *len = strlen(result);
 
-  DBG1(r, "AFTER input exchange result = [%s]", result);
+  DBG1(r, "AFTER input convert result = [%s]", result);
 
   return result;
 }
@@ -733,7 +749,7 @@ chxj_input_filter(ap_filter_t*        f,
     ap_remove_input_filter(f);
     return ap_get_brigade(f->next, bb, mode, block, readbytes);
   }
-  data_brigade = chxj_input_exchange(
+  data_brigade = chxj_input_convert(
     r, 
     (const char**)&data_brigade, 
     (apr_size_t*)&len,

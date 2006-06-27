@@ -14,16 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#if 0
-#include <wand/magick_wand.h>
-
-#undef PACKAGE_NAME
-#undef PACKAGE_STRING
-#undef PACKAGE_TARNAME
-#undef PACKAGE_VERSION
-
-#endif
-
 #include <libgen.h>
 #include "mod_chxj.h"
 #include "chxj_img_conv_format.h"
@@ -35,9 +25,7 @@
 
 #include "http_core.h"
 
-#if 1
 #include <wand/magick_wand.h>
-#endif
 
 
 #define EXIT_MAGICK_ERROR() \
@@ -260,10 +248,10 @@ chxj_img_conv_format_handler(request_rec* r)
   else {
     entryp = chxj_apply_convrule(r, conf->convrules);
     if (entryp && entryp->user_agent) {
-      user_agent = (char*)apr_table_get(r->headers_in, "CHXJ_HTTP_USER_AGENT");
+      user_agent = (char*)apr_table_get(r->headers_in, CHXJ_HTTP_USER_AGENT);
     }
     else {
-      user_agent = (char*)apr_table_get(r->headers_in, "User-Agent");
+      user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
     }
   }
 
@@ -328,10 +316,10 @@ chxj_exchange_image(request_rec *r, const char** src, apr_size_t* len)
   else {
     entryp = chxj_apply_convrule(r, conf->convrules);
     if (entryp && entryp->user_agent) {
-      user_agent = (char*)apr_table_get(r->headers_in, "CHXJ_HTTP_USER_AGENT");
+      user_agent = (char*)apr_table_get(r->headers_in, CHXJ_HTTP_USER_AGENT);
     }
     else {
-      user_agent = (char*)apr_table_get(r->headers_in, "User-Agent");
+      user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
     }
   }
 

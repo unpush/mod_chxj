@@ -1,3 +1,10 @@
+libapache2-mod-chxj (0.7.1-1) unstable; urgency=low
+
+  * bug fix
+      - it cannot correctly read the value when the backslash exists in the attribute.
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Mon, 19 Jun 2006 17:29:48 +0900
+
 libapache2-mod-chxj (0.7.0-1) unstable; urgency=low
 
   * bug fix which the size before it converts it into Content-Length when HEAD of 

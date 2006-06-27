@@ -24,14 +24,15 @@
 Attr*
 qs_parse_attr(Doc* doc, const char*s, int len, int *pos) 
 {
-  int ii;
-  int start_pos;
-  int size;
-  int novalue;
+  int   ii;
+  int   start_pos;
+  int   size;
+  int   novalue;
   char* name;
   char* value;
   Attr* attr;
-  int use_quote = 0;
+  int   use_quote = 0;
+  int   backslash = 0;
 
   QX_LOGGER_DEBUG("start qs_parse_attr()");
 
@@ -80,9 +81,17 @@ qs_parse_attr(Doc* doc, const char*s, int len, int *pos)
 
   size = 0;
   if (!novalue) {
-    /* ignore space */
+    /* 
+     * ignore space
+     */
     ii += qs_ignore_sp(doc, &s[ii], len-ii);
+
+    backslash = 0;
     for (;ii<len; ii++) {
+      if (s[ii] == '\\') {
+        backslash = 1;
+        break;
+      }
       if (s[ii] == '\'' || s[ii] == '"') {
         use_quote = 1;
         ii++;
@@ -94,7 +103,13 @@ qs_parse_attr(Doc* doc, const char*s, int len, int *pos)
     }
   
     start_pos = ii;
-    /* get attr value */
+    if (backslash && ii + 2 < len)
+      ii+=2;
+    
+    backslash = 0;
+    /* 
+     * get attr value 
+     */
     for (;ii<len; ii++) {
       if (is_sjis_kanji(s[ii])) {
         ii++;
@@ -106,6 +121,9 @@ qs_parse_attr(Doc* doc, const char*s, int len, int *pos)
         if (! use_quote) 
           break;
       }
+      if (s[ii] == '\\') 
+        continue;
+
       if (s[ii] == '"') 
         break;
 
@@ -124,6 +142,7 @@ qs_parse_attr(Doc* doc, const char*s, int len, int *pos)
   attr = qs_new_attr(doc);
   attr->name = name;
   attr->value = value;
+
   QX_LOGGER_DEBUG(attr->name);
   QX_LOGGER_DEBUG(attr->value);
 
