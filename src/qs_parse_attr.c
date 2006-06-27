@@ -24,14 +24,15 @@
 Attr*
 qs_parse_attr(Doc* doc, const char*s, int len, int *pos) 
 {
-  int ii;
-  int start_pos;
-  int size;
-  int novalue;
+  int   ii;
+  int   start_pos;
+  int   size;
+  int   novalue;
   char* name;
   char* value;
   Attr* attr;
-  int use_quote = 0;
+  int   use_quote = 0;
+  int   backslash = 0;
 
   QX_LOGGER_DEBUG("start qs_parse_attr()");
 

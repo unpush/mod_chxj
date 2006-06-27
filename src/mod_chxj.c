@@ -117,6 +117,12 @@ converter_t convert_routine[] = {
   }
 };
 
+
+/**
+ * Only when User-Agent is specified, the User-Agent header is camouflaged. 
+ *
+ * @param r   [i]
+ */
 static apr_status_t 
 chxj_headers_fixup(request_rec *r)
 {
