@@ -17,10 +17,12 @@
 #ifndef __QS_PARSE_STRING_H__
 #define __QS_PARSE_STRING_H__
 #include <httpd.h>
+
 /*
 #define DEBUG
 #define USE_LOG
 */
+
 /**
  * Max of memory allocation times.
  */
