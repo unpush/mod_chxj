@@ -1,3 +1,16 @@
+libapache2-mod-chxj (0.7.0-1) unstable; urgency=low
+
+  * bug fix which the size before it converts it into Content-Length when HEAD of 
+    the image conversion is requested is returned. 
+  * change to acquire it even if the extension is attached by the image acquisition 
+    request.
+  * bug fix into which the submit value had not converted the character-code for HDML. 
+  * bug fix #8585.
+  * add user_agent rewrite function.
+  * bug fix that the image conversion routine was executed two times.
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Mon, 19 Jun 2006 17:29:48 +0900
+
 libapache2-mod-chxj (0.6.2-1) unstable; urgency=low
 
   * Fix bug which operates the character-code conversion when PC 
