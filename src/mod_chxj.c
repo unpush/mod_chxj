@@ -255,8 +255,8 @@ chxj_exchange_input_header(request_rec *r,chxjconvrule_entry* entryp)
   char*      pair;
   char*      name;
   char*      value;
-  char* pstate;
-  char* vstate;
+  char*      pstate;
+  char*      vstate;
 
   ap_unescape_url(r->unparsed_uri);
   urilen = strlen(r->unparsed_uri);
@@ -270,9 +270,11 @@ chxj_exchange_input_header(request_rec *r,chxjconvrule_entry* entryp)
   /* _chxj_r_ */
   /* _chxj_s_ */
   for (;;) {
+
     pair = apr_strtok(buff, "&", &pstate);
     if (pair == NULL)
       break;
+
     buff = NULL;
 
     name  = apr_strtok(pair, "=", &vstate);
