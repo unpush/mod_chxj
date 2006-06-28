@@ -47,6 +47,13 @@ Please specify the --with-apr-config option. And, please specify the place of th
 ])
 fi
 
+AC_ARG_WITH(apu-config, [  --with-apu-config=ARG  Path of apu-config program file.])
+if test "x$with_apu_config" = "xyes" ; then
+    AC_MSG_ERROR([
+Please specify the --with-apu-config option. And, please specify the place of the apu-config program. 
+])
+fi
+
 
 AC_ARG_ENABLE(img-conv-f, [  --enable-img-conv-f      Please specify it when you change the file name of the image being written in the 
 source by the automatic operation.])
@@ -99,6 +106,16 @@ if test "x$with_apr_config" = "x" ; then
 fi
 if test "x$with_apr_config" != "x" ; then
   APR_CONFIG=$with_apr_config
+fi
+if test "x$with_apu_config" = "x" ; then
+  AC_PATH_PROG(APU_CONFIG, apu-config, no,
+     /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
+  if test "x$APU_CONFIG" = "xno" ; then
+      AC_MSG_ERROR([apu-config not found.])
+  fi
+fi
+if test "x$with_apu_config" != "x" ; then
+  APU_CONFIG=$with_apu_config
 fi
 
 AC_ARG_WITH(iconv, [  --with-iconv=ARG  specify the place of the libiconv directory.])
@@ -157,8 +174,10 @@ esac
 
 LIBS="${LIBS} `${WAND_CONFIG} --ldflags` `${WAND_CONFIG} --libs | sed -e s/-ldpstk//` "
 LIBS="${LIBS} `${APR_CONFIG} --ldflags` `${APR_CONFIG} --libs` "
+LIBS="${LIBS} `${APU_CONFIG} --ldflags` `${APU_CONFIG} --libs` "
 CFLAGS="${CFLAGS} `${WAND_CONFIG} --cppflags` `${WAND_CONFIG} --cflags`"
 CFLAGS="${CFLAGS} `${APR_CONFIG} --includes` `${APR_CONFIG} --cflags` `${APR_CONFIG} --cppflags`"
+CFLAGS="${CFLAGS} `${APU_CONFIG} --includes`"
 AC_SUBST(with_apache_header)
 AC_SUBST(CC)
 AC_SUBST(QDEFS)
