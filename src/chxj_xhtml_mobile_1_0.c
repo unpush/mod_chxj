@@ -2335,7 +2335,6 @@ s_xhtml_1_0_start_b_tag(void* pdoc, Node* child)
   Doc*         doc   = xhtml->doc;
   request_rec* r     = doc->r;
 
-
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<div style=\"font-weight:bold\">", NULL);
 
   return xhtml->out;
