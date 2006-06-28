@@ -21,8 +21,7 @@ chxj_dump_out(const char* title, const char* s, int slen)
 {
 #ifdef DUMP_LOG
   FILE* fp=fopen(DUMP_LOG, "a");
-  if (fp != NULL) 
-  {
+  if (fp != NULL) {
     fprintf(fp, "%s\n", title);
     fprintf(fp, "[%.*s]\n", slen, s);
     fprintf(fp, "-----------------------------\n");
