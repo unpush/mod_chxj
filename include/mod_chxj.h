@@ -306,6 +306,7 @@ module AP_MODULE_DECLARE_DATA chxj_module;
 #define DBG5(X,Y,Za,Zb,Zc,Zd,Ze)  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za),(Zb),(Zc),(Zd),(Ze))
 #define ERR(X,Y)  ap_log_rerror(APLOG_MARK,APLOG_ERR,0,(X),(Y))
 #define ERR1(X,Y,Za)  ap_log_rerror(APLOG_MARK,APLOG_ERR,0,(X),(Y),(Za))
+#define ERR2(X,Y,Za,Zb)  ap_log_rerror(APLOG_MARK,APLOG_ERR,0,(X),(Y),(Za),(Zb))
 
 extern tag_handlers chxj_tag_handlers[];
 extern tag_handler chtml10_handler[];

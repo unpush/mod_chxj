@@ -56,6 +56,7 @@
 #include "chxj_qr_code.h"
 #include "chxj_encoding.h"
 #include "chxj_apply_convrule.h"
+#include "chxj_cookie.h"
 
 
 #define CHXJ_VERSION_PREFIX PACKAGE_NAME "/"
@@ -219,6 +220,11 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
     return (char*)*src;
   }
 
+  /*
+   * save cookie.
+   */
+  chxj_save_cookie(r);
+
   if (!r->header_only) {
     device_table* spec = chxj_specified_device(r, user_agent);
 
@@ -294,11 +300,11 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp)
         char* dvalue;
 
         dlen   = strlen(value);
-        ap_unescape_url(value);
+        value = chxj_url_decode(r, value);
         DBG1(r, "************ before encoding[%s]", value);
 
         dvalue = chxj_rencoding(r, value, &dlen);
-        dvalue = ap_escape_uri(r->pool,dvalue);
+        dvalue = chxj_url_encode(r, dvalue);
 
         DBG1(r, "************ after encoding[%s]", dvalue);
 
@@ -384,11 +390,11 @@ chxj_input_convert(
         char*      dvalue;
 
         dlen   = strlen(value);
-        ap_unescape_url(value);
+        value = chxj_url_decode(r, value);
         DBG1(r, "************ before encoding[%s]", value);
 
         dvalue = chxj_rencoding(r, value, &dlen);
-        dvalue = ap_escape_uri(r->pool,dvalue);
+        dvalue = chxj_url_encode(r,dvalue);
 
         DBG1(r, "************ after encoding[%s]", dvalue);
 
@@ -417,11 +423,11 @@ chxj_input_convert(
         char*      dvalue;
 
         dlen   = strlen(value);
-        ap_unescape_url(value);
+        value = chxj_url_decode(r, value);
         DBG1(r, "************ before encoding[%s]", value);
 
         dvalue = chxj_rencoding(r, value, &dlen);
-        dvalue = ap_escape_uri(r->pool,dvalue);
+        dvalue = chxj_url_encode(r,dvalue);
 
         DBG1(r, "************ after encoding[%s]", dvalue);
 
@@ -496,6 +502,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
 
 
   DBG(r, "start of chxj_output_filter()");
+
   if (!f->ctx) {
     if ((f->r->proto_num >= 1001) 
     &&  !f->r->main 

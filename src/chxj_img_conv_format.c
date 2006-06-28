@@ -21,6 +21,7 @@
 #include "chxj_str_util.h"
 #include "chxj_qr_code.h"
 #include "chxj_apply_convrule.h"
+#include "chxj_url_encode.h"
 #include "qs_parse_string.h"
 
 #include "http_core.h"

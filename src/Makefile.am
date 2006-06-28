@@ -26,7 +26,9 @@ libmod_chxj_la_SOURCES = mod_chxj.c \
     chxj_calc_ecc.c \
     chxj_apply_convrule.c \
     chxj_encoding.c \
-    chxj_node_exchange.c
+    chxj_node_exchange.c \
+    chxj_url_encode.c \
+    chxj_cookie.c
 
 
 libmod_chxj_la_CFLAGS = -Wall -O2 -prefer-pic @QDEFS@ @DDEFS@ -I. -I../include -I@with_apache_header@ 
