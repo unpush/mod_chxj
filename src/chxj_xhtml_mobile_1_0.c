@@ -317,7 +317,8 @@ chxj_exchange_xhtml_mobile_1_0(
   const char*     src,
   apr_size_t      srclen,
   apr_size_t*     dstlen,
-  chxjconvrule_entry* entryp
+  chxjconvrule_entry* entryp,
+  const char* cookie_id
 )
 {
   char*     dst = NULL;

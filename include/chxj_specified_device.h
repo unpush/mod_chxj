@@ -98,7 +98,8 @@ typedef struct _converter_t {
                     const char*                 src, 
                     apr_size_t                  srclen, 
                     apr_size_t*                 dstlen,
-                    struct _chxjconvrule_entry* entryp);
+                    struct _chxjconvrule_entry* entryp,
+                    const char*                 cookie_id);
 
   char* (*encoder)(request_rec* r,
                    const char*  src,

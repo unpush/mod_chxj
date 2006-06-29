@@ -19,7 +19,7 @@
 
 #include "mod_chxj.h"
 
-extern void chxj_save_cookie(request_rec *r);
+extern char* chxj_save_cookie(request_rec *r);
 
 #endif
 /*

@@ -101,7 +101,8 @@ char* chxj_exchange_hdml(
   const char*         src,
   apr_size_t          srclen,
   apr_size_t*         dstlen,
-  chxjconvrule_entry* entryp) ;
+  chxjconvrule_entry* entryp,
+  const char* cookie_id);
 char* qs_out_apr_pstrcat(request_rec* r, char* o, char* s, int* len);
 char* qs_conv_istyle_to_format(request_rec* r, char* is);
 

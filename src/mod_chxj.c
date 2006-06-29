@@ -188,6 +188,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
   char*               user_agent;
   char*               dst;
   char*               tmp;
+  char*               cookie_id;
   mod_chxj_config*    dconf; 
   chxjconvrule_entry* entryp;
 
@@ -224,7 +225,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
   /*
    * save cookie.
    */
-  chxj_save_cookie(r);
+  cookie_id = chxj_save_cookie(r);
 
   if (!r->header_only) {
     device_table* spec = chxj_specified_device(r, user_agent);
@@ -235,9 +236,21 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
 
     if (convert_routine[spec->html_spec_type].converter) {
       if (tmp)
-        dst = convert_routine[spec->html_spec_type].converter(r, spec, tmp, *len, len, entryp);
+        dst = convert_routine[spec->html_spec_type].converter(r, 
+                                                              spec, 
+                                                              tmp, 
+                                                              *len, 
+                                                              len, 
+                                                              entryp, 
+                                                              cookie_id);
       else
-        dst = convert_routine[spec->html_spec_type].converter(r, spec, *src, *len, len, entryp);
+        dst = convert_routine[spec->html_spec_type].converter(r,
+                                                              spec, 
+                                                              tmp, 
+                                                              *len, 
+                                                              len, 
+                                                              entryp, 
+                                                              cookie_id);
     }
   }
 
@@ -775,28 +788,6 @@ chxj_input_filter(ap_filter_t*        f,
     APR_BRIGADE_CONCAT(bb, obb);
   }
   DBG(r, "end of chxj_input_filter()");
-  return APR_SUCCESS;
-}
-
-/**
- * It is processing when the module ends. The shared memory etc. are liberated.
- *
- * @param data [i]  The pointer to the server_rec structure is specified. 
- * @return APR_SUCCESS
- *
- */
-apr_status_t 
-chxj_init_module_kill(void *data)
-{
-  server_rec *base_server = (server_rec *)data;
-  mod_chxj_global_config* conf;
-
-  /*--------------------------------------------------------------------------*/
-  /* The setting of each server is acquired.                                  */
-  /*--------------------------------------------------------------------------*/
-  if (base_server)
-    conf = ap_get_module_config(base_server->module_config, &chxj_module);
-
   return APR_SUCCESS;
 }
 

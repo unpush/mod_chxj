@@ -27,7 +27,7 @@
 /*
  *
  */
-void
+char*
 chxj_save_cookie(request_rec* r)
 {
   int   ii;
@@ -42,23 +42,18 @@ chxj_save_cookie(request_rec* r)
   char*             uuid_string;
   unsigned char*    md5_value;
   char*             md5_string;
+  mod_chxj_global_config* gconf;
+
 
 
   DBG(r, "start chxj_save_cookie()");
 
+  md5_string = NULL;
+
+  gconf = ap_get_module_config(r->server->module_config, &chxj_module);
   headers = (apr_array_header_t*)apr_table_elts(r->headers_out);
   entryp = (apr_table_entry_t*)headers->elts;
 
-  retval = apr_dbm_open_ex(&f, 
-                           "default", 
-                           "/tmp/cookie.db", 
-                           APR_DBM_RWCREATE, 
-                           APR_OS_DEFAULT, 
-                           r->pool);
-  if (retval != APR_SUCCESS) {
-    ERR2(r, "could not open dbm (type %s) auth file: %s", "default", "/tmp/cookie.db");
-    return;
-  }
 
   cookie = apr_palloc(r->pool, 1);
   cookie[0] = 0;
@@ -71,6 +66,26 @@ chxj_save_cookie(request_rec* r)
       DBG(r, "=====================================");
     }
   }
+
+  if (strlen(cookie) == 0) {
+    DBG(r, "no cookie");
+    return NULL;
+  }
+
+  apr_global_mutex_lock(gconf->cookie_db_lock);
+
+  retval = apr_dbm_open_ex(&f, 
+                           "default", 
+                           "/tmp/cookie.db", 
+                           APR_DBM_RWCREATE, 
+                           APR_OS_DEFAULT, 
+                           r->pool);
+  if (retval != APR_SUCCESS) {
+    ERR2(r, "could not open dbm (type %s) auth file: %s", "default", "/tmp/cookie.db");
+    apr_global_mutex_unlock(gconf->cookie_db_lock);
+    return NULL;
+  }
+
   apr_uuid_get(&uuid);
   uuid_string = apr_palloc(r->pool, APR_UUID_FORMATTED_LENGTH + 1);
   memset(uuid_string, 0, APR_UUID_FORMATTED_LENGTH + 1);
@@ -120,8 +135,10 @@ chxj_save_cookie(request_rec* r)
 
 on_error:
   apr_dbm_close(f);
+  apr_global_mutex_unlock(gconf->cookie_db_lock);
 
   DBG(r, "end   chxj_save_cookie()");
+  return md5_string;
 }
 
 /*

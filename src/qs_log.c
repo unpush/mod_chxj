@@ -21,7 +21,6 @@
 #include "http_log.h"
 
 
-extern apr_status_t chxj_init_module_kill(void *data);
 
 void
 qs_log(Doc* doc, int log_level,const char* f, int l, char* msg) 
@@ -80,7 +79,6 @@ qs_log(Doc* doc, int log_level,const char* f, int l, char* msg)
 #endif
     if (doc->r) {
       ap_log_rerror(f,l, APLOG_CRIT, 0, doc->r, msg);
-      chxj_init_module_kill((void*)doc->r->server);
     }
     qs_all_free(doc, QX_LOGMARK);
     _exit(0);

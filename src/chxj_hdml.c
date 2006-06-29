@@ -310,12 +310,14 @@ tag_handler hdml_handler[] = {
  * @return         The character string after the converting is returned.
  */
 char*
-chxj_exchange_hdml(request_rec* r, 
-                   device_table* spec, 
-                   const char* src, 
-                   apr_size_t srclen, 
-                   apr_size_t* dstlen,
-                   chxjconvrule_entry* entryp
+chxj_exchange_hdml(
+  request_rec* r, 
+  device_table* spec, 
+  const char* src, 
+  apr_size_t srclen, 
+  apr_size_t* dstlen,
+  chxjconvrule_entry* entryp,
+  const char* cookie_id
 )
 {
   char*     dst = NULL;
