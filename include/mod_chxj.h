@@ -17,6 +17,10 @@
 #ifndef __MOD_CHXJ_H__
 #define __MOD_CHXJ_H__
 
+#if !defined(OS2) && !defined(WIN32) && !defined(BEOS) && !defined(NETWARE)
+#define AP_NEED_SET_MUTEX_PERMS
+#endif
+
 
 #include <string.h>
 
@@ -34,6 +38,10 @@
 #include "apr_general.h"
 #include "apr_pools.h"
 #include "util_filter.h"
+
+#if defined(AP_NEED_SET_MUTEX_PERMS)
+#  include "unixd.h"
+#endif
 
 #include "qs_ignore_sp.h"
 #include "qs_log.h"
@@ -272,9 +280,7 @@ typedef struct {
 #define CONVRULE_PC_FLAG_OFF_BIT      (0x00000002)
 
 typedef struct {
-  apr_shm_t*          client_shm;
-  apr_global_mutex_t* client_lock;
-  char                client_lock_file_name[256];
+  apr_global_mutex_t* cookie_db_lock;
 } mod_chxj_global_config;
 
 typedef struct {
@@ -287,7 +293,7 @@ typedef struct {
 
 #include "chxj_tag_util.h"
 
-#define CHXJ_MOD_CONFIG_KEY   "chxj_module"
+#define CHXJ_MOD_CONFIG_KEY   "chxj_module_key"
 
 #define HTTP_USER_AGENT       "User-Agent"
 #define CHXJ_HTTP_USER_AGENT  "CHXJ_HTTP_USER_AGENT"
@@ -304,9 +310,18 @@ module AP_MODULE_DECLARE_DATA chxj_module;
 #define DBG3(X,Y,Za,Zb,Zc)  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za),(Zb),(Zc))
 #define DBG4(X,Y,Za,Zb,Zc,Zd)  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za),(Zb),(Zc),(Zd))
 #define DBG5(X,Y,Za,Zb,Zc,Zd,Ze)  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za),(Zb),(Zc),(Zd),(Ze))
+#define SDBG(X,Y)  ap_log_error(APLOG_MARK,APLOG_DEBUG,0,(X),(Y))
+#define SDBG1(X,Y,Za)  ap_log_error(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za))
+#define SDBG2(X,Y,Za,Zb)  ap_log_error(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za),(Zb))
+#define SDBG3(X,Y,Za,Zb,Zc)  ap_log_error(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za),(Zb),(Zc))
+#define SDBG4(X,Y,Za,Zb,Zc,Zd)  ap_log_error(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za),(Zb),(Zc),(Zd))
+#define SDBG5(X,Y,Za,Zb,Zc,Zd,Ze)  ap_log_error(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za),(Zb),(Zc),(Zd),(Ze))
 #define ERR(X,Y)  ap_log_rerror(APLOG_MARK,APLOG_ERR,0,(X),(Y))
 #define ERR1(X,Y,Za)  ap_log_rerror(APLOG_MARK,APLOG_ERR,0,(X),(Y),(Za))
 #define ERR2(X,Y,Za,Zb)  ap_log_rerror(APLOG_MARK,APLOG_ERR,0,(X),(Y),(Za),(Zb))
+#define SERR(X,Y)  ap_log_error(APLOG_MARK,APLOG_ERR,0,(X),(Y))
+#define SERR1(X,Y,Za)  ap_log_error(APLOG_MARK,APLOG_ERR,0,(X),(Y),(Za))
+#define SERR2(X,Y,Za,Zb)  ap_log_error(APLOG_MARK,APLOG_ERR,0,(X),(Y),(Za),(Zb))
 
 extern tag_handlers chxj_tag_handlers[];
 extern tag_handler chtml10_handler[];
@@ -324,6 +339,8 @@ extern char* chxj_node_exchange(
   Node*         node,
   int           indent
 );
+
+
 
 #endif
 /*

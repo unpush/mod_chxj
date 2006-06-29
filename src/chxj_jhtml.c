@@ -2211,7 +2211,6 @@ s_jhtml_start_b_tag(void* pdoc, Node* node)
   jhtml_t*      jhtml = GET_JHTML(pdoc);
   Doc*          doc   = jhtml->doc;
   request_rec*  r     = doc->r;
-  Attr*         attr;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<b>", NULL);
 

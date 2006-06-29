@@ -57,6 +57,7 @@
 #include "chxj_encoding.h"
 #include "chxj_apply_convrule.h"
 #include "chxj_cookie.h"
+#include "chxj_url_encode.h"
 
 
 #define CHXJ_VERSION_PREFIX PACKAGE_NAME "/"
@@ -804,49 +805,18 @@ static mod_chxj_global_config*
 chxj_global_config_create(apr_pool_t* pool, server_rec* s)
 {
   mod_chxj_global_config* conf;
-  void*           param;
 
-
-  apr_pool_userdata_get(&param, CHXJ_MOD_CONFIG_KEY, pool);
-  conf = (mod_chxj_global_config*)param;
-  apr_pool_cleanup_register(pool, s,
-                               chxj_init_module_kill,
-                               apr_pool_cleanup_null);
-  if (conf) {
-    /*------------------------------------------------------------------------*/
-    /* reused for lifetime of the server                                      */
-    /*------------------------------------------------------------------------*/
-    return conf; 
-  }
+  SDBG(s, "start chxj_global_config_create()");
 
   /*--------------------------------------------------------------------------*/
   /* allocate an own subpool which survives server restarts                   */
   /*--------------------------------------------------------------------------*/
   conf = (mod_chxj_global_config*)apr_palloc(pool, 
                   sizeof(mod_chxj_global_config));
-  conf->client_shm  = NULL;
-  conf->client_lock = NULL;
-  memset(conf->client_lock_file_name, 0, sizeof(conf->client_lock_file_name));
+  conf->cookie_db_lock = NULL;
+  SDBG(s, "end   chxj_global_config_create()");
 
-
-  apr_pool_userdata_set(conf, CHXJ_MOD_CONFIG_KEY,
-                              apr_pool_cleanup_null,
-                              pool);
   return conf;
-}
-
-static void *
-chxj_config_server_merge(apr_pool_t *p, void *basev, void *overridesv)
-{
-  mod_chxj_global_config *mrg, *base, *overrides;
-    
-  mrg       = (mod_chxj_global_config *)apr_pcalloc(p,
-                                                   sizeof(mod_chxj_global_config));
-  base      = (mod_chxj_global_config *)basev;
-  overrides = (mod_chxj_global_config *)overridesv;
-    
-
-  return mrg;
 }
 
 /**
@@ -858,13 +828,72 @@ chxj_init_module(apr_pool_t *p,
                   apr_pool_t *ptemp, 
                   server_rec *s)
 {
-  DBG(s,"start chxj_init_module()");
+  mod_chxj_global_config* conf;
+  void *user_data;
+  server_rec* s_sv = s;
+
+  SDBG(s, "start chxj_init_module()");
+
+  apr_pool_userdata_get(&user_data, CHXJ_MOD_CONFIG_KEY, s->process->pool);
+  SDBG(s, " ");
+  if (user_data == NULL) {
+    SDBG(s, " ");
+    /*
+     * dummy user_data set.
+     */
+    apr_pool_userdata_set(
+      (const void *)(1), 
+      CHXJ_MOD_CONFIG_KEY, 
+      apr_pool_cleanup_null, 
+      s->process->pool);
+    SDBG(s, "end  chxj_init_module()");
+    return OK;
+  }
+  SDBG(s, " ");
 
   ap_add_version_component(p, CHXJ_VERSION_PREFIX CHXJ_VERSION);
+  SDBG(s, " ");
 
-  DBG(s,"end chxj_init_module()");
+  do {
+    SDBG(s, " ");
+    conf = (mod_chxj_global_config *)ap_get_module_config(s->module_config, &chxj_module);
+    SDBG(s, " ");
 
+    if (apr_global_mutex_create(&(conf->cookie_db_lock), NULL, APR_LOCK_DEFAULT, p) != APR_SUCCESS) {
+      SERR(s, "end  chxj_init_module()");
+      return HTTP_INTERNAL_SERVER_ERROR;
+    }
+#ifdef AP_NEED_SET_MUTEX_PERMS
+    if (unixd_set_global_mutex_perms(conf->cookie_db_lock) != APR_SUCCESS) {
+      SERR(s, "end  chxj_init_module()");
+      return HTTP_INTERNAL_SERVER_ERROR;
+    }
+#endif
+    SDBG(s, " ");
+  } 
+  while ((s = s->next) != NULL);
+  SDBG(s_sv, " ");
+
+  SDBG(s_sv, "end  chxj_init_module()");
   return OK;
+}
+
+static void 
+chxj_child_init(apr_pool_t *p, server_rec *s)
+{
+  mod_chxj_global_config* conf;
+  server_rec* s_sv = s;
+
+  SDBG(s, "start chxj_child_init()");
+  do {
+    conf = (mod_chxj_global_config*)ap_get_module_config(s->module_config, &chxj_module);
+
+    if (apr_global_mutex_child_init(&conf->cookie_db_lock, NULL, p) != APR_SUCCESS) {
+      SERR(s, "Can't attach global mutex.");
+      return;
+    }
+  } while ((s = s->next) != NULL);
+  SDBG(s_sv, "end   chxj_child_init()");
 }
 
 
@@ -902,7 +931,11 @@ chxj_register_hooks(apr_pool_t *p)
   ap_hook_post_config(chxj_init_module,
                       NULL,
                       NULL,
-                      APR_HOOK_MIDDLE);
+                      APR_HOOK_REALLY_FIRST);
+  ap_hook_child_init(chxj_child_init, 
+                     NULL, 
+                     NULL, 
+                     APR_HOOK_REALLY_FIRST);
   ap_register_output_filter (
                       "chxj_output_filter", 
                       chxj_output_filter, 
@@ -1434,7 +1467,7 @@ module AP_MODULE_DECLARE_DATA chxj_module =
   chxj_create_per_dir_config,          /* create per-dir    config structures */
   chxj_merge_per_dir_config,           /* merge  per-dir    config structures */
   chxj_config_server_create,           /* create per-server config structures */
-  chxj_config_server_merge,            /* merge  per-server config structures */
+  NULL,                                /* merge  per-server config structures */
   cmds,                                /* table of config file commands       */
   chxj_register_hooks                  /* register hooks                      */
 };
