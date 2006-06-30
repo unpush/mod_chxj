@@ -17,6 +17,7 @@
 #include "mod_chxj.h"
 #include "chxj_cookie.h"
 #include "chxj_url_encode.h"
+#include "chxj_apply_convrule.h"
 
 #include "apu.h"
 #include "apr_dbm.h"
@@ -36,7 +37,7 @@ chxj_save_cookie(request_rec* r)
   int   ii;
   char* cookie;
   apr_array_header_t* headers;
-  apr_table_entry_t* entryp;
+  apr_table_entry_t*  hentryp;
   apr_status_t        retval;
   apr_datum_t dbmkey;
   apr_datum_t dbmval;
@@ -46,6 +47,8 @@ chxj_save_cookie(request_rec* r)
   unsigned char*    md5_value;
   char*             md5_string;
   mod_chxj_global_config* gconf;
+  mod_chxj_config*        dconf;
+  chxjconvrule_entry* entryp;
 
 
 
@@ -54,18 +57,30 @@ chxj_save_cookie(request_rec* r)
   md5_string = NULL;
 
   gconf = ap_get_module_config(r->server->module_config, &chxj_module);
+  dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  entryp = chxj_apply_convrule(r, dconf->convrules);
+  if (! entryp) {
+    DBG(r, "end chxj_save_cookie() no pattern");
+    return NULL;
+  }
+  if (! (entryp->action & CONVRULE_COOKIE_ON_BIT)) {
+    DBG(r, "end chxj_save_cookie() CookieOff");
+    return NULL;
+  }
+
+
   headers = (apr_array_header_t*)apr_table_elts(r->headers_out);
-  entryp = (apr_table_entry_t*)headers->elts;
+  hentryp = (apr_table_entry_t*)headers->elts;
 
 
   cookie = apr_palloc(r->pool, 1);
   cookie[0] = 0;
 
   for (ii=0; ii<headers->nelts; ii++) {
-    if (strcasecmp(entryp[ii].key, "Set-Cookie") == 0) {
+    if (strcasecmp(hentryp[ii].key, "Set-Cookie") == 0) {
       DBG(r, "=====================================");
-      DBG2(r, "cookie=[%s:%s]", entryp[ii].key, entryp[ii].val);
-      cookie = apr_pstrcat(r->pool, cookie, "\r\n", entryp[ii].val, NULL);
+      DBG2(r, "cookie=[%s:%s]", hentryp[ii].key, hentryp[ii].val);
+      cookie = apr_pstrcat(r->pool, cookie, "\r\n", hentryp[ii].val, NULL);
       DBG(r, "=====================================");
     }
   }

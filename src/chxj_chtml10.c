@@ -1579,6 +1579,8 @@ s_chtml10_start_form_tag(void* pdoc, Node* node)
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
+      value = chxj_add_cookie_parameter(r, value, chtml10->cookie_id);
+
       chtml10->out = apr_pstrcat(r->pool, 
                       chtml10->out, 
                       " action=\"",
