@@ -225,7 +225,10 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
   /*
    * save cookie.
    */
-  cookie_id = chxj_save_cookie(r);
+  cookie_id = NULL;
+  if (entryp->action && CONVRULE_COOKIE_ON_BIT) {
+    cookie_id = chxj_save_cookie(r);
+  }
 
   if (!r->header_only) {
     device_table* spec = chxj_specified_device(r, user_agent);
@@ -515,6 +518,8 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
   mod_chxj_ctx* ctx;
   char*         cookie_id;
   char*         location_header;
+  mod_chxj_config*    dconf;
+  chxjconvrule_entry* entryp;
 
 
   DBG(r, "start of chxj_output_filter()");
@@ -525,6 +530,9 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
     &&  !f->r->prev) 
       f->r->chunked = 1;
   }
+
+  dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  entryp = chxj_apply_convrule(r, dconf->convrules);
 
 
   for (b = APR_BRIGADE_FIRST(bb);
@@ -606,19 +614,21 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
         /*
          * save cookie.
          */
-        cookie_id = chxj_save_cookie(r);
+        if (entryp->action & CONVRULE_COOKIE_ON_BIT) {
+          cookie_id = chxj_save_cookie(r);
 
-        /*
-         * Location Header Check to add cookie parameter.
-         */
-        location_header = (char*)apr_table_get(r->headers_out, "Location");
-        if (location_header) {
-          DBG1(r, "Location Header=[%s]", location_header);
-          location_header = chxj_add_cookie_parameter(r,
-                                                      location_header,
-                                                      cookie_id);
-          apr_table_setn(r->headers_out, "Location", location_header);
-          DBG1(r, "Location Header=[%s]", location_header);
+          /*
+           * Location Header Check to add cookie parameter.
+           */
+          location_header = (char*)apr_table_get(r->headers_out, "Location");
+          if (location_header) {
+            DBG1(r, "Location Header=[%s]", location_header);
+            location_header = chxj_add_cookie_parameter(r,
+                                                        location_header,
+                                                        cookie_id);
+            apr_table_setn(r->headers_out, "Location", location_header);
+            DBG1(r, "Location Header=[%s]", location_header);
+          }
         }
 
         apr_table_setn(r->headers_out, "Content-Length", "0");
@@ -845,7 +855,6 @@ chxj_init_module(apr_pool_t *p,
 {
   mod_chxj_global_config* conf;
   void *user_data;
-  server_rec* s_sv = s;
 
   SDBG(s, "start chxj_init_module()");
 
@@ -864,32 +873,25 @@ chxj_init_module(apr_pool_t *p,
     SDBG(s, "end  chxj_init_module()");
     return OK;
   }
-  SDBG(s, " ");
 
   ap_add_version_component(p, CHXJ_VERSION_PREFIX CHXJ_VERSION);
+
+  conf = (mod_chxj_global_config *)ap_get_module_config(s->module_config, &chxj_module);
+
+  if (apr_global_mutex_create(&(conf->cookie_db_lock), NULL, APR_LOCK_DEFAULT, p) != APR_SUCCESS) {
+    SERR(s, "end  chxj_init_module()");
+    return HTTP_INTERNAL_SERVER_ERROR;
+  }
+#ifdef AP_NEED_SET_MUTEX_PERMS
+  if (unixd_set_global_mutex_perms(conf->cookie_db_lock) != APR_SUCCESS) {
+    SERR(s, "end  chxj_init_module()");
+    return HTTP_INTERNAL_SERVER_ERROR;
+  }
+#endif
+
   SDBG(s, " ");
 
-  do {
-    SDBG(s, " ");
-    conf = (mod_chxj_global_config *)ap_get_module_config(s->module_config, &chxj_module);
-    SDBG(s, " ");
-
-    if (apr_global_mutex_create(&(conf->cookie_db_lock), NULL, APR_LOCK_DEFAULT, p) != APR_SUCCESS) {
-      SERR(s, "end  chxj_init_module()");
-      return HTTP_INTERNAL_SERVER_ERROR;
-    }
-#ifdef AP_NEED_SET_MUTEX_PERMS
-    if (unixd_set_global_mutex_perms(conf->cookie_db_lock) != APR_SUCCESS) {
-      SERR(s, "end  chxj_init_module()");
-      return HTTP_INTERNAL_SERVER_ERROR;
-    }
-#endif
-    SDBG(s, " ");
-  } 
-  while ((s = s->next) != NULL);
-  SDBG(s_sv, " ");
-
-  SDBG(s_sv, "end  chxj_init_module()");
+  SDBG(s, "end  chxj_init_module()");
   return OK;
 }
 
@@ -897,18 +899,16 @@ static void
 chxj_child_init(apr_pool_t *p, server_rec *s)
 {
   mod_chxj_global_config* conf;
-  server_rec* s_sv = s;
 
   SDBG(s, "start chxj_child_init()");
-  do {
-    conf = (mod_chxj_global_config*)ap_get_module_config(s->module_config, &chxj_module);
+  conf = (mod_chxj_global_config*)ap_get_module_config(s->module_config, &chxj_module);
 
-    if (apr_global_mutex_child_init(&conf->cookie_db_lock, NULL, p) != APR_SUCCESS) {
-      SERR(s, "Can't attach global mutex.");
-      return;
-    }
-  } while ((s = s->next) != NULL);
-  SDBG(s_sv, "end   chxj_child_init()");
+  if (apr_global_mutex_child_init(&conf->cookie_db_lock, NULL, p) != APR_SUCCESS) {
+    SERR(s, "Can't attach global mutex.");
+    return;
+  }
+
+  SDBG(s, "end   chxj_child_init()");
 }
 
 
@@ -1398,6 +1398,14 @@ cmd_convert_rule(cmd_parms *cmd, void* mconfig, const char *arg)
       else
       if (strcasecmp(CONVRULE_ENGINE_OFF_CMD, action) == 0) {
         newrule->action |= CONVRULE_ENGINE_OFF_BIT;
+      }
+      else
+      if (strcasecmp(CONVRULE_COOKIE_ON_CMD, action) == 0) {
+        newrule->action |= CONVRULE_COOKIE_ON_BIT;
+      }
+      else
+      if (strcasecmp(CONVRULE_COOKIE_OFF_CMD, action) == 0) {
+        newrule->action |= CONVRULE_COOKIE_OFF_BIT;
       }
     }
   }
