@@ -24,6 +24,9 @@
 #include "apr_md5.h"
 #include "apr_base64.h"
 
+static char* s_get_hostname_from_url(request_rec* r, char* value);
+static char* s_cut_until_end_hostname(request_rec*, char* value);
+
 /*
  *
  */
@@ -141,6 +144,83 @@ on_error:
   return md5_string;
 }
 
+
+char*
+chxj_add_cookie_parameter(request_rec* r, char* value, char* cookie_id)
+{
+  char* qs;
+  char* dst;
+
+  DBG1(r, "start chxj_add_cookie_parameter() cookie_id=[%s]", cookie_id);
+  if (!cookie_id) return value;
+  if (chxj_cookie_check_host(r, value) != 0) {
+    DBG(r, "end chxj_add_cookie_parameter()(check host)");
+    return value;
+  }
+
+  dst = value;
+
+  qs = strchr(dst, '?');
+  if (qs) {
+    dst = apr_psprintf(r->pool, "%s&%s=%s", dst, CHXJ_COOKIE_PARAM, cookie_id);
+  }
+  else {
+    dst = apr_psprintf(r->pool, "%s?%s=%s", dst, CHXJ_COOKIE_PARAM, cookie_id);
+  }
+
+  DBG1(r, "end   chxj_add_cookie_parameter() dst=[%s]", dst);
+
+  return dst;
+}
+
+
+int
+chxj_cookie_check_host(request_rec* r, char* value) 
+{
+  char* hostnm;
+
+  DBG1(r, "hostname=[%s]", r->hostname);
+
+  hostnm = s_get_hostname_from_url(r, value);
+  if (hostnm) {
+    if (strcasecmp(hostnm, r->hostname) == 0)
+      return 0;
+    else
+      return 1;
+  }
+  return 0;
+}
+
+
+static char*
+s_get_hostname_from_url(request_rec* r, char* value)
+{
+  if (!value) return NULL; 
+
+  if (strncasecmp(value, "http://",  7) == 0 )
+    return s_cut_until_end_hostname(r, &value[7]);
+
+  if (strncasecmp(value, "https://", 8) == 0)
+    return s_cut_until_end_hostname(r, &value[8]);
+
+  return NULL;
+}
+
+static char* 
+s_cut_until_end_hostname(request_rec* r, char* value)
+{
+  char* sp;
+  char* hostnm;
+
+  hostnm = sp = apr_pstrdup(r->pool, value);
+  for (;*sp; sp++) {
+    if (*sp == '/'|| *sp == '?') {
+      *sp = '\0';
+      break;
+    }
+  }
+  return hostnm;
+}
 /*
  * vim:ts=2 et
  */

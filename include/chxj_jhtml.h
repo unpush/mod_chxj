@@ -32,6 +32,7 @@ typedef struct _jhtml_t {
     device_table*    spec;
     mod_chxj_config* conf;
     chxjconvrule_entry* entryp;
+    char*               cookie_id;
 } jhtml_t;
 
 /*----------------------------------------------------------------------------*/

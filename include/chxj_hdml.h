@@ -91,6 +91,7 @@ typedef struct _hdml_t {
   mod_chxj_config*  conf;
 
   chxjconvrule_entry* entryp;
+  char*               cookie_id;
 } hdml_t;
 /*============================================================================*/
 /* Prototype declaration.                                                     */

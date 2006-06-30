@@ -19,7 +19,11 @@
 
 #include "mod_chxj.h"
 
+#define CHXJ_COOKIE_PARAM  "_chxj_cc"
+
 extern char* chxj_save_cookie(request_rec *r);
+extern char* chxj_add_cookie_parameter(request_rec* r, char* value, char* cookie_id);
+extern int chxj_cookie_check_host(request_rec* r, char* value);
 
 #endif
 /*

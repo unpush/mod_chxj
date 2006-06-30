@@ -33,6 +33,7 @@ typedef struct _ctml10_t {
     device_table*      spec;
     mod_chxj_config*   conf;
     chxjconvrule_entry* entryp;
+    char*               cookie_id;
 } chtml10_t;
 
 /*----------------------------------------------------------------------------*/

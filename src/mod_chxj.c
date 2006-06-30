@@ -513,6 +513,8 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
   char*       contentLength;
   apr_size_t  len;
   mod_chxj_ctx* ctx;
+  char*         cookie_id;
+  char*         location_header;
 
 
   DBG(r, "start of chxj_output_filter()");
@@ -557,7 +559,11 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
             DBG(r, " ");
             ctx->buffer = apr_psprintf(r->pool, "\n");
             ctx->len += 1;
+            ctx->buffer = chxj_exchange(r, 
+                                        (const char**)&ctx->buffer, 
+                                        (apr_size_t*)&ctx->len);
             DBG(r, " ");
+
           }
         }
         DBG(r, " ");
@@ -597,6 +603,24 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
       }
       else {
         DBG(r, " ");
+        /*
+         * save cookie.
+         */
+        cookie_id = chxj_save_cookie(r);
+
+        /*
+         * Location Header Check to add cookie parameter.
+         */
+        location_header = (char*)apr_table_get(r->headers_out, "Location");
+        if (location_header) {
+          DBG1(r, "Location Header=[%s]", location_header);
+          location_header = chxj_add_cookie_parameter(r,
+                                                      location_header,
+                                                      cookie_id);
+          apr_table_setn(r->headers_out, "Location", location_header);
+          DBG1(r, "Location Header=[%s]", location_header);
+        }
+
         apr_table_setn(r->headers_out, "Content-Length", "0");
         rv = pass_data_to_filter(f, (const char*)"", (apr_size_t)0);
         DBG(r, " ");

@@ -19,6 +19,7 @@
 #include "chxj_dump.h"
 #include "chxj_img_conv.h"
 #include "chxj_qr_code.h"
+#include "chxj_cookie.h"
 
 #define GET_CHTML10(X) ((chtml10_t*)(X))
 
@@ -339,6 +340,7 @@ chxj_exchange_chtml10(
   /*--------------------------------------------------------------------------*/
   s_init_chtml10(&chtml10, &doc, r, spec);
   chtml10.entryp = entryp;
+  chtml10.cookie_id = (char*)cookie_id;
 
   ap_set_content_type(r, "text/html; charset=Windows-31J");
 
@@ -351,6 +353,7 @@ chxj_exchange_chtml10(
   ss = apr_pcalloc(r->pool, srclen + 1);
   memset(ss, 0, srclen + 1);
   memcpy(ss, src, srclen);
+
 #ifdef DUMP_LOG
   chxj_dump_out("[src] CHTML -> CHTML1.0", ss, srclen);
 #endif
@@ -362,6 +365,7 @@ chxj_exchange_chtml10(
   /*--------------------------------------------------------------------------*/
   chxj_node_exchange(spec,r,(void*)&chtml10, &doc, qs_get_root(&doc), 0);
   dst = chtml10.out;
+
 
   qs_all_free(&doc,QX_LOGMARK);
 
@@ -1296,6 +1300,8 @@ s_chtml10_start_a_tag(void* pdoc, Node* node)
       /*----------------------------------------------------------------------*/
       /* CHTML1.0                                                             */
       /*----------------------------------------------------------------------*/
+      value = chxj_add_cookie_parameter(r, value, chtml10->cookie_id);
+      
       chtml10->out = apr_pstrcat(r->pool, 
                       chtml10->out, 
                       " href=\"", 
