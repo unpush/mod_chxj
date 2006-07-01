@@ -2211,12 +2211,15 @@ s_chtml10_start_option_tag(void* pdoc, Node* child)
   request_rec* r;
   Attr*        attr;
 
-  char* selected   = NULL;
-  char* value      = NULL;
+  char* selected;
+  char* value;
 
-  chtml10 = GET_CHTML10(pdoc);
-  doc     = chtml10->doc;
-  r       = doc->r;
+  chtml10   = GET_CHTML10(pdoc);
+  doc       = chtml10->doc;
+  r         = doc->r;
+
+  selected  = NULL;
+  value     = NULL;
 
   chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<option", NULL);
   for (attr = qs_get_attr(doc,child);
