@@ -1672,37 +1672,51 @@ s_chtml10_start_form_tag(void* pdoc, Node* node)
     name  = qs_get_attr_name(doc,attr);
     value = qs_get_attr_value(doc,attr);
 
-    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "action") == 0) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 1.0                                                            */
-      /*----------------------------------------------------------------------*/
-      value = chxj_add_cookie_parameter(r, value, chtml10->cookie_id);
+    switch(*name) {
+    case 'a':
+    case 'A':
+      if (strcasecmp(name, "action") == 0) {
+        /*----------------------------------------------------------------------*/
+        /* CHTML 1.0                                                            */
+        /*----------------------------------------------------------------------*/
+        value = chxj_add_cookie_parameter(r, value, chtml10->cookie_id);
+  
+        chtml10->out = apr_pstrcat(r->pool, 
+                        chtml10->out, 
+                        " action=\"",
+                        value,
+                        "\"", 
+                        NULL);
+      }
+      break;
 
-      chtml10->out = apr_pstrcat(r->pool, 
-                      chtml10->out, 
-                      " action=\"",
-                      value,
-                      "\"", 
-                      NULL);
-    }
-    else
-    if ((*name == 'm' || *name == 'M') && strcasecmp(name, "method") == 0) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 1.0                                                            */
-      /*----------------------------------------------------------------------*/
-      chtml10->out = apr_pstrcat(r->pool, 
-                      chtml10->out, 
-                      " method=\"",
-                      value,
-                      "\"", 
-                      NULL);
-    }
-    else
-    if ((*name == 'u' || *name == 'U') && strcasecmp(name, "utn") == 0) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 3.0                                                            */
-      /*----------------------------------------------------------------------*/
-      /* ignore */
+    case 'm':
+    case 'M':
+      if (strcasecmp(name, "method") == 0) {
+        /*----------------------------------------------------------------------*/
+        /* CHTML 1.0                                                            */
+        /*----------------------------------------------------------------------*/
+        chtml10->out = apr_pstrcat(r->pool, 
+                        chtml10->out, 
+                        " method=\"",
+                        value,
+                        "\"", 
+                        NULL);
+      }
+      break;
+
+    case 'u':
+    case 'U':
+      if (strcasecmp(name, "utn") == 0) {
+        /*----------------------------------------------------------------------*/
+        /* CHTML 3.0                                                            */
+        /*----------------------------------------------------------------------*/
+        /* ignore */
+      }
+      break;
+
+    default:
+      break;
     }
   }
 
