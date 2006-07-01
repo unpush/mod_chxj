@@ -520,6 +520,7 @@ pass_data_to_filter(ap_filter_t *f, const char *data,
   }
 
   DBG(r, "end pass_data_to_filter()");
+
   return rv;
 }
 
