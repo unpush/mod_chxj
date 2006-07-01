@@ -862,7 +862,9 @@ chxj_global_config_create(apr_pool_t* pool, server_rec* s)
   /*--------------------------------------------------------------------------*/
   conf = (mod_chxj_global_config*)apr_palloc(pool, 
                   sizeof(mod_chxj_global_config));
+#if 0
   conf->cookie_db_lock = NULL;
+#endif
   SDBG(s, "end   chxj_global_config_create()");
 
   return conf;
@@ -902,6 +904,7 @@ chxj_init_module(apr_pool_t *p,
 
   conf = (mod_chxj_global_config *)ap_get_module_config(s->module_config, &chxj_module);
 
+#if 0
   if (apr_global_mutex_create(&(conf->cookie_db_lock), NULL, APR_LOCK_DEFAULT, p) != APR_SUCCESS) {
     SERR(s, "end  chxj_init_module()");
     return HTTP_INTERNAL_SERVER_ERROR;
@@ -911,6 +914,7 @@ chxj_init_module(apr_pool_t *p,
     SERR(s, "end  chxj_init_module()");
     return HTTP_INTERNAL_SERVER_ERROR;
   }
+#endif
 #endif
 
   SDBG(s, " ");
@@ -922,15 +926,20 @@ chxj_init_module(apr_pool_t *p,
 static void 
 chxj_child_init(apr_pool_t *p, server_rec *s)
 {
+#if 0
   mod_chxj_global_config* conf;
+#endif
 
   SDBG(s, "start chxj_child_init()");
+#if 0
   conf = (mod_chxj_global_config*)ap_get_module_config(s->module_config, &chxj_module);
 
-  if (apr_global_mutex_child_init(&conf->cookie_db_lock, NULL, p) != APR_SUCCESS) {
+  if (apr_global_mutex_child_init(&conf->cookie_db_lock, NULL, p) 
+  != APR_SUCCESS) {
     SERR(s, "Can't attach global mutex.");
     return;
   }
+#endif
 
   SDBG(s, "end   chxj_child_init()");
 }
