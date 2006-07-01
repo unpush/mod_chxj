@@ -1443,7 +1443,9 @@ cmd_convert_rule(cmd_parms *cmd, void* mconfig, const char *arg)
 
   dconf = (mod_chxj_config*)mconfig;
   if (dconf->convrules == NULL)
-    dconf->convrules   = apr_array_make(cmd->pool, 2, sizeof(chxjconvrule_entry));
+    dconf->convrules   = apr_array_make(cmd->pool, 
+                                        2, 
+                                        sizeof(chxjconvrule_entry));
 
 
   newrule = apr_array_push(dconf->convrules);
