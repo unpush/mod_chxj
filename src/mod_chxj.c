@@ -598,7 +598,6 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
 
           }
         }
-        DBG(r, " ");
         if (r->content_type 
         && *(char*)r->content_type == 'i' 
         && strncmp(r->content_type, "image/", 6) == 0) {
