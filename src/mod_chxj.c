@@ -1409,6 +1409,7 @@ cmd_set_image_copyright(cmd_parms *parms, void* mconfig, const char* arg)
   Doc              doc;
 
   doc.r = NULL;
+
   if (strlen(arg) > 256) 
     return "Copyright Flag is too long.";
 
@@ -1417,6 +1418,7 @@ cmd_set_image_copyright(cmd_parms *parms, void* mconfig, const char* arg)
 
   return NULL;
 }
+
 
 static const char*
 cmd_convert_rule(cmd_parms *cmd, void* mconfig, const char *arg)
