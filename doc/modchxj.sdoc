@@ -13,6 +13,7 @@
 mod_chxjはオープンソースの携帯向けコンテンツ変換Apache2.0用モジュールであり、
 CHTML（DoCoMo i-Mode用 CHTML3.0)で記述された文書や通常のHTMLで記述された文書を、アクセスに来た端末のUser-Agentヘッダを見て、それぞれの端末にあった形式に変換します。
 HTML文書に限らず、画像（jpg、gif、png）、絵文字についても、定義ファイルに従ってそれぞれのキャリアにあった絵文字に変換します。
+Cookie非対応端末のために、Set-Cookie、Cookieヘッダをシミュレートすることもできます（EXPERIMENTAL)。
 
 
 </section>
@@ -467,7 +468,7 @@ ChxjConvRule "^/chxj.+$" "EngineOn" "EUC-JP"
     </tr>
 
     <tr>
-      <td>第2パラメータ</td><td>HTML変換エンジンのOn|Offを指定します。Onの場合は"EngineOn"。Offの場合は"EngineOff"を指定します。</td>
+      <td>第2パラメータ</td><td>HTML変換エンジンのOn|Offを指定します。Onの場合は"EngineOn"。Offの場合は"EngineOff"を指定します。"EngineOn|EngineOff"の他に"CookieOn|CookieOff"を指定することもできます。複数指定する場合は","で区切って指定します。</td>
     </tr>
     <tr>
       <td>第3パラメータ</td><td>文字コードを指定します。ここで指定した文字コードから"CP932"に変換します。指定できる文字コードはiconv -lコマンドによって確認することができます。変換しなくて良い場合はNONEを指定してください。</td>
@@ -1002,6 +1003,15 @@ httpd.confに以下の記述を追加します。
   ua=IGNを指定して、リクエストしなければなりません。（もちろん、画像変換エンジンをそのまま使用する場合は何もしないでいいです。）
   
   
+</subsection>
+</section>
+<section title="Cookieシミュレート機能(EXPERIMENTAL)">
+<subsection title="Cookieシミュレート機能(EXPERIMENTAL)">
+  Cookieを受け付けない（無視する）端末のためにCookieをシミュレートします。本機能を有効にするためにはChxjConvertRuleディレクティブを使用する必要があります。ChxjConvertRuleディレクティブの第２パラメータにCookieOnを指定します。
+  
+  <program title="Cookieシミュレート機能を有効にする例">
+    ChxjConvertRule "^/chxj.+$" "EngineOn,CookieOn" "NONE"
+  </program>
 </subsection>
 </section>
 </body>

@@ -736,12 +736,16 @@ function setOHPHandler() {
 <li> <a href="#doc1_1265" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">ＱＲコードソースファイルの設置</a>
 <li> <a href="#doc1_1289" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">ＱＲコードの動的出力機能</a>
 </ul>
+<li> <a href="#doc1_1296" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">Cookieシミュレート機能(EXPERIMENTAL)</a>
+<ul>
+<li> <a href="#doc1_1298" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">Cookieシミュレート機能(EXPERIMENTAL)</a>
+</ul>
 </ul>
 </div>
 
 <h2 id="doc1_15">Overview</h2>
 
-<p class="first_ja">mod_chxjはオープンソースの携帯向けコンテンツ変換Apache2.0用モジュールであり、CHTML（DoCoMo i-Mode用CHTML3.0)で記述された文書や通常のHTMLで記述された文書を、アクセスに来た端末のUser-Agentヘッダを見て、それぞれの端末にあった形式に変換します。HTML文書に限らず、画像（jpg、gif、png）、絵文字についても、定義ファイルに従ってそれぞれのキャリアにあった絵文字に変換します。</p>
+<p class="first_ja">mod_chxjはオープンソースの携帯向けコンテンツ変換Apache2.0用モジュールであり、CHTML（DoCoMo i-Mode用CHTML3.0)で記述された文書や通常のHTMLで記述された文書を、アクセスに来た端末のUser-Agentヘッダを見て、それぞれの端末にあった形式に変換します。HTML文書に限らず、画像（jpg、gif、png）、絵文字についても、定義ファイルに従ってそれぞれのキャリアにあった絵文字に変換します。Cookie非対応端末のために、Set-Cookie、Cookieヘッダをシミュレートすることもできます（EXPERIMENTAL)。</p>
 
 <h2 id="doc1_18">インストール</h2>
 
@@ -1191,7 +1195,7 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 </tr>
 <tr class="odd">
 <td>第2パラメータ</td>
-<td>HTML変換エンジンのOn|Offを指定します。Onの場合は&quot;EngineOn&quot;。Offの場合は&quot;EngineOff&quot;を指定します。</td>
+<td>HTML変換エンジンのOn|Offを指定します。Onの場合は&quot;EngineOn&quot;。Offの場合は&quot;EngineOff&quot;を指定します。&quot;EngineOn|EngineOff&quot;の他に&quot;CookieOn|CookieOff&quot;を指定することもできます。複数指定する場合は&quot;,&quot;で区切って指定します。</td>
 </tr>
 <tr class="even">
 <td>第3パラメータ</td>
@@ -1741,5 +1745,19 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 </pre>
 
 <p>そして、上記のコードを、OutputFilterを通るところに設置すれば完了です。なお、OutputFilterを通る場合は、画像変換エンジンも動作してしまうため、使用するクライアントのUser-Agentを定義するか、もしくは、ua=IGNを指定して、リクエストしなければなりません。（もちろん、画像変換エンジンをそのまま使用する場合は何もしないでいいです。）</p>
+
+<h2 id="doc1_1296">Cookieシミュレート機能(EXPERIMENTAL)</h2>
+
+
+<h3 id="doc1_1298">Cookieシミュレート機能(EXPERIMENTAL)</h3>
+
+<p class="first_ja">Cookieを受け付けない（無視する）端末のためにCookieをシミュレートします。本機能を有効にするためにはChxjConvertRuleディレクティブを使用する必要があります。ChxjConvertRuleディレクティブの第２パラメータにCookieOnを指定します。</p>
+
+<div id="doc1_1300" class="caption">Cookieシミュレート機能を有効にする例</div>
+<pre class="program" style="margin-top:0">
+    ChxjConvertRule &quot;^/chxj.+$&quot; &quot;EngineOn,CookieOn&quot; &quot;NONE&quot;
+  
+</pre>
+
 </body>
 </html>
