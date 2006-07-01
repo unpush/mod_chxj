@@ -570,6 +570,7 @@ s_chtml10_end_meta_tag(void* pdoc, Node* child)
   return chtml10->out;
 }
 
+
 /**
  * It is a handler who processes the HEAD tag.
  *
