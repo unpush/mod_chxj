@@ -775,6 +775,7 @@ chxj_input_filter(ap_filter_t*        f,
   entryp = chxj_apply_convrule(r, dconf->convrules);
   if (!entryp || !(entryp->action & CONVRULE_ENGINE_ON_BIT)) {
     DBG(r,"EngineOff");
+
     ap_remove_input_filter(f);
     return ap_get_brigade(f->next, bb, mode, block, readbytes);
   }
