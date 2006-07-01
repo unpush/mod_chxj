@@ -542,7 +542,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
   apr_size_t  len;
   mod_chxj_ctx* ctx;
   char*         cookie_id;
-  char*         location_header;
+  char*               location_header;
   mod_chxj_config*    dconf;
   chxjconvrule_entry* entryp;
 
