@@ -1960,53 +1960,74 @@ s_chtml10_start_hr_tag(void* pdoc, Node* node)
   for (attr = qs_get_attr(doc,node);
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
+
     char* name;
     char* value;
 
     name  = qs_get_attr_name (doc,attr);
     value = qs_get_attr_value(doc,attr);
 
-    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "align") == 0) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 1.0                                                            */
-      /*----------------------------------------------------------------------*/
-      chtml10->out = apr_pstrcat(r->pool,
-                        chtml10->out, 
-                        " align=\"", value, "\" ", NULL);
-    }
-    else
-    if ((*name == 's' || *name == 'S') && strcasecmp(name, "size") == 0) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 1.0                                                            */
-      /*----------------------------------------------------------------------*/
-      chtml10->out = apr_pstrcat(r->pool,
-                        chtml10->out, 
-                        " size=\"", value, "\" ", NULL);
-    }
-    else
-    if ((*name == 'w' || *name == 'W') && strcasecmp(name, "width") == 0) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 1.0                                                            */
-      /*----------------------------------------------------------------------*/
-      chtml10->out = apr_pstrcat(r->pool,
-                        chtml10->out, 
-                        " width=\"", value, "\" ", NULL);
-    }
-    else
-    if ((*name == 'n' || *name == 'N') && strcasecmp(name, "noshade") == 0) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 1.0                                                            */
-      /*----------------------------------------------------------------------*/
-      chtml10->out = apr_pstrcat(r->pool,
-                        chtml10->out, 
-                        " noshade ", NULL);
-    }
-    else
-    if ((*name == 'c' || *name == 'C') && strcasecmp(name, "color") == 0) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 4.0                                                            */
-      /*----------------------------------------------------------------------*/
-      /* ignore */
+    switch(*name) {
+    case 'a':
+    case 'A':
+      if (strcasecmp(name, "align") == 0) {
+        /*----------------------------------------------------------------------*/
+        /* CHTML 1.0                                                            */
+        /*----------------------------------------------------------------------*/
+        chtml10->out = apr_pstrcat(r->pool,
+                          chtml10->out, 
+                          " align=\"", value, "\" ", NULL);
+      }
+      break;
+
+    case 's':
+    case 'S':
+      if (strcasecmp(name, "size") == 0) {
+        /*----------------------------------------------------------------------*/
+        /* CHTML 1.0                                                            */
+        /*----------------------------------------------------------------------*/
+        chtml10->out = apr_pstrcat(r->pool,
+                          chtml10->out, 
+                          " size=\"", value, "\" ", NULL);
+      }
+      break;
+
+    case 'w':
+    case 'W':
+      if (strcasecmp(name, "width") == 0) {
+        /*----------------------------------------------------------------------*/
+        /* CHTML 1.0                                                            */
+        /*----------------------------------------------------------------------*/
+        chtml10->out = apr_pstrcat(r->pool,
+                          chtml10->out, 
+                          " width=\"", value, "\" ", NULL);
+      }
+      break;
+
+    case 'n':
+    case 'N':
+      if (strcasecmp(name, "noshade") == 0) {
+        /*----------------------------------------------------------------------*/
+        /* CHTML 1.0                                                            */
+        /*----------------------------------------------------------------------*/
+        chtml10->out = apr_pstrcat(r->pool,
+                          chtml10->out, 
+                          " noshade ", NULL);
+      }
+      break;
+
+    case 'c':
+    case 'C':
+      if (strcasecmp(name, "color") == 0) {
+        /*----------------------------------------------------------------------*/
+        /* CHTML 4.0                                                            */
+        /*----------------------------------------------------------------------*/
+        /* ignore */
+      }
+      break;
+
+    default:
+      break;
     }
   }
 
