@@ -2254,7 +2254,10 @@ s_chtml10_start_option_tag(void* pdoc, Node* child)
                                "\"", 
                                NULL);
   else
-    chtml10->out = apr_pstrcat(r->pool, chtml10->out, " value=\"\"", NULL);
+    chtml10->out = apr_pstrcat(r->pool, 
+                               chtml10->out, 
+                               " value=\"\"", 
+                               NULL);
 
   if (selected)
     chtml10->out = apr_pstrcat(r->pool, chtml10->out, " selected ", NULL);
