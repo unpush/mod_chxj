@@ -922,10 +922,12 @@ chxj_init_module(apr_pool_t *p,
   conf = (mod_chxj_global_config *)ap_get_module_config(s->module_config, 
                                                         &chxj_module);
 
-  if (apr_global_mutex_create(&(conf->cookie_db_lock), NULL, APR_LOCK_DEFAULT, p) != APR_SUCCESS) {
+  if (apr_global_mutex_create(&(conf->cookie_db_lock), 
+                              NULL, APR_LOCK_DEFAULT, p) != APR_SUCCESS) {
     SERR(s, "end  chxj_init_module()");
     return HTTP_INTERNAL_SERVER_ERROR;
   }
+
 #ifdef AP_NEED_SET_MUTEX_PERMS
   if (unixd_set_global_mutex_perms(conf->cookie_db_lock) != APR_SUCCESS) {
     SERR(s, "end  chxj_init_module()");
@@ -934,7 +936,6 @@ chxj_init_module(apr_pool_t *p,
 #endif
 #endif
 
-  SDBG(s, " ");
 
   SDBG(s, "end  chxj_init_module()");
   return OK;
