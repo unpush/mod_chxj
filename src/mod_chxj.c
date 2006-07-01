@@ -560,7 +560,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
       f->r->chunked = 1;
   }
 
-  dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  dconf  = ap_get_module_config(r->per_dir_config, &chxj_module);
   entryp = chxj_apply_convrule(r, dconf->convrules);
 
 
