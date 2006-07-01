@@ -1325,6 +1325,7 @@ cmd_load_device_data(cmd_parms *parms, void *mconfig, const char* arg)
   return NULL;
 }
 
+
 /**
  * Device definition information is loaded. 
  *
