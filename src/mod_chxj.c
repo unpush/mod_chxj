@@ -614,17 +614,22 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
         && *(char*)r->content_type == 'i' 
         && strncmp(r->content_type, "image/", 6) == 0) {
           if (ctx->len) {
-            char* tmp = apr_palloc(r->pool, ctx->len + 1);
+            char* tmp;
+
+            tmp = apr_palloc(r->pool, ctx->len + 1);
+
             memset(tmp, 0, ctx->len + 1);
             memcpy(tmp, ctx->buffer, ctx->len);
 
             DBG1(r, "input data=[%s]", tmp);
 
             ctx->buffer = 
-              chxj_exchange_image(r, (const char**)&tmp,(apr_size_t*)&ctx->len);
-            if (ctx->buffer == NULL) {
+              chxj_exchange_image(r, 
+                                  (const char**)&tmp,
+                                  (apr_size_t*)&ctx->len);
+
+            if (ctx->buffer == NULL)
               ctx->buffer = tmp;
-            }
 
             DBG2(r, "output data=[%.*s]", ctx->len,ctx->buffer);
           }
