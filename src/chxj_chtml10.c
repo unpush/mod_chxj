@@ -343,7 +343,7 @@ chxj_exchange_chtml10(
   /* The CHTML structure is initialized.                                      */
   /*--------------------------------------------------------------------------*/
   s_init_chtml10(&chtml10, &doc, r, spec);
-  chtml10.entryp = entryp;
+  chtml10.entryp    = entryp;
   chtml10.cookie_id = (char*)cookie_id;
 
   ap_set_content_type(r, "text/html; charset=Windows-31J");

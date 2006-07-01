@@ -857,6 +857,7 @@ chxj_input_filter(ap_filter_t*        f,
     ap_remove_input_filter(f);
     return ap_get_brigade(f->next, bb, mode, block, readbytes);
   }
+
   data_brigade = chxj_input_convert(
     r, 
     (const char**)&data_brigade, 
