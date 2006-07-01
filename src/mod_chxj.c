@@ -262,13 +262,13 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
     }
   }
 
-  DBG(r, "end chxj_exchange()");
-  DBG1(r, "Length=[%d]", *len);
   if (*len == 0) {
     dst = apr_psprintf(r->pool, "\n");
     *len = 1;
   }
   dst[*len] = 0;
+
+  DBG(r, "end chxj_exchange()");
 
   return dst;
 }
