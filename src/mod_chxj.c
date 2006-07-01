@@ -1389,6 +1389,7 @@ cmd_set_image_cache_dir(cmd_parms *parms, void *mconfig, const char* arg)
 {
   mod_chxj_config* conf;
   Doc              doc;
+
   doc.r = NULL;
 
   if (strlen(arg) > 256) 
