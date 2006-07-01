@@ -961,11 +961,11 @@ chxj_init_module(apr_pool_t *p,
 #endif
 #endif
 
-
   SDBG(s, "end  chxj_init_module()");
 
   return OK;
 }
+
 
 static void 
 chxj_child_init(apr_pool_t *p, server_rec *s)

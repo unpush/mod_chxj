@@ -402,7 +402,11 @@ chxj_exchange_chtml10(
  * @param spec  [i]   The pointer to the device_table
  */
 static void
-s_init_chtml10(chtml10_t* chtml10, Doc* doc, request_rec* r, device_table* spec)
+s_init_chtml10(
+  chtml10_t* chtml10, 
+  Doc* doc, 
+  request_rec*  r, 
+  device_table* spec)
 {
   memset(doc,   0, sizeof(Doc));
   memset(chtml10, 0, sizeof(chtml10_t));
