@@ -1945,7 +1945,9 @@ s_chtml10_start_hr_tag(void* pdoc, Node* node)
 static char*
 s_chtml10_end_hr_tag(void* pdoc, Node* child) 
 {
-  chtml10_t* chtml10 = GET_CHTML10(pdoc);
+  chtml10_t* chtml10;
+
+  chtml10 = GET_CHTML10(pdoc);
 
   return chtml10->out;
 }
