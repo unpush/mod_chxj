@@ -1447,7 +1447,6 @@ cmd_convert_rule(cmd_parms *cmd, void* mconfig, const char *arg)
                                         2, 
                                         sizeof(chxjconvrule_entry));
 
-
   newrule = apr_array_push(dconf->convrules);
 
   newrule->flags  = 0;
@@ -1481,7 +1480,6 @@ cmd_convert_rule(cmd_parms *cmd, void* mconfig, const char *arg)
         newrule->action |= CONVRULE_COOKIE_ON_BIT;
       }
       break;
-
     default:
       break;
     }
