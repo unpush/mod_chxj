@@ -536,7 +536,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
 {
   request_rec* r = f->r;
   apr_status_t rv = APR_SUCCESS;
-  apr_bucket*  b;
+  apr_bucket*         b;
   const char*         data;
   char*               contentLength;
   apr_size_t          len;
