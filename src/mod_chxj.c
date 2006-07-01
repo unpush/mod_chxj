@@ -296,6 +296,7 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp)
 
   if (! r->args) {
     DBG(r, "r->args=[null]");
+    DBG(r, "end   chxj_convert_input_header()");
     return 0;
   }
   urilen = strlen(r->args);
