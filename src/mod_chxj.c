@@ -1431,7 +1431,7 @@ cmd_convert_rule(cmd_parms *cmd, void* mconfig, const char *arg)
   char* prm5;
   int mode;
   char* pstate;
-  char* action;
+  char*               action;
   char*               pp;
   ap_regex_t*         regexp;
   chxjconvrule_entry* newrule;
