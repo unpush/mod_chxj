@@ -2369,18 +2369,29 @@ s_chtml10_start_option_tag(void* pdoc, Node* child)
     nm  = qs_get_attr_name (doc,attr);
     val = qs_get_attr_value(doc,attr);
 
-    if ((*nm == 's' || *nm == 'S') && strcasecmp(nm, "selected") == 0) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 1.0 version 2.0                                                */
-      /*----------------------------------------------------------------------*/
-      selected = apr_pstrdup(r->pool, val);
-    }
-    else
-    if ((*nm == 'v' || *nm == 'V') && strcasecmp(nm, "value") == 0) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 1.0 version 2.0                                                */
-      /*----------------------------------------------------------------------*/
-      value = apr_pstrdup(r->pool, val);
+    switch(*nm) {
+    case 's':
+    case 'S':
+      if (strcasecmp(nm, "selected") == 0) {
+        /*----------------------------------------------------------------------*/
+        /* CHTML 1.0 version 2.0                                                */
+        /*----------------------------------------------------------------------*/
+        selected = apr_pstrdup(r->pool, val);
+      }
+      break;
+
+    case 'v':
+    case 'V':
+      if (strcasecmp(nm, "value") == 0) {
+        /*----------------------------------------------------------------------*/
+        /* CHTML 1.0 version 2.0                                                */
+        /*----------------------------------------------------------------------*/
+        value = apr_pstrdup(r->pool, val);
+      }
+      break;
+
+    default:
+      break;
     }
   }
 
