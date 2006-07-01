@@ -2685,31 +2685,45 @@ s_chtml10_start_textarea_tag(void* pdoc, Node* node)
     name  = qs_get_attr_name (doc,attr);
     value = qs_get_attr_value(doc,attr);
 
-    if ((*name == 'n' || *name == 'N') && strcasecmp(name, "name") == 0) {
-      chtml10->out = apr_pstrcat(r->pool, 
-                                 chtml10->out, 
-                                 " name=\"",
-                                 value,
-                                 "\"", 
-                                 NULL);
-    }
-    else 
-    if ((*name == 'r' || *name == 'R') && strcasecmp(name, "rows") == 0) {
-      chtml10->out = apr_pstrcat(r->pool, 
-                                 chtml10->out, 
-                                 " rows=\"",
+    switch(*name) {
+    case 'n':
+    case 'N':
+      if (strcasecmp(name, "name") == 0) {
+        chtml10->out = apr_pstrcat(r->pool, 
+                                   chtml10->out, 
+                                   " name=\"",
                                    value,
-                                   "\"",
+                                   "\"", 
                                    NULL);
-    }
-    else 
-    if ((*name == 'c' || *name == 'C') && strcasecmp(name, "cols") == 0) {
-      chtml10->out = apr_pstrcat(r->pool, 
-                                 chtml10->out, 
-                                 " cols=\"",
-                                 value,
-                                 "\"", 
-                                 NULL);
+      }
+      break;
+
+    case 'r':
+    case 'R':
+      if (strcasecmp(name, "rows") == 0) {
+        chtml10->out = apr_pstrcat(r->pool, 
+                                   chtml10->out, 
+                                   " rows=\"",
+                                     value,
+                                     "\"",
+                                     NULL);
+      }
+      break;
+
+    case 'c':
+    case 'C':
+      if (strcasecmp(name, "cols") == 0) {
+        chtml10->out = apr_pstrcat(r->pool, 
+                                   chtml10->out, 
+                                   " cols=\"",
+                                   value,
+                                   "\"", 
+                                   NULL);
+      }
+      break;
+    
+    default:
+      break;
     }
   }
 
