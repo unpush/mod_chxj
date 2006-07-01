@@ -858,6 +858,7 @@ chxj_input_filter(ap_filter_t*        f,
     APR_BRIGADE_INSERT_TAIL(obb, eos);
     APR_BRIGADE_CONCAT(bb, obb);
   }
+
   DBG(r, "end of chxj_input_filter()");
 
   return APR_SUCCESS;
