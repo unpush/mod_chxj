@@ -1927,6 +1927,7 @@ s_chtml10_start_hr_tag(void* pdoc, Node* node)
       /* ignore */
     }
   }
+
   chtml10->out = apr_pstrcat(r->pool, chtml10->out, " >", NULL);
 
   return chtml10->out;
