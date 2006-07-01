@@ -1999,12 +1999,16 @@ s_chtml10_start_img_tag(void* pdoc, Node* node)
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
 #ifdef IMG_NOT_CONVERT_FILENAME
+      value = chxj_add_cookie_parameter(r, value, chtml10->cookie_id);
       chtml10->out = apr_pstrcat(r->pool, 
                       chtml10->out, " src=\"",value,"\"", NULL);
 #else
+      value = chxj_img_conv(r, spec, value);
+      value = chxj_add_cookie_parameter(r, value, chtml10->cookie_id);
       chtml10->out = apr_pstrcat(r->pool, 
                       chtml10->out, " src=\"", 
-                      chxj_img_conv(r, spec, value), NULL);
+                      value, 
+                      NULL);
       chtml10->out = apr_pstrcat(r->pool, chtml10->out, "\"", NULL);
 #endif
     }
