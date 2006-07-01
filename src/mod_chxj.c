@@ -603,7 +603,6 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
         && *(char*)r->content_type == 'i' 
         && strncmp(r->content_type, "image/", 6) == 0) {
           if (ctx->len) {
-            DBG(r, " ");
             char* tmp = apr_palloc(r->pool, ctx->len + 1);
             memset(tmp, 0, ctx->len + 1);
             memcpy(tmp, ctx->buffer, ctx->len);
