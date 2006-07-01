@@ -938,6 +938,7 @@ chxj_init_module(apr_pool_t *p,
 
 
   SDBG(s, "end  chxj_init_module()");
+
   return OK;
 }
 
