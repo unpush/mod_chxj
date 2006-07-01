@@ -575,8 +575,11 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
       /* End Of File                                                          */
       /*----------------------------------------------------------------------*/
       if (f->ctx) {
+
         ctx = (mod_chxj_ctx*)f->ctx;
+
         DBG1(r, "content_type=[%s]", r->content_type);
+
         if (r->content_type 
         && *(char*)r->content_type == 't' 
         && strncmp(r->content_type, "text/html",   9) == 0) {
