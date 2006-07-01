@@ -1066,9 +1066,13 @@ chxj_create_per_dir_config(apr_pool_t *p, char *arg)
 static void*
 chxj_merge_per_dir_config(apr_pool_t *p, void *basev, void *addv)
 {
-  mod_chxj_config *base = (mod_chxj_config*)basev;
-  mod_chxj_config *add  = (mod_chxj_config*)addv;
-  mod_chxj_config *mrg  = (mod_chxj_config*)apr_palloc(p, sizeof(mod_chxj_config));
+  mod_chxj_config *base;
+  mod_chxj_config *add;
+  mod_chxj_config *mrg;
+
+  base = (mod_chxj_config*)basev;
+  add  = (mod_chxj_config*)addv;
+  mrg  = (mod_chxj_config*)apr_palloc(p, sizeof(mod_chxj_config));
 
   mrg->device_data_file = NULL;
   mrg->devices          = NULL;
