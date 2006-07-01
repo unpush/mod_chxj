@@ -907,6 +907,7 @@ chxj_global_config_create(apr_pool_t* pool, server_rec* s)
   return conf;
 }
 
+
 /**
  * initialize chxj module
  */

@@ -355,7 +355,7 @@ chxj_exchange_chtml10(
   qs_init_root_node(&doc);
 
   ss = apr_pcalloc(r->pool, srclen + 1);
-  memset(ss, 0, srclen + 1);
+  memset(ss, 0,   srclen + 1);
   memcpy(ss, src, srclen);
 
 #ifdef DUMP_LOG
