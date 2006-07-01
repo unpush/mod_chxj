@@ -534,8 +534,8 @@ pass_data_to_filter(ap_filter_t *f, const char *data,
 static apr_status_t 
 chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
 {
-  request_rec* r = f->r;
-  apr_status_t rv = APR_SUCCESS;
+  request_rec*        r;
+  apr_status_t        rv;
   apr_bucket*         b;
   const char*         data;
   char*               contentLength;
@@ -547,7 +547,11 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
   chxjconvrule_entry* entryp;
 
 
+
   DBG(r, "start of chxj_output_filter()");
+
+  r  = f->r;
+  rv = APR_SUCCESS;
 
   if (!f->ctx) {
     if ((f->r->proto_num >= 1001) 
