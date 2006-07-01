@@ -170,6 +170,7 @@ chxj_headers_fixup(request_rec *r)
   
   default:
     break;
+
   }
 
   DBG(r, "end chxj_headers_fixup()");
