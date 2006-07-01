@@ -548,7 +548,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
 
 
 
-  DBG(r, "start of chxj_output_filter()");
+  DBG(f->r, "start of chxj_output_filter()");
 
   r  = f->r;
   rv = APR_SUCCESS;
@@ -894,7 +894,9 @@ chxj_init_module(apr_pool_t *p,
                   apr_pool_t *ptemp, 
                   server_rec *s)
 {
+#if 0
   mod_chxj_global_config* conf;
+#endif
   void *user_data;
 
   SDBG(s, "start chxj_init_module()");
