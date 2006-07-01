@@ -2537,7 +2537,12 @@ s_chtml10_start_textarea_tag(void* pdoc, Node* node)
     value = qs_get_attr_value(doc,attr);
 
     if ((*name == 'n' || *name == 'N') && strcasecmp(name, "name") == 0) {
-      chtml10->out = apr_pstrcat(r->pool, chtml10->out, " name=\"",value,"\"", NULL);
+      chtml10->out = apr_pstrcat(r->pool, 
+                                 chtml10->out, 
+                                 " name=\"",
+                                 value,
+                                 "\"", 
+                                 NULL);
     }
     else 
     if ((*name == 'r' || *name == 'R') && strcasecmp(name, "rows") == 0) {
