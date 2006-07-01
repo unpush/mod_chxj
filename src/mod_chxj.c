@@ -649,6 +649,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
       }
       else {
         DBG1(r, " SAVE COOKIE[%x]", entryp->action);
+
         /*
          * save cookie.
          */
@@ -673,7 +674,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
 
         apr_table_setn(r->headers_out, "Content-Length", "0");
         rv = pass_data_to_filter(f, (const char*)"", (apr_size_t)0);
-        DBG(r, " ");
+
         return rv;
       }
     }
