@@ -595,6 +595,7 @@ s_chtml10_start_head_tag(void* pdoc, Node* node)
   return chtml10->out;
 }
 
+
 /**
  * It is a handler who processes the HEAD tag.
  *
