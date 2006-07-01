@@ -590,7 +590,6 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
             DBG2(r, "output data=[%.*s]", ctx->len,ctx->buffer);
           }
           else {
-            DBG(r, " ");
             ctx->buffer = apr_psprintf(r->pool, "\n");
             ctx->len += 1;
             ctx->buffer = chxj_exchange(r, 
