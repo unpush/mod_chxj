@@ -2091,6 +2091,7 @@ s_chtml10_start_img_tag(void* pdoc, Node* node)
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
+
     char* name;
     char* value;
 
@@ -2249,25 +2250,39 @@ s_chtml10_start_select_tag(void* pdoc, Node* child)
     nm  = qs_get_attr_name (doc,attr);
     val = qs_get_attr_value(doc,attr);
 
-    if ((*nm == 's' || *nm == 'S') && strcasecmp(nm, "size") == 0) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 1.0 version 2.0                                                */
-      /*----------------------------------------------------------------------*/
-      size = apr_pstrdup(r->pool, val);
-    }
-    else
-    if ((*nm == 'n' || *nm == 'N') && strcasecmp(nm, "name") == 0) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 1.0 version 2.0                                                */
-      /*----------------------------------------------------------------------*/
-      name = apr_pstrdup(r->pool, val);
-    }
-    else
-    if ((*nm == 'm' || *nm == 'M') && strcasecmp(nm, "multiple") == 0) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 1.0 version 2.0                                                */
-      /*----------------------------------------------------------------------*/
-      /* Ignore */
+    switch(*nm) {
+    case 's':
+    case 'S':
+      if (strcasecmp(nm, "size") == 0) {
+        /*----------------------------------------------------------------------*/
+        /* CHTML 1.0 version 2.0                                                */
+        /*----------------------------------------------------------------------*/
+        size = apr_pstrdup(r->pool, val);
+      }
+      break;
+
+    case 'n':
+    case 'N':
+      if (strcasecmp(nm, "name") == 0) {
+        /*----------------------------------------------------------------------*/
+        /* CHTML 1.0 version 2.0                                                */
+        /*----------------------------------------------------------------------*/
+        name = apr_pstrdup(r->pool, val);
+      }
+      break;
+
+    case 'm':
+    case 'M':
+      if (strcasecmp(nm, "multiple") == 0) {
+        /*----------------------------------------------------------------------*/
+        /* CHTML 1.0 version 2.0                                                */
+        /*----------------------------------------------------------------------*/
+        /* Ignore */
+      }
+      break;
+
+    default:
+      break;
     }
   }
 
