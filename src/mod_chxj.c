@@ -1339,7 +1339,7 @@ cmd_load_emoji_data(cmd_parms *parms, void *mconfig, const char* arg)
 {
   mod_chxj_config* conf;
   char*            rtn;
-  Doc doc;
+  Doc              doc;
 
   doc.r = NULL;
 
