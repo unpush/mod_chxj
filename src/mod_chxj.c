@@ -644,7 +644,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
                                    (apr_size_t)ctx->len);
         }
         f->ctx = NULL;
-        DBG(r, " ");
+
         return rv;
       }
       else {
