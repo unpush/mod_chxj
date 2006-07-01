@@ -1380,9 +1380,9 @@ cmd_set_image_engine(cmd_parms *parms, void *mconfig, const char* arg)
   else
     conf->image = CHXJ_IMG_OFF;
 
-
   return NULL;
 }
+
 
 static const char* 
 cmd_set_image_cache_dir(cmd_parms *parms, void *mconfig, const char* arg) 
