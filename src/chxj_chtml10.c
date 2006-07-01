@@ -319,10 +319,12 @@ chxj_exchange_chtml10(
   const char*         cookie_id
 )
 {
-  char*     dst = NULL;
+  char*     dst;
   char*     ss;
-  chtml10_t     chtml10;
+  chtml10_t chtml10;
   Doc       doc;
+
+  dst = NULL;
 
   DBG1(r, "start chxj_exchange_chtml10() cookie_id=[%s]", cookie_id);
 

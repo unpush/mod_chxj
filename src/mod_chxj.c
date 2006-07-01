@@ -746,9 +746,9 @@ chxj_input_filter(ap_filter_t*        f,
                  apr_read_type_e      block,
                  apr_off_t            readbytes)
 {
-  request_rec*        r = f->r;
+  request_rec*        r;
   apr_status_t        rv;
-  conn_rec*           c = r->connection;
+  conn_rec*           c;
   apr_bucket*         b;
   /*--------------------------------------------------------------------------*/
   /* It is the brigade area for output                                        */
@@ -769,6 +769,9 @@ chxj_input_filter(ap_filter_t*        f,
   char*               user_agent;
   mod_chxj_config*    dconf;
   chxjconvrule_entry* entryp;
+
+  r = f->r;
+  c = r->connection;
 
   DBG(r, "start of chxj_input_filter()");
 
