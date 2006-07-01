@@ -547,6 +547,7 @@ s_chtml10_start_meta_tag(void* pdoc, Node* node)
   chtml10 = GET_CHTML10(pdoc);
 
   /* ignore */
+
   return chtml10->out;
 }
 
