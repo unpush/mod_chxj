@@ -408,7 +408,7 @@ s_init_chtml10(
   request_rec*  r, 
   device_table* spec)
 {
-  memset(doc,   0, sizeof(Doc));
+  memset(doc,     0, sizeof(Doc));
   memset(chtml10, 0, sizeof(chtml10_t));
 
   doc->r      = r;
