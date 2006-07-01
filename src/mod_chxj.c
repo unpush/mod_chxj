@@ -950,8 +950,10 @@ chxj_child_init(apr_pool_t *p, server_rec *s)
 #endif
 
   SDBG(s, "start chxj_child_init()");
+
 #if 0
-  conf = (mod_chxj_global_config*)ap_get_module_config(s->module_config, &chxj_module);
+  conf = (mod_chxj_global_config*)ap_get_module_config(s->module_config, 
+                                                       &chxj_module);
 
   if (apr_global_mutex_child_init(&conf->cookie_db_lock, NULL, p) 
   != APR_SUCCESS) {
