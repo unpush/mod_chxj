@@ -403,8 +403,8 @@ chxj_exchange_chtml10(
  */
 static void
 s_init_chtml10(
-  chtml10_t* chtml10, 
-  Doc* doc, 
+  chtml10_t*    chtml10, 
+  Doc*          doc, 
   request_rec*  r, 
   device_table* spec)
 {
