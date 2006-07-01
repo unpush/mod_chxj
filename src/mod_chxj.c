@@ -1406,7 +1406,7 @@ static const char*
 cmd_set_image_copyright(cmd_parms *parms, void* mconfig, const char* arg) 
 {
   mod_chxj_config* conf;
-  Doc doc;
+  Doc              doc;
 
   doc.r = NULL;
   if (strlen(arg) > 256) 
