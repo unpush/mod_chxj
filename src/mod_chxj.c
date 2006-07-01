@@ -238,7 +238,9 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
 
     tmp = NULL;
     if (convert_routine[spec->html_spec_type].encoder)
-      tmp = convert_routine[spec->html_spec_type].encoder(r, *src, (apr_size_t*)len);
+      tmp = convert_routine[spec->html_spec_type].encoder(r, 
+                                                          *src, 
+                                                          (apr_size_t*)len);
 
     if (convert_routine[spec->html_spec_type].converter) {
       if (tmp)
