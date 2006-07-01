@@ -763,8 +763,10 @@ chxj_input_filter(ap_filter_t*        f,
   content_type = (char*)apr_table_get(r->headers_in, "Content-Type");
   if (content_type 
   && strncasecmp("multipart/form-data", content_type, 19) == 0) {
+
     DBG(r, "detect multipart/form-data");
     ap_remove_input_filter(f);
+
     return ap_get_brigade(f->next, bb, mode, block, readbytes);
   }
 
