@@ -1423,7 +1423,7 @@ cmd_set_image_copyright(cmd_parms *parms, void* mconfig, const char* arg)
 static const char*
 cmd_convert_rule(cmd_parms *cmd, void* mconfig, const char *arg)
 {
-  mod_chxj_config* dconf;
+  mod_chxj_config*    dconf;
   char*               prm1;
   char*               prm2;
   char*               prm3;
