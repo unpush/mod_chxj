@@ -2516,7 +2516,7 @@ s_chtml10_start_textarea_tag(void* pdoc, Node* node)
   Doc*          doc;
   request_rec*  r;
   chtml10_t*    chtml10;
-  Attr* attr;
+  Attr*         attr;
 
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
