@@ -845,6 +845,7 @@ s_chtml10_start_h2_tag(void* pdoc, Node* node)
   return chtml10->out;
 }
 
+
 /**
  * It is a handler who processes the H2 tag.
  *
