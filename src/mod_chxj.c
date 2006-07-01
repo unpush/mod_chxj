@@ -1558,8 +1558,7 @@ static const command_rec cmds[] = {
 /*----------------------------------------------------------------------------*/
 /* Dispatch list for API hooks                                                */
 /*----------------------------------------------------------------------------*/
-module AP_MODULE_DECLARE_DATA chxj_module = 
-{
+module AP_MODULE_DECLARE_DATA chxj_module = {
   STANDARD20_MODULE_STUFF, 
   chxj_create_per_dir_config,          /* create per-dir    config structures */
   chxj_merge_per_dir_config,           /* merge  per-dir    config structures */
