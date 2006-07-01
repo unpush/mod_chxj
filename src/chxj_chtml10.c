@@ -1685,16 +1685,16 @@ s_chtml10_start_input_tag(void* pdoc, Node* node)
   request_rec*  r;
   char*         max_length;
   char*         type;
-  char*         name        = NULL;
-  char*         value       = NULL;
-  char*         istyle      = NULL;
-  char*         size        = NULL;
-  char*         checked     = NULL;
-  char*         accesskey   = NULL;
+  char*         name;
+  char*         value;
+  char*         istyle;
+  char*         size;
+  char*         checked;
+  char*         accesskey;
 
-  chtml10 = GET_CHTML10(pdoc);
-  doc     = chtml10->doc;
-  r       = doc->r;
+  chtml10     = GET_CHTML10(pdoc);
+  doc         = chtml10->doc;
+  r           = doc->r;
 
   max_length  = NULL;
   type        = NULL;
