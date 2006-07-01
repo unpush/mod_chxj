@@ -2106,12 +2106,15 @@ s_chtml10_start_select_tag(void* pdoc, Node* child)
   request_rec* r;
   Attr*        attr;
 
-  char* size      = NULL;
-  char* name      = NULL;
+  char* size;
+  char* name;
 
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
   r       = doc->r;
+
+  size    = NULL;
+  name    = NULL;
 
   chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<select", NULL);
   for (attr = qs_get_attr(doc,child);
