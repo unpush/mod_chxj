@@ -2157,7 +2157,12 @@ s_chtml10_start_select_tag(void* pdoc, Node* child)
                                NULL);
 
   if (name) 
-    chtml10->out = apr_pstrcat(r->pool, chtml10->out, " name=\"",name,"\"", NULL);
+    chtml10->out = apr_pstrcat(r->pool, 
+                               chtml10->out, 
+                               " name=\"",
+                               name,
+                               "\"", 
+                               NULL);
 
   chtml10->out = apr_pstrcat(r->pool, chtml10->out, ">\n", NULL);
   return chtml10->out;
