@@ -2615,6 +2615,7 @@ s_chtml10_text(void* pdoc, Node* child)
   
   textval = qs_get_node_value(doc,child);
   textval = qs_trim_string(r, textval);
+
   if (strlen(textval) == 0)
     return chtml10->out;
   
@@ -2627,7 +2628,9 @@ s_chtml10_text(void* pdoc, Node* child)
   
   for (ii=0; ii<qs_get_node_size(doc,child); ii++) {
     char* out;
-    int rtn = s_chtml10_search_emoji(chtml10, &textval[ii], &out);
+    int   rtn;
+
+    rtn = s_chtml10_search_emoji(chtml10, &textval[ii], &out);
     if (rtn) {
       tdst = qs_out_apr_pstrcat(r, tdst, out, &tdst_len);
       ii+=(rtn - 1);
