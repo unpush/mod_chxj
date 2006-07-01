@@ -1353,7 +1353,9 @@ cmd_load_emoji_data(cmd_parms *parms, void *mconfig, const char* arg)
   qs_init_root_node(&doc);
 
   qs_parse_file((Doc*)&doc, (const char*)arg);
+
   rtn = chxj_load_emoji_data(&doc,parms->pool, conf);
+
   qs_all_free(&doc, QX_LOGMARK);
 
 
