@@ -1401,6 +1401,7 @@ cmd_set_image_cache_dir(cmd_parms *parms, void *mconfig, const char* arg)
   return NULL;
 }
 
+
 static const char* 
 cmd_set_image_copyright(cmd_parms *parms, void* mconfig, const char* arg) 
 {
