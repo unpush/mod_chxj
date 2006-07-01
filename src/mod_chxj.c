@@ -749,7 +749,7 @@ chxj_input_filter(ap_filter_t*        f,
   char*               content_type;
   device_table*       spec ;
   char*               user_agent;
-  mod_chxj_config* dconf;
+  mod_chxj_config*    dconf;
   chxjconvrule_entry* entryp;
 
   DBG(r, "start of chxj_input_filter()");
