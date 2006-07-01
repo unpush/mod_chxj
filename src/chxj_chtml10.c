@@ -2546,7 +2546,12 @@ s_chtml10_start_textarea_tag(void* pdoc, Node* node)
     }
     else 
     if ((*name == 'r' || *name == 'R') && strcasecmp(name, "rows") == 0) {
-      chtml10->out = apr_pstrcat(r->pool, chtml10->out, " rows=\"",value,"\"", NULL);
+      chtml10->out = apr_pstrcat(r->pool, 
+                                 chtml10->out, 
+                                 " rows=\"",
+                                   value,
+                                   "\"",
+                                   NULL);
     }
     else 
     if ((*name == 'c' || *name == 'C') && strcasecmp(name, "cols") == 0) {
