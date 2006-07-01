@@ -1432,7 +1432,7 @@ cmd_convert_rule(cmd_parms *cmd, void* mconfig, const char *arg)
   int mode;
   char* pstate;
   char* action;
-  char* pp;
+  char*               pp;
   ap_regex_t*         regexp;
   chxjconvrule_entry* newrule;
 
