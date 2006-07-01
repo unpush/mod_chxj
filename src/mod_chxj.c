@@ -1362,12 +1362,12 @@ cmd_load_emoji_data(cmd_parms *parms, void *mconfig, const char* arg)
   return rtn;
 }
 
+
 static const char* 
 cmd_set_image_engine(cmd_parms *parms, void *mconfig, const char* arg) 
 {
   mod_chxj_config* conf;
-  Doc doc;
-
+  Doc              doc;
 
   doc.r = NULL;
 
