@@ -2120,8 +2120,11 @@ s_chtml10_start_select_tag(void* pdoc, Node* child)
   for (attr = qs_get_attr(doc,child);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-    char* nm  = qs_get_attr_name(doc,attr);
-    char* val = qs_get_attr_value(doc,attr);
+    char* nm;
+    char* val;
+
+    nm  = qs_get_attr_name (doc,attr);
+    val = qs_get_attr_value(doc,attr);
 
     if ((*nm == 's' || *nm == 'S') && strcasecmp(nm, "size") == 0) {
       /*----------------------------------------------------------------------*/
