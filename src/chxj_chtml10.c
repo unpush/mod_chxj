@@ -2097,26 +2097,31 @@ s_chtml10_start_img_tag(void* pdoc, Node* node)
     name  = qs_get_attr_name (doc,attr);
     value = qs_get_attr_value(doc,attr);
 
-    if ((*name == 's' || *name == 'S') && strcasecmp(name, "src") == 0) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 1.0                                                            */
-      /*----------------------------------------------------------------------*/
+    switch(*name) {
+    case 's':
+    case 'S':
+      if (strcasecmp(name, "src") == 0) {
+        /*----------------------------------------------------------------------*/
+        /* CHTML 1.0                                                            */
+        /*----------------------------------------------------------------------*/
 #ifdef IMG_NOT_CONVERT_FILENAME
-      value = chxj_add_cookie_parameter(r, value, chtml10->cookie_id);
-      chtml10->out = apr_pstrcat(r->pool, 
-                      chtml10->out, " src=\"",value,"\"", NULL);
+        value = chxj_add_cookie_parameter(r, value, chtml10->cookie_id);
+        chtml10->out = apr_pstrcat(r->pool, 
+                        chtml10->out, " src=\"",value,"\"", NULL);
 #else
-      value = chxj_img_conv(r, spec, value);
-      value = chxj_add_cookie_parameter(r, value, chtml10->cookie_id);
-      chtml10->out = apr_pstrcat(r->pool, 
-                      chtml10->out, " src=\"", 
-                      value, 
-                      NULL);
-      chtml10->out = apr_pstrcat(r->pool, chtml10->out, "\"", NULL);
+        value = chxj_img_conv(r, spec, value);
+        value = chxj_add_cookie_parameter(r, value, chtml10->cookie_id);
+        chtml10->out = apr_pstrcat(r->pool, 
+                        chtml10->out, " src=\"", 
+                        value, 
+                        NULL);
+        chtml10->out = apr_pstrcat(r->pool, chtml10->out, "\"", NULL);
 #endif
-    }
-    else
-    if (*name == 'a' || *name == 'A') {
+      }
+      break;
+
+    case 'a':
+    case 'A':
       if (strcasecmp(name, "align" ) == 0) {
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
@@ -2135,17 +2140,21 @@ s_chtml10_start_img_tag(void* pdoc, Node* node)
         chtml10->out = apr_pstrcat(r->pool, 
                         chtml10->out, " alt=\"",value,"\"", NULL);
       }
-    }
-    else
-    if ((*name == 'w' || *name == 'W') && strcasecmp(name, "width" ) == 0) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 1.0                                                            */
-      /*----------------------------------------------------------------------*/
-      chtml10->out = apr_pstrcat(r->pool, 
-                      chtml10->out, " width=\"",value,"\"", NULL);
-    }
-    else
-    if (*name == 'h' || *name == 'H') {
+      break;
+
+    case 'w':
+    case 'W':
+      if (strcasecmp(name, "width" ) == 0) {
+        /*----------------------------------------------------------------------*/
+        /* CHTML 1.0                                                            */
+        /*----------------------------------------------------------------------*/
+        chtml10->out = apr_pstrcat(r->pool, 
+                        chtml10->out, " width=\"",value,"\"", NULL);
+      }
+      break;
+
+    case 'h':
+    case 'H':
       if (strcasecmp(name, "height") == 0) {
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
@@ -2161,14 +2170,21 @@ s_chtml10_start_img_tag(void* pdoc, Node* node)
         chtml10->out = apr_pstrcat(r->pool, 
                         chtml10->out, " hspace=\"",value,"\"", NULL);
       }
-    }
-    else
-    if ((*name == 'v' || *name == 'V') && strcasecmp(name, "vspace") == 0) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 1.0                                                            */
-      /*----------------------------------------------------------------------*/
-      chtml10->out = apr_pstrcat(r->pool, 
-                      chtml10->out, " vspace=\"",value,"\"", NULL);
+      break;
+
+    case 'v':
+    case 'V':
+      if (strcasecmp(name, "vspace") == 0) {
+        /*----------------------------------------------------------------------*/
+        /* CHTML 1.0                                                            */
+        /*----------------------------------------------------------------------*/
+        chtml10->out = apr_pstrcat(r->pool, 
+                        chtml10->out, " vspace=\"",value,"\"", NULL);
+      }
+      break;
+
+    default:
+      break;
     }
   }
 
