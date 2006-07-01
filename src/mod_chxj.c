@@ -1058,6 +1058,8 @@ chxj_create_per_dir_config(apr_pool_t *p, char *arg)
 
   return conf;
 }
+
+
 /*
  *  Merge per-directory CHXJ configurations
  */
