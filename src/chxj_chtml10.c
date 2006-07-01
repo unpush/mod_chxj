@@ -2660,6 +2660,7 @@ s_chtml10_text(void* pdoc, Node* child)
       tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
     }
   }
+
   chtml10->out = apr_pstrcat(r->pool, chtml10->out, tdst, NULL);
 
   return chtml10->out;
