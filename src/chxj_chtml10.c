@@ -1255,6 +1255,7 @@ s_chtml10_start_body_tag(void* pdoc, Node* node)
   return chtml10->out;
 }
 
+
 /**
  * It is a handler who processes the BODY tag.
  *
