@@ -230,9 +230,8 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
    * save cookie.
    */
   cookie_id = NULL;
-  if (entryp->action & CONVRULE_COOKIE_ON_BIT) {
+  if (entryp->action & CONVRULE_COOKIE_ON_BIT)
     cookie_id = chxj_save_cookie(r);
-  }
 
   if (!r->header_only) {
     device_table* spec = chxj_specified_device(r, user_agent);
