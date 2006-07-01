@@ -693,9 +693,12 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
         if (len > 0) {
           tmp = apr_palloc(r->pool, ctx->len);
           memcpy(tmp, ctx->buffer, ctx->len);
+
           ctx->buffer = apr_palloc(r->pool, ctx->len + len);
+
           memcpy(ctx->buffer, tmp, ctx->len);
           memcpy(&ctx->buffer[ctx->len], data, len);
+
           ctx->len += len;
         }
         DBG(r, "append data end");
