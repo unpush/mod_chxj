@@ -1424,7 +1424,7 @@ static const char*
 cmd_convert_rule(cmd_parms *cmd, void* mconfig, const char *arg)
 {
   mod_chxj_config* dconf;
-  char* prm1;
+  char*            prm1;
   char* prm2;
   char* prm3;
   char* prm4;
@@ -1433,7 +1433,7 @@ cmd_convert_rule(cmd_parms *cmd, void* mconfig, const char *arg)
   char* pstate;
   char* action;
   char* pp;
-  ap_regex_t *regexp;
+  ap_regex_t*         regexp;
   chxjconvrule_entry* newrule;
 
   dconf = (mod_chxj_config*)mconfig;
