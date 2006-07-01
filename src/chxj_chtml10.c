@@ -2211,8 +2211,8 @@ s_chtml10_start_option_tag(void* pdoc, Node* child)
   request_rec* r;
   Attr*        attr;
 
-  char* selected;
-  char* value;
+  char*        selected;
+  char*        value;
 
   chtml10   = GET_CHTML10(pdoc);
   doc       = chtml10->doc;
