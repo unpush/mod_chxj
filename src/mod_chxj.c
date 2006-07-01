@@ -917,9 +917,11 @@ chxj_init_module(apr_pool_t *p,
 
   ap_add_version_component(p, CHXJ_VERSION_PREFIX CHXJ_VERSION);
 
-  conf = (mod_chxj_global_config *)ap_get_module_config(s->module_config, &chxj_module);
 
 #if 0
+  conf = (mod_chxj_global_config *)ap_get_module_config(s->module_config, 
+                                                        &chxj_module);
+
   if (apr_global_mutex_create(&(conf->cookie_db_lock), NULL, APR_LOCK_DEFAULT, p) != APR_SUCCESS) {
     SERR(s, "end  chxj_init_module()");
     return HTTP_INTERNAL_SERVER_ERROR;
