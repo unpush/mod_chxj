@@ -583,8 +583,12 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
         if (r->content_type 
         && *(char*)r->content_type == 't' 
         && strncmp(r->content_type, "text/html",   9) == 0) {
+
           if (ctx->len) {
-            char* tmp = apr_palloc(r->pool, ctx->len + 1);
+            char* tmp;
+
+            tmp = apr_palloc(r->pool, ctx->len + 1);
+
             memset(tmp, 0, ctx->len + 1);
             memcpy(tmp, ctx->buffer, ctx->len);
 

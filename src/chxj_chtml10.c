@@ -316,7 +316,7 @@ chxj_exchange_chtml10(
   apr_size_t srclen,
   apr_size_t *dstlen,
   chxjconvrule_entry* entryp,
-  const char* cookie_id
+  const char*         cookie_id
 )
 {
   char*     dst = NULL;
