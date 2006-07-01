@@ -1161,6 +1161,7 @@ s_chtml10_start_base_tag(void* pdoc, Node* node)
                       NULL);
     }
   }
+
   chtml10->out = apr_pstrcat(r->pool, chtml10->out, " >\r\n", NULL);
 
   return chtml10->out;
