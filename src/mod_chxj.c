@@ -1492,9 +1492,8 @@ cmd_convert_rule(cmd_parms *cmd, void* mconfig, const char *arg)
   }
 
   mode = AP_REG_EXTENDED;
-  if ((regexp = ap_pregcomp(cmd->pool, pp, mode)) == NULL) {
+  if ((regexp = ap_pregcomp(cmd->pool, pp, mode)) == NULL)
     return "RewriteRule: cannot compile regular expression ";
-  }
 
   newrule->regexp = regexp;
   if (*prm3)
