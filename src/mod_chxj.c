@@ -594,7 +594,9 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
 
             DBG2(r, "input data=[%s] len=[%d]", tmp, ctx->len);
 
-            ctx->buffer = chxj_exchange(r, (const char**)&tmp, (apr_size_t*)&ctx->len);
+            ctx->buffer = chxj_exchange(r, 
+                                        (const char**)&tmp, 
+                                        (apr_size_t*)&ctx->len);
 
             DBG2(r, "output data=[%.*s]", ctx->len,ctx->buffer);
           }
