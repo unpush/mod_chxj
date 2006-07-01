@@ -618,7 +618,6 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
             DBG2(r, "output data=[%.*s]", ctx->len,ctx->buffer);
           }
         }
-        DBG(r, " ");
         contentLength = apr_psprintf(r->pool, "%d", ctx->len);
         apr_table_setn(r->headers_out, "Content-Length", contentLength);
         DBG(r, " ");
