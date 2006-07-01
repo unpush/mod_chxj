@@ -989,6 +989,7 @@ chxj_translate_name(request_rec *r)
   return chxj_trans_name(r);
 }
 
+
 /**
  * The hook is registered.
  *
