@@ -847,8 +847,12 @@ chxj_input_filter(ap_filter_t*        f,
     DBG1(r, "(in:exchange)POSTDATA:[%s]", data_brigade);
 
     obb = apr_brigade_create(r->pool, c->bucket_alloc);
-    tmp_heap = apr_bucket_heap_create(data_brigade, len, NULL, f->c->bucket_alloc);
+    tmp_heap = apr_bucket_heap_create(data_brigade, 
+                                      len, 
+                                      NULL, 
+                                      f->c->bucket_alloc);
     eos      = apr_bucket_eos_create(f->c->bucket_alloc);
+
     APR_BRIGADE_INSERT_TAIL(obb, tmp_heap);
     APR_BRIGADE_INSERT_TAIL(obb, eos);
     APR_BRIGADE_CONCAT(bb, obb);
