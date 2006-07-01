@@ -2308,11 +2308,13 @@ s_chtml10_start_div_tag(void* pdoc, Node* child)
   request_rec* r;
   Attr*        attr;
 
-  char* align = NULL;
+  char*        align;
 
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
   r       = doc->r;
+
+  align   = NULL;
 
   chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<div", NULL);
   for (attr = qs_get_attr(doc,child);
