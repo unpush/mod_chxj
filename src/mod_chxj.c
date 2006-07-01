@@ -847,6 +847,7 @@ chxj_input_filter(ap_filter_t*        f,
     DBG1(r, "(in:exchange)POSTDATA:[%s]", data_brigade);
 
     obb = apr_brigade_create(r->pool, c->bucket_alloc);
+
     tmp_heap = apr_bucket_heap_create(data_brigade, 
                                       len, 
                                       NULL, 
