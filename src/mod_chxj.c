@@ -538,7 +538,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
   apr_status_t rv = APR_SUCCESS;
   apr_bucket*  b;
   const char*  data;
-  char*       contentLength;
+  char*               contentLength;
   apr_size_t          len;
   mod_chxj_ctx*       ctx;
   char*               cookie_id;
