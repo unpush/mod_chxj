@@ -1293,6 +1293,7 @@ chxj_command_parse_take5(
   return 0;
 }
 
+
 /**
  * The device definition file is loaded. 
  *
