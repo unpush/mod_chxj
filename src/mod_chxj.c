@@ -567,7 +567,9 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
   for (b = APR_BRIGADE_FIRST(bb);
        b != APR_BRIGADE_SENTINEL(bb); 
        b = APR_BUCKET_NEXT(b)) {
+
     if (APR_BUCKET_IS_EOS(b)) {
+
       DBG(r, "eos");
       /*----------------------------------------------------------------------*/
       /* End Of File                                                          */
