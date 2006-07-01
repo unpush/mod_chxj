@@ -119,6 +119,7 @@ converter_t convert_routine[] = {
   }
 };
 
+static int chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp);
 
 /**
  * Only when User-Agent is specified, the User-Agent header is camouflaged. 
@@ -162,6 +163,8 @@ chxj_headers_fixup(request_rec *r)
       apr_table_setn(r->headers_in, 
                      HTTP_USER_AGENT, 
                      entryp->user_agent);
+
+    chxj_convert_input_header(r,entryp);
 
     break;
   
@@ -226,7 +229,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
    * save cookie.
    */
   cookie_id = NULL;
-  if (entryp->action && CONVRULE_COOKIE_ON_BIT) {
+  if (entryp->action & CONVRULE_COOKIE_ON_BIT) {
     cookie_id = chxj_save_cookie(r);
   }
 
@@ -287,12 +290,18 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp)
   char*      pstate;
   char*      vstate;
 
-  ap_unescape_url(r->unparsed_uri);
-  urilen = strlen(r->unparsed_uri);
+  DBG(r, "start chxj_convert_input_header()");
+
+  if (! r->args) {
+    DBG(r, "r->args=[null]");
+    return 0;
+  }
+  urilen = strlen(r->args);
 
   result = qs_alloc_zero_byte_string(r);
 
-  buff = apr_pstrdup(r->pool, r->unparsed_uri);
+  buff = apr_pstrdup(r->pool, r->args);
+  DBG1(r, "r->args=[%s]", buff);
 
   /* _chxj_dmy */
   /* _chxj_c_ */
@@ -326,10 +335,12 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp)
         DBG1(r, "************ after encoding[%s]", dvalue);
 
         result = apr_pstrcat(r->pool, result, name, "=", dvalue, NULL);
-
       }
       else {
-        result = apr_pstrcat(r->pool, result, name, "=", value, NULL);
+        if (strcmp(name, pair) != 0)
+          result = apr_pstrcat(r->pool, result, name, "=", value, NULL);
+        else
+          result = apr_pstrcat(r->pool, result, name, NULL);
       }
     }
     else
@@ -347,10 +358,16 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp)
 
       result = apr_pstrcat(r->pool, result, &name[8], "=", value, NULL);
     }
+    else
+    if (strcasecmp(name, CHXJ_COOKIE_PARAM) == 0) {
+      DBG1(r, "found cookie parameter[%s]", value);
+      chxj_load_cookie(r, value);
+    }
   }
-  ap_parse_uri(r, result);
-  ap_getparents(r->uri); /* normalize given path for security */
+  r->args = result;
 
+  DBG1(r, "result r->args=[%s]", r->args);
+  DBG(r, "end   chxj_convert_input_header()");
   return 0;
 }
 
@@ -378,8 +395,6 @@ chxj_input_convert(
   char* result;
 
   s = apr_pstrdup(r->pool, *src);
-
-  chxj_convert_input_header(r, entryp);
 
   result = qs_alloc_zero_byte_string(r);
 
@@ -454,6 +469,11 @@ chxj_input_convert(
       else {
         result = apr_pstrcat(r->pool, result, &name[8], "=", value, NULL);
       }
+    }
+    else
+    if (strcasecmp(name, CHXJ_COOKIE_PARAM) == 0) {
+      DBG1(r, "found cookie parameter[%s]", value);
+      chxj_load_cookie(r, value);
     }
   }
   *len = strlen(result);
@@ -610,11 +630,13 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
         return rv;
       }
       else {
-        DBG(r, " ");
+        DBG1(r, " SAVE COOKIE[%x]", entryp->action);
         /*
          * save cookie.
          */
         if (entryp->action & CONVRULE_COOKIE_ON_BIT) {
+          DBG(r, "entryp->action == COOKIE_ON_BIT");
+
           cookie_id = chxj_save_cookie(r);
 
           /*
@@ -762,6 +784,7 @@ chxj_input_filter(ap_filter_t*        f,
   case CHXJ_SPEC_Hdml:
   case CHXJ_SPEC_Jhtml:
     break;
+
   default:
     ap_remove_input_filter(f);
     return ap_get_brigade(f->next, bb, mode, block, readbytes);
@@ -822,6 +845,7 @@ chxj_input_filter(ap_filter_t*        f,
     APR_BRIGADE_CONCAT(bb, obb);
   }
   DBG(r, "end of chxj_input_filter()");
+
   return APR_SUCCESS;
 }
 
@@ -1399,14 +1423,17 @@ cmd_convert_rule(cmd_parms *cmd, void* mconfig, const char *arg)
       if (strcasecmp(CONVRULE_ENGINE_OFF_CMD, action) == 0) {
         newrule->action |= CONVRULE_ENGINE_OFF_BIT;
       }
-      else
+      break;
+
+    case 'C':
+    case 'c':
       if (strcasecmp(CONVRULE_COOKIE_ON_CMD, action) == 0) {
         newrule->action |= CONVRULE_COOKIE_ON_BIT;
       }
-      else
-      if (strcasecmp(CONVRULE_COOKIE_OFF_CMD, action) == 0) {
-        newrule->action |= CONVRULE_COOKIE_OFF_BIT;
-      }
+      break;
+
+    default:
+      break;
     }
   }
   

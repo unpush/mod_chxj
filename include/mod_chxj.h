@@ -269,7 +269,6 @@ typedef struct {
 #define CONVRULE_ENGINE_ON_BIT        (0x00000001)
 #define CONVRULE_ENGINE_OFF_BIT       (0x00000002)
 #define CONVRULE_COOKIE_ON_BIT        (0x00000004)
-#define CONVRULE_COOKIE_OFF_BIT       (0x00000008)
 
 #define CONVRULE_ENGINE_ON_CMD        "EngineOn"
 #define CONVRULE_ENGINE_OFF_CMD       "EngineOff"

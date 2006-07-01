@@ -324,6 +324,8 @@ chxj_exchange_chtml10(
   chtml10_t     chtml10;
   Doc       doc;
 
+  DBG1(r, "start chxj_exchange_chtml10() cookie_id=[%s]", cookie_id);
+
   /*--------------------------------------------------------------------------*/
   /* If qrcode xml                                                            */
   /*--------------------------------------------------------------------------*/
@@ -380,6 +382,8 @@ chxj_exchange_chtml10(
 #ifdef DUMP_LOG
   chxj_dump_out("[dst] CHTML -> CHTML1.0", dst, *dstlen);
 #endif
+
+  DBG1(r, "end   chxj_exchange_chtml10() cookie_id=[%s]", cookie_id);
 
   return dst;
 }
