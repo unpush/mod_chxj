@@ -595,7 +595,6 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
             ctx->buffer = chxj_exchange(r, 
                                         (const char**)&ctx->buffer, 
                                         (apr_size_t*)&ctx->len);
-            DBG(r, " ");
 
           }
         }
