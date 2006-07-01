@@ -1022,6 +1022,7 @@ chxj_register_hooks(apr_pool_t *p)
   ap_hook_fixups(chxj_headers_fixup, NULL, NULL, APR_HOOK_LAST);
 }
 
+
 /**
  * A set structure according to the directory is generated. 
  *
