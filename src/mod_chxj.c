@@ -1429,7 +1429,7 @@ cmd_convert_rule(cmd_parms *cmd, void* mconfig, const char *arg)
   char* prm3;
   char* prm4;
   char* prm5;
-  int mode;
+  int                 mode;
   char*               pstate;
   char*               action;
   char*               pp;
