@@ -558,46 +558,59 @@ s_chtml20_start_meta_tag(void* pdoc, Node* node)
     name   = qs_get_attr_name(doc,attr);
     value  = qs_get_attr_value(doc,attr);
 
-    if (strcasecmp(name, "http-equiv") == 0) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 2.0                                                            */
-      /*----------------------------------------------------------------------*/
-      chtml20->out = apr_pstrcat(r->pool, 
-                      chtml20->out, 
-                      " http-equiv=\"", 
-                      value,
-                      "\"",
-                      NULL);
-
-      if ((*value == 'c' || *value == 'C') && strcasecmp(value, "content-type") == 0) {
-        content_type_flag = 1;
-      }
-    }
-    else
-    if (strcasecmp(name, "content") == 0) {
-      if (content_type_flag) {
-        chtml20->out = apr_pstrcat(r->pool,
-                        chtml20->out,
-                        " ",
-                        name,
-                        "=\"",
-                        "text/html; charset=Windows-31J",
-                        "\"",
-                        NULL);
-      }
-      else {
-        chtml20->out = apr_pstrcat(r->pool,
-                        chtml20->out,
-                        " ",
-                        name,
-                        "=\"",
+    switch(*name) {
+    case 'h':
+    case 'H':
+      if (strcasecmp(name, "http-equiv") == 0) {
+        /*----------------------------------------------------------------------*/
+        /* CHTML 2.0                                                            */
+        /*----------------------------------------------------------------------*/
+        chtml20->out = apr_pstrcat(r->pool, 
+                        chtml20->out, 
+                        " http-equiv=\"", 
                         value,
                         "\"",
                         NULL);
+  
+        if ((*value == 'c' || *value == 'C') 
+        && strcasecmp(value, "content-type") == 0)
+          content_type_flag = 1;
       }
+      break;
+
+    case 'c':
+    case 'C':
+      if (strcasecmp(name, "content") == 0) {
+        if (content_type_flag) {
+          chtml20->out = apr_pstrcat(r->pool,
+                          chtml20->out,
+                          " ",
+                          name,
+                          "=\"",
+                          "text/html; charset=Windows-31J",
+                          "\"",
+                          NULL);
+        }
+        else {
+          chtml20->out = apr_pstrcat(r->pool,
+                          chtml20->out,
+                          " ",
+                          name,
+                          "=\"",
+                          value,
+                          "\"",
+                          NULL);
+        }
+      }
+      break;
+
+    default:
+      break;
     }
   }
+
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, ">", NULL);
+
   return chtml20->out;
 }
 
