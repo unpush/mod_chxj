@@ -434,7 +434,7 @@ s_chtml20_search_emoji(chtml20_t* chtml20, char* txt, char** rslt)
   spec = chtml20->spec;
 
   len = strlen(txt);
-  r = chtml20->doc->r;
+  r   = chtml20->doc->r;
 
   if (spec == NULL)
     DBG(r,"spec is NULL");
