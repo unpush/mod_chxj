@@ -19,6 +19,8 @@
 
 /* #define DUMP_CHTML30 "" */
 #include "mod_chxj.h"
+#include "chxj_cookie.h"
+
 /*----------------------------------------------------------------------------*/
 /* Structure for CHTML3.0                                                     */
 /*----------------------------------------------------------------------------*/
@@ -32,7 +34,7 @@ typedef struct _chtml30_t {
     device_table*      spec;
     mod_chxj_config*   conf;
     chxjconvrule_entry* entryp;
-    char*               cookie_id;
+    cookie_t*           cookie;
 } chtml30_t;
 
 /*----------------------------------------------------------------------------*/
@@ -46,5 +48,5 @@ chxj_exchange_chtml30(
   apr_size_t      srclen,
   apr_size_t*     dstlen,
   chxjconvrule_entry* entryp,
-  const char* cookie_id);
+  cookie_t*           cookie);
 #endif

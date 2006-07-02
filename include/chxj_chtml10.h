@@ -19,6 +19,7 @@
 
 /*#define DUMP_CHTML10 "" */
 #include "mod_chxj.h"
+#include "chxj_cookie.h"
 
 /*----------------------------------------------------------------------------*/
 /* Structure for HDML                                                         */
@@ -33,11 +34,11 @@ typedef struct _ctml10_t {
     device_table*      spec;
     mod_chxj_config*   conf;
     chxjconvrule_entry* entryp;
-    char*               cookie_id;
+    cookie_t*           cookie;
 } chtml10_t;
 
 /*----------------------------------------------------------------------------*/
 /* Prototype                                                                  */
 /*----------------------------------------------------------------------------*/
-char* chxj_exchange_chtml10( request_rec* r, device_table* spec, const char* src, apr_size_t srclen, apr_size_t *dstlen, chxjconvrule_entry* entryp, const char* cookie_id);
+char* chxj_exchange_chtml10( request_rec* r, device_table* spec, const char* src, apr_size_t srclen, apr_size_t *dstlen, chxjconvrule_entry* , cookie_t*);
 #endif

@@ -316,7 +316,7 @@ chxj_exchange_chtml10(
   apr_size_t          srclen,
   apr_size_t*         dstlen,
   chxjconvrule_entry* entryp,
-  const char*         cookie_id
+  cookie_t*           cookie
 )
 {
   char*     dst;
@@ -326,7 +326,7 @@ chxj_exchange_chtml10(
 
   dst = NULL;
 
-  DBG1(r, "start chxj_exchange_chtml10() cookie_id=[%s]", cookie_id);
+  DBG1(r, "start chxj_exchange_chtml10() cookie_id=[%s]", cookie->cookie_id);
 
   /*--------------------------------------------------------------------------*/
   /* If qrcode xml                                                            */
@@ -344,7 +344,7 @@ chxj_exchange_chtml10(
   /*--------------------------------------------------------------------------*/
   s_init_chtml10(&chtml10, &doc, r, spec);
   chtml10.entryp    = entryp;
-  chtml10.cookie_id = (char*)cookie_id;
+  chtml10.cookie    = cookie;
 
   ap_set_content_type(r, "text/html; charset=Windows-31J");
 
@@ -385,7 +385,7 @@ chxj_exchange_chtml10(
   chxj_dump_out("[dst] CHTML -> CHTML1.0", dst, *dstlen);
 #endif
 
-  DBG1(r, "end   chxj_exchange_chtml10() cookie_id=[%s]", cookie_id);
+  DBG1(r, "end   chxj_exchange_chtml10() cookie_id=[%s]", cookie->cookie_id);
 
   return dst;
 }
@@ -1366,7 +1366,7 @@ s_chtml10_start_a_tag(void* pdoc, Node* node)
         /*----------------------------------------------------------------------*/
         /* CHTML1.0                                                             */
         /*----------------------------------------------------------------------*/
-        value = chxj_add_cookie_parameter(r, value, chtml10->cookie_id);
+        value = chxj_add_cookie_parameter(r, value, chtml10->cookie);
         
         chtml10->out = apr_pstrcat(r->pool, 
                         chtml10->out, 
@@ -1679,7 +1679,7 @@ s_chtml10_start_form_tag(void* pdoc, Node* node)
         /*----------------------------------------------------------------------*/
         /* CHTML 1.0                                                            */
         /*----------------------------------------------------------------------*/
-        value = chxj_add_cookie_parameter(r, value, chtml10->cookie_id);
+        value = chxj_add_cookie_parameter(r, value, chtml10->cookie);
   
         chtml10->out = apr_pstrcat(r->pool, 
                         chtml10->out, 
@@ -2106,12 +2106,12 @@ s_chtml10_start_img_tag(void* pdoc, Node* node)
         /* CHTML 1.0                                                            */
         /*----------------------------------------------------------------------*/
 #ifdef IMG_NOT_CONVERT_FILENAME
-        value = chxj_add_cookie_parameter(r, value, chtml10->cookie_id);
+        value = chxj_add_cookie_parameter(r, value, chtml10->cookie);
         chtml10->out = apr_pstrcat(r->pool, 
                         chtml10->out, " src=\"",value,"\"", NULL);
 #else
         value = chxj_img_conv(r, spec, value);
-        value = chxj_add_cookie_parameter(r, value, chtml10->cookie_id);
+        value = chxj_add_cookie_parameter(r, value, chtml10->cookie);
         chtml10->out = apr_pstrcat(r->pool, 
                         chtml10->out, " src=\"", 
                         value, 

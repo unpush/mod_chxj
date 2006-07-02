@@ -34,6 +34,7 @@ typedef enum {
 #define CHXJ_PIC_NG                (0x00)
 
 #include "mod_chxj.h"
+#include "chxj_cookie.h"
 
 
 typedef struct _device_table_t {
@@ -91,7 +92,9 @@ typedef struct _device_table_list_t {
   device_table* tail;
 } device_table_list;
 
-typedef struct _converter_t {
+typedef struct converter_t converter_t;
+
+struct converter_t {
   /* convert routine */
   char* (*converter)(request_rec*               r,
                     struct _device_table_t*     spec,
@@ -99,12 +102,12 @@ typedef struct _converter_t {
                     apr_size_t                  srclen, 
                     apr_size_t*                 dstlen,
                     struct _chxjconvrule_entry* entryp,
-                    const char*                 cookie_id);
+                    cookie_t*                   cookie);
 
   char* (*encoder)(request_rec* r,
                    const char*  src,
                    apr_size_t*  len);
-} converter_t;
+};
 
 extern converter_t convert_routine[];
 

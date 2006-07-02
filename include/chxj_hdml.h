@@ -27,6 +27,7 @@
 #define END_LINE        "\0"
 
 #include "mod_chxj.h"
+#include "chxj_cookie.h"
 
 /*============================================================================*/
 /* Structure for HDML                                                         */
@@ -91,7 +92,7 @@ typedef struct _hdml_t {
   mod_chxj_config*  conf;
 
   chxjconvrule_entry* entryp;
-  char*               cookie_id;
+  cookie_t*           cookie;
 } hdml_t;
 /*============================================================================*/
 /* Prototype declaration.                                                     */
@@ -103,7 +104,7 @@ char* chxj_exchange_hdml(
   apr_size_t          srclen,
   apr_size_t*         dstlen,
   chxjconvrule_entry* entryp,
-  const char* cookie_id);
+  cookie_t* cookie);
 char* qs_out_apr_pstrcat(request_rec* r, char* o, char* s, int* len);
 char* qs_conv_istyle_to_format(request_rec* r, char* is);
 

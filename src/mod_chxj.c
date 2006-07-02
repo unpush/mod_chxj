@@ -192,7 +192,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
   char*               user_agent;
   char*               dst;
   char*               tmp;
-  char*               cookie_id;
+  cookie_t*           cookie;
   mod_chxj_config*    dconf; 
   chxjconvrule_entry* entryp;
 
@@ -229,9 +229,9 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
   /*
    * save cookie.
    */
-  cookie_id = NULL;
+  cookie = NULL;
   if (entryp->action & CONVRULE_COOKIE_ON_BIT)
-    cookie_id = chxj_save_cookie(r);
+    cookie = chxj_save_cookie(r);
 
   if (!r->header_only) {
     device_table* spec = chxj_specified_device(r, user_agent);
@@ -250,7 +250,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
                                                               *len, 
                                                               len, 
                                                               entryp, 
-                                                              cookie_id);
+                                                              cookie);
       else
         dst = convert_routine[spec->html_spec_type].converter(r,
                                                               spec, 
@@ -258,7 +258,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
                                                               *len, 
                                                               len, 
                                                               entryp, 
-                                                              cookie_id);
+                                                              cookie);
     }
   }
 
@@ -311,12 +311,15 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp)
   /* _chxj_r_ */
   /* _chxj_s_ */
   for (;;) {
+    char* pair_sv;
 
     pair = apr_strtok(buff, "&", &pstate);
     if (pair == NULL)
       break;
 
     buff = NULL;
+
+    pair_sv = apr_pstrdup(r->pool, pair);
 
     name  = apr_strtok(pair, "=", &vstate);
     value = apr_strtok(NULL, "=", &vstate);
@@ -340,7 +343,7 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp)
         result = apr_pstrcat(r->pool, result, name, "=", dvalue, NULL);
       }
       else {
-        if (strcmp(name, pair) != 0)
+        if (strcmp(name, pair_sv) != 0)
           result = apr_pstrcat(r->pool, result, name, "=", value, NULL);
         else
           result = apr_pstrcat(r->pool, result, name, NULL);
@@ -541,7 +544,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
   char*               contentLength;
   apr_size_t          len;
   mod_chxj_ctx*       ctx;
-  char*               cookie_id;
+  cookie_t*           cookie;
   char*               location_header;
   mod_chxj_config*    dconf;
   chxjconvrule_entry* entryp;
@@ -656,7 +659,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
         if (entryp->action & CONVRULE_COOKIE_ON_BIT) {
           DBG(r, "entryp->action == COOKIE_ON_BIT");
 
-          cookie_id = chxj_save_cookie(r);
+          cookie = chxj_save_cookie(r);
 
           /*
            * Location Header Check to add cookie parameter.
@@ -666,7 +669,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
             DBG1(r, "Location Header=[%s]", location_header);
             location_header = chxj_add_cookie_parameter(r,
                                                         location_header,
-                                                        cookie_id);
+                                                        cookie);
             apr_table_setn(r->headers_out, "Location", location_header);
             DBG1(r, "Location Header=[%s]", location_header);
           }

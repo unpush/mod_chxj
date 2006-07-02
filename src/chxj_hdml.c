@@ -317,7 +317,7 @@ chxj_exchange_hdml(
   apr_size_t srclen, 
   apr_size_t* dstlen,
   chxjconvrule_entry* entryp,
-  const char* cookie_id
+  cookie_t* cookie
 )
 {
   char*     dst = NULL;

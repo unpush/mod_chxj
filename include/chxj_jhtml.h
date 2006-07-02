@@ -32,7 +32,7 @@ typedef struct _jhtml_t {
     device_table*    spec;
     mod_chxj_config* conf;
     chxjconvrule_entry* entryp;
-    char*               cookie_id;
+    cookie_t*           cookie;
 } jhtml_t;
 
 /*----------------------------------------------------------------------------*/
@@ -46,5 +46,5 @@ chxj_exchange_jhtml(
   apr_size_t srclen,
   apr_size_t *dstlen,
   chxjconvrule_entry* entryp,
-  const char* cookie_id) ;
+  cookie_t* cookie) ;
 #endif

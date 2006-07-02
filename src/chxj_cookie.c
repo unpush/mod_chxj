@@ -31,11 +31,10 @@ static char* s_cut_until_end_hostname(request_rec*, char* value);
 /*
  *
  */
-char*
+cookie_t*
 chxj_save_cookie(request_rec* r)
 {
   int   ii;
-  char* cookie;
   apr_array_header_t* headers;
   apr_table_entry_t*  hentryp;
   apr_status_t        retval;
@@ -45,19 +44,21 @@ chxj_save_cookie(request_rec* r)
   apr_uuid_t        uuid;
   char*             uuid_string;
   unsigned char*    md5_value;
-  char*             md5_string;
   char*             old_cookie_id;
   mod_chxj_config*        dconf;
   chxjconvrule_entry* entryp;
   apr_file_t* file;
   apr_table_t*        new_cookie_table;
-  apr_array_header_t* old_cookie_headers;
   int                 has_cookie = 0;
+  cookie_t*           cookie;
+  cookie_t*           old_cookie;
 
 
   DBG(r, "start chxj_save_cookie()");
 
-  md5_string = NULL;
+  cookie = (cookie_t*)apr_palloc(r->pool, sizeof(cookie_t));
+
+  cookie->cookie_id = NULL;
 
   dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
   entryp = chxj_apply_convrule(r, dconf->convrules);
@@ -74,9 +75,6 @@ chxj_save_cookie(request_rec* r)
   headers = (apr_array_header_t*)apr_table_elts(r->headers_out);
   hentryp = (apr_table_entry_t*)headers->elts;
 
-
-  cookie = apr_palloc(r->pool, 1);
-  cookie[0] = 0;
 
   new_cookie_table = apr_table_make(r->pool, headers->nelts);
 
@@ -106,10 +104,10 @@ chxj_save_cookie(request_rec* r)
    */
   old_cookie_id = (char*)apr_table_get(r->headers_in, "CHXJ_COOKIE_ID");
   if (old_cookie_id) {
-    old_cookie_headers = chxj_load_cookie(r, old_cookie_id);
-    if (old_cookie_headers) {
-      hentryp = (apr_table_entry_t*)old_cookie_headers->elts;
-      for (ii=0; ii<old_cookie_headers->nelts; ii++) {
+    old_cookie = chxj_load_cookie(r, old_cookie_id); 
+    if (old_cookie && old_cookie->cookie_headers) {
+      hentryp = (apr_table_entry_t*)old_cookie->cookie_headers->elts;
+      for (ii=0; ii<old_cookie->cookie_headers->nelts; ii++) {
         if (apr_table_get(new_cookie_table, hentryp[ii].key) == NULL) {
           apr_table_setn(new_cookie_table, hentryp[ii].key, hentryp[ii].val);
           has_cookie = 1;
@@ -157,29 +155,29 @@ chxj_save_cookie(request_rec* r)
     goto on_error;
   }
 
-  md5_string = apr_palloc(r->pool, apr_base64_encode_len(APR_MD5_DIGESTSIZE)+1);
-  memset(md5_string, 0, APR_MD5_DIGESTSIZE+1);
-  apr_base64_encode(md5_string, (char*)md5_value, APR_MD5_DIGESTSIZE);
+  cookie->cookie_id = apr_palloc(r->pool, apr_base64_encode_len(APR_MD5_DIGESTSIZE)+1);
+  memset(cookie->cookie_id, 0, APR_MD5_DIGESTSIZE+1);
+  apr_base64_encode(cookie->cookie_id, (char*)md5_value, APR_MD5_DIGESTSIZE);
 
-  DBG1(r, "md5_string=[%s]", md5_string);
+  DBG1(r, "cookie->cookie_id=[%s]", cookie->cookie_id);
 
-  md5_string = chxj_url_encode(r,md5_string);
+  cookie->cookie_id = chxj_url_encode(r,cookie->cookie_id);
 
-  DBG1(r, "md5_string=[%s]", md5_string);
+  DBG1(r, "cookie->cookie_id=[%s]", cookie->cookie_id);
 
   /*
    * create key
    */
 
-  dbmkey.dptr  = md5_string;
-  dbmkey.dsize = strlen(md5_string);
+  dbmkey.dptr  = cookie->cookie_id;
+  dbmkey.dsize = strlen(cookie->cookie_id);
 
   /*
    * create val
    */
-  headers = (apr_array_header_t*)apr_table_elts(new_cookie_table);
-  dbmval.dptr  = (char*)headers;
-  dbmval.dsize = headers->elt_size * headers->nelts + sizeof(apr_array_header_t);
+  cookie->cookie_headers = (apr_array_header_t*)apr_table_elts(new_cookie_table);
+  dbmval.dptr  = (char*)cookie->cookie_headers;
+  dbmval.dsize = cookie->cookie_headers->elt_size * cookie->cookie_headers->nelts + sizeof(apr_array_header_t);
 
   /*
    * store to db
@@ -196,14 +194,14 @@ on_error:
   chxj_cookie_db_unlock(r, file);
 
   DBG(r, "end   chxj_save_cookie()");
-  return md5_string;
+  return cookie;
 }
 
 /*
  *
  * @return loaded data.
  */
-apr_array_header_t*
+cookie_t*
 chxj_load_cookie(request_rec* r, char* cookie_id)
 {
   int ii;
@@ -215,14 +213,16 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
   mod_chxj_config*        dconf;
   chxjconvrule_entry* entryp;
   apr_file_t*       file;
-  apr_array_header_t* cookie_headers;
   apr_table_entry_t*  hentryp;
+  cookie_t*           cookie;
 
 
 
   DBG(r, "start chxj_load_cookie()");
 
-  cookie_headers = NULL;
+  cookie = (cookie_t*)apr_palloc(r->pool, sizeof(cookie_t));
+  cookie->cookie_headers = NULL;
+  cookie->cookie_id = apr_pstrdup(r->pool, cookie_id);
 
 
   gconf = ap_get_module_config(r->server->module_config, &chxj_module);
@@ -259,7 +259,7 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
   /*
    * create key
    */
-  dbmkey.dptr  = apr_pstrdup(r->pool, cookie_id);
+  dbmkey.dptr  = apr_pstrdup(r->pool, cookie->cookie_id);
   dbmkey.dsize = strlen(dbmkey.dptr);
 
   retval = apr_dbm_fetch(f, dbmkey, &dbmval);
@@ -267,11 +267,11 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
     ERR2(r, "could not fetch dbm (type %s) auth file: %s", "default", "/tmp/cookie.db");
     goto on_error;
   }
-  cookie_headers = (apr_array_header_t*)dbmval.dptr;
+  cookie->cookie_headers = (apr_array_header_t*)dbmval.dptr;
 
-  hentryp = (apr_table_entry_t*)cookie_headers->elts;
+  hentryp = (apr_table_entry_t*)cookie->cookie_headers->elts;
 
-  for (ii=0; ii<cookie_headers->nelts; ii++) {
+  for (ii=0; ii<cookie->cookie_headers->nelts; ii++) {
     DBG2(r, "cookie=[%s:%s]", hentryp[ii].key, hentryp[ii].val);
 
     apr_table_setn(r->headers_in, "Cookie", apr_pstrcat(r->pool, hentryp[ii].key, "=", hentryp[ii].val, NULL));
@@ -282,25 +282,27 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
   /*
    * save cookie_id to request header.
    */
-  apr_table_setn(r->headers_in, "CHXJ_COOKIE_ID", cookie_id);
+  apr_table_setn(r->headers_in, "CHXJ_COOKIE_ID", cookie->cookie_id);
   DBG(r, " ");
 
 on_error:
   chxj_cookie_db_unlock(r, file);
 
   DBG(r, "end   chxj_load_cookie()");
-  return cookie_headers;
+  return cookie;
 }
 
 
 char*
-chxj_add_cookie_parameter(request_rec* r, char* value, char* cookie_id)
+chxj_add_cookie_parameter(request_rec* r, char* value, cookie_t* cookie)
 {
   char* qs;
   char* dst;
 
-  DBG1(r, "start chxj_add_cookie_parameter() cookie_id=[%s]", cookie_id);
-  if (!cookie_id) return value;
+  DBG1(r, "start chxj_add_cookie_parameter() cookie_id=[%s]", (cookie) ? cookie->cookie_id : NULL);
+
+  if (!cookie) return value;
+  if (!cookie->cookie_id) return value;
   if (chxj_cookie_check_host(r, value) != 0) {
     DBG(r, "end chxj_add_cookie_parameter()(check host)");
     return value;
@@ -310,10 +312,10 @@ chxj_add_cookie_parameter(request_rec* r, char* value, char* cookie_id)
 
   qs = strchr(dst, '?');
   if (qs) {
-    dst = apr_psprintf(r->pool, "%s&%s=%s", dst, CHXJ_COOKIE_PARAM, cookie_id);
+    dst = apr_psprintf(r->pool, "%s&%s=%s", dst, CHXJ_COOKIE_PARAM, cookie->cookie_id);
   }
   else {
-    dst = apr_psprintf(r->pool, "%s?%s=%s", dst, CHXJ_COOKIE_PARAM, cookie_id);
+    dst = apr_psprintf(r->pool, "%s?%s=%s", dst, CHXJ_COOKIE_PARAM, cookie->cookie_id);
   }
 
   DBG1(r, "end   chxj_add_cookie_parameter() dst=[%s]", dst);
