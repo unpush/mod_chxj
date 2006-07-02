@@ -322,7 +322,7 @@ chxj_exchange_chtml20(
 {
   char*     dst = NULL;
   char*     ss;
-  chtml20_t   chtml20;
+  chtml20_t chtml20;
   Doc       doc;
 
   /*--------------------------------------------------------------------------*/
