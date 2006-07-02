@@ -535,11 +535,13 @@ s_chtml20_start_meta_tag(void* pdoc, Node* node)
   Doc*         doc;
   request_rec* r;
   Attr*        attr;
-  int          content_type_flag = 0;
+  int          content_type_flag;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
   r       = doc->r;
+
+  content_type_flag = 0;
 
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<meta", NULL);
 
