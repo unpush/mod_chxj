@@ -519,6 +519,7 @@ s_chtml20_end_html_tag(void* pdoc, Node* child)
   return chtml20->out;
 }
 
+
 /**
  * It is a handler who processes the META tag.
  *
