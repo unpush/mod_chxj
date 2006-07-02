@@ -301,14 +301,19 @@ chxj_add_cookie_parameter(request_rec* r, char* value, cookie_t* cookie)
 
   DBG1(r, "start chxj_add_cookie_parameter() cookie_id=[%s]", (cookie) ? cookie->cookie_id : NULL);
 
-  if (!cookie) return value;
-  if (!cookie->cookie_id) return value;
+  dst = value;
+
+  if (!cookie)
+    goto on_error;
+
+  if (!cookie->cookie_id)
+    goto on_error;
+
   if (chxj_cookie_check_host(r, value) != 0) {
     DBG(r, "end chxj_add_cookie_parameter()(check host)");
-    return value;
+    goto on_error;
   }
 
-  dst = value;
 
   qs = strchr(dst, '?');
   if (qs) {
@@ -320,6 +325,10 @@ chxj_add_cookie_parameter(request_rec* r, char* value, cookie_t* cookie)
 
   DBG1(r, "end   chxj_add_cookie_parameter() dst=[%s]", dst);
 
+  return dst;
+
+on_error:
+  DBG(r, "end   chxj_add_cookie_parameter() (on_error)");
   return dst;
 }
 
