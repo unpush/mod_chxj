@@ -399,10 +399,10 @@ chxj_exchange_chtml20(
 static void
 s_init_chtml20(chtml20_t* chtml20, Doc* doc, request_rec* r, device_table* spec)
 {
-  memset(doc,   0, sizeof(Doc));
+  memset(doc,     0, sizeof(Doc));
   memset(chtml20, 0, sizeof(chtml20_t));
 
-  doc->r      = r;
+  doc->r        = r;
   chtml20->doc  = doc;
   chtml20->spec = spec;
   chtml20->out  = qs_alloc_zero_byte_string(r);
