@@ -343,6 +343,7 @@ chxj_exchange_chtml20(
   DBG(r,"init end");
 
   chtml20.entryp = entryp;
+  chtml20.cookie = cookie;
 
   ap_set_content_type(r, "text/html; charset=Windows-31J");
 
