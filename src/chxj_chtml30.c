@@ -800,7 +800,7 @@ s_chtml30_start_base_tag(void* pdoc, Node* node)
 
     if ((*name == 'h' || *name == 'H') && strcasecmp(name, "href") == 0) {
       chtml30->out = apr_pstrcat(r->pool, 
-                      chtml30->out, 
+                                 chtml30->out, 
                       " href=\"", 
                       value, 
                       "\"", 

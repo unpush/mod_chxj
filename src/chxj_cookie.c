@@ -401,7 +401,8 @@ chxj_cookie_check_host(request_rec* r, char* value)
 static char*
 s_get_hostname_from_url(request_rec* r, char* value)
 {
-  if (!value) return NULL; 
+  if (!value) 
+    return NULL; 
 
   if (strncasecmp(value, "http://",  7) == 0 )
     return s_cut_until_end_hostname(r, &value[7]);

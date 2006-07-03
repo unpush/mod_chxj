@@ -22,7 +22,7 @@ extern int
 chxj_calc_ecc(
   qr_code_t* qrcode,
   unsigned char* indata, 
-              unsigned char* dst);
+  unsigned char* dst);
 #endif
 /*
  * vim:ts=2 et
