@@ -29,7 +29,7 @@ typedef struct _ctml10_t {
     char*              out;
     int                out_len;
     int                pre_flag;
-    int                textarea_flag;
+    int                 textarea_flag;
 
     device_table*       spec;
     mod_chxj_config*    conf;
