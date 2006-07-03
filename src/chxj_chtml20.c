@@ -1724,6 +1724,7 @@ s_chtml20_start_ul_tag(void* pdoc, Node* node)
   return chtml20->out;
 }
 
+
 /**
  * It is a handler who processes the UL tag.
  *
@@ -1747,6 +1748,7 @@ s_chtml20_end_ul_tag(void* pdoc, Node* child)
 
   return chtml20->out;
 }
+
 
 /**
  * It is a handler who processes the OL tag.
@@ -1862,7 +1864,7 @@ s_chtml20_start_hr_tag(void* pdoc, Node* node)
   chtml20_t*    chtml20;
   Doc*          doc;
   request_rec*  r;
-  Attr* attr;
+  Attr*         attr;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
