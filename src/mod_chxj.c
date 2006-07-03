@@ -658,20 +658,37 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
          */
         if (entryp->action & CONVRULE_COOKIE_ON_BIT) {
           DBG(r, "entryp->action == COOKIE_ON_BIT");
+          char* user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
+          device_table* spec = chxj_specified_device(r, user_agent);
 
-          cookie = chxj_save_cookie(r);
+          switch(spec->html_spec_type) {
+          case CHXJ_SPEC_Chtml_1_0:
+          case CHXJ_SPEC_Chtml_2_0:
+          case CHXJ_SPEC_Chtml_3_0:
+          case CHXJ_SPEC_Chtml_4_0:
+          case CHXJ_SPEC_Chtml_5_0:
+          case CHXJ_SPEC_XHtml_Mobile_1_0:
+          case CHXJ_SPEC_Hdml:
+          case CHXJ_SPEC_Jhtml:
 
-          /*
-           * Location Header Check to add cookie parameter.
-           */
-          location_header = (char*)apr_table_get(r->headers_out, "Location");
-          if (location_header) {
-            DBG1(r, "Location Header=[%s]", location_header);
-            location_header = chxj_add_cookie_parameter(r,
-                                                        location_header,
-                                                        cookie);
-            apr_table_setn(r->headers_out, "Location", location_header);
-            DBG1(r, "Location Header=[%s]", location_header);
+            cookie = chxj_save_cookie(r);
+  
+            /*
+             * Location Header Check to add cookie parameter.
+             */
+            location_header = (char*)apr_table_get(r->headers_out, "Location");
+            if (location_header) {
+              DBG1(r, "Location Header=[%s]", location_header);
+              location_header = chxj_add_cookie_parameter(r,
+                                                          location_header,
+                                                          cookie);
+              apr_table_setn(r->headers_out, "Location", location_header);
+              DBG1(r, "Location Header=[%s]", location_header);
+            }
+            break;
+
+          default:
+            break;
           }
         }
 
