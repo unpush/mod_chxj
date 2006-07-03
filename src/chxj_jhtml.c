@@ -925,6 +925,7 @@ s_jhtml_start_body_tag(void* pdoc, Node* node)
       /* ignore */
     }
   }
+
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, ">\r\n", NULL);
 
   return jhtml->out;
