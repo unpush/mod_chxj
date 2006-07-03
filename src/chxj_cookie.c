@@ -235,7 +235,7 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
   chxjconvrule_entry*     entryp;
   apr_file_t*             file;
   cookie_t*               cookie;
-  apr_table_t*        load_cookie_table;
+  apr_table_t*            load_cookie_table;
   char*               load_string;
   char*               pstat;
   char*               key;

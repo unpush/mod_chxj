@@ -435,6 +435,7 @@ chxj_exchange_hdml(
   return dst;
 }
 
+
 /**
  * The HDML structure is initialized. 
  * 
