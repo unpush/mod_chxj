@@ -2597,6 +2597,7 @@ s_chtml20_end_h3_tag(void* pdoc, Node* child)
   return chtml20->out;
 }
 
+
 /**
  * It is a handler who processes the H4 tag.
  *
@@ -2620,6 +2621,7 @@ s_chtml20_start_h4_tag(void* pdoc, Node* node)
 
   return chtml20->out;
 }
+
 
 /**
  * It is a handler who processes the H4 tag.
