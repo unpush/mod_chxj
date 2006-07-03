@@ -142,7 +142,7 @@ chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
     return (char*)src;
   }
 
-  memset(ibuf, 0, ilen+1);
+  memset(ibuf, 0,   ilen+1);
   memcpy(ibuf, src, ilen);
 
   olen = ilen * 4 + 1;

@@ -42,7 +42,7 @@ chxj_img_conv(
     if (spec->available_jpeg)
       return apr_pstrcat(r->pool, dst,".jpg", NULL);
 
-    if (spec->available_png != 0)
+    if (spec->available_png)
       return apr_pstrcat(r->pool, dst,".png", NULL);
 
     if (spec->available_gif != 0)

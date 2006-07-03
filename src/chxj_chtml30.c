@@ -1003,7 +1003,7 @@ s_chtml30_start_a_tag(void* pdoc, Node* node)
       value = chxj_encoding_parameter(r, value);
       value = chxj_add_cookie_parameter(r, value, chtml30->cookie);
       chtml30->out = apr_pstrcat(r->pool, 
-                      chtml30->out, 
+                                 chtml30->out, 
                       " href=\"", 
                       value, 
                       "\"", 

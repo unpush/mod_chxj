@@ -27,7 +27,7 @@ extern char*    qs_get_checked_attr   (Doc* doc, Node* tag, request_rec* r);
 extern char*    qs_get_type_attr      (Doc* doc, Node* tag, request_rec* r);
 extern char*    qs_get_name_attr      (Doc* doc, Node* tag, request_rec* r);
 extern char*    qs_get_istyle_attr    (Doc* doc, Node* tag, request_rec* r);
-char*    qs_get_maxlength_attr (Doc* doc, Node* tag, request_rec* r);
+extern char*    qs_get_maxlength_attr (Doc* doc, Node* tag, request_rec* r);
 char*    qs_get_size_attr      (Doc* doc, Node* tag, request_rec* r);
 char*    qs_get_accesskey_attr (Doc* doc, Node* tag, request_rec* r);
 
