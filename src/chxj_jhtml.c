@@ -600,7 +600,7 @@ s_jhtml_start_meta_tag(void* pdoc, Node* node)
         jhtml->out = apr_pstrcat(r->pool,
                                 jhtml->out,
                                 " ",
-                        name,
+                                name,
                         "=\"",
                         "text/html; charset=Windows-31J",
                         "\"",
