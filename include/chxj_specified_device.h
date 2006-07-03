@@ -41,7 +41,7 @@ typedef struct device_table_t device_table;
 
 struct device_table_t {
   struct device_table_t* next;
-  const char* device_id;
+  const char*            device_id;
   const char* device_name;
   spec_type html_spec_type;
   int width;

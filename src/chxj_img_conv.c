@@ -39,7 +39,7 @@ chxj_img_conv(
     default:       dst = apr_pstrcat(r->pool, dst,".30", NULL); break;
     }
 
-    if (spec->available_jpeg != 0)
+    if (spec->available_jpeg)
       return apr_pstrcat(r->pool, dst,".jpg", NULL);
 
     if (spec->available_png != 0)

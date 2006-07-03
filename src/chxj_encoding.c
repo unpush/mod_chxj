@@ -141,6 +141,7 @@ chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
     DBG(r,"end   chxj_rencoding()");
     return (char*)src;
   }
+
   memset(ibuf, 0, ilen+1);
   memcpy(ibuf, src, ilen);
 

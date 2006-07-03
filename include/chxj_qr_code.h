@@ -104,7 +104,7 @@ typedef enum _qr_mode_change_t {
 
 typedef struct qr_code_t qr_code_t;
 
-struct _qr_code_t {
+struct qr_code_t {
   qr_code_found_t  found;
   qr_mode_change_t mode_change;
 

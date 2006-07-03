@@ -1023,7 +1023,7 @@ s_jhtml_start_a_tag(void* pdoc, Node* node)
       /* CHTML1.0                                                             */
       /*----------------------------------------------------------------------*/
       jhtml->out = apr_pstrcat(r->pool, 
-                      jhtml->out, 
+                               jhtml->out, 
                       " accesskey=\"", 
                       value, 
                       "\"", 

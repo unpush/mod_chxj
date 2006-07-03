@@ -1455,8 +1455,8 @@ s_hdml_do_input_text_tag(hdml_t* hdml, Node* tag)
 
   hdml->card_cnt++;
   s_output_to_hdml_out(hdml, 
-                  apr_psprintf(r->pool,
-                          "<A TASK=GOSUB LABEL=\x93\xfc\x97\xcd DEST=#D%d "
+                       apr_psprintf(r->pool,
+                              "<A TASK=GOSUB LABEL=\x93\xfc\x97\xcd DEST=#D%d "
                           "VARS=\"V=$%s%02d\" RECEIVE=%s%02d>",
                           hdml->card_cnt,
                           s_get_form_no(r, hdml),
