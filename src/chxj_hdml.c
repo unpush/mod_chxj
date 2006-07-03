@@ -1264,7 +1264,7 @@ s_hdml_start_form_tag(void* pdoc, Node* node)
                                  NULL);
   }
   hdml->form_tmp = apr_pstrcat(r->pool,
-                           hdml->form_tmp,
+                               hdml->form_tmp,
                            "\" ",NULL);
   hdml->form_tmp = apr_pstrcat(r->pool,
                            hdml->form_tmp,

@@ -875,7 +875,7 @@ s_chtml30_start_body_tag(void* pdoc, Node* node)
                                  chtml30->out, 
                                  " bgcolor=\"", 
                                  value, 
-                      "\"", 
+                                 "\"", 
                       NULL);
     }
     else

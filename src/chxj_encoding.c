@@ -33,7 +33,7 @@
 char*
 chxj_encoding(request_rec *r, const char* src, apr_size_t* len)
 {
-  char* obuf;
+  char*               obuf;
   char*               ibuf;
   char*               spos;
   
