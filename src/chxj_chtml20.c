@@ -2409,7 +2409,8 @@ s_chtml20_start_div_tag(void* pdoc, Node* child)
   if (align)
     chtml20->out = apr_pstrcat(r->pool, 
                                chtml20->out, 
-                               " align=\"", align, "\"", NULL);
+                               " align=\"", 
+                               align, "\"", NULL);
 
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, ">", NULL);
 
