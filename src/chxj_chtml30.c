@@ -614,7 +614,7 @@ s_chtml30_start_meta_tag(void* pdoc, Node* node)
           url = chxj_encoding_parameter(r, url);
           url = chxj_add_cookie_parameter(r, url, chtml30->cookie);
           chtml30->out = apr_pstrcat(r->pool,
-                          chtml30->out,
+                                     chtml30->out,
                           " ",
                           name,
                           "=\"",

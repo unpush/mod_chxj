@@ -228,7 +228,7 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
 {
   apr_status_t            retval;
   apr_datum_t             dbmkey;
-  apr_datum_t dbmval;
+  apr_datum_t             dbmval;
   apr_dbm_t*          f;
   mod_chxj_global_config* gconf;
   mod_chxj_config*        dconf;
