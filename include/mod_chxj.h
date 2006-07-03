@@ -154,12 +154,14 @@
 #endif
 
 
-typedef struct _imode_emoji_t {
+typedef struct imode_emoji_t imode_emoji_t;
+
+struct imode_emoji_t {
   char  hex1byte;
   char  hex2byte;
   char* string;
   char *description;
-} imode_emoji_t;
+};
 
 typedef struct _ezweb_emoji_t {
   char* typeA;

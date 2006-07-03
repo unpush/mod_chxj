@@ -1055,7 +1055,7 @@ s_jhtml_start_a_tag(void* pdoc, Node* node)
       /* It is special only for CHTML.                                        */
       /*----------------------------------------------------------------------*/
       jhtml->out = apr_pstrcat(r->pool, 
-                      jhtml->out, 
+                               jhtml->out, 
                       " utn ", 
                       NULL);
     }

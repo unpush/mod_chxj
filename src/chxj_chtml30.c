@@ -1029,7 +1029,7 @@ s_chtml30_start_a_tag(void* pdoc, Node* node)
       chtml30->out = apr_pstrcat(r->pool, 
                                  chtml30->out, 
                                  " cti=\"", 
-                      value, 
+                                 value, 
                       "\"", 
                       NULL);
     }
