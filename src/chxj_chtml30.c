@@ -491,7 +491,7 @@ s_chtml30_start_html_tag(void* pdoc, Node* node)
 
   chtml30 = GET_CHTML30(pdoc);
   doc     = chtml30->doc;
-  r     = doc->r;
+  r       = doc->r;
 
   /*--------------------------------------------------------------------------*/
   /* start HTML tag                                                           */
