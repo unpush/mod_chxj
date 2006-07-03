@@ -1537,6 +1537,7 @@ s_hdml_do_input_text_tag(hdml_t* hdml, Node* tag)
   hdml->var_cnt[hdml->pure_form_cnt]++;
 }
 
+
 /**
  * The substitution processing of tag "input type = password" is done. 
  * 
