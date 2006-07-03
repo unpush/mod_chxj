@@ -1335,7 +1335,7 @@ s_hdml_start_input_tag(void* pdoc, Node* node)
   Attr*      attr;
 
   hdml = GET_HDML(pdoc);
-  doc = hdml->doc;
+  doc  = hdml->doc;
 
   /*--------------------------------------------------------------------------*/
   /* The attribute of the input tag is acquired.                              */

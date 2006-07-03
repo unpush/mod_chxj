@@ -40,5 +40,6 @@ extern char*
 chxj_encoding_parameter(
   request_rec* r, 
   const char*  value);
+
 #endif
 

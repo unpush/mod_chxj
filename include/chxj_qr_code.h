@@ -112,7 +112,7 @@ typedef struct _qr_code_t {
   request_rec*     r;
   Doc*             doc;
   int              size;
-  char*        indata;
+  char*            indata;
 } qr_code_t;
 
 int     chxj_qr_code_handler            (request_rec* r);
