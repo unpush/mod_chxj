@@ -518,7 +518,7 @@ s_chtml30_end_html_tag(void* pdoc, Node* child)
   request_rec*  r;
 
   chtml30 = GET_CHTML30(pdoc);
-  doc   = chtml30->doc;
+  doc     = chtml30->doc;
   r     = doc->r;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "</html>\n", NULL);

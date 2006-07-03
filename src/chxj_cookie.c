@@ -34,7 +34,7 @@ static char* s_cut_until_end_hostname(request_rec*, char* value);
 cookie_t*
 chxj_save_cookie(request_rec* r)
 {
-  int   ii;
+  int                 ii;
   apr_array_header_t* headers;
   apr_table_entry_t*  hentryp;
   apr_status_t        retval;

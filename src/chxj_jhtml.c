@@ -598,8 +598,8 @@ s_jhtml_start_meta_tag(void* pdoc, Node* node)
       /*----------------------------------------------------------------------*/
       if (content_type_flag)  {
         jhtml->out = apr_pstrcat(r->pool,
-                        jhtml->out,
-                        " ",
+                                jhtml->out,
+                                " ",
                         name,
                         "=\"",
                         "text/html; charset=Windows-31J",
