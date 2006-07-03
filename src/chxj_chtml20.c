@@ -1989,7 +1989,8 @@ s_chtml20_start_img_tag(void* pdoc, Node* node)
         chtml20->out = apr_pstrcat(r->pool, 
                         chtml20->out, " src=\"", 
                         chxj_img_conv(r, spec,value), NULL);
-        chtml20->out = apr_pstrcat(r->pool, chtml20->out, "\"", NULL);
+        chtml20->out = apr_pstrcat(r->pool, 
+                                   chtml20->out, "\"", NULL);
 #endif
       }
       break;
