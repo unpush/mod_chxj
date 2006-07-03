@@ -999,7 +999,7 @@ s_jhtml_start_a_tag(void* pdoc, Node* node)
       jhtml->out = apr_pstrcat(r->pool, 
                                jhtml->out, 
                                " name=\"", 
-                      value, 
+                               value, 
                       "\"", 
                       NULL);
     }
