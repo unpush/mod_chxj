@@ -25,7 +25,7 @@
 /* Structure for HDML                                                         */
 /*----------------------------------------------------------------------------*/
 typedef struct _ctml10_t {
-    Doc*               doc;
+    Doc*                doc;
     char*               out;
     int                 out_len;
     int                 pre_flag;

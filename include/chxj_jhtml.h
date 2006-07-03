@@ -23,7 +23,7 @@
 /* Structure for J-PHONE HTML                                                 */
 /*----------------------------------------------------------------------------*/
 typedef struct _jhtml_t {
-    Doc* doc;
+    Doc*                doc;
     char*               out;
     int                 out_len;
     int                 pre_flag;

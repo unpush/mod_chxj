@@ -44,7 +44,7 @@ chxj_save_cookie(request_rec* r)
   apr_uuid_t          uuid;
   char*               uuid_string;
   unsigned char*      md5_value;
-  char*             old_cookie_id;
+  char*               old_cookie_id;
   char*             store_string;
   mod_chxj_config*        dconf;
   chxjconvrule_entry* entryp;
