@@ -2004,7 +2004,8 @@ s_chtml20_start_img_tag(void* pdoc, Node* node)
                                    chtml20->out, 
                                    " align=\"",
                                    value,
-                                   "\"", NULL);
+                                   "\"", 
+                                   NULL);
       }
       else
       if (strcasecmp(name, "alt"   ) == 0) {
