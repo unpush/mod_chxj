@@ -31,7 +31,7 @@ chxj_exchange_image(
   const char** src, 
   apr_size_t*  len);
 
-int chxj_trans_name(request_rec *r);
+extern int chxj_trans_name(request_rec *r);
 
 
 #endif

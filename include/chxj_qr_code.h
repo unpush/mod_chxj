@@ -108,7 +108,7 @@ typedef struct _qr_code_t {
 
   qr_ver_t         version;
   qr_level_t       level;
-  qr_mode_t    mode;
+  qr_mode_t        mode;
   request_rec* r;
   Doc*         doc;
   int          size;

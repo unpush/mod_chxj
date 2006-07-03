@@ -166,7 +166,7 @@ static char*        s_create_workfile(  request_rec*,
                                         const char*, 
                                         query_string_param_t*);
 static apr_status_t s_create_cache_file(request_rec* r, 
-                                        const char* tmpfile, 
+                                        const char*   tmpfile, 
                                         device_table* spec,
                                         apr_finfo_t* st,
                                         query_string_param_t *qsp);
