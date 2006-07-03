@@ -1262,7 +1262,7 @@ s_chtml30_start_font_tag(void* pdoc, Node* node)
                                  " color=\"", 
                                  value, 
                                  "\"", 
-                      NULL);
+                                 NULL);
     }
     else
     if (strcasecmp(name, "size") == 0) {

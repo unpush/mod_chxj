@@ -114,6 +114,7 @@ struct converter_t {
 
 extern converter_t convert_routine[];
 
-extern device_table* chxj_specified_device(request_rec* r, const char* user_agent);
+extern device_table* 
+chxj_specified_device(request_rec* r, const char* user_agent);
 
 #endif
