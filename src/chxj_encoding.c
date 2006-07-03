@@ -134,6 +134,7 @@ chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
     DBG(r,"none encoding.");
     return (char*)src;
   }
+
   ilen = *len;
   ibuf = apr_palloc(r->pool, ilen+1);
   if (ibuf == NULL) {

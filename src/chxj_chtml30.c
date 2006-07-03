@@ -989,7 +989,7 @@ s_chtml30_start_a_tag(void* pdoc, Node* node)
       /* CHTML1.0                                                             */
       /*----------------------------------------------------------------------*/
       chtml30->out = apr_pstrcat(r->pool, 
-                      chtml30->out, 
+                                 chtml30->out, 
                       " name=\"", 
                       value, 
                       "\"", 
