@@ -1245,8 +1245,11 @@ s_hdml_start_form_tag(void* pdoc, Node* node)
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
 
-    char* name = qs_get_attr_name(doc,attr);
-    char* value = qs_get_attr_value(doc,attr);
+    char* name;
+    char* value;
+
+    name = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
 
     if ((*name == 'a' || *name == 'A') && strcasecmp(name, "action") == 0) {
       act = apr_psprintf(r->pool, "%s", value);

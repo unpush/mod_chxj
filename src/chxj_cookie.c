@@ -468,6 +468,7 @@ chxj_cookie_db_unlock(request_rec* r, apr_file_t* file)
   apr_file_close(file);
 }
 
+
 void
 chxj_delete_cookie(request_rec* r, char* cookie_id)
 {

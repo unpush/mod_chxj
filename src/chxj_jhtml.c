@@ -904,7 +904,7 @@ s_jhtml_start_body_tag(void* pdoc, Node* node)
       /* CHTML 2.0                                                            */
       /*----------------------------------------------------------------------*/
       jhtml->out = apr_pstrcat(r->pool, 
-                      jhtml->out, 
+                              jhtml->out, 
                       " link=\"", 
                       value, 
                       "\"", 
