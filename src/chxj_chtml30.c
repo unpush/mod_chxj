@@ -1347,8 +1347,8 @@ s_chtml30_start_form_tag(void* pdoc, Node* node)
       value = chxj_add_cookie_parameter(r, value, chtml30->cookie);
       chtml30->out = apr_pstrcat(r->pool, 
                                  chtml30->out, 
-                      " action=\"",
-                      value,
+                                 " action=\"",
+                                 value,
                       "\"", 
                       NULL);
     }

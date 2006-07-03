@@ -1298,7 +1298,7 @@ s_jhtml_start_font_tag(void* pdoc, Node* node)
 static char*
 s_jhtml_end_font_tag(void* pdoc, Node* child) 
 {
-  jhtml_t* jhtml;
+  jhtml_t*     jhtml;
   request_rec* r;
 
   jhtml = GET_JHTML(pdoc);
