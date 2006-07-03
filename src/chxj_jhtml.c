@@ -1257,8 +1257,11 @@ s_jhtml_start_font_tag(void* pdoc, Node* node)
   for (attr = qs_get_attr(doc,node);
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
-    char* name  = qs_get_attr_name(doc,attr);
-    char* value = qs_get_attr_value(doc,attr);
+    char* name;
+    char* value;
+
+    name  = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
 
     if ((*name == 'c' || *name == 'C') && strcasecmp(name, "color") == 0) {
       jhtml->out = apr_pstrcat(r->pool, 
