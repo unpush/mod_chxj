@@ -590,7 +590,7 @@ s_chtml30_start_meta_tag(void* pdoc, Node* node)
     if (strcasecmp(name, "content") == 0) {
       if (content_type_flag) {
         chtml30->out = apr_pstrcat(r->pool,
-                        chtml30->out,
+                                   chtml30->out,
                         " ",
                         name,
                         "=\"",
