@@ -1302,7 +1302,7 @@ s_jhtml_end_font_tag(void* pdoc, Node* child)
   request_rec* r;
 
   jhtml = GET_JHTML(pdoc);
-  r = jhtml->doc->r;
+  r     = jhtml->doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</font>", NULL);
 
