@@ -2924,7 +2924,8 @@ s_chtml20_start_textarea_tag(void* pdoc, Node* node)
     case 'r':
     case 'R':
       if (strcasecmp(name, "rows") == 0) {
-        chtml20->out = apr_pstrcat(r->pool, chtml20->out, " rows=\"",value,"\"", NULL);
+        chtml20->out = apr_pstrcat(r->pool, 
+                                   chtml20->out, " rows=\"",value,"\"", NULL);
       }
       break;
 
