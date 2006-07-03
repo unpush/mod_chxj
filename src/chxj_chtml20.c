@@ -2472,6 +2472,7 @@ s_chtml20_start_h1_tag(void* pdoc, Node* node)
   return chtml20->out;
 }
 
+
 /**
  * It is a handler who processes the H1 tag.
  *
@@ -2495,6 +2496,7 @@ s_chtml20_end_h1_tag(void* pdoc, Node* child)
 
   return chtml20->out;
 }
+
 
 /**
  * It is a handler who processes the H2 tag.
