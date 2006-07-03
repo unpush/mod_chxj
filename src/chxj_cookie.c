@@ -473,7 +473,7 @@ void
 chxj_delete_cookie(request_rec* r, char* cookie_id)
 {
   apr_status_t      retval;
-  apr_datum_t dbmkey;
+  apr_datum_t       dbmkey;
   apr_dbm_t*          f;
   apr_file_t*       file;
 
