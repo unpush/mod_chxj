@@ -1344,8 +1344,11 @@ s_hdml_start_input_tag(void* pdoc, Node* node)
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
 
-    char* name  = qs_get_attr_name(doc,attr);
-    char* value = qs_get_attr_value(doc,attr);
+    char* name;
+    char* value;
+
+    name  = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
 
     if ((*name == 't'|| *name == 'T') && strcasecmp(name, "type") == 0) {
       if ((*value == 't' || *value == 'T') && strcasecmp(value, "text") == 0) {
