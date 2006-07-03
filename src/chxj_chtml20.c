@@ -2311,7 +2311,8 @@ s_chtml20_start_option_tag(void* pdoc, Node* child)
   }
 
   if (value)
-    chtml20->out = apr_pstrcat(r->pool, chtml20->out, " value=\"",value,"\"", NULL);
+    chtml20->out = apr_pstrcat(r->pool, 
+                               chtml20->out, " value=\"",value,"\"", NULL);
   else
     chtml20->out = apr_pstrcat(r->pool, chtml20->out, " value=\"\"", NULL);
 
