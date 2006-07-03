@@ -154,6 +154,7 @@ chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
   DBG2(r,"encode convert [%s] -> [%s]", "CP932", entryp->encoding);
 
   memset(obuf, 0, olen);
+
   cd = iconv_open(entryp->encoding, "CP932");
   if (cd == (iconv_t)-1) {
     DBG(r,"end   chxj_rencoding()");

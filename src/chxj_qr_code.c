@@ -676,6 +676,7 @@ chxj_qr_code_blob_handler(request_rec* r, const char* indata, size_t* len)
   return img;
 }
 
+
 int
 chxj_qrcode_create_image_data(
   qr_code_t* qrcode,

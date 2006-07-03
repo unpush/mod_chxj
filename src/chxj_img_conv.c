@@ -48,7 +48,7 @@ chxj_img_conv(
     if (spec->available_gif)
       return apr_pstrcat(r->pool, dst, ".gif", NULL);
 
-    if (spec->available_bmp4 || spec->available_bmp2 != 0)
+    if (spec->available_bmp4 || spec->available_bmp2)
       return apr_pstrcat(r->pool, dst, ".bmp", NULL);
   }
 

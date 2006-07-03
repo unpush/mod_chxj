@@ -31,7 +31,7 @@ extern char*    qs_get_maxlength_attr (Doc* doc, Node* tag, request_rec* r);
 extern char*    qs_get_size_attr      (Doc* doc, Node* tag, request_rec* r);
 extern char*    qs_get_accesskey_attr (Doc* doc, Node* tag, request_rec* r);
 
-int      qs_is_checked_checkbox_attr(Doc* doc, Node* tag, request_rec* r);
+extern int      qs_is_checked_checkbox_attr(Doc* doc, Node* tag, request_rec* r);
 
 char*    qs_get_selected_value_text(Doc *doc, Node* node, request_rec* r);
 char*    qs_get_selected_value(Doc* doc, Node* node, request_rec* r);
