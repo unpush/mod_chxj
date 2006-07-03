@@ -1894,7 +1894,8 @@ s_chtml20_start_hr_tag(void* pdoc, Node* node)
                                    chtml20->out, 
                                    " align=\"", 
                                    value, 
-                                   "\" ", NULL);
+                                   "\" ", 
+                                   NULL);
       }
       break;
 
