@@ -137,7 +137,7 @@ chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
 
   ilen = *len;
   ibuf = apr_palloc(r->pool, ilen+1);
-  if (ibuf == NULL) {
+  if (! ibuf) {
     DBG(r,"end   chxj_rencoding()");
     return (char*)src;
   }

@@ -1450,6 +1450,7 @@ s_hdml_do_input_text_tag(hdml_t* hdml, Node* tag)
 
   doc   = hdml->doc;
   r     = doc->r;
+
   s_hdml_tag_output_upper_half(hdml, tag);
 
   hdml->card_cnt++;
