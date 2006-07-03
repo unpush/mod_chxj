@@ -24,7 +24,9 @@
 /*----------------------------------------------------------------------------*/
 /* Structure for HDML                                                         */
 /*----------------------------------------------------------------------------*/
-typedef struct _ctml10_t {
+typedef struct ctml10_t chtml10_t;
+
+struct ctml10_t {
     Doc*                doc;
     char*               out;
     int                 out_len;
@@ -35,7 +37,7 @@ typedef struct _ctml10_t {
     mod_chxj_config*    conf;
     chxjconvrule_entry* entryp;
     cookie_t*           cookie;
-} chtml10_t;
+};
 
 /*----------------------------------------------------------------------------*/
 /* Prototype                                                                  */

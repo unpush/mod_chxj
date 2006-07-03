@@ -19,10 +19,14 @@
 
 /* #define DUMP_JHTML "" */
 #include "mod_chxj.h"
+#include "chxj_cookie.h"
+
 /*----------------------------------------------------------------------------*/
 /* Structure for J-PHONE HTML                                                 */
 /*----------------------------------------------------------------------------*/
-typedef struct _jhtml_t {
+typedef struct jhtml_t jhtml_t;
+
+struct jhtml_t {
     Doc*                doc;
     char*               out;
     int                 out_len;
@@ -33,7 +37,7 @@ typedef struct _jhtml_t {
     mod_chxj_config*    conf;
     chxjconvrule_entry* entryp;
     cookie_t*           cookie;
-} jhtml_t;
+};
 
 /*----------------------------------------------------------------------------*/
 /* Prototype                                                                  */
