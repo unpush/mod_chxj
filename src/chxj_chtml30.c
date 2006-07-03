@@ -1258,7 +1258,7 @@ s_chtml30_start_font_tag(void* pdoc, Node* node)
 
     if (strcasecmp(name, "color") == 0) {
       chtml30->out = apr_pstrcat(r->pool, 
-                      chtml30->out, 
+                                 chtml30->out, 
                       " color=\"", 
                       value, 
                       "\"", 

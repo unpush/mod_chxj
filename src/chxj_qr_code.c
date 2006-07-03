@@ -938,8 +938,8 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
     s_init_modules(qrcode, ii, module);
     s_map_data(qrcode,  module, (unsigned char*)eccstr, data_total_count, ii);
     lost_point = s_calc_lost_point(qrcode, module);
-    if (min_mask_pattern == -1)
-    {
+
+    if (min_mask_pattern == -1) {
       min_mask_pattern = ii;
       min_lost_point = lost_point;
     }
