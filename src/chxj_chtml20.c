@@ -1287,24 +1287,36 @@ s_chtml20_start_font_tag(void* pdoc, Node* node)
     name  = qs_get_attr_name(doc,attr);
     value = qs_get_attr_value(doc,attr);
 
-    if (strcasecmp(name, "color") == 0) {
-      chtml20->out = apr_pstrcat(r->pool, 
-                      chtml20->out, 
-                      " color=\"", 
-                      value, 
-                      "\"", 
-                      NULL);
-    }
-    else
-    if (strcasecmp(name, "size") == 0) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 5.0                                                            */
-      /*----------------------------------------------------------------------*/
-      /* ignore */
+    switch(*name) {
+    case 'c':
+    case 'C':
+      if (strcasecmp(name, "color") == 0) {
+        chtml20->out = apr_pstrcat(r->pool, 
+                        chtml20->out, 
+                        " color=\"", 
+                        value, 
+                        "\"", 
+                        NULL);
+      }
+      break;
+
+    case 's':
+    case 'S':
+      if (strcasecmp(name, "size") == 0) {
+        /*--------------------------------------------------------------------*/
+        /* CHTML 5.0                                                          */
+        /*--------------------------------------------------------------------*/
+        /* ignore */
+      }
+      break;
+
+    default:
+      break;
     }
   }
 
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, ">", NULL);
+
   return chtml20->out;
 }
 
