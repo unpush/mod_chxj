@@ -18,6 +18,7 @@
 #include "chxj_encoding.h"
 #include "chxj_apply_convrule.h"
 #include "chxj_url_encode.h"
+
 #if defined(HAVE_LIBICONV_HOOK)
 #  include "iconv_hook/iconv.h"
 #else

@@ -491,7 +491,7 @@ s_init_hdml(hdml_t* hdml, Doc* doc, request_rec* r, device_table* spec)
 static int
 s_hdml_search_emoji(hdml_t* hdml, char* txt, char** rslt)
 {
-  emoji_t* ee;
+  emoji_t*      ee;
   request_rec* r;
   device_table* spec;
   int len;
