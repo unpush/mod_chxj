@@ -18,7 +18,8 @@
 #define __CHXJ_CALC_ECC_H__
 #include "chxj_qr_code.h"
 
-extern int chxj_calc_ecc(qr_code_t* qrcode,
+extern int 
+chxj_calc_ecc(qr_code_t* qrcode,
               unsigned char* indata, 
               unsigned char* dst);
 #endif

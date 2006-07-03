@@ -34,7 +34,7 @@ struct cookie_t {
 
 extern cookie_t* chxj_save_cookie(request_rec *r);
 extern char*     chxj_add_cookie_parameter(request_rec* r, char* value, cookie_t* cookie);
-extern int chxj_cookie_check_host(request_rec* r, char* value);
+extern int       chxj_cookie_check_host(request_rec* r, char* value);
 extern cookie_t* chxj_load_cookie(request_rec* r, char* cookie_id);
 extern apr_file_t* chxj_cookie_db_lock(request_rec* r);
 extern void chxj_cookie_db_unlock(request_rec* r, apr_file_t* file);

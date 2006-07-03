@@ -45,7 +45,7 @@ struct ctml20_t {
 extern char*
 chxj_exchange_chtml20(
   request_rec* r,
-  device_table* spec,
+  device_table*       spec,
   const char*         src,
   apr_size_t          srclen,
   apr_size_t*         dstlen,

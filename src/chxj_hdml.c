@@ -494,7 +494,7 @@ s_hdml_search_emoji(hdml_t* hdml, char* txt, char** rslt)
   emoji_t*      ee;
   request_rec*  r;
   device_table* spec;
-  int len;
+  int           len;
 
   spec = hdml->spec;
 

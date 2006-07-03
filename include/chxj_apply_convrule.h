@@ -20,7 +20,8 @@
 #include "mod_chxj.h"
 
 extern chxjconvrule_entry* 
-chxj_apply_convrule(request_rec *r, apr_array_header_t *convrules);
+chxj_apply_convrule(
+  request_rec *r, apr_array_header_t *convrules);
 
 #endif
 /*
