@@ -1985,7 +1985,8 @@ s_chtml20_start_img_tag(void* pdoc, Node* node)
 #ifdef IMG_NOT_CONVERT_FILENAME
         chtml20->out = apr_pstrcat(r->pool, 
                                    chtml20->out,
-                                   " src=\"",value,"\"", NULL);
+                                   " src=\"",
+                                   value,"\"", NULL);
 #else
         chtml20->out = apr_pstrcat(r->pool, 
                                    chtml20->out, " src=\"", 
