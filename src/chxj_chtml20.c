@@ -2210,7 +2210,8 @@ s_chtml20_start_select_tag(void* pdoc, Node* child)
   if (name)
     chtml20->out = apr_pstrcat(r->pool, 
                                chtml20->out, 
-                               " name=\"",name,"\"", NULL);
+                               " name=\"",
+                               name,"\"", NULL);
 
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, ">\n", NULL);
 
