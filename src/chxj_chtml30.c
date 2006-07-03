@@ -803,7 +803,7 @@ s_chtml30_start_base_tag(void* pdoc, Node* node)
                                  chtml30->out, 
                                  " href=\"", 
                                  value, 
-                      "\"", 
+                                 "\"", 
                       NULL);
     }
   }

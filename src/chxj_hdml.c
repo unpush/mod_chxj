@@ -1227,11 +1227,12 @@ s_hdml_start_form_tag(void* pdoc, Node* node)
   request_rec* r;
   Attr*        attr;
   Doc*         doc;
-  char*        act = NULL;
+  char*        act;
 
   hdml = GET_HDML(pdoc);
   doc  = hdml->doc;
   r    = hdml->doc->r;
+  act  = NULL;
 
   hdml->form_tmp = apr_psprintf(r->pool,
                   "<NODISPLAY NAME=F%d>\n",

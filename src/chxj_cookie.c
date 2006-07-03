@@ -434,7 +434,7 @@ s_cut_until_end_hostname(request_rec* r, char* value)
 apr_file_t*
 chxj_cookie_db_lock(request_rec* r)
 {
-  apr_file_t* file;
+  apr_file_t*  file;
   apr_status_t rv;
 
   rv = apr_file_open(&file, "/tmp/cookie_db.lock", APR_CREATE|APR_WRITE, APR_OS_DEFAULT, r->pool);
