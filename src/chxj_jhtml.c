@@ -1257,6 +1257,7 @@ s_jhtml_start_font_tag(void* pdoc, Node* node)
   for (attr = qs_get_attr(doc,node);
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
+
     char* name;
     char* value;
 

@@ -179,7 +179,7 @@ static apr_status_t s_send_cache_file(  device_table*         spec,
 
 static apr_status_t s_header_only_cache_file(device_table* spec, 
                                              query_string_param_t* query_string, 
-                                             request_rec* r, 
+                                             request_rec*          r, 
                                              const char*           tmpfile);
 static query_string_param_t* s_get_query_string_param(request_rec *r);
 static unsigned short s_add_crc(        const char* writedata, 

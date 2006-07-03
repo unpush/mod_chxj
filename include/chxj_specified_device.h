@@ -80,8 +80,8 @@ struct device_table_t {
   /* 262144  : 262144   Colors                                                */
   /* 15680000: 15680000 over colors                                           */
   /*--------------------------------------------------------------------------*/
-  int color;
-  char* emoji_type;
+  int                    color;
+  char*                  emoji_type;
 };
 
 typedef struct device_table_list_t  device_table_list;
