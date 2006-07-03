@@ -62,7 +62,7 @@ struct device_table_t {
   /*--------------------------------------------------------------------------*/
   int                    available_gif;
   int                    available_jpeg;
-  int available_png;
+  int                    available_png;
   int available_bmp2;
   int available_bmp4;
   /*--------------------------------------------------------------------------*/

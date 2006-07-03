@@ -184,7 +184,7 @@ struct emoji_t {
   struct _emoji_t* next;
   int no;
   imode_emoji_t* imode;
-  ezweb_emoji_t* ezweb;
+  ezweb_emoji_t*  ezweb;
   jphone_emoji_t* jphone;
 };
 

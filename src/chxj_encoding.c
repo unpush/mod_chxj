@@ -203,7 +203,7 @@ chxj_encoding_parameter(request_rec* r, const char* value)
   *spos++ = 0;
 
   src_sv = apr_pstrdup(r->pool, src);
-  param = apr_palloc(r->pool, 1);
+  param  = apr_palloc(r->pool, 1);
   param[0] = 0;
 
   for (;;) {

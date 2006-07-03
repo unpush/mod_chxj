@@ -760,7 +760,8 @@ chxj_qrcode_create_image_data(
     status = MagickResizeImage(magick_wand, 
                                (module_count * qrcode->size + 6), 
                                (module_count * qrcode->size + 6) , 
-                               LanczosFilter,0.0);
+                               LanczosFilter,
+                               0.0);
   }
   if (status == MagickFalse) 
     goto on_error;
