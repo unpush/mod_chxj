@@ -1270,7 +1270,7 @@ s_jhtml_start_font_tag(void* pdoc, Node* node)
                                " color=\"", 
                                value, 
                                "\"", 
-                      NULL);
+                               NULL);
     }
     else
     if ((*name == 's' || *name == 'S') && strcasecmp(name, "size") == 0) {
