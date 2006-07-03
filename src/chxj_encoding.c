@@ -252,6 +252,7 @@ chxj_encoding_parameter(request_rec* r, const char* value)
     }
   }
   DBG(r, "end   chxj_encoding_parameter()");
+
   return apr_pstrcat(r->pool, src_sv, "?", param, NULL);
 }
 /*

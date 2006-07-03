@@ -847,15 +847,19 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
     case QR_NUM_MODE:
       real_data = s_data_to_bin_num(qrcode, data_code_count);
       break;
+
     case QR_ALPHA_MODE:
       real_data = s_data_to_bin_alpha(qrcode, data_code_count);
       break;
+
     case QR_8BIT_MODE:
       real_data = s_data_to_bin_8bit(qrcode,data_code_count);
       break;
+
     case QR_KANJI_MODE:
       real_data = s_data_to_bin_kanji(qrcode,data_code_count);
       break;
+
     default:
       qrcode->mode = QR_8BIT_MODE;
       qrcode->mode_change = QR_CHANGE;

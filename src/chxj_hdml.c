@@ -1491,7 +1491,7 @@ s_hdml_do_input_text_tag(hdml_t* hdml, Node* tag)
                        apr_psprintf(r->pool, 
                                     "%s=$%s%02d", 
                                     nm,
-                          s_get_form_no(r, hdml),
+                                    s_get_form_no(r, hdml),
                           hdml->var_cnt[hdml->pure_form_cnt]));
 
   mlen = qs_get_maxlength_attr  (doc, tag, r);
