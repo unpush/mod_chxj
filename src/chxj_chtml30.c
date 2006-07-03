@@ -342,6 +342,7 @@ chxj_exchange_chtml30(
   s_init_chtml30(&chtml30, &doc, r, spec);
 
   chtml30.entryp = entryp;
+  chtml30.cookie = cookie;
 
   ap_set_content_type(r, "text/html; charset=Windows-31J");
 
@@ -937,6 +938,7 @@ s_chtml30_start_a_tag(void* pdoc, Node* node)
       /*----------------------------------------------------------------------*/
       /* CHTML1.0                                                             */
       /*----------------------------------------------------------------------*/
+      value = chxj_add_cookie_parameter(r, value, chtml30->cookie);
       chtml30->out = apr_pstrcat(r->pool, 
                       chtml30->out, 
                       " href=\"", 
@@ -1268,6 +1270,7 @@ s_chtml30_start_form_tag(void* pdoc, Node* node)
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
+      value = chxj_add_cookie_parameter(r, value, chtml30->cookie);
       chtml30->out = apr_pstrcat(r->pool, 
                       chtml30->out, 
                       " action=\"",
@@ -1657,12 +1660,18 @@ s_chtml30_start_img_tag(void* pdoc, Node* node)
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
 #ifdef IMG_NOT_CONVERT_FILENAME
+      value = chxj_add_cookie_parameter(r, value, chtml30->cookie);
+
       chtml30->out = apr_pstrcat(r->pool, 
                       chtml30->out, " src=\"",value,"\"", NULL);
 #else
+      value = chxj_img_conv(r,spec,value);
+      value = chxj_add_cookie_parameter(r, value, chtml30->cookie);
+
       chtml30->out = apr_pstrcat(r->pool, 
                       chtml30->out, " src=\"", 
-                      chxj_img_conv(r,spec,value), NULL);
+                      value, NULL);
+
       chtml30->out = apr_pstrcat(r->pool, chtml30->out, "\"", NULL);
 #endif
     }
