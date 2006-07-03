@@ -1268,7 +1268,7 @@ s_jhtml_start_font_tag(void* pdoc, Node* node)
       jhtml->out = apr_pstrcat(r->pool, 
                                jhtml->out, 
                                " color=\"", 
-                      value, 
+                               value, 
                       "\"", 
                       NULL);
     }
