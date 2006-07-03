@@ -62,7 +62,8 @@ chxj_cookie_db_unlock(
   apr_file_t*  file);
 
 extern void 
-chxj_delete_cookie(request_rec* r, char* cookie_id);
+chxj_delete_cookie(
+  request_rec* r, char* cookie_id);
 
 #endif
 /*

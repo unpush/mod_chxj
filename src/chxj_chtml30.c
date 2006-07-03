@@ -993,7 +993,7 @@ s_chtml30_start_a_tag(void* pdoc, Node* node)
                                  " name=\"", 
                                  value, 
                                  "\"", 
-                      NULL);
+                                 NULL);
     }
     else
     if (strcasecmp(name, "href") == 0) {
