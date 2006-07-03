@@ -386,6 +386,7 @@ chxj_exchange_jhtml(
   return dst;
 }
 
+
 /**
  * The CHTML structure is initialized.
  *

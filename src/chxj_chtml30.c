@@ -384,6 +384,7 @@ chxj_exchange_chtml30(
     dst = apr_psprintf(r->pool, "\n");
 
   *dstlen = strlen(dst);
+
 #ifdef DUMP_LOG
   chxj_dump_out("[src] CHTML -> CHTML3.0", dst, *dstlen);
 #endif
