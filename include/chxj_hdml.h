@@ -119,6 +119,7 @@ qs_out_apr_pstrcat(
 
 extern char* 
 qs_conv_istyle_to_format(
-  request_rec* r, char* is);
+  request_rec* r, 
+  char* is);
 
 #endif

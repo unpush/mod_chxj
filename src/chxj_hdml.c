@@ -1259,7 +1259,7 @@ s_hdml_start_form_tag(void* pdoc, Node* node)
 
   if (act) {
     hdml->form_tmp = apr_pstrcat(r->pool,
-                             hdml->form_tmp,
+                                 hdml->form_tmp,
                              act,
                              NULL);
   }
