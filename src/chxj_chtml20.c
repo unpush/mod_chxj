@@ -2547,6 +2547,7 @@ s_chtml20_end_h2_tag(void* pdoc, Node* child)
   return chtml20->out;
 }
 
+
 /**
  * It is a handler who processes the H3 tag.
  *
