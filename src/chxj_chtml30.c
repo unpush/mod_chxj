@@ -622,7 +622,7 @@ s_chtml30_start_meta_tag(void* pdoc, Node* node)
                                      ";",
                                      url,
                                      "\"",
-                          NULL);
+                                     NULL);
         }
       }
       else {
