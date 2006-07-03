@@ -1382,38 +1382,54 @@ s_chtml20_start_form_tag(void* pdoc, Node* node)
     name  = qs_get_attr_name(doc,attr);
     value = qs_get_attr_value(doc,attr);
 
-    if (strcasecmp(name, "action") == 0) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 1.0                                                            */
-      /*----------------------------------------------------------------------*/
-      chtml20->out = apr_pstrcat(r->pool, 
-                      chtml20->out, 
-                      " action=\"",
-                      value,
-                      "\"", 
-                      NULL);
-    }
-    else
-    if (strcasecmp(name, "method") == 0) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 1.0                                                            */
-      /*----------------------------------------------------------------------*/
-      chtml20->out = apr_pstrcat(r->pool, 
-                      chtml20->out, 
-                      " method=\"",
-                      value,
-                      "\"", 
-                      NULL);
-    }
-    else
-    if (strcasecmp(name, "utn") == 0) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 3.0                                                            */
-      /*----------------------------------------------------------------------*/
-      /* ignore */
+    switch(*name) {
+    case 'a':
+    case 'A':
+      if (strcasecmp(name, "action") == 0) {
+        /*--------------------------------------------------------------------*/
+        /* CHTML 1.0                                                          */
+        /*--------------------------------------------------------------------*/
+        chtml20->out = apr_pstrcat(r->pool, 
+                        chtml20->out, 
+                        " action=\"",
+                        value,
+                        "\"", 
+                        NULL);
+      }
+      break;
+
+    case 'm':
+    case 'M':
+      if (strcasecmp(name, "method") == 0) {
+        /*--------------------------------------------------------------------*/
+        /* CHTML 1.0                                                          */
+        /*--------------------------------------------------------------------*/
+        chtml20->out = apr_pstrcat(r->pool, 
+                        chtml20->out, 
+                        " method=\"",
+                        value,
+                        "\"", 
+                        NULL);
+      }
+      break;
+
+    case 'u':
+    case 'U':
+      if (strcasecmp(name, "utn") == 0) {
+        /*--------------------------------------------------------------------*/
+        /* CHTML 3.0                                                          */
+        /*--------------------------------------------------------------------*/
+        /* ignore */
+      }
+      break;
+
+    default:
+      break;
     }
   }
+
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, ">", NULL);
+
   return chtml20->out;
 }
 
