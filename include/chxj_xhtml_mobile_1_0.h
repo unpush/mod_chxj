@@ -22,7 +22,8 @@
 /*----------------------------------------------------------------------------*/
 /* Structure for HDML                                                         */
 /*----------------------------------------------------------------------------*/
-typedef struct _xhtml_t {
+typedef struct xhtml_t xhtml_t;
+struct xhtml_t {
     Doc*               doc;
     char*              out;
     int                out_len;
@@ -33,7 +34,7 @@ typedef struct _xhtml_t {
     mod_chxj_config*   conf;
     chxjconvrule_entry* entryp;
     cookie_t*           cookie;
-} xhtml_t;
+};
 
 /*----------------------------------------------------------------------------*/
 /* Prototype                                                                  */
