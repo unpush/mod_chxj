@@ -19,6 +19,7 @@
 #include "chxj_dump.h"
 #include "chxj_img_conv.h"
 #include "chxj_qr_code.h"
+#include "chxj_encoding.h"
 
 #define GET_JHTML(X) ((jhtml_t*)(X))
 
@@ -339,6 +340,7 @@ chxj_exchange_jhtml(
   s_init_jhtml(&jhtml, &doc, r, spec);
 
   jhtml.entryp = entryp;
+  jhtml.cookie = cookie;
 
   ap_set_content_type(r, "text/html; charset=Windows-31J");
 
@@ -541,8 +543,12 @@ s_jhtml_start_meta_tag(void* pdoc, Node* node)
   request_rec* r                 = doc->r;
   Attr*        attr;
   int          content_type_flag = 0;
+  int          refresh_flag;
+
+  refresh_flag      = 0;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<meta", NULL);
+
 
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -566,13 +572,16 @@ s_jhtml_start_meta_tag(void* pdoc, Node* node)
       if ((*value == 'c' || *value == 'C') && strcasecmp(value, "content-type") == 0) {
         content_type_flag = 1;
       }
+      if ((*value == 'r' || *value == 'R')
+      && strcasecmp(value, "refresh") == 0)
+        refresh_flag = 1;
     }
     else
     if ((*name == 'c' || *name == 'C') &&strcasecmp(name, "content") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 2.0                                                            */
       /*----------------------------------------------------------------------*/
-      if (content_type_flag) 
+      if (content_type_flag)  {
         jhtml->out = apr_pstrcat(r->pool,
                         jhtml->out,
                         " ",
@@ -581,6 +590,32 @@ s_jhtml_start_meta_tag(void* pdoc, Node* node)
                         "text/html; charset=Windows-31J",
                         "\"",
                         NULL);
+      }
+      else
+      if (refresh_flag) {
+        char* buf = apr_pstrdup(r->pool, value);
+        char* sec;
+        char* url;
+
+        url = strchr(buf, ';');
+        if (url) {
+          sec = apr_pstrdup(r->pool, buf);
+          sec[url-buf] = 0;
+          url++;
+          url = chxj_encoding_parameter(r, url);
+          url = chxj_add_cookie_parameter(r, url, jhtml->cookie);
+          jhtml->out = apr_pstrcat(r->pool,
+                          jhtml->out,
+                          " ",
+                          name,
+                          "=\"",
+                          sec,
+                          ";",
+                          url,
+                          "\"",
+                          NULL);
+        }
+      }
       else
         jhtml->out = apr_pstrcat(r->pool,
                         jhtml->out,
@@ -904,6 +939,8 @@ s_jhtml_start_a_tag(void* pdoc, Node* node)
       /*----------------------------------------------------------------------*/
       /* CHTML1.0                                                             */
       /*----------------------------------------------------------------------*/
+      value = chxj_encoding_parameter(r, value);
+      value = chxj_add_cookie_parameter(r, value, jhtml->cookie);
       jhtml->out = apr_pstrcat(r->pool, 
                       jhtml->out, 
                       " href=\"", 
@@ -1241,6 +1278,13 @@ s_jhtml_start_form_tag(void* pdoc, Node* node)
   }
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, ">", NULL);
+
+  if (jhtml->cookie && jhtml->cookie->cookie_id) {
+    jhtml->out = apr_psprintf(r->pool, "%s<input type='hidden' name='%s' value='%s'>",
+                             jhtml->out, 
+                             CHXJ_COOKIE_PARAM,
+                             jhtml->cookie->cookie_id);
+  }
 
   return jhtml->out;
 }
@@ -1791,11 +1835,16 @@ s_jhtml_start_img_tag(void* pdoc, Node* node)
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
 #ifdef IMG_NOT_CONVERT_FILENAME
+      value = chxj_encoding_parameter(r, value);
+      value = chxj_add_cookie_parameter(r, value, jhtml->cookie);
       jhtml->out = apr_pstrcat(r->pool, 
                       jhtml->out, " src=\"",value,"\"", NULL);
 #else
+      value = chxj_img_conv(r, spec, value);
+      value = chxj_encoding_parameter(r, value);
+      value = chxj_add_cookie_parameter(r, value, jhtml->cookie);
       jhtml->out = apr_pstrcat(r->pool, 
-                      jhtml->out, " src=\"", chxj_img_conv(r,spec,value), NULL);
+                      jhtml->out, " src=\"", value, NULL);
       jhtml->out = apr_pstrcat(r->pool, jhtml->out, "\"", NULL);
 #endif
     }
