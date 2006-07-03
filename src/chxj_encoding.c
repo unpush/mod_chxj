@@ -100,6 +100,7 @@ chxj_encoding(request_rec *r, const char* src, apr_size_t* len)
   return spos;
 }
 
+
 char*
 chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
 {

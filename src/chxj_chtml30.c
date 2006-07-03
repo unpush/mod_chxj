@@ -876,7 +876,7 @@ s_chtml30_start_body_tag(void* pdoc, Node* node)
                                  " bgcolor=\"", 
                                  value, 
                                  "\"", 
-                      NULL);
+                                 NULL);
     }
     else
     if (strcasecmp(name, "text") == 0) {

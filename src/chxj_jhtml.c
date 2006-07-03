@@ -956,6 +956,7 @@ s_jhtml_end_body_tag(void* pdoc, Node* child)
   return jhtml->out;
 }
 
+
 /**
  * It is a handler who processes the A tag.
  *
