@@ -778,9 +778,12 @@ s_chtml20_start_base_tag(void* pdoc, Node* node)
                       NULL);
     }
   }
+
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, " >\r\n", NULL);
+
   return chtml20->out;
 }
+
 
 /**
  * It is a handler who processes the BASE tag.
@@ -803,6 +806,7 @@ s_chtml20_end_base_tag(void* pdoc, Node* child)
 
   return chtml20->out;
 }
+
 
 /**
  * It is a handler who processes the BODY tag.
