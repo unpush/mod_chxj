@@ -442,7 +442,7 @@ s_chtml30_search_emoji(chtml30_t* chtml30, char* txt, char** rslt)
   len = strlen(txt);
   r   = chtml30->doc->r;
 
-  if (spec == NULL)
+  if (!spec)
     DBG(r,"spec is NULL");
 
   for (ee = chtml30->conf->emoji;

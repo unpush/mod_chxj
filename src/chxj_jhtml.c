@@ -441,6 +441,7 @@ s_jhtml_search_emoji(jhtml_t* jhtml, char* txt, char** rslt)
   for (ee = jhtml->conf->emoji;
        ee;
        ee = ee->next) {
+
     unsigned char hex1byte;
     unsigned char hex2byte;
 
@@ -474,6 +475,7 @@ s_jhtml_search_emoji(jhtml_t* jhtml, char* txt, char** rslt)
       return 0;
     }
   }
+
   return 0;
 }
 
