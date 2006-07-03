@@ -44,7 +44,7 @@ struct ctml10_t {
 /*----------------------------------------------------------------------------*/
 extern char* 
 chxj_exchange_chtml10(
-  request_rec* r,
+  request_rec*        r,
   device_table* spec, 
   const char* src, 
   apr_size_t srclen, 
