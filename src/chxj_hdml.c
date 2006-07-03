@@ -1319,6 +1319,7 @@ s_hdml_end_form_tag(void* pdoc, Node* child)
   return hdml->out;
 }
 
+
 /**
  * It is a handler that takes charge of the processing of the input tag. 
  *

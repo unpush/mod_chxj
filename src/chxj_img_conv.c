@@ -21,7 +21,7 @@ char*
 chxj_img_conv(
   request_rec* r, 
   device_table* spec, 
-  const char* s)
+  const char*   s)
 {
   char* dst;
 

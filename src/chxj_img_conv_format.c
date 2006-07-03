@@ -165,7 +165,7 @@ static char*        s_create_workfile(  request_rec*,
                                         mod_chxj_config* , 
                                         const char*, 
                                         query_string_param_t*);
-static apr_status_t s_create_cache_file(request_rec* r, 
+static apr_status_t s_create_cache_file(request_rec*  r, 
                                         const char*   tmpfile, 
                                         device_table* spec,
                                         apr_finfo_t* st,
