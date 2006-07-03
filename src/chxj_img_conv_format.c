@@ -175,7 +175,7 @@ static apr_status_t s_create_cache_file(request_rec*          r,
 static apr_status_t s_send_cache_file(  device_table*         spec,
                                         query_string_param_t* query_string,
                                         request_rec*          r,
-                                        const char* tmpfile);
+                                        const char*           tmpfile);
 
 static apr_status_t s_header_only_cache_file(
   device_table* spec, 

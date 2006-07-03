@@ -27,7 +27,7 @@ chxj_url_encode(
 extern char* 
 chxj_url_decode(
   request_rec* r, 
-  const char* src);
+  const char*  src);
 
 #endif
 /*
