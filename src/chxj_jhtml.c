@@ -602,7 +602,7 @@ s_jhtml_start_meta_tag(void* pdoc, Node* node)
                                 " ",
                                 name,
                                 "=\"",
-                        "text/html; charset=Windows-31J",
+                                "text/html; charset=Windows-31J",
                         "\"",
                         NULL);
       }

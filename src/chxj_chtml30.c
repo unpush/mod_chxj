@@ -550,7 +550,7 @@ s_chtml30_start_meta_tag(void* pdoc, Node* node)
   r       = doc->r;
 
   content_type_flag = 0;
-  refresh_flag = 0;
+  refresh_flag      = 0;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<meta", NULL);
 
