@@ -536,12 +536,14 @@ s_chtml20_start_meta_tag(void* pdoc, Node* node)
   request_rec* r;
   Attr*        attr;
   int          content_type_flag;
+  int          refresh_flag;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
   r       = doc->r;
 
   content_type_flag = 0;
+  refresh_flag      = 0;
 
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<meta", NULL);
 
@@ -575,6 +577,9 @@ s_chtml20_start_meta_tag(void* pdoc, Node* node)
         if ((*value == 'c' || *value == 'C') 
         && strcasecmp(value, "content-type") == 0)
           content_type_flag = 1;
+        if ((*value == 'r' || *value == 'R')
+        && strcasecmp(value, "refresh") == 0)
+          refresh_flag = 1;
       }
       break;
 
@@ -590,6 +595,27 @@ s_chtml20_start_meta_tag(void* pdoc, Node* node)
                           "text/html; charset=Windows-31J",
                           "\"",
                           NULL);
+        }
+        else
+        if (refresh_flag) {
+          char* buf = apr_pstrdup(r->pool, value);
+          char* pstat;
+          char* sec = apr_strtok(buf, ";", &pstat);
+          char* url = apr_strtok(NULL, ";", &pstat);
+          if (url) {
+            url = chxj_add_cookie_parameter(r, url, chtml20->cookie);
+          }
+          chtml20->out = apr_pstrcat(r->pool,
+                          chtml20->out,
+                          " ",
+                          name,
+                          "=\"",
+                          sec,
+                          ";",
+                          url,
+                          "\"",
+                          NULL);
+         
         }
         else {
           chtml20->out = apr_pstrcat(r->pool,
