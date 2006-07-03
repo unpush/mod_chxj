@@ -1007,7 +1007,7 @@ s_chtml30_start_a_tag(void* pdoc, Node* node)
                                  " href=\"", 
                                  value, 
                                  "\"", 
-                      NULL);
+                                 NULL);
     }
     else
     if (strcasecmp(name, "accesskey") == 0) {

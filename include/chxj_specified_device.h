@@ -44,7 +44,7 @@ struct device_table_t {
   const char*            device_id;
   const char*            device_name;
   spec_type              html_spec_type;
-  int width;
+  int                    width;
   int heigh;
   /*--------------------------------------------------------------------------*/
   /* Walll Paper Size                                                         */
