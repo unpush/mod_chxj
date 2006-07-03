@@ -573,7 +573,7 @@ s_chtml30_start_meta_tag(void* pdoc, Node* node)
       /*----------------------------------------------------------------------*/
       chtml30->out = apr_pstrcat(r->pool, 
                                  chtml30->out, 
-                      " http-equiv=\"", 
+                                 " http-equiv=\"", 
                       value,
                       "\"",
                       NULL);

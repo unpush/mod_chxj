@@ -622,7 +622,7 @@ s_jhtml_start_meta_tag(void* pdoc, Node* node)
           url = chxj_encoding_parameter(r, url);
           url = chxj_add_cookie_parameter(r, url, jhtml->cookie);
           jhtml->out = apr_pstrcat(r->pool,
-                          jhtml->out,
+                                   jhtml->out,
                           " ",
                           name,
                           "=\"",
