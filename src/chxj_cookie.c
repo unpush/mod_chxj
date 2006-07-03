@@ -116,7 +116,7 @@ chxj_save_cookie(request_rec* r)
     }
   }
 
-  if (! has_cookie == 0) {
+  if (! has_cookie) {
     DBG(r, "no cookie");
     return NULL;
   }
