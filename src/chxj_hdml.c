@@ -1460,7 +1460,7 @@ s_hdml_do_input_text_tag(hdml_t* hdml, Node* tag)
                                     "VARS=\"V=$%s%02d\" RECEIVE=%s%02d>",
                                     hdml->card_cnt,
                                     s_get_form_no(r, hdml),
-                          hdml->var_cnt[hdml->pure_form_cnt],
+                                    hdml->var_cnt[hdml->pure_form_cnt],
                           s_get_form_no(r, hdml),
                           hdml->var_cnt[hdml->pure_form_cnt]
                   ));
