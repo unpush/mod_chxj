@@ -2916,7 +2916,8 @@ s_chtml20_start_textarea_tag(void* pdoc, Node* node)
                                    chtml20->out, 
                                    " name=\"",
                                    value,
-                                   "\"", NULL);
+                                   "\"", 
+                                   NULL);
       }
       break;
 
