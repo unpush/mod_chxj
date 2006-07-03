@@ -634,6 +634,7 @@ chxj_qr_code_handler(request_rec* r)
   return OK;
 }
 
+
 char* 
 chxj_qr_code_blob_handler(request_rec* r, const char* indata, size_t* len)
 {

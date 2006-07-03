@@ -1006,7 +1006,7 @@ s_chtml30_start_a_tag(void* pdoc, Node* node)
                                  chtml30->out, 
                                  " href=\"", 
                                  value, 
-                      "\"", 
+                                 "\"", 
                       NULL);
     }
     else

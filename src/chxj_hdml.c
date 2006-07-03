@@ -1461,7 +1461,7 @@ s_hdml_do_input_text_tag(hdml_t* hdml, Node* tag)
                                     hdml->card_cnt,
                                     s_get_form_no(r, hdml),
                                     hdml->var_cnt[hdml->pure_form_cnt],
-                          s_get_form_no(r, hdml),
+                                    s_get_form_no(r, hdml),
                           hdml->var_cnt[hdml->pure_form_cnt]
                   ));
 

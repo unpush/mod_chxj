@@ -94,7 +94,9 @@ chxj_node_exchange(
        child;
        child = qs_get_next_node(doc,child)) {
 
-    char* name = qs_get_node_name(doc,child);
+    char* name;
+
+    name = qs_get_node_name(doc,child);
 
     switch(*name) {
     case 'h':
