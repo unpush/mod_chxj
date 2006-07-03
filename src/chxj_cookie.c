@@ -115,6 +115,7 @@ chxj_save_cookie(request_rec* r)
           has_cookie = 1;
         }
       }
+      chxj_delete_cookie(r, old_cookie_id);
     }
   }
 
@@ -461,6 +462,55 @@ chxj_cookie_db_unlock(request_rec* r, apr_file_t* file)
   }
 
   apr_file_close(file);
+}
+
+void
+chxj_delete_cookie(request_rec* r, char* cookie_id)
+{
+  apr_status_t        retval;
+  apr_datum_t dbmkey;
+  apr_dbm_t*          f;
+  apr_file_t*       file;
+
+  DBG(r, "start chxj_delete_cookie()");
+
+  file = chxj_cookie_db_lock(r);
+  if (file == NULL) {
+    ERR(r, "mod_chxj: Can't lock cookie db");
+    goto on_error0;
+  }
+
+  retval = apr_dbm_open_ex(&f,
+                           "default",
+                           "/tmp/cookie.db",
+                           APR_DBM_RWCREATE,
+                           APR_OS_DEFAULT,
+                           r->pool);
+  if (retval != APR_SUCCESS) {
+    ERR2(r, "could not open dbm (type %s) auth file: %s", "default", "/tmp/cookie.db");
+    goto on_error1;
+  }
+  /*
+   * create key
+   */
+  dbmkey.dptr  = apr_pstrdup(r->pool, cookie_id);
+  dbmkey.dsize = strlen(dbmkey.dptr);
+  if (apr_dbm_exists(f, dbmkey)) {
+    apr_dbm_delete(f, dbmkey);
+  }
+  apr_dbm_close(f);
+  chxj_cookie_db_unlock(r, file);
+
+  DBG(r, "end   chxj_delete_cookie()");
+
+  return;
+
+on_error1:
+  chxj_cookie_db_unlock(r, file);
+
+on_error0:
+  return;
+
 }
 /*
  * vim:ts=2 et
