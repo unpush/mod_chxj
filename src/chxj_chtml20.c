@@ -1002,6 +1002,8 @@ s_chtml20_start_a_tag(void* pdoc, Node* node)
         /*--------------------------------------------------------------------*/
         /* CHTML1.0                                                           */
         /*--------------------------------------------------------------------*/
+        value = chxj_add_cookie_parameter(r, value, chtml20->cookie);
+
         chtml20->out = apr_pstrcat(r->pool, 
                         chtml20->out, 
                         " href=\"", 
@@ -1389,6 +1391,8 @@ s_chtml20_start_form_tag(void* pdoc, Node* node)
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
+        value = chxj_add_cookie_parameter(r, value, chtml20->cookie);
+
         chtml20->out = apr_pstrcat(r->pool, 
                         chtml20->out, 
                         " action=\"",
@@ -1983,6 +1987,7 @@ s_chtml20_start_img_tag(void* pdoc, Node* node)
         /* CHTML 1.0                                                         */
         /*-------------------------------------------------------------------*/
 #ifdef IMG_NOT_CONVERT_FILENAME
+        value = chxj_add_cookie_parameter(r, value, chtml20->cookie);
         chtml20->out = apr_pstrcat(r->pool, 
                                    chtml20->out,
                                    " src=\"",
@@ -1990,9 +1995,12 @@ s_chtml20_start_img_tag(void* pdoc, Node* node)
                                    "\"", 
                                    NULL);
 #else
+        value = chxj_img_conv(r, spec, value);
+        value = chxj_add_cookie_parameter(r, value, chtml20->cookie);
+
         chtml20->out = apr_pstrcat(r->pool, 
                                    chtml20->out, " src=\"", 
-                                   chxj_img_conv(r, spec,value), 
+                                   value, 
                                    NULL);
 
         chtml20->out = apr_pstrcat(r->pool, 
