@@ -312,7 +312,7 @@ chxj_exchange_jhtml(
   request_rec*        r,
   device_table*       spec,
   const char*         src,
-  apr_size_t srclen,
+  apr_size_t          srclen,
   apr_size_t *dstlen,
   chxjconvrule_entry* entryp,
   cookie_t* cookie
