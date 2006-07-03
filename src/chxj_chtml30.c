@@ -802,7 +802,7 @@ s_chtml30_start_base_tag(void* pdoc, Node* node)
       chtml30->out = apr_pstrcat(r->pool, 
                                  chtml30->out, 
                                  " href=\"", 
-                      value, 
+                                 value, 
                       "\"", 
                       NULL);
     }

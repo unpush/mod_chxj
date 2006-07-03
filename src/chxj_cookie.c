@@ -430,6 +430,7 @@ s_cut_until_end_hostname(request_rec* r, char* value)
   return hostnm;
 }
 
+
 apr_file_t*
 chxj_cookie_db_lock(request_rec* r)
 {
