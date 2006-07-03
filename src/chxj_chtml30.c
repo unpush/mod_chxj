@@ -542,12 +542,15 @@ s_chtml30_start_meta_tag(void* pdoc, Node* node)
   Doc*          doc;
   request_rec*  r;
   Attr*         attr;
-  int           content_type_flag = 0;
-  int           refresh_flag = 0;
+  int           content_type_flag;
+  int           refresh_flag;
 
   chtml30 = GET_CHTML30(pdoc);
   doc     = chtml30->doc;
   r       = doc->r;
+
+  content_type_flag = 0;
+  refresh_flag = 0;
 
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<meta", NULL);
 

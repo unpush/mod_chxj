@@ -38,7 +38,7 @@ chxj_save_cookie(request_rec* r)
   apr_array_header_t* headers;
   apr_table_entry_t*  hentryp;
   apr_status_t        retval;
-  apr_datum_t dbmkey;
+  apr_datum_t         dbmkey;
   apr_datum_t dbmval;
   apr_dbm_t*          f;
   apr_uuid_t        uuid;

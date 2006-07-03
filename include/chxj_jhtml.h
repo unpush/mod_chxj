@@ -29,7 +29,7 @@ typedef struct _jhtml_t {
     int   pre_flag;
     int   textarea_flag;
 
-    device_table*    spec;
+    device_table*       spec;
     mod_chxj_config*    conf;
     chxjconvrule_entry* entryp;
     cookie_t*           cookie;
