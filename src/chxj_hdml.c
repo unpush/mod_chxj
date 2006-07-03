@@ -507,6 +507,7 @@ s_hdml_search_emoji(hdml_t* hdml, char* txt, char** rslt)
   for (ee = hdml->conf->emoji;
        ee;
        ee = ee->next) {
+
     unsigned char hex1byte;
     unsigned char hex2byte;
 

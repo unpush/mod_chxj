@@ -111,7 +111,8 @@ extern char* chxj_exchange_hdml(
   cookie_t*           cookie);
 
 extern char* 
-qs_out_apr_pstrcat(request_rec* r, char* o, char* s, int* len);
+qs_out_apr_pstrcat(
+  request_rec* r, char* o, char* s, int* len);
 extern char* qs_conv_istyle_to_format(request_rec* r, char* is);
 
 #endif

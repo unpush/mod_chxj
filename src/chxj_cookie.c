@@ -242,8 +242,6 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
   char*                   val;
   char*                   pair;
 
-
-
   DBG1(r, "start chxj_load_cookie() cookie_id=[%s]", cookie_id);
 
   cookie = (cookie_t*)apr_palloc(r->pool, sizeof(cookie_t));

@@ -27,7 +27,7 @@ struct xhtml_t {
     Doc*               doc;
     char*              out;
     int                out_len;
-    int                pre_flag;
+    int                 pre_flag;
     int                 textarea_flag;
 
     device_table*       spec;

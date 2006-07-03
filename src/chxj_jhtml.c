@@ -883,7 +883,7 @@ s_jhtml_start_body_tag(void* pdoc, Node* node)
                                jhtml->out, 
                                " bgcolor=\"", 
                                value, 
-                      "\"", 
+                               "\"", 
                       NULL);
     }
     else
