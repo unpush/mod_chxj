@@ -453,6 +453,7 @@ chxj_cookie_db_lock(request_rec* r)
   return file;
 }
 
+
 void
 chxj_cookie_db_unlock(request_rec* r, apr_file_t* file)
 {

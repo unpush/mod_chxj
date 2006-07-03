@@ -896,7 +896,7 @@ s_jhtml_start_body_tag(void* pdoc, Node* node)
                                " text=\"", 
                                value, 
                                "\"", 
-                      NULL);
+                               NULL);
     }
     else
     if ((*name == 'l' || *name == 'L') && strcasecmp(name, "link") == 0) {
