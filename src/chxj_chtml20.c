@@ -20,6 +20,7 @@
 #include "chxj_dump.h"
 #include "chxj_img_conv.h"
 #include "chxj_qr_code.h"
+#include "chxj_encoding.h"
 
 #define GET_CHTML20(X) ((chtml20_t*)(X))
 
@@ -612,6 +613,7 @@ s_chtml20_start_meta_tag(void* pdoc, Node* node)
             sec = apr_pstrdup(r->pool, buf);
             sec[url-buf] = 0;
             url++;
+            url = chxj_encoding_parameter(r, url);
             url = chxj_add_cookie_parameter(r, url, chtml20->cookie);
             chtml20->out = apr_pstrcat(r->pool,
                             chtml20->out,
@@ -1036,6 +1038,7 @@ s_chtml20_start_a_tag(void* pdoc, Node* node)
         /*--------------------------------------------------------------------*/
         /* CHTML1.0                                                           */
         /*--------------------------------------------------------------------*/
+        value = chxj_encoding_parameter(r, value);
         value = chxj_add_cookie_parameter(r, value, chtml20->cookie);
 
         chtml20->out = apr_pstrcat(r->pool, 
@@ -1425,6 +1428,7 @@ s_chtml20_start_form_tag(void* pdoc, Node* node)
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
+        value = chxj_encoding_parameter(r, value);
         value = chxj_add_cookie_parameter(r, value, chtml20->cookie);
 
         chtml20->out = apr_pstrcat(r->pool, 
@@ -2021,6 +2025,7 @@ s_chtml20_start_img_tag(void* pdoc, Node* node)
         /* CHTML 1.0                                                         */
         /*-------------------------------------------------------------------*/
 #ifdef IMG_NOT_CONVERT_FILENAME
+        value = chxj_encoding_parameter(r, value);
         value = chxj_add_cookie_parameter(r, value, chtml20->cookie);
         chtml20->out = apr_pstrcat(r->pool, 
                                    chtml20->out,
@@ -2030,6 +2035,7 @@ s_chtml20_start_img_tag(void* pdoc, Node* node)
                                    NULL);
 #else
         value = chxj_img_conv(r, spec, value);
+        value = chxj_encoding_parameter(r, value);
         value = chxj_add_cookie_parameter(r, value, chtml20->cookie);
 
         chtml20->out = apr_pstrcat(r->pool, 

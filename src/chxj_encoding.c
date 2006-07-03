@@ -182,6 +182,8 @@ chxj_encoding_parameter(request_rec* r, const char* value)
   char* vstat;
   char* param;
 
+  int use_amp_flag;
+  
   DBG(r, "start chxj_encoding_parameter()");
   src = apr_pstrdup(r->pool, value);
 
@@ -197,11 +199,15 @@ chxj_encoding_parameter(request_rec* r, const char* value)
 
   for (;;) {
     apr_size_t len;
+
+    use_amp_flag = 0;
+
     pair = apr_strtok(spos, "&", &pstat);
     spos = NULL;
     if (!pair) break;
     if (strncasecmp(pair, "amp;", 4) == 0) {
       pair += 4;
+      use_amp_flag = 1;
     }
     key = apr_strtok(pair, "=", &vstat);
     val = apr_strtok(NULL, "=", &vstat);
@@ -210,16 +216,30 @@ chxj_encoding_parameter(request_rec* r, const char* value)
       len = (apr_size_t)strlen(val);
       val = chxj_encoding(r, val, &len);
       val = chxj_url_encode(r, val);
-      if (strlen(param) == 0)
+      if (strlen(param) == 0) {
         param = apr_pstrcat(r->pool, param, key, "=", val, NULL);
-      else
-        param = apr_pstrcat(r->pool, param, "&", key, "=", val, NULL);
+      }
+      else {
+        if (use_amp_flag) {
+          param = apr_pstrcat(r->pool, param, "&amp;", key, "=", val, NULL);
+        }
+        else {
+          param = apr_pstrcat(r->pool, param, "&", key, "=", val, NULL);
+        }
+      }
     }
     else {
-      if (strlen(param) == 0)
+      if (strlen(param) == 0) {
         param = apr_pstrcat(r->pool, param, key,  NULL);
-      else
-        param = apr_pstrcat(r->pool, param, "&", key, NULL);
+      }
+      else {
+        if (use_amp_flag) {
+          param = apr_pstrcat(r->pool, param, "&amp;", key, NULL);
+        }
+        else {
+          param = apr_pstrcat(r->pool, param, "&", key, NULL);
+        }
+      }
     }
   }
   DBG(r, "end   chxj_encoding_parameter()");

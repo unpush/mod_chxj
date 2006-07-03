@@ -1,6 +1,7 @@
 libapache2-mod-chxj (0.8.0-1) unstable; urgency=low
 
   * add b tag.
+  * add fieldset tag.
   * add cookie simulator.
 
  -- Atsushi Konno <konn@users.sourceforge.jp>  Mon, 19 Jun 2006 17:29:48 +0900

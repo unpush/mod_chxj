@@ -20,6 +20,7 @@
 #include "chxj_dump.h"
 #include "chxj_img_conv.h"
 #include "chxj_qr_code.h"
+#include "chxj_encoding.h"
 
 #define GET_CHTML30(X) ((chtml30_t*)(X))
 
@@ -539,6 +540,7 @@ s_chtml30_start_meta_tag(void* pdoc, Node* node)
   request_rec*  r;
   Attr*         attr;
   int           content_type_flag = 0;
+  int           refresh_flag = 0;
 
   chtml30 = GET_CHTML30(pdoc);
   doc     = chtml30->doc;
@@ -568,6 +570,9 @@ s_chtml30_start_meta_tag(void* pdoc, Node* node)
       if ((*value == 'c' || *value == 'C') && strcasecmp(value, "content-type") == 0) {
         content_type_flag = 1;
       }
+      if ((*value == 'r' || *value == 'R')
+      && strcasecmp(value, "refresh") == 0)
+        refresh_flag = 1;
     }
     else
     if (strcasecmp(name, "content") == 0) {
@@ -580,6 +585,31 @@ s_chtml30_start_meta_tag(void* pdoc, Node* node)
                         "text/html; charset=Windows-31J",
                         "\"",
                         NULL);
+      }
+      else
+      if (refresh_flag) {
+        char* buf = apr_pstrdup(r->pool, value);
+        char* sec;
+        char* url;
+
+        url = strchr(buf, ';');
+        if (url) {
+          sec = apr_pstrdup(r->pool, buf);
+          sec[url-buf] = 0;
+          url++;
+          url = chxj_encoding_parameter(r, url);
+          url = chxj_add_cookie_parameter(r, url, chtml30->cookie);
+          chtml30->out = apr_pstrcat(r->pool,
+                          chtml30->out,
+                          " ",
+                          name,
+                          "=\"",
+                          sec,
+                          ";",
+                          url,
+                          "\"",
+                          NULL);
+        }
       }
       else {
         chtml30->out = apr_pstrcat(r->pool,
@@ -944,6 +974,7 @@ s_chtml30_start_a_tag(void* pdoc, Node* node)
       /*----------------------------------------------------------------------*/
       /* CHTML1.0                                                             */
       /*----------------------------------------------------------------------*/
+      value = chxj_encoding_parameter(r, value);
       value = chxj_add_cookie_parameter(r, value, chtml30->cookie);
       chtml30->out = apr_pstrcat(r->pool, 
                       chtml30->out, 
@@ -1276,6 +1307,7 @@ s_chtml30_start_form_tag(void* pdoc, Node* node)
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
+      value = chxj_encoding_parameter(r, value);
       value = chxj_add_cookie_parameter(r, value, chtml30->cookie);
       chtml30->out = apr_pstrcat(r->pool, 
                       chtml30->out, 
@@ -1666,12 +1698,14 @@ s_chtml30_start_img_tag(void* pdoc, Node* node)
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
 #ifdef IMG_NOT_CONVERT_FILENAME
+      value = chxj_encoding_parameter(r, value);
       value = chxj_add_cookie_parameter(r, value, chtml30->cookie);
 
       chtml30->out = apr_pstrcat(r->pool, 
                       chtml30->out, " src=\"",value,"\"", NULL);
 #else
       value = chxj_img_conv(r,spec,value);
+      value = chxj_encoding_parameter(r, value);
       value = chxj_add_cookie_parameter(r, value, chtml30->cookie);
 
       chtml30->out = apr_pstrcat(r->pool, 
