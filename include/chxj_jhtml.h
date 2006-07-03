@@ -50,5 +50,5 @@ chxj_exchange_jhtml(
   apr_size_t          srclen,
   apr_size_t*         dstlen,
   chxjconvrule_entry* entryp,
-  cookie_t* cookie) ;
+  cookie_t*           cookie);
 #endif
