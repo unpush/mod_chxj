@@ -2914,7 +2914,8 @@ s_chtml20_start_textarea_tag(void* pdoc, Node* node)
       if (strcasecmp(name, "name") == 0) {
         chtml20->out = apr_pstrcat(r->pool, 
                                    chtml20->out, 
-                                   " name=\"",value,"\"", NULL);
+                                   " name=\"",
+                                   value,"\"", NULL);
       }
       break;
 
