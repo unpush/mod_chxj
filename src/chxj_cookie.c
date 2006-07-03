@@ -239,7 +239,7 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
   char*                   load_string;
   char*                   pstat;
   char*                   key;
-  char*               val;
+  char*                   val;
   char*               pair;
 
 
