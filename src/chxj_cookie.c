@@ -126,7 +126,7 @@ chxj_save_cookie(request_rec* r)
   }
 
   file = chxj_cookie_db_lock(r);
-  if (file == NULL) {
+  if (! file) {
     ERR(r, "mod_chxj: Can't lock cookie db");
     return NULL;
   }

@@ -635,7 +635,7 @@ s_jhtml_start_meta_tag(void* pdoc, Node* node)
       }
       else
         jhtml->out = apr_pstrcat(r->pool,
-                        jhtml->out,
+                                 jhtml->out,
                         " ",
                         name,
                         "=\"",

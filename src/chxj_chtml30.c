@@ -593,7 +593,7 @@ s_chtml30_start_meta_tag(void* pdoc, Node* node)
                                    chtml30->out,
                                    " ",
                                    name,
-                        "=\"",
+                                   "=\"",
                         "text/html; charset=Windows-31J",
                         "\"",
                         NULL);
