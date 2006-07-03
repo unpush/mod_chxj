@@ -888,7 +888,7 @@ s_chtml30_start_body_tag(void* pdoc, Node* node)
                                  " text=\"", 
                                  value, 
                                  "\"", 
-                      NULL);
+                                 NULL);
     }
     else
     if (strcasecmp(name, "link") == 0) {

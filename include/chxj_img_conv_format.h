@@ -32,7 +32,8 @@ chxj_exchange_image(
   apr_size_t*  len);
 
 extern int 
-chxj_trans_name(request_rec *r);
+chxj_trans_name(
+  request_rec *r);
 
 
 #endif
