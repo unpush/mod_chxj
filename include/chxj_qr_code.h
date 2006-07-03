@@ -129,7 +129,7 @@ chxj_qrcode_create_image_data(
 extern void    
 chxj_qrcode_node_to_qrcode(
   qr_code_t* qrcode, 
-  Node* root);
+  Node*      root);
 extern char*   chxj_qr_code_blob_handler       (request_rec* r, const char* indata, size_t* len);
 
 #endif

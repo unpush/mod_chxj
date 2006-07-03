@@ -1261,7 +1261,7 @@ s_chtml30_start_font_tag(void* pdoc, Node* node)
                                  chtml30->out, 
                                  " color=\"", 
                                  value, 
-                      "\"", 
+                                 "\"", 
                       NULL);
     }
     else

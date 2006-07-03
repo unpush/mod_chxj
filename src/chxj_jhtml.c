@@ -1266,7 +1266,7 @@ s_jhtml_start_font_tag(void* pdoc, Node* node)
 
     if ((*name == 'c' || *name == 'C') && strcasecmp(name, "color") == 0) {
       jhtml->out = apr_pstrcat(r->pool, 
-                      jhtml->out, 
+                               jhtml->out, 
                       " color=\"", 
                       value, 
                       "\"", 
