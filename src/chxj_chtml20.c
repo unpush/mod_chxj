@@ -2411,7 +2411,8 @@ s_chtml20_start_div_tag(void* pdoc, Node* child)
                                chtml20->out, 
                                " align=\"", 
                                align, 
-                               "\"", NULL);
+                               "\"", 
+                               NULL);
 
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, ">", NULL);
 
