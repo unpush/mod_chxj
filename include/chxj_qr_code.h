@@ -132,6 +132,7 @@ chxj_qrcode_node_to_qrcode(
   Node*      root);
 
 extern char*   
-chxj_qr_code_blob_handler       (request_rec* r, const char* indata, size_t* len);
+chxj_qr_code_blob_handler(
+  request_rec* r, const char* indata, size_t* len);
 
 #endif

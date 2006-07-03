@@ -1269,7 +1269,7 @@ s_jhtml_start_font_tag(void* pdoc, Node* node)
                                jhtml->out, 
                                " color=\"", 
                                value, 
-                      "\"", 
+                               "\"", 
                       NULL);
     }
     else

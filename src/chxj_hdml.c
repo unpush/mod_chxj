@@ -1526,7 +1526,7 @@ s_hdml_do_input_text_tag(hdml_t* hdml, Node* tag)
                                        "%s%02d=%s", 
                                        s_get_form_no(r, hdml),
                                        hdml->var_cnt[hdml->pure_form_cnt],
-                        ap_escape_uri(r->pool,val)));
+                                       ap_escape_uri(r->pool,val)));
   else 
     s_output_to_init_vars(hdml, 
                     apr_psprintf(r->pool, "%s%02d=", 
