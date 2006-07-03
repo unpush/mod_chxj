@@ -641,7 +641,7 @@ s_jhtml_start_meta_tag(void* pdoc, Node* node)
                                  "=\"",
                                  value,
                                  "\"",
-                        NULL);
+                                 NULL);
     }
   }
 
