@@ -172,7 +172,7 @@ static apr_status_t s_create_cache_file(request_rec*          r,
                                         apr_finfo_t*          st,
                                         query_string_param_t* qsp);
 
-static apr_status_t s_send_cache_file(  device_table* spec,
+static apr_status_t s_send_cache_file(  device_table*         spec,
                                         query_string_param_t* query_string,
                                         request_rec* r,
                                         const char* tmpfile);

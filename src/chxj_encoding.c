@@ -189,7 +189,7 @@ chxj_encoding_parameter(request_rec* r, const char* value)
   char* vstat;
   char* param;
 
-  int use_amp_flag;
+  int   use_amp_flag;
   
   DBG(r, "start chxj_encoding_parameter()");
   src = apr_pstrdup(r->pool, value);

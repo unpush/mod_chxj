@@ -119,7 +119,9 @@ struct qr_code_t {
 
 extern int     
 chxj_qr_code_handler(request_rec* r);
-extern int     chxj_qrcode_create_image_data   (qr_code_t* qrcode, char** img, size_t* img_len);
+
+extern int     
+chxj_qrcode_create_image_data   (qr_code_t* qrcode, char** img, size_t* img_len);
 extern void    chxj_qrcode_node_to_qrcode      (qr_code_t* qrcode, Node* root);
 extern char*   chxj_qr_code_blob_handler       (request_rec* r, const char* indata, size_t* len);
 

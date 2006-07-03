@@ -163,12 +163,14 @@ struct imode_emoji_t {
   char *description;
 };
 
-typedef struct _ezweb_emoji_t {
+typedef struct ezweb_emoji_t ezweb_emoji_t;
+
+struct ezweb_emoji_t {
   char* typeA;
   char* typeB;
   char* typeC;
   char* typeD;
-} ezweb_emoji_t;
+};
 
 typedef struct _jphone_emoji_t {
   char* string;
