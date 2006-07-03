@@ -1516,7 +1516,7 @@ s_hdml_do_input_text_tag(hdml_t* hdml, Node* tag)
   }
 
   s_output_to_hdml_card(hdml, 
-                  " MARKABLE=FALSE>\n"
+                        " MARKABLE=FALSE>\n"
                   "<ACTION TYPE=ACCEPT TASK=RETURN RETVALS=$V>\n"
                   "</ENTRY>\n");
 

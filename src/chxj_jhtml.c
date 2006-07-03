@@ -1221,7 +1221,9 @@ s_jhtml_start_tr_tag(void* pdoc, Node* node)
 static char*
 s_jhtml_end_tr_tag(void* pdoc, Node* child) 
 {
-  jhtml_t* jhtml = GET_JHTML(pdoc);
+  jhtml_t* jhtml;
+
+  jhtml = GET_JHTML(pdoc);
 
   return jhtml->out;
 }
