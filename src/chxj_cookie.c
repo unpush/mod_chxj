@@ -413,6 +413,7 @@ s_get_hostname_from_url(request_rec* r, char* value)
   return NULL;
 }
 
+
 static char* 
 s_cut_until_end_hostname(request_rec* r, char* value)
 {

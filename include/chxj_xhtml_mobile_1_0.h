@@ -24,7 +24,7 @@
 /*----------------------------------------------------------------------------*/
 typedef struct xhtml_t xhtml_t;
 struct xhtml_t {
-    Doc*               doc;
+    Doc*                doc;
     char*               out;
     int                 out_len;
     int                 pre_flag;

@@ -20,7 +20,7 @@
 
 extern int 
 chxj_calc_ecc(
-  qr_code_t* qrcode,
+  qr_code_t*     qrcode,
   unsigned char* indata, 
   unsigned char* dst);
 #endif

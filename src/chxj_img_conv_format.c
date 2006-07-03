@@ -56,7 +56,9 @@ typedef enum _ua_use_flag_t {
 /*----------------------------------------------------------------------------*/
 /* Request parameter maintenance structure                                    */
 /*----------------------------------------------------------------------------*/
-typedef struct _query_string_param_t {
+typedef struct query_string_param_t query_string_param_t;
+
+struct query_string_param_t {
   img_conv_mode_t   mode;
   char*             user_agent;
   ua_use_flag_t     ua_flag;
@@ -66,7 +68,7 @@ typedef struct _query_string_param_t {
   long              count;     /* for EZGET */
   int               width;
   int               height;
-} query_string_param_t;
+};
 
 /*----------------------------------------------------------------------------*/
 /* Device_spec when User-Agent is disregarded                                 */

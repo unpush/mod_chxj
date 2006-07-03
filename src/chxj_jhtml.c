@@ -893,7 +893,7 @@ s_jhtml_start_body_tag(void* pdoc, Node* node)
       /*----------------------------------------------------------------------*/
       jhtml->out = apr_pstrcat(r->pool, 
                                jhtml->out, 
-                      " text=\"", 
+                               " text=\"", 
                       value, 
                       "\"", 
                       NULL);

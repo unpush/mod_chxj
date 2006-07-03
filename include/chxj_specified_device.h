@@ -37,7 +37,9 @@ typedef enum {
 #include "chxj_cookie.h"
 
 
-typedef struct _device_table_t {
+typedef struct device_table_t device_table;
+
+struct device_table_t {
   struct _device_table_t* next;
   const char* device_id;
   const char* device_name;
@@ -80,9 +82,7 @@ typedef struct _device_table_t {
   /*--------------------------------------------------------------------------*/
   int color;
   char* emoji_type;
-
-
-} device_table;
+};
 
 typedef struct _device_table_list_t {
   struct _device_table_list_t* next;
