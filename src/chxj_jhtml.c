@@ -544,14 +544,18 @@ s_jhtml_end_html_tag(void* pdoc, Node* child)
 static char*
 s_jhtml_start_meta_tag(void* pdoc, Node* node) 
 {
-  jhtml_t*     jhtml             = GET_JHTML(pdoc);
-  Doc*         doc               = jhtml->doc;
-  request_rec* r                 = doc->r;
+  jhtml_t*     jhtml;
+  Doc*         doc;
+  request_rec* r;
   Attr*        attr;
-  int          content_type_flag = 0;
+  int          content_type_flag;
   int          refresh_flag;
 
+  jhtml             = GET_JHTML(pdoc);
+  doc               = jhtml->doc;
+  r                 = doc->r;
   refresh_flag      = 0;
+  content_type_flag = 0;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<meta", NULL);
 

@@ -469,8 +469,10 @@ s_chtml30_search_emoji(chtml30_t* chtml30, char* txt, char** rslt)
       return 0;
     }
   }
+
   return 0;
 }
+
 
 /**
  * It is a handler who processes the HTML tag.
