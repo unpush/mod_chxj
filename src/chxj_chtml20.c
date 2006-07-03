@@ -1560,16 +1560,24 @@ s_chtml20_start_input_tag(void* pdoc, Node* node)
     if (istyle != NULL && strcasecmp(istyle, "1") == 0)
       chtml20->out = apr_pstrcat(r->pool, 
                       chtml20->out, 
-                      apr_psprintf(r->pool, " maxlength=\"%d\"", chxj_atoi(max_length)*2) , NULL);
+                      apr_psprintf(r->pool, 
+                                   " maxlength=\"%d\"",
+                                   chxj_atoi(max_length)*2), 
+                                   NULL);
     else
       chtml20->out = apr_pstrcat(r->pool, 
-                      chtml20->out, 
-                      apr_psprintf(r->pool, " maxlength=\"%d\"", chxj_atoi(max_length)) , NULL);
+                                 chtml20->out, 
+                                 apr_psprintf(r->pool, 
+                                              " maxlength=\"%d\"",
+                                              chxj_atoi(max_length)),
+                                              NULL);
   }
 
   if (checked)
     chtml20->out = apr_pstrcat(r->pool, 
-                    chtml20->out, " checked ", NULL);
+                               chtml20->out,
+                               " checked ",
+                               NULL);
 
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, " >", NULL);
 
