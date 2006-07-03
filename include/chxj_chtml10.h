@@ -49,6 +49,6 @@ chxj_exchange_chtml10(
   const char*         src, 
   apr_size_t          srclen, 
   apr_size_t*         dstlen, 
-  chxjconvrule_entry* , 
+  chxjconvrule_entry* entryp, 
   cookie_t*);
 #endif

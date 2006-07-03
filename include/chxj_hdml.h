@@ -108,7 +108,7 @@ extern char* chxj_exchange_hdml(
   apr_size_t          srclen,
   apr_size_t*         dstlen,
   chxjconvrule_entry* entryp,
-  cookie_t* cookie);
+  cookie_t*           cookie);
 char* qs_out_apr_pstrcat(request_rec* r, char* o, char* s, int* len);
 char* qs_conv_istyle_to_format(request_rec* r, char* is);
 

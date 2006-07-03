@@ -851,10 +851,14 @@ s_jhtml_end_base_tag(void* pdoc, Node* child)
 static char*
 s_jhtml_start_body_tag(void* pdoc, Node* node) 
 {
-  jhtml_t*     jhtml = GET_JHTML(pdoc);
-  Doc*         doc   = jhtml->doc;
-  request_rec* r     = doc->r;
+  jhtml_t*     jhtml;
+  Doc*         doc;
+  request_rec* r;
   Attr*        attr;
+
+  jhtml = GET_JHTML(pdoc);
+  doc   = jhtml->doc;
+  r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<body", NULL);
 
