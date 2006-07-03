@@ -1298,7 +1298,7 @@ s_hdml_end_form_tag(void* pdoc, Node* child)
   s_output_to_postdata(hdml, "_chxj_dmy=");
 
   hdml->form_tmp = apr_pstrcat(r->pool, 
-                             hdml->form_tmp,
+                               hdml->form_tmp,
                              hdml->postdata[hdml->pure_form_cnt],
                              NULL);
 

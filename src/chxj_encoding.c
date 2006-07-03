@@ -108,7 +108,7 @@ chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
   char* ibuf;
   char* spos;
   
-  iconv_t cd;
+  iconv_t             cd;
   size_t              result;
   apr_size_t          ilen;
   apr_size_t          olen;

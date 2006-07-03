@@ -37,6 +37,7 @@ chxj_rencoding(
   apr_size_t*  len);
 
 extern char* 
-chxj_encoding_parameter(request_rec* r, const char* value);
+chxj_encoding_parameter(
+  request_rec* r, const char* value);
 #endif
 
