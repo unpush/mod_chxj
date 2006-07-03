@@ -617,7 +617,7 @@ s_chtml30_start_meta_tag(void* pdoc, Node* node)
                                      chtml30->out,
                                      " ",
                                      name,
-                          "=\"",
+                                     "=\"",
                           sec,
                           ";",
                           url,
