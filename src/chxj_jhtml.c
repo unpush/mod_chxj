@@ -411,6 +411,7 @@ s_init_jhtml(jhtml_t* jhtml, Doc* doc, request_rec* r, device_table* spec)
   jhtml->doc->parse_mode = PARSE_MODE_CHTML;
 }
 
+
 /**
  * Corresponding EMOJI to a current character-code is retrieved. 
  * The substitution character string is stored in the rslt pointer if agreeing.

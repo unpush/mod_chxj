@@ -406,10 +406,10 @@ chxj_exchange_chtml30(
 static void
 s_init_chtml30(chtml30_t* chtml30, Doc* doc, request_rec* r, device_table* spec)
 {
-  memset(doc,   0, sizeof(Doc));
+  memset(doc,     0, sizeof(Doc));
   memset(chtml30, 0, sizeof(chtml30_t));
 
-  doc->r      = r;
+  doc->r        = r;
   chtml30->doc  = doc;
   chtml30->spec = spec;
   chtml30->out  = qs_alloc_zero_byte_string(r);
