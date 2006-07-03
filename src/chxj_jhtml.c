@@ -608,9 +608,11 @@ s_jhtml_start_meta_tag(void* pdoc, Node* node)
       }
       else
       if (refresh_flag) {
-        char* buf = apr_pstrdup(r->pool, value);
+        char* buf;
         char* sec;
         char* url;
+
+        buf = apr_pstrdup(r->pool, value);
 
         url = strchr(buf, ';');
         if (url) {
