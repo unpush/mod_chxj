@@ -591,7 +591,7 @@ s_chtml30_start_meta_tag(void* pdoc, Node* node)
       if (content_type_flag) {
         chtml30->out = apr_pstrcat(r->pool,
                                    chtml30->out,
-                        " ",
+                                   " ",
                         name,
                         "=\"",
                         "text/html; charset=Windows-31J",

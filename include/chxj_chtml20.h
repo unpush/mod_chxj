@@ -25,7 +25,7 @@
 /* Structure for CHTML2.0                                                     */
 /*----------------------------------------------------------------------------*/
 typedef struct _ctml20_t {
-    Doc*               doc;
+    Doc*                doc;
     char*               out;
     int                 out_len;
     int                 pre_flag;

@@ -48,7 +48,7 @@ chxj_save_cookie(request_rec* r)
   char*               store_string;
   mod_chxj_config*    dconf;
   chxjconvrule_entry* entryp;
-  apr_file_t* file;
+  apr_file_t*         file;
   apr_table_t*        new_cookie_table;
   int                 has_cookie = 0;
   cookie_t*           cookie;
