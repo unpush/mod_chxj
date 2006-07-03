@@ -596,7 +596,7 @@ s_chtml30_start_meta_tag(void* pdoc, Node* node)
                                    "=\"",
                                   "text/html; charset=Windows-31J",
                                   "\"",
-                        NULL);
+                                  NULL);
       }
       else
       if (refresh_flag) {
