@@ -19,6 +19,7 @@
 
 extern void 
 chxj_dump_out(
-  const char* title, const char* s, int slen);
+  const char* title, 
+  const char* s, int slen);
 
 #endif

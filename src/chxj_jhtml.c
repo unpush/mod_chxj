@@ -884,7 +884,7 @@ s_jhtml_start_body_tag(void* pdoc, Node* node)
                                " bgcolor=\"", 
                                value, 
                                "\"", 
-                      NULL);
+                               NULL);
     }
     else
     if ((*name == 't' || *name == 'T') && strcasecmp(name, "text") == 0) {

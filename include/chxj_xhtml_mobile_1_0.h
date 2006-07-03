@@ -26,7 +26,7 @@ typedef struct xhtml_t xhtml_t;
 struct xhtml_t {
     Doc*               doc;
     char*              out;
-    int                out_len;
+    int                 out_len;
     int                 pre_flag;
     int                 textarea_flag;
 

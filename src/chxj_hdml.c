@@ -511,7 +511,7 @@ s_hdml_search_emoji(hdml_t* hdml, char* txt, char** rslt)
     unsigned char hex1byte;
     unsigned char hex2byte;
 
-    if (!ee->imode) {
+    if (! ee->imode) {
       DBG(r, "emoji->imode is NULL");
       continue;
     }

@@ -798,7 +798,7 @@ s_chtml30_start_base_tag(void* pdoc, Node* node)
     name = qs_get_attr_name(doc,attr);
     value = qs_get_attr_value(doc,attr);
 
-    if (strcasecmp(name, "href") == 0) {
+    if ((*name == 'h' || *name == 'H') && strcasecmp(name, "href") == 0) {
       chtml30->out = apr_pstrcat(r->pool, 
                       chtml30->out, 
                       " href=\"", 
