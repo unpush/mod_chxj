@@ -1931,6 +1931,7 @@ s_chtml20_end_hr_tag(void* pdoc, Node* child)
   return chtml20->out;
 }
 
+
 /**
  * It is a handler who processes the IMG tag.
  *
@@ -1967,8 +1968,12 @@ s_chtml20_start_img_tag(void* pdoc, Node* node)
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-    char* name  = qs_get_attr_name(doc,attr);
-    char* value = qs_get_attr_value(doc,attr);
+
+    char* name;
+    char* value;
+
+    name  = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
 
     if (strcasecmp(name, "src") == 0) {
       /*----------------------------------------------------------------------*/
