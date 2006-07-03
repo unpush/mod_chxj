@@ -490,7 +490,7 @@ s_chtml30_start_html_tag(void* pdoc, Node* node)
   request_rec*  r;
 
   chtml30 = GET_CHTML30(pdoc);
-  doc   = chtml30->doc;
+  doc     = chtml30->doc;
   r     = doc->r;
 
   /*--------------------------------------------------------------------------*/
