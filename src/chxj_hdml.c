@@ -1488,7 +1488,7 @@ s_hdml_do_input_text_tag(hdml_t* hdml, Node* tag)
   }
 
   s_output_to_postdata(hdml, 
-                  apr_psprintf(r->pool, 
+                       apr_psprintf(r->pool, 
                           "%s=$%s%02d", 
                           nm,
                           s_get_form_no(r, hdml),

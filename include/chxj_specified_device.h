@@ -60,7 +60,7 @@ struct device_table_t {
   /* 1: It is possible to display it.                                         */
   /* 0: It is not possible to display it.                                     */
   /*--------------------------------------------------------------------------*/
-  int available_gif;
+  int                    available_gif;
   int available_jpeg;
   int available_png;
   int available_bmp2;

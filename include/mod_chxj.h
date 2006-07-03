@@ -172,7 +172,9 @@ struct ezweb_emoji_t {
   char* typeD;
 };
 
-typedef struct _jphone_emoji_t {
+typedef struct jphone_emoji_t jphone_emoji_t;
+
+struct jphone_emoji_t {
   char* string;
 } jphone_emoji_t;
 

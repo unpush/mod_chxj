@@ -1031,7 +1031,7 @@ s_chtml30_start_a_tag(void* pdoc, Node* node)
                                  " cti=\"", 
                                  value, 
                                  "\"", 
-                      NULL);
+                                 NULL);
     }
     else
     if (strcasecmp(name, "ijam") == 0) {

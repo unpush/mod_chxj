@@ -27,7 +27,7 @@
 
 
 static void s_set_devices_data(
-  Doc* doc, 
+  Doc*             doc, 
   apr_pool_t*      p, 
   mod_chxj_config* conf, 
   Node*            node) ;
