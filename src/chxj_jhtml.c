@@ -1027,7 +1027,7 @@ s_jhtml_start_a_tag(void* pdoc, Node* node)
                                " accesskey=\"", 
                                value, 
                                "\"", 
-                      NULL);
+                               NULL);
     }
     else
     if ((*name == 'c' || *name == 'C') && strcasecmp(name, "cti") == 0) {
