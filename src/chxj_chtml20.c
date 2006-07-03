@@ -2329,7 +2329,8 @@ s_chtml20_start_option_tag(void* pdoc, Node* child)
                                " selected ", 
                                NULL);
 
-  chtml20->out = apr_pstrcat(r->pool, chtml20->out, ">", NULL);
+  chtml20->out = apr_pstrcat(r->pool, 
+                             chtml20->out, ">", NULL);
 
   return chtml20->out;
 }
