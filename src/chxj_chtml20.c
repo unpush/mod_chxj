@@ -1936,7 +1936,7 @@ s_chtml20_start_hr_tag(void* pdoc, Node* node)
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
         chtml20->out = apr_pstrcat(r->pool,
-                          chtml20->out, 
+                                   chtml20->out, 
                           " noshade ", NULL);
       }
       break;
