@@ -112,7 +112,7 @@ chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
   size_t result;
   apr_size_t ilen;
   apr_size_t olen;
-  mod_chxj_config* dconf;
+  mod_chxj_config*    dconf;
   chxjconvrule_entry* entryp;
 
   DBG(r,"start chxj_rencoding()");
