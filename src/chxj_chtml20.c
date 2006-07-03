@@ -2152,11 +2152,16 @@ s_chtml20_start_select_tag(void* pdoc, Node* child)
   char* name      = NULL;
 
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<select", NULL);
+
   for (attr = qs_get_attr(doc,child);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-    char* nm  = qs_get_attr_name(doc,attr);
-    char* val = qs_get_attr_value(doc,attr);
+
+    char* nm;
+    char* val;
+
+    nm  = qs_get_attr_name(doc,attr);
+    val = qs_get_attr_value(doc,attr);
 
     if (strcasecmp(nm, "size") == 0) {
       /*----------------------------------------------------------------------*/
