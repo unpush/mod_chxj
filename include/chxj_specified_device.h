@@ -84,8 +84,10 @@ struct device_table_t {
   char* emoji_type;
 };
 
-typedef struct _device_table_list_t {
-  struct _device_table_list_t* next;
+typedef struct device_table_list_t  device_table_list;
+
+struct device_table_list_t {
+  struct device_table_list_t* next;
   char* pattern;
   ap_regex_t* regexp;
   device_table* table;

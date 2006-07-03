@@ -38,7 +38,7 @@ chxj_encoding(request_rec *r, const char* src, apr_size_t* len)
   char* spos;
   
   iconv_t cd;
-  size_t result;
+  size_t              result;
   apr_size_t          ilen;
   apr_size_t          olen;
   mod_chxj_config*    dconf;

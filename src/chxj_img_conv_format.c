@@ -161,7 +161,8 @@ static const char* HDML_FAIL_PAGE =
 /*----------------------------------------------------------------------------*/
 /* Prototype declaration                                                      */
 /*----------------------------------------------------------------------------*/
-static char*        s_create_workfile(  request_rec*, mod_chxj_config* , 
+static char*        s_create_workfile(  request_rec*, 
+                                        mod_chxj_config* , 
                                         const char*, 
                                         query_string_param_t*);
 static apr_status_t s_create_cache_file(request_rec* r, 
