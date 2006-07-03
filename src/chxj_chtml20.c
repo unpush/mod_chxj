@@ -1975,74 +1975,94 @@ s_chtml20_start_img_tag(void* pdoc, Node* node)
     name  = qs_get_attr_name(doc,attr);
     value = qs_get_attr_value(doc,attr);
 
-    if (strcasecmp(name, "src") == 0) {
-      /*---------------------------------------------------------------------*/
-      /* CHTML 1.0                                                           */
-      /*---------------------------------------------------------------------*/
+    switch(*name) {
+    case 's':
+    case 'S':
+      if (strcasecmp(name, "src") == 0) {
+        /*-------------------------------------------------------------------*/
+        /* CHTML 1.0                                                         */
+        /*-------------------------------------------------------------------*/
 #ifdef IMG_NOT_CONVERT_FILENAME
-      chtml20->out = apr_pstrcat(r->pool, 
-                      chtml20->out, " src=\"",value,"\"", NULL);
+        chtml20->out = apr_pstrcat(r->pool, 
+                        chtml20->out, " src=\"",value,"\"", NULL);
 #else
-      chtml20->out = apr_pstrcat(r->pool, 
-                      chtml20->out, " src=\"", 
-                      chxj_img_conv(r, spec,value), NULL);
-      chtml20->out = apr_pstrcat(r->pool, chtml20->out, "\"", NULL);
+        chtml20->out = apr_pstrcat(r->pool, 
+                        chtml20->out, " src=\"", 
+                        chxj_img_conv(r, spec,value), NULL);
+        chtml20->out = apr_pstrcat(r->pool, chtml20->out, "\"", NULL);
 #endif
-    }
-    else
-    if (strcasecmp(name, "align" ) == 0) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 1.0                                                            */
-      /*----------------------------------------------------------------------*/
-      chtml20->out = apr_pstrcat(r->pool, 
-                      chtml20->out, " align=\"",value,"\"", NULL);
-    }
-    else
-    if (strcasecmp(name, "width" ) == 0) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 1.0                                                            */
-      /*----------------------------------------------------------------------*/
-      chtml20->out = apr_pstrcat(r->pool, 
-                      chtml20->out, " width=\"",value,"\"", NULL);
-    }
-    else
-    if (strcasecmp(name, "height") == 0) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 1.0                                                            */
-      /*----------------------------------------------------------------------*/
-      chtml20->out = apr_pstrcat(r->pool, 
-                      chtml20->out, " height=\"",value,"\"", NULL);
-    }
-    else
-    if (strcasecmp(name, "hspace") == 0) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 1.0                                                            */
-      /*----------------------------------------------------------------------*/
-      chtml20->out = apr_pstrcat(r->pool, 
-                      chtml20->out, " hspace=\"",value,"\"", NULL);
-    }
-    else
-    if (strcasecmp(name, "vspace") == 0) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 1.0                                                            */
-      /*----------------------------------------------------------------------*/
-      chtml20->out = apr_pstrcat(r->pool, 
-                      chtml20->out, " vspace=\"",value,"\"", NULL);
-    }
-    else
-    if (strcasecmp(name, "alt"   ) == 0) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 1.0                                                            */
-      /*----------------------------------------------------------------------*/
-      chtml20->out = apr_pstrcat(r->pool, 
-                      chtml20->out, " alt=\"",value,"\"", NULL);
-    }
-    else
-    if (strcasecmp(name, "align" ) == 0) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 4.0                                                            */
-      /*----------------------------------------------------------------------*/
-      /* ignore */
+      }
+      break;
+
+    case 'a':
+    case 'A':
+      if (strcasecmp(name, "align" ) == 0) {
+        /*--------------------------------------------------------------------*/
+        /* CHTML 1.0                                                          */
+        /*--------------------------------------------------------------------*/
+        chtml20->out = apr_pstrcat(r->pool, 
+                        chtml20->out, " align=\"",value,"\"", NULL);
+      }
+      else
+      if (strcasecmp(name, "alt"   ) == 0) {
+        /*--------------------------------------------------------------------*/
+        /* CHTML 1.0                                                          */
+        /*--------------------------------------------------------------------*/
+        chtml20->out = apr_pstrcat(r->pool, 
+                        chtml20->out, " alt=\"",value,"\"", NULL);
+      }
+      else
+      if (strcasecmp(name, "align" ) == 0) {
+        /*--------------------------------------------------------------------*/
+        /* CHTML 4.0                                                          */
+        /*--------------------------------------------------------------------*/
+        /* ignore */
+      }
+      break;
+
+    case 'w':
+    case 'W':
+      if (strcasecmp(name, "width" ) == 0) {
+        /*--------------------------------------------------------------------*/
+        /* CHTML 1.0                                                          */
+        /*--------------------------------------------------------------------*/
+        chtml20->out = apr_pstrcat(r->pool, 
+                        chtml20->out, " width=\"",value,"\"", NULL);
+      }
+      break;
+
+    case 'h':
+    case 'H':
+      if (strcasecmp(name, "height") == 0) {
+        /*--------------------------------------------------------------------*/
+        /* CHTML 1.0                                                          */
+        /*--------------------------------------------------------------------*/
+        chtml20->out = apr_pstrcat(r->pool, 
+                        chtml20->out, " height=\"",value,"\"", NULL);
+      }
+      else
+      if (strcasecmp(name, "hspace") == 0) {
+        /*--------------------------------------------------------------------*/
+        /* CHTML 1.0                                                          */
+        /*--------------------------------------------------------------------*/
+        chtml20->out = apr_pstrcat(r->pool, 
+                        chtml20->out, " hspace=\"",value,"\"", NULL);
+      }
+      break;
+
+    case 'v':
+    case 'V':
+      if (strcasecmp(name, "vspace") == 0) {
+        /*--------------------------------------------------------------------*/
+        /* CHTML 1.0                                                          */
+        /*--------------------------------------------------------------------*/
+        chtml20->out = apr_pstrcat(r->pool, 
+                        chtml20->out, " vspace=\"",value,"\"", NULL);
+      }
+      break;
+
+    default:
+      break;
     }
   }
 
