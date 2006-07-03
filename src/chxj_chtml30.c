@@ -328,7 +328,7 @@ chxj_exchange_chtml30(
 {
   char*     dst = NULL;
   char*     ss;
-  chtml30_t   chtml30;
+  chtml30_t chtml30;
   Doc       doc;
 
 

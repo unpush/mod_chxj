@@ -318,10 +318,12 @@ chxj_exchange_jhtml(
   cookie_t*           cookie
 )
 {
-  char*     dst = NULL;
+  char*     dst;
   char*     ss;
   jhtml_t   jhtml;
   Doc       doc;
+
+  dst = NULL;
 
   /*--------------------------------------------------------------------------*/
   /* If qrcode xml                                                            */
