@@ -1150,6 +1150,7 @@ s_chtml20_end_a_tag(void* pdoc, Node* child)
   r       = doc->r;
 
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</a>", NULL);
+
   return chtml20->out;
 }
 
