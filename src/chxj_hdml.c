@@ -1530,7 +1530,7 @@ s_hdml_do_input_text_tag(hdml_t* hdml, Node* tag)
   else 
     s_output_to_init_vars(hdml, 
                           apr_psprintf(r->pool, "%s%02d=", 
-                        s_get_form_no(r, hdml),
+                                       s_get_form_no(r, hdml),
                         hdml->var_cnt[hdml->pure_form_cnt]));
 
   hdml->var_cnt[hdml->pure_form_cnt]++;
