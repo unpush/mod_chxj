@@ -2989,14 +2989,12 @@ s_chtml20_text_tag(void* pdoc, Node* child)
   chtml20_t*    chtml20;
   Doc*          doc;
   request_rec*  r;
-
-
-  char*   textval;
-  char*   tmp;
-  char*   tdst;
-  char    one_byte[2];
-  int     ii;
-  int     tdst_len;
+  char*         textval;
+  char*         tmp;
+  char*         tdst;
+  char          one_byte[2];
+  int           ii;
+  int           tdst_len;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
