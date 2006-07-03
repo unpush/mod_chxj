@@ -24,7 +24,8 @@
 /*----------------------------------------------------------------------------*/
 /* Structure for CHTML3.0                                                     */
 /*----------------------------------------------------------------------------*/
-typedef struct _chtml30_t {
+typedef struct chtml30_t chtml30_t;
+struct chtml30_t {
     Doc*               doc;
     char*              out;
     int                out_len;
@@ -35,7 +36,7 @@ typedef struct _chtml30_t {
     mod_chxj_config*   conf;
     chxjconvrule_entry* entryp;
     cookie_t*           cookie;
-} chtml30_t;
+};
 
 /*----------------------------------------------------------------------------*/
 /* Prototype                                                                  */

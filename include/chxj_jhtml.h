@@ -24,7 +24,7 @@
 /*----------------------------------------------------------------------------*/
 typedef struct _jhtml_t {
     Doc* doc;
-    char* out;
+    char*               out;
     int                 out_len;
     int                 pre_flag;
     int                 textarea_flag;
