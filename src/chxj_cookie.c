@@ -87,13 +87,14 @@ chxj_save_cookie(request_rec* r)
       char* key;
       char* val;
       char* buff;
-      char* pstatus;
 
       buff = apr_pstrdup(r->pool, hentryp[ii].val);
-      key = apr_strtok(buff, "=", &pstatus);
-      val = apr_strtok(NULL, "=", &pstatus);
-      
-      apr_table_add(new_cookie_table, key, val);
+      val = strchr(buff, '=');
+      if (val) {
+        key = buff;
+        *val++ = 0;
+        apr_table_add(new_cookie_table, key, val);
+      }
 
       has_cookie = 1;
       DBG(r, "=====================================");
@@ -234,7 +235,6 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
   apr_table_t*        load_cookie_table;
   char*               load_string;
   char*               pstat;
-  char*               vstat;
   char*               key;
   char*               val;
   char*               pair;
@@ -246,7 +246,6 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
   cookie = (cookie_t*)apr_palloc(r->pool, sizeof(cookie_t));
   cookie->cookie_headers = NULL;
   cookie->cookie_id = apr_pstrdup(r->pool, cookie_id);
-DBG(r, " ");
 
   gconf = ap_get_module_config(r->server->module_config, &chxj_module);
   dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
@@ -255,12 +254,10 @@ DBG(r, " ");
     DBG(r, "end chxj_load_cookie() no pattern");
     goto on_error0;
   }
-DBG(r, " ");
   if (! (entryp->action & CONVRULE_COOKIE_ON_BIT)) {
     DBG(r, "end chxj_load_cookie() CookieOff");
     goto on_error0;
   }
-DBG(r, " ");
 
 
   file = chxj_cookie_db_lock(r);
@@ -268,7 +265,6 @@ DBG(r, " ");
     ERR(r, "mod_chxj: Can't lock cookie db");
     goto on_error0;
   }
-DBG(r, " ");
 
   retval = apr_dbm_open_ex(&f, 
                            "default", 
@@ -280,15 +276,12 @@ DBG(r, " ");
     ERR2(r, "could not open dbm (type %s) auth file: %s", "default", "/tmp/cookie.db");
     goto on_error1;
   }
-DBG(r, " ");
 
   /*
    * create key
    */
   dbmkey.dptr  = apr_pstrdup(r->pool, cookie->cookie_id);
   dbmkey.dsize = strlen(dbmkey.dptr);
-DBG(r, " ");
-DBG1(r, "EXISTS?=[%d]", apr_dbm_exists(f, dbmkey));
   if (apr_dbm_exists(f, dbmkey)) {
   
     retval = apr_dbm_fetch(f, dbmkey, &dbmval);
@@ -296,21 +289,26 @@ DBG1(r, "EXISTS?=[%d]", apr_dbm_exists(f, dbmkey));
       ERR2(r, "could not fetch dbm (type %s) auth file: %s", "default", "/tmp/cookie.db");
       goto on_error2;
     }
-    DBG(r, " ");
     load_cookie_table = apr_table_make(r->pool, 0);
     load_string = apr_palloc(r->pool, dbmval.dsize+1);
+
     memset(load_string, 0, dbmval.dsize+1);
     memcpy(load_string, dbmval.dptr, dbmval.dsize);
-    DBG1(r, " dbmval.dptr=[%x]", (unsigned int)dbmval.dptr);
-    DBG1(r, " dbmval.dsize=[%x]", (unsigned int)dbmval.dsize);
     for (;;) {
       pair = apr_strtok(load_string, "\n", &pstat);  
       load_string = NULL;
       if (!pair) break;
 
-      key = apr_strtok(pair, "=", &vstat);
-      val = apr_strtok(NULL, "=", &vstat);
-      apr_table_add(load_cookie_table, key, val);
+      DBG1(r, "Cookie:[%s]", pair);
+      char* tmp_pair;
+
+      tmp_pair = apr_pstrdup(r->pool, pair);
+      val = strchr(tmp_pair, '=');
+      if (val) {
+        key = tmp_pair;
+        *val++ = 0;
+        apr_table_add(load_cookie_table, key, val);
+      }
       apr_table_setn(r->headers_in, "Cookie", pair);
     }
   

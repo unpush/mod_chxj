@@ -20,6 +20,7 @@
 #include "chxj_img_conv.h"
 #include "chxj_qr_code.h"
 #include "chxj_cookie.h"
+#include "chxj_encoding.h"
 
 #define GET_CHTML10(X) ((chtml10_t*)(X))
 
@@ -292,6 +293,11 @@ tag_handler chtml10_handler[] = {
     NULL,
   },
   /* tagB */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagFIELDSET */
   {
     NULL,
     NULL,
@@ -1366,6 +1372,7 @@ s_chtml10_start_a_tag(void* pdoc, Node* node)
         /*----------------------------------------------------------------------*/
         /* CHTML1.0                                                             */
         /*----------------------------------------------------------------------*/
+        value = chxj_encoding_parameter(r, value);
         value = chxj_add_cookie_parameter(r, value, chtml10->cookie);
         
         chtml10->out = apr_pstrcat(r->pool, 
@@ -1679,6 +1686,7 @@ s_chtml10_start_form_tag(void* pdoc, Node* node)
         /*----------------------------------------------------------------------*/
         /* CHTML 1.0                                                            */
         /*----------------------------------------------------------------------*/
+        value = chxj_encoding_parameter(r, value);
         value = chxj_add_cookie_parameter(r, value, chtml10->cookie);
   
         chtml10->out = apr_pstrcat(r->pool, 
@@ -2106,11 +2114,13 @@ s_chtml10_start_img_tag(void* pdoc, Node* node)
         /* CHTML 1.0                                                            */
         /*----------------------------------------------------------------------*/
 #ifdef IMG_NOT_CONVERT_FILENAME
+        value = chxj_encoding_parameter(r, value);
         value = chxj_add_cookie_parameter(r, value, chtml10->cookie);
         chtml10->out = apr_pstrcat(r->pool, 
                         chtml10->out, " src=\"",value,"\"", NULL);
 #else
         value = chxj_img_conv(r, spec, value);
+        value = chxj_encoding_parameter(r, value);
         value = chxj_add_cookie_parameter(r, value, chtml10->cookie);
         chtml10->out = apr_pstrcat(r->pool, 
                         chtml10->out, " src=\"", 

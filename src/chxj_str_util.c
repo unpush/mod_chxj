@@ -74,6 +74,8 @@ chxj_atoi(const char* s)
 
   return result;
 }
+
+
 /*
  * vim:ts=2 et
  */

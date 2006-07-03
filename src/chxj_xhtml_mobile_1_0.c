@@ -299,6 +299,11 @@ tag_handler xhtml_handler[] = {
     s_xhtml_1_0_start_b_tag,
     s_xhtml_1_0_end_b_tag,
   },
+  /* tagFIELDSET */
+  {
+    NULL,
+    NULL,
+  },
 };
  
 /**

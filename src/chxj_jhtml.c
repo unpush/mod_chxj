@@ -289,7 +289,13 @@ tag_handler jhtml_handler[] = {
     s_jhtml_start_b_tag,
     s_jhtml_end_b_tag,
   },
+  /* tagFIELDSET */
+  {
+    NULL,
+    NULL,
+  },
 };
+
 
 /**
  * converts from CHTML5.0 to JHTML.

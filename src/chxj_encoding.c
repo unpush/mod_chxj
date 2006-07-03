@@ -17,6 +17,7 @@
 #include "mod_chxj.h"
 #include "chxj_encoding.h"
 #include "chxj_apply_convrule.h"
+#include "chxj_url_encode.h"
 #if defined(HAVE_LIBICONV_HOOK)
 #  include "iconv_hook/iconv.h"
 #else
@@ -166,6 +167,63 @@ chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
   DBG3(r,"end   chxj_rencoding() len=[%d] obuf=[%.*s]", *len, *len, spos);
 
   return spos;
+}
+
+char*
+chxj_encoding_parameter(request_rec* r, const char* value)
+{
+  char* src;
+  char* src_sv;
+  char* pstat;
+  char* spos;
+  char* pair;
+  char* key;
+  char* val;
+  char* vstat;
+  char* param;
+
+  DBG(r, "start chxj_encoding_parameter()");
+  src = apr_pstrdup(r->pool, value);
+
+  spos = strchr(src, '?');
+  if (!spos) {
+    DBG(r, "end   chxj_encoding_parameter()");
+    return src;
+  }
+  *spos++ = 0;
+  src_sv = apr_pstrdup(r->pool, src);
+  param = apr_palloc(r->pool, 1);
+  param[0] = 0;
+
+  for (;;) {
+    apr_size_t len;
+    pair = apr_strtok(spos, "&", &pstat);
+    spos = NULL;
+    if (!pair) break;
+    if (strncasecmp(pair, "amp;", 4) == 0) {
+      pair += 4;
+    }
+    key = apr_strtok(pair, "=", &vstat);
+    val = apr_strtok(NULL, "=", &vstat);
+    if (val) {
+      val = chxj_url_decode(r, val);
+      len = (apr_size_t)strlen(val);
+      val = chxj_encoding(r, val, &len);
+      val = chxj_url_encode(r, val);
+      if (strlen(param) == 0)
+        param = apr_pstrcat(r->pool, param, key, "=", val, NULL);
+      else
+        param = apr_pstrcat(r->pool, param, "&", key, "=", val, NULL);
+    }
+    else {
+      if (strlen(param) == 0)
+        param = apr_pstrcat(r->pool, param, key,  NULL);
+      else
+        param = apr_pstrcat(r->pool, param, "&", key, NULL);
+    }
+  }
+  DBG(r, "end   chxj_encoding_parameter()");
+  return apr_pstrcat(r->pool, src_sv, "?", param, NULL);
 }
 /*
  * vim:ts=2 et

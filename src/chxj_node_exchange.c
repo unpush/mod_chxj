@@ -437,6 +437,19 @@ chxj_node_exchange(
         if (handlers[tagFORM].end_tag_handler)
           handlers[tagFORM].end_tag_handler(pdoc, child);
       }
+      /*----------------------------------------------------------------------*/
+      /* <FIELDSET>                                                           */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "fieldset") == 0) {
+        if (handlers[tagFIELDSET].start_tag_handler) 
+          handlers[tagFIELDSET].start_tag_handler(pdoc, child);
+
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+
+        if (handlers[tagFIELDSET].end_tag_handler)
+          handlers[tagFIELDSET].end_tag_handler(pdoc, child);
+      }
       break;
 
     case 'i':

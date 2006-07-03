@@ -298,6 +298,11 @@ tag_handler chtml20_handler[] = {
     NULL,
     NULL,
   },
+  /* tagFIELDSET */
+  {
+    NULL,
+    NULL,
+  },
 };
 
 /**
@@ -599,23 +604,26 @@ s_chtml20_start_meta_tag(void* pdoc, Node* node)
         else
         if (refresh_flag) {
           char* buf = apr_pstrdup(r->pool, value);
-          char* pstat;
-          char* sec = apr_strtok(buf, ";", &pstat);
-          char* url = apr_strtok(NULL, ";", &pstat);
+          char* sec;
+          char* url;
+
+          url = strchr(buf, ';');
           if (url) {
+            sec = apr_pstrdup(r->pool, buf);
+            sec[url-buf] = 0;
+            url++;
             url = chxj_add_cookie_parameter(r, url, chtml20->cookie);
+            chtml20->out = apr_pstrcat(r->pool,
+                            chtml20->out,
+                            " ",
+                            name,
+                            "=\"",
+                            sec,
+                            ";",
+                            url,
+                            "\"",
+                            NULL);
           }
-          chtml20->out = apr_pstrcat(r->pool,
-                          chtml20->out,
-                          " ",
-                          name,
-                          "=\"",
-                          sec,
-                          ";",
-                          url,
-                          "\"",
-                          NULL);
-         
         }
         else {
           chtml20->out = apr_pstrcat(r->pool,

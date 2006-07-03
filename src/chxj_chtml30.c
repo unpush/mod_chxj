@@ -297,7 +297,13 @@ tag_handler chtml30_handler[] = {
     NULL,
     NULL,
   },
+  /* tagFIELDSET */
+  {
+    NULL,
+    NULL,
+  },
 };
+
 
 /**
  * converts from CHTML5.0 to CHTML3.0.

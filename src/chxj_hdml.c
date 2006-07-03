@@ -298,6 +298,11 @@ tag_handler hdml_handler[] = {
     NULL,
     NULL,
   },
+  /* tagFIELDSET */
+  {
+    NULL,
+    NULL,
+  },
 };
 
 /**
