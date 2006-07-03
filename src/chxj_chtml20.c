@@ -1123,7 +1123,9 @@ s_chtml20_start_a_tag(void* pdoc, Node* node)
       break;
     }
   }
+
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, ">", NULL);
+
   return chtml20->out;
 }
 
