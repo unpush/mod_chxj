@@ -1101,6 +1101,7 @@ s_chtml30_start_a_tag(void* pdoc, Node* node)
       /* ignore */
     }
   }
+
   chtml30->out = apr_pstrcat(r->pool, chtml30->out, ">", NULL);
 
   return chtml30->out;

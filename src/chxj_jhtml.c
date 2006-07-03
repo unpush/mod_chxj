@@ -1196,9 +1196,13 @@ s_jhtml_end_br_tag(void* pdoc, Node* child)
 static char*
 s_jhtml_start_tr_tag(void* pdoc, Node* node) 
 {
-  jhtml_t*     jhtml = GET_JHTML(pdoc);
-  Doc*         doc   = jhtml->doc;
-  request_rec* r     = doc->r;
+  jhtml_t*     jhtml;
+  Doc*         doc;
+  request_rec* r;
+
+  jhtml = GET_JHTML(pdoc);
+  doc   = jhtml->doc;
+  r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<br>\r\n", NULL);
 
