@@ -1466,7 +1466,7 @@ s_hdml_do_input_text_tag(hdml_t* hdml, Node* tag)
                       ));
 
   s_output_to_hdml_out(hdml, 
-                  apr_psprintf(r->pool, "[$%s%02d]</A>\n"  , 
+                       apr_psprintf(r->pool, "[$%s%02d]</A>\n"  , 
                           s_get_form_no(r, hdml),
                           hdml->var_cnt[hdml->pure_form_cnt]));
 

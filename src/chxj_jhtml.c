@@ -1039,7 +1039,7 @@ s_jhtml_start_a_tag(void* pdoc, Node* node)
                                " cti=\"", 
                                value, 
                                "\"", 
-                      NULL);
+                               NULL);
     }
     else
     if ((*name == 'i' || *name == 'I') && strcasecmp(name, "ijam") == 0) {

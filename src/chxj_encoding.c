@@ -160,6 +160,7 @@ chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
     DBG(r,"end   chxj_rencoding()");
     return ibuf;
   }
+
   while (ilen > 0) {
     result = iconv(cd, &ibuf, &ilen, &obuf, &olen);
     if (result == (size_t)(-1)) {
