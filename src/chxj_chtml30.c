@@ -628,7 +628,7 @@ s_chtml30_start_meta_tag(void* pdoc, Node* node)
       else {
         chtml30->out = apr_pstrcat(r->pool,
                                    chtml30->out,
-                        " ",
+                                   " ",
                         name,
                         "=\"",
                         value,

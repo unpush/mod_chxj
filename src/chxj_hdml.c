@@ -325,10 +325,13 @@ chxj_exchange_hdml(
   cookie_t* cookie
 )
 {
-  char*     dst = NULL;
-  char*     buf = NULL;
+  char*     dst;
+  char*     buf;
   Doc       doc;
-  hdml_t      hdml;
+  hdml_t    hdml;
+
+  dst = NULL;
+  buf = NULL;
 
   /*--------------------------------------------------------------------------*/
   /* If qrcode xml                                                            */

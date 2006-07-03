@@ -26,7 +26,7 @@
 /*----------------------------------------------------------------------------*/
 typedef struct chtml30_t chtml30_t;
 struct chtml30_t {
-    Doc*               doc;
+    Doc*                doc;
     char*               out;
     int                 out_len;
     int                 pre_flag;

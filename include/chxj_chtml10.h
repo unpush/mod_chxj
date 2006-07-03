@@ -47,7 +47,7 @@ chxj_exchange_chtml10(
   request_rec*        r,
   device_table*       spec, 
   const char*         src, 
-  apr_size_t srclen, 
+  apr_size_t          srclen, 
   apr_size_t* dstlen, 
   chxjconvrule_entry* , 
   cookie_t*);
