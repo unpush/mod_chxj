@@ -118,8 +118,7 @@ chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
   DBG(r,"start chxj_rencoding()");
 
   dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
-
-  if (dconf == NULL) {
+  if (! dconf) {
     DBG(r,"none encoding.");
     return (char*)src;
   }

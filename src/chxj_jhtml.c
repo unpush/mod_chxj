@@ -1012,7 +1012,7 @@ s_jhtml_start_a_tag(void* pdoc, Node* node)
       value = chxj_add_cookie_parameter(r, value, jhtml->cookie);
       jhtml->out = apr_pstrcat(r->pool, 
                                jhtml->out, 
-                      " href=\"", 
+                               " href=\"", 
                       value, 
                       "\"", 
                       NULL);
