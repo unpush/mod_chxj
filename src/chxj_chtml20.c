@@ -2398,7 +2398,7 @@ s_chtml20_start_div_tag(void* pdoc, Node* child)
     nm  = qs_get_attr_name(doc,attr);
     val = qs_get_attr_value(doc,attr);
 
-    if (strcasecmp(nm, "align") == 0) {
+    if ((*nm == 'a'||*nm == 'A') && strcasecmp(nm, "align") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0 (W3C version 3.2)                                          */
       /*----------------------------------------------------------------------*/
@@ -2408,7 +2408,8 @@ s_chtml20_start_div_tag(void* pdoc, Node* child)
 
   if (align)
     chtml20->out = apr_pstrcat(r->pool, 
-                    chtml20->out, " align=\"", align, "\"", NULL);
+                               chtml20->out, 
+                               " align=\"", align, "\"", NULL);
 
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, ">", NULL);
 
