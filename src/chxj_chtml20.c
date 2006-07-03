@@ -1924,7 +1924,8 @@ s_chtml20_start_hr_tag(void* pdoc, Node* node)
                                    chtml20->out, 
                                    " width=\"", 
                                    value, 
-                                   "\" ", NULL);
+                                   "\" ", 
+                                   NULL);
       }
       break;
 
