@@ -32,7 +32,9 @@
 /*============================================================================*/
 /* Structure for HDML                                                         */
 /*============================================================================*/
-typedef struct _hdml_t {
+typedef struct hdml_t hdml_t;
+
+struct hdml_t {
   Doc*    doc;
   char*   out;
   int     center;
@@ -93,7 +95,7 @@ typedef struct _hdml_t {
 
   chxjconvrule_entry* entryp;
   cookie_t*           cookie;
-} hdml_t;
+};
 /*============================================================================*/
 /* Prototype declaration.                                                     */
 /*============================================================================*/

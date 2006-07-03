@@ -89,7 +89,7 @@ static void  s_output_to_init_vars        (hdml_t* hdml, char* s);
 static int   s_hdml_search_emoji          (hdml_t* hdml, char* txt, char** rslt);
 
 static char* s_hdml_chxjif_tag            (void* pdoc, Node* node);
-static char* s_hdml_text_tag              (void* pdoc, Node* node) ;
+static char* s_hdml_text_tag              (void* pdoc, Node* node);
 
 
 tag_handler hdml_handler[] = {

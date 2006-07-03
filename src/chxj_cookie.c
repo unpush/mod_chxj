@@ -233,7 +233,7 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
   mod_chxj_global_config* gconf;
   mod_chxj_config*        dconf;
   chxjconvrule_entry*     entryp;
-  apr_file_t*       file;
+  apr_file_t*             file;
   cookie_t*           cookie;
   apr_table_t*        load_cookie_table;
   char*               load_string;
