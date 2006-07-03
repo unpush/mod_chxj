@@ -1832,56 +1832,82 @@ s_chtml20_start_hr_tag(void* pdoc, Node* node)
   for (attr = qs_get_attr(doc,node);
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
-    char* name = qs_get_attr_name(doc,attr);
-    char* value = qs_get_attr_value(doc,attr);
 
-    if (strcasecmp(name, "align") == 0) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 1.0                                                            */
-      /*----------------------------------------------------------------------*/
-      chtml20->out = apr_pstrcat(r->pool,
-                        chtml20->out, 
-                        " align=\"", value, "\" ", NULL);
-    }
-    else
-    if (strcasecmp(name, "size") == 0) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 1.0                                                            */
-      /*----------------------------------------------------------------------*/
-      chtml20->out = apr_pstrcat(r->pool,
-                        chtml20->out, 
-                        " size=\"", value, "\" ", NULL);
-    }
-    else
-    if (strcasecmp(name, "width") == 0) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 1.0                                                            */
-      /*----------------------------------------------------------------------*/
-      chtml20->out = apr_pstrcat(r->pool,
-                        chtml20->out, 
-                        " width=\"", value, "\" ", NULL);
-    }
-    else
-    if (strcasecmp(name, "noshade") == 0) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 1.0                                                            */
-      /*----------------------------------------------------------------------*/
-      chtml20->out = apr_pstrcat(r->pool,
-                        chtml20->out, 
-                        " noshade ", NULL);
-    }
-    else
-    if (strcasecmp(name, "color") == 0) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 4.0                                                            */
-      /*----------------------------------------------------------------------*/
-      /* ignore */
+    char* name;
+    char* value;
+
+    name  = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
+
+    switch(*name) {
+    case 'a':
+    case 'A':
+      if (strcasecmp(name, "align") == 0) {
+        /*--------------------------------------------------------------------*/
+        /* CHTML 1.0                                                          */
+        /*--------------------------------------------------------------------*/
+        chtml20->out = apr_pstrcat(r->pool,
+                          chtml20->out, 
+                          " align=\"", value, "\" ", NULL);
+      }
+      break;
+
+    case 's':
+    case 'S':
+      if (strcasecmp(name, "size") == 0) {
+        /*--------------------------------------------------------------------*/
+        /* CHTML 1.0                                                          */
+        /*--------------------------------------------------------------------*/
+        chtml20->out = apr_pstrcat(r->pool,
+                          chtml20->out, 
+                          " size=\"", value, "\" ", NULL);
+      }
+      break;
+
+    case 'w':
+    case 'W':
+      if (strcasecmp(name, "width") == 0) {
+        /*--------------------------------------------------------------------*/
+        /* CHTML 1.0                                                          */
+        /*--------------------------------------------------------------------*/
+        chtml20->out = apr_pstrcat(r->pool,
+                          chtml20->out, 
+                          " width=\"", value, "\" ", NULL);
+      }
+      break;
+
+    case 'n':
+    case 'N':
+      if (strcasecmp(name, "noshade") == 0) {
+        /*--------------------------------------------------------------------*/
+        /* CHTML 1.0                                                          */
+        /*--------------------------------------------------------------------*/
+        chtml20->out = apr_pstrcat(r->pool,
+                          chtml20->out, 
+                          " noshade ", NULL);
+      }
+      break;
+
+    case 'c':
+    case 'C':
+      if (strcasecmp(name, "color") == 0) {
+        /*--------------------------------------------------------------------*/
+        /* CHTML 4.0                                                          */
+        /*--------------------------------------------------------------------*/
+        /* ignore */
+      }
+      break;
+
+    default:
+      break;
     }
   }
+
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, " >", NULL);
 
   return chtml20->out;
 }
+
 
 /**
  * It is a handler who processes the HR tag.
