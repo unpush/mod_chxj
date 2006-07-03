@@ -1780,6 +1780,7 @@ s_chtml20_start_li_tag(void* pdoc, Node* node)
   return chtml20->out;
 }
 
+
 /**
  * It is a handler who processes the LI tag.
  *
