@@ -44,7 +44,7 @@ struct jhtml_t {
 /*----------------------------------------------------------------------------*/
 char*
 chxj_exchange_jhtml(
-  request_rec* r,
+  request_rec*        r,
   device_table* spec,
   const char* src,
   apr_size_t srclen,

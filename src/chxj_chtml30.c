@@ -579,9 +579,9 @@ s_chtml30_start_meta_tag(void* pdoc, Node* node)
                                  NULL);
 
       if ((*value == 'c' || *value == 'C') 
-      && strcasecmp(value, "content-type") == 0) {
+      && strcasecmp(value, "content-type") == 0)
         content_type_flag = 1;
-      }
+
       if ((*value == 'r' || *value == 'R')
       && strcasecmp(value, "refresh") == 0)
         refresh_flag = 1;
