@@ -2027,7 +2027,7 @@ s_chtml20_start_img_tag(void* pdoc, Node* node)
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
         chtml20->out = apr_pstrcat(r->pool, 
-                        chtml20->out, " width=\"",value,"\"", NULL);
+                                   chtml20->out, " width=\"",value,"\"", NULL);
       }
       break;
 
