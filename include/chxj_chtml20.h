@@ -24,7 +24,9 @@
 /*----------------------------------------------------------------------------*/
 /* Structure for CHTML2.0                                                     */
 /*----------------------------------------------------------------------------*/
-typedef struct _ctml20_t {
+typedef struct ctml20_t chtml20_t;
+
+struct ctml20_t {
     Doc*                doc;
     char*               out;
     int                 out_len;
@@ -35,7 +37,7 @@ typedef struct _ctml20_t {
     mod_chxj_config*    conf;
     chxjconvrule_entry* entryp;
     cookie_t*           cookie;
-} chtml20_t;
+};
 
 /*----------------------------------------------------------------------------*/
 /* Prototype                                                                  */

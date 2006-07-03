@@ -58,8 +58,9 @@ chxj_save_cookie(request_rec* r)
   DBG(r, "start chxj_save_cookie()");
 
   cookie = (cookie_t*)apr_palloc(r->pool, sizeof(cookie_t));
-
   cookie->cookie_id = NULL;
+
+  has_cookie = 0;
 
   dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
   entryp = chxj_apply_convrule(r, dconf->convrules);
