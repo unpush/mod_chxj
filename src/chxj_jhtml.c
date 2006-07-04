@@ -1353,8 +1353,8 @@ s_jhtml_start_form_tag(void* pdoc, Node* node)
                                jhtml->out, 
                                " action=\"",
                                value,
-                      "\"", 
-                      NULL);
+                               "\"", 
+                               NULL);
     }
     else
     if ((*name == 'm' || *name == 'M') && strcasecmp(name, "method") == 0) {

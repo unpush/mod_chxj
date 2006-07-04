@@ -974,16 +974,14 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
     int xx, yy;
     int module_count = v_module_count_table[qrcode->version];
     DBG1(r,"loop to [%d]", module_count);
-    for (yy=0; yy<module_count; yy++)
-    {
+    for (yy=0; yy<module_count; yy++) {
       char *rows ;
 
       rows = apr_psprintf(r->pool, " ");
       
       for (xx=0; xx<module_count; xx++)
-      {
         rows = apr_pstrcat(r->pool, rows, "[", apr_psprintf(r->pool, "%c", module[yy][xx]), "]", NULL);
-      }
+
       DBG2(r,"%d:%s", yy,rows);
     }
   } while(0);

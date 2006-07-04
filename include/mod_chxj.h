@@ -188,7 +188,9 @@ struct emoji_t {
   jphone_emoji_t*  jphone;
 };
 
-typedef struct _chxjconvrule_entry {
+typedef struct chxjconvrule_entry chxjconvrule_entry;
+
+struct _chxjconvrule_entry {
   char       *pattern;
   ap_regex_t *regexp;
   int        flags;
@@ -196,7 +198,7 @@ typedef struct _chxjconvrule_entry {
   char       *encoding;
   int        pc_flag;
   char       *user_agent;
-} chxjconvrule_entry;
+};
 
 typedef struct {
   char* (*start_tag_handler)(void* doc, Node* node); 

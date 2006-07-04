@@ -40,7 +40,8 @@ s_set_user_agent_data(
   Node*            node);
 
 static void 
-s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node) ;
+s_set_device_data(
+  Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node) ;
 
 /**
  * load device_data.xml
