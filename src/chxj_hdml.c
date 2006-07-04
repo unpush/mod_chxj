@@ -1565,7 +1565,7 @@ s_hdml_do_input_password_tag(hdml_t* hdml, Node* tag)
   s_output_to_hdml_out(hdml, "<A TASK=GOSUB LABEL=\"\x93\xfc\x97\xcd\" DEST=");
   s_output_to_hdml_out(hdml, apr_psprintf(r->pool, "#D%d ", hdml->card_cnt));
   s_output_to_hdml_out(hdml, 
-                  apr_psprintf(r->pool, "VARS=\"V=$%s%02d\" ", 
+                       apr_psprintf(r->pool, "VARS=\"V=$%s%02d\" ", 
                           s_get_form_no(r, hdml),
                           hdml->var_cnt[hdml->pure_form_cnt]));
 

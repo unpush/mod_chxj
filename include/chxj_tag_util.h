@@ -25,8 +25,9 @@
 extern char*    
 qs_get_value_attr(
   Doc*         doc, 
-  Node* tag, 
+  Node*        tag, 
   request_rec* r);
+
 extern char*    qs_get_checked_attr   (Doc* doc, Node* tag, request_rec* r);
 extern char*    qs_get_type_attr      (Doc* doc, Node* tag, request_rec* r);
 extern char*    qs_get_name_attr      (Doc* doc, Node* tag, request_rec* r);

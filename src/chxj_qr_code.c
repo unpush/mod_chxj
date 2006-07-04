@@ -944,8 +944,7 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
       min_lost_point = lost_point;
     }
     else {
-      if (min_lost_point >= lost_point)
-      {
+      if (min_lost_point >= lost_point) {
         min_mask_pattern = ii;
         min_lost_point = lost_point;
       }
