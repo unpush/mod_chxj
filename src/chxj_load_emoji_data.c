@@ -18,7 +18,9 @@
 #include "mod_chxj.h"
 #include "chxj_load_emoji_data.h"
 
-static char* s_load_emoji_set_tag( Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node);
+static char* 
+s_load_emoji_set_tag( Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node);
+
 static char* s_set_emoji_data( Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node);
 static char* s_load_emoji_emoji_tag( Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node);
 static void  s_emoji_add_to_tail( mod_chxj_config* conf, emoji_t* emoji);
@@ -485,8 +487,8 @@ s_emoji_add_to_tail(
 static char 
 s_hexstring_to_byte(char* s)
 {
-  int len;
-  int ii;
+  int  len;
+  int  ii;
   char one_byte = 0;
 
   len = strlen(s);

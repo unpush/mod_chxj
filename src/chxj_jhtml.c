@@ -1364,9 +1364,9 @@ s_jhtml_start_form_tag(void* pdoc, Node* node)
       jhtml->out = apr_pstrcat(r->pool, 
                                jhtml->out, 
                                " method=\"",
-                      value,
-                      "\"", 
-                      NULL);
+                               value,
+                               "\"", 
+                               NULL);
     }
     else
     if ((*name == 'u' || *name == 'U') && strcasecmp(name, "utn") == 0) {

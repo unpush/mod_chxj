@@ -1005,11 +1005,14 @@ chxj_qrcode_node_to_qrcode(qr_code_t* qrcode, Node* node)
 
   for (child = qs_get_child_node(doc,node);
        child ;
-       child = qs_get_next_node(doc,child))
-  {
-    char* name = qs_get_node_name(doc,child);
-    if (strcasecmp("qrcode",name) == 0)
-    {
+       child = qs_get_next_node(doc,child)) {
+
+    char* name;
+
+    name = qs_get_node_name(doc,child);
+
+    if (strcasecmp("qrcode",name) == 0) {
+
       qrcode->found       = QR_FOUND;
       qrcode->mode_change = QR_NOT_CHANGE;
       qrcode->version     = QR_VER_5;

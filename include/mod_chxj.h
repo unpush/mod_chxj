@@ -176,12 +176,12 @@ typedef struct jphone_emoji_t jphone_emoji_t;
 
 struct jphone_emoji_t {
   char* string;
-} jphone_emoji_t;
+};
 
 typedef struct emoji_t emoji_t;
 
 struct emoji_t {
-  struct _emoji_t* next;
+  struct emoji_t* next;
   int              no;
   imode_emoji_t*   imode;
   ezweb_emoji_t*   ezweb;
@@ -190,7 +190,7 @@ struct emoji_t {
 
 typedef struct chxjconvrule_entry chxjconvrule_entry;
 
-struct _chxjconvrule_entry {
+struct chxjconvrule_entry {
   char       *pattern;
   ap_regex_t *regexp;
   int        flags;
