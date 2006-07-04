@@ -18,11 +18,24 @@
 #include "mod_chxj.h"
 #include "chxj_load_emoji_data.h"
 
-static char* 
-s_load_emoji_set_tag( Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node);
+static char* s_load_emoji_set_tag(
+  Doc*             doc,
+  apr_pool_t*      p,
+  mod_chxj_config* conf,
+  Node*            node);
 
-static char* s_set_emoji_data( Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node);
-static char* s_load_emoji_emoji_tag( Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node);
+static char* s_set_emoji_data(
+  Doc*             doc,
+  apr_pool_t*      p,
+  mod_chxj_config* conf,
+  Node*            node);
+
+static char* s_load_emoji_emoji_tag(
+  Doc*             doc,
+  apr_pool_t*      p,
+  mod_chxj_config* conf,
+  Node*            node);
+
 static void  s_emoji_add_to_tail( mod_chxj_config* conf, emoji_t* emoji);
 static char* s_load_emoji_no_tag( Doc* doc, apr_pool_t* p, emoji_t* em, Node* node);
 static char* s_load_emoji_imode_tag( Doc* doc, apr_pool_t* p, emoji_t* em, Node* node);
