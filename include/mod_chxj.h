@@ -181,7 +181,7 @@ struct jphone_emoji_t {
 typedef struct emoji_t emoji_t;
 
 struct emoji_t {
-  struct emoji_t* next;
+  struct emoji_t*  next;
   int              no;
   imode_emoji_t*   imode;
   ezweb_emoji_t*   ezweb;

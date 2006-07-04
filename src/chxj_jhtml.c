@@ -802,16 +802,16 @@ s_jhtml_start_base_tag(void* pdoc, Node* node)
     char* name;
     char* value;
 
-    name = qs_get_attr_name(doc,attr);
+    name  = qs_get_attr_name(doc,attr);
     value = qs_get_attr_value(doc,attr);
 
     if ((*name == 'h' || *name == 'H') && strcasecmp(name, "href") == 0) {
       jhtml->out = apr_pstrcat(r->pool, 
-                      jhtml->out, 
-                      " href=\"", 
-                      value, 
-                      "\"", 
-                      NULL);
+                               jhtml->out, 
+                               " href=\"", 
+                               value, 
+                               "\"", 
+                               NULL);
     }
   }
 
@@ -872,7 +872,7 @@ s_jhtml_start_body_tag(void* pdoc, Node* node)
     char* name;
     char* value;
 
-    name  = qs_get_attr_name(doc,attr);
+    name   = qs_get_attr_name(doc,attr);
     value  = qs_get_attr_value(doc,attr);
 
     if ((*name == 'b' || *name == 'B') && strcasecmp(name, "bgcolor") == 0) {
@@ -1426,17 +1426,29 @@ s_jhtml_end_form_tag(void* pdoc, Node* child)
 static char*
 s_jhtml_start_input_tag(void* pdoc, Node* node) 
 {
-  jhtml_t*      jhtml       = GET_JHTML(pdoc);
-  Doc*          doc         = jhtml->doc;
-  request_rec*  r           = doc->r;
-  char*         max_length  = NULL;
-  char*         type        = NULL;
-  char*         name        = NULL;
-  char*         value       = NULL;
-  char*         istyle      = NULL;
-  char*         size        = NULL;
-  char*         checked     = NULL;
-  char*         accesskey   = NULL;
+  jhtml_t*      jhtml;
+  Doc*          doc;
+  request_rec*  r;
+  char*         max_length;
+  char*         type;
+  char*         name;
+  char*         value;
+  char*         istyle;
+  char*         size;
+  char*         checked;
+  char*         accesskey;
+
+  jhtml       = GET_JHTML(pdoc);
+  doc         = jhtml->doc;
+  r           = doc->r;
+  max_length  = NULL;
+  type        = NULL;
+  name        = NULL;
+  value       = NULL;
+  istyle      = NULL;
+  size        = NULL;
+  checked     = NULL;
+  accesskey   = NULL;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<input", NULL);
 
@@ -1499,42 +1511,47 @@ s_jhtml_start_input_tag(void* pdoc, Node* node)
     if (type && (*type == 'p' || *type == 'P') && strcasecmp(type, "password") == 0
     && ! jhtml->entryp->pc_flag ) {
       jhtml->out = apr_pstrcat(r->pool, 
-                    jhtml->out, 
-                    " mode=\"", 
-                    "numeric", "\" ", 
-                    NULL);
+                               jhtml->out, 
+                               " mode=\"", 
+                               "numeric", 
+                               "\" ", 
+                               NULL);
     }
     else {
       jhtml->out = apr_pstrcat(r->pool, 
-                    jhtml->out, 
-                    " mode=\"", 
-                    chxj_istyle_to_mode(r,istyle), "\" ", 
-                    NULL);
+                               jhtml->out, 
+                               " mode=\"", 
+                               chxj_istyle_to_mode(r,istyle), 
+                               "\" ", 
+                               NULL);
     }
   }
   else
   if (istyle == NULL && type != NULL && strcasecmp(type, "password") == 0) {
     jhtml->out = apr_pstrcat(r->pool, 
-                    jhtml->out, 
-                    " mode=\"", 
-                    "numeric", "\" ", 
-                    NULL);
+                             jhtml->out, 
+                             " mode=\"", 
+                             "numeric", 
+                             "\" ", 
+                             NULL);
   }
   /*--------------------------------------------------------------------------*/
   /* The figure is default for the password.                                  */
   /*--------------------------------------------------------------------------*/
   if (max_length) {
     jhtml->out = apr_pstrcat(r->pool, 
-                      jhtml->out, 
-                      " maxlength=\"", 
-                      max_length, 
-                      "\"", 
-                      NULL);
+                             jhtml->out, 
+                             " maxlength=\"", 
+                             max_length, 
+                             "\"", 
+                             NULL);
   }
 
   if (checked) {
     jhtml->out = apr_pstrcat(r->pool, 
-                    jhtml->out, " checked ", NULL);
+                             jhtml->out,
+                             " checked ",
+                             NULL);
   }
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, " >", NULL);
@@ -1592,9 +1609,13 @@ s_jhtml_start_center_tag(void* pdoc, Node* node)
 static char*
 s_jhtml_end_center_tag(void* pdoc, Node* child) 
 {
-  jhtml_t*      jhtml = GET_JHTML(pdoc);
-  Doc*          doc   = jhtml->doc;
-  request_rec*  r     = doc->r;
+  jhtml_t*      jhtml;
+  Doc*          doc;
+  request_rec*  r;
+
+  jhtml = GET_JHTML(pdoc);
+  doc   = jhtml->doc;
+  r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</center>", NULL);
 
@@ -1613,9 +1634,13 @@ s_jhtml_end_center_tag(void* pdoc, Node* child)
 static char*
 s_jhtml_start_li_tag(void* pdoc, Node* node) 
 {
-  jhtml_t*      jhtml = GET_JHTML(pdoc);
-  Doc*          doc   = jhtml->doc;
-  request_rec*  r     = doc->r;
+  jhtml_t*      jhtml;
+  Doc*          doc;
+  request_rec*  r;
+
+  jhtml = GET_JHTML(pdoc);
+  doc   = jhtml->doc;
+  r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<li>", NULL);
 

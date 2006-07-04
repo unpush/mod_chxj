@@ -1023,8 +1023,7 @@ chxj_qrcode_node_to_qrcode(qr_code_t* qrcode, Node* node)
       chxj_qrcode_node_to_qrcode(qrcode, child);
     }
     else
-    if (strcasecmp("version", name) == 0)
-    {
+    if (strcasecmp("version", name) == 0) {
       int ver;
       Node* cchild = qs_get_child_node(doc, child);
       char* value;
