@@ -1362,8 +1362,8 @@ s_jhtml_start_form_tag(void* pdoc, Node* node)
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
       jhtml->out = apr_pstrcat(r->pool, 
-                      jhtml->out, 
-                      " method=\"",
+                               jhtml->out, 
+                               " method=\"",
                       value,
                       "\"", 
                       NULL);

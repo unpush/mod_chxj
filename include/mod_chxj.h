@@ -200,10 +200,12 @@ struct _chxjconvrule_entry {
   char       *user_agent;
 };
 
-typedef struct {
+typedef struct tag_handler tag_handler;
+
+struct tag_handler {
   char* (*start_tag_handler)(void* doc, Node* node); 
   char* (*end_tag_handler)(void* doc, Node* node); 
-} tag_handler;
+};
 
 #include "chxj_specified_device.h"
 

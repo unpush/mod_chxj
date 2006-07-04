@@ -996,9 +996,12 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
 void
 chxj_qrcode_node_to_qrcode(qr_code_t* qrcode, Node* node)
 {
-  request_rec* r = qrcode->r;
-  Doc* doc = qrcode->doc;
-  Node* child;
+  request_rec* r;
+  Doc*         doc;
+  Node*        child;
+
+  r   = qrcode->r;
+  doc = qrcode->doc;
 
   for (child = qs_get_child_node(doc,node);
        child ;

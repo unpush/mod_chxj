@@ -36,5 +36,6 @@
 extern void 
 qs_log(Doc* doc, int log_level,const char* f, int l, char* msg);
 
-extern void qs_log_int(Doc* doc, int log_level,const char* f, int l, char* msg, int val);
+extern void 
+qs_log_int(Doc* doc, int log_level,const char* f, int l, char* msg, int val);
 #endif

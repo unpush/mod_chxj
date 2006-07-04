@@ -24,6 +24,8 @@ qs_ignore_sp(
   const char*, int);
 
 extern int 
-qs_ignore_sp_and_quote(Doc* doc, const char* s, int len) ;
+qs_ignore_sp_and_quote(
+  Doc* doc, 
+  const char* s, int len) ;
 
 #endif
