@@ -1351,7 +1351,7 @@ s_jhtml_start_form_tag(void* pdoc, Node* node)
       /*----------------------------------------------------------------------*/
       jhtml->out = apr_pstrcat(r->pool, 
                                jhtml->out, 
-                      " action=\"",
+                               " action=\"",
                       value,
                       "\"", 
                       NULL);

@@ -19,7 +19,8 @@
 #include "qs_parse_string.h"
 
 extern int 
-qs_ignore_sp(Doc* doc, const char*, int);
+qs_ignore_sp(
+  Doc* doc, const char*, int);
 int qs_ignore_sp_and_quote(Doc* doc, const char* s, int len) ;
 
 #endif

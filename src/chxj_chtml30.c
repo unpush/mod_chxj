@@ -1358,7 +1358,7 @@ s_chtml30_start_form_tag(void* pdoc, Node* node)
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
       chtml30->out = apr_pstrcat(r->pool, 
-                      chtml30->out, 
+                                 chtml30->out, 
                       " method=\"",
                       value,
                       "\"", 
