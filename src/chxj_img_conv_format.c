@@ -190,7 +190,8 @@ static unsigned short s_add_crc(        const char* writedata,
 static MagickWand* s_fixup_size(MagickWand* , 
                                 request_rec* r, 
                                 device_table* spec, 
-                                        query_string_param_t *qsp);
+                                query_string_param_t *qsp);
+
 static MagickWand* s_fixup_color(MagickWand* magick_wand, 
                                  request_rec* r, 
                                  device_table* spec, 

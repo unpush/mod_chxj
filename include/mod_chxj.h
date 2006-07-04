@@ -185,7 +185,7 @@ struct emoji_t {
   int              no;
   imode_emoji_t*   imode;
   ezweb_emoji_t*   ezweb;
-  jphone_emoji_t* jphone;
+  jphone_emoji_t*  jphone;
 };
 
 typedef struct _chxjconvrule_entry {

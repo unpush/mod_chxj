@@ -33,6 +33,8 @@
 #define QX_LOGGER_FATAL(c)  qs_log(doc,QX_LOG_FATAL,QX_LOGMARK,(c))
 #define QX_LOGGER_DEBUG_INT(x,y)  qs_log_int(doc,QX_LOG_DEBUG,QX_LOGMARK,(x),(y))
 
-extern void qs_log(Doc* doc, int log_level,const char* f, int l, char* msg);
+extern void 
+qs_log(Doc* doc, int log_level,const char* f, int l, char* msg);
+
 void qs_log_int(Doc* doc, int log_level,const char* f, int l, char* msg, int val);
 #endif

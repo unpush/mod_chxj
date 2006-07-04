@@ -957,6 +957,7 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
 #ifdef QR_CODE_DEBUG
   DBG1(r, "selected mask[%d]", min_mask_pattern);
 #endif
+
   s_init_modules(qrcode, min_mask_pattern, module);
   s_map_data(qrcode, 
              module, 
