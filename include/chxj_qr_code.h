@@ -135,6 +135,6 @@ extern char*
 chxj_qr_code_blob_handler(
   request_rec* r, 
   const char* indata, 
-  size_t* len);
+  size_t*      len);
 
 #endif

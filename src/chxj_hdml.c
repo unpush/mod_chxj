@@ -1548,13 +1548,16 @@ s_hdml_do_input_text_tag(hdml_t* hdml, Node* tag)
 static void
 s_hdml_do_input_password_tag(hdml_t* hdml, Node* tag)
 {
-  Doc*            doc = hdml->doc;
-  request_rec*    r   = doc->r;
+  Doc*            doc;
+  request_rec*    r;
   char*           mlen;
   char*           val;
   char*           is;
   char*           nm;
   char*           fmt;
+
+  doc = hdml->doc;
+  r   = doc->r;
 
   s_hdml_tag_output_upper_half(hdml, tag);
 

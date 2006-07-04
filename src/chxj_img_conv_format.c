@@ -186,6 +186,7 @@ static query_string_param_t* s_get_query_string_param(request_rec *r);
 
 static unsigned short s_add_crc(        const char* writedata, 
                                         apr_size_t witebyte);
+
 static MagickWand* s_fixup_size(MagickWand* , 
                                         request_rec* r, 
                                         device_table* spec, 

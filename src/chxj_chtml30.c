@@ -1349,7 +1349,7 @@ s_chtml30_start_form_tag(void* pdoc, Node* node)
                                  chtml30->out, 
                                  " action=\"",
                                  value,
-                      "\"", 
+                                 "\"", 
                       NULL);
     }
     else

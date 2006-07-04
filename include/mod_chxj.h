@@ -182,7 +182,7 @@ typedef struct emoji_t emoji_t;
 
 struct emoji_t {
   struct _emoji_t* next;
-  int no;
+  int              no;
   imode_emoji_t*  imode;
   ezweb_emoji_t*  ezweb;
   jphone_emoji_t* jphone;
