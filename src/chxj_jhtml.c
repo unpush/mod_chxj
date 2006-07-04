@@ -1659,9 +1659,13 @@ s_jhtml_start_li_tag(void* pdoc, Node* node)
 static char*
 s_jhtml_end_li_tag(void* pdoc, Node* child) 
 {
-  jhtml_t*      jhtml = GET_JHTML(pdoc);
-  Doc*          doc   = jhtml->doc;
-  request_rec*  r     = doc->r;
+  jhtml_t*      jhtml;
+  Doc*          doc;
+  request_rec*  r;
+
+  jhtml = GET_JHTML(pdoc);
+  doc   = jhtml->doc;
+  r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</li>", NULL);
 
@@ -1680,9 +1684,13 @@ s_jhtml_end_li_tag(void* pdoc, Node* child)
 static char*
 s_jhtml_start_ol_tag(void* pdoc, Node* node) 
 {
-  jhtml_t*      jhtml = GET_JHTML(pdoc);
-  Doc*          doc   = jhtml->doc;
-  request_rec*  r     = doc->r;
+  jhtml_t*      jhtml;
+  Doc*          doc;
+  request_rec*  r;
+
+  jhtml = GET_JHTML(pdoc);
+  doc   = jhtml->doc;
+  r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<ol>", NULL);
 
@@ -1701,9 +1709,13 @@ s_jhtml_start_ol_tag(void* pdoc, Node* node)
 static char*
 s_jhtml_end_ol_tag(void* pdoc, Node* child) 
 {
-  jhtml_t*      jhtml = GET_JHTML(pdoc);
-  Doc*          doc   = jhtml->doc;
-  request_rec*  r     = doc->r;
+  jhtml_t*      jhtml;
+  Doc*          doc;
+  request_rec*  r;
+
+  jhtml = GET_JHTML(pdoc);
+  doc   = jhtml->doc;
+  r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</ol>", NULL);
 

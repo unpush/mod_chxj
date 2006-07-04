@@ -1024,11 +1024,13 @@ chxj_qrcode_node_to_qrcode(qr_code_t* qrcode, Node* node)
     }
     else
     if (strcasecmp("version", name) == 0) {
-      int ver;
-      Node* cchild = qs_get_child_node(doc, child);
+      int   ver;
+      Node* cchild;
       char* value;
-      if (cchild == NULL)
-      {
+
+      cchild = qs_get_child_node(doc, child);
+
+      if (cchild == NULL) {
         qrcode->version = QR_VER_1;
         continue;
       }
