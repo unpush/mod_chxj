@@ -252,6 +252,7 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
   char*                   pair;
 
   DBG1(r, "start chxj_load_cookie() cookie_id=[%s]", cookie_id);
+  chxj_cookie_expire_gc(r);
 
   cookie = (cookie_t*)apr_palloc(r->pool, sizeof(cookie_t));
   cookie->cookie_headers = NULL;
@@ -806,6 +807,101 @@ chxj_delete_cookie_expire(request_rec* r, char* cookie_id)
   chxj_cookie_expire_db_unlock(r, file);
 
   DBG(r, "end   chxj_delete_cookie_expire()");
+
+  return;
+
+on_error1:
+  chxj_cookie_expire_db_unlock(r, file);
+
+on_error0:
+  return;
+
+}
+
+
+void
+chxj_cookie_expire_gc(request_rec* r)
+{
+  apr_status_t      retval;
+  apr_datum_t       dbmkey;
+  apr_datum_t       dbmval;
+  apr_dbm_t*        f;
+  apr_file_t*       file;
+  mod_chxj_config*  dconf;
+  time_t            now_time;
+
+  DBG(r, "start chxj_cookie_expire_gc()");
+
+  file = chxj_cookie_expire_db_lock(r);
+  if (! file) {
+    ERR(r, "mod_chxj: Can't lock cookie db");
+    goto on_error0;
+  }
+  dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
+
+  retval = apr_dbm_open_ex(&f,
+                           "default",
+                           chxj_cookie_expire_db_name_create(r, dconf->cookie_db_dir),
+                           APR_DBM_RWCREATE,
+                           APR_OS_DEFAULT,
+                           r->pool);
+  if (retval != APR_SUCCESS) {
+    ERR2(r, 
+         "could not open dbm (type %s) auth file: %s", 
+         "default", 
+         chxj_cookie_expire_db_name_create(r,dconf->cookie_db_dir));
+    goto on_error1;
+  }
+
+  /*
+   * create key
+   */
+  memset(&dbmkey, 0, sizeof(apr_datum_t));
+
+  now_time = time(NULL);
+
+  retval = apr_dbm_firstkey(f, &dbmkey);
+  if (retval == APR_SUCCESS) {
+    do {
+      char* tmp;
+      char* old_cookie_id;
+      int   val_time;
+      int   cmp_time;
+
+      retval = apr_dbm_fetch(f, dbmkey, &dbmval);
+      if (retval != APR_SUCCESS) {
+        break;
+      }
+      tmp = apr_palloc(r->pool, dbmval.dsize+1);
+      memset(tmp, 0, dbmval.dsize+1);
+      memcpy(tmp, dbmval.dptr, dbmval.dsize);
+
+
+      val_time = atoi(tmp);
+
+      if (dconf->cookie_timeout == 0)
+        cmp_time = now_time - DEFAULT_COOKIE_TIMEOUT;
+      else
+        cmp_time = now_time - dconf->cookie_timeout;
+
+      if (cmp_time >= val_time) {
+        apr_dbm_delete(f, dbmkey);
+
+        old_cookie_id = apr_palloc(r->pool, dbmkey.dsize+1);
+        memset(old_cookie_id, 0, dbmkey.dsize+1);
+        memcpy(old_cookie_id, dbmkey.dptr, dbmkey.dsize);
+
+        chxj_delete_cookie(r,old_cookie_id);
+      }
+
+      retval = apr_dbm_nextkey(f, &dbmkey);
+    } while(retval == APR_SUCCESS);
+  }
+
+  apr_dbm_close(f);
+  chxj_cookie_expire_db_unlock(r, file);
+
+  DBG(r, "end   chxj_cookie_expire_gc()");
 
   return;
 
