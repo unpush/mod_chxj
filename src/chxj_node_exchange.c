@@ -532,8 +532,9 @@ chxj_node_exchange(
       if (strcasecmp(name, "style") == 0) {
         if (handlers[tagSTYLE].start_tag_handler) 
           handlers[tagSTYLE].start_tag_handler(pdoc, child);
-
+#if 0
         chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+#endif
 
         if (handlers[tagSTYLE].end_tag_handler)
           handlers[tagSTYLE].end_tag_handler(pdoc, child);
