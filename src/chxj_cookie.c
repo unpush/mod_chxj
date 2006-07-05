@@ -310,6 +310,7 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
     memset(load_string, 0, dbmval.dsize+1);
     memcpy(load_string, dbmval.dptr, dbmval.dsize);
     for (;;) {
+      char* tmp_sem;
       pair = apr_strtok(load_string, "\n", &pstat);  
       load_string = NULL;
       if (!pair) break;
@@ -324,6 +325,10 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
         *val++ = 0;
         apr_table_add(load_cookie_table, key, val);
       }
+      tmp_sem = strchr(pair, ';'); 
+      if (tmp_sem)
+        *tmp_sem = '\0';
+
       apr_table_setn(r->headers_in, "Cookie", pair);
     }
   

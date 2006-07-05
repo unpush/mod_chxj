@@ -21,6 +21,7 @@
 #include "chxj_img_conv.h"
 #include "chxj_dump.h"
 #include "chxj_qr_code.h"
+#include "chxj_encoding.h"
 
 #define CHECK_BOX_PREFIX     "_chxj_c_"
 #define RADIO_BUTTON_PREFIX  "_chxj_r_"
@@ -978,13 +979,16 @@ s_hdml_start_a_tag(void* pdoc, Node* node)
     }
     else 
     if ((*name == 'h' || *name == 'H') && strcasecmp(name, "href") == 0) {
-      if ((*value == 'm' || *value == 'M') && strncasecmp(value, "mailto:", 7) == 0) {
+      if ((*value == 'm' || *value == 'M') 
+      && strncasecmp(value, "mailto:", 7) == 0) {
+        value = chxj_encoding_parameter(hdml->doc->r, value);
         s_output_to_hdml_out(hdml, " TASK=GO DEST=\""     );
         s_output_to_hdml_out(hdml, value                  );
         s_output_to_hdml_out(hdml, "\" "                  );
       }
       else 
-      if ((*value == 't' || *value == 'T') && strncasecmp(value, "tel:", 4) == 0) {
+      if ((*value == 't' || *value == 'T') 
+      && strncasecmp(value, "tel:", 4) == 0) {
 
         s_output_to_hdml_out(hdml,  " TASK=CALL NUMBER=\"");
         s_output_to_hdml_out(hdml, &value[4]              );
@@ -1238,8 +1242,9 @@ s_hdml_start_form_tag(void* pdoc, Node* node)
                   "<NODISPLAY NAME=F%d>\n",
                   hdml->pure_form_cnt);
   hdml->form_tmp = apr_pstrcat(r->pool,
-                           hdml->form_tmp,
-                           "<ACTION TYPE=ACCEPT TASK=GO METHOD=POST DEST=\"",NULL);
+                              hdml->form_tmp,
+                             "<ACTION TYPE=ACCEPT TASK=GO METHOD=POST DEST=\"",
+                              NULL);
   /* Get Attributes */
   for (attr = qs_get_attr(doc,node); 
        attr; 
@@ -1252,6 +1257,7 @@ s_hdml_start_form_tag(void* pdoc, Node* node)
     value = qs_get_attr_value(doc,attr);
 
     if ((*name == 'a' || *name == 'A') && strcasecmp(name, "action") == 0) {
+      value = chxj_encoding_parameter(hdml->doc->r, value);
       act = apr_psprintf(r->pool, "%s", value);
       break;
     }
@@ -2231,6 +2237,7 @@ s_hdml_start_img_tag(void* pdoc, Node* node)
     char* value = qs_get_attr_value(doc,attr);
 
     if ((*name == 's' || *name == 'S') && strcasecmp(name, "src") == 0) {
+      value = chxj_encoding_parameter(hdml->doc->r, value);
       s_output_to_hdml_out(hdml, " src=\"");
 #ifdef IMG_NOT_CONVERT_FILENAME
       s_output_to_hdml_out(hdml, value    );

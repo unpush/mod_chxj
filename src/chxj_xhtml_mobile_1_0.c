@@ -1027,6 +1027,7 @@ s_xhtml_1_0_start_a_tag(void* pdoc, Node* node)
                       "\"", 
                       NULL);
 #else
+      value = chxj_encoding_parameter(r, value);
       xhtml->out = apr_pstrcat(r->pool, 
                       xhtml->out, 
                       " href=\"", 
@@ -1273,6 +1274,7 @@ s_xhtml_1_0_start_form_tag(void* pdoc, Node* node)
     char* name = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
     if ((*name == 'a' || *name == 'A') && strcasecmp(name, "action") == 0) {
+      value = chxj_encoding_parameter(r, value);
       xhtml->out = apr_pstrcat(r->pool, 
                       xhtml->out, 
                       " action=\"",
@@ -2049,6 +2051,7 @@ s_xhtml_1_0_start_img_tag(void* pdoc, Node* node)
     char* value = qs_get_attr_value(doc,attr);
 
     if ((*name == 's' || *name == 'S') && strcasecmp(name, "src") == 0) {
+      value = chxj_encoding_parameter(r, value);
 #ifdef IMG_NOT_CONVERT_FILENAME
       xhtml->out = apr_pstrcat(r->pool, 
                       xhtml->out, " src=\"",value,"\"", NULL);
