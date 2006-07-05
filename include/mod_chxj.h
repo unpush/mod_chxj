@@ -257,6 +257,7 @@ typedef enum {
   tagTH,  
   tagB,
   tagFIELDSET,
+  tagDT,
 } tag_type;
 
 typedef struct mod_chxj_config mod_chxj_config;

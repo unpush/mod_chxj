@@ -304,6 +304,11 @@ tag_handler xhtml_handler[] = {
     NULL,
     NULL,
   },
+  /* tagDT */
+  {
+    NULL,
+    NULL,
+  },
 };
  
 /**

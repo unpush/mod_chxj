@@ -154,14 +154,25 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
 
       ii += endpoint;
       if (node->name[0] == '/' ) {
-
-        if ((doc->parse_mode == PARSE_MODE_CHTML && has_child(&(node->name[1])))
-        ||  (doc->parse_mode == PARSE_MODE_NO_PARSE 
-        &&  (node->name[1] == 'c' || node->name[1] == 'C')
-        &&  strcasecmp(&node->name[1], "chxj:if") == 0)) {
-          if (doc->now_parent_node->parent != NULL) {
-            doc->now_parent_node = doc->now_parent_node->parent;
-            doc->parse_mode = PARSE_MODE_CHTML;
+        if (doc->parse_mode == PARSE_MODE_CHTML) {
+          if (has_child(&(node->name[1]))) {
+            if (doc->now_parent_node->parent != NULL) {
+              doc->now_parent_node = doc->now_parent_node->parent;
+              doc->parse_mode = PARSE_MODE_CHTML;
+            }
+          }
+          else {
+            continue;
+          }
+        }
+        else
+        if (doc->parse_mode == PARSE_MODE_NO_PARSE) {
+          if ((node->name[1] == 'c' || node->name[1] == 'C')
+          &&  strcasecmp(&node->name[1], "chxj:if") == 0) {
+            if (doc->now_parent_node->parent != NULL) {
+              doc->now_parent_node = doc->now_parent_node->parent;
+              doc->parse_mode = PARSE_MODE_CHTML;
+            }
           }
         }
 

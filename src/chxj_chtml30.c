@@ -303,6 +303,11 @@ tag_handler chtml30_handler[] = {
     NULL,
     NULL,
   },
+  /* tagDT */
+  {
+    NULL,
+    NULL,
+  },
 };
 
 
