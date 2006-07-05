@@ -2295,17 +2295,23 @@ s_count_11311_pattern(qr_ver_t ver, char* dst[])
 
   return point;
 }
+
+
 /* 
  * 全体に占める暗モジュールの割合 50±(5+k)%〜50±(5+(k+1))% 
  */
 static int
 s_count_dark_ratio(qr_ver_t ver, char* dst[])
 {
-  int module_count = v_module_count_table[ver];
-  int dark_count = 0;
+  int module_count;
+  int dark_count;
   int xx, yy;
   int ratio;
-  int all_count = module_count * module_count;
+  int all_count;
+
+  module_count = v_module_count_table[ver];
+  dark_count   = 0;
+  all_count    = module_count * module_count;
 
   /* 単に"暗"をカウントする */
   for (yy=0; yy<module_count; yy++) {

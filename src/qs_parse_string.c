@@ -190,7 +190,7 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
           continue;
       }
 #ifdef DEBUG
-  QX_LOGGER_DEBUG("return from qs_add_child_node()");
+      QX_LOGGER_DEBUG("return from qs_add_child_node()");
 #endif
       if (doc->parse_mode == PARSE_MODE_CHTML && 
       (*node->name == 'c' || *node->name == 'C') &&

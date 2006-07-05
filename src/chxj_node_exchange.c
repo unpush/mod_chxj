@@ -59,6 +59,7 @@ tag_handlers chxj_tag_handlers[] = {
   },
 };
 
+
 /**
  * It is main processing of conversion from CHTML to XXML. 
  *
@@ -97,7 +98,7 @@ chxj_node_exchange(
     char* name;
 
     name = qs_get_node_name(doc,child);
-DBG1(r, "name=[%s]", name);
+
     switch(*name) {
     case 'h':
     case 'H':
@@ -723,6 +724,8 @@ DBG1(r, "name=[%s]", name);
     }
   }
 
-
   return NULL;
 }
+/*
+ * vim:ts=2 et
+ */
