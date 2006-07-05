@@ -14,6 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include <time.h>
+
 #include "mod_chxj.h"
 #include "chxj_cookie.h"
 #include "chxj_url_encode.h"
@@ -116,7 +118,8 @@ chxj_save_cookie(request_rec* r)
           has_cookie = 1;
         }
       }
-      chxj_delete_cookie(r, old_cookie_id);
+      chxj_delete_cookie(r,        old_cookie_id);
+      chxj_delete_cookie_expire(r, old_cookie_id);
     }
   }
 
@@ -214,6 +217,8 @@ chxj_save_cookie(request_rec* r)
     goto on_error;
   }
 
+  chxj_save_cookie_expire(r, cookie);
+
 
 on_error:
   apr_dbm_close(f);
@@ -235,7 +240,6 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
   apr_datum_t             dbmkey;
   apr_datum_t             dbmval;
   apr_dbm_t*              f;
-  mod_chxj_global_config* gconf;
   mod_chxj_config*        dconf;
   chxjconvrule_entry*     entryp;
   apr_file_t*             file;
@@ -253,7 +257,6 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
   cookie->cookie_headers = NULL;
   cookie->cookie_id = apr_pstrdup(r->pool, cookie_id);
 
-  gconf = ap_get_module_config(r->server->module_config, &chxj_module);
   dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
   entryp = chxj_apply_convrule(r, dconf->convrules);
   if (! entryp) {
@@ -569,6 +572,134 @@ char*
 chxj_cookie_db_lock_name_create(request_rec* r, const char* dir)
 {
   char* dst;
+  DBG(r, "start  chxj_cookie_db_lock_name_create()");
+
+  if (!dir) {
+DBG(r, " ");
+    dst = apr_pstrdup(r->pool, DEFAULT_COOKIE_DB_DIR);
+DBG(r, " ");
+  }
+  else {
+DBG1(r, " dir=[%x]", (unsigned int)dir);
+    dst = apr_pstrdup(r->pool, dir);
+DBG(r, " ");
+  }
+DBG1(r, "dst[strlen(dst)-1]=[%c]", dst[strlen(dst)-1]);
+  if (dst[strlen(dst)-1] != '/') {
+    dst = apr_pstrcat(r->pool, dst, "/", COOKIE_DB_LOCK_NAME, NULL);
+  }
+  else {
+    dst = apr_pstrcat(r->pool, dst, COOKIE_DB_LOCK_NAME, NULL);
+  }
+  DBG(r, "end  chxj_cookie_db_lock_name_create()");
+  return dst;
+}
+/*
+ *
+ */
+void
+chxj_save_cookie_expire(request_rec* r, cookie_t* cookie)
+{
+  apr_status_t            retval;
+  apr_datum_t             dbmkey;
+  apr_datum_t             dbmval;
+  apr_dbm_t*              f;
+  apr_file_t*             file;
+  mod_chxj_config*        dconf;
+  char*                   store_string;
+
+  DBG(r, "start chxj_save_cookie_expire()");
+  if (!cookie) {
+    DBG(r, "cookie is NULL");
+    return;
+  }
+
+  dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  if (!dconf) {
+    DBG(r, "dconf is NULL");
+    return;
+  }
+
+  file = chxj_cookie_expire_db_lock(r);
+  if (! file) {
+    ERR(r, "mod_chxj: Can't lock cookie db");
+    return;
+  }
+
+  DBG(r, " ");
+
+  retval = apr_dbm_open_ex(&f, 
+                           "default", 
+                           chxj_cookie_expire_db_name_create(r, dconf->cookie_db_dir), 
+                           APR_DBM_RWCREATE, 
+                           APR_OS_DEFAULT, 
+                           r->pool);
+  if (retval != APR_SUCCESS) {
+    ERR2(r, "could not open dbm (type %s) auth file: %s", 
+            "default", 
+            chxj_cookie_expire_db_name_create(r,dconf->cookie_db_dir));
+    chxj_cookie_expire_db_unlock(r, file);
+    return;
+  }
+  /*
+   * create key
+   */
+
+  dbmkey.dptr  = cookie->cookie_id;
+  dbmkey.dsize = strlen(cookie->cookie_id);
+
+  /*
+   * create val
+   */
+  
+  store_string = apr_psprintf(r->pool, "%d", (int)time(NULL));
+  dbmval.dptr  = store_string;
+  dbmval.dsize = strlen(store_string);
+
+  /*
+   * store to db
+   */
+  retval = apr_dbm_store(f, dbmkey, dbmval);
+  if (retval != APR_SUCCESS) {
+    ERR1(r, "Cannot store Cookie data to DBM file `%s'",
+            chxj_cookie_db_name_create(r, dconf->cookie_db_dir));
+  }
+
+
+  apr_dbm_close(f);
+  chxj_cookie_expire_db_unlock(r, file);
+
+  DBG(r, "end   chxj_save_cookie_expire()");
+}
+
+
+char*
+chxj_cookie_expire_db_name_create(request_rec* r, const char* dir)
+{
+  char* dst;
+
+  if (!dir) {
+    dst = apr_pstrdup(r->pool, DEFAULT_COOKIE_DB_DIR);
+  }
+  else {
+    dst = apr_pstrdup(r->pool, dir);
+  }
+
+  if (dst[strlen(dst)-1] != '/') {
+    dst = apr_pstrcat(r->pool, dst, "/", COOKIE_EXPIRE_DB_NAME, NULL);
+  }
+  else {
+    dst = apr_pstrcat(r->pool, dst, COOKIE_EXPIRE_DB_NAME, NULL);
+  }
+
+  return dst;
+}
+
+
+char*
+chxj_cookie_expire_db_lock_name_create(request_rec* r, const char* dir)
+{
+  char* dst;
 
   if (!dir) {
     dst = apr_pstrdup(r->pool, DEFAULT_COOKIE_DB_DIR);
@@ -577,13 +708,113 @@ chxj_cookie_db_lock_name_create(request_rec* r, const char* dir)
     dst = apr_pstrdup(r->pool, dir);
   }
   if (dst[strlen(dst)-1] != '/') {
-    dst = apr_pstrcat(r->pool, dst, "/", COOKIE_DB_LOCK_NAME, NULL);
+    dst = apr_pstrcat(r->pool, dst, "/", COOKIE_EXPIRE_DB_LOCK_NAME, NULL);
   }
   else {
-    dst = apr_pstrcat(r->pool, dst, COOKIE_DB_LOCK_NAME, NULL);
+    dst = apr_pstrcat(r->pool, dst, COOKIE_EXPIRE_DB_LOCK_NAME, NULL);
   }
 
   return dst;
+}
+
+
+apr_file_t*
+chxj_cookie_expire_db_lock(request_rec* r)
+{
+  apr_file_t*      file;
+  apr_status_t     rv;
+  mod_chxj_config* dconf;
+
+  dconf = (mod_chxj_config*)ap_get_module_config(r->per_dir_config, &chxj_module);
+
+  rv = apr_file_open(&file, 
+                     chxj_cookie_expire_db_lock_name_create(r, dconf->cookie_db_dir),
+                     APR_CREATE|APR_WRITE, 
+                     APR_OS_DEFAULT, 
+                     r->pool);
+  if (rv != APR_SUCCESS) {
+    ERR(r, "cookie lock file open failed.");
+    return NULL;
+  }
+
+  rv = apr_file_lock(file,APR_FLOCK_EXCLUSIVE);
+  if (rv != APR_SUCCESS) {
+    ERR(r, "cookie lock file open failed.");
+    apr_file_close(file);
+    return NULL;
+  }
+
+  return file;
+}
+
+
+void
+chxj_cookie_expire_db_unlock(request_rec* r, apr_file_t* file)
+{
+  apr_status_t rv;
+
+  rv = apr_file_unlock(file);
+  if (rv != APR_SUCCESS) {
+    ERR(r, "cookie lock file open failed.");
+    return;
+  }
+
+  apr_file_close(file);
+}
+
+void
+chxj_delete_cookie_expire(request_rec* r, char* cookie_id)
+{
+  apr_status_t      retval;
+  apr_datum_t       dbmkey;
+  apr_dbm_t*        f;
+  apr_file_t*       file;
+  mod_chxj_config*  dconf;
+
+  DBG(r, "start chxj_delete_cookie_expire()");
+
+  file = chxj_cookie_expire_db_lock(r);
+  if (! file) {
+    ERR(r, "mod_chxj: Can't lock cookie db");
+    goto on_error0;
+  }
+  dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
+
+  retval = apr_dbm_open_ex(&f,
+                           "default",
+                           chxj_cookie_expire_db_name_create(r, dconf->cookie_db_dir),
+                           APR_DBM_RWCREATE,
+                           APR_OS_DEFAULT,
+                           r->pool);
+  if (retval != APR_SUCCESS) {
+    ERR2(r, 
+         "could not open dbm (type %s) auth file: %s", 
+         "default", 
+         chxj_cookie_expire_db_name_create(r,dconf->cookie_db_dir));
+    goto on_error1;
+  }
+
+  /*
+   * create key
+   */
+  dbmkey.dptr  = apr_pstrdup(r->pool, cookie_id);
+  dbmkey.dsize = strlen(dbmkey.dptr);
+  if (apr_dbm_exists(f, dbmkey)) {
+    apr_dbm_delete(f, dbmkey);
+  }
+  apr_dbm_close(f);
+  chxj_cookie_expire_db_unlock(r, file);
+
+  DBG(r, "end   chxj_delete_cookie_expire()");
+
+  return;
+
+on_error1:
+  chxj_cookie_expire_db_unlock(r, file);
+
+on_error0:
+  return;
+
 }
 /*
  * vim:ts=2 et

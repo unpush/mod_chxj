@@ -1189,6 +1189,9 @@ chxj_merge_per_dir_config(apr_pool_t *p, void *basev, void *addv)
   if (base->cookie_db_dir) {
     mrg->cookie_db_dir = apr_pstrdup(p, base->cookie_db_dir);
   }
+  else {
+    mrg->cookie_db_dir = NULL;
+  }
 
   if (add->cookie_timeout) {
     mrg->cookie_timeout   = add->cookie_timeout;
@@ -1196,6 +1199,9 @@ chxj_merge_per_dir_config(apr_pool_t *p, void *basev, void *addv)
   else
   if (base->cookie_db_dir) {
     mrg->cookie_timeout   = base->cookie_timeout;
+  }
+  else {
+    mrg->cookie_timeout   = 0;
   }
 
   return mrg;

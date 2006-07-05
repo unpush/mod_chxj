@@ -27,6 +27,8 @@
 #define COOKIE_DB_NAME        "cookie.db"
 #define COOKIE_DB_LOCK_NAME   "cookie.db.lock"
 
+#define COOKIE_EXPIRE_DB_NAME "cookie.expire.db"
+#define COOKIE_EXPIRE_DB_LOCK_NAME   "cookie.expire.db.lock"
 
 typedef struct cookie_t cookie_t;
 
@@ -71,6 +73,26 @@ extern char* chxj_cookie_db_name_create(
 extern char* chxj_cookie_db_lock_name_create(
   request_rec* r, 
   const char*  dir);
+
+extern char* chxj_cookie_expire_db_lock_name_create(
+  request_rec* r, 
+  const char*  dir);
+
+extern char* chxj_cookie_expire_db_name_create(
+  request_rec* r, 
+  const char*  dir);
+
+extern apr_file_t* chxj_cookie_expire_db_lock(
+  request_rec* r);
+
+extern void chxj_cookie_expire_db_unlock(
+  request_rec* r, apr_file_t* file);
+
+extern void chxj_save_cookie_expire(
+  request_rec* r, cookie_t* cookie);
+
+extern void chxj_delete_cookie_expire(
+  request_rec* r, char* cookie_id);
 
 #endif
 /*
