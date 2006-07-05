@@ -332,7 +332,7 @@ s_cut_text(const char* s, int len)
 Node*
 qs_init_root_node(Doc* doc) 
 {
-  doc->root_node = (Node*)apr_palloc(doc->pool,sizeof(struct _node));
+  doc->root_node = (Node*)apr_palloc(doc->pool,sizeof(struct Node));
   if (doc->root_node == NULL) 
     QX_LOGGER_FATAL("Out Of Memory");
 

@@ -18,8 +18,15 @@
 #define __QS_PARSE_ATTR_H__
 #include "qs_parse_string.h"
 
-Attr* qs_parse_attr(Doc* doc, const char*s, int len, int* newpos);
-Attr* qs_new_attr(Doc* doc);
+extern Attr* qs_parse_attr(
+  Doc*        doc,
+  const char* s,
+  int         len,
+  int*        newpos);
+
+extern Attr* qs_new_attr(
+  Doc* doc);
+
 #endif
 /*
  * vim:ts=2 et

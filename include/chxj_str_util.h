@@ -19,11 +19,11 @@
 
 #include <string.h>
 
-extern int 
-chxj_chk_numeric(const char* s);
+extern int chxj_chk_numeric(
+  const char* s);
 
-extern int 
-chxj_atoi(const char* s);
+extern int chxj_atoi(
+  const char* s);
 
 #endif
 /*

@@ -574,7 +574,6 @@ s_jhtml_start_meta_tag(void* pdoc, Node* node)
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<meta", NULL);
 
-
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
   /*--------------------------------------------------------------------------*/
@@ -588,75 +587,86 @@ s_jhtml_start_meta_tag(void* pdoc, Node* node)
     name   = qs_get_attr_name(doc,attr);
     value  = qs_get_attr_value(doc,attr);
 
-    if ((*name == 'h' || *name == 'H') && strcasecmp(name, "http-equiv") == 0) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 2.0                                                            */
-      /*----------------------------------------------------------------------*/
-      jhtml->out = apr_pstrcat(r->pool, 
-                      jhtml->out, 
-                      " http-equiv=\"", 
-                      value,
-                      "\"",
-                      NULL);
-      if ((*value == 'c' || *value == 'C') 
-      && strcasecmp(value, "content-type") == 0) {
-        content_type_flag = 1;
+    switch(*name) {
+    case 'h':
+    case 'H':
+      if (strcasecmp(name, "http-equiv") == 0) {
+        /*----------------------------------------------------------------------*/
+        /* CHTML 2.0                                                            */
+        /*----------------------------------------------------------------------*/
+        jhtml->out = apr_pstrcat(r->pool, 
+                        jhtml->out, 
+                        " http-equiv=\"", 
+                        value,
+                        "\"",
+                        NULL);
+        if ((*value == 'c' || *value == 'C') 
+        && strcasecmp(value, "content-type") == 0) {
+          content_type_flag = 1;
+        }
+        if ((*value == 'r' || *value == 'R')
+        && strcasecmp(value, "refresh") == 0)
+          refresh_flag = 1;
       }
-      if ((*value == 'r' || *value == 'R')
-      && strcasecmp(value, "refresh") == 0)
-        refresh_flag = 1;
-    }
-    else
-    if ((*name == 'c' || *name == 'C') &&strcasecmp(name, "content") == 0) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 2.0                                                            */
-      /*----------------------------------------------------------------------*/
-      if (content_type_flag)  {
-        jhtml->out = apr_pstrcat(r->pool,
-                                jhtml->out,
-                                " ",
-                                name,
-                                "=\"",
-                                "text/html; charset=Windows-31J",
-                                "\"",
-                                NULL);
-      }
-      else
-      if (refresh_flag) {
-        char* buf;
-        char* sec;
-        char* url;
+      break;
 
-        buf = apr_pstrdup(r->pool, value);
-
-        url = strchr(buf, ';');
-        if (url) {
-          sec = apr_pstrdup(r->pool, buf);
-          sec[url-buf] = 0;
-          url++;
-          url = chxj_encoding_parameter(r, url);
-          url = chxj_add_cookie_parameter(r, url, jhtml->cookie);
+    case 'c':
+    case 'C':
+      if (strcasecmp(name, "content") == 0) {
+        /*----------------------------------------------------------------------*/
+        /* CHTML 2.0                                                            */
+        /*----------------------------------------------------------------------*/
+        if (content_type_flag)  {
+          jhtml->out = apr_pstrcat(r->pool,
+                                  jhtml->out,
+                                  " ",
+                                  name,
+                                  "=\"",
+                                  "text/html; charset=Windows-31J",
+                                  "\"",
+                                  NULL);
+        }
+        else
+        if (refresh_flag) {
+          char* buf;
+          char* sec;
+          char* url;
+  
+          buf = apr_pstrdup(r->pool, value);
+  
+          url = strchr(buf, ';');
+          if (url) {
+            sec = apr_pstrdup(r->pool, buf);
+            sec[url-buf] = 0;
+            url++;
+            url = chxj_encoding_parameter(r, url);
+            url = chxj_add_cookie_parameter(r, url, jhtml->cookie);
+            jhtml->out = apr_pstrcat(r->pool,
+                                     jhtml->out,
+                                     " ",
+                                     name,
+                                     "=\"",
+                                     sec,
+                                     ";",
+                                     url,
+                                     "\"",
+                                     NULL);
+          }
+        }
+        else
           jhtml->out = apr_pstrcat(r->pool,
                                    jhtml->out,
                                    " ",
                                    name,
                                    "=\"",
-                                   sec,
-                                   ";",
-                                   url,
+                                   value,
                                    "\"",
                                    NULL);
-        }
       }
-      else
-        jhtml->out = apr_pstrcat(r->pool,
-                                 jhtml->out,
-                                 " ",
-                                 name,
-                                 "=\"",
-                                 value,
-                                 "\"",
-                                 NULL);
+      break;
+    
+    default:
+      break;
     }
   }
 

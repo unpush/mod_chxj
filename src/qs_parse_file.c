@@ -32,11 +32,11 @@
 Node*
 qs_parse_file(Doc* doc, const char* filename) 
 {
-  char *tgt = NULL;
-  Node* return_value = NULL;
+  char*       tgt = NULL;
+  Node*       return_value = NULL;
   struct stat st;
-  int rtn;
-  int fd;
+  int         rtn;
+  int         fd;
 
 
   memset(&st, 0, sizeof(struct stat));

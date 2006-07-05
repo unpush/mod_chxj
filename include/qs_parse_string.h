@@ -97,28 +97,32 @@
 /**
  * The structure of the attribute is defined.
  */
-typedef struct _attr {
-  struct _attr* next;
-  struct _node* parent;
+typedef struct Attr Attr;
+
+struct Attr {
+  struct Attr* next;
+  struct Node* parent;
   char *name;
   char *value;
-} Attr;
+};
 
 /**
  * The structure of the element is defined. 
  */
-typedef struct _node {
-  struct _node* next;
-  struct _node* parent;
-  struct _node* child;
-  struct _node* child_tail;
-  struct _attr* attr;
-  struct _attr* attr_tail;
+typedef struct Node Node;
+
+struct Node {
+  struct Node* next;
+  struct Node* parent;
+  struct Node* child;
+  struct Node* child_tail;
+  struct Attr* attr;
+  struct Attr* attr_tail;
   char* name;
   char* value;
   int   size;
   char* otext;
-} Node;
+};
 
 typedef struct pointer_table_t {
   unsigned int address;
