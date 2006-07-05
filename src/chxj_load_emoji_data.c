@@ -40,10 +40,18 @@ static void  s_emoji_add_to_tail(
   mod_chxj_config* conf,
   emoji_t*         emoji);
 
-static char* s_load_emoji_no_tag( Doc* doc, apr_pool_t* p, emoji_t* em, Node* node);
+static char* s_load_emoji_no_tag(
+  Doc*        doc,
+  apr_pool_t* p,
+  emoji_t*    em,
+  Node*       node);
+
 static char* s_load_emoji_imode_tag( Doc* doc, apr_pool_t* p, emoji_t* em, Node* node);
+
 static char* s_load_emoji_ezweb_tag( Doc* doc, apr_pool_t* p, emoji_t* em, Node* node);
+
 static char* s_load_emoji_jphone_tag( Doc* doc, apr_pool_t* p, emoji_t* em, Node* node);
+
 static char  s_hexstring_to_byte(char* s);
 
 
