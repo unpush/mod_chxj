@@ -309,6 +309,16 @@ tag_handler hdml_handler[] = {
     NULL,
     NULL,
   },
+  /* tagLEGEND */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagLABEL */
+  {
+    NULL,
+    NULL,
+  },
 };
 
 /**

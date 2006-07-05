@@ -307,6 +307,16 @@ tag_handler chtml10_handler[] = {
     NULL,
     NULL,
   },
+  /* tagLEGEND */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagLABEL */
+  {
+    NULL,
+    NULL,
+  },
 };
 
 

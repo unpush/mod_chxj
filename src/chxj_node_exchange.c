@@ -97,7 +97,7 @@ chxj_node_exchange(
     char* name;
 
     name = qs_get_node_name(doc,child);
-
+DBG1(r, "name=[%s]", name);
     switch(*name) {
     case 'h':
     case 'H':
@@ -281,9 +281,9 @@ chxj_node_exchange(
 
     case 'l':
     case 'L':
-      /*------------------------------------------------------------------------*/
-      /* <LI>                                                                   */
-      /*------------------------------------------------------------------------*/
+      /*----------------------------------------------------------------------*/
+      /* <LI>                                                                 */
+      /*----------------------------------------------------------------------*/
       if (strcasecmp(name, "li") == 0) {
         if (handlers[tagLI].start_tag_handler) 
           handlers[tagLI].start_tag_handler(pdoc, child);
@@ -293,6 +293,33 @@ chxj_node_exchange(
         if (handlers[tagLI].end_tag_handler)
           handlers[tagLI].end_tag_handler(pdoc, child);
       }
+      else
+      /*----------------------------------------------------------------------*/
+      /* <LEGEND>                                                             */
+      /*----------------------------------------------------------------------*/
+      if (strcasecmp(name, "legend") == 0) {
+        if (handlers[tagLEGEND].start_tag_handler) 
+          handlers[tagLEGEND].start_tag_handler(pdoc, child);
+
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+
+        if (handlers[tagLEGEND].end_tag_handler)
+          handlers[tagLEGEND].end_tag_handler(pdoc, child);
+      }
+      else
+      /*----------------------------------------------------------------------*/
+      /* <LABEL>                                                              */
+      /*----------------------------------------------------------------------*/
+      if (strcasecmp(name, "label") == 0) {
+        if (handlers[tagLABEL].start_tag_handler) 
+          handlers[tagLABEL].start_tag_handler(pdoc, child);
+
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+
+        if (handlers[tagLABEL].end_tag_handler)
+          handlers[tagLABEL].end_tag_handler(pdoc, child);
+      }
+      
       break;
 
     case 'o':

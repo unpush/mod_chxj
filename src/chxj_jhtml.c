@@ -300,6 +300,16 @@ tag_handler jhtml_handler[] = {
     NULL,
     NULL,
   },
+  /* tagLEGEND */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagLABEL */
+  {
+    NULL,
+    NULL,
+  },
 };
 
 
