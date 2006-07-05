@@ -36,8 +36,7 @@ static char* s_load_emoji_emoji_tag(
   mod_chxj_config* conf,
   Node*            node);
 
-static void  
-s_emoji_add_to_tail(
+static void  s_emoji_add_to_tail(
   mod_chxj_config* conf,
   emoji_t*         emoji);
 

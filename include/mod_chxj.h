@@ -259,7 +259,9 @@ typedef enum {
   tagFIELDSET,
 } tag_type;
 
-typedef struct {
+typedef struct mod_chxj_config mod_chxj_config;
+
+struct mod_chxj_config {
   int                   image;
 
   char*                 device_data_file;
@@ -276,7 +278,9 @@ typedef struct {
 
   apr_array_header_t   *convrules;
 
-} mod_chxj_config;
+  char*                 cookie_db_dir;
+  long                  cookie_timeout;
+};
 
 
 #define CONVRULE_ENGINE_ON_BIT        (0x00000001)

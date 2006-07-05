@@ -1088,6 +1088,9 @@ chxj_create_per_dir_config(apr_pool_t *p, char *arg)
   conf->image            = CHXJ_IMG_OFF;
   conf->image_cache_dir  = apr_psprintf(p, "%s",DEFAULT_IMAGE_CACHE_DIR);
   conf->server_side_encoding = NULL;
+  conf->cookie_db_dir    = NULL;
+  conf->cookie_timeout   = 0;
+
   if (arg == NULL) {
     conf->dir                  = NULL;
   }
@@ -1178,6 +1181,22 @@ chxj_merge_per_dir_config(apr_pool_t *p, void *basev, void *addv)
   }
 
   mrg->convrules    = apr_array_append(p, add->convrules, base->convrules);
+
+  if (add->cookie_db_dir) {
+    mrg->cookie_db_dir = apr_pstrdup(p, add->cookie_db_dir);
+  }
+  else
+  if (base->cookie_db_dir) {
+    mrg->cookie_db_dir = apr_pstrdup(p, base->cookie_db_dir);
+  }
+
+  if (add->cookie_timeout) {
+    mrg->cookie_timeout   = add->cookie_timeout;
+  }
+  else
+  if (base->cookie_db_dir) {
+    mrg->cookie_timeout   = base->cookie_timeout;
+  }
 
   return mrg;
 }
@@ -1355,7 +1374,7 @@ cmd_load_device_data(cmd_parms *parms, void *mconfig, const char* arg)
   doc.r = NULL;
 
   if (strlen(arg) > 256) 
-    return "device data filename too long.";
+    return "mod_chxj: device data filename too long.";
 
   conf = (mod_chxj_config*)mconfig;
   conf->device_data_file = apr_pstrdup(parms->pool, arg);
@@ -1390,7 +1409,7 @@ cmd_load_emoji_data(cmd_parms *parms, void *mconfig, const char* arg)
 
 
   if (strlen(arg) > 256) 
-    return "emoji data filename too long.";
+    return "mod_chxj: emoji data filename too long.";
 
   conf = (mod_chxj_config*)mconfig;
   conf->emoji_data_file = apr_pstrdup(parms->pool, arg);
@@ -1484,7 +1503,7 @@ cmd_convert_rule(cmd_parms *cmd, void* mconfig, const char *arg)
   dconf = (mod_chxj_config*)mconfig;
 
   if (strlen(arg) > 4096) 
-    return "ChxjConvertRule: is too long.";
+    return "mod_chxj: ChxjConvertRule: is too long.";
 
   dconf = (mod_chxj_config*)mconfig;
   if (dconf->convrules == NULL)
@@ -1559,6 +1578,36 @@ cmd_convert_rule(cmd_parms *cmd, void* mconfig, const char *arg)
 }
 
 
+static const char*
+cmd_set_cookie_dir(
+  cmd_parms*  cmd, 
+  void*       mconfig, 
+  const char* arg)
+{
+  mod_chxj_config*    dconf;
+
+
+  if (strlen(arg) > 4096) 
+    return "mod_chxj: ChxjCookieDir is too long.";
+
+  dconf = (mod_chxj_config*)mconfig;
+
+  dconf->cookie_db_dir = apr_pstrdup(cmd->pool, arg);
+
+  return NULL;
+}
+
+
+static const char*
+cmd_set_cookie_timeout(
+  cmd_parms *cmd, 
+  void* mconfig, 
+  const char *arg)
+{
+  return NULL;
+}
+
+
 static const command_rec cmds[] = {
   AP_INIT_TAKE1(
     "ChxjLoadDeviceData",
@@ -1596,6 +1645,18 @@ static const command_rec cmds[] = {
     NULL, 
     OR_FILEINFO,
     "an URL-applied regexp-pattern and a substitution URL"),
+  AP_INIT_TAKE1(
+    "ChxjCookieDir",
+    cmd_set_cookie_dir,
+    NULL,
+    OR_ALL,
+    "save cookie.db directory."),
+  AP_INIT_TAKE1(
+    "ChxjCookieTimeout",
+    cmd_set_cookie_timeout,
+    NULL,
+    OR_ALL,
+    "The compulsion time-out time of the cookie is specified. "),
   { NULL },
 };
 

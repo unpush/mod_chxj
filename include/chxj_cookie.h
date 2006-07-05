@@ -32,39 +32,41 @@ struct cookie_t {
   apr_array_header_t* cookie_headers;
 };
 
-extern cookie_t* 
-chxj_save_cookie(
+
+extern cookie_t* chxj_save_cookie(
   request_rec *r);
 
-extern char*     
-chxj_add_cookie_parameter(
+extern char*     chxj_add_cookie_parameter(
   request_rec* r, 
   char*        value, 
   cookie_t*    cookie);
 
-extern int       
-chxj_cookie_check_host(
+extern int chxj_cookie_check_host(
   request_rec* r, 
   char*        value);
 
-extern cookie_t* 
-chxj_load_cookie(
+extern cookie_t* chxj_load_cookie(
   request_rec* r, 
   char*        cookie_id);
 
-extern apr_file_t* 
-chxj_cookie_db_lock(
+extern apr_file_t* chxj_cookie_db_lock(
   request_rec* r);
 
-extern void 
-chxj_cookie_db_unlock(
+extern void chxj_cookie_db_unlock(
   request_rec* r, 
   apr_file_t*  file);
 
-extern void 
-chxj_delete_cookie(
+extern void chxj_delete_cookie(
   request_rec* r, 
   char*        cookie_id);
+
+extern char* chxj_cookie_db_name_create(
+  request_rec* r, 
+  const char*  dir);
+
+extern char* chxj_cookie_db_lock_name_create(
+  request_rec* r, 
+  const char*  dir);
 
 #endif
 /*

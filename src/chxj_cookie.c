@@ -135,12 +135,14 @@ chxj_save_cookie(request_rec* r)
 
   retval = apr_dbm_open_ex(&f, 
                            "default", 
-                           "/tmp/cookie.db", 
+                           chxj_cookie_db_name_create(r, dconf->cookie_db_dir), 
                            APR_DBM_RWCREATE, 
                            APR_OS_DEFAULT, 
                            r->pool);
   if (retval != APR_SUCCESS) {
-    ERR2(r, "could not open dbm (type %s) auth file: %s", "default", "/tmp/cookie.db");
+    ERR2(r, "could not open dbm (type %s) auth file: %s", 
+            "default", 
+            chxj_cookie_db_name_create(r,dconf->cookie_db_dir));
     chxj_cookie_db_unlock(r, file);
     return NULL;
   }
@@ -152,8 +154,10 @@ chxj_save_cookie(request_rec* r)
 
   md5_value = (unsigned char*)apr_palloc(r->pool, APR_MD5_DIGESTSIZE + 1);
   memset(md5_value, 0, APR_MD5_DIGESTSIZE + 1);
+
   retval = apr_md5(md5_value, 
-          (const char*)uuid_string, (apr_size_t)APR_UUID_FORMATTED_LENGTH);
+                   (const char*)uuid_string, 
+                   (apr_size_t)APR_UUID_FORMATTED_LENGTH);
   if (retval != APR_SUCCESS) {
     ERR(r, "md5 failed.");
     goto on_error;
@@ -205,7 +209,8 @@ chxj_save_cookie(request_rec* r)
    */
   retval = apr_dbm_store(f, dbmkey, dbmval);
   if (retval != APR_SUCCESS) {
-    ERR1(r, "Cannot store SSL session to DBM file `%s'","/tmp/cookie.db");
+    ERR1(r, "Cannot store Cookie data to DBM file `%s'",
+            chxj_cookie_db_name_create(r, dconf->cookie_db_dir));
     goto on_error;
   }
 
@@ -269,12 +274,15 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
 
   retval = apr_dbm_open_ex(&f, 
                            "default", 
-                           "/tmp/cookie.db", 
+                           chxj_cookie_db_name_create(r, dconf->cookie_db_dir),
                            APR_DBM_RWCREATE, 
                            APR_OS_DEFAULT, 
                            r->pool);
   if (retval != APR_SUCCESS) {
-    ERR2(r, "could not open dbm (type %s) auth file: %s", "default", "/tmp/cookie.db");
+    ERR2(r, 
+         "could not open dbm (type %s) auth file: %s", 
+         "default", 
+         chxj_cookie_db_name_create(r, dconf->cookie_db_dir));
     goto on_error1;
   }
 
@@ -287,7 +295,9 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
   
     retval = apr_dbm_fetch(f, dbmkey, &dbmval);
     if (retval != APR_SUCCESS) {
-      ERR2(r, "could not fetch dbm (type %s) auth file: %s", "default", "/tmp/cookie.db");
+      ERR2(r, 
+           "could not fetch dbm (type %s) auth file: %s", "default", 
+           chxj_cookie_db_name_create(r, dconf->cookie_db_dir));
       goto on_error2;
     }
     load_cookie_table = apr_table_make(r->pool, 0);
@@ -434,10 +444,17 @@ s_cut_until_end_hostname(request_rec* r, char* value)
 apr_file_t*
 chxj_cookie_db_lock(request_rec* r)
 {
-  apr_file_t*  file;
-  apr_status_t rv;
+  apr_file_t*      file;
+  apr_status_t     rv;
+  mod_chxj_config* dconf;
 
-  rv = apr_file_open(&file, "/tmp/cookie_db.lock", APR_CREATE|APR_WRITE, APR_OS_DEFAULT, r->pool);
+  dconf = (mod_chxj_config*)ap_get_module_config(r->per_dir_config, &chxj_module);
+
+  rv = apr_file_open(&file, 
+                     chxj_cookie_db_lock_name_create(r, dconf->cookie_db_dir),
+                     APR_CREATE|APR_WRITE, 
+                     APR_OS_DEFAULT, 
+                     r->pool);
   if (rv != APR_SUCCESS) {
     ERR(r, "cookie lock file open failed.");
     return NULL;
@@ -476,6 +493,7 @@ chxj_delete_cookie(request_rec* r, char* cookie_id)
   apr_datum_t       dbmkey;
   apr_dbm_t*        f;
   apr_file_t*       file;
+  mod_chxj_config*  dconf;
 
   DBG(r, "start chxj_delete_cookie()");
 
@@ -484,17 +502,22 @@ chxj_delete_cookie(request_rec* r, char* cookie_id)
     ERR(r, "mod_chxj: Can't lock cookie db");
     goto on_error0;
   }
+  dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
 
   retval = apr_dbm_open_ex(&f,
                            "default",
-                           "/tmp/cookie.db",
+                           chxj_cookie_db_name_create(r, dconf->cookie_db_dir),
                            APR_DBM_RWCREATE,
                            APR_OS_DEFAULT,
                            r->pool);
   if (retval != APR_SUCCESS) {
-    ERR2(r, "could not open dbm (type %s) auth file: %s", "default", "/tmp/cookie.db");
+    ERR2(r, 
+         "could not open dbm (type %s) auth file: %s", 
+         "default", 
+         chxj_cookie_db_name_create(r,dconf->cookie_db_dir));
     goto on_error1;
   }
+
   /*
    * create key
    */
@@ -516,6 +539,50 @@ on_error1:
 on_error0:
   return;
 
+}
+
+char*
+chxj_cookie_db_name_create(request_rec* r, const char* dir)
+{
+  char* dst;
+
+  if (!dir) {
+    dst = apr_pstrdup(r->pool, "/tmp");
+  }
+  else {
+    dst = apr_pstrdup(r->pool, dir);
+  }
+
+  if (dst[strlen(dst)-1] != '/') {
+    dst = apr_pstrcat(r->pool, dst, "/", "cookie.db" , NULL);
+  }
+  else {
+    dst = apr_pstrcat(r->pool, dst, "cookie.db" , NULL);
+  }
+
+  return dst;
+}
+
+
+char*
+chxj_cookie_db_lock_name_create(request_rec* r, const char* dir)
+{
+  char* dst;
+
+  if (!dir) {
+    dst = apr_pstrdup(r->pool, "/tmp");
+  }
+  else {
+    dst = apr_pstrdup(r->pool, dir);
+  }
+  if (dst[strlen(dst)-1] != '/') {
+    dst = apr_pstrcat(r->pool, dst, "/", "cookie.db.lock" , NULL);
+  }
+  else {
+    dst = apr_pstrcat(r->pool, dst, "cookie.db.lock" , NULL);
+  }
+
+  return dst;
 }
 /*
  * vim:ts=2 et
