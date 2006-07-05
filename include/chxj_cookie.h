@@ -23,6 +23,10 @@
 
 #define CHXJ_COOKIE_PARAM  "_chxj_cc"
 
+#define DEFAULT_COOKIE_DB_DIR "/tmp"
+#define COOKIE_DB_NAME        "cookie.db"
+#define COOKIE_DB_LOCK_NAME   "cookie.db.lock"
+
 
 typedef struct cookie_t cookie_t;
 

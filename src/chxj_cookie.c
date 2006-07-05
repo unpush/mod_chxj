@@ -541,23 +541,24 @@ on_error0:
 
 }
 
+
 char*
 chxj_cookie_db_name_create(request_rec* r, const char* dir)
 {
   char* dst;
 
   if (!dir) {
-    dst = apr_pstrdup(r->pool, "/tmp");
+    dst = apr_pstrdup(r->pool, DEFAULT_COOKIE_DB_DIR);
   }
   else {
     dst = apr_pstrdup(r->pool, dir);
   }
 
   if (dst[strlen(dst)-1] != '/') {
-    dst = apr_pstrcat(r->pool, dst, "/", "cookie.db" , NULL);
+    dst = apr_pstrcat(r->pool, dst, "/", COOKIE_DB_NAME, NULL);
   }
   else {
-    dst = apr_pstrcat(r->pool, dst, "cookie.db" , NULL);
+    dst = apr_pstrcat(r->pool, dst, COOKIE_DB_NAME, NULL);
   }
 
   return dst;
@@ -570,16 +571,16 @@ chxj_cookie_db_lock_name_create(request_rec* r, const char* dir)
   char* dst;
 
   if (!dir) {
-    dst = apr_pstrdup(r->pool, "/tmp");
+    dst = apr_pstrdup(r->pool, DEFAULT_COOKIE_DB_DIR);
   }
   else {
     dst = apr_pstrdup(r->pool, dir);
   }
   if (dst[strlen(dst)-1] != '/') {
-    dst = apr_pstrcat(r->pool, dst, "/", "cookie.db.lock" , NULL);
+    dst = apr_pstrcat(r->pool, dst, "/", COOKIE_DB_LOCK_NAME, NULL);
   }
   else {
-    dst = apr_pstrcat(r->pool, dst, "cookie.db.lock" , NULL);
+    dst = apr_pstrcat(r->pool, dst, COOKIE_DB_LOCK_NAME, NULL);
   }
 
   return dst;
