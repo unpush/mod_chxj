@@ -42,8 +42,7 @@ struct chtml30_t {
 /*----------------------------------------------------------------------------*/
 /* Prototype                                                                  */
 /*----------------------------------------------------------------------------*/
-extern char*
-chxj_exchange_chtml30(
+extern char* chxj_exchange_chtml30(
   request_rec*        r,
   device_table*       spec,
   const char*         src,
@@ -51,4 +50,5 @@ chxj_exchange_chtml30(
   apr_size_t*         dstlen,
   chxjconvrule_entry* entryp,
   cookie_t*           cookie);
+
 #endif

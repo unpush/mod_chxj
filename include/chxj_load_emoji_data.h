@@ -21,8 +21,7 @@
 #define ESCAPE_CHAR_GT "&gt;"
 
 
-extern char* 
-chxj_load_emoji_data(
+extern char* chxj_load_emoji_data(
   Doc*             doc, 
   apr_pool_t*      p, 
   mod_chxj_config* conf);

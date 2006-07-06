@@ -17,8 +17,7 @@
 #ifndef __CHXJ_DUMP_H__
 #define __CHXJ_DUMP_H__
 
-extern void 
-chxj_dump_out(
+extern void chxj_dump_out(
   const char* title, 
   const char* s, 
   int         slen);

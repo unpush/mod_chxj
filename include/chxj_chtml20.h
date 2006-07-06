@@ -42,8 +42,7 @@ struct ctml20_t {
 /*----------------------------------------------------------------------------*/
 /* Prototype                                                                  */
 /*----------------------------------------------------------------------------*/
-extern char*
-chxj_exchange_chtml20(
+extern char* chxj_exchange_chtml20(
   request_rec*        r,
   device_table*       spec,
   const char*         src,
