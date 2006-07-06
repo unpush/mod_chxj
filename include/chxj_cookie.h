@@ -30,6 +30,8 @@
 #define COOKIE_EXPIRE_DB_NAME "cookie.expire.db"
 #define COOKIE_EXPIRE_DB_LOCK_NAME   "cookie.expire.db.lock"
 
+#define REFERER_COOKIE_KEY "CHXJ_REFER"
+
 /* 
  * default cookie timeout is 30 minute
  */
