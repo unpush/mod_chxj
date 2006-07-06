@@ -867,6 +867,7 @@ chxj_cookie_expire_gc(request_rec* r)
 
   retval = apr_dbm_firstkey(f, &dbmkey);
   if (retval == APR_SUCCESS) {
+    DBG2(r, "firstkey=[%.*s]", dbmkey.dsize, dbmkey.dptr);
     do {
       char* tmp;
       char* old_cookie_id;
@@ -889,6 +890,7 @@ chxj_cookie_expire_gc(request_rec* r)
       else
         cmp_time = now_time - dconf->cookie_timeout;
 
+      DBG2(r, "key=[%.*s]", dbmkey.dsize, dbmkey.dptr);
       if (cmp_time >= val_time) {
         apr_dbm_delete(f, dbmkey);
 
@@ -897,10 +899,11 @@ chxj_cookie_expire_gc(request_rec* r)
         memcpy(old_cookie_id, dbmkey.dptr, dbmkey.dsize);
 
         chxj_delete_cookie(r,old_cookie_id);
+        DBG1(r, "detect timeout cookie [%s]", old_cookie_id);
       }
 
       retval = apr_dbm_nextkey(f, &dbmkey);
-    } while(retval == APR_SUCCESS);
+    } while(retval == APR_SUCCESS && dbmkey.dptr != NULL);
   }
 
   apr_dbm_close(f);
