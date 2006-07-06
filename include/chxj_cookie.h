@@ -105,6 +105,10 @@ extern void chxj_delete_cookie_expire(
 extern void chxj_cookie_expire_gc(
   request_rec* r);
 
+cookie_t* chxj_update_cookie(
+  request_rec* r, 
+  cookie_t*    old_cookie);
+
 #endif
 /*
  * vim:ts=2 et

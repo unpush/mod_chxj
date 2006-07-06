@@ -103,6 +103,7 @@ chxj_save_cookie(request_rec* r)
       DBG(r, "=====================================");
     }
   }
+  apr_table_unset(r->headers_out, "Set-Cookie");
 
   /*
    * check input parameters
@@ -225,6 +226,160 @@ on_error:
   chxj_cookie_db_unlock(r, file);
 
   DBG(r, "end   chxj_save_cookie()");
+  return cookie;
+}
+
+/*
+ *
+ */
+cookie_t*
+chxj_update_cookie(request_rec* r, cookie_t* old_cookie)
+{
+  int                 ii;
+  apr_array_header_t* headers;
+  apr_table_entry_t*  hentryp;
+  apr_status_t        retval;
+  apr_datum_t         dbmkey;
+  apr_datum_t         dbmval;
+  apr_dbm_t*          f;
+  apr_uuid_t          uuid;
+  char*               uuid_string;
+  unsigned char*      md5_value;
+  char*               store_string;
+  mod_chxj_config*    dconf;
+  chxjconvrule_entry* entryp;
+  apr_file_t*         file;
+  int                 has_cookie = 0;
+  cookie_t*           cookie;
+
+
+  DBG(r, "start chxj_update_cookie()");
+
+  cookie = (cookie_t*)apr_palloc(r->pool, sizeof(cookie_t));
+  cookie->cookie_id = NULL;
+
+  has_cookie = 0;
+
+  dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  entryp = chxj_apply_convrule(r, dconf->convrules);
+  if (! entryp) {
+    DBG(r, "end chxj_update_cookie() no pattern");
+    return NULL;
+  }
+  if (! (entryp->action & CONVRULE_COOKIE_ON_BIT)) {
+    DBG(r, "end chxj_update_cookie() CookieOff");
+    return NULL;
+  }
+
+
+  headers = (apr_array_header_t*)apr_table_elts(r->headers_out);
+  hentryp = (apr_table_entry_t*)headers->elts;
+
+
+  chxj_delete_cookie(r,        old_cookie->cookie_id);
+  chxj_delete_cookie_expire(r, old_cookie->cookie_id);
+
+  if (! has_cookie) {
+    DBG(r, "no cookie");
+    return NULL;
+  }
+
+  file = chxj_cookie_db_lock(r);
+  if (! file) {
+    ERR(r, "mod_chxj: Can't lock cookie db");
+    return NULL;
+  }
+
+  DBG(r, " ");
+
+  retval = apr_dbm_open_ex(&f, 
+                           "default", 
+                           chxj_cookie_db_name_create(r, dconf->cookie_db_dir), 
+                           APR_DBM_RWCREATE, 
+                           APR_OS_DEFAULT, 
+                           r->pool);
+  if (retval != APR_SUCCESS) {
+    ERR2(r, "could not open dbm (type %s) auth file: %s", 
+            "default", 
+            chxj_cookie_db_name_create(r,dconf->cookie_db_dir));
+    chxj_cookie_db_unlock(r, file);
+    return NULL;
+  }
+
+  apr_uuid_get(&uuid);
+  uuid_string = apr_palloc(r->pool, APR_UUID_FORMATTED_LENGTH + 1);
+  memset(uuid_string, 0, APR_UUID_FORMATTED_LENGTH + 1);
+  apr_uuid_format(uuid_string, &uuid);;
+
+  md5_value = (unsigned char*)apr_palloc(r->pool, APR_MD5_DIGESTSIZE + 1);
+  memset(md5_value, 0, APR_MD5_DIGESTSIZE + 1);
+
+  retval = apr_md5(md5_value, 
+                   (const char*)uuid_string, 
+                   (apr_size_t)APR_UUID_FORMATTED_LENGTH);
+  if (retval != APR_SUCCESS) {
+    ERR(r, "md5 failed.");
+    goto on_error;
+  }
+
+  cookie->cookie_id = apr_palloc(r->pool, apr_base64_encode_len(APR_MD5_DIGESTSIZE)+1);
+  memset(cookie->cookie_id, 0, APR_MD5_DIGESTSIZE+1);
+  apr_base64_encode(cookie->cookie_id, (char*)md5_value, APR_MD5_DIGESTSIZE);
+
+  cookie->cookie_id = chxj_url_encode(r,cookie->cookie_id);
+
+
+  /*
+   * create key
+   */
+
+  dbmkey.dptr  = cookie->cookie_id;
+  dbmkey.dsize = strlen(cookie->cookie_id);
+
+  /*
+   * create val
+   */
+  cookie->cookie_headers = old_cookie->cookie_headers;
+  store_string = apr_palloc(r->pool, 1);
+  store_string[0] = 0;
+  hentryp = (apr_table_entry_t*)cookie->cookie_headers->elts;
+
+  for (ii=0; ii<cookie->cookie_headers->nelts; ii++) {
+    if (ii) store_string = apr_pstrcat(r->pool,
+                               store_string, 
+                               "\n",
+                               NULL);
+
+    store_string = apr_pstrcat(r->pool, 
+                               store_string, 
+                               hentryp[ii].key, 
+                               "=",
+                               hentryp[ii].val, 
+                               NULL);
+  }
+  dbmval.dptr  = store_string;
+  dbmval.dsize = strlen(store_string);
+
+  /*
+   * store to db
+   */
+  retval = apr_dbm_store(f, dbmkey, dbmval);
+  if (retval != APR_SUCCESS) {
+    ERR1(r, "Cannot store Cookie data to DBM file `%s'",
+            chxj_cookie_db_name_create(r, dconf->cookie_db_dir));
+    goto on_error;
+  }
+
+  chxj_save_cookie_expire(r, cookie);
+
+  apr_table_setn(r->headers_in, "CHXJ_COOKIE_ID", cookie->cookie_id);
+
+
+on_error:
+  apr_dbm_close(f);
+  chxj_cookie_db_unlock(r, file);
+
+  DBG(r, "end   chxj_update_cookie()");
   return cookie;
 }
 

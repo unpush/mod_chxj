@@ -291,6 +291,7 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp)
   char*      value;
   char*      pstate;
   char*      vstate;
+  cookie_t*  cookie;
 
   DBG(r, "start chxj_convert_input_header()");
 
@@ -367,7 +368,8 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp)
     else
     if (strcasecmp(name, CHXJ_COOKIE_PARAM) == 0) {
       DBG1(r, "found cookie parameter[%s]", value);
-      chxj_load_cookie(r, value);
+      cookie = chxj_load_cookie(r, value);
+      chxj_update_cookie(r, cookie);
     }
   }
   r->args = result;
@@ -399,6 +401,7 @@ chxj_input_convert(
   char* vstate;
   char* s;
   char* result;
+  cookie_t* cookie;
 
   s = apr_pstrdup(r->pool, *src);
 
@@ -479,7 +482,8 @@ chxj_input_convert(
     else
     if (strcasecmp(name, CHXJ_COOKIE_PARAM) == 0) {
       DBG1(r, "found cookie parameter[%s]", value);
-      chxj_load_cookie(r, value);
+      cookie = chxj_load_cookie(r, value);
+      chxj_update_cookie(r, cookie);
     }
   }
   *len = strlen(result);
