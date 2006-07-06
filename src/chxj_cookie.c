@@ -26,6 +26,7 @@
 #include "apr_uuid.h"
 #include "apr_md5.h"
 #include "apr_base64.h"
+#include "apr_uri.h"
 
 static char* s_get_hostname_from_url(request_rec* r, char* value);
 static char* s_cut_until_end_hostname(request_rec*, char* value);
@@ -55,6 +56,7 @@ chxj_save_cookie(request_rec* r)
   int                 has_cookie = 0;
   cookie_t*           cookie;
   cookie_t*           old_cookie;
+  char*               refer_string;
 
 
   DBG(r, "start chxj_save_cookie()");
@@ -74,6 +76,13 @@ chxj_save_cookie(request_rec* r)
     DBG(r, "end chxj_save_cookie() CookieOff");
     return NULL;
   }
+
+  refer_string = apr_psprintf(r->pool, 
+                              "CHXJ_REFER=%s", 
+                              apr_uri_unparse(r->pool,
+                                              &r->parsed_uri,
+                                              APR_URI_UNP_OMITQUERY));
+  apr_table_setn(r->headers_out, "Set-Cookie", refer_string);
 
 
   headers = (apr_array_header_t*)apr_table_elts(r->headers_out);
