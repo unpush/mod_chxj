@@ -599,13 +599,17 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
             memset(tmp, 0, ctx->len + 1);
             memcpy(tmp, ctx->buffer, ctx->len);
 
+#if 0
             DBG2(r, "input data=[%s] len=[%d]", tmp, ctx->len);
+#endif
 
             ctx->buffer = chxj_exchange(r, 
                                         (const char**)&tmp, 
                                         (apr_size_t*)&ctx->len);
 
+#if 0
             DBG2(r, "output data=[%.*s]", ctx->len,ctx->buffer);
+#endif
           }
           else {
             ctx->buffer = apr_psprintf(r->pool, "\n");
@@ -628,7 +632,10 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
             memset(tmp, 0, ctx->len + 1);
             memcpy(tmp, ctx->buffer, ctx->len);
 
+#if 0
             DBG1(r, "input data=[%s]", tmp);
+#endif
+
 
             ctx->buffer = 
               chxj_exchange_image(r, 
@@ -638,7 +645,9 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
             if (ctx->buffer == NULL)
               ctx->buffer = tmp;
 
+#if 0
             DBG2(r, "output data=[%.*s]", ctx->len,ctx->buffer);
+#endif
           }
         }
 
@@ -1039,6 +1048,51 @@ chxj_translate_name(request_rec *r)
 }
 
 
+static void 
+chxj_insert_filter(request_rec *r)
+{
+  char*               user_agent;
+  device_table*       spec;
+  mod_chxj_config*    dconf;
+  chxjconvrule_entry* entryp;
+DBG(r, "start chxj_insert_filter()");
+
+  dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
+
+  user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
+  spec = chxj_specified_device(r, user_agent);
+  entryp = NULL;
+
+  switch(spec->html_spec_type) {
+  case CHXJ_SPEC_Chtml_1_0:
+  case CHXJ_SPEC_Chtml_2_0:
+  case CHXJ_SPEC_Chtml_3_0:
+  case CHXJ_SPEC_Chtml_4_0:
+  case CHXJ_SPEC_Chtml_5_0:
+  case CHXJ_SPEC_XHtml_Mobile_1_0:
+  case CHXJ_SPEC_Hdml:
+  case CHXJ_SPEC_Jhtml:
+    entryp = chxj_apply_convrule(r, dconf->convrules);
+    break;
+  
+  default:
+    break;
+
+  }
+  if (!entryp) {
+    DBG(r, "end chxj_insert_filter()");
+    return;
+  }
+
+  if (entryp->action & CONVRULE_ENGINE_ON_BIT) {
+    ap_add_input_filter("chxj_input_filter",   NULL, r, r->connection);
+    ap_add_output_filter("chxj_output_filter", NULL, r, r->connection);
+  }
+
+DBG(r, "end   chxj_insert_filter()");
+}
+
+
 /**
  * The hook is registered.
  *
@@ -1065,6 +1119,7 @@ chxj_register_hooks(apr_pool_t *p)
                       chxj_input_filter, 
                       NULL, 
                       AP_FTYPE_RESOURCE);
+  ap_hook_insert_filter(chxj_insert_filter, NULL, NULL, APR_HOOK_MIDDLE);
   ap_hook_handler(chxj_img_conv_format_handler, NULL, NULL, APR_HOOK_MIDDLE);
   ap_hook_handler(chxj_qr_code_handler, NULL, NULL, APR_HOOK_MIDDLE);
   ap_hook_translate_name(chxj_translate_name, NULL, NULL, APR_HOOK_MIDDLE);
