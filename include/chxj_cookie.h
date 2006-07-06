@@ -31,9 +31,9 @@
 #define COOKIE_EXPIRE_DB_LOCK_NAME   "cookie.expire.db.lock"
 
 /* 
- * default cookie timeout is 5 minute
+ * default cookie timeout is 30 minute
  */
-#define DEFAULT_COOKIE_TIMEOUT (300)
+#define DEFAULT_COOKIE_TIMEOUT (1800)
 
 typedef struct cookie_t cookie_t;
 

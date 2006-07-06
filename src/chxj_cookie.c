@@ -249,16 +249,18 @@ chxj_update_cookie(request_rec* r, cookie_t* old_cookie)
   mod_chxj_config*    dconf;
   chxjconvrule_entry* entryp;
   apr_file_t*         file;
-  int                 has_cookie = 0;
   cookie_t*           cookie;
 
 
   DBG(r, "start chxj_update_cookie()");
+  if (!old_cookie || ! old_cookie->cookie_headers || ! old_cookie->cookie_id) {
+    DBG(r, "end chxj_update_cookie() (old_cookie is null)");
+    return  NULL;
+  }
 
   cookie = (cookie_t*)apr_palloc(r->pool, sizeof(cookie_t));
   cookie->cookie_id = NULL;
 
-  has_cookie = 0;
 
   dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
   entryp = chxj_apply_convrule(r, dconf->convrules);
@@ -278,11 +280,6 @@ chxj_update_cookie(request_rec* r, cookie_t* old_cookie)
 
   chxj_delete_cookie(r,        old_cookie->cookie_id);
   chxj_delete_cookie_expire(r, old_cookie->cookie_id);
-
-  if (! has_cookie) {
-    DBG(r, "no cookie");
-    return NULL;
-  }
 
   file = chxj_cookie_db_lock(r);
   if (! file) {
@@ -305,6 +302,7 @@ chxj_update_cookie(request_rec* r, cookie_t* old_cookie)
     chxj_cookie_db_unlock(r, file);
     return NULL;
   }
+  DBG(r, " ");
 
   apr_uuid_get(&uuid);
   uuid_string = apr_palloc(r->pool, APR_UUID_FORMATTED_LENGTH + 1);
@@ -321,6 +319,7 @@ chxj_update_cookie(request_rec* r, cookie_t* old_cookie)
     ERR(r, "md5 failed.");
     goto on_error;
   }
+  DBG(r, " ");
 
   cookie->cookie_id = apr_palloc(r->pool, apr_base64_encode_len(APR_MD5_DIGESTSIZE)+1);
   memset(cookie->cookie_id, 0, APR_MD5_DIGESTSIZE+1);
@@ -328,6 +327,7 @@ chxj_update_cookie(request_rec* r, cookie_t* old_cookie)
 
   cookie->cookie_id = chxj_url_encode(r,cookie->cookie_id);
 
+  DBG(r, " ");
 
   /*
    * create key
@@ -350,6 +350,7 @@ chxj_update_cookie(request_rec* r, cookie_t* old_cookie)
                                "\n",
                                NULL);
 
+    DBG2(r, "OLD COOKIE VALUE=[%s][%s]", hentryp[ii].key, hentryp[ii].val);
     store_string = apr_pstrcat(r->pool, 
                                store_string, 
                                hentryp[ii].key, 
@@ -406,6 +407,10 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
   char*                   val;
   char*                   pair;
 
+  DBG(r, "========================================================");
+  DBG(r, "========================================================");
+  DBG(r, "========================================================");
+  DBG(r, "========================================================");
   DBG1(r, "start chxj_load_cookie() cookie_id=[%s]", cookie_id);
   chxj_cookie_expire_gc(r);
 
@@ -497,6 +502,10 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
   apr_dbm_close(f);
   chxj_cookie_db_unlock(r, file);
   DBG(r, "end   chxj_load_cookie()");
+  DBG(r, "========================================================");
+  DBG(r, "========================================================");
+  DBG(r, "========================================================");
+  DBG(r, "========================================================");
 
   return cookie;
 
@@ -510,6 +519,10 @@ on_error1:
 on_error0:
 
   DBG(r, "end   chxj_load_cookie()");
+  DBG(r, "========================================================");
+  DBG(r, "========================================================");
+  DBG(r, "========================================================");
+  DBG(r, "========================================================");
   return NULL;
 }
 
@@ -522,7 +535,7 @@ chxj_add_cookie_parameter(request_rec* r, char* value, cookie_t* cookie)
 
   DBG1(r, "start chxj_add_cookie_parameter() cookie_id=[%s]", (cookie) ? cookie->cookie_id : NULL);
 
-  dst = value;
+  dst = apr_pstrdup(r->pool, value);
 
   if (!cookie)
     goto on_error;
@@ -534,7 +547,6 @@ chxj_add_cookie_parameter(request_rec* r, char* value, cookie_t* cookie)
     DBG(r, "end chxj_add_cookie_parameter()(check host)");
     goto on_error;
   }
-
 
   qs = strchr(dst, '?');
   if (qs) {
