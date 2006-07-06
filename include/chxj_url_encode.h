@@ -19,13 +19,11 @@
 
 #include "mod_chxj.h"
 
-extern char* 
-chxj_url_encode(
+extern char* chxj_url_encode(
   request_rec* r, 
   const char*  src);
 
-extern char* 
-chxj_url_decode(
+extern char* chxj_url_decode(
   request_rec* r, 
   const char*  src);
 
