@@ -226,15 +226,28 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
     return (char*)*src;
   }
 
+  device_table* spec = chxj_specified_device(r, user_agent);
+
   /*
    * save cookie.
    */
   cookie = NULL;
-  if (entryp->action & CONVRULE_COOKIE_ON_BIT)
-    cookie = chxj_save_cookie(r);
+  if (entryp->action & CONVRULE_COOKIE_ON_BIT) {
+    switch(spec->html_spec_type) {
+    case CHXJ_SPEC_Chtml_1_0:
+    case CHXJ_SPEC_Chtml_2_0:
+    case CHXJ_SPEC_Chtml_3_0:
+    case CHXJ_SPEC_Chtml_4_0:
+    case CHXJ_SPEC_Chtml_5_0:
+    case CHXJ_SPEC_Jhtml:
+      cookie = chxj_save_cookie(r);
+      break;
+    default:
+      break;
+    }
+  }
 
   if (!r->header_only) {
-    device_table* spec = chxj_specified_device(r, user_agent);
 
     tmp = NULL;
     if (convert_routine[spec->html_spec_type].encoder)
@@ -680,8 +693,6 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
           case CHXJ_SPEC_Chtml_3_0:
           case CHXJ_SPEC_Chtml_4_0:
           case CHXJ_SPEC_Chtml_5_0:
-          case CHXJ_SPEC_XHtml_Mobile_1_0:
-          case CHXJ_SPEC_Hdml:
           case CHXJ_SPEC_Jhtml:
 
             cookie = chxj_save_cookie(r);

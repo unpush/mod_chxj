@@ -485,6 +485,7 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
    */
   dbmkey.dptr  = apr_pstrdup(r->pool, cookie->cookie_id);
   dbmkey.dsize = strlen(dbmkey.dptr);
+
   if (apr_dbm_exists(f, dbmkey)) {
   
     retval = apr_dbm_fetch(f, dbmkey, &dbmval);
@@ -534,7 +535,9 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
     cookie->cookie_headers = (apr_array_header_t*)apr_table_elts(load_cookie_table);
 
     if (apr_table_get(r->headers_in, "referer") == NULL) {
-      apr_table_setn(r->headers_in, "referer", apr_table_get(load_cookie_table, REFERER_COOKIE_KEY));
+      apr_table_setn(r->headers_in, 
+                     "referer",
+                     apr_table_get(load_cookie_table, REFERER_COOKIE_KEY));
     }
   
     /*
