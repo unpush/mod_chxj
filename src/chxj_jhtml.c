@@ -2342,10 +2342,14 @@ chxj_istyle_to_mode(request_rec* r, const char* s)
 static char*
 s_jhtml_chxjif_tag(void* pdoc, Node* node)
 {
-  jhtml_t*     jhtml = GET_JHTML(pdoc);
-  Doc*         doc   = jhtml->doc;
+  jhtml_t*     jhtml;
+  Doc*         doc;
   Node*        child;
-  request_rec* r     = doc->r;
+  request_rec* r;
+
+  jhtml = GET_JHTML(pdoc);
+  doc   = jhtml->doc;
+  r     = doc->r;
 
   for (child = qs_get_child_node(doc, node);
        child;

@@ -200,10 +200,10 @@ static MagickWand* s_fixup_depth(MagickWand* magick_wand,
                                  request_rec* r, device_table* spec);
 static MagickWand* s_img_down_sizing(MagickWand* magick_wand, 
                                 request_rec* r, device_table* spec);
-static MagickWand* s_add_copyright(
-                          MagickWand* magick_wand,
-                          request_rec* r,
-                          device_table* spec);
+
+static MagickWand* s_add_copyright(MagickWand*   magick_wand,
+                                   request_rec*  r,
+                                   device_table* spec);
 
 static char* s_create_blob_data(request_rec*          r,
                                 device_table*         spec,
