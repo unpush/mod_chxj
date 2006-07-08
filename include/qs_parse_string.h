@@ -163,8 +163,13 @@ typedef struct _doc {
 /*
  * Prototype Declare
  */
-Node* qs_init_root_node(Doc* doc);
-void qs_add_child_node(Doc* doc, Node*);
+extern Node* qs_init_root_node(
+  Doc* doc);
+
+extern void qs_add_child_node(
+  Doc* doc, 
+  Node*);
+
 void qs_free_node(Doc* doc, Node*);
 Node* qs_get_root(Doc* doc) ;
 Node* qs_parse_string(Doc* doc, const char* ss, int len);

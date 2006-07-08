@@ -1046,14 +1046,12 @@ chxj_qrcode_node_to_qrcode(qr_code_t* qrcode, Node* node)
         continue;
       }
 
-      if (chxj_chk_numeric(value))
-      {
+      if (chxj_chk_numeric(value)) {
         qrcode->version = QR_VER_1;
         continue;
       }
       ver = chxj_atoi(value);
-      if (ver <= 0 || ver > 40)
-      {
+      if (ver <= 0 || ver > 40) {
         qrcode->version = QR_VER_1;
         continue;
       }

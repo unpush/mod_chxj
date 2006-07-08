@@ -2434,9 +2434,13 @@ s_jhtml_end_textarea_tag(void* pdoc, Node* child)
 static char*
 s_jhtml_start_b_tag(void* pdoc, Node* node) 
 {
-  jhtml_t*      jhtml = GET_JHTML(pdoc);
-  Doc*          doc   = jhtml->doc;
-  request_rec*  r     = doc->r;
+  jhtml_t*      jhtml;
+  Doc*          doc;
+  request_rec*  r;
+
+  jhtml = GET_JHTML(pdoc);
+  doc   = jhtml->doc;
+  r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<b>", NULL);
 

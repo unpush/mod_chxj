@@ -227,7 +227,7 @@ chxj_img_conv_format_handler(request_rec* r)
   query_string_param_t* qsp;
   char*                 user_agent;
   device_table*         spec;
-  chxjconvrule_entry* entryp;
+  chxjconvrule_entry*   entryp;
 
   DBG(r, "start chxj_img_conv_format_handler()");
   
