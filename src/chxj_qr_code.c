@@ -1066,10 +1066,9 @@ chxj_qrcode_node_to_qrcode(qr_code_t* qrcode, Node* node)
         qrcode->level = QR_LEVEL_L;
         continue;
       }
-      name = qs_get_node_name(doc, cchild);
+      name  = qs_get_node_name(doc, cchild);
       value = qs_get_node_value(doc, cchild);
-      if (strcasecmp("TEXT", name) != 0)
-      {
+      if (strcasecmp("TEXT", name) != 0) {
         qrcode->level = QR_LEVEL_L;
         continue;
       }
