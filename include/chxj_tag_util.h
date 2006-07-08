@@ -73,8 +73,8 @@ extern char* qs_get_selected_value_text(
   request_rec* r);
 
 extern char* qs_get_selected_value(
-  Doc*  doc, 
-  Node* node,
+  Doc*         doc, 
+  Node*        node,
   request_rec* r);
 
 extern char* qs_alloc_zero_byte_string(request_rec* r);

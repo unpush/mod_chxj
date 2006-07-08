@@ -211,12 +211,11 @@ static char* s_create_blob_data(request_rec*          r,
                                 char*                 indata,
                                 apr_size_t*           len);
 
-static int s_img_conv_format_from_file(
-                request_rec*          r, 
-                mod_chxj_config*      conf, 
-                const char*           user_agent,
-                query_string_param_t* qsp,
-                device_table*         spec);
+static int s_img_conv_format_from_file(request_rec*          r, 
+                                       mod_chxj_config*      conf, 
+                                       const char*           user_agent,
+                                       query_string_param_t* qsp,
+                                       device_table*         spec);
 
 
 

@@ -18,6 +18,6 @@
 #define __QS_MALLOC_H__
 #include "qs_parse_string.h"
 
-void qs_init_malloc(Doc* doc);
-void qs_all_free(Doc* doc, const char* fname, int line);
+extern void qs_init_malloc(Doc* doc);
+extern void qs_all_free(Doc* doc, const char* fname, int line);
 #endif
