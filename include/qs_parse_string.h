@@ -170,7 +170,10 @@ extern void qs_add_child_node(
   Doc* doc, 
   Node*);
 
-void qs_free_node(Doc* doc, Node*);
+extern void qs_free_node(
+  Doc* doc,
+  Node*);
+
 Node* qs_get_root(Doc* doc) ;
 Node* qs_parse_string(Doc* doc, const char* ss, int len);
 char* qs_get_node_value(Doc* doc,Node* node);

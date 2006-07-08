@@ -1059,12 +1059,10 @@ chxj_qrcode_node_to_qrcode(qr_code_t* qrcode, Node* node)
       qrcode->version = ver - 1;
     }
     else
-    if (strcasecmp("level", name) == 0)
-    {
+    if (strcasecmp("level", name) == 0) {
       Node* cchild = qs_get_child_node(doc, child);
       char* value;
-      if (cchild == NULL)
-      {
+      if (cchild == NULL) {
         qrcode->level = QR_LEVEL_L;
         continue;
       }
