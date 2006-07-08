@@ -1037,13 +1037,11 @@ chxj_qrcode_node_to_qrcode(qr_code_t* qrcode, Node* node)
 
       name = qs_get_node_name(doc, cchild);
       value = qs_get_node_value(doc, cchild);
-      if (strcasecmp("TEXT", name) != 0)
-      {
+      if (strcasecmp("TEXT", name) != 0) {
         qrcode->version = QR_VER_1;
         continue;
       }
-      if (value == NULL || strlen(value) == 0)
-      {
+      if (value == NULL || strlen(value) == 0) {
         qrcode->version = QR_VER_1;
         continue;
       }

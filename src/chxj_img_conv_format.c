@@ -218,13 +218,15 @@ static int s_img_conv_format_from_file(
                 query_string_param_t* qsp,
                 device_table*       spec);
 
+
+
 int 
 chxj_img_conv_format_handler(request_rec* r)
 {
   mod_chxj_config*      conf;
   query_string_param_t* qsp;
   char*                 user_agent;
-  device_table*       spec;
+  device_table*         spec;
   chxjconvrule_entry* entryp;
 
   DBG(r, "start chxj_img_conv_format_handler()");

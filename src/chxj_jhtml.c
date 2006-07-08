@@ -2467,15 +2467,19 @@ s_jhtml_end_b_tag(void* pdoc, Node* child)
 static char*
 s_jhtml_text_tag(void* pdoc, Node* child)
 {
-  jhtml_t*     jhtml = GET_JHTML(pdoc);
-  Doc*         doc = jhtml->doc;
+  jhtml_t*     jhtml;
+  Doc*         doc;
   char*        textval;
   char*        tmp;
   char*        tdst;
   char         one_byte[2];
   int          ii;
   int          tdst_len;
-  request_rec* r = doc->r;
+  request_rec* r;
+
+  jhtml = GET_JHTML(pdoc);
+  doc   = jhtml->doc;
+  r     = doc->r;
 
   textval = qs_get_node_value(doc,child);
   textval = qs_trim_string(jhtml->doc->r, textval);

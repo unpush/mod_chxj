@@ -47,12 +47,16 @@ extern char* qs_get_istyle_attr(
   Node*        tag,
   request_rec* r);
 
-extern char* qs_get_maxlength_attr (
+extern char* qs_get_maxlength_attr(
   Doc*         doc, 
   Node*        tag, 
   request_rec* r);
 
-extern char* qs_get_size_attr      (Doc* doc, Node* tag, request_rec* r);
+extern char* qs_get_size_attr(
+  Doc*         doc, 
+  Node*        tag, 
+  request_rec* r);
+
 extern char* qs_get_accesskey_attr (Doc* doc, Node* tag, request_rec* r);
 
 extern int   qs_is_checked_checkbox_attr(Doc* doc, Node* tag, request_rec* r);
