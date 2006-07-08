@@ -1073,8 +1073,7 @@ chxj_qrcode_node_to_qrcode(qr_code_t* qrcode, Node* node)
         continue;
       }
 
-      if (value == NULL || strlen(value) == 0)
-      {
+      if (value == NULL || strlen(value) == 0) {
         qrcode->level = QR_LEVEL_L;
         continue;
       }

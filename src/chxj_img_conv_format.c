@@ -205,11 +205,11 @@ static MagickWand* s_add_copyright(
                           request_rec* r,
                           device_table* spec);
 
-static char* s_create_blob_data(request_rec* r,
-                                device_table* spec,
-                                query_string_param_t *qsp,
-                                char* indata,
-                                apr_size_t* len);
+static char* s_create_blob_data(request_rec*          r,
+                                device_table*         spec,
+                                query_string_param_t* qsp,
+                                char*                 indata,
+                                apr_size_t*           len);
 
 static int s_img_conv_format_from_file(
                 request_rec*          r, 

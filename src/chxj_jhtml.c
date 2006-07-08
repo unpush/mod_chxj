@@ -2434,6 +2434,7 @@ s_jhtml_end_textarea_tag(void* pdoc, Node* child)
   return jhtml->out;
 }
 
+
 /**
  * It is a handler who processes the B tag.
  *
