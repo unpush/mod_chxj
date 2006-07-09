@@ -2667,8 +2667,11 @@ static void
 s_hdml_count_radio_tag(hdml_t* hdml, Node* node) 
 {
   Node*         child;
-  Doc*          doc       = hdml->doc; 
-  request_rec*  r         = doc->r;
+  Doc*          doc; 
+  request_rec*  r;
+
+  doc       = hdml->doc; 
+  r         = doc->r;
 
   /*--------------------------------------------------------------------------*/
   /* All the child nodes of the specified node are scanned.                   */
