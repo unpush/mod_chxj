@@ -176,7 +176,11 @@ extern void qs_free_node(
 
 extern Node* qs_get_root(
   Doc* doc) ;
-Node* qs_parse_string(Doc* doc, const char* ss, int len);
+
+extern Node* qs_parse_string(
+  Doc* doc, 
+  const char* ss, 
+  int len);
 char* qs_get_node_value(Doc* doc,Node* node);
 char* qs_get_node_name(Doc* doc, Node* node) ;
 int qs_get_node_size(Doc* doc, Node* node) ;

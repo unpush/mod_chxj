@@ -109,13 +109,6 @@ ChxjLoadEmojiData   /etc/apache2/chxj/emoji.xml
 #====================================================================================
 ChxjConvertRule "^/chxj.+$" "EngineOn" "NONE"
 
-#====================================================================================
-# 変換させる対象の設定
-#====================================================================================
-&lt;Location /chxj&gt;
-  SetOutputFilter chxj_output_filter
-  SetInputFilter  chxj_input_filter
-&lt;/Location&gt;
 </program>
 </li>
 <li>apacheの再起動。</li>
@@ -151,10 +144,6 @@ ChxjLoadEmojiData   /etc/apache2/chxj/emoji.xml
 #====================================================================================
 ChxjConvertRule "^/chxj.+$" "EngineOn" "EUC-JP"
 
-&lt;Location /chxj&gt;
-  SetOutputFilter chxj_output_filter
-  SetInputFilter  chxj_input_filter
-&lt;/Location&gt;
 </program>
 </li>
 <li>apacheの再起動。</li>
@@ -225,8 +214,6 @@ ChxjConvertRule "^/.+$" "EngineOn" "EUC-JP"
 
 
 &lt;Location /&gt;
-  SetOutputFilter chxj_output_filter
-  SetInputFilter  chxj_input_filter
   ChxjImageEngine On
   AllowOverride All
 &lt;/Location&gt;

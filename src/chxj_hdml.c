@@ -2826,7 +2826,9 @@ s_output_to_hdml_card(hdml_t* hdml, char* s)
 static void
 s_output_to_postdata(hdml_t* hdml, char* s)
 {
-  request_rec*          r = hdml->doc->r;
+  request_rec*          r;
+
+  r = hdml->doc->r;
 
   if (strlen(hdml->postdata[hdml->pure_form_cnt]))
     hdml->postdata[hdml->pure_form_cnt] =

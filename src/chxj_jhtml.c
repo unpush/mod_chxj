@@ -2262,12 +2262,18 @@ s_jhtml_end_option_tag(void* pdoc, Node* child)
 static char*
 s_jhtml_start_div_tag(void* pdoc, Node* child)
 {
-  jhtml_t*     jhtml = GET_JHTML(pdoc);
-  Doc*         doc   = jhtml->doc;
-  request_rec* r     = doc->r;
+  jhtml_t*     jhtml;
+  Doc*         doc;
+  request_rec* r;
   Attr*        attr;
 
-  char* align   = NULL;
+  char*        align;
+
+  jhtml = GET_JHTML(pdoc);
+  doc   = jhtml->doc;
+  r     = doc->r;
+
+  align = NULL;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<div", NULL);
   for (attr = qs_get_attr(doc,child);
