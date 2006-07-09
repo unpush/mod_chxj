@@ -2243,7 +2243,9 @@ s_jhtml_start_option_tag(void* pdoc, Node* child)
 static char*
 s_jhtml_end_option_tag(void* pdoc, Node* child)
 {
-  jhtml_t*  jhtml = GET_JHTML(pdoc);
+  jhtml_t*  jhtml;
+
+  jhtml = GET_JHTML(pdoc);
 
   /* Don't close */
 

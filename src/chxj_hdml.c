@@ -2641,9 +2641,11 @@ qs_out_apr_pstrcat(request_rec* r, char* o, char* s, int* len)
 static char*
 s_get_form_no(request_rec* r, hdml_t* hdml) 
 {
-  char *result;
+  char*          result;
   apr_time_exp_t tm;
-  unsigned long fc = hdml->form_cnt;
+  unsigned long  fc;
+
+  fc = hdml->form_cnt;
 
   apr_time_exp_tz(&tm, hdml->form_cnt, 0);
 
