@@ -43,7 +43,7 @@ static void qs_dump_node(Doc* doc, Node* node, int indent);
 Node*
 qs_parse_string(Doc* doc, const char* src, int srclen) 
 {
-  int ii;
+  int     ii;
   char encoding[256];
   char* osrc;
   char* ibuf;

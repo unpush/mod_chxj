@@ -128,6 +128,7 @@ chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
   entryp = chxj_apply_convrule(r, dconf->convrules);
   if (! entryp->encoding) {
     DBG(r,"none encoding.");
+    DBG(r,"end   chxj_rencoding()");
     return (char*)src;
   }
 

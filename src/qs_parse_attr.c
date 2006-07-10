@@ -176,6 +176,7 @@ qs_new_attr(Doc* doc)
   attr->parent = NULL;
   attr->name   = NULL;
   attr->value  = NULL;
+
   return attr;
 }
 /*

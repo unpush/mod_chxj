@@ -2221,10 +2221,12 @@ s_count_same_module(qr_ver_t ver, char* dst[])
 static int
 s_count_same_block(qr_ver_t ver, char* dst[])
 {
-  int module_count = v_module_count_table[ver];
+  int module_count;
   int point;
   int count;
   int xx,yy;
+
+  module_count = v_module_count_table[ver];
 
   point = 0;
   for (yy = 0; yy < module_count-1; yy++) {

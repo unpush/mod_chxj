@@ -21,5 +21,6 @@
 /*
  * Prototype Declare
  */
-extern Node* qs_parse_file(Doc* doc, const char* filename) ;
+extern Node* qs_parse_file(
+  Doc* doc, const char* filename) ;
 #endif
