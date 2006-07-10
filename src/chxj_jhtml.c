@@ -2007,12 +2007,26 @@ s_jhtml_start_img_tag(void* pdoc, Node* node)
 #ifdef IMG_NOT_CONVERT_FILENAME
       value = chxj_encoding_parameter(r, value);
       value = chxj_add_cookie_parameter(r, value, jhtml->cookie);
+      if (value) {
+        value = apr_psprintf(r->pool,
+                             "%s%c%s=true",
+                             value,
+                             (strchr(value, '?')) ? '&' : '?',
+                             CHXJ_COOKIE_NOUPDATE_PARAM);
+      }
       jhtml->out = apr_pstrcat(r->pool, 
                       jhtml->out, " src=\"",value,"\"", NULL);
 #else
       value = chxj_img_conv(r, spec, value);
       value = chxj_encoding_parameter(r, value);
       value = chxj_add_cookie_parameter(r, value, jhtml->cookie);
+      if (value) {
+        value = apr_psprintf(r->pool,
+                             "%s%c%s=true",
+                             value,
+                             (strchr(value, '?')) ? '&' : '?',
+                             CHXJ_COOKIE_NOUPDATE_PARAM);
+      }
       jhtml->out = apr_pstrcat(r->pool, 
                       jhtml->out, " src=\"", value, NULL);
       jhtml->out = apr_pstrcat(r->pool, jhtml->out, "\"", NULL);

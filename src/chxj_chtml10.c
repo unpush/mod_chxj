@@ -2131,12 +2131,26 @@ s_chtml10_start_img_tag(void* pdoc, Node* node)
 #ifdef IMG_NOT_CONVERT_FILENAME
         value = chxj_encoding_parameter(r, value);
         value = chxj_add_cookie_parameter(r, value, chtml10->cookie);
+        if (value) {
+          value = apr_psprintf(r->pool, 
+                               "%s%c%s=true", 
+                               value, 
+                               (strchr(value, '?')) ? '&' : '?',
+                               CHXJ_COOKIE_NOUPDATE_PARAM);
+        }
         chtml10->out = apr_pstrcat(r->pool, 
                         chtml10->out, " src=\"",value,"\"", NULL);
 #else
         value = chxj_img_conv(r, spec, value);
         value = chxj_encoding_parameter(r, value);
         value = chxj_add_cookie_parameter(r, value, chtml10->cookie);
+        if (value) {
+          value = apr_psprintf(r->pool,
+                               "%s%c%s=true",
+                               value,
+                               (strchr(value, '?')) ? '&' : '?',
+                               CHXJ_COOKIE_NOUPDATE_PARAM);
+        }
         chtml10->out = apr_pstrcat(r->pool, 
                         chtml10->out, " src=\"", 
                         value, 

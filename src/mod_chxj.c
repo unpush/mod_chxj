@@ -297,6 +297,7 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp)
 {
 
   char*      buff;
+  char*      buff_pre;
   apr_size_t urilen;
   char*      result;
   char*      pair;
@@ -305,6 +306,7 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp)
   char*      pstate;
   char*      vstate;
   cookie_t*  cookie;
+  int        no_update_flag = 0;
 
   DBG(r, "start chxj_convert_input_header()");
 
@@ -316,6 +318,27 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp)
   urilen = strlen(r->args);
 
   result = qs_alloc_zero_byte_string(r);
+
+  buff_pre = apr_pstrdup(r->pool, r->args);
+
+  for (;;) {
+    char* pair_sv;
+
+    pair = apr_strtok(buff_pre, "&", &pstate);
+    if (pair == NULL)
+      break;
+
+    buff_pre = NULL;
+
+    pair_sv = apr_pstrdup(r->pool, pair);
+
+    name  = apr_strtok(pair, "=", &vstate);
+    value = apr_strtok(NULL, "=", &vstate);
+    if (strcasecmp(name, CHXJ_COOKIE_NOUPDATE_PARAM) == 0) {
+      DBG(r, "found cookie no update parameter");
+      no_update_flag++;
+    }
+  }
 
   buff = apr_pstrdup(r->pool, r->args);
   DBG1(r, "r->args=[%s]", buff);
@@ -384,10 +407,7 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp)
       DBG(r, "call start chxj_load_cookie()");
       cookie = chxj_load_cookie(r, value);
       DBG(r, "call end   chxj_load_cookie()");
-      if (! strstr(r->uri, ".jpg")  
-      &&  ! strstr(r->uri, ".jpeg")
-      &&  ! strstr(r->uri, ".gif")
-      &&  ! strstr(r->uri, ".png")) {
+      if (! no_update_flag) {
         chxj_update_cookie(r, cookie);
       }
     }
@@ -422,12 +442,34 @@ chxj_input_convert(
   char* s;
   char* result;
   cookie_t* cookie;
+  char* buff_pre;
+  int   no_update_flag = 0;
 
-  s = apr_pstrdup(r->pool, *src);
+  s        = apr_pstrdup(r->pool, *src);
+  buff_pre = apr_pstrdup(r->pool, *src);
 
   result = qs_alloc_zero_byte_string(r);
 
   DBG1(r, "BEFORE input convert source = [%s]", s);
+
+  for (;;) {
+    char* pair_sv;
+
+    pair = apr_strtok(buff_pre, "&", &pstate);
+    if (pair == NULL)
+      break;
+
+    buff_pre = NULL;
+
+    pair_sv = apr_pstrdup(r->pool, pair);
+
+    name  = apr_strtok(pair, "=", &vstate);
+    value = apr_strtok(NULL, "=", &vstate);
+    if (strcasecmp(name, CHXJ_COOKIE_NOUPDATE_PARAM) == 0) {
+      DBG(r, "found cookie no update parameter");
+      no_update_flag++;
+    }
+  }
 
   /* _chxj_dmy */
   /* _chxj_c_ */
@@ -505,7 +547,9 @@ chxj_input_convert(
       DBG(r, "call start chxj_load_cookie()");
       cookie = chxj_load_cookie(r, value);
       DBG(r, "call end   chxj_load_cookie()");
-      chxj_update_cookie(r, cookie);
+      if (! no_update_flag) {
+        chxj_update_cookie(r, cookie);
+      }
     }
   }
   *len = strlen(result);

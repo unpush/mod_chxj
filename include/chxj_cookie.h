@@ -22,6 +22,7 @@
 #include "apr_tables.h"
 
 #define CHXJ_COOKIE_PARAM  "_chxj_cc"
+#define CHXJ_COOKIE_NOUPDATE_PARAM "_chxj_nc"
 
 #define DEFAULT_COOKIE_DB_DIR "/tmp"
 #define COOKIE_DB_NAME        "cookie.db"
