@@ -5,6 +5,7 @@ libapache2-mod-chxj (0.8.0-1) unstable; urgency=low
   * add cookie simulator.
   * To use neither SetOutputFilter nor SetInputFilter, it changes. 
   * add referer header simulator.
+  * When '_ chxj_nc' parameter exists, the cookie is not renewed.
 
  -- Atsushi Konno <konn@users.sourceforge.jp>  Mon, 19 Jun 2006 17:29:48 +0900
 
