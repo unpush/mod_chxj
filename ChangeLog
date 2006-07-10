@@ -6,6 +6,7 @@ libapache2-mod-chxj (0.8.0-1) unstable; urgency=low
   * To use neither SetOutputFilter nor SetInputFilter, it changes. 
   * add referer header simulator.
   * When '_ chxj_nc' parameter exists, the cookie is not renewed. 
+  * The bug that the dynamic qrcode output function doesn't operate is corrected. 
 
  -- Atsushi Konno <konn@users.sourceforge.jp>  Mon, 19 Jun 2006 17:29:48 +0900
 
