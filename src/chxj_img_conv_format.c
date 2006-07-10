@@ -499,138 +499,169 @@ s_create_cache_file(request_rec*       r,
     return HTTP_NOT_FOUND;
   }
 
-  /*
-   * The size of the image is changed.
-   */
-  DBG(r,"call s_fixup_size()");
-
-  if ((magick_wand = s_fixup_size(magick_wand, r, spec, qsp)) == NULL) 
-    return HTTP_NOT_FOUND;
-
-  /*
-   * The colors of the image is changed.
-   */
-  DBG(r,"call s_fixup_color()");
-
-  if ((magick_wand = s_fixup_color(magick_wand, r,spec, mode)) == NULL) 
-    return HTTP_NOT_FOUND;
-
-  /*
-   * DEPTH of the image is changed.
-   */
-  DBG(r,"call s_fixup_depth()");
-
-  if ((magick_wand = s_fixup_depth(magick_wand, r, spec)) == NULL) 
-    return HTTP_NOT_FOUND;
-
-
-
-  DBG(r,"start convert and compression");
-
-  if (spec->available_jpeg) {
-    if (MagickSetImageCompression(magick_wand,JPEGCompression) == MagickFalse) {
-      EXIT_MAGICK_ERROR();
+  if (spec->html_spec_type != CHXJ_SPEC_UNKNOWN) {
+    /*
+     * The size of the image is changed.
+     */
+    DBG(r,"call s_fixup_size()");
+  
+    if ((magick_wand = s_fixup_size(magick_wand, r, spec, qsp)) == NULL) 
       return HTTP_NOT_FOUND;
+  
+    /*
+     * The colors of the image is changed.
+     */
+    DBG(r,"call s_fixup_color()");
+  
+    if ((magick_wand = s_fixup_color(magick_wand, r,spec, mode)) == NULL) 
+      return HTTP_NOT_FOUND;
+  
+    /*
+     * DEPTH of the image is changed.
+     */
+    DBG(r,"call s_fixup_depth()");
+  
+    if ((magick_wand = s_fixup_depth(magick_wand, r, spec)) == NULL) 
+      return HTTP_NOT_FOUND;
+  
+  
+  
+    DBG(r,"start convert and compression");
+  
+    if (spec->available_jpeg) {
+      if (MagickSetImageCompression(magick_wand,JPEGCompression) == MagickFalse) {
+        EXIT_MAGICK_ERROR();
+        return HTTP_NOT_FOUND;
+      }
+  
+      if (MagickSetImageFormat(magick_wand, "jpg") == MagickFalse) {
+        EXIT_MAGICK_ERROR();
+        return HTTP_NOT_FOUND;
+      }
+  
+      if (MagickStripImage(magick_wand) == MagickFalse) {
+        EXIT_MAGICK_ERROR();
+        return HTTP_NOT_FOUND;
+      }
+  
+      if ((magick_wand = s_img_down_sizing(magick_wand, r, spec)) == NULL)
+        return HTTP_NOT_FOUND;
+  
+      r->content_type = apr_psprintf(r->pool, "image/jpeg");
+      DBG(r,"convert to jpg");
     }
-
-    if (MagickSetImageFormat(magick_wand, "jpg") == MagickFalse) {
-      EXIT_MAGICK_ERROR();
-      return HTTP_NOT_FOUND;
+    else
+    if (spec->available_png) {
+  
+      if (MagickSetImageCompression(magick_wand,ZipCompression) == MagickFalse) {
+        EXIT_MAGICK_ERROR();
+        return HTTP_NOT_FOUND;
+      }
+  
+      if (MagickSetImageFormat(magick_wand, "png") == MagickFalse) {
+        EXIT_MAGICK_ERROR();
+        return HTTP_NOT_FOUND;
+      }
+  
+      if (MagickStripImage(magick_wand) == MagickFalse) {
+        EXIT_MAGICK_ERROR();
+        return HTTP_NOT_FOUND;
+      }
+  
+      if ((magick_wand = s_img_down_sizing(magick_wand, r, spec)) == NULL) 
+        return HTTP_NOT_FOUND;
+  
+      r->content_type = apr_psprintf(r->pool, "image/png");
+      DBG(r, "convert to png");
     }
-
-    if (MagickStripImage(magick_wand) == MagickFalse) {
-      EXIT_MAGICK_ERROR();
-      return HTTP_NOT_FOUND;
+    else
+    if (spec->available_gif) {
+  
+      if (MagickSetImageCompression(magick_wand,LZWCompression) == MagickFalse) {
+        EXIT_MAGICK_ERROR();
+        return HTTP_NOT_FOUND;
+      }
+  
+      if (MagickSetImageFormat(magick_wand, "gif") == MagickFalse) {
+        EXIT_MAGICK_ERROR();
+        return HTTP_NOT_FOUND;
+      }
+  
+      if (MagickStripImage(magick_wand) == MagickFalse) {
+        EXIT_MAGICK_ERROR();
+        return HTTP_NOT_FOUND;
+      }
+  
+      if ((magick_wand = s_img_down_sizing(magick_wand, r, spec)) == NULL) 
+        return HTTP_NOT_FOUND;
+  
+      r->content_type = apr_psprintf(r->pool, "image/gif");
+  
+      DBG(r,"convert to gif");
     }
-
-    if ((magick_wand = s_img_down_sizing(magick_wand, r, spec)) == NULL)
+    else
+    if (spec->available_bmp2 || spec->available_bmp4) {
+  
+      if (MagickSetImageCompression(magick_wand,NoCompression) == MagickFalse) {
+        EXIT_MAGICK_ERROR();
+        return HTTP_NOT_FOUND;
+      }
+  
+      if (MagickSetImageFormat(magick_wand, "bmp") == MagickFalse) {
+        EXIT_MAGICK_ERROR();
+        return HTTP_NOT_FOUND;
+      }
+  
+      if (MagickStripImage(magick_wand) == MagickFalse) {
+        EXIT_MAGICK_ERROR();
+        return HTTP_NOT_FOUND;
+      }
+  
+      if ((magick_wand = s_img_down_sizing(magick_wand, r, spec)) == NULL) 
+        return HTTP_NOT_FOUND;
+  
+      r->content_type = apr_psprintf(r->pool, "image/bmp");
+  
+      DBG(r, "convert to bmp(unsupported)");
+    }
+  
+    /*
+     * Add Comment (Copyright and so on.)
+     */
+    DBG(r, "call s_add_copyright()");
+  
+    if ((magick_wand = s_add_copyright(magick_wand, r, spec)) == NULL) 
       return HTTP_NOT_FOUND;
-
-    r->content_type = apr_psprintf(r->pool, "image/jpeg");
-    DBG(r,"convert to jpg");
   }
-  else
-  if (spec->available_png) {
-
-    if (MagickSetImageCompression(magick_wand,ZipCompression) == MagickFalse) {
-      EXIT_MAGICK_ERROR();
-      return HTTP_NOT_FOUND;
+  else {
+    char* fmt;
+    fmt = MagickGetImageFormat(magick_wand);
+    if (fmt == NULL) {
+      if (MagickSetImageFormat(magick_wand, "jpg") == MagickFalse) {
+        EXIT_MAGICK_ERROR();
+        return HTTP_NOT_FOUND;
+      }
+  
+      r->content_type = apr_psprintf(r->pool, "image/jpeg");
     }
-
-    if (MagickSetImageFormat(magick_wand, "png") == MagickFalse) {
-      EXIT_MAGICK_ERROR();
-      return HTTP_NOT_FOUND;
+    else {
+      if (strcasecmp(fmt, "jpg") == 0) {
+        r->content_type = apr_psprintf(r->pool, "image/jpeg");
+      }
+      else
+      if (strcasecmp(fmt, "jpeg") == 0) {
+        r->content_type = apr_psprintf(r->pool, "image/jpeg");
+      }
+      else
+      if (strcasecmp(fmt, "gif") == 0) {
+        r->content_type = apr_psprintf(r->pool, "image/gif");
+      }
+      else
+      if (strcasecmp(fmt, "png") == 0) {
+        r->content_type = apr_psprintf(r->pool, "image/png");
+      }
     }
-
-    if (MagickStripImage(magick_wand) == MagickFalse) {
-      EXIT_MAGICK_ERROR();
-      return HTTP_NOT_FOUND;
-    }
-
-    if ((magick_wand = s_img_down_sizing(magick_wand, r, spec)) == NULL) 
-      return HTTP_NOT_FOUND;
-
-    r->content_type = apr_psprintf(r->pool, "image/png");
-    DBG(r, "convert to png");
   }
-  else
-  if (spec->available_gif) {
-
-    if (MagickSetImageCompression(magick_wand,LZWCompression) == MagickFalse) {
-      EXIT_MAGICK_ERROR();
-      return HTTP_NOT_FOUND;
-    }
-
-    if (MagickSetImageFormat(magick_wand, "gif") == MagickFalse) {
-      EXIT_MAGICK_ERROR();
-      return HTTP_NOT_FOUND;
-    }
-
-    if (MagickStripImage(magick_wand) == MagickFalse) {
-      EXIT_MAGICK_ERROR();
-      return HTTP_NOT_FOUND;
-    }
-
-    if ((magick_wand = s_img_down_sizing(magick_wand, r, spec)) == NULL) 
-      return HTTP_NOT_FOUND;
-
-    r->content_type = apr_psprintf(r->pool, "image/gif");
-
-    DBG(r,"convert to gif");
-  }
-  else
-  if (spec->available_bmp2 || spec->available_bmp4) {
-
-    if (MagickSetImageCompression(magick_wand,NoCompression) == MagickFalse) {
-      EXIT_MAGICK_ERROR();
-      return HTTP_NOT_FOUND;
-    }
-
-    if (MagickSetImageFormat(magick_wand, "bmp") == MagickFalse) {
-      EXIT_MAGICK_ERROR();
-      return HTTP_NOT_FOUND;
-    }
-
-    if (MagickStripImage(magick_wand) == MagickFalse) {
-      EXIT_MAGICK_ERROR();
-      return HTTP_NOT_FOUND;
-    }
-
-    if ((magick_wand = s_img_down_sizing(magick_wand, r, spec)) == NULL) 
-      return HTTP_NOT_FOUND;
-
-    r->content_type = apr_psprintf(r->pool, "image/bmp");
-
-    DBG(r, "convert to bmp(unsupported)");
-  }
-
-  /*
-   * Add Comment (Copyright and so on.)
-   */
-  DBG(r, "call s_add_copyright()");
-
-  if ((magick_wand = s_add_copyright(magick_wand, r, spec)) == NULL) 
-    return HTTP_NOT_FOUND;
 
   writedata = (char*)MagickGetImageBlob(magick_wand, &writebyte);
 
