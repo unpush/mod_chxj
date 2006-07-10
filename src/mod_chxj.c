@@ -381,8 +381,15 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp)
     else
     if (strcasecmp(name, CHXJ_COOKIE_PARAM) == 0) {
       DBG1(r, "found cookie parameter[%s]", value);
+      DBG(r, "call start chxj_load_cookie()");
       cookie = chxj_load_cookie(r, value);
-      chxj_update_cookie(r, cookie);
+      DBG(r, "call end   chxj_load_cookie()");
+      if (! strstr(r->uri, ".jpg")  
+      &&  ! strstr(r->uri, ".jpeg")
+      &&  ! strstr(r->uri, ".gif")
+      &&  ! strstr(r->uri, ".png")) {
+        chxj_update_cookie(r, cookie);
+      }
     }
   }
   r->args = result;
@@ -495,7 +502,9 @@ chxj_input_convert(
     else
     if (strcasecmp(name, CHXJ_COOKIE_PARAM) == 0) {
       DBG1(r, "found cookie parameter[%s]", value);
+      DBG(r, "call start chxj_load_cookie()");
       cookie = chxj_load_cookie(r, value);
+      DBG(r, "call end   chxj_load_cookie()");
       chxj_update_cookie(r, cookie);
     }
   }
