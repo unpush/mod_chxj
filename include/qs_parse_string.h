@@ -184,7 +184,7 @@ extern Node* qs_parse_string(
 
 extern char* qs_get_node_value(Doc* doc,Node* node);
 
-char* qs_get_node_name(Doc* doc, Node* node) ;
+extern char* qs_get_node_name(Doc* doc, Node* node) ;
 int qs_get_node_size(Doc* doc, Node* node) ;
 Node* qs_get_child_node(Doc* doc, Node* node) ;
 Node* qs_get_next_node(Doc* doc, Node* node) ;

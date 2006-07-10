@@ -27,11 +27,11 @@ static char* s_get_tag_name(Doc* doc, const char* s, int len) ;
 Node*
 qs_parse_tag(Doc* doc, const char* s, int len) 
 {
-  Node* node;
-  char *tag_name;
-  char *sp = (char*)s;
-  int ll = len;
-  int next_point = 0;
+  Node*  node;
+  char*  tag_name;
+  char*  sp = (char*)s;
+  int    ll = len;
+  int    next_point = 0;
 
   QX_LOGGER_DEBUG("start parse_tag()");
 

@@ -2245,9 +2245,11 @@ s_count_same_block(qr_ver_t ver, char* dst[])
 static int
 s_count_11311_pattern(qr_ver_t ver, char* dst[])
 {
-  int module_count = v_module_count_table[ver];
+  int module_count;
   int point;
   int xx,yy;
+
+  module_count = v_module_count_table[ver];
 
   point = 0;
   /* 横方向のチェック */

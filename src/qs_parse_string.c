@@ -45,11 +45,14 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
 {
   int ii;
   char encoding[256];
-  char* osrc = NULL;
-  char* ibuf = NULL;
+  char* osrc;
+  char* ibuf;
   int olen;
   int ilen;
   iconv_t cd;
+
+  osrc = NULL;
+  ibuf = NULL;
 
   memset(encoding, 0, 256);
 

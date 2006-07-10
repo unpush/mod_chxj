@@ -31,8 +31,11 @@ qs_parse_attr(Doc* doc, const char*s, int len, int *pos)
   char* name;
   char* value;
   Attr* attr;
-  int   use_quote = 0;
-  int   backslash = 0;
+  int   use_quote;
+  int   backslash;
+
+  use_quote = 0;
+  backslash = 0;
 
   QX_LOGGER_DEBUG("start qs_parse_attr()");
 
