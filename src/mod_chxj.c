@@ -642,6 +642,54 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
 
           }
         }
+        if (r->content_type
+        && *(char*)r->content_type == 't'
+        && strncmp(r->content_type, "text/xml",   8) == 0) {
+          DBG(r, "text/XML");
+
+          Doc       doc;
+          Node*     root;
+          Node*     child;
+          qr_code_t qrcode;
+          int       sts;
+      
+          memset(&doc,    0, sizeof(Doc));
+          memset(&qrcode, 0, sizeof(qr_code_t));
+          doc.r = r;
+          doc.parse_mode  = PARSE_MODE_CHTML;
+          qrcode.doc      = &doc;
+          qrcode.r        = r;
+      
+          qs_init_malloc(&doc);
+      
+          root = qs_parse_string(&doc, ctx->buffer, ctx->len);
+
+          sts = 0;
+          for (child = qs_get_child_node(&doc,root);
+               child ;
+               child = qs_get_next_node(&doc,child)) {
+        
+            char* name;
+        
+            name = qs_get_node_name(&doc,child);
+        
+            if (strcasecmp("qrcode",name) == 0) {
+              sts++;
+              break;
+            }
+          }
+          qs_all_free(&doc,QX_LOGMARK);
+          if (sts) {
+            r->handler = apr_psprintf(r->pool, "chxj-qrcode");
+            chxj_qrcode_node_to_qrcode(&qrcode, root);
+            sts = chxj_qrcode_create_image_data(&qrcode, &ctx->buffer, &ctx->len);
+            if (sts != OK) {
+              ERR(r, "qrcode create failed.");
+              return sts;
+            }
+            r->content_type = apr_psprintf(r->pool, "image/jpg");
+          }
+        }
 
         if (r->content_type 
         && *(char*)r->content_type == 'i' 
@@ -1083,22 +1131,7 @@ DBG(r, "start chxj_insert_filter()");
   spec = chxj_specified_device(r, user_agent);
   entryp = NULL;
 
-  switch(spec->html_spec_type) {
-  case CHXJ_SPEC_Chtml_1_0:
-  case CHXJ_SPEC_Chtml_2_0:
-  case CHXJ_SPEC_Chtml_3_0:
-  case CHXJ_SPEC_Chtml_4_0:
-  case CHXJ_SPEC_Chtml_5_0:
-  case CHXJ_SPEC_XHtml_Mobile_1_0:
-  case CHXJ_SPEC_Hdml:
-  case CHXJ_SPEC_Jhtml:
-    entryp = chxj_apply_convrule(r, dconf->convrules);
-    break;
-  
-  default:
-    break;
-
-  }
+  entryp = chxj_apply_convrule(r, dconf->convrules);
   if (!entryp) {
     DBG(r, "end chxj_insert_filter()");
     return;

@@ -590,9 +590,8 @@ chxj_qr_code_handler(request_rec* r)
   Node*              root;
   mod_chxj_config*   conf;
 
-#ifdef QR_CODE_DEBUG
   DBG(r,"start chxj_qr_code_handler()");
-#endif
+
   if (strcasecmp(r->handler, "chxj-qrcode")) {
     DBG(r, "end chxj_qr_code_handler()");
     return DECLINED;
