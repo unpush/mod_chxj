@@ -2165,11 +2165,14 @@ s_calc_lost_point(qr_code_t* qrcode, char* dst[])
 static int
 s_count_same_module(qr_ver_t ver, char* dst[])
 {
-  int module_count = v_module_count_table[ver];
-  int point = 0;
+  int module_count;
+  int point;
   int xx, yy;
   int same_count = 0;
   int prev_value = -1;
+
+  module_count = v_module_count_table[ver];
+  point        = 0;
 
   /* 横方向でチェック */
   for (yy=0; yy<module_count; yy++) {

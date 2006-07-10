@@ -22,7 +22,7 @@ extern void qs_init_malloc(
   Doc* doc);
 
 extern void qs_all_free(
-  Doc* doc, 
+  Doc*        doc, 
   const char* fname,
   int line);
 #endif

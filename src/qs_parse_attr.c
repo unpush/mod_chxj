@@ -161,6 +161,7 @@ qs_parse_attr(Doc* doc, const char*s, int len, int *pos)
 
   QX_LOGGER_DEBUG("end qs_parse_attr()");
   *pos = ii;
+
   return attr;
 }
 

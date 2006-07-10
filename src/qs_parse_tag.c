@@ -40,7 +40,9 @@ qs_parse_tag(Doc* doc, const char* s, int len)
   QX_LOGGER_DEBUG("start parse_tag()");
 
 
-  /* s[0] == '<' && s[len-1] == '>' */
+  /* 
+   * s[0] == '<' && s[len-1] == '>' 
+   */
   tag_name = (char *)s_get_tag_name(doc, ++s, --ll);
   QX_LOGGER_DEBUG_INT("ll",ll);
 
