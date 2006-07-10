@@ -17,7 +17,7 @@
 #include "mod_chxj.h"
 
 static device_table  UNKNOWN_DEVICE      = {
-    NULL, "","UNKNOWN", CHXJ_SPEC_UNKNOWN,  0,  0,0,0,0,0,0,0,0,0,0,0,0, ""};
+    NULL, "","UNKNOWN", CHXJ_SPEC_UNKNOWN,  640,  480,640,480,0,0,0,0,0,0,0,0,0, ""};
 
 /**
  * The device is specified from UserAgent. 

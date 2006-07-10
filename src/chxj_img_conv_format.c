@@ -244,8 +244,9 @@ chxj_img_conv_format_handler(request_rec* r)
     return DECLINED;
   }
 
-  if (strcasecmp(r->handler, "chxj-qrcode") == 0 &&  conf->image == CHXJ_IMG_OFF) 
+  if (strcasecmp(r->handler, "chxj-qrcode") == 0 &&  conf->image == CHXJ_IMG_OFF) {
     return DECLINED;
+  }
 
 
   /*------------------------------------------------------------------------*/
@@ -277,8 +278,10 @@ chxj_img_conv_format_handler(request_rec* r)
   DBG1(r,"found device_name=[%s]", spec->device_name);
   DBG1(r,"User-Agent=[%s]", user_agent);
 
+#if 0
   if (spec->width == 0 || spec->heigh == 0)
     return DECLINED;
+#endif
 
   return s_img_conv_format_from_file(r, conf, user_agent, qsp, spec);
 }
