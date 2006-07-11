@@ -905,6 +905,8 @@ httpd.confに以下の記述を追加します。
       $size    = $_POST["size"];
       $data    = $_POST["data"];
 
+      header("Content-Type: text/xml; charset=Shift_JIS");
+
       echo "&lt;qrcode&gt;\n";
       echo "&lt;version&gt;".$version."&lt;/version&gt;\n";
       echo "&lt;level&gt;".$level."&lt;/level&gt;\n";
@@ -914,10 +916,7 @@ httpd.confに以下の記述を追加します。
       echo "&lt;/qrcode&gt;\n";
     &gt;
   </program>
-  そして、上記のコードを、OutputFilterを通るところに設置すれば完了です。
-  なお、OutputFilterを通る場合は、画像変換エンジンも動作してしまうため、使用するクライアントのUser-Agentを定義するか、もしくは、
-  ua=IGNを指定して、リクエストしなければなりません。（もちろん、画像変換エンジンをそのまま使用する場合は何もしないでいいです。）
-  
+  そして、上記のコードを、mod_chxj変換エンジンが処理するはずであるところに設置すれば完了です。
   
 </subsection>
 </section>
@@ -927,6 +926,17 @@ httpd.confに以下の記述を追加します。
   
   <program title="Cookieシミュレート機能を有効にする例">
     ChxjConvertRule "^/chxj.+$" "EngineOn,CookieOn" "NONE"
+  </program>
+
+</subsection>
+<subsection title="One-Time ID">
+Cookieシミュレートでは、aタグ、imgタグ、formタグのURL部にOne-Time IDを埋め込むことで実現します。
+そのため、ユーザがブラウザの戻るボタン等で戻った場合はCookieを取得できなくなります。
+</subsection>
+<subsection title="Cookieの保存場所">
+Cookieの内容は、サーバ側に保存されます。保存ディレクトリはChxjCookieDirディレクティブを使用することで指定することができます。指定しなかった場合は、/tmpに保存されます。
+  <program title="ChxjCookieDirの例">
+    ChxjCookieDir /var/abc
   </program>
 </subsection>
 </section>

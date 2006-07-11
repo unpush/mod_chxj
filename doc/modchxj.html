@@ -738,6 +738,8 @@ function setOHPHandler() {
 <li> <a href="#doc1_1257" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">Cookieシミュレート機能(EXPERIMENTAL)</a>
 <ul>
 <li> <a href="#doc1_1259" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">Cookieシミュレート機能(EXPERIMENTAL)</a>
+<li> <a href="#doc1_1265" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">One-Time ID</a>
+<li> <a href="#doc1_1268" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">Cookieの保存場所</a>
 </ul>
 </ul>
 </div>
@@ -1644,6 +1646,8 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
       $size    = $_POST[&quot;size&quot;];
       $data    = $_POST[&quot;data&quot;];
 
+      header(&quot;Content-Type: text/xml; charset=Shift_JIS&quot;);
+
       echo &quot;&lt;qrcode&gt;\n&quot;;
       echo &quot;&lt;version&gt;&quot;.$version.&quot;&lt;/version&gt;\n&quot;;
       echo &quot;&lt;level&gt;&quot;.$level.&quot;&lt;/level&gt;\n&quot;;
@@ -1655,7 +1659,7 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
   
 </pre>
 
-<p>そして、上記のコードを、OutputFilterを通るところに設置すれば完了です。なお、OutputFilterを通る場合は、画像変換エンジンも動作してしまうため、使用するクライアントのUser-Agentを定義するか、もしくは、ua=IGNを指定して、リクエストしなければなりません。（もちろん、画像変換エンジンをそのまま使用する場合は何もしないでいいです。）</p>
+<p>そして、上記のコードを、mod_chxj変換エンジンが処理するはずであるところに設置すれば完了です。</p>
 
 <h2 id="doc1_1257">Cookieシミュレート機能(EXPERIMENTAL)</h2>
 
@@ -1667,6 +1671,21 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 <div id="doc1_1261" class="caption">Cookieシミュレート機能を有効にする例</div>
 <pre class="program" style="margin-top:0">
     ChxjConvertRule &quot;^/chxj.+$&quot; &quot;EngineOn,CookieOn&quot; &quot;NONE&quot;
+  
+</pre>
+
+
+<h3 id="doc1_1265">One-Time ID</h3>
+
+<p class="first_ja">Cookieシミュレートでは、aタグ、imgタグ、formタグのURL部にOne-Time IDを埋め込むことで実現します。そのため、ユーザがブラウザの戻るボタン等で戻った場合はCookieを取得できなくなります。</p>
+
+<h3 id="doc1_1268">Cookieの保存場所</h3>
+
+<p class="first_ja">Cookieの内容は、サーバ側に保存されます。保存ディレクトリはChxjCookieDirディレクティブを使用することで指定することができます。指定しなかった場合は、/tmpに保存されます。</p>
+
+<div id="doc1_1270" class="caption">ChxjCookieDirの例</div>
+<pre class="program" style="margin-top:0">
+    ChxjCookieDir /var/abc
   
 </pre>
 
