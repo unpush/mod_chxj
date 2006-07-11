@@ -939,6 +939,15 @@ Cookieд╬╞т═╞д╧бве╡б╝е╨┬жд╦╩▌┬╕д╡дьд▐д╣бг╩▌┬╕е╟егеьепе╚еъд╧ChxjCookieDirе╟егеьепе
     ChxjCookieDir /var/abc
   </program>
 </subsection>
+<subsection title="Cookieд╬╩▌╗¤┤№┤╓">
+ChxjCookieTimeoutе╟егеьепе╞еге╓д╟╩▌╗¤┤№┤╓дЄ╗╪─ъд╣дыд│д╚дмд╟днд▐д╣бг╗╪─ъд╖д╩длд├д┐╛ь╣чд╧1800╔├д╟е╡б╝е╨д╦╩▌┬╕д╡дьд╞дддыCookieд╧║я╜№д╡дьд▐д╣бг
+  <program title="ChxjCookieTimeoutд╬╬у">
+    &lt;Location /&gt;
+      ChxjCookieTimeout 10
+    &lt;/Location&gt;
+  </program>
+  ╛х╡нд╬╬уд╧бв10╔├д╟е┐едеревеже╚(е╡б╝е╨длдщ║я╜№)д╣дыдшджд╦╗╪─ъд╖д╞ддд▐д╣бг
+</subsection>
 </section>
 
 
