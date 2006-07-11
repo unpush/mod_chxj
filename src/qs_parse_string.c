@@ -255,6 +255,7 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
   return doc->root_node;
 }
 
+
 static void
 qs_dump_node(Doc* doc, Node* node, int indent) 
 {

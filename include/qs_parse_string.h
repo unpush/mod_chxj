@@ -186,7 +186,8 @@ extern char* qs_get_node_value(
   Doc*  doc,
   Node* node);
 
-extern char* qs_get_node_name(Doc* doc, Node* node) ;
+extern char* qs_get_node_name(
+  Doc* doc, Node* node) ;
 
 extern int qs_get_node_size(Doc* doc, Node* node) ;
 Node* qs_get_child_node(Doc* doc, Node* node) ;

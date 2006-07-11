@@ -39,7 +39,7 @@ qs_ignore_sp(Doc* doc, const char* s, int len)
 int
 qs_ignore_sp_and_quote(Doc* doc, const char* s, int len) 
 {
-  int ii;
+  int   ii;
   char* sp = (char*)s;
 
   for(ii=0;
