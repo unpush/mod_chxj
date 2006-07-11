@@ -25,4 +25,5 @@ extern void qs_all_free(
   Doc*        doc, 
   const char* fname,
   int line);
+
 #endif

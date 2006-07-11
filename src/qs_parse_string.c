@@ -81,12 +81,18 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
           if ((*parse_attr->name == 'e' || *parse_attr->name == 'E')
           &&   strcasecmp(parse_attr->name, "encoding") == 0) {
             switch (*parse_attr->value) {
+            case 'X':
+            case 'x':
+              if (strcasecmp(parse_attr->value, "x-sjis"   ) == 0) {
+                strcpy((char*)encoding, (char*)"NONE");
+              }
+              break;
+
             case 'S':
             case 's':
               if ((strcasecmp(parse_attr->value, "Shift_JIS") == 0)
-              ||  (strcasecmp(parse_attr->value, "sjis"     ) == 0)
-              ||  (strcasecmp(parse_attr->value, "Shift-JIS") == 0)
-              ||  (strcasecmp(parse_attr->value, "x-sjis"   ) == 0)) {
+              ||  (strcasecmp(parse_attr->value, "SJIS"     ) == 0)
+              ||  (strcasecmp(parse_attr->value, "Shift-JIS") == 0)) {
                 strcpy((char*)encoding, (char*)"NONE");
               }
               break;

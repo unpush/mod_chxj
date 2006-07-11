@@ -2168,11 +2168,13 @@ s_count_same_module(qr_ver_t ver, char* dst[])
   int module_count;
   int point;
   int xx, yy;
-  int same_count = 0;
-  int prev_value = -1;
+  int same_count;
+  int prev_value;
 
   module_count = v_module_count_table[ver];
   point        = 0;
+  same_count   = 0;
+  prev_value   = -1;
 
   /* 横方向でチェック */
   for (yy=0; yy<module_count; yy++) {

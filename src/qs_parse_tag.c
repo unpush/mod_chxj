@@ -44,7 +44,6 @@ qs_parse_tag(Doc* doc, const char* s, int len)
    * s[0] == '<' && s[len-1] == '>' 
    */
   tag_name = (char *)s_get_tag_name(doc, ++s, --ll);
-  QX_LOGGER_DEBUG_INT("ll",ll);
 
   node = (Node*)qs_new_tag(doc);
   node->name = tag_name;

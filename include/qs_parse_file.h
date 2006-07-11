@@ -23,5 +23,6 @@
  */
 extern Node* qs_parse_file(
   Doc* doc, 
-  const char* filename) ;
+  const char* filename);
+
 #endif
