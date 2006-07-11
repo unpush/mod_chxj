@@ -1540,7 +1540,7 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 
 <h2 id="doc1_1157">デバイス定義 device_data.xml</h2>
 
-<p class="first_ja">mod_chxjの動作を決定付ける重要な定義です。変換対象の端末は全て、device_data.xmlファイルに定義される必要があります。定義されていない端末は、mod_chxjとしては、認識することができません。認識できない場合には、ＣＨＴＭＬをそのまま出力します。</p>
+<p class="first_ja">mod_chxjの動作を決定付ける重要な定義です。変換対象の端末は全て、device_data.xmlファイルに定義される必要があります。定義されていない端末は、mod_chxjとしては、認識することができません。認識できない場合には、変換せずにそのまま出力します。ただし、Perl互換の正規表現によって定義できるため、正規表現の書き方によっては全ての機種に対応させることも可能です。</p>
 
 <h2 id="doc1_1160">イメージ画像変換機能</h2>
 
