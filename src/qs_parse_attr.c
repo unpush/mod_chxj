@@ -88,6 +88,7 @@ qs_parse_attr(Doc* doc, const char*s, int len, int *pos)
 
   size = 0;
   if (!novalue) {
+
     /* 
      * ignore space
      */

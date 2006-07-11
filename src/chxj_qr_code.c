@@ -2181,15 +2181,14 @@ s_count_same_module(qr_ver_t ver, char* dst[])
     prev_value = -1;
     same_count = 0;
     for (xx=0; xx<module_count; xx++) {
-      if (prev_value == (unsigned char)dst[yy][xx]) {
+      if (prev_value == (unsigned char)dst[yy][xx])
         same_count++;
-      }
-      else {
+      else
         same_count = 0;
-      }
-      if (same_count >= 5) {
+
+      if (same_count >= 5) 
         point++;
-      }
+
       prev_value = (unsigned char)dst[yy][xx];
     }
   }

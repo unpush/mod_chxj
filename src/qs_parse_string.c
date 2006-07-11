@@ -57,6 +57,7 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
   memset(encoding, 0, 256);
 
   doc->now_parent_node = qs_init_root_node(doc);
+
   /* 
    * It is the pre reading. 
    * Because I want to specify encoding.
@@ -198,9 +199,7 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
         if (node->name[0] == '/')
           continue;
       }
-#ifdef DEBUG
-      QX_LOGGER_DEBUG("return from qs_add_child_node()");
-#endif
+
       if (doc->parse_mode == PARSE_MODE_CHTML && 
       (*node->name == 'c' || *node->name == 'C') &&
       strcasecmp(node->name, "chxj:if") == 0) {

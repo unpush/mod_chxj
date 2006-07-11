@@ -68,7 +68,9 @@ s_set_devices_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node)
        child ; 
        child = qs_get_next_node(doc,child)) {
 
-    char* name = qs_get_node_name(doc,child);
+    char* name;
+
+    name = qs_get_node_name(doc,child);
 
     if ((*name == 'd' || *name == 'D') && strcasecmp(name, "devices") == 0)
       s_set_user_agent_data(doc, p, conf, child);
@@ -81,7 +83,7 @@ s_set_devices_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node)
 static void
 s_set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node) 
 {
-  Node* child;
+  Node*              child;
   device_table_list* t;
 
   for (child = qs_get_child_node(doc,node);

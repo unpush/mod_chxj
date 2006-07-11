@@ -138,6 +138,7 @@ qs_add_attr(Doc* doc, Node* node, Attr* attr)
 
   attr->parent = node;
   attr->next   = NULL;
+
   if (node->attr == NULL) {
     node->attr      = attr;
     node->attr_tail = attr;
