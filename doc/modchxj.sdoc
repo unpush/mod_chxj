@@ -895,7 +895,7 @@ httpd.confに以下の記述を追加します。
 </ol>
 </subsection>
 <subsection title="ＱＲコードの動的出力機能">
-  プログラム等を使用し、動的にＱＲコードを出力したい場合は、上記の.qrcファイルの内容をそのままOutputFilterに通してあげればＯＫです。
+  プログラム等を使用し、動的にＱＲコードを出力したい場合は、上記の.qrcファイルの内容をそのままOutputFilterに通してあげればＯＫです。つまり、ChxjConvertRuleディレクティブで"EngineOn"と指定したURIが指すディレクトリに設置すれば良いということです。mod_chxj内部で、Content-Typeがtext/xmlの場合、QRCode用のファイルであるかどうかを一度読み込んで判断するので、Content-Typeには、text/xmlを設定してください。
 
   <program title="phpでＱＲコードを動的に出力する例">
     &lt;php

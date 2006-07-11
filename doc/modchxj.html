@@ -1639,7 +1639,7 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 
 <h3 id="doc1_1250">ＱＲコードの動的出力機能</h3>
 
-<p class="first_ja">プログラム等を使用し、動的にＱＲコードを出力したい場合は、上記の.qrcファイルの内容をそのままOutputFilterに通してあげればＯＫです。</p>
+<p class="first_ja">プログラム等を使用し、動的にＱＲコードを出力したい場合は、上記の.qrcファイルの内容をそのままOutputFilterに通してあげればＯＫです。つまり、ChxjConvertRuleディレクティブで&quot;EngineOn&quot;と指定したURIが指すディレクトリに設置すれば良いということです。mod_chxj内部で、Content-Typeがtext/xmlの場合、QRCode用のファイルであるかどうかを一度読み込んで判断するので、Content-Typeには、text/xmlを設定してください。</p>
 
 <div id="doc1_1252" class="caption">phpでＱＲコードを動的に出力する例</div>
 <pre class="program" style="margin-top:0">
