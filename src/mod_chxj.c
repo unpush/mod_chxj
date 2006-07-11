@@ -58,6 +58,7 @@
 #include "chxj_apply_convrule.h"
 #include "chxj_cookie.h"
 #include "chxj_url_encode.h"
+#include "chxj_str_util.h"
 
 
 #define CHXJ_VERSION_PREFIX PACKAGE_NAME "/"
@@ -1766,6 +1767,19 @@ cmd_set_cookie_timeout(
   void*       mconfig, 
   const char* arg)
 {
+  mod_chxj_config*    dconf;
+
+
+  if (strlen(arg) > 4096) 
+    return "mod_chxj: ChxjCookieTimeout is too long.";
+
+  if (chxj_chk_numeric(arg) != 0)
+    return "mod_chxj: ChxjCookieTimeout is not numeric.";
+
+  dconf = (mod_chxj_config*)mconfig;
+
+  dconf->cookie_timeout = atoi(arg);
+
   return NULL;
 }
 
