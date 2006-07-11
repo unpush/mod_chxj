@@ -403,6 +403,22 @@ ChxjConvRule "^/chxj.+$" "EngineOn" "EUC-JP"
     ChxjConvertRule "^/chxj.+$/" EngineOn EUC-JP
   </program> 
   </li>
+  <li>ChxjCookieDir<br />
+    クッキーを使用する場合に指定します。クッキーの内容を保存するディレクトリを指定します。
+    指定しない場合は/tmpに保存されます。
+  <program title="ex)">
+    ChxjCookieDir   /tmp
+  </program> 
+  詳細は「Cookieシミュレート機能」の項を参照ください。
+  </li>
+  <li>ChxjCookieTimeout<br />
+    クッキーを使用する場合に指定します。クッキーの保持期間を秒単位で指定します。
+    指定しない場合は、1800秒でクッキーデータを破棄します。
+  <program title="ex)">
+    ChxjCookieTimeout 10
+  </program> 
+  詳細は「Cookieシミュレート機能」の項を参照ください。
+  </li>
 </ol>
 </subsection>
 </section>
