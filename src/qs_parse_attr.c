@@ -166,10 +166,14 @@ qs_parse_attr(Doc* doc, const char*s, int len, int *pos)
 Attr*
 qs_new_attr(Doc* doc) 
 {
-  Attr* attr = (Attr*)apr_palloc(doc->pool,sizeof(Attr));
+  Attr* attr;
+
+  attr = (Attr*)apr_palloc(doc->pool,sizeof(Attr));
+
   if (attr == NULL) {
     QX_LOGGER_FATAL("Out Of Memory");
   }
+
   attr->next   = NULL;
   attr->parent = NULL;
   attr->name   = NULL;

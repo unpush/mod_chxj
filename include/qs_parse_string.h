@@ -183,7 +183,8 @@ extern Node* qs_parse_string(
   int         len);
 
 extern char* qs_get_node_value(
-  Doc* doc,Node* node);
+  Doc* doc,
+  Node* node);
 
 extern char* qs_get_node_name(Doc* doc, Node* node) ;
 

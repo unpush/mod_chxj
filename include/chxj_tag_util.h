@@ -86,8 +86,8 @@ extern char* qs_trim_string(
 
 extern int   chxj_chxjif_is_mine(
   device_table* spec, 
-  Doc* doc, 
-  Node* tag);
+  Doc*          doc, 
+  Node*         tag);
 
 extern char* qs_get_destlang_attr(Doc* doc, Node* tag, request_rec* r);
 

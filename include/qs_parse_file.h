@@ -22,7 +22,7 @@
  * Prototype Declare
  */
 extern Node* qs_parse_file(
-  Doc* doc, 
+  Doc*        doc, 
   const char* filename);
 
 #endif

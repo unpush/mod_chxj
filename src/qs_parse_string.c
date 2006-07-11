@@ -44,11 +44,11 @@ Node*
 qs_parse_string(Doc* doc, const char* src, int srclen) 
 {
   int     ii;
-  char encoding[256];
-  char* osrc;
-  char* ibuf;
-  int olen;
-  int ilen;
+  char    encoding[256];
+  char*   osrc;
+  char*   ibuf;
+  int     olen;
+  int     ilen;
   iconv_t cd;
 
   osrc = NULL;

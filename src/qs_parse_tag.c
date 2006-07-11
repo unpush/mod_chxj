@@ -133,9 +133,8 @@ qs_new_tag(Doc* doc)
 Node*
 qs_add_attr(Doc* doc, Node* node, Attr* attr) 
 {
-  if (node == NULL) {
+  if (node == NULL)
     QX_LOGGER_FATAL("qs_add_attr() node is null");
-  }
 
   attr->parent = node;
   attr->next   = NULL;
