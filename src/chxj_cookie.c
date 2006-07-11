@@ -1101,9 +1101,9 @@ chxj_cookie_expire_gc(request_rec* r)
       if (dconf->cookie_timeout == 0)
         cmp_time = now_time - DEFAULT_COOKIE_TIMEOUT;
       else
-        cmp_time = now_time - (dconf->cookie_timeout * 60);
+        cmp_time = now_time - dconf->cookie_timeout;
 
-      DBG2(r, "key=[%.*s]", dbmkey.dsize, dbmkey.dptr);
+      DBG4(r, "key=[%.*s] cmp_time=[%d] val_time=[%d]", dbmkey.dsize, dbmkey.dptr, cmp_time, val_time);
       if (cmp_time >= val_time) {
         apr_dbm_delete(f, dbmkey);
 
