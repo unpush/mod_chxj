@@ -1762,9 +1762,9 @@ cmd_set_cookie_dir(
 
 static const char*
 cmd_set_cookie_timeout(
-  cmd_parms *cmd, 
-  void* mconfig, 
-  const char *arg)
+  cmd_parms*  cmd, 
+  void*       mconfig, 
+  const char* arg)
 {
   return NULL;
 }
