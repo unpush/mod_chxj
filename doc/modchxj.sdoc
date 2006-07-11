@@ -13,7 +13,7 @@
 mod_chxjはオープンソースの携帯向けコンテンツ変換Apache2.0用モジュールであり、
 CHTML（DoCoMo i-Mode用 CHTML3.0)で記述された文書や通常のHTMLで記述された文書を、アクセスに来た端末のUser-Agentヘッダを見て、それぞれの端末にあった形式に変換します。
 HTML文書に限らず、画像（jpg、gif、png）、絵文字についても、定義ファイルに従ってそれぞれのキャリアにあった絵文字に変換します。
-Cookie非対応端末のために、Set-Cookie、Cookieヘッダをシミュレートすることもできます（EXPERIMENTAL)。
+Cookie非対応端末、Refer非対応端末のために、Set-Cookie、CookieヘッダやRefererヘッダをシミュレートすることもできます（EXPERIMENTAL)。
 
 
 </section>
@@ -48,6 +48,7 @@ $ ./configure --with-apache-header=/usr/include/apache2.0
 </program>
 <note>--with-apache-headerは必須です。</note>
 <note>FreeBSD等の場合は--with-iconvも必須です。</note>
+<note>場合によっては--with-aprや--with-apuも必要です。</note>
 </li>
 <li>mod_chxj.soを生成します
 <program title="make">
