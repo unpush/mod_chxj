@@ -20,7 +20,8 @@
 
 extern Node* qs_parse_tag(Doc* doc, const char* s, int len) ;
 extern Node* qs_new_tag(Doc* doc);
-Node* qs_add_attr(Doc* doc, Node* node, Attr* attr);
+extern Node* qs_add_attr(Doc* doc, Node* node, Attr* attr);
+
 #endif
 /*
  * vim:ts=2 et
