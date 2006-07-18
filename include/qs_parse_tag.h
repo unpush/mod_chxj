@@ -16,6 +16,7 @@
  */
 #ifndef __QS_PARSE_TAG_H__
 #define __QS_PARSE_TAG_H__
+
 #include "qs_parse_string.h"
 
 extern Node* qs_parse_tag(Doc* doc, const char* s, int len) ;

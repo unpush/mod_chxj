@@ -16,6 +16,7 @@
  */
 #ifndef __QS_PARSE_STRING_H__
 #define __QS_PARSE_STRING_H__
+
 #include <httpd.h>
 
 /*
@@ -192,7 +193,7 @@ extern char* qs_get_node_name(
 
 extern int qs_get_node_size(Doc* doc, Node* node) ;
 
-Node* qs_get_child_node(Doc* doc, Node* node) ;
+extern Node* qs_get_child_node(Doc* doc, Node* node) ;
 Node* qs_get_next_node(Doc* doc, Node* node) ;
 Attr* qs_get_attr(Doc* doc, Node* node) ;
 Attr* qs_get_next_attr(Doc* doc, Attr* attr) ;

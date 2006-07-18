@@ -89,9 +89,9 @@ struct hdml_t {
 
   int     hdml_end_flag;
 
-  device_table* spec;
+  device_table*       spec;
 
-  mod_chxj_config*  conf;
+  mod_chxj_config*    conf;
 
   chxjconvrule_entry* entryp;
   cookie_t*           cookie;

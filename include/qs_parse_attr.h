@@ -16,6 +16,7 @@
  */
 #ifndef __QS_PARSE_ATTR_H__
 #define __QS_PARSE_ATTR_H__
+
 #include "qs_parse_string.h"
 
 extern Attr* qs_parse_attr(
