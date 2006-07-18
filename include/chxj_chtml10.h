@@ -50,4 +50,5 @@ extern char* chxj_exchange_chtml10(
   apr_size_t*         dstlen, 
   chxjconvrule_entry* entryp, 
   cookie_t*           cookie);
+
 #endif

@@ -91,9 +91,13 @@ extern int   chxj_chxjif_is_mine(
 
 extern char* qs_get_destlang_attr(
   Doc* doc, 
-  Node* tag, request_rec* r);
+  Node* tag, 
+  request_rec* r);
 
-extern char* qs_get_parse_attr(Doc* doc, Node* tag, request_rec* r);
+extern char* qs_get_parse_attr(
+  Doc*         doc, 
+  Node*        tag, 
+  request_rec* r);
 
 #endif
 /*

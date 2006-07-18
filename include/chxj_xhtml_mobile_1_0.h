@@ -23,6 +23,7 @@
 /* Structure for HDML                                                         */
 /*----------------------------------------------------------------------------*/
 typedef struct xhtml_t xhtml_t;
+
 struct xhtml_t {
     Doc*                doc;
     char*               out;

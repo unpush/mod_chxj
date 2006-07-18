@@ -18,7 +18,7 @@
 #define __MOD_CHXJ_H__
 
 #if !defined(OS2) && !defined(WIN32) && !defined(BEOS) && !defined(NETWARE)
-#define AP_NEED_SET_MUTEX_PERMS
+#  define AP_NEED_SET_MUTEX_PERMS
 #endif
 
 
@@ -348,12 +348,12 @@ module AP_MODULE_DECLARE_DATA chxj_module;
 #define SERR2(X,Y,Za,Zb)  ap_log_error(APLOG_MARK,APLOG_ERR,0,(X),(Y),(Za),(Zb))
 
 extern tag_handlers chxj_tag_handlers[];
-extern tag_handler chtml10_handler[];
-extern tag_handler chtml20_handler[];
-extern tag_handler chtml30_handler[];
-extern tag_handler xhtml_handler[];
-extern tag_handler hdml_handler[];
-extern tag_handler jhtml_handler[];
+extern tag_handler  chtml10_handler[];
+extern tag_handler  chtml20_handler[];
+extern tag_handler  chtml30_handler[];
+extern tag_handler  xhtml_handler[];
+extern tag_handler  hdml_handler[];
+extern tag_handler  jhtml_handler[];
 
 extern char* chxj_node_exchange( 
   device_table* spec,

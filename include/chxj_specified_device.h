@@ -104,7 +104,7 @@ struct converter_t {
                      const char*                 src, 
                      apr_size_t                  srclen, 
                      apr_size_t*                 dstlen,
-                     struct chxjconvrule_entry* entryp,
+                     struct chxjconvrule_entry*  entryp,
                      cookie_t*                   cookie);
 
   char* (*encoder)(request_rec* r,

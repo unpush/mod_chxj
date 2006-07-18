@@ -20,11 +20,11 @@
 /*============================================================================*/
 /* The maximum number of form is up to ten.                                   */
 /*============================================================================*/
-#define MAX_FORM_COUNT  (10)
-#define MAX_RADIO_COUNT (10)
-#define MAX_RADIO_VALUE_COUNT (100)
-#define MAX_SUBMIT_BUTTON_COUNT (10)
-#define END_LINE        "\0"
+#define MAX_FORM_COUNT           (10)
+#define MAX_RADIO_COUNT          (10)
+#define MAX_RADIO_VALUE_COUNT    (100)
+#define MAX_SUBMIT_BUTTON_COUNT  (10)
+#define END_LINE                 "\0"
 
 #include "mod_chxj.h"
 #include "chxj_cookie.h"
@@ -89,9 +89,9 @@ struct hdml_t {
 
   int     hdml_end_flag;
 
-  device_table* spec;
+  device_table*       spec;
 
-  mod_chxj_config*  conf;
+  mod_chxj_config*    conf;
 
   chxjconvrule_entry* entryp;
   cookie_t*           cookie;
