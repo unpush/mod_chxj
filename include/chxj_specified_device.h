@@ -90,9 +90,9 @@ struct device_table_list_t {
   struct device_table_list_t* next;
 
   char*                       pattern;
-  ap_regex_t*   regexp;
-  device_table* table;
-  device_table* tail;
+  ap_regex_t*                 regexp;
+  device_table*               table;
+  device_table*               tail;
 };
 
 typedef struct converter_t converter_t;
@@ -115,7 +115,7 @@ struct converter_t {
 extern converter_t convert_routine[];
 
 extern device_table* chxj_specified_device(
-  request_rec* r, 
-  const char*  user_agent);
+  request_rec*          r, 
+  const char*           user_agent);
 
 #endif

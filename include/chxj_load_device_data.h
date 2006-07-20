@@ -20,8 +20,8 @@
 #include "mod_chxj.h"
 
 extern void chxj_load_device_data(
-  Doc*             doc, 
-  apr_pool_t*      p, 
-  mod_chxj_config* conf);
+  Doc*                   doc, 
+  apr_pool_t*            p, 
+  mod_chxj_config*       conf);
 
 #endif

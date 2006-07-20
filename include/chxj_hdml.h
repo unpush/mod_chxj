@@ -35,13 +35,13 @@
 typedef struct hdml_t hdml_t;
 
 struct hdml_t {
-  Doc*    doc;
-  char*   out;
-  int     center;
-  int     in_center;
-  char*   card;
-  int     card_cnt;
-  apr_time_t   form_cnt;
+  Doc*           doc;
+  char*          out;
+  int            center;
+  int            in_center;
+  char*          card;
+  int            card_cnt;
+  apr_time_t     form_cnt;
 
   /*--------------------------------------------------------------------------*/
   /* If the title tag is found, it becomes ``1''.                             */

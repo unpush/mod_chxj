@@ -19,13 +19,13 @@
 #include "qs_parse_string.h"
 
 extern int qs_ignore_sp(
-  Doc* doc, 
+  Doc*            doc, 
   const char*, 
   int);
 
 extern int qs_ignore_sp_and_quote(
-  Doc* doc, 
-  const char* s, 
-  int len) ;
+  Doc*         doc, 
+  const char*  s, 
+  int          len) ;
 
 #endif

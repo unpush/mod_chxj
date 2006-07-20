@@ -18,6 +18,7 @@
 #define __CHXJ_JHTML_H__
 
 /* #define DUMP_JHTML "" */
+
 #include "mod_chxj.h"
 #include "chxj_cookie.h"
 
@@ -43,12 +44,12 @@ struct jhtml_t {
 /* Prototype                                                                  */
 /*----------------------------------------------------------------------------*/
 extern char* chxj_exchange_jhtml(
-  request_rec*        r,
-  device_table*       spec,
-  const char*         src,
-  apr_size_t          srclen,
-  apr_size_t*         dstlen,
-  chxjconvrule_entry* entryp,
-  cookie_t*           cookie);
+  request_rec*              r,
+  device_table*             spec,
+  const char*               src,
+  apr_size_t                srclen,
+  apr_size_t*               dstlen,
+  chxjconvrule_entry*       entryp,
+  cookie_t*                 cookie);
 
 #endif

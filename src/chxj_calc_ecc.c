@@ -1008,11 +1008,14 @@ chxj_calc_ecc(qr_code_t* qrcode,
 #ifdef QR_CODE_DEBUG
       /* for DEBUG */
       do {
-        char* debug_rows = apr_palloc(r->pool, 1);
+        char* debug_rows;
+
+        debug_rows = apr_palloc(r->pool, 1);
         debug_rows[0] = 0;
-        for (jj=ecc_count + data_count - 1; jj>=0; jj--) {
+
+        for (jj=ecc_count + data_count - 1; jj>=0; jj--)
           debug_rows = apr_pstrcat(r->pool, debug_rows, apr_psprintf(r->pool, "[%d]", tmp[jj]), NULL);
-        }
+
         DBG1(r,"rows [%s]", debug_rows);
       } while(0);
       /* for DEBUG END */
