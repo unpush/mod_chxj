@@ -16,6 +16,7 @@
  */
 #ifndef __QS_LOG_H__
 #define __QS_LOG_H__
+
 #include "qs_parse_string.h"
 
 #define QX_LOGMARK   __FILE__,__LINE__

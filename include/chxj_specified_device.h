@@ -89,7 +89,7 @@ typedef struct device_table_list_t  device_table_list;
 struct device_table_list_t {
   struct device_table_list_t* next;
 
-  char*         pattern;
+  char*                       pattern;
   ap_regex_t*   regexp;
   device_table* table;
   device_table* tail;

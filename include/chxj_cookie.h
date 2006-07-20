@@ -36,7 +36,8 @@
 /* 
  * default cookie timeout is 30 minute
  */
-#define DEFAULT_COOKIE_TIMEOUT (1800)
+#define DEFAULT_COOKIE_TIMEOUT          (1800)
+
 
 typedef struct cookie_t cookie_t;
 

@@ -87,7 +87,7 @@ struct hdml_t {
   int     hdml_a_flag;
   int     hdml_br_flag;
 
-  int     hdml_end_flag;
+  int                 hdml_end_flag;
 
   device_table*       spec;
 

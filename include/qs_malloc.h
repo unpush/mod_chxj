@@ -16,6 +16,7 @@
  */
 #ifndef __QS_MALLOC_H__
 #define __QS_MALLOC_H__
+
 #include "qs_parse_string.h"
 
 extern void qs_init_malloc(
