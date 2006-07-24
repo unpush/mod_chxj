@@ -1010,7 +1010,7 @@ chxj_calc_ecc(qr_code_t* qrcode,
       do {
         char* debug_rows;
 
-        debug_rows = apr_palloc(r->pool, 1);
+        debug_rows    = apr_palloc(r->pool, 1);
         debug_rows[0] = 0;
 
         for (jj=ecc_count + data_count - 1; jj>=0; jj--)
