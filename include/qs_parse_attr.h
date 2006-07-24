@@ -26,7 +26,7 @@ extern Attr* qs_parse_attr(
   int*        newpos);
 
 extern Attr* qs_new_attr(
-  Doc* doc);
+  Doc*        doc);
 
 #endif
 /*

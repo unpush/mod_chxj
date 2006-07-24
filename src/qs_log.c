@@ -96,15 +96,19 @@ qs_log_int(Doc* doc, int log_level,const char* f, int l, char*msg, int val)
     fprintf(stderr, "DBG:[%20.20s][%10d]: - <%s:%d>\n", f,l,msg, val);
 #endif
     break;
+
   case QX_LOG_INFO:
     fprintf(stderr, "INF:[%20.20s][%10d]: - <%s:%d>\n", f,l,msg,val);
     break;
+
   case QX_LOG_WARN:
     fprintf(stderr, "WRN:[%20.20s][%10d]: - <%s:%d>\n", f,l,msg,val);
     break;
+
   case QX_LOG_ERROR:
     fprintf(stderr, "ERR:[%20.20s][%10d]: - <%s:%d>\n", f,l,msg,val);
     break;
+
   case QX_LOG_FATAL:
     fprintf(stderr, "FTL:[%20.20s][%10d]: - <%s:%d>\n", f,l,msg,val);
     _exit(0);

@@ -35,18 +35,18 @@
 typedef struct hdml_t hdml_t;
 
 struct hdml_t {
-  Doc*    doc;
-  char*   out;
-  int     center;
-  int     in_center;
-  char*   card;
-  int     card_cnt;
-  apr_time_t   form_cnt;
+  Doc*           doc;
+  char*          out;
+  int            center;
+  int            in_center;
+  char*          card;
+  int            card_cnt;
+  apr_time_t     form_cnt;
 
   /*--------------------------------------------------------------------------*/
   /* If the title tag is found, it becomes ``1''.                             */
   /*--------------------------------------------------------------------------*/
-  int     found_title;
+  int            found_title;
   /*--------------------------------------------------------------------------*/
   /* Counter of pure form tag                                                 */
   /*--------------------------------------------------------------------------*/
@@ -87,7 +87,7 @@ struct hdml_t {
   int     hdml_a_flag;
   int     hdml_br_flag;
 
-  int     hdml_end_flag;
+  int                 hdml_end_flag;
 
   device_table*       spec;
 
