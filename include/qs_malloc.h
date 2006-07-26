@@ -20,7 +20,7 @@
 #include "qs_parse_string.h"
 
 extern void qs_init_malloc(
-  Doc* doc);
+  Doc*        doc);
 
 extern void qs_all_free(
   Doc*        doc, 

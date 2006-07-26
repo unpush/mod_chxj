@@ -18,6 +18,7 @@
 #define __CHXJ_CHTM30_H__
 
 /* #define DUMP_CHTML30 "" */
+
 #include "mod_chxj.h"
 #include "chxj_cookie.h"
 

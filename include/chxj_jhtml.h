@@ -37,7 +37,7 @@ struct jhtml_t {
     device_table*       spec;
     mod_chxj_config*    conf;
     chxjconvrule_entry* entryp;
-    cookie_t*           cookie;
+    cookie_t*               cookie;
 };
 
 /*----------------------------------------------------------------------------*/

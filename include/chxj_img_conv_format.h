@@ -22,15 +22,15 @@
 
 
 extern int chxj_img_conv_format_handler(
-  request_rec*       r);
+  request_rec*         r);
 
 extern char* chxj_exchange_image(
-  request_rec*       r, 
-  const char**       src, 
-  apr_size_t*        len);
+  request_rec*         r, 
+  const char**         src, 
+  apr_size_t*          len);
 
 extern int chxj_trans_name(
-  request_rec*       r);
+  request_rec*         r);
 
 
 #endif
