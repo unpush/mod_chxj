@@ -76,8 +76,8 @@ extern void chxj_delete_cookie(
   char*                   cookie_id);
 
 extern char* chxj_cookie_db_name_create(
-  request_rec* r, 
-  const char*  dir);
+  request_rec*            r, 
+  const char*             dir);
 
 extern char* chxj_cookie_db_lock_name_create(
   request_rec* r, 

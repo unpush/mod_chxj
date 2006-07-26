@@ -191,13 +191,13 @@ struct emoji_t {
 typedef struct chxjconvrule_entry chxjconvrule_entry;
 
 struct chxjconvrule_entry {
-  char       *pattern;
-  ap_regex_t *regexp;
-  int        flags;
-  int        action;
-  char       *encoding;
-  int        pc_flag;
-  char       *user_agent;
+  char*        pattern;
+  ap_regex_t*  regexp;
+  int          flags;
+  int          action;
+  char*        encoding;
+  int          pc_flag;
+  char*        user_agent;
 };
 
 typedef struct tag_handler tag_handler;
@@ -279,7 +279,7 @@ struct mod_chxj_config {
 
   char*                 dir; /* for LOG */
 
-  apr_array_header_t   *convrules;
+  apr_array_header_t*   convrules;
 
   char*                 cookie_db_dir;
   long                  cookie_timeout;

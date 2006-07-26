@@ -50,7 +50,7 @@ struct hdml_t {
   /*--------------------------------------------------------------------------*/
   /* Counter of pure form tag                                                 */
   /*--------------------------------------------------------------------------*/
-  int     pure_form_cnt;
+  int            pure_form_cnt;
 
   int     var_cnt[MAX_FORM_COUNT];
   char*   postdata[MAX_FORM_COUNT];

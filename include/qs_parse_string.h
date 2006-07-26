@@ -113,21 +113,21 @@ struct Attr {
 typedef struct Node Node;
 
 struct Node {
-  struct Node* next;
-  struct Node* parent;
-  struct Node* child;
-  struct Node* child_tail;
-  struct Attr* attr;
-  struct Attr* attr_tail;
-  char* name;
-  char* value;
-  int   size;
-  char* otext;
+  struct Node*   next;
+  struct Node*   parent;
+  struct Node*   child;
+  struct Node*   child_tail;
+  struct Attr*   attr;
+  struct Attr*   attr_tail;
+  char*          name;
+  char*          value;
+  int            size;
+  char*          otext;
 };
 
 typedef struct pointer_table_t {
-  unsigned int address;
-  unsigned long size;
+  unsigned int            address;
+  unsigned long           size;
   struct pointer_table_t* next;
   struct pointer_table_t* prev;
 } Pointer_Table;

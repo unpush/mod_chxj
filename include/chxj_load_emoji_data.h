@@ -17,13 +17,13 @@
 #ifndef __LOAD_EMOJI_DATA_H__
 #define __LOAD_EMOJI_DATA_H__
 
-#define ESCAPE_CHAR_LT "&lt;"
-#define ESCAPE_CHAR_GT "&gt;"
+#define ESCAPE_CHAR_LT        "&lt;"
+#define ESCAPE_CHAR_GT        "&gt;"
 
 
 extern char* chxj_load_emoji_data(
-  Doc*                   doc, 
-  apr_pool_t*            p, 
-  mod_chxj_config*       conf);
+  Doc*                     doc, 
+  apr_pool_t*              p, 
+  mod_chxj_config*         conf);
 
 #endif

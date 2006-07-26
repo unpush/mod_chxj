@@ -20,17 +20,17 @@
 #include "qs_parse_string.h"
 
 extern Node* qs_parse_tag(
-  Doc* doc, 
-  const char* s, 
-  int len) ;
+  Doc*         doc, 
+  const char*  s, 
+  int          len) ;
 
 extern Node* qs_new_tag(
-  Doc* doc);
+  Doc*         doc);
 
 extern Node* qs_add_attr(
-  Doc* doc,
-  Node* node, 
-  Attr* attr);
+  Doc*         doc,
+  Node*        node, 
+  Attr*        attr);
 
 #endif
 /*
