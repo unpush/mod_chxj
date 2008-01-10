@@ -17,16 +17,16 @@
 #define HAVE_INTTYPES_H 1
 
 /* Define to 1 if you have the `apr-0' library (-lapr-0). */
-#define HAVE_LIBAPR_0 1
+/* #undef HAVE_LIBAPR_0 */
 
 /* Define to 1 if you have the <libgen.h> header file. */
 #define HAVE_LIBGEN_H 1
 
 /* Define to 1 if you have the iconv library file. */
-/* #undef HAVE_LIBICONV */
+#define HAVE_LIBICONV 
 
 /* Define to 1 if you have the iconv_hook library file. */
-#define HAVE_LIBICONV_HOOK 
+/* #undef HAVE_LIBICONV_HOOK */
 
 /* Define to 1 if your system has a GNU libc compatible `malloc' function, and
    to 0 otherwise. */

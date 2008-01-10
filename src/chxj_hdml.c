@@ -375,6 +375,7 @@ chxj_exchange_hdml(
   chxj_dump_out("[src] CHTML->HDML", src, srclen);
 #endif
 
+  DBG1(r, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", src);
 
   /*--------------------------------------------------------------------------*/
   /* It is examined whether there is a location header. It ends without doing */
@@ -404,9 +405,13 @@ chxj_exchange_hdml(
     /*------------------------------------------------------------------------*/
     /* Here, the parsing of the received character string is done             */
     /*------------------------------------------------------------------------*/
-    char *ss = apr_pstrdup(r->pool, src);
-
-    DBG1(r, "input srclen=[%d]\n", srclen);
+    // char *ss = apr_pstrdup(r->pool, src);
+    char *ss = apr_palloc(r->pool, srclen + 1);
+    memset(ss, 0, srclen + 1);
+    memcpy(ss, src, srclen);
+    
+    DBG1(r, "input strlen(src)=[%d]\n", srclen);
+    DBG1(r, "[[[[%s]]]\n", src);
 
     qs_init_malloc(&doc); 
     qs_init_root_node(&doc);

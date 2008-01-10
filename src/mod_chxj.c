@@ -115,9 +115,6 @@ converter_t convert_routine[] = {
     .converter = NULL,
     .encoder  = NULL,
   },
-  {
-    NULL
-  }
 };
 
 static int chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp);
@@ -973,7 +970,13 @@ chxj_input_filter(ap_filter_t*        f,
     return rv;
   }
 
+#if 0
   APR_BRIGADE_FOREACH(b, ibb) {
+#endif
+  for (b =  APR_BRIGADE_FIRST(ibb); 
+       b != APR_BRIGADE_SENTINEL(ibb);
+       b =  APR_BUCKET_NEXT(b)) {
+
     rv = apr_bucket_read(b, &data, &len, APR_BLOCK_READ);
     if (rv != APR_SUCCESS) {
       DBG(r, "apr_bucket_read() failed");
@@ -1126,8 +1129,7 @@ chxj_child_init(apr_pool_t *p, server_rec *s)
   conf = (mod_chxj_global_config*)ap_get_module_config(s->module_config, 
                                                        &chxj_module);
 
-  if (apr_global_mutex_child_init(&conf->cookie_db_lock, NULL, p) 
-  != APR_SUCCESS) {
+  if (apr_global_mutex_child_init(&conf->cookie_db_lock, NULL, p) != APR_SUCCESS) {
     SERR(s, "Can't attach global mutex.");
     return;
   }

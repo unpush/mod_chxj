@@ -118,7 +118,7 @@ chxj_save_cookie(request_rec* r)
     apr_uri_parse(r->pool,r->uri, &parsed_uri);
     refer_string = apr_psprintf(r->pool, 
                                 "%s://%s%s", 
-                                ap_run_http_method(r),
+                                ap_run_http_scheme(r),
                                 r->hostname,
                                 apr_uri_unparse(r->pool,
                                                 &parsed_uri,

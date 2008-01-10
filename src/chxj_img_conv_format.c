@@ -1246,7 +1246,7 @@ s_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table* spec)
     if (spec->cache == 0)
       break;
 
-    if (writebyte <= spec->cache)
+    if (writebyte <= (unsigned int)spec->cache)
       break;
 
     quality -= 10;
@@ -1259,7 +1259,7 @@ s_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table* spec)
 
 
   if (spec->cache > 0 
-  &&  writebyte   > spec->cache) {
+  &&  writebyte   > (unsigned int)spec->cache) {
     unsigned long now_color = spec->color;
     unsigned long depth     = 0;
     do {

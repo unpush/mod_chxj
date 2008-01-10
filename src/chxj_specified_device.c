@@ -81,6 +81,10 @@ chxj_specified_device(request_rec* r, const char* user_agent)
   DBG(r, "start chxj_specified_device()");
 
   conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  if (! conf->devices) {
+    DBG(r, "device_data.xml load failure");
+    return returnType;
+  }
 
   for (dtl = conf->devices; dtl; dtl = dtl->next) {
     if (! dtl->pattern) {

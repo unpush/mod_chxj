@@ -450,7 +450,7 @@ s_load_emoji_jphone_tag(
         char* cvalue = qs_get_node_value(doc, stringnode);
 
         if ((*cname == 't' || *cname == 'T') && strcasecmp(cname, "text") == 0) {
-          int   ii;
+          unsigned int   ii;
           int   jj;
           char* tmp;
  
