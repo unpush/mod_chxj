@@ -1835,7 +1835,7 @@ static const command_rec cmds[] = {
     NULL,
     OR_ALL,
     "The compulsion time-out time of the cookie is specified. "),
-  { NULL },
+  {NULL}
 };
 
 

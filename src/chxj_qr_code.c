@@ -680,7 +680,7 @@ int
 chxj_qrcode_create_image_data(
   qr_code_t* qrcode,
   char**     img,
-  size_t*    img_len)
+  apr_size_t*    img_len)
 {
   int                xx, yy;
   int                module_count;

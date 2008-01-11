@@ -319,7 +319,7 @@ typedef struct {
 } mod_chxj_global_config;
 
 typedef struct {
-  unsigned int len;
+  apr_size_t len;
 
   apr_bucket_brigade *bb;
 
