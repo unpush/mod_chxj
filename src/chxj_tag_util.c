@@ -454,7 +454,7 @@ qs_get_maxlength_attr(Doc* doc, Node* tag, request_rec* r)
  * @return 1 is returned when it is CHECKED and, additionally, 0 is returned. 
  */
 int
-qs_is_checked_checkbox_attr(Doc* doc, Node* tag, request_rec* r)
+qs_is_checked_checkbox_attr(Doc* doc, Node* tag, request_rec* UNUSED(r))
 {
   Attr* attr;
 

@@ -3054,7 +3054,7 @@ s_chtml20_start_textarea_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml20_end_textarea_tag(void* pdoc, Node* child) 
+s_chtml20_end_textarea_tag(void* pdoc, Node* UNUSED(child)) 
 {
   chtml20_t*    chtml20;
   Doc*          doc;
