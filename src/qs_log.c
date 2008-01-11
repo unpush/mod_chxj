@@ -22,6 +22,8 @@
 
 
 
+
+
 void
 qs_log(Doc* doc, int log_level,const char* f, int l, char* msg) 
 {
@@ -86,7 +88,7 @@ qs_log(Doc* doc, int log_level,const char* f, int l, char* msg)
 }
 
 void
-qs_log_int(Doc* doc, int log_level,const char* f, int l, char*msg, int val) 
+qs_log_int(Doc* UNUSED(doc), int UNUSED(log_level),const char* UNUSED(f), int UNUSED(l), char* UNUSED(msg), int UNUSED(val)) 
 {
 #if 0
 #ifdef USE_LOG

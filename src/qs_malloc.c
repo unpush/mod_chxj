@@ -44,7 +44,7 @@ qs_init_malloc(Doc* doc)
 
 
 void
-qs_all_free(Doc* doc, const char* fname, int line) 
+qs_all_free(Doc* doc, const char* UNUSED(fname), int UNUSED(line)) 
 {
   if (doc->do_init_flag) {
     apr_pool_destroy(doc->pool);

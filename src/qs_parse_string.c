@@ -394,7 +394,7 @@ qs_get_root(Doc* doc) {
 
 
 char* 
-qs_get_node_value(Doc* doc, Node* node) {
+qs_get_node_value(Doc* UNUSED(doc), Node* node) {
   return node->value;
 }
 
@@ -402,14 +402,14 @@ qs_get_node_value(Doc* doc, Node* node) {
 
 
 char*
-qs_get_node_name(Doc* doc, Node* node) {
+qs_get_node_name(Doc* UNUSED(doc), Node* node) {
   return node->name;
 }
 
 
 
 Node*
-qs_get_child_node(Doc* doc, Node* node) {
+qs_get_child_node(Doc* UNUSED(doc), Node* node) {
   return node->child;
 }
 
@@ -417,14 +417,14 @@ qs_get_child_node(Doc* doc, Node* node) {
 
 
 Node*
-qs_get_next_node(Doc* doc, Node* node) {
+qs_get_next_node(Doc* UNUSED(doc), Node* node) {
   return node->next;
 }
 
 
 
 Attr*
-qs_get_attr(Doc* doc, Node* node) {
+qs_get_attr(Doc* UNUSED(doc), Node* node) {
   return node->attr;
 }
 
@@ -432,26 +432,26 @@ qs_get_attr(Doc* doc, Node* node) {
 
 
 Attr*
-qs_get_next_attr(Doc* doc, Attr* attr) {
+qs_get_next_attr(Doc* UNUSED(doc), Attr* attr) {
   return attr->next;
 }
 
 
 
 char*
-qs_get_attr_name(Doc* doc, Attr* attr) {
+qs_get_attr_name(Doc* UNUSED(doc), Attr* attr) {
   return attr->name;
 }
 
 
 
 char*
-qs_get_attr_value(Doc* doc, Attr* attr) {
+qs_get_attr_value(Doc* UNUSED(doc), Attr* attr) {
   return attr->value;
 }
 
 int 
-qs_get_node_size(Doc* doc, Node* node) {
+qs_get_node_size(Doc* UNUSED(doc), Node* node) {
   return node->size;
 }
 /*

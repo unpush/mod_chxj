@@ -1062,8 +1062,8 @@ chxj_global_config_create(apr_pool_t* pool, server_rec* s)
  */
 static int 
 chxj_init_module(apr_pool_t *p, 
-                  apr_pool_t *plog, 
-                  apr_pool_t *ptemp, 
+                  apr_pool_t* UNUSED(plog), 
+                  apr_pool_t* UNUSED(ptemp), 
                   server_rec *s)
 {
 #if 0
@@ -1117,7 +1117,7 @@ chxj_init_module(apr_pool_t *p,
 
 
 static void 
-chxj_child_init(apr_pool_t *p, server_rec *s)
+chxj_child_init(apr_pool_t* UNUSED(p), server_rec *s)
 {
 #if 0
   mod_chxj_global_config* conf;
@@ -1199,7 +1199,7 @@ DBG(r, "end   chxj_insert_filter()");
  * @param p
  */
 static void 
-chxj_register_hooks(apr_pool_t *p)
+chxj_register_hooks(apr_pool_t* UNUSED(p))
 {
   ap_hook_post_config(chxj_init_module,
                       NULL,
@@ -1593,7 +1593,7 @@ cmd_load_emoji_data(cmd_parms *parms, void *mconfig, const char* arg)
 
 
 static const char* 
-cmd_set_image_engine(cmd_parms *parms, void *mconfig, const char* arg) 
+cmd_set_image_engine(cmd_parms* UNUSED(parms), void *mconfig, const char* arg) 
 {
   mod_chxj_config* conf;
   Doc              doc;
@@ -1765,7 +1765,7 @@ cmd_set_cookie_dir(
 
 static const char*
 cmd_set_cookie_timeout(
-  cmd_parms*  cmd, 
+  cmd_parms*  UNUSED(cmd), 
   void*       mconfig, 
   const char* arg)
 {

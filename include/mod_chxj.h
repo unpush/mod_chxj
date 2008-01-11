@@ -17,8 +17,18 @@
 #ifndef __MOD_CHXJ_H__
 #define __MOD_CHXJ_H__
 
-#if !defined(OS2) && !defined(WIN32) && !defined(BEOS) && !defined(NETWARE)
-#  define AP_NEED_SET_MUTEX_PERMS
+#if !defined(AP_NEED_SET_MUTEX_PERMS)
+#  if !defined(OS2) && !defined(WIN32) && !defined(BEOS) && !defined(NETWARE)
+#    define AP_NEED_SET_MUTEX_PERMS
+#  endif
+#endif
+#ifdef UNUSED
+#elif defined(__GNUC__)
+# define UNUSED(x) UNUSED_ ## x __attribute__((unused))
+#elif defined(__LCLINT__)
+# define UNUSED(x) /*@unused@*/ x
+#else
+# define UNUSED(x) x
 #endif
 
 
