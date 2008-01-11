@@ -47,8 +47,8 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
   char    encoding[256];
   char*   osrc;
   char*   ibuf;
-  int     olen;
-  int     ilen;
+  size_t  olen;
+  size_t  ilen;
   iconv_t cd;
 
   osrc = NULL;
@@ -138,7 +138,7 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
       memset(ibuf, 0, ilen+1);
       memcpy(ibuf, src, ilen);
       while (ilen > 0) {
-        size_t result = iconv(cd, &ibuf, (size_t*)&ilen, &osrc, (size_t*)&olen);
+        size_t result = iconv(cd, &ibuf, &ilen, &osrc, &olen);
         if (result == (size_t)(-1)) {
           break;
         }

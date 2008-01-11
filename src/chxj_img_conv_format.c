@@ -1060,7 +1060,7 @@ s_fixup_size(MagickWand* magick_wand,
 }
 
 static MagickWand*
-s_fixup_color(MagickWand* magick_wand, request_rec* r, device_table* spec, img_conv_mode_t mode)
+s_fixup_color(MagickWand* magick_wand, request_rec* r, device_table* spec, img_conv_mode_t UNUSED(mode))
 {
   DBG(r,"start chxj_fixup_clor()");
 

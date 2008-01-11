@@ -874,7 +874,7 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
 #ifdef QR_CODE_DEBUG
   DBG1(r,"Before TERM BIT[%s]", binstr);
 #endif
-  if (data_code_count * 8 > strlen(binstr)) {
+  if ((size_t)(data_code_count * 8) > strlen(binstr)) {
     int binstr_len = strlen(binstr);
     for (ii=0; ii< (data_code_count * 8) - binstr_len && ii < 4; ii++) {
       binstr = apr_pstrcat(r->pool, binstr, "0", NULL);

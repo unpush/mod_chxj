@@ -15,9 +15,10 @@
  * limitations under the License.
  */
 #include <stdio.h>
+#include "qs_log.h"
 
 void
-chxj_dump_out(const char* title, const char* s, int slen)
+chxj_dump_out(const char* UNUSED(title), const char* UNUSED(s), int UNUSED(slen))
 {
 #ifdef DUMP_LOG
   FILE* fp=fopen(DUMP_LOG, "a");
