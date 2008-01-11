@@ -823,7 +823,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
     }
     else
     if (apr_bucket_read(b, &data, &len, APR_BLOCK_READ) == APR_SUCCESS) {
-      DBG2(r, "read data[%.*s]",len, data);
+      DBG2(r, "read data[%.*s]",(int)len, data);
 
       if (f->ctx == NULL) {
         /*--------------------------------------------------------------------*/
@@ -1721,7 +1721,7 @@ cmd_convert_rule(cmd_parms *cmd, void* mconfig, const char *arg)
   }
 
   mode = AP_REG_EXTENDED;
-  if ((regexp = ap_pregcomp(cmd->pool, pp, mode)) == NULL)
+  if ((regexp = ap_pregcomp(cmd->pool, (const char *)pp, mode)) == NULL)
     return "RewriteRule: cannot compile regular expression ";
 
   newrule->regexp = regexp;

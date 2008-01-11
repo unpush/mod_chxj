@@ -97,7 +97,7 @@ chxj_encoding(request_rec *r, const char* src, apr_size_t* len)
   *len = olen;
   iconv_close(cd);
 
-  DBG3(r,"end   chxj_encoding() len=[%d] obuf=[%.*s]", *len, *len, spos);
+  DBG3(r,"end   chxj_encoding() len=[%d] obuf=[%.*s]", (int)*len, (int)*len, spos);
   return spos;
 }
 
@@ -174,7 +174,7 @@ chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
   *len = olen;
   iconv_close(cd);
 
-  DBG3(r,"end   chxj_rencoding() len=[%d] obuf=[%.*s]", *len, *len, spos);
+  DBG3(r,"end   chxj_rencoding() len=[%d] obuf=[%.*s]", (int)*len, (int)*len, spos);
 
   return spos;
 }

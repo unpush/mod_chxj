@@ -98,8 +98,8 @@ chxj_specified_device(request_rec* r, const char* user_agent)
       return returnType;
     }
 
-    if (ap_regexec(dtl->regexp, user_agent, dtl->regexp->re_nsub + 1, match, 0) == 0) {
-      device_id = ap_pregsub(r->pool, "$1", user_agent, dtl->regexp->re_nsub + 1, match);
+    if (ap_regexec((const char *)dtl->regexp, user_agent, dtl->regexp->re_nsub + 1, (ap_regmatch_t*)match, 0) == 0) {
+      device_id = ap_pregsub(r->pool, "$1", user_agent, dtl->regexp->re_nsub + 1, (ap_regmatch_t*)match);
       DBG1(r, "device_id:[%s]", device_id);
       for (dt = dtl->table; dt; dt = dt->next) {
         if (strcasecmp(device_id, dt->device_id) == 0) {

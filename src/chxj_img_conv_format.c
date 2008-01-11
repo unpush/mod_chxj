@@ -1227,7 +1227,7 @@ s_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table* spec)
 
     writedata = (char*)MagickGetImageBlob(magick_wand, &writebyte);
     if (writebyte >= prev_size || revers_flag) {
-      DBG2(r, "quality=[%ld] size=[%d]", (long)quality, writebyte);
+      DBG2(r, "quality=[%ld] size=[%d]", (long)quality, (int)writebyte);
       revers_flag = 1;
       quality += 10;
       if (quality > 100) {
@@ -1241,7 +1241,7 @@ s_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table* spec)
       continue;
     }
 
-    DBG2(r, "quality=[%ld] size=[%d]", (long)quality, writebyte);
+    DBG2(r, "quality=[%ld] size=[%d]", (long)quality, (int)writebyte);
 
     if (spec->cache == 0)
       break;
@@ -1309,7 +1309,7 @@ s_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table* spec)
 
       writedata = (char*)MagickGetImageBlob(magick_wand, &writebyte);
 
-      DBG2(r,"now_color=[%ld] size=[%d]", (long)now_color, writebyte);
+      DBG2(r,"now_color=[%ld] size=[%d]", (long)now_color, (int)writebyte);
 
       /* Once per request */
       break;
@@ -1370,7 +1370,7 @@ s_send_cache_file(device_table* spec, query_string_param_t* query_string, reques
     ap_send_fd(fout, r, 0, st.size, &sendbyte);
     apr_file_close(fout);
     ap_rflush(r);
-    DBG1(r, "send file data[%d]byte", sendbyte);
+    DBG1(r, "send file data[%d]byte", (int)sendbyte);
   }
   else
   if (query_string->mode == IMG_CONV_MODE_EZGET) {
@@ -1428,7 +1428,7 @@ s_send_cache_file(device_table* spec, query_string_param_t* query_string, reques
       ap_send_fd(fout, r, query_string->offset, query_string->count, &sendbyte);
       apr_file_close(fout);
       ap_rflush(r);
-      DBG1(r, "send file data[%d]byte", sendbyte);
+      DBG1(r, "send file data[%d]byte", (int)sendbyte);
     }
   }
   

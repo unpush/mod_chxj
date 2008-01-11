@@ -408,7 +408,7 @@ chxj_exchange_hdml(
     memset(ss, 0, srclen + 1);
     memcpy(ss, src, srclen);
     
-    DBG1(r, "input strlen(src)=[%d]\n", srclen);
+    DBG1(r, "input strlen(src)=[%d]\n", (int)srclen);
     DBG1(r, "[[[[%s]]]\n", src);
 
     qs_init_malloc(&doc); 
