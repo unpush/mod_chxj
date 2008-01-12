@@ -981,7 +981,7 @@ s_fixup_size(MagickWand* magick_wand,
 
     DBG(r,"**** detect normal mode ****");
 
-    if (qsp->ua_flag != UA_IGN) {
+    if (qsp->ua_flag != UA_IGN && spec->html_spec_type != CHXJ_SPEC_UNKNOWN) {
       if (neww > c_width) {
         newh = (int)((double)newh * (double)((double)c_width / (double)neww));
         neww = (int)((double)neww * (double)((double)c_width / (double)neww));
@@ -995,67 +995,70 @@ s_fixup_size(MagickWand* magick_wand,
     break;
   }
 
-  DBG2(r,"convert width=[%d --> %d]", oldw, neww);
-  DBG2(r,"convert heigh=[%d --> %d]", oldh, newh);
-
-  MagickResetIterator(magick_wand);
-
-  while (MagickNextImage(magick_wand) != MagickFalse) {
-    switch (mode) {
-    case IMG_CONV_MODE_WALLPAPER:
-    case IMG_CONV_MODE_EZGET:
-
-      if (MagickResizeImage(magick_wand,neww,newh,LanczosFilter,1.0) == MagickFalse) {
-        EXIT_MAGICK_ERROR();
-        return NULL;
+  if (spec->html_spec_type != CHXJ_SPEC_UNKNOWN) {
+    DBG2(r,"convert width=[%d --> %d]", oldw, neww);
+    DBG2(r,"convert heigh=[%d --> %d]", oldh, newh);
+  
+    MagickResetIterator(magick_wand);
+  
+    while (MagickNextImage(magick_wand) != MagickFalse) {
+      switch (mode) {
+      case IMG_CONV_MODE_WALLPAPER:
+      case IMG_CONV_MODE_EZGET:
+  
+        if (MagickResizeImage(magick_wand,neww,newh,LanczosFilter,1.0) == MagickFalse) {
+          EXIT_MAGICK_ERROR();
+          return NULL;
+        }
+  
+        if (MagickCropImage(magick_wand, 
+                        (unsigned long)c_width, 
+                        (unsigned long)c_heigh,
+                        (long)((neww - c_width) / 2),
+                        (long)((newh - c_heigh) / 2)) == MagickFalse) {
+          EXIT_MAGICK_ERROR();
+          return NULL;
+        }
+        break;
+  
+      case IMG_CONV_MODE_NORMAL:
+        if (qsp->width) {
+          DBG2(r,"convert width=[%d --> %d]", neww, qsp->width);
+          neww = qsp->width;
+        }
+        if (qsp->height) {
+          DBG2(r,"convert heigh=[%d --> %d]", newh, qsp->height);
+          newh = qsp->height;
+        }
+  
+      default:
+        if (MagickResizeImage(magick_wand,neww,newh,LanczosFilter,1.0) == MagickFalse) {
+          EXIT_MAGICK_ERROR();
+          return NULL;
+        }
+        break;
       }
-
-      if (MagickCropImage(magick_wand, 
-                      (unsigned long)c_width, 
-                      (unsigned long)c_heigh,
-                      (long)((neww - c_width) / 2),
-                      (long)((newh - c_heigh) / 2)) == MagickFalse) {
-        EXIT_MAGICK_ERROR();
-        return NULL;
+  
+      if (spec->html_spec_type != CHXJ_SPEC_UNKNOWN) {
+        if (MagickSetImageUnits(magick_wand, PixelsPerInchResolution) == MagickFalse) {
+          EXIT_MAGICK_ERROR();
+          return NULL;
+        }
+    
+        if (MagickSetImageResolution(magick_wand,
+                                     (double)spec->dpi_width,
+                                     (double)spec->dpi_heigh) == MagickFalse) {
+          EXIT_MAGICK_ERROR();
+          return NULL;
+        }
+    
+        if (MagickSetImageDispose(magick_wand, BackgroundDispose) == MagickFalse) {
+          EXIT_MAGICK_ERROR();
+          return NULL;
+        }
       }
-      break;
-
-    case IMG_CONV_MODE_NORMAL:
-      if (qsp->width) {
-        DBG2(r,"convert width=[%d --> %d]", neww, qsp->width);
-        neww = qsp->width;
-      }
-      if (qsp->height) {
-        DBG2(r,"convert heigh=[%d --> %d]", newh, qsp->height);
-        newh = qsp->height;
-      }
-
-    default:
-      if (MagickResizeImage(magick_wand,neww,newh,LanczosFilter,1.0) == MagickFalse) {
-        EXIT_MAGICK_ERROR();
-        return NULL;
-      }
-      break;
-    }
-
-    if (MagickSetImageUnits(magick_wand, PixelsPerInchResolution) == MagickFalse) {
-      EXIT_MAGICK_ERROR();
-      return NULL;
-    }
-
-    if (MagickSetImageResolution(magick_wand,
-                                 (double)spec->dpi_width,
-                                 (double)spec->dpi_heigh) == MagickFalse) {
-      EXIT_MAGICK_ERROR();
-      return NULL;
-    }
-
-    if (MagickSetImageDispose(magick_wand, BackgroundDispose) == MagickFalse) {
-      EXIT_MAGICK_ERROR();
-      return NULL;
     }
   }
-
   return magick_wand;
 }
 
@@ -1063,6 +1066,11 @@ static MagickWand*
 s_fixup_color(MagickWand* magick_wand, request_rec* r, device_table* spec, img_conv_mode_t UNUSED(mode))
 {
   DBG(r,"start chxj_fixup_clor()");
+
+  if (spec->html_spec_type == CHXJ_SPEC_UNKNOWN) {
+    DBG(r, "Pass s_fixup_color proc");
+    return magick_wand;
+  }
 
   if (spec->color >= 256) {
 
@@ -1108,6 +1116,11 @@ s_fixup_color(MagickWand* magick_wand, request_rec* r, device_table* spec, img_c
 static MagickWand*
 s_fixup_depth(MagickWand* magick_wand, request_rec* r, device_table* spec)
 {
+  if (spec->html_spec_type == CHXJ_SPEC_UNKNOWN) {
+    DBG(r, "Pass s_fixup_depth proc");
+    return magick_wand;
+  }
+
   if (spec->color == 15680000) {
     if (MagickSetImageDepth(magick_wand, 24) == MagickFalse) {
       EXIT_MAGICK_ERROR();
@@ -1165,6 +1178,11 @@ static MagickWand*
 s_add_copyright(MagickWand* magick_wand, request_rec* r, device_table* spec)
 {
   mod_chxj_config* conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+
+  if (spec->html_spec_type == CHXJ_SPEC_UNKNOWN) {
+    DBG(r, "Pass add_copiright proc");
+    return magick_wand;
+  }
 
   if (conf->image_copyright) {
 

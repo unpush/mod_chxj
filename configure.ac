@@ -1,11 +1,11 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
-AC_INIT(mod_chxj, 0.8.0)
-AC_PREREQ(2.59)
+AC_INIT([mod_chxj],[0.8.0])
+AC_PREREQ(2.61)
 AC_CONFIG_SRCDIR([src/mod_chxj.c])
 AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
-AM_CONFIG_HEADER(include/config.h)
+AC_CONFIG_HEADERS([include/config.h])
 
 
 # Checks for programs.
@@ -178,6 +178,7 @@ LIBS="${LIBS} `${APU_CONFIG} --ldflags` `${APU_CONFIG} --libs` "
 CFLAGS="${CFLAGS} `${WAND_CONFIG} --cppflags` `${WAND_CONFIG} --cflags`"
 CFLAGS="${CFLAGS} `${APR_CONFIG} --includes` `${APR_CONFIG} --cflags` `${APR_CONFIG} --cppflags`"
 CFLAGS="${CFLAGS} `${APU_CONFIG} --includes`"
+CPPFLAGS="${CPPFLAGS} `${APR_CONFIG} --includes` -I${with_apache_header}"
 AC_SUBST(with_apache_header)
 AC_SUBST(CC)
 AC_SUBST(QDEFS)
@@ -189,9 +190,19 @@ AC_SUBST(CFLAGS)
 AC_HEADER_STDC
 AC_CHECK_HEADERS([string.h strings.h unistd.h fcntl.h sys/types.h sys/stat.h sys/mman.h libgen.h])
 APR_HEADER_DIR="`${APR_CONFIG} --includes | sed -e 's/-I//g' | sed -e 's/ //g'`"
-AC_CHECK_HEADERS([$APR_HEADER_DIR/apr_shm.h $APR_HEADER_DIR/apr_global_mutex.h])
-AC_CHECK_HEADERS([$with_apache_header/ap_regex.h],
-  AC_DEFINE([HAVE_AP_REGEX_H], [], [Define to 1 if you have the <ap_regex.h> header file.]))
+AC_CHECK_HEADERS([apr_shm.h apr_global_mutex.h])
+AC_CHECK_HEADERS([apr.h])
+AC_CHECK_HEADERS([ap_config.h])
+AC_CHECK_HEADERS([ap_regex.h],
+  AC_DEFINE([HAVE_AP_REGEX_H], [], [Define to 1 if you have the <ap_regex.h> header file.]),[],
+[[
+#ifdef HAVE_APR_H
+#include "apr.h"
+#endif
+#ifdef HAVE_AP_CONFIG_H
+#include "ap_config.h"
+#endif
+]])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST

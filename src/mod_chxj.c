@@ -763,7 +763,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
           }
         }
 
-        contentLength = apr_psprintf(r->pool, "%d", ctx->len);
+        contentLength = apr_psprintf(r->pool, "%d", (int)ctx->len);
         apr_table_setn(r->headers_out, "Content-Length", contentLength);
         
         if (ctx->len > 0) {
@@ -1721,7 +1721,7 @@ cmd_convert_rule(cmd_parms *cmd, void* mconfig, const char *arg)
   }
 
   mode = AP_REG_EXTENDED;
-  if ((regexp = ap_pregcomp(cmd->pool, (const char *)pp, mode)) == NULL)
+  if ((regexp = ap_pregcomp((apr_pool_t *)cmd->pool, (const char *)pp, mode)) == NULL)
     return "RewriteRule: cannot compile regular expression ";
 
   newrule->regexp = regexp;

@@ -5397,6 +5397,26 @@
       <dpi_heigh>96</dpi_heigh>
     </device>
     <device>
+      <device_id>N506iS2</device_id>
+      <device_name>N506iSII</device_name>
+      <html_spec_type>CHTML_5_0</html_spec_type>
+      <width>240</width>
+      <heigh>295</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>false</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>20000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+    <device>
       <device_id>SO506i</device_id>
       <device_name>premini-II SO506i</device_name>
       <html_spec_type>CHTML_5_0</html_spec_type>
@@ -8077,7 +8097,6 @@ Mozilla/4.0 (compatible; MSIE 6.0; KYOCERA/AH-K3001V/1.4.1.67.000000/0.1) Opera 
       <dpi_heigh>96</dpi_heigh>
     </device>
   </user_agent>
-
 
 </devices>
 <!--
