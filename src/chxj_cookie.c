@@ -1,6 +1,6 @@
 /*
+ * Copyright (C) 2005-2008 Atsushi Konno All rights reserved.
  * Copyright (C) 2005 QSDN,Inc. All rights reserved.
- * Copyright (C) 2005 Atsushi Konno All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@
 #include "chxj_cookie.h"
 #include "chxj_url_encode.h"
 #include "chxj_apply_convrule.h"
+
+#include "ap_release.h"
 
 #include "apu.h"
 #include "apr_dbm.h"
@@ -118,7 +120,11 @@ chxj_save_cookie(request_rec* r)
     apr_uri_parse(r->pool,r->uri, &parsed_uri);
     refer_string = apr_psprintf(r->pool, 
                                 "%s://%s%s", 
+#if AP_SERVER_MAJORVERSION_NUMBER == 2 && AP_SERVER_MINORVERSION_NUMBER == 2
                                 ap_run_http_scheme(r),
+#else
+                                ap_run_http_method(r),
+#endif
                                 r->hostname,
                                 apr_uri_unparse(r->pool,
                                                 &parsed_uri,
