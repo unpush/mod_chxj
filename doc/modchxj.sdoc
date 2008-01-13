@@ -103,7 +103,7 @@ ChxjLoadDeviceData  /etc/apache2/chxj/device_data.xml
 ChxjLoadEmojiData   /etc/apache2/chxj/emoji.xml
 
 #====================================================================================
-# 変換エンジン動作指示命令（下記のSetOutputFilter、SetInputFilterも必須です)
+# 変換エンジン動作指示命令
 # ChxjConvRule ==> ディレクティブ
 # "^/chxj.+$"  ==> Perl互換のURIパターン
 # EngineOn     ==> 変換エンジンを動作させる指示
@@ -137,7 +137,7 @@ ChxjLoadDeviceData  /etc/apache2/chxj/device_data.xml
 ChxjLoadEmojiData   /etc/apache2/chxj/emoji.xml
 
 #====================================================================================
-# 変換エンジン動作指示命令（下記のSetOutputFilter、SetInputFilterも必須です)
+# 変換エンジン動作指示命令
 # ChxjConvRule ==> ディレクティブ
 # "^/chxj.+$"  ==> Perl互換のURIパターン
 # EngineOn     ==> 変換エンジンを動作させる指示。動作させたく無い場合は"EngineOff"
@@ -173,7 +173,7 @@ ChxjLoadDeviceData  /etc/apache2/chxj/device_data.xml
 ChxjLoadEmojiData   /etc/apache2/chxj/emoji.xml
 
 #====================================================================================
-# 変換エンジン動作指示命令（下記のSetOutputFilter、SetInputFilterも必須です)
+# 変換エンジン動作指示命令
 #====================================================================================
 #====================================================================================
 # bwikiの設定をします。bwikiではどうもxoopsヘッダの文字コードとbwiki内での携帯スキン
@@ -307,6 +307,8 @@ ChxjImageCopyright "A.Konno"
 <li>httpd.confに以下を追加します。
 下記は、URIが/chxjで始まる全てのコンテンツに対して動作するようmod_chxjに指示しています。
 サーバ側はEUC-JPであった場合の例です。mod_chxjによってSJISに変換するように指示しています。
+サーバ側がShift_JISで無い場合は、Shift_JISコードの10進参照文字列表記を記述することによって
+Shift_JISコードの絵文字2バイトコードに変換しクライアントへ返します。
 
 <program title="httpd.conf">
 ChxjConvRule "^/chxj.+$" "EngineOn" "EUC-JP"
@@ -320,7 +322,7 @@ ChxjConvRule "^/chxj.+$" "EngineOn" "EUC-JP"
           EUC-JPからCP932に変換後、クライアントに出力されます。
           省略した場合はNONE
           <ol>
-             <li>変換エンジン動作指示命令（下記のSetOutputFilter、SetInputFilterも必須です)<br />
+             <li>変換エンジン動作指示命令<br />
              ChxjConvertRule ==> ディレクティブ<br />
              "^/chxj.+$"  ==> Perl互換のURIパターン<br />
              EngineOn     ==> 変換エンジンを動作させる指示。動作させたく無い場合は"EngineOff"<br />
@@ -736,13 +738,6 @@ ChxjConvRule "^/chxj.+$" "EngineOn" "EUC-JP"
   </li>
 </ol>
 </section>
-
-
-
-<section title="文字コード">
-  文字コードは、絵文字の入出力がある関係上、Shift_JISのみとしています。
-</section>
-
 
 <section title="絵文字について">
   i-Mode用の絵文字を書いておけば、アクセスしたキャリアによって、mod_chxjが対応の絵文字に自動変換します。
