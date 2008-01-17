@@ -7,6 +7,7 @@ libapache2-mod-chxj (0.8.1-1) unstable; urgency=low
   * Fixed Bug that Segmentation Falt had occurred when browser inforamtion was
     read in the AMD64 environment.
   * Fixed buf that the HTML conversion operates when connecting it from PC.
+  * Fixed bug that the HTML conversion for jhtml.
 
 
  -- Atsushi Konno <konn@users.sourceforge.jp>  Fri, 11 Jan 2008 18:39:44 +0900

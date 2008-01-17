@@ -2,9 +2,10 @@ libapache2-mod-chxj (0.8.1-1) unstable; urgency=low
 
   * Changed for Apache 2.2.x.
   * Changed so that ``Configure'' might run well by CentOS5.1. 
-  * Fixed Bug that Segmentation Falt had occurred when browser inforamtion was 
+  * Fixed bug that Segmentation Falt had occurred when browser inforamtion was 
     read in the AMD64 environment. 
-  * Fixed buf that the HTML conversion operates when connecting it from PC. 
+  * Fixed bug that the HTML conversion operates when connecting it from PC. 
+  * Fixed bug that the HTML conversion for jhtml.
 
  -- Atsushi Konno <konn@users.sourceforge.jp>  Mon, 19 Jun 2006 17:29:48 +0900
 
