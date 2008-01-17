@@ -45,7 +45,7 @@ chxj_encoding(request_rec *r, const char* src, apr_size_t* len)
   chxjconvrule_entry* entryp;
 
 
-  DBG(r,"start chxj_encoding()");
+  DBG2(r,"start chxj_encoding() input[%.*s]", (int)len, src);
 
   dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
 

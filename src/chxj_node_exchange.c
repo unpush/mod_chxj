@@ -42,6 +42,14 @@ tag_handlers chxj_tag_handlers[] = {
     .handler = chtml30_handler,
   },
   {
+    .type    = CHXJ_SPEC_Chtml_6_0,
+    .handler = chtml30_handler,
+  },
+  {
+    .type    = CHXJ_SPEC_Chtml_7_0,
+    .handler = chtml30_handler,
+  },
+  {
     .type    = CHXJ_SPEC_XHtml_Mobile_1_0,
     .handler = xhtml_handler,
   },
@@ -74,16 +82,16 @@ tag_handlers chxj_tag_handlers[] = {
  */
 char*
 chxj_node_exchange(
-  device_table* spec,
-  request_rec*  r,
-  void*         pdoc, 
-  Doc*          doc, 
-  Node*         node, 
+  device_table *spec,
+  request_rec  *r,
+  void         *pdoc, 
+  Doc          *doc, 
+  Node         *node, 
   int           indent
 )
 {
-  Node*         child;
-  tag_handler*  handlers;
+  Node         *child;
+  tag_handler  *handlers;
 
 
   handlers = chxj_tag_handlers[spec->html_spec_type].handler;

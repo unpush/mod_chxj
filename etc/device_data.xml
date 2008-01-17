@@ -5704,7 +5704,7 @@
     <device>
       <device_id>F904i</device_id>
       <device_name>F904i_H1</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>352</heigh>
       <gif>true</gif>
@@ -5730,7 +5730,7 @@
     <device>
       <device_id>F904i</device_id>
       <device_name>F904i_H2</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>352</heigh>
       <gif>true</gif>
@@ -5756,7 +5756,7 @@
     <device>
       <device_id>F904i</device_id>
       <device_name>F904i_H3</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>352</heigh>
       <gif>true</gif>
@@ -5783,7 +5783,7 @@
     <device>
       <device_id>F904i</device_id>
       <device_name>F904i_W1</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -5809,7 +5809,7 @@
     <device>
       <device_id>F904i</device_id>
       <device_name>F904i_W2</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -5835,7 +5835,7 @@
     <device>
       <device_id>F904i</device_id>
       <device_name>F904i_W3</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -5861,7 +5861,7 @@
     <device>
       <device_id>F905i</device_id>
       <device_name>F905i_H1</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>352</heigh>
       <gif>true</gif>
@@ -5887,7 +5887,7 @@
     <device>
       <device_id>F905i</device_id>
       <device_name>F905i_H2</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>352</heigh>
       <gif>true</gif>
@@ -5913,7 +5913,7 @@
     <device>
       <device_id>F905i</device_id>
       <device_name>F905i_H3</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>352</heigh>
       <gif>true</gif>
@@ -5939,7 +5939,7 @@
     <device>
       <device_id>F905i</device_id>
       <device_name>F905i_H4</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>352</heigh>
       <gif>true</gif>
@@ -5965,7 +5965,7 @@
     <device>
       <device_id>F905i</device_id>
       <device_name>F905i_H5</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>352</heigh>
       <gif>true</gif>
@@ -5991,7 +5991,7 @@
     <device>
       <device_id>F905i</device_id>
       <device_name>F905i_W1</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -6017,7 +6017,7 @@
     <device>
       <device_id>F905i</device_id>
       <device_name>F905i_W2</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -6043,7 +6043,7 @@
     <device>
       <device_id>F905i</device_id>
       <device_name>F905i_W3</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -6069,7 +6069,7 @@
     <device>
       <device_id>F905i</device_id>
       <device_name>F905i_W4</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -6095,7 +6095,7 @@
     <device>
       <device_id>F905i</device_id>
       <device_name>F905i_W5</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -6121,7 +6121,7 @@
     <device>
       <device_id>SH905i</device_id>
       <device_name>SH905i_H1</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>320</heigh>
       <gif>true</gif>
@@ -6147,7 +6147,7 @@
     <device>
       <device_id>SH905i</device_id>
       <device_name>SH905i_H2</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>320</heigh>
       <gif>true</gif>
@@ -6173,7 +6173,7 @@
     <device>
       <device_id>SH905i</device_id>
       <device_name>SH905i_H3</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>320</heigh>
       <gif>true</gif>
@@ -6199,7 +6199,7 @@
     <device>
       <device_id>SH905i</device_id>
       <device_name>SH905i_H4</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>320</heigh>
       <gif>true</gif>
@@ -6226,7 +6226,7 @@
     <device>
       <device_id>SH905i</device_id>
       <device_name>SH905i_H5</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>320</heigh>
       <gif>true</gif>
@@ -6252,7 +6252,7 @@
     <device>
       <device_id>SH905i</device_id>
       <device_name>SH905i_W1</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -6278,7 +6278,7 @@
     <device>
       <device_id>SH905i</device_id>
       <device_name>SH905i_W2</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -6304,7 +6304,7 @@
     <device>
       <device_id>SH905i</device_id>
       <device_name>SH905i_W3</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -6330,7 +6330,7 @@
     <device>
       <device_id>SH905i</device_id>
       <device_name>SH905i_W4</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -7482,7 +7482,7 @@
     <device>
       <device_id>F702iD</device_id>
       <device_name>F702iD</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>230</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -7509,7 +7509,7 @@
     <device>
       <device_id>SH702iD</device_id>
       <device_name>SH702iD</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -7536,7 +7536,7 @@
     <device>
       <device_id>P702i</device_id>
       <device_name>P702i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -7670,7 +7670,7 @@
     <device>
       <device_id>D702i</device_id>
       <device_name>D702i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>230</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -7697,7 +7697,7 @@
     <device>
       <device_id>SO902i</device_id>
       <device_name>SO902i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>256</heigh>
       <gif>true</gif>
@@ -7724,7 +7724,7 @@
     <device>
       <device_id>D851iWM</device_id>
       <device_name>D851iWM</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>230</width>
       <heigh>320</heigh>
       <gif>true</gif>
@@ -7804,7 +7804,7 @@
     <device>
       <device_id>SO702i</device_id>
       <device_name>SO702i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>256</heigh>
       <gif>true</gif>
@@ -7831,7 +7831,7 @@
     <device>
       <device_id>SO902i</device_id>
       <device_name>SO902i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -7858,7 +7858,7 @@
     <device>
       <device_id>P902iS</device_id>
       <device_name>P902iS</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -7885,7 +7885,7 @@
     <device>
       <device_id>SO902iWP+</device_id>
       <device_name>SO902iWP+</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>256</heigh>
       <gif>true</gif>
@@ -7912,7 +7912,7 @@
     <device>
       <device_id>D702iBCL</device_id>
       <device_name>D702iBCL</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>230</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -7939,7 +7939,7 @@
     <device>
       <device_id>F902iS</device_id>
       <device_name>F902iS</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>230</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -7966,7 +7966,7 @@
     <device>
       <device_id>N902iS</device_id>
       <device_name>N902iS</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -7993,7 +7993,7 @@
     <device>
       <device_id>D902iS</device_id>
       <device_name>D902iS</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>230</width>
       <heigh>320</heigh>
       <gif>true</gif>
@@ -8020,7 +8020,7 @@
     <device>
       <device_id>SH702iS</device_id>
       <device_name>SH702iS</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -8047,7 +8047,7 @@
     <device>
       <device_id>SA702i</device_id>
       <device_name>SA702i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>252</heigh>
       <gif>true</gif>
@@ -8074,7 +8074,7 @@
     <device>
       <device_id>SH902iSL</device_id>
       <device_name>SH902iSL</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -8101,7 +8101,7 @@
     <device>
       <device_id>N902iX</device_id>
       <device_name>N902iX</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -8128,7 +8128,7 @@
     <device>
       <device_id>P702iD</device_id>
       <device_name>P702iD</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -8155,7 +8155,7 @@
     <device>
       <device_id>N702iS</device_id>
       <device_name>N702iS</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -8182,7 +8182,7 @@
     <device>
       <device_id>D702iF</device_id>
       <device_name>D702iF</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>230</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -8208,7 +8208,7 @@
     <device>
       <device_id>F882iES</device_id>
       <device_name>F882iES</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>256</heigh>
       <gif>true</gif>
@@ -8235,7 +8235,7 @@
     <device>
       <device_id>N902iX</device_id>
       <device_name>N902iX</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -8262,7 +8262,7 @@
     <device>
       <device_id>SH903i</device_id>
       <device_name>SH903i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>320</heigh>
       <gif>true</gif>
@@ -8289,7 +8289,7 @@
     <device>
       <device_id>SO903i</device_id>
       <device_name>SO903i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>368</heigh>
       <gif>true</gif>
@@ -8343,7 +8343,7 @@
     <device>
       <device_id>N903i</device_id>
       <device_name>N903i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -8370,7 +8370,7 @@
     <device>
       <device_id>D903i</device_id>
       <device_name>D903i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>230</width>
       <heigh>320</heigh>
       <gif>true</gif>
@@ -8397,7 +8397,7 @@
     <device>
       <device_id>F903i</device_id>
       <device_name>F903i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>230</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -8424,7 +8424,7 @@
     <device>
       <device_id>P903i</device_id>
       <device_name>P903i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -8505,7 +8505,7 @@
     <device>
       <device_id>N601i</device_id>
       <device_name>N601i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -8559,7 +8559,7 @@
     <device>
       <device_id>N703iD</device_id>
       <device_name>N703iD</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -8586,7 +8586,7 @@
     <device>
       <device_id>SH903iTV</device_id>
       <device_name>SH903iTV</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>320</heigh>
       <gif>true</gif>
@@ -8613,7 +8613,7 @@
     <device>
       <device_id>P903iTV</device_id>
       <device_name>P903iTV</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>350</heigh>
       <gif>true</gif>
@@ -8640,7 +8640,7 @@
     <device>
       <device_id>SO703i</device_id>
       <device_name>SO703i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>368</heigh>
       <gif>true</gif>
@@ -8667,7 +8667,7 @@
     <device>
       <device_id>N703imyu</device_id>
       <device_name>N703imyu</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -8694,7 +8694,7 @@
     <device>
       <device_id>F903iX</device_id>
       <device_name>F903iX</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>230</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -8721,7 +8721,7 @@
     <device>
       <device_id>D903iTV</device_id>
       <device_name>D903iTV</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>230</width>
       <heigh>320</heigh>
       <gif>true</gif>
@@ -8748,7 +8748,7 @@
     <device>
       <device_id>D800iDS</device_id>
       <device_name>D800iDS</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>230</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -8775,7 +8775,7 @@
     <device>
       <device_id>D800iDS</device_id>
       <device_name>D800iDS</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -8802,7 +8802,7 @@
     <device>
       <device_id>P703i</device_id>
       <device_name>P703i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -8829,7 +8829,7 @@
     <device>
       <device_id>D703i</device_id>
       <device_name>D703i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>230</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -8856,7 +8856,7 @@
     <device>
       <device_id>F703i</device_id>
       <device_name>F703i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>230</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -8883,7 +8883,7 @@
     <device>
       <device_id>P703i</device_id>
       <device_name>P703i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -8910,7 +8910,7 @@
     <device>
       <device_id>F903iBSC</device_id>
       <device_name>F903iBSC</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>230</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -8937,7 +8937,7 @@
     <device>
       <device_id>P903iX</device_id>
       <device_name>P903iX</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -8963,7 +8963,7 @@
     <device>
       <device_id>F883i</device_id>
       <device_name>F883i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>256</heigh>
       <gif>true</gif>
@@ -8990,7 +8990,7 @@
     <device>
       <device_id>N904i</device_id>
       <device_name>N904i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>352</heigh>
       <gif>true</gif>
@@ -9017,7 +9017,7 @@
     <device>
       <device_id>SH904i</device_id>
       <device_name>SH904i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>320</heigh>
       <gif>true</gif>
@@ -9071,7 +9071,7 @@
     <device>
       <device_id>SO903iTV</device_id>
       <device_name>SO903iTV</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>368</heigh>
       <gif>true</gif>
@@ -9098,7 +9098,7 @@
     <device>
       <device_id>P904i</device_id>
       <device_name>P904i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>350</heigh>
       <gif>true</gif>
@@ -9125,7 +9125,7 @@
     <device>
       <device_id>D904i</device_id>
       <device_name>D904i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>320</heigh>
       <gif>true</gif>
@@ -9152,7 +9152,7 @@
     <device>
       <device_id>P704imyu</device_id>
       <device_name>P704imyu</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -9179,7 +9179,7 @@
     <device>
       <device_id>SH704i</device_id>
       <device_name>SH704i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>320</heigh>
       <gif>true</gif>
@@ -9206,7 +9206,7 @@
     <device>
       <device_id>N704imyu</device_id>
       <device_name>N704imyu</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -9233,7 +9233,7 @@
     <device>
       <device_id>SO704i</device_id>
       <device_name>SO704i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>368</heigh>
       <gif>true</gif>
@@ -9260,7 +9260,7 @@
     <device>
       <device_id>P704i</device_id>
       <device_name>P704i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -9287,7 +9287,7 @@
     <device>
       <device_id>D704i</device_id>
       <device_name>D704i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>320</heigh>
       <gif>true</gif>
@@ -9313,7 +9313,7 @@
     <device>
       <device_id>F883iES</device_id>
       <device_name>F883iES</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>256</heigh>
       <gif>true</gif>
@@ -9340,7 +9340,7 @@
     <device>
       <device_id>L704i</device_id>
       <device_name>L704i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>280</heigh>
       <gif>true</gif>
@@ -9374,7 +9374,7 @@
     <device>
       <device_id>D905i</device_id>
       <device_name>D905i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>352</heigh>
       <gif>true</gif>
@@ -9403,7 +9403,7 @@
     <device>
       <device_id>N905i</device_id>
       <device_name>N905i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>320</heigh>
       <gif>true</gif>
@@ -9430,7 +9430,7 @@
     <device>
       <device_id>P905i</device_id>
       <device_name>P905i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>350</heigh>
       <gif>true</gif>
@@ -9460,7 +9460,7 @@
     <device>
       <device_id>SO905i</device_id>
       <device_name>SO905i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>368</heigh>
       <gif>true</gif>
@@ -9488,7 +9488,7 @@
     <device>
       <device_id>N905imyu</device_id>
       <device_name>N905imyu</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>320</heigh>
       <gif>true</gif>
@@ -9516,7 +9516,7 @@
     <device>
       <device_id>F801i</device_id>
       <device_name>F801i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>352</heigh>
       <gif>true</gif>
@@ -9544,7 +9544,7 @@
     <device>
       <device_id>N905iBiz</device_id>
       <device_name>N905iBiz</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>320</heigh>
       <gif>true</gif>

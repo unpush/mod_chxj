@@ -504,11 +504,11 @@ s_jhtml_search_emoji(jhtml_t* jhtml, char* txt, char** rslt)
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_start_html_tag(void* pdoc, Node* UNUSED(node)) 
+s_jhtml_start_html_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  jhtml_t*      jhtml;
-  Doc*          doc;
-  request_rec*  r;
+  jhtml_t      *jhtml;
+  Doc          *doc;
+  request_rec  *r;
 
 
   jhtml  = GET_JHTML(pdoc);
@@ -521,7 +521,7 @@ s_jhtml_start_html_tag(void* pdoc, Node* UNUSED(node))
   /*--------------------------------------------------------------------------*/
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<html>\n", NULL);
 
-  DBG(r, "end s_jhtml_start_html_tag()");
+  DBG1(r, "end s_jhtml_start_html_tag()[%s]", jhtml->out);
 
   return jhtml->out;
 }
@@ -542,7 +542,11 @@ s_jhtml_end_html_tag(void* pdoc, Node* UNUSED(child))
   Doc*          doc = jhtml->doc;
   request_rec*  r   = doc->r;
 
+  DBG(r, "start s_jhtml_end_html_tag()");
+
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</html>\n", NULL);
+
+  DBG1(r, "end s_jhtml_end_html_tag() OUT:[%s]", jhtml->out);
 
   return jhtml->out;
 }
@@ -2121,15 +2125,15 @@ s_jhtml_end_img_tag(void* pdoc, Node* UNUSED(child))
  * @return The conversion result is returned.
  */
 static char*
-s_jhtml_start_select_tag(void* pdoc, Node* child)
+s_jhtml_start_select_tag(void *pdoc, Node *child)
 {
-  jhtml_t*     jhtml = GET_JHTML(pdoc);
-  Doc*         doc   = jhtml->doc;
-  request_rec* r     = doc->r;
-  Attr*        attr;
+  jhtml_t     *jhtml = GET_JHTML(pdoc);
+  Doc         *doc   = jhtml->doc;
+  request_rec *r     = doc->r;
+  Attr *attr;
 
-  char* size      = NULL;
-  char* name      = NULL;
+  char *size      = NULL;
+  char *name      = NULL;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<select", NULL);
   for (attr = qs_get_attr(doc,child);

@@ -40,17 +40,17 @@ chxj_apply_convrule(request_rec* r, apr_array_header_t* convrules)
 }
 
 static int
-s_apply_rule(request_rec* r, chxjconvrule_entry* pp) 
+s_apply_rule(request_rec *r, chxjconvrule_entry *pp) 
 {
-  char* uri;
-  int   rtn;
+  char *uri;
+  int rtn;
   ap_regmatch_t regmatch[AP_MAX_REG_MATCH];
 
   uri = r->uri;
 
   DBG2(r,"convert rule pattern=[%s] uri=[%s]", pp->pattern, uri);
 
-  rtn = ap_regexec((const ap_regex_t*)pp->regexp, uri, AP_MAX_REG_MATCH, (ap_regmatch_t*)regmatch, 0);
+  rtn = ap_regexec((const ap_regex_t *)pp->regexp, uri, AP_MAX_REG_MATCH, (ap_regmatch_t *)regmatch, 0);
   if (rtn == 0) {
     /* Match */
     if (pp->flags & CONVRULE_FLAG_NOTMATCH) {

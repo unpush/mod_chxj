@@ -96,6 +96,16 @@ converter_t convert_routine[] = {
     .encoder  = chxj_encoding,
   },
   {
+    /* CHXJ_SPEC_Chtml_6_0        */
+    .converter = chxj_exchange_chtml30,
+    .encoder  = chxj_encoding,
+  },
+  {
+    /* CHXJ_SPEC_Chtml_7_0        */
+    .converter = chxj_exchange_chtml30,
+    .encoder  = chxj_encoding,
+  },
+  {
     /* CHXJ_SPEC_XHtml_Mobile_1_0 */
     .converter = chxj_exchange_xhtml_mobile_1_0,
     .encoder  = chxj_encoding,
@@ -144,6 +154,8 @@ chxj_headers_fixup(request_rec *r)
   case CHXJ_SPEC_Chtml_3_0:
   case CHXJ_SPEC_Chtml_4_0:
   case CHXJ_SPEC_Chtml_5_0:
+  case CHXJ_SPEC_Chtml_6_0:
+  case CHXJ_SPEC_Chtml_7_0:
   case CHXJ_SPEC_XHtml_Mobile_1_0:
   case CHXJ_SPEC_Hdml:
   case CHXJ_SPEC_Jhtml:
@@ -194,7 +206,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
   mod_chxj_config*    dconf; 
   chxjconvrule_entry* entryp;
 
-  dst  = apr_pstrcat(r->pool, (char*)*src, NULL);
+  dst = apr_pstrdup(r->pool, (char*)*src);
 
   dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
 
@@ -237,6 +249,8 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
     case CHXJ_SPEC_Chtml_3_0:
     case CHXJ_SPEC_Chtml_4_0:
     case CHXJ_SPEC_Chtml_5_0:
+    case CHXJ_SPEC_Chtml_6_0:
+    case CHXJ_SPEC_Chtml_7_0:
     case CHXJ_SPEC_Jhtml:
       cookie = chxj_save_cookie(r);
       break;
@@ -265,7 +279,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
       else
         dst = convert_routine[spec->html_spec_type].converter(r,
                                                               spec, 
-                                                              tmp, 
+                                                              *src, 
                                                               *len, 
                                                               len, 
                                                               entryp, 
@@ -792,6 +806,8 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
           case CHXJ_SPEC_Chtml_3_0:
           case CHXJ_SPEC_Chtml_4_0:
           case CHXJ_SPEC_Chtml_5_0:
+          case CHXJ_SPEC_Chtml_6_0:
+          case CHXJ_SPEC_Chtml_7_0:
           case CHXJ_SPEC_Jhtml:
 
             cookie = chxj_save_cookie(r);
@@ -953,6 +969,8 @@ chxj_input_filter(ap_filter_t*        f,
   case CHXJ_SPEC_Chtml_3_0:
   case CHXJ_SPEC_Chtml_4_0:
   case CHXJ_SPEC_Chtml_5_0:
+  case CHXJ_SPEC_Chtml_6_0:
+  case CHXJ_SPEC_Chtml_7_0:
   case CHXJ_SPEC_XHtml_Mobile_1_0:
   case CHXJ_SPEC_Hdml:
   case CHXJ_SPEC_Jhtml:

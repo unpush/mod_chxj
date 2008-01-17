@@ -517,6 +517,8 @@ chxj_chxjif_is_mine(device_table* spec, Doc* doc, Node* tag)
         case CHXJ_SPEC_Chtml_3_0:
         case CHXJ_SPEC_Chtml_4_0:
         case CHXJ_SPEC_Chtml_5_0:
+        case CHXJ_SPEC_Chtml_6_0:
+        case CHXJ_SPEC_Chtml_7_0:
           return 1;
         default:
           break;
