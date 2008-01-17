@@ -1,6 +1,6 @@
 /*
+ * Copyright (C) 2005-2008 Atsushi Konno All rights reserved.
  * Copyright (C) 2005 QSDN,Inc. All rights reserved.
- * Copyright (C) 2005 Atsushi Konno All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -338,7 +338,7 @@ chxj_exchange_hdml(
   apr_size_t srclen, 
   apr_size_t* dstlen,
   chxjconvrule_entry* entryp,
-  cookie_t* cookie
+  cookie_t* UNUSED(cookie)
 )
 {
   char*     dst;
@@ -375,7 +375,6 @@ chxj_exchange_hdml(
   chxj_dump_out("[src] CHTML->HDML", src, srclen);
 #endif
 
-
   /*--------------------------------------------------------------------------*/
   /* It is examined whether there is a location header. It ends without doing */
   /* anything when is.                                                        */
@@ -404,9 +403,13 @@ chxj_exchange_hdml(
     /*------------------------------------------------------------------------*/
     /* Here, the parsing of the received character string is done             */
     /*------------------------------------------------------------------------*/
-    char *ss = apr_pstrdup(r->pool, src);
-
-    DBG1(r, "input srclen=[%d]\n", srclen);
+    // char *ss = apr_pstrdup(r->pool, src);
+    char *ss = apr_palloc(r->pool, srclen + 1);
+    memset(ss, 0, srclen + 1);
+    memcpy(ss, src, srclen);
+    
+    DBG1(r, "input strlen(src)=[%d]\n", (int)srclen);
+    DBG1(r, "[[[[%s]]]\n", src);
 
     qs_init_malloc(&doc); 
     qs_init_root_node(&doc);
@@ -639,7 +642,7 @@ s_hdml_search_emoji(hdml_t* hdml, char* txt, char** rslt)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_start_html_tag(void* pdoc, Node* node) 
+s_hdml_start_html_tag(void* pdoc, Node* UNUSED(node)) 
 {
   hdml_t* hdml;
  
@@ -668,7 +671,7 @@ s_hdml_start_html_tag(void* pdoc, Node* node)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_end_html_tag(void* pdoc, Node* child) 
+s_hdml_end_html_tag(void* pdoc, Node* UNUSED(child)) 
 {
   hdml_t* hdml;
 
@@ -707,7 +710,7 @@ s_hdml_end_html_tag(void* pdoc, Node* child)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_start_meta_tag(void* pdoc, Node* node) 
+s_hdml_start_meta_tag(void* pdoc, Node* UNUSED(node)) 
 {
   hdml_t* hdml;
 
@@ -730,7 +733,7 @@ s_hdml_start_meta_tag(void* pdoc, Node* node)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_end_meta_tag(void* pdoc, Node* child) 
+s_hdml_end_meta_tag(void* pdoc, Node* UNUSED(child)) 
 {
   hdml_t* hdml;
 
@@ -749,7 +752,7 @@ s_hdml_end_meta_tag(void* pdoc, Node* child)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_start_head_tag(void* pdoc, Node* node) 
+s_hdml_start_head_tag(void* pdoc, Node* UNUSED(node)) 
 {
   hdml_t* hdml;
 
@@ -772,7 +775,7 @@ s_hdml_start_head_tag(void* pdoc, Node* node)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_end_head_tag(void* pdoc, Node* child) 
+s_hdml_end_head_tag(void* pdoc, Node* UNUSED(child)) 
 {
   hdml_t* hdml;
 
@@ -792,7 +795,7 @@ s_hdml_end_head_tag(void* pdoc, Node* child)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_start_title_tag(void* pdoc, Node* node) 
+s_hdml_start_title_tag(void* pdoc, Node* UNUSED(node)) 
 {
   hdml_t* hdml;
 
@@ -816,7 +819,7 @@ s_hdml_start_title_tag(void* pdoc, Node* node)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_end_title_tag(void* pdoc, Node* child) 
+s_hdml_end_title_tag(void* pdoc, Node* UNUSED(child)) 
 {
   hdml_t* hdml;
 
@@ -837,7 +840,7 @@ s_hdml_end_title_tag(void* pdoc, Node* child)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_start_base_tag(void* pdoc, Node* node) 
+s_hdml_start_base_tag(void* pdoc, Node* UNUSED(node)) 
 {
   hdml_t* hdml;
 
@@ -858,7 +861,7 @@ s_hdml_start_base_tag(void* pdoc, Node* node)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_end_base_tag(void* pdoc, Node* child) 
+s_hdml_end_base_tag(void* pdoc, Node* UNUSED(child)) 
 {
   hdml_t* hdml;
 
@@ -941,7 +944,7 @@ s_hdml_start_body_tag(void* pdoc, Node* node)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_end_body_tag(void* pdoc, Node* child) 
+s_hdml_end_body_tag(void* pdoc, Node* UNUSED(child)) 
 {
   hdml_t* hdml;
 
@@ -1083,7 +1086,7 @@ s_hdml_start_a_tag(void* pdoc, Node* node)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_end_a_tag(void* pdoc, Node* child) 
+s_hdml_end_a_tag(void* pdoc, Node* UNUSED(child)) 
 {
   hdml_t* hdml;
 
@@ -1106,7 +1109,7 @@ s_hdml_end_a_tag(void* pdoc, Node* child)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_start_br_tag(void* pdoc, Node* node) 
+s_hdml_start_br_tag(void* pdoc, Node* UNUSED(node)) 
 {
   hdml_t* hdml;
 
@@ -1135,7 +1138,7 @@ s_hdml_start_br_tag(void* pdoc, Node* node)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_end_br_tag(void* pdoc, Node* child) 
+s_hdml_end_br_tag(void* pdoc, Node* UNUSED(child)) 
 {
   hdml_t* hdml;
 
@@ -1154,7 +1157,7 @@ s_hdml_end_br_tag(void* pdoc, Node* child)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_start_tr_tag(void* pdoc, Node* node) 
+s_hdml_start_tr_tag(void* pdoc, Node* UNUSED(node)) 
 {
   hdml_t* hdml;
 
@@ -1183,7 +1186,7 @@ s_hdml_start_tr_tag(void* pdoc, Node* node)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_end_tr_tag(void* pdoc, Node* child) 
+s_hdml_end_tr_tag(void* pdoc, Node* UNUSED(child)) 
 {
   hdml_t* hdml;
 
@@ -1202,7 +1205,7 @@ s_hdml_end_tr_tag(void* pdoc, Node* child)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_start_font_tag(void* pdoc, Node* node) 
+s_hdml_start_font_tag(void* pdoc, Node* UNUSED(node)) 
 {
   hdml_t* hdml;
 
@@ -1221,7 +1224,7 @@ s_hdml_start_font_tag(void* pdoc, Node* node)
  * @return The conversion result is returned. 
  */
 static char*
-s_hdml_end_font_tag(void* pdoc, Node* child) 
+s_hdml_end_font_tag(void* pdoc, Node* UNUSED(child)) 
 {
   hdml_t* hdml;
 
@@ -1308,7 +1311,7 @@ s_hdml_start_form_tag(void* pdoc, Node* node)
  * @return The HDML output result after it edits it is returned. 
  */
 static char*
-s_hdml_end_form_tag(void* pdoc, Node* child) 
+s_hdml_end_form_tag(void* pdoc, Node* UNUSED(child)) 
 {
   hdml_t*      hdml;
   request_rec* r;
@@ -1467,7 +1470,7 @@ s_hdml_do_input_text_tag(hdml_t* hdml, Node* tag)
   char*         is;
   char*         nm;
   char*         fmt;
-  int           ii;
+  size_t        ii;
 
   doc   = hdml->doc;
   r     = doc->r;
@@ -2042,7 +2045,7 @@ qs_conv_istyle_to_format(request_rec* r, char* is)
  * @return The conversion result is returned.
  */
 static char*
-s_hdml_end_input_tag(void* pdoc, Node* child) 
+s_hdml_end_input_tag(void* pdoc, Node* UNUSED(child)) 
 {
   hdml_t* hdml;
 
@@ -2061,7 +2064,7 @@ s_hdml_end_input_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_hdml_start_center_tag(void* pdoc, Node* node) 
+s_hdml_start_center_tag(void* pdoc, Node* UNUSED(node)) 
 {
   hdml_t* hdml;
 
@@ -2088,7 +2091,7 @@ s_hdml_start_center_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_hdml_end_center_tag(void* pdoc, Node* child) 
+s_hdml_end_center_tag(void* pdoc, Node* UNUSED(child)) 
 {
   hdml_t* hdml;
 
@@ -2113,7 +2116,7 @@ s_hdml_end_center_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_hdml_start_hr_tag(void* pdoc, Node* node) 
+s_hdml_start_hr_tag(void* pdoc, Node* UNUSED(node)) 
 {
   hdml_t* hdml;
 
@@ -2145,7 +2148,7 @@ s_hdml_start_hr_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_hdml_end_hr_tag(void* pdoc, Node* child) 
+s_hdml_end_hr_tag(void* pdoc, Node* UNUSED(child)) 
 {
   hdml_t* hdml;
 
@@ -2164,7 +2167,7 @@ s_hdml_end_hr_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_hdml_start_li_tag(void* pdoc, Node* node) 
+s_hdml_start_li_tag(void* pdoc, Node* UNUSED(node)) 
 {
   hdml_t* hdml;
 
@@ -2194,7 +2197,7 @@ s_hdml_start_li_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_hdml_end_li_tag(void* pdoc, Node* child) 
+s_hdml_end_li_tag(void* pdoc, Node* UNUSED(child)) 
 {
   hdml_t* hdml;
 
@@ -2315,7 +2318,7 @@ s_hdml_start_img_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_hdml_end_img_tag(void* pdoc, Node* child) 
+s_hdml_end_img_tag(void* pdoc, Node* UNUSED(child)) 
 {
   hdml_t* hdml;
 
@@ -2432,7 +2435,7 @@ s_hdml_start_select_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char* 
-s_hdml_end_select_tag(void* pdoc,  Node* node)  
+s_hdml_end_select_tag(void* pdoc,  Node* UNUSED(node))
 {
   hdml_t* hdml;
 
@@ -2510,7 +2513,7 @@ s_hdml_start_option_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char* 
-s_hdml_end_option_tag(void* pdoc,  Node* node)  
+s_hdml_end_option_tag(void* pdoc,  Node* UNUSED(node)) 
 {
   hdml_t* hdml;
 
@@ -2589,7 +2592,7 @@ s_hdml_start_div_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char* 
-s_hdml_end_div_tag(void* pdoc,  Node* node)  
+s_hdml_end_div_tag(void* pdoc,  Node* UNUSED(node))
 {
   hdml_t*      hdml;
   request_rec* r;
@@ -2861,7 +2864,7 @@ s_output_to_postdata(hdml_t* hdml, char* s)
  * @param node   [i]   The A tag node is specified.
  */
 static void
-s_hdml_tag_output_upper_half(hdml_t* hdml, Node* node)
+s_hdml_tag_output_upper_half(hdml_t* hdml, Node* UNUSED(node))
 {
   if (hdml->hdml_br_flag   == 1 
   &&  hdml->div_right_flag == 1) {

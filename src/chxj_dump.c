@@ -1,6 +1,6 @@
 /*
+ * Copyright (C) 2005-2008 Atsushi Konno All rights reserved.
  * Copyright (C) 2005 QSDN,Inc. All rights reserved.
- * Copyright (C) 2005 Atsushi Konno All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,10 @@
  * limitations under the License.
  */
 #include <stdio.h>
+#include "qs_log.h"
 
 void
-chxj_dump_out(const char* title, const char* s, int slen)
+chxj_dump_out(const char* UNUSED(title), const char* UNUSED(s), int UNUSED(slen))
 {
 #ifdef DUMP_LOG
   FILE* fp=fopen(DUMP_LOG, "a");

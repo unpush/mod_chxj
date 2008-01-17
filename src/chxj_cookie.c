@@ -1,6 +1,6 @@
 /*
+ * Copyright (C) 2005-2008 Atsushi Konno All rights reserved.
  * Copyright (C) 2005 QSDN,Inc. All rights reserved.
- * Copyright (C) 2005 Atsushi Konno All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@
 #include "chxj_cookie.h"
 #include "chxj_url_encode.h"
 #include "chxj_apply_convrule.h"
+
+#include "ap_release.h"
 
 #include "apu.h"
 #include "apr_dbm.h"
@@ -118,7 +120,11 @@ chxj_save_cookie(request_rec* r)
     apr_uri_parse(r->pool,r->uri, &parsed_uri);
     refer_string = apr_psprintf(r->pool, 
                                 "%s://%s%s", 
+#if AP_SERVER_MAJORVERSION_NUMBER == 2 && AP_SERVER_MINORVERSION_NUMBER == 2
+                                ap_run_http_scheme(r),
+#else
                                 ap_run_http_method(r),
+#endif
                                 r->hostname,
                                 apr_uri_unparse(r->pool,
                                                 &parsed_uri,
@@ -794,16 +800,15 @@ chxj_cookie_db_lock_name_create(request_rec* r, const char* dir)
   DBG(r, "start  chxj_cookie_db_lock_name_create()");
 
   if (!dir) {
-DBG(r, " ");
+    DBG(r, " ");
     dst = apr_pstrdup(r->pool, DEFAULT_COOKIE_DB_DIR);
-DBG(r, " ");
+    DBG(r, " ");
   }
   else {
-DBG1(r, " dir=[%x]", (unsigned int)dir);
     dst = apr_pstrdup(r->pool, dir);
-DBG(r, " ");
+    DBG(r, " ");
   }
-DBG1(r, "dst[strlen(dst)-1]=[%c]", dst[strlen(dst)-1]);
+  DBG1(r, "dst[strlen(dst)-1]=[%c]", dst[strlen(dst)-1]);
   if (dst[strlen(dst)-1] != '/') {
     dst = apr_pstrcat(r->pool, dst, "/", COOKIE_DB_LOCK_NAME, NULL);
   }
@@ -1080,7 +1085,7 @@ chxj_cookie_expire_gc(request_rec* r)
 
   retval = apr_dbm_firstkey(f, &dbmkey);
   if (retval == APR_SUCCESS) {
-    DBG2(r, "firstkey=[%.*s]", dbmkey.dsize, dbmkey.dptr);
+    DBG2(r, "firstkey=[%.*s]", (int)dbmkey.dsize, dbmkey.dptr);
     do {
       char* tmp;
       char* old_cookie_id;
@@ -1104,7 +1109,7 @@ chxj_cookie_expire_gc(request_rec* r)
         cmp_time = now_time - dconf->cookie_timeout;
 
       DBG1(r, "dconf->cookie_timeout=[%d]", (int)dconf->cookie_timeout);
-      DBG4(r, "key=[%.*s] cmp_time=[%d] val_time=[%d]", dbmkey.dsize, dbmkey.dptr, cmp_time, val_time);
+      DBG4(r, "key=[%.*s] cmp_time=[%d] val_time=[%d]", (int)dbmkey.dsize, dbmkey.dptr, cmp_time, val_time);
       if (cmp_time >= val_time) {
         apr_dbm_delete(f, dbmkey);
 

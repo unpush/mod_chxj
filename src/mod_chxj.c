@@ -1,6 +1,6 @@
 /*
+ * Copyright (C) 2005-2008 Atsushi Konno All rights reserved.
  * Copyright (C) 2005 QSDN,Inc. All rights reserved.
- * Copyright (C) 2005 Atsushi Konno All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -115,9 +115,6 @@ converter_t convert_routine[] = {
     .converter = NULL,
     .encoder  = NULL,
   },
-  {
-    NULL
-  }
 };
 
 static int chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp);
@@ -766,7 +763,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
           }
         }
 
-        contentLength = apr_psprintf(r->pool, "%d", ctx->len);
+        contentLength = apr_psprintf(r->pool, "%d", (int)ctx->len);
         apr_table_setn(r->headers_out, "Content-Length", contentLength);
         
         if (ctx->len > 0) {
@@ -826,7 +823,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
     }
     else
     if (apr_bucket_read(b, &data, &len, APR_BLOCK_READ) == APR_SUCCESS) {
-      DBG2(r, "read data[%.*s]",len, data);
+      DBG2(r, "read data[%.*s]",(int)len, data);
 
       if (f->ctx == NULL) {
         /*--------------------------------------------------------------------*/
@@ -973,7 +970,13 @@ chxj_input_filter(ap_filter_t*        f,
     return rv;
   }
 
+#if 0
   APR_BRIGADE_FOREACH(b, ibb) {
+#endif
+  for (b =  APR_BRIGADE_FIRST(ibb); 
+       b != APR_BRIGADE_SENTINEL(ibb);
+       b =  APR_BUCKET_NEXT(b)) {
+
     rv = apr_bucket_read(b, &data, &len, APR_BLOCK_READ);
     if (rv != APR_SUCCESS) {
       DBG(r, "apr_bucket_read() failed");
@@ -1059,8 +1062,8 @@ chxj_global_config_create(apr_pool_t* pool, server_rec* s)
  */
 static int 
 chxj_init_module(apr_pool_t *p, 
-                  apr_pool_t *plog, 
-                  apr_pool_t *ptemp, 
+                  apr_pool_t* UNUSED(plog), 
+                  apr_pool_t* UNUSED(ptemp), 
                   server_rec *s)
 {
 #if 0
@@ -1114,7 +1117,7 @@ chxj_init_module(apr_pool_t *p,
 
 
 static void 
-chxj_child_init(apr_pool_t *p, server_rec *s)
+chxj_child_init(apr_pool_t* UNUSED(p), server_rec *s)
 {
 #if 0
   mod_chxj_global_config* conf;
@@ -1126,8 +1129,7 @@ chxj_child_init(apr_pool_t *p, server_rec *s)
   conf = (mod_chxj_global_config*)ap_get_module_config(s->module_config, 
                                                        &chxj_module);
 
-  if (apr_global_mutex_child_init(&conf->cookie_db_lock, NULL, p) 
-  != APR_SUCCESS) {
+  if (apr_global_mutex_child_init(&conf->cookie_db_lock, NULL, p) != APR_SUCCESS) {
     SERR(s, "Can't attach global mutex.");
     return;
   }
@@ -1197,7 +1199,7 @@ DBG(r, "end   chxj_insert_filter()");
  * @param p
  */
 static void 
-chxj_register_hooks(apr_pool_t *p)
+chxj_register_hooks(apr_pool_t* UNUSED(p))
 {
   ap_hook_post_config(chxj_init_module,
                       NULL,
@@ -1591,7 +1593,7 @@ cmd_load_emoji_data(cmd_parms *parms, void *mconfig, const char* arg)
 
 
 static const char* 
-cmd_set_image_engine(cmd_parms *parms, void *mconfig, const char* arg) 
+cmd_set_image_engine(cmd_parms* UNUSED(parms), void *mconfig, const char* arg) 
 {
   mod_chxj_config* conf;
   Doc              doc;
@@ -1719,7 +1721,7 @@ cmd_convert_rule(cmd_parms *cmd, void* mconfig, const char *arg)
   }
 
   mode = AP_REG_EXTENDED;
-  if ((regexp = ap_pregcomp(cmd->pool, pp, mode)) == NULL)
+  if ((regexp = ap_pregcomp((apr_pool_t *)cmd->pool, (const char *)pp, mode)) == NULL)
     return "RewriteRule: cannot compile regular expression ";
 
   newrule->regexp = regexp;
@@ -1763,7 +1765,7 @@ cmd_set_cookie_dir(
 
 static const char*
 cmd_set_cookie_timeout(
-  cmd_parms*  cmd, 
+  cmd_parms*  UNUSED(cmd), 
   void*       mconfig, 
   const char* arg)
 {
@@ -1833,7 +1835,7 @@ static const command_rec cmds[] = {
     NULL,
     OR_ALL,
     "The compulsion time-out time of the cookie is specified. "),
-  { NULL },
+  {NULL}
 };
 
 

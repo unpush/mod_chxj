@@ -1,6 +1,6 @@
 /*
+ * Copyright (C) 2005-2008 Atsushi Konno All rights reserved.
  * Copyright (C) 2005 QSDN,Inc. All rights reserved.
- * Copyright (C) 2005 Atsushi Konno All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ qs_init_malloc(Doc* doc)
 
 
 void
-qs_all_free(Doc* doc, const char* fname, int line) 
+qs_all_free(Doc* doc, const char* UNUSED(fname), int UNUSED(line)) 
 {
   if (doc->do_init_flag) {
     apr_pool_destroy(doc->pool);

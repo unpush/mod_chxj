@@ -1,6 +1,6 @@
 /*
+ * Copyright (C) 2005-2008 Atsushi Konno All rights reserved.
  * Copyright (C) 2005 QSDN,Inc. All rights reserved.
- * Copyright (C) 2005 Atsushi Konno All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,12 +25,13 @@ extern Node* qs_parse_tag(
   int          len) ;
 
 extern Node* qs_new_tag(
-  Doc*         doc);
+  Doc       *doc);
 
-extern Node* qs_add_attr(
-  Doc*         doc,
-  Node*        node, 
-  Attr*        attr);
+extern Node *qs_add_attr(
+  Doc       *doc,
+  Node      *node, 
+  Attr      *attr);
+
 
 #endif
 /*

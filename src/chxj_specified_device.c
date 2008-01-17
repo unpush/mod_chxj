@@ -1,6 +1,6 @@
 /*
+ * Copyright (C) 2005-2008 Atsushi Konno All rights reserved.
  * Copyright (C) 2005 QSDN,Inc. All rights reserved.
- * Copyright (C) 2005 Atsushi Konno All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -81,6 +81,10 @@ chxj_specified_device(request_rec* r, const char* user_agent)
   DBG(r, "start chxj_specified_device()");
 
   conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  if (! conf->devices) {
+    DBG(r, "device_data.xml load failure");
+    return returnType;
+  }
 
   for (dtl = conf->devices; dtl; dtl = dtl->next) {
     if (! dtl->pattern) {
@@ -94,7 +98,7 @@ chxj_specified_device(request_rec* r, const char* user_agent)
       return returnType;
     }
 
-    if (ap_regexec(dtl->regexp, user_agent, dtl->regexp->re_nsub + 1, match, 0) == 0) {
+    if (ap_regexec((const ap_regex_t *)dtl->regexp, user_agent, (apr_size_t)dtl->regexp->re_nsub + 1, match, 0) == 0) {
       device_id = ap_pregsub(r->pool, "$1", user_agent, dtl->regexp->re_nsub + 1, match);
       DBG1(r, "device_id:[%s]", device_id);
       for (dt = dtl->table; dt; dt = dt->next) {

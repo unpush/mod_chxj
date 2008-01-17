@@ -1,6 +1,6 @@
 /*
+ * Copyright (C) 2005-2008 Atsushi Konno All rights reserved.
  * Copyright (C) 2005 QSDN,Inc. All rights reserved.
- * Copyright (C) 2005 Atsushi Konno All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -127,7 +127,7 @@ s_set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node
 
         if ((*attr_name == 'p' || *attr_name == 'P') && strcasecmp(attr_name, "pattern") == 0) {
             dtl->pattern = apr_pstrdup(p, qs_get_attr_value(doc,attr));
-            dtl->regexp = ap_pregcomp(p, dtl->pattern, AP_REG_EXTENDED|AP_REG_ICASE);
+            dtl->regexp = ap_pregcomp(p, (const char *)dtl->pattern, AP_REG_EXTENDED|AP_REG_ICASE);
         }
       }
       s_set_device_data(doc, p, dtl, child);
@@ -186,7 +186,7 @@ s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node)
         Node* ch = qs_get_child_node(doc, child);
         if (ch && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) {
           char *vv = qs_get_node_value(doc,ch);
-          int ii;
+          unsigned int ii;
           for (ii=0; ii<strlen(vv); ii++) {
             if ((vv[ii] >= '1' && vv[ii] <= '9') || vv[ii] == '0') 
               continue;
@@ -203,7 +203,7 @@ s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node)
         Node* ch = qs_get_child_node(doc, child);
         if (ch && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) {
           char *vv = qs_get_node_value(doc,ch);
-          int ii;
+          unsigned int ii;
           for (ii=0; ii<strlen(vv); ii++) {
             if ((vv[ii] >= '1' && vv[ii] <= '9') || vv[ii] == '0') 
               continue;
@@ -262,7 +262,7 @@ s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node)
         Node* ch = qs_get_child_node(doc, child);
         if (ch && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) {
           char *vv = qs_get_node_value(doc,ch);
-          int ii;
+          unsigned int ii;
           for (ii=0; ii<strlen(vv); ii++) {
             if ((vv[ii] >= '1' && vv[ii] <= '9') || vv[ii] == '0') 
               continue;
@@ -283,7 +283,7 @@ s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node)
         Node* ch = qs_get_child_node(doc, child);
         if (ch && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) {
           char *vv = qs_get_node_value(doc,ch);
-          int ii;
+          unsigned int ii;
           for (ii=0; ii<strlen(vv); ii++) {
             if ((vv[ii] >= '1' && vv[ii] <= '9') || vv[ii] == '0')
               continue;
@@ -300,7 +300,7 @@ s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node)
         Node* ch = qs_get_child_node(doc, child);
         if (ch && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) {
           char *vv = qs_get_node_value(doc,ch);
-          int ii;
+          unsigned int ii;
           for (ii=0; ii<strlen(vv); ii++) {
             if ((vv[ii] >= '1' && vv[ii] <= '9') || vv[ii] == '0') 
               continue;
@@ -318,7 +318,7 @@ s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node)
         Node* ch = qs_get_child_node(doc, child);
         if (ch && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) {
           char *vv = qs_get_node_value(doc,ch);
-          int ii;
+          unsigned int ii;
           for (ii=0; ii<strlen(vv); ii++) {
             if ((vv[ii] >= '1' && vv[ii] <= '9') || vv[ii] == '0') 
               continue;
@@ -423,7 +423,7 @@ s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node)
         Node* ch = qs_get_child_node(doc, child);
         if (ch && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) {
           char *vv = qs_get_node_value(doc,ch);
-          int ii;
+          unsigned int ii;
           for (ii=0; ii<strlen(vv); ii++) {
             if ((vv[ii] >= '1' && vv[ii] <= '9') || vv[ii] == '0') 
               continue;

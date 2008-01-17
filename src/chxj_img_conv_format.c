@@ -1,6 +1,6 @@
 /*
+ * Copyright (C) 2005-2008 Atsushi Konno All rights reserved.
  * Copyright (C) 2005 QSDN,Inc. All rights reserved.
- * Copyright (C) 2005 Atsushi Konno All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -981,7 +981,7 @@ s_fixup_size(MagickWand* magick_wand,
 
     DBG(r,"**** detect normal mode ****");
 
-    if (qsp->ua_flag != UA_IGN) {
+    if (qsp->ua_flag != UA_IGN && spec->html_spec_type != CHXJ_SPEC_UNKNOWN) {
       if (neww > c_width) {
         newh = (int)((double)newh * (double)((double)c_width / (double)neww));
         neww = (int)((double)neww * (double)((double)c_width / (double)neww));
@@ -995,74 +995,82 @@ s_fixup_size(MagickWand* magick_wand,
     break;
   }
 
-  DBG2(r,"convert width=[%d --> %d]", oldw, neww);
-  DBG2(r,"convert heigh=[%d --> %d]", oldh, newh);
-
-  MagickResetIterator(magick_wand);
-
-  while (MagickNextImage(magick_wand) != MagickFalse) {
-    switch (mode) {
-    case IMG_CONV_MODE_WALLPAPER:
-    case IMG_CONV_MODE_EZGET:
-
-      if (MagickResizeImage(magick_wand,neww,newh,LanczosFilter,1.0) == MagickFalse) {
-        EXIT_MAGICK_ERROR();
-        return NULL;
+  if (spec->html_spec_type != CHXJ_SPEC_UNKNOWN) {
+    DBG2(r,"convert width=[%d --> %d]", oldw, neww);
+    DBG2(r,"convert heigh=[%d --> %d]", oldh, newh);
+  
+    MagickResetIterator(magick_wand);
+  
+    while (MagickNextImage(magick_wand) != MagickFalse) {
+      switch (mode) {
+      case IMG_CONV_MODE_WALLPAPER:
+      case IMG_CONV_MODE_EZGET:
+  
+        if (MagickResizeImage(magick_wand,neww,newh,LanczosFilter,1.0) == MagickFalse) {
+          EXIT_MAGICK_ERROR();
+          return NULL;
+        }
+  
+        if (MagickCropImage(magick_wand, 
+                        (unsigned long)c_width, 
+                        (unsigned long)c_heigh,
+                        (long)((neww - c_width) / 2),
+                        (long)((newh - c_heigh) / 2)) == MagickFalse) {
+          EXIT_MAGICK_ERROR();
+          return NULL;
+        }
+        break;
+  
+      case IMG_CONV_MODE_NORMAL:
+        if (qsp->width) {
+          DBG2(r,"convert width=[%d --> %d]", neww, qsp->width);
+          neww = qsp->width;
+        }
+        if (qsp->height) {
+          DBG2(r,"convert heigh=[%d --> %d]", newh, qsp->height);
+          newh = qsp->height;
+        }
+  
+      default:
+        if (MagickResizeImage(magick_wand,neww,newh,LanczosFilter,1.0) == MagickFalse) {
+          EXIT_MAGICK_ERROR();
+          return NULL;
+        }
+        break;
       }
-
-      if (MagickCropImage(magick_wand, 
-                      (unsigned long)c_width, 
-                      (unsigned long)c_heigh,
-                      (long)((neww - c_width) / 2),
-                      (long)((newh - c_heigh) / 2)) == MagickFalse) {
-        EXIT_MAGICK_ERROR();
-        return NULL;
+  
+      if (spec->html_spec_type != CHXJ_SPEC_UNKNOWN) {
+        if (MagickSetImageUnits(magick_wand, PixelsPerInchResolution) == MagickFalse) {
+          EXIT_MAGICK_ERROR();
+          return NULL;
+        }
+    
+        if (MagickSetImageResolution(magick_wand,
+                                     (double)spec->dpi_width,
+                                     (double)spec->dpi_heigh) == MagickFalse) {
+          EXIT_MAGICK_ERROR();
+          return NULL;
+        }
+    
+        if (MagickSetImageDispose(magick_wand, BackgroundDispose) == MagickFalse) {
+          EXIT_MAGICK_ERROR();
+          return NULL;
+        }
       }
-      break;
-
-    case IMG_CONV_MODE_NORMAL:
-      if (qsp->width) {
-        DBG2(r,"convert width=[%d --> %d]", neww, qsp->width);
-        neww = qsp->width;
-      }
-      if (qsp->height) {
-        DBG2(r,"convert heigh=[%d --> %d]", newh, qsp->height);
-        newh = qsp->height;
-      }
-
-    default:
-      if (MagickResizeImage(magick_wand,neww,newh,LanczosFilter,1.0) == MagickFalse) {
-        EXIT_MAGICK_ERROR();
-        return NULL;
-      }
-      break;
-    }
-
-    if (MagickSetImageUnits(magick_wand, PixelsPerInchResolution) == MagickFalse) {
-      EXIT_MAGICK_ERROR();
-      return NULL;
-    }
-
-    if (MagickSetImageResolution(magick_wand,
-                                 (double)spec->dpi_width,
-                                 (double)spec->dpi_heigh) == MagickFalse) {
-      EXIT_MAGICK_ERROR();
-      return NULL;
-    }
-
-    if (MagickSetImageDispose(magick_wand, BackgroundDispose) == MagickFalse) {
-      EXIT_MAGICK_ERROR();
-      return NULL;
     }
   }
-
   return magick_wand;
 }
 
 static MagickWand*
-s_fixup_color(MagickWand* magick_wand, request_rec* r, device_table* spec, img_conv_mode_t mode)
+s_fixup_color(MagickWand* magick_wand, request_rec* r, device_table* spec, img_conv_mode_t UNUSED(mode))
 {
   DBG(r,"start chxj_fixup_clor()");
+
+  if (spec->html_spec_type == CHXJ_SPEC_UNKNOWN) {
+    DBG(r, "Pass s_fixup_color proc");
+    return magick_wand;
+  }
 
   if (spec->color >= 256) {
 
@@ -1108,6 +1116,11 @@ s_fixup_color(MagickWand* magick_wand, request_rec* r, device_table* spec, img_c
 static MagickWand*
 s_fixup_depth(MagickWand* magick_wand, request_rec* r, device_table* spec)
 {
+  if (spec->html_spec_type == CHXJ_SPEC_UNKNOWN) {
+    DBG(r, "Pass s_fixup_depth proc");
+    return magick_wand;
+  }
+
   if (spec->color == 15680000) {
     if (MagickSetImageDepth(magick_wand, 24) == MagickFalse) {
       EXIT_MAGICK_ERROR();
@@ -1165,6 +1178,11 @@ static MagickWand*
 s_add_copyright(MagickWand* magick_wand, request_rec* r, device_table* spec)
 {
   mod_chxj_config* conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+
+  if (spec->html_spec_type == CHXJ_SPEC_UNKNOWN) {
+    DBG(r, "Pass add_copiright proc");
+    return magick_wand;
+  }
 
   if (conf->image_copyright) {
 
@@ -1227,7 +1245,7 @@ s_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table* spec)
 
     writedata = (char*)MagickGetImageBlob(magick_wand, &writebyte);
     if (writebyte >= prev_size || revers_flag) {
-      DBG2(r, "quality=[%ld] size=[%d]", (long)quality, writebyte);
+      DBG2(r, "quality=[%ld] size=[%d]", (long)quality, (int)writebyte);
       revers_flag = 1;
       quality += 10;
       if (quality > 100) {
@@ -1241,12 +1259,12 @@ s_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table* spec)
       continue;
     }
 
-    DBG2(r, "quality=[%ld] size=[%d]", (long)quality, writebyte);
+    DBG2(r, "quality=[%ld] size=[%d]", (long)quality, (int)writebyte);
 
     if (spec->cache == 0)
       break;
 
-    if (writebyte <= spec->cache)
+    if (writebyte <= (unsigned int)spec->cache)
       break;
 
     quality -= 10;
@@ -1259,7 +1277,7 @@ s_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table* spec)
 
 
   if (spec->cache > 0 
-  &&  writebyte   > spec->cache) {
+  &&  writebyte   > (unsigned int)spec->cache) {
     unsigned long now_color = spec->color;
     unsigned long depth     = 0;
     do {
@@ -1309,7 +1327,7 @@ s_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table* spec)
 
       writedata = (char*)MagickGetImageBlob(magick_wand, &writebyte);
 
-      DBG2(r,"now_color=[%ld] size=[%d]", (long)now_color, writebyte);
+      DBG2(r,"now_color=[%ld] size=[%d]", (long)now_color, (int)writebyte);
 
       /* Once per request */
       break;
@@ -1370,7 +1388,7 @@ s_send_cache_file(device_table* spec, query_string_param_t* query_string, reques
     ap_send_fd(fout, r, 0, st.size, &sendbyte);
     apr_file_close(fout);
     ap_rflush(r);
-    DBG1(r, "send file data[%d]byte", sendbyte);
+    DBG1(r, "send file data[%d]byte", (int)sendbyte);
   }
   else
   if (query_string->mode == IMG_CONV_MODE_EZGET) {
@@ -1428,7 +1446,7 @@ s_send_cache_file(device_table* spec, query_string_param_t* query_string, reques
       ap_send_fd(fout, r, query_string->offset, query_string->count, &sendbyte);
       apr_file_close(fout);
       ap_rflush(r);
-      DBG1(r, "send file data[%d]byte", sendbyte);
+      DBG1(r, "send file data[%d]byte", (int)sendbyte);
     }
   }
   

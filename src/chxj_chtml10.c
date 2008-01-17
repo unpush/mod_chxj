@@ -1,6 +1,6 @@
 /*
+ * Copyright (C) 2005-2008 Atsushi Konno All rights reserved.
  * Copyright (C) 2005 QSDN,Inc. All rights reserved.
- * Copyright (C) 2005 Atsushi Konno All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -507,7 +507,7 @@ s_chtml10_search_emoji(chtml10_t* chtml10, char* txt, char** rslt)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_start_html_tag(void* pdoc, Node* node) 
+s_chtml10_start_html_tag(void* pdoc, Node* UNUSED(node)) 
 {
   Doc*          doc;
   request_rec*  r;
@@ -535,7 +535,7 @@ s_chtml10_start_html_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_html_tag(void* pdoc, Node* child) 
+s_chtml10_end_html_tag(void* pdoc, Node* UNUSED(child)) 
 {
   Doc*          doc;
   request_rec*  r;
@@ -561,7 +561,7 @@ s_chtml10_end_html_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_start_meta_tag(void* pdoc, Node* node) 
+s_chtml10_start_meta_tag(void* pdoc, Node* UNUSED(node)) 
 {
   chtml10_t* chtml10;
 
@@ -582,7 +582,7 @@ s_chtml10_start_meta_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_meta_tag(void* pdoc, Node* child) 
+s_chtml10_end_meta_tag(void* pdoc, Node* UNUSED(child)) 
 {
   chtml10_t* chtml10;
 
@@ -601,7 +601,7 @@ s_chtml10_end_meta_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_start_head_tag(void* pdoc, Node* node) 
+s_chtml10_start_head_tag(void* pdoc, Node* UNUSED(node)) 
 {
   Doc*          doc;
   request_rec*  r;
@@ -626,7 +626,7 @@ s_chtml10_start_head_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_head_tag(void* pdoc, Node* child) 
+s_chtml10_end_head_tag(void* pdoc, Node* UNUSED(child)) 
 {
   Doc*          doc;
   request_rec*  r;
@@ -651,7 +651,7 @@ s_chtml10_end_head_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_start_ol_tag(void* pdoc, Node* node) 
+s_chtml10_start_ol_tag(void* pdoc, Node* UNUSED(node)) 
 {
   Doc*          doc;
   request_rec*  r;
@@ -676,7 +676,7 @@ s_chtml10_start_ol_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_ol_tag(void* pdoc, Node* child) 
+s_chtml10_end_ol_tag(void* pdoc, Node* UNUSED(child)) 
 {
   Doc*          doc;
   request_rec*  r;
@@ -701,7 +701,7 @@ s_chtml10_end_ol_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_start_ul_tag(void* pdoc, Node* node) 
+s_chtml10_start_ul_tag(void* pdoc, Node* UNUSED(node)) 
 {
   Doc*          doc;
   request_rec*  r;
@@ -726,7 +726,7 @@ s_chtml10_start_ul_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_ul_tag(void* pdoc, Node* child) 
+s_chtml10_end_ul_tag(void* pdoc, Node* UNUSED(child)) 
 {
   Doc*          doc;
   request_rec*  r;
@@ -751,7 +751,7 @@ s_chtml10_end_ul_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_start_li_tag(void* pdoc, Node* node) 
+s_chtml10_start_li_tag(void* pdoc, Node* UNUSED(node)) 
 {
   Doc*          doc;
   request_rec*  r;
@@ -776,7 +776,7 @@ s_chtml10_start_li_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_li_tag(void* pdoc, Node* child) 
+s_chtml10_end_li_tag(void* pdoc, Node* UNUSED(child)) 
 {
   chtml10_t*    chtml10;
   Doc*          doc;
@@ -801,7 +801,7 @@ s_chtml10_end_li_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_start_h1_tag(void* pdoc, Node* node) 
+s_chtml10_start_h1_tag(void* pdoc, Node* UNUSED(node)) 
 {
   Doc*          doc;
   request_rec*  r;
@@ -826,7 +826,7 @@ s_chtml10_start_h1_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_h1_tag(void* pdoc, Node* child) 
+s_chtml10_end_h1_tag(void* pdoc, Node* UNUSED(child)) 
 {
   Doc*          doc;
   request_rec*  r;
@@ -851,7 +851,7 @@ s_chtml10_end_h1_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_start_h2_tag(void* pdoc, Node* node) 
+s_chtml10_start_h2_tag(void* pdoc, Node* UNUSED(node)) 
 {
   Doc*          doc;
   request_rec*  r;
@@ -876,7 +876,7 @@ s_chtml10_start_h2_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_h2_tag(void* pdoc, Node* child) 
+s_chtml10_end_h2_tag(void* pdoc, Node* UNUSED(child)) 
 {
   Doc*          doc;
   request_rec*  r;
@@ -901,7 +901,7 @@ s_chtml10_end_h2_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_start_h3_tag(void* pdoc, Node* node) 
+s_chtml10_start_h3_tag(void* pdoc, Node* UNUSED(node)) 
 {
   Doc*          doc;
   request_rec*  r;
@@ -926,7 +926,7 @@ s_chtml10_start_h3_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_h3_tag(void* pdoc, Node* child) 
+s_chtml10_end_h3_tag(void* pdoc, Node* UNUSED(child)) 
 {
   chtml10_t*    chtml10;
   Doc*          doc;
@@ -951,7 +951,7 @@ s_chtml10_end_h3_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_start_h4_tag(void* pdoc, Node* node) 
+s_chtml10_start_h4_tag(void* pdoc, Node* UNUSED(node)) 
 {
   chtml10_t*    chtml10;
   Doc*          doc;
@@ -976,7 +976,7 @@ s_chtml10_start_h4_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_h4_tag(void* pdoc, Node* child) 
+s_chtml10_end_h4_tag(void* pdoc, Node* UNUSED(child)) 
 {
   Doc*          doc;
   request_rec*  r;
@@ -1001,7 +1001,7 @@ s_chtml10_end_h4_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_start_h5_tag(void* pdoc, Node* node) 
+s_chtml10_start_h5_tag(void* pdoc, Node* UNUSED(node)) 
 {
   Doc*          doc;
   request_rec*  r;
@@ -1026,7 +1026,7 @@ s_chtml10_start_h5_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_h5_tag(void* pdoc, Node* child) 
+s_chtml10_end_h5_tag(void* pdoc, Node* UNUSED(child)) 
 {
   Doc*          doc;
   request_rec*  r;
@@ -1051,7 +1051,7 @@ s_chtml10_end_h5_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_start_h6_tag(void* pdoc, Node* node) 
+s_chtml10_start_h6_tag(void* pdoc, Node* UNUSED(node)) 
 {
   Doc*          doc;
   request_rec*  r;
@@ -1076,7 +1076,7 @@ s_chtml10_start_h6_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_h6_tag(void* pdoc, Node* child) 
+s_chtml10_end_h6_tag(void* pdoc, Node* UNUSED(child)) 
 {
   Doc*          doc;
   request_rec*  r;
@@ -1101,7 +1101,7 @@ s_chtml10_end_h6_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_start_title_tag(void* pdoc, Node* node) 
+s_chtml10_start_title_tag(void* pdoc, Node* UNUSED(node)) 
 {
   Doc*         doc;
   request_rec* r;
@@ -1126,7 +1126,7 @@ s_chtml10_start_title_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_title_tag(void* pdoc, Node* child) 
+s_chtml10_end_title_tag(void* pdoc, Node* UNUSED(child)) 
 {
   Doc*          doc;
   request_rec*  r;
@@ -1202,7 +1202,7 @@ s_chtml10_start_base_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_base_tag(void* pdoc, Node* child) 
+s_chtml10_end_base_tag(void* pdoc, Node* UNUSED(child)) 
 {
   chtml10_t* chtml10 = GET_CHTML10(pdoc);
 
@@ -1314,7 +1314,7 @@ s_chtml10_start_body_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_body_tag(void* pdoc, Node* child) 
+s_chtml10_end_body_tag(void* pdoc, Node* UNUSED(child)) 
 {
   Doc*          doc;
   request_rec*  r;
@@ -1522,7 +1522,7 @@ s_chtml10_start_a_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_a_tag(void* pdoc, Node* child) 
+s_chtml10_end_a_tag(void* pdoc, Node* UNUSED(child)) 
 {
   chtml10_t*   chtml10;
   Doc*         doc;
@@ -1547,7 +1547,7 @@ s_chtml10_end_a_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_start_br_tag(void* pdoc, Node* node) 
+s_chtml10_start_br_tag(void* pdoc, Node* UNUSED(node)) 
 {
   chtml10_t*   chtml10;
   Doc*         doc;
@@ -1572,7 +1572,7 @@ s_chtml10_start_br_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_br_tag(void* pdoc, Node* child) 
+s_chtml10_end_br_tag(void* pdoc, Node* UNUSED(child)) 
 {
   chtml10_t* chtml10 = GET_CHTML10(pdoc);
 
@@ -1589,7 +1589,7 @@ s_chtml10_end_br_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_start_tr_tag(void* pdoc, Node* node) 
+s_chtml10_start_tr_tag(void* pdoc, Node* UNUSED(node)) 
 {
   chtml10_t* chtml10 = GET_CHTML10(pdoc);
 
@@ -1606,7 +1606,7 @@ s_chtml10_start_tr_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_tr_tag(void* pdoc, Node* child) 
+s_chtml10_end_tr_tag(void* pdoc, Node* UNUSED(child)) 
 {
   chtml10_t*   chtml10;
   Doc*         doc;
@@ -1631,7 +1631,7 @@ s_chtml10_end_tr_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_start_font_tag(void* pdoc, Node* node) 
+s_chtml10_start_font_tag(void* pdoc, Node* UNUSED(node)) 
 {
   chtml10_t* chtml10 = GET_CHTML10(pdoc);
 
@@ -1650,7 +1650,7 @@ s_chtml10_start_font_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_font_tag(void* pdoc, Node* child) 
+s_chtml10_end_font_tag(void* pdoc, Node* UNUSED(child)) 
 {
   chtml10_t* chtml10 = GET_CHTML10(pdoc);
 
@@ -1758,7 +1758,7 @@ s_chtml10_start_form_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_form_tag(void* pdoc, Node* child) 
+s_chtml10_end_form_tag(void* pdoc, Node* UNUSED(child)) 
 {
   chtml10_t*   chtml10;
   Doc*         doc;
@@ -1900,7 +1900,7 @@ s_chtml10_start_input_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_input_tag(void* pdoc, Node* child) 
+s_chtml10_end_input_tag(void* pdoc, Node* UNUSED(child)) 
 {
   chtml10_t* chtml10 = GET_CHTML10(pdoc);
 
@@ -1917,7 +1917,7 @@ s_chtml10_end_input_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_start_center_tag(void* pdoc, Node* node) 
+s_chtml10_start_center_tag(void* pdoc, Node* UNUSED(node)) 
 {
   chtml10_t*   chtml10;
   Doc*         doc;
@@ -1942,7 +1942,7 @@ s_chtml10_start_center_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_center_tag(void* pdoc, Node* child) 
+s_chtml10_end_center_tag(void* pdoc, Node* UNUSED(child)) 
 {
   chtml10_t*    chtml10;
   Doc*          doc;
@@ -2069,7 +2069,7 @@ s_chtml10_start_hr_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_hr_tag(void* pdoc, Node* child) 
+s_chtml10_end_hr_tag(void* pdoc, Node* UNUSED(child)) 
 {
   chtml10_t* chtml10;
 
@@ -2243,7 +2243,7 @@ s_chtml10_start_img_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_img_tag(void* pdoc, Node* child) 
+s_chtml10_end_img_tag(void* pdoc, Node* UNUSED(child)) 
 {
   chtml10_t* chtml10;
 
@@ -2356,7 +2356,7 @@ s_chtml10_start_select_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_select_tag(void* pdoc, Node* child)
+s_chtml10_end_select_tag(void* pdoc, Node* UNUSED(child))
 {
   chtml10_t*   chtml10;
   Doc*         doc;
@@ -2468,7 +2468,7 @@ s_chtml10_start_option_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_option_tag(void* pdoc, Node* child)
+s_chtml10_end_option_tag(void* pdoc, Node* UNUSED(child))
 {
   chtml10_t* chtml10;
  
@@ -2542,7 +2542,7 @@ s_chtml10_start_div_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_div_tag(void* pdoc, Node* child)
+s_chtml10_end_div_tag(void* pdoc, Node* UNUSED(child))
 {
   chtml10_t*   chtml10;
   Doc*         doc;
@@ -2598,7 +2598,7 @@ s_chtml10_chxjif_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_start_pre_tag(void* pdoc, Node* node) 
+s_chtml10_start_pre_tag(void* pdoc, Node* UNUSED(node)) 
 {
   Doc*          doc;
   request_rec*  r;
@@ -2624,7 +2624,7 @@ s_chtml10_start_pre_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_pre_tag(void* pdoc, Node* child) 
+s_chtml10_end_pre_tag(void* pdoc, Node* UNUSED(child)) 
 {
   chtml10_t*    chtml10;
   Doc*          doc;
@@ -2650,7 +2650,7 @@ s_chtml10_end_pre_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_start_p_tag(void* pdoc, Node* node) 
+s_chtml10_start_p_tag(void* pdoc, Node* UNUSED(node)) 
 {
   Doc*          doc;
   request_rec*  r;
@@ -2675,7 +2675,7 @@ s_chtml10_start_p_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_p_tag(void* pdoc, Node* child) 
+s_chtml10_end_p_tag(void* pdoc, Node* UNUSED(child)) 
 {
   Doc*          doc;
   request_rec*  r;
@@ -2782,7 +2782,7 @@ s_chtml10_start_textarea_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_end_textarea_tag(void* pdoc, Node* child) 
+s_chtml10_end_textarea_tag(void* pdoc, Node* UNUSED(child)) 
 {
   Doc*          doc;
   request_rec*  r;

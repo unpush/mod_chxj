@@ -1,6 +1,6 @@
 /*
+ * Copyright (C) 2005-2008 Atsushi Konno All rights reserved.
  * Copyright (C) 2005 QSDN,Inc. All rights reserved.
- * Copyright (C) 2005 Atsushi Konno All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -338,7 +338,7 @@ chxj_exchange_xhtml_mobile_1_0(
   apr_size_t      srclen,
   apr_size_t*     dstlen,
   chxjconvrule_entry* entryp,
-  cookie_t*   cookie
+  cookie_t*   UNUSED(cookie)
 )
 {
   char*     dst = NULL;
@@ -648,7 +648,7 @@ s_xhtml_1_0_start_html_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_html_tag(void* pdoc, Node* child) 
+s_xhtml_1_0_end_html_tag(void* pdoc, Node* UNUSED(child)) 
 {
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
@@ -753,7 +753,7 @@ s_xhtml_1_0_start_meta_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_meta_tag(void* pdoc, Node* child) 
+s_xhtml_1_0_end_meta_tag(void* pdoc, Node* UNUSED(child)) 
 {
   xhtml_t*  xhtml = GET_XHTML(pdoc);
 
@@ -770,7 +770,7 @@ s_xhtml_1_0_end_meta_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_head_tag(void* pdoc, Node* node) 
+s_xhtml_1_0_start_head_tag(void* pdoc, Node* UNUSED(node)) 
 {
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
@@ -791,7 +791,7 @@ s_xhtml_1_0_start_head_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_head_tag(void* pdoc, Node* child) 
+s_xhtml_1_0_end_head_tag(void* pdoc, Node* UNUSED(child)) 
 {
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
@@ -812,7 +812,7 @@ s_xhtml_1_0_end_head_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_title_tag(void* pdoc, Node* node) 
+s_xhtml_1_0_start_title_tag(void* pdoc, Node* UNUSED(node)) 
 {
   xhtml_t*     xhtml = GET_XHTML(pdoc);
   Doc*         doc   = xhtml->doc;
@@ -833,7 +833,7 @@ s_xhtml_1_0_start_title_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_title_tag(void* pdoc, Node* child) 
+s_xhtml_1_0_end_title_tag(void* pdoc, Node* UNUSED(child)) 
 {
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
@@ -895,7 +895,7 @@ s_xhtml_1_0_start_base_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_base_tag(void* pdoc, Node* child) 
+s_xhtml_1_0_end_base_tag(void* pdoc, Node* UNUSED(child)) 
 {
   xhtml_t* xhtml = GET_XHTML(pdoc);
 
@@ -979,7 +979,7 @@ s_xhtml_1_0_start_body_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_body_tag(void* pdoc, Node* child) 
+s_xhtml_1_0_end_body_tag(void* pdoc, Node* UNUSED(child)) 
 {
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
@@ -1116,7 +1116,7 @@ s_xhtml_1_0_start_a_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_a_tag(void* pdoc, Node* child) 
+s_xhtml_1_0_end_a_tag(void* pdoc, Node* UNUSED(child)) 
 {
   xhtml_t*     xhtml = GET_XHTML(pdoc);
   Doc*         doc   = xhtml->doc;
@@ -1137,7 +1137,7 @@ s_xhtml_1_0_end_a_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_br_tag(void* pdoc, Node* node) 
+s_xhtml_1_0_start_br_tag(void* pdoc, Node* UNUSED(node)) 
 {
   xhtml_t*     xhtml = GET_XHTML(pdoc);
   Doc*         doc   = xhtml->doc;
@@ -1158,7 +1158,7 @@ s_xhtml_1_0_start_br_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_br_tag(void* pdoc, Node* child) 
+s_xhtml_1_0_end_br_tag(void* pdoc, Node* UNUSED(child)) 
 {
   xhtml_t* xhtml = GET_XHTML(pdoc);
 
@@ -1175,7 +1175,7 @@ s_xhtml_1_0_end_br_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_tr_tag(void* pdoc, Node* node) 
+s_xhtml_1_0_start_tr_tag(void* pdoc, Node* UNUSED(node)) 
 {
   xhtml_t*     xhtml = GET_XHTML(pdoc);
   Doc*         doc   = xhtml->doc;
@@ -1196,7 +1196,7 @@ s_xhtml_1_0_start_tr_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_tr_tag(void* pdoc, Node* child) 
+s_xhtml_1_0_end_tr_tag(void* pdoc, Node* UNUSED(child)) 
 {
   xhtml_t* xhtml = GET_XHTML(pdoc);
 
@@ -1250,7 +1250,7 @@ s_xhtml_1_0_start_font_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_font_tag(void* pdoc, Node* child) 
+s_xhtml_1_0_end_font_tag(void* pdoc, Node* UNUSED(child)) 
 {
   xhtml_t*     xhtml = GET_XHTML(pdoc);
   Doc*         doc   = xhtml->doc;
@@ -1325,7 +1325,7 @@ s_xhtml_1_0_start_form_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_form_tag(void* pdoc, Node* child) 
+s_xhtml_1_0_end_form_tag(void* pdoc, Node* UNUSED(child)) 
 {
   xhtml_t*     xhtml = GET_XHTML(pdoc);
   Doc*         doc   = xhtml->doc;
@@ -1418,7 +1418,7 @@ s_xhtml_1_0_start_input_tag(void* pdoc, Node* node)
     char* fmt = qs_conv_istyle_to_format(r,istyle);
     if (max_length) {
       int ii;
-      for (ii=0; ii<strlen(max_length); ii++) {
+      for (ii=0; (unsigned int)ii<strlen(max_length); ii++) {
         if (max_length[ii] < '0' || max_length[ii] > '9') {
           max_length = apr_psprintf(r->pool, "0");
           break;
@@ -1484,7 +1484,7 @@ s_xhtml_1_0_start_input_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_input_tag(void* pdoc, Node* child) 
+s_xhtml_1_0_end_input_tag(void* pdoc, Node* UNUSED(child)) 
 {
   xhtml_t* xhtml = GET_XHTML(pdoc);
 
@@ -1501,7 +1501,7 @@ s_xhtml_1_0_end_input_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_center_tag(void* pdoc, Node* node) 
+s_xhtml_1_0_start_center_tag(void* pdoc, Node* UNUSED(node)) 
 {
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
@@ -1522,7 +1522,7 @@ s_xhtml_1_0_start_center_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_center_tag(void* pdoc, Node* child) 
+s_xhtml_1_0_end_center_tag(void* pdoc, Node* UNUSED(child)) 
 {
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
@@ -1543,7 +1543,7 @@ s_xhtml_1_0_end_center_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_hr_tag(void* pdoc, Node* node) 
+s_xhtml_1_0_start_hr_tag(void* pdoc, Node* UNUSED(node)) 
 {
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
@@ -1564,7 +1564,7 @@ s_xhtml_1_0_start_hr_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_hr_tag(void* pdoc, Node* child) 
+s_xhtml_1_0_end_hr_tag(void* pdoc, Node* UNUSED(child)) 
 {
   xhtml_t* xhtml = GET_XHTML(pdoc);
 
@@ -1581,7 +1581,7 @@ s_xhtml_1_0_end_hr_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_pre_tag(void* pdoc, Node* node) 
+s_xhtml_1_0_start_pre_tag(void* pdoc, Node* UNUSED(node)) 
 {
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
@@ -1603,7 +1603,7 @@ s_xhtml_1_0_start_pre_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_pre_tag(void* pdoc, Node* child) 
+s_xhtml_1_0_end_pre_tag(void* pdoc, Node* UNUSED(child)) 
 {
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
@@ -1625,7 +1625,7 @@ s_xhtml_1_0_end_pre_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_p_tag(void* pdoc, Node* node) 
+s_xhtml_1_0_start_p_tag(void* pdoc, Node* UNUSED(node)) 
 {
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
@@ -1646,7 +1646,7 @@ s_xhtml_1_0_start_p_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_p_tag(void* pdoc, Node* child) 
+s_xhtml_1_0_end_p_tag(void* pdoc, Node* UNUSED(child)) 
 {
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
@@ -1667,7 +1667,7 @@ s_xhtml_1_0_end_p_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_ul_tag(void* pdoc, Node* node) 
+s_xhtml_1_0_start_ul_tag(void* pdoc, Node* UNUSED(node)) 
 {
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
@@ -1688,7 +1688,7 @@ s_xhtml_1_0_start_ul_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_ul_tag(void* pdoc, Node* child) 
+s_xhtml_1_0_end_ul_tag(void* pdoc, Node* UNUSED(child)) 
 {
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
@@ -1709,7 +1709,7 @@ s_xhtml_1_0_end_ul_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_h1_tag(void* pdoc, Node* node) 
+s_xhtml_1_0_start_h1_tag(void* pdoc, Node* UNUSED(node)) 
 {
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
@@ -1730,7 +1730,7 @@ s_xhtml_1_0_start_h1_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_h1_tag(void* pdoc, Node* child) 
+s_xhtml_1_0_end_h1_tag(void* pdoc, Node* UNUSED(child)) 
 {
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
@@ -1751,7 +1751,7 @@ s_xhtml_1_0_end_h1_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_h2_tag(void* pdoc, Node* node) 
+s_xhtml_1_0_start_h2_tag(void* pdoc, Node* UNUSED(node)) 
 {
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc = xhtml->doc;
@@ -1772,7 +1772,7 @@ s_xhtml_1_0_start_h2_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_h2_tag(void* pdoc, Node* child) 
+s_xhtml_1_0_end_h2_tag(void* pdoc, Node* UNUSED(child)) 
 {
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
@@ -1793,7 +1793,7 @@ s_xhtml_1_0_end_h2_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_h3_tag(void* pdoc, Node* node) 
+s_xhtml_1_0_start_h3_tag(void* pdoc, Node* UNUSED(node)) 
 {
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
@@ -1814,7 +1814,7 @@ s_xhtml_1_0_start_h3_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_h3_tag(void* pdoc, Node* child) 
+s_xhtml_1_0_end_h3_tag(void* pdoc, Node* UNUSED(child)) 
 {
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
@@ -1835,7 +1835,7 @@ s_xhtml_1_0_end_h3_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_h4_tag(void* pdoc, Node* node) 
+s_xhtml_1_0_start_h4_tag(void* pdoc, Node* UNUSED(node)) 
 {
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
@@ -1856,7 +1856,7 @@ s_xhtml_1_0_start_h4_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_h4_tag(void* pdoc, Node* child) 
+s_xhtml_1_0_end_h4_tag(void* pdoc, Node* UNUSED(child)) 
 {
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
@@ -1877,7 +1877,7 @@ s_xhtml_1_0_end_h4_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_h5_tag(void* pdoc, Node* node) 
+s_xhtml_1_0_start_h5_tag(void* pdoc, Node* UNUSED(node)) 
 {
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
@@ -1897,7 +1897,7 @@ s_xhtml_1_0_start_h5_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_h5_tag(void* pdoc, Node* child) 
+s_xhtml_1_0_end_h5_tag(void* pdoc, Node* UNUSED(child)) 
 {
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
@@ -1918,7 +1918,7 @@ s_xhtml_1_0_end_h5_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_h6_tag(void* pdoc, Node* node) 
+s_xhtml_1_0_start_h6_tag(void* pdoc, Node* UNUSED(node)) 
 {
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
@@ -1939,7 +1939,7 @@ s_xhtml_1_0_start_h6_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_h6_tag(void* pdoc, Node* child) 
+s_xhtml_1_0_end_h6_tag(void* pdoc, Node* UNUSED(child)) 
 {
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
@@ -1960,7 +1960,7 @@ s_xhtml_1_0_end_h6_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_ol_tag(void* pdoc, Node* node) 
+s_xhtml_1_0_start_ol_tag(void* pdoc, Node* UNUSED(node)) 
 {
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
@@ -1981,7 +1981,7 @@ s_xhtml_1_0_start_ol_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_ol_tag(void* pdoc, Node* child) 
+s_xhtml_1_0_end_ol_tag(void* pdoc, Node* UNUSED(child)) 
 {
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
@@ -2002,7 +2002,7 @@ s_xhtml_1_0_end_ol_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_li_tag(void* pdoc, Node* node) 
+s_xhtml_1_0_start_li_tag(void* pdoc, Node* UNUSED(node)) 
 {
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
@@ -2023,7 +2023,7 @@ s_xhtml_1_0_start_li_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_li_tag(void* pdoc, Node* child) 
+s_xhtml_1_0_end_li_tag(void* pdoc, Node* UNUSED(child)) 
 {
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
@@ -2127,7 +2127,7 @@ s_xhtml_1_0_start_img_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_img_tag(void* pdoc, Node* child) 
+s_xhtml_1_0_end_img_tag(void* pdoc, Node* UNUSED(child)) 
 {
   xhtml_t*  xhtml = GET_XHTML(pdoc);
 
@@ -2198,7 +2198,7 @@ s_xhtml_1_0_start_select_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_select_tag(void* pdoc, Node* child)
+s_xhtml_1_0_end_select_tag(void* pdoc, Node* UNUSED(child))
 {
   xhtml_t*     xhtml = GET_XHTML(pdoc);
   Doc*         doc   = xhtml->doc;
@@ -2270,7 +2270,7 @@ s_xhtml_1_0_start_option_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_option_tag(void* pdoc, Node* child)
+s_xhtml_1_0_end_option_tag(void* pdoc, Node* UNUSED(child))
 {
   xhtml_t*     xhtml = GET_XHTML(pdoc);
   Doc*         doc   = xhtml->doc;
@@ -2332,7 +2332,7 @@ s_xhtml_1_0_start_div_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_div_tag(void* pdoc, Node* child)
+s_xhtml_1_0_end_div_tag(void* pdoc, Node* UNUSED(child))
 {
   xhtml_t*     xhtml = GET_XHTML(pdoc);
   Doc*         doc   = xhtml->doc;
@@ -2353,7 +2353,7 @@ s_xhtml_1_0_end_div_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_start_b_tag(void* pdoc, Node* child)
+s_xhtml_1_0_start_b_tag(void* pdoc, Node* UNUSED(child))
 {
   xhtml_t*     xhtml = GET_XHTML(pdoc);
   Doc*         doc   = xhtml->doc;
@@ -2374,7 +2374,7 @@ s_xhtml_1_0_start_b_tag(void* pdoc, Node* child)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_b_tag(void* pdoc, Node* child)
+s_xhtml_1_0_end_b_tag(void* pdoc, Node* UNUSED(child))
 {
   xhtml_t*     xhtml = GET_XHTML(pdoc);
   Doc*         doc   = xhtml->doc;
@@ -2466,7 +2466,7 @@ s_xhtml_1_0_start_textarea_tag(void* pdoc, Node* node)
  * @return The conversion result is returned.
  */
 static char*
-s_xhtml_1_0_end_textarea_tag(void* pdoc, Node* child) 
+s_xhtml_1_0_end_textarea_tag(void* pdoc, Node* UNUSED(child)) 
 {
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;

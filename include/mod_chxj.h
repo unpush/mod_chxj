@@ -1,6 +1,6 @@
 /*
+ * Copyright (C) 2005-2008 Atsushi Konno All rights reserved.
  * Copyright (C) 2005 QSDN,Inc. All rights reserved.
- * Copyright (C) 2005 Atsushi Konno All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,13 @@
 #ifndef __MOD_CHXJ_H__
 #define __MOD_CHXJ_H__
 
-#if !defined(OS2) && !defined(WIN32) && !defined(BEOS) && !defined(NETWARE)
-#  define AP_NEED_SET_MUTEX_PERMS
+#ifdef UNUSED
+#elif defined(__GNUC__)
+# define UNUSED(x) UNUSED_ ## x __attribute__((unused))
+#elif defined(__LCLINT__)
+# define UNUSED(x) /*@unused@*/ x
+#else
+# define UNUSED(x) x
 #endif
 
 
@@ -41,6 +46,11 @@
 
 #if defined(AP_NEED_SET_MUTEX_PERMS)
 #  include "unixd.h"
+#endif
+#if !defined(AP_NEED_SET_MUTEX_PERMS)
+#  if !defined(OS2) && !defined(WIN32) && !defined(BEOS) && !defined(NETWARE)
+#    define AP_NEED_SET_MUTEX_PERMS
+#  endif
 #endif
 
 #include "qs_ignore_sp.h"
@@ -308,7 +318,7 @@ typedef struct {
 } mod_chxj_global_config;
 
 typedef struct {
-  unsigned int len;
+  apr_size_t len;
 
   apr_bucket_brigade *bb;
 

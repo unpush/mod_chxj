@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005 QSDN,Inc. All rights reserved.
+ * Copyright (C) 2005-2008 QSDN,Inc. All rights reserved.
  * Copyright (C) 2005 Atsushi Konno All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -54,7 +54,7 @@ qs_parse_file(Doc* doc, const char* filename)
     return return_value;
 
   tgt = (char*)mmap(0, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
-  if ((int)tgt == -1) {
+  if (tgt == (void *)-1) {
     close(fd);
     return return_value;
   }

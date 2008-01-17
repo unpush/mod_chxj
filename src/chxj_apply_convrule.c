@@ -1,6 +1,6 @@
 /*
+ * Copyright (C) 2005-2008 Atsushi Konno All rights reserved.
  * Copyright (C) 2005 QSDN,Inc. All rights reserved.
- * Copyright (C) 2005 Atsushi Konno All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ s_apply_rule(request_rec* r, chxjconvrule_entry* pp)
 
   DBG2(r,"convert rule pattern=[%s] uri=[%s]", pp->pattern, uri);
 
-  rtn = ap_regexec(pp->regexp, uri, AP_MAX_REG_MATCH, regmatch, 0);
+  rtn = ap_regexec((const ap_regex_t*)pp->regexp, uri, AP_MAX_REG_MATCH, (ap_regmatch_t*)regmatch, 0);
   if (rtn == 0) {
     /* Match */
     if (pp->flags & CONVRULE_FLAG_NOTMATCH) {

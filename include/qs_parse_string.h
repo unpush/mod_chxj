@@ -1,6 +1,6 @@
 /*
+ * Copyright (C) 2005-2008 Atsushi Konno All rights reserved.
  * Copyright (C) 2005 QSDN,Inc. All rights reserved.
- * Copyright (C) 2005 Atsushi Konno All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -193,8 +193,9 @@ extern char* qs_get_node_name(
 
 extern int qs_get_node_size(Doc* doc, Node* node) ;
 
-extern Node* qs_get_child_node(Doc* doc, Node* node) ;
-extern Node* qs_get_next_node(Doc* doc, Node* node) ;
+extern Node *qs_get_child_node(Doc *doc, Node *node) ;
+extern Node *qs_get_next_node(Doc *doc, Node *node) ;
+
 Attr* qs_get_attr(Doc* doc, Node* node) ;
 Attr* qs_get_next_attr(Doc* doc, Attr* attr) ;
 char* qs_get_attr_name(Doc* doc, Attr* attr) ;

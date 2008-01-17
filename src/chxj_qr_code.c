@@ -1,6 +1,6 @@
 /*
+ * Copyright (C) 2005-2008 Atsushi Konno All rights reserved.
  * Copyright (C) 2005 QSDN,Inc. All rights reserved.
- * Copyright (C) 2005 Atsushi Konno All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -680,7 +680,7 @@ int
 chxj_qrcode_create_image_data(
   qr_code_t* qrcode,
   char**     img,
-  size_t*    img_len)
+  apr_size_t*    img_len)
 {
   int                xx, yy;
   int                module_count;
@@ -874,7 +874,7 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
 #ifdef QR_CODE_DEBUG
   DBG1(r,"Before TERM BIT[%s]", binstr);
 #endif
-  if (data_code_count * 8 > strlen(binstr)) {
+  if ((size_t)(data_code_count * 8) > strlen(binstr)) {
     int binstr_len = strlen(binstr);
     for (ii=0; ii< (data_code_count * 8) - binstr_len && ii < 4; ii++) {
       binstr = apr_pstrcat(r->pool, binstr, "0", NULL);
@@ -1309,7 +1309,7 @@ s_get_char_bit_count(qr_code_t* qrcode, int len)
  * 入力データから、２進文字列を取得します.
  */
 static char*
-s_data_to_bin_num(qr_code_t* qrcode, int data_code_count)
+s_data_to_bin_num(qr_code_t* qrcode, int UNUSED(data_code_count))
 {
   int len = strlen(qrcode->indata);
   int setn;
@@ -1379,7 +1379,7 @@ s_data_to_bin_num(qr_code_t* qrcode, int data_code_count)
  * 入力データから、２進文字列を取得します.
  */
 static char*
-s_data_to_bin_alpha(qr_code_t* qrcode, int data_code_count)
+s_data_to_bin_alpha(qr_code_t* qrcode, int UNUSED(data_code_count))
 {
   int len = strlen(qrcode->indata);
   int setn;
@@ -1524,7 +1524,7 @@ s_char_to_num_alpha(qr_code_t* qrcode, char src)
  * 入力データから２進文字列を取得します.
  */
 static char*
-s_data_to_bin_8bit(qr_code_t* qrcode, int data_code_count)
+s_data_to_bin_8bit(qr_code_t* qrcode, int UNUSED(data_code_count))
 {
   int len = strlen(qrcode->indata);
   int ii;
@@ -1570,7 +1570,7 @@ s_data_to_bin_8bit(qr_code_t* qrcode, int data_code_count)
  * A binary character string is acquired from input data.
  */
 static char*
-s_data_to_bin_kanji(qr_code_t* qrcode, int data_code_count)
+s_data_to_bin_kanji(qr_code_t* qrcode, int UNUSED(data_code_count))
 {
   int len = strlen(qrcode->indata);
   int ii;
@@ -2022,8 +2022,8 @@ s_setup_version_info(qr_code_t* qrcode, char* dst[])
 {
   char* bits = v_version_info_table[qrcode->version].bits;
   int module_count = v_module_count_table[qrcode->version];
-  int xx;
-  int yy;
+  size_t xx;
+  size_t yy;
 
   if (bits == NULL) {
     /* バージョン７以降のみ対象 */

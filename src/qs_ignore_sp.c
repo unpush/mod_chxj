@@ -1,6 +1,6 @@
 /*
+ * Copyright (C) 2005-2008 Atsushi Konno All rights reserved.
  * Copyright (C) 2005 QSDN,Inc. All rights reserved.
- * Copyright (C) 2005 Atsushi Konno All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,13 @@
  * limitations under the License.
  */
 #include "qs_parse_string.h"
+#include "qs_log.h"
 
 /**
  * ignore space
  */
 int
-qs_ignore_sp(Doc* doc, const char* s, int len) 
+qs_ignore_sp(Doc* UNUSED(doc), const char* s, int len) 
 {
   int ii;
   char* sp;
@@ -37,7 +38,7 @@ qs_ignore_sp(Doc* doc, const char* s, int len)
 
 
 int
-qs_ignore_sp_and_quote(Doc* doc, const char* s, int len) 
+qs_ignore_sp_and_quote(Doc* UNUSED(doc), const char* s, int len) 
 {
   int   ii;
   char* sp = (char*)s;
