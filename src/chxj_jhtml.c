@@ -2138,21 +2138,21 @@ s_jhtml_start_select_tag(void* pdoc, Node* child)
     char* nm  = qs_get_attr_name(doc,attr);
     char* val = qs_get_attr_value(doc,attr);
 
-    if ((*name == 's' || *name == 'S') && strcasecmp(nm, "size") == 0) {
+    if ((*nm == 's' || *nm == 'S') && strcasecmp(nm, "size") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0 version 2.0                                                */
       /*----------------------------------------------------------------------*/
       size = apr_pstrdup(r->pool, val);
     }
     else
-    if ((*name == 'n' || *name == 'N') && strcasecmp(nm, "name") == 0) {
+    if ((*nm == 'n' || *nm == 'N') && strcasecmp(nm, "name") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0 version 2.0                                                */
       /*----------------------------------------------------------------------*/
       name = apr_pstrdup(r->pool, val);
     }
     else
-    if ((*name == 'm' || *name == 'M') && strcasecmp(nm, "multiple") == 0) {
+    if ((*nm == 'm' || *nm == 'M') && strcasecmp(nm, "multiple") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0 version 2.0                                                */
       /*----------------------------------------------------------------------*/

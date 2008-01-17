@@ -25,12 +25,12 @@ extern Node* qs_parse_tag(
   int          len) ;
 
 extern Node* qs_new_tag(
-  Doc*         doc);
+  Doc       *doc);
 
-extern Node* qs_add_attr(
-  Doc*         doc,
-  Node*        node, 
-  Attr*        attr);
+extern Node *qs_add_attr(
+  Doc       *doc,
+  Node      *node, 
+  Attr      *attr);
 
 
 #endif

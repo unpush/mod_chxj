@@ -35,10 +35,10 @@
 #define HAVE_LIBGEN_H 1
 
 /* Define to 1 if you have the iconv library file. */
-#define HAVE_LIBICONV 
+/* #undef HAVE_LIBICONV */
 
 /* Define to 1 if you have the iconv_hook library file. */
-/* #undef HAVE_LIBICONV_HOOK */
+#define HAVE_LIBICONV_HOOK 
 
 /* Define to 1 if your system has a GNU libc compatible `malloc' function, and
    to 0 otherwise. */
@@ -102,19 +102,19 @@
 #define PACKAGE_NAME "mod_chxj"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "mod_chxj 0.8.0"
+#define PACKAGE_STRING "mod_chxj 0.9.0"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "mod_chxj"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "0.8.0"
+#define PACKAGE_VERSION "0.9.0"
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
 
 /* Version number of package */
-#define VERSION "0.8.0"
+#define VERSION "0.9.0"
 
 /* Define to empty if `const' does not conform to ANSI C. */
 /* #undef const */

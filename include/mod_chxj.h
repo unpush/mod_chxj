@@ -17,7 +17,6 @@
 #ifndef __MOD_CHXJ_H__
 #define __MOD_CHXJ_H__
 
-
 #ifdef UNUSED
 #elif defined(__GNUC__)
 # define UNUSED(x) UNUSED_ ## x __attribute__((unused))

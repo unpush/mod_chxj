@@ -1,7 +1,7 @@
 Source: libapache2-mod-chxj
 Priority: optional
 Maintainer: Atsushi Konno <konn@users.sourceforge.jp>
-Build-Depends: debhelper (>= 4.0.0), autotools-dev, apache2 (>=2.0.54-5), libapr0 (>=2.0.54-5), libmagick9-dev (>=6.2.4.5-0.6), libiconv-hook1 (>=0.0.20021209-6.1)
+Build-Depends: debhelper (>= 5.0.42), autotools-dev, apache2 (>=2.2.3), libapr1 (>=1.2.7), libaprutil1 (>=1.2.7), libmagick9-dev (>=6.2.4.5-0.6), libiconv-hook1 (>=0.0.20021209-6.1)
 Standards-Version: 3.6.2
 Section: libs
 
