@@ -5,7 +5,7 @@ AC_PREREQ(2.59)
 AC_CONFIG_SRCDIR([src/mod_chxj.c])
 AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
-AC_CONFIG_HEADERS([include/config.h])
+AM_CONFIG_HEADER(include/config.h)
 
 
 # Checks for programs.
