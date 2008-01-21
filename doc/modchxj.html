@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Script-Type" content="text/javascript">
 <meta name="generator" content="SmartDoc 1.1">
 <meta name="author" content="Atsushi Konno" lang="ja">
-<meta name="date" content="29 Mar 2005" lang="ja">
+<meta name="date" content="Last modified: 21 Jan 2008" lang="ja">
 <title>mod_chxj</title>
 <style type="text/css">
 <!--
@@ -692,123 +692,129 @@ function setOHPHandler() {
 
 <h1 class="title">mod_chxj<br><span class="subtitle"></span></h1>
 
-<div class="date">29 Mar 2005</div>
+<div class="date">Last modified: 21 Jan 2008</div>
 <div class="author">Atsushi Konno</div>
 <h2>目次</h2>
 
 <div class="toc">
 <ul>
-<li> <a href="#doc1_15" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">Overview</a>
-<li> <a href="#doc1_18" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">インストール</a>
+<li> <a href="#doc1_17" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">Overview</a>
+<li> <a href="#doc1_23" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">インストール</a>
 <ul>
-<li> <a href="#doc1_20" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">準備</a>
-<li> <a href="#doc1_47" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">mod_chxjの入手</a>
-<li> <a href="#doc1_53" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">インストール</a>
+<li> <a href="#doc1_25" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">準備</a>
+<li> <a href="#doc1_52" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">mod_chxjの入手</a>
+<li> <a href="#doc1_58" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">インストール</a>
 </ul>
-<li> <a href="#doc1_102" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">Configuration</a>
+<li> <a href="#doc1_104" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">Configuration</a>
 <ul>
-<li> <a href="#doc1_104" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">htmlファイルが変換対象の場合</a>
-<li> <a href="#doc1_119" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">php等の出力結果が変換対象の場合</a>
-<li> <a href="#doc1_134" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">xoopsを使用し、且つwordpress、bwikiを使用している場合</a>
-<li> <a href="#doc1_149" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">画像自動変換機能を使用する場合</a>
-<li> <a href="#doc1_214" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">文字コードを変換したい場合(EXPERIMENTAL)</a>
-<li> <a href="#doc1_258" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">ディレクティブ</a>
+<li> <a href="#doc1_106" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">htmlファイルが変換対象の場合</a>
+<li> <a href="#doc1_121" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">php等の出力結果が変換対象の場合</a>
+<li> <a href="#doc1_136" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">xoopsを使用し、且つwordpress、bwikiを使用している場合</a>
+<li> <a href="#doc1_151" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">画像自動変換機能を使用する場合</a>
+<li> <a href="#doc1_216" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">文字コードを変換したい場合(EXPERIMENTAL)</a>
+<li> <a href="#doc1_260" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">ディレクティブ</a>
 </ul>
-<li> <a href="#doc1_375" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">対応するCHTMLタグ</a>
-<li> <a href="#doc1_1083" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">独自拡張タグ</a>
-<li> <a href="#doc1_1120" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">絵文字について</a>
+<li> <a href="#doc1_377" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">対応するCHTMLタグ</a>
+<li> <a href="#doc1_1085" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">独自拡張タグ</a>
+<li> <a href="#doc1_1122" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">絵文字について</a>
 <ul>
-<li> <a href="#doc1_1125" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">絵文字変換定義</a>
+<li> <a href="#doc1_1127" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">絵文字変換定義</a>
 </ul>
-<li> <a href="#doc1_1170" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">デバイス定義 device_data.xml</a>
-<li> <a href="#doc1_1173" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">イメージ画像変換機能</a>
+<li> <a href="#doc1_1172" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">デバイス定義 device_data.xml</a>
+<li> <a href="#doc1_1175" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">イメージ画像変換機能</a>
 <ul>
-<li> <a href="#doc1_1182" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">サムネイルモード</a>
-<li> <a href="#doc1_1188" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">壁紙モード</a>
-<li> <a href="#doc1_1194" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">EzGetモード</a>
-<li> <a href="#doc1_1200" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">その他の機能</a>
+<li> <a href="#doc1_1184" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">サムネイルモード</a>
+<li> <a href="#doc1_1190" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">壁紙モード</a>
+<li> <a href="#doc1_1196" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">EzGetモード</a>
+<li> <a href="#doc1_1202" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">その他の機能</a>
 </ul>
-<li> <a href="#doc1_1231" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">ＱＲコード出力機能</a>
+<li> <a href="#doc1_1233" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">ＱＲコード出力機能</a>
 <ul>
-<li> <a href="#doc1_1233" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">ＱＲコード出力ハンドラの登録</a>
-<li> <a href="#doc1_1239" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">ＱＲコードソースファイルの設置</a>
-<li> <a href="#doc1_1263" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">ＱＲコードの動的出力機能</a>
+<li> <a href="#doc1_1235" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">ＱＲコード出力ハンドラの登録</a>
+<li> <a href="#doc1_1241" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">ＱＲコードソースファイルの設置</a>
+<li> <a href="#doc1_1265" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">ＱＲコードの動的出力機能</a>
 </ul>
-<li> <a href="#doc1_1270" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">Cookieシミュレート機能(EXPERIMENTAL)</a>
-<ul>
 <li> <a href="#doc1_1272" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">Cookieシミュレート機能(EXPERIMENTAL)</a>
-<li> <a href="#doc1_1278" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">One-Time ID</a>
-<li> <a href="#doc1_1281" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">Cookieの保存場所</a>
-<li> <a href="#doc1_1287" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">Cookieの保持期間</a>
-</ul>
-<li> <a href="#doc1_1294" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">Refererシミュレート機能(EXPERIMENTAL)</a>
 <ul>
+<li> <a href="#doc1_1274" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">Cookieシミュレート機能(EXPERIMENTAL)</a>
+<li> <a href="#doc1_1280" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">One-Time ID</a>
+<li> <a href="#doc1_1283" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">Cookieの保存場所</a>
+<li> <a href="#doc1_1289" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">Cookieの保持期間</a>
+</ul>
 <li> <a href="#doc1_1296" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">Refererシミュレート機能(EXPERIMENTAL)</a>
+<ul>
+<li> <a href="#doc1_1298" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">Refererシミュレート機能(EXPERIMENTAL)</a>
 </ul>
 </ul>
 </div>
 
-<h2 id="doc1_15">Overview</h2>
+<h2 id="doc1_17">Overview</h2>
 
-<p class="first_ja">mod_chxjはオープンソースの携帯向けコンテンツ変換Apache2.0用モジュールであり、CHTML（DoCoMo i-Mode用CHTML3.0)で記述された文書や通常のHTMLで記述された文書を、アクセスに来た端末のUser-Agentヘッダを見て、それぞれの端末にあった形式に変換します。HTML文書に限らず、画像（jpg、gif、png）、絵文字についても、定義ファイルに従ってそれぞれのキャリアにあった絵文字に変換します。Cookie非対応端末、Refer非対応端末のために、Set-Cookie、CookieヘッダやRefererヘッダをシミュレートすることもできます（EXPERIMENTAL)。</p>
+<p class="first_ja">mod_chxjはオープンソースの携帯向けコンテンツ変換Apache2.x用モジュールであり、CHTML（DoCoMo i-Mode用CHTML3.0)で記述された文書や通常のHTMLで記述された文書を、アクセスに来た端末のUser-Agentヘッダを見て、それぞれの端末にあった形式に変換します。HTML文書に限らず、画像（jpg、gif、png）、絵文字についても、定義ファイルに従ってそれぞれのキャリアにあった絵文字に変換します。Cookie非対応端末、Refer非対応端末のために、Set-Cookie、CookieヘッダやRefererヘッダをシミュレートすることもできます（EXPERIMENTAL)。<span class="note"><a href="#doc1_19" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="Apache2.2はバージョン0.8.1から対応"><sup>(1)</sup></a></span></p>
 
-<h2 id="doc1_18">インストール</h2>
+<div class="footnote">
+<ol>
+<li id="doc1_19" value="1"> Apache2.2はバージョン0.8.1から対応</ol>
+</div>
 
 
-<h3 id="doc1_20">準備</h3>
+<h2 id="doc1_23">インストール</h2>
+
+
+<h3 id="doc1_25">準備</h3>
 
 <p class="first_ja">mod_chxjをインストールする前に、下記のものを用意する必要があります。</p>
 
 <ol>
-<li> Apache2.0のヘッダーファイル群
-<li> Apache2.0用のapxs
+<li> Apache2.xのヘッダーファイル群
+<li> Apache2.x用のapxs
 <li> apr(Apache Portable Runtime)ライブラリとそのヘッダファイル郡(apu含む)
 <li> automake、autoconf、libtool1.3.X
 <li> ImageMagick(MagickWand)
-<li> libiconvまたはlibiconv_hook
+<li> libiconvまたはlibiconv_hook(SJIS-WIN、EUCJP-WIN対応が望ましい)
 <li> Linux</ol>
 
 
-<h3 id="doc1_47">mod_chxjの入手</h3>
+<h3 id="doc1_52">mod_chxjの入手</h3>
 
 <p class="first_ja">mod_chxjは<a href="http://sourceforge.jp/projects/modchxj/" target="_top" onmouseover="hilightExternallink(this)" onmouseout="normal(this)">こちら</a>からダウンロードすることができます。</p>
 
-<h3 id="doc1_53">インストール</h3>
+<h3 id="doc1_58">インストール</h3>
 
 <p class="first_ja">以下にmod_chxjインストール手順を示します。</p>
 
 <ol>
 <li> <p>Configureスクリプトを生成します</p>
 
-<div id="doc1_59" class="caption">Configure スクリプトの生成</div>
+<div id="doc1_64" class="caption">Configure スクリプトの生成</div>
 <pre class="program" style="margin-top:0">
 $ ./buildconf.sh
 </pre>
 
-<p><span class="note"><a href="#doc1_62" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="&quot;$&quot;はプロンプトをあらわします。"><sup>(1)</sup></a></span></p>
+<p><span class="note"><a href="#doc1_67" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="&quot;$&quot;はプロンプトをあらわします。"><sup>(2)</sup></a></span></p>
 <li> <p>Configure</p>
-<p>以下は、/usr/include/apache2.0に、Apache2.0のヘッダーファイルが存在する場合です。</p>
+<p>以下は、/usr/include/apache2.xに、Apache2.xのヘッダーファイルが存在する場合です。</p>
 
-<div id="doc1_68" class="caption">Configure</div>
+<div id="doc1_73" class="caption">Configure</div>
 <pre class="program" style="margin-top:0">
-$ ./configure --with-apache-header=/usr/include/apache2.0
+$ ./configure --with-apache-header=/usr/include/apache2.x
 </pre>
 
-<p><span class="note"><a href="#doc1_71" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="--with-apache-headerは必須です。"><sup>(2)</sup></a></span><span class="note"><a href="#doc1_74" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="FreeBSD等の場合は--with-iconvも必須です。"><sup>(3)</sup></a></span><span class="note"><a href="#doc1_77" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="場合によっては--with-aprや--with-apuも必要です。"><sup>(4)</sup></a></span></p>
+<p><span class="note"><a href="#doc1_76" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="--with-apache-headerは必須です。"><sup>(3)</sup></a></span><span class="note"><a href="#doc1_79" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="環境によっては--with-iconvや--with-apr、--with-apuも必要です"><sup>(4)</sup></a></span></p>
 <li> mod_chxj.soを生成します
-<div id="doc1_83" class="caption">make</div>
+<div id="doc1_85" class="caption">make</div>
 <pre class="program" style="margin-top:0">
 $ make
 </pre>
 <li> apacheにインストールします
-<div id="doc1_89" class="caption">install</div>
+<div id="doc1_91" class="caption">install</div>
 <pre class="program" style="margin-top:0">
 $ make install
 </pre>
 <li> <p>データの設置etcディレクトリは以下のdevice_data.xmlとemoji.xmlをApacheからアクセスできるところに配置します。</p>
 <p>以下、/etc/apache2/chxjディレクトリにchxj用設定ファイルを用意する場合</p>
 
-<div id="doc1_95" class="caption">データの設置</div>
+<div id="doc1_97" class="caption">データの設置</div>
 <pre class="program" style="margin-top:0">
 $ mkdir -p /etc/apache2/chxj
 $ cp etc/device_data.xml /etc/apache2/chxj
@@ -818,24 +824,24 @@ $ cp etc/emoji.xml /etc/apache2/chxj
 
 <div class="footnote">
 <ol>
-<li id="doc1_62" value="1"> &quot;$&quot;はプロンプトをあらわします。<li id="doc1_71" value="2"> --with-apache-headerは必須です。<li id="doc1_74" value="3"> FreeBSD等の場合は--with-iconvも必須です。<li id="doc1_77" value="4"> 場合によっては--with-aprや--with-apuも必要です。</ol>
+<li id="doc1_67" value="2"> &quot;$&quot;はプロンプトをあらわします。<li id="doc1_76" value="3"> --with-apache-headerは必須です。<li id="doc1_79" value="4"> 環境によっては--with-iconvや--with-apr、--with-apuも必要です</ol>
 </div>
 
 
-<h2 id="doc1_102">Configuration</h2>
+<h2 id="doc1_104">Configuration</h2>
 
 <p class="first_ja">以下はmod_chxjが/usr/lib/apache2/modulesディレクトリ配下に設置されたものとしています</p>
 
-<h3 id="doc1_104">htmlファイルが変換対象の場合</h3>
+<h3 id="doc1_106">htmlファイルが変換対象の場合</h3>
 
 <p class="first_ja">例として、Locationが&quot;/chxj&quot;以下のものは全て変換する場合を説明します。</p>
 
 <ol>
 <li> httpd.confに以下を追加します。
-<div id="doc1_110" class="caption">httpd.conf</div>
+<div id="doc1_112" class="caption">httpd.conf</div>
 <pre class="program" style="margin-top:0">
 #====================================================================================
-# モジュールをApache2.0にロード
+# モジュールをApache2.xにロード
 #====================================================================================
 LoadModule chxj_module /usr/lib/apache2/modules/mod_chxj.so
 
@@ -861,15 +867,15 @@ ChxjConvertRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;NONE&quot;
 <li> apacheの再起動。</ol>
 
 
-<h3 id="doc1_119">php等の出力結果が変換対象の場合</h3>
+<h3 id="doc1_121">php等の出力結果が変換対象の場合</h3>
 
 
 <ol>
 <li> httpd.confに以下を追加します
-<div id="doc1_125" class="caption">httpd.conf</div>
+<div id="doc1_127" class="caption">httpd.conf</div>
 <pre class="program" style="margin-top:0">
 #====================================================================================
-# モジュールをApache2.0にロード
+# モジュールをApache2.xにロード
 #====================================================================================
 LoadModule chxj_module /usr/lib/apache2/modules/mod_chxj.so
 
@@ -896,15 +902,15 @@ ChxjConvertRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 <li> apacheの再起動。</ol>
 
 
-<h3 id="doc1_134">xoopsを使用し、且つwordpress、bwikiを使用している場合</h3>
+<h3 id="doc1_136">xoopsを使用し、且つwordpress、bwikiを使用している場合</h3>
 
 
 <ol>
 <li> httpd.confに以下を追加します
-<div id="doc1_140" class="caption">httpd.conf</div>
+<div id="doc1_142" class="caption">httpd.conf</div>
 <pre class="program" style="margin-top:0">
 #====================================================================================
-# モジュールをApache2.0にロード
+# モジュールをApache2.xにロード
 #====================================================================================
 LoadModule chxj_module /usr/lib/apache2/modules/mod_chxj.so
 
@@ -971,13 +977,13 @@ ChxjConvertRule &quot;^/.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 <li> apacheの再起動。</ol>
 
 
-<h3 id="doc1_149">画像自動変換機能を使用する場合</h3>
+<h3 id="doc1_151">画像自動変換機能を使用する場合</h3>
 
 
 <ol>
 <li> <p>httpd.confに以下を追加します。下記は、URIが/imgで始まる全ての画像に対して動作するようmod_chxjに指示しています。</p>
 
-<div id="doc1_155" class="caption">httpd.conf</div>
+<div id="doc1_157" class="caption">httpd.conf</div>
 <pre class="program" style="margin-top:0">
 &lt;Location /img&gt;
 ChxjImageEngine On
@@ -993,7 +999,7 @@ ChxjImageCopyright &quot;A.Konno&quot;
 <p><br></br> <br></br></p>
 <li> <p>ChxjImageCacheDir<br></br> mod_chxj画像変換ハンドラが使用する変換後の画像をおいておくディレクトリを指定します。デフォルトは/tmp。</p>
 
-<div id="doc1_173" class="caption">ChxjImageCacheDir</div>
+<div id="doc1_175" class="caption">ChxjImageCacheDir</div>
 <pre class="program" style="margin-top:0">
       ChxjImageCacheDir /tmp
       
@@ -1002,7 +1008,7 @@ ChxjImageCopyright &quot;A.Konno&quot;
 <p>mod_chxjに画像変換キャッシュとして/tmpを使用するよう指示します。<br></br><br></br></p>
 <li> <p>ChxjImageCopyright<br></br> mod_chxjの画像変換ハンドラに、転送禁止設定を行うよう指示します。パラメータとして任意の文字列をとります。ChxjImageCopyrightディレクティブで指定された文字列は、それぞれのイメージのコメント部に埋め込まれます。</p>
 
-<div id="doc1_185" class="caption">ChxjImageCopyright</div>
+<div id="doc1_187" class="caption">ChxjImageCopyright</div>
 <pre class="program" style="margin-top:0">
       ChxjImageCopyright &quot;A.Konno&quot;
       
@@ -1011,7 +1017,7 @@ ChxjImageCopyright &quot;A.Konno&quot;
 <p>mod_chxjに転送禁止設定を行うよう指示しています。変換後イメージのコメント部分には、キャリア毎に以下の文字列を埋め込みます。</p>
 <p><b>AU の場合</b></p>
 
-<div id="doc1_191" class="caption">AU</div>
+<div id="doc1_193" class="caption">AU</div>
 <pre class="program" style="margin-top:0">
        kddi_copyright=on,A.Konno
        
@@ -1019,35 +1025,35 @@ ChxjImageCopyright &quot;A.Konno&quot;
 
 <p><b>DoCoMoの場合</b></p>
 
-<div id="doc1_197" class="caption">DoCoMo</div>
+<div id="doc1_199" class="caption">DoCoMo</div>
 <pre class="program" style="margin-top:0">
 copy=&quot;NO&quot;,A.Konno
 </pre>
 
 <p><b>Vodafone</b>の場合は、レスポンスヘッダに</p>
 
-<div id="doc1_203" class="caption">Vodafone/J-PHONE</div>
+<div id="doc1_205" class="caption">Vodafone/J-PHONE</div>
 <pre class="program" style="margin-top:0">
          x-jphone-copyright:no-transfer
        
 </pre>
 
-<p>を埋め込みます。<span class="note"><a href="#doc1_206" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="Vodafoneの場合は、リクエストＵＲＬの最後が.pnzか、.jpzで終わるようにダミーを付けなければなりません。"><sup>(5)</sup></a></span></p></ol></ol>
+<p>を埋め込みます。<span class="note"><a href="#doc1_208" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="Vodafoneの場合は、リクエストＵＲＬの最後が.pnzか、.jpzで終わるようにダミーを付けなければなりません。"><sup>(5)</sup></a></span></p></ol></ol>
 
 
 <div class="footnote">
 <ol>
-<li id="doc1_206" value="5"> Vodafoneの場合は、リクエストＵＲＬの最後が.pnzか、.jpzで終わるようにダミーを付けなければなりません。</ol>
+<li id="doc1_208" value="5"> Vodafoneの場合は、リクエストＵＲＬの最後が.pnzか、.jpzで終わるようにダミーを付けなければなりません。</ol>
 </div>
 
 
-<h3 id="doc1_214">文字コードを変換したい場合(EXPERIMENTAL)</h3>
+<h3 id="doc1_216">文字コードを変換したい場合(EXPERIMENTAL)</h3>
 
 
 <ol>
 <li> <p>httpd.confに以下を追加します。下記は、URIが/chxjで始まる全てのコンテンツに対して動作するようmod_chxjに指示しています。サーバ側はEUC-JPであった場合の例です。mod_chxjによってSJISに変換するように指示しています。サーバ側がShift_JISで無い場合は、Shift_JISコードの10進参照文字列表記を記述することによってShift_JISコードの絵文字2バイトコードに変換しクライアントへ返します。</p>
 
-<div id="doc1_220" class="caption">httpd.conf</div>
+<div id="doc1_222" class="caption">httpd.conf</div>
 <pre class="program" style="margin-top:0">
 ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 </pre>
@@ -1063,43 +1069,43 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 <p><br></br><br></br></p></ol></ol>
 
 
-<h3 id="doc1_258">ディレクティブ</h3>
+<h3 id="doc1_260">ディレクティブ</h3>
 
 
 <ol>
 <li> ChxjLoadDeviceData<br></br>デバイス定義ファイルを指定します。
-<div id="doc1_266" class="caption">ex)</div>
+<div id="doc1_268" class="caption">ex)</div>
 <pre class="program" style="margin-top:0">
     ChxjLoadDeviceData /etc/apache2/device.xml
   
 </pre>
 <li> ChxjLoadEmojiData<br></br>絵文字変換定義ファイルを指定します。
-<div id="doc1_274" class="caption">ex)</div>
+<div id="doc1_276" class="caption">ex)</div>
 <pre class="program" style="margin-top:0">
     ChxjLoadEmojiData   /etc/apache2/chxj/emoji.xml
   
 </pre>
 <li> ChxjImageEngine<br></br>画像変換エンジンを有効にします。パラメータとしてOnとOffを指定できます。DefaultはOffです。
-<div id="doc1_282" class="caption">ex)</div>
+<div id="doc1_284" class="caption">ex)</div>
 <pre class="program" style="margin-top:0">
     ChxjImageEngine On
   
 </pre>
 <li> ChxjImageCacheDir<br></br>イメージの一時ファイル保存場所を指定します。
-<div id="doc1_290" class="caption">ex)</div>
+<div id="doc1_292" class="caption">ex)</div>
 <pre class="program" style="margin-top:0">
     ChxjImageCacheDir   /tmp
   
 </pre>
 <li> ChxjImageCopyright<br></br>イメージに著作権情報を付与します。
-<div id="doc1_298" class="caption">ex)</div>
+<div id="doc1_300" class="caption">ex)</div>
 <pre class="program" style="margin-top:0">
     ChxjImageCacheDir   &quot;chosakuken jyoho&quot;
   
 </pre>
 <li> ChxjConvertRule<br></br> HTML変換エンジンの適用ルールを記述します。本ディレクティブを使用し、変換エンジンのOn|Offを指定します。DefaultはOFFです。また、ルールは記述された順番に評価し、マッチするものがあれば、その時点で対象ルールを適用します。パラメータは3つ必要です。下記にパラメータを記します。
 <div class="table">
-<table id="doc1_306" class="data" rules="groups">
+<table id="doc1_308" class="data" rules="groups">
 <caption>パラメータ</caption>
 <colgroup span="2">
 <col>
@@ -1131,14 +1137,14 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 </div>
 
 
-<div id="doc1_352" class="caption">ex)</div>
+<div id="doc1_354" class="caption">ex)</div>
 <pre class="program" style="margin-top:0">
     ChxjConvertRule &quot;^/chxj.+$/&quot; EngineOn EUC-JP
   
 </pre>
 <li> <p>ChxjCookieDir<br></br>クッキーを使用する場合に指定します。クッキーの内容を保存するディレクトリを指定します。指定しない場合は/tmpに保存されます。</p>
 
-<div id="doc1_360" class="caption">ex)</div>
+<div id="doc1_362" class="caption">ex)</div>
 <pre class="program" style="margin-top:0">
     &lt;Location /&gt;
       ChxjCookieDir   /tmp
@@ -1149,7 +1155,7 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 <p>詳細は「Cookieシミュレート機能」の項を参照ください。</p>
 <li> <p>ChxjCookieTimeout<br></br>クッキーを使用する場合に指定します。クッキーの保持期間を秒単位で指定します。指定しない場合は、1800秒でクッキーデータを破棄します。</p>
 
-<div id="doc1_368" class="caption">ex)</div>
+<div id="doc1_370" class="caption">ex)</div>
 <pre class="program" style="margin-top:0">
     &lt;Location /&gt;
       ChxjCookieTimeout 10
@@ -1160,12 +1166,12 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 <p>詳細は「Cookieシミュレート機能」の項を参照ください。</p></ol>
 
 
-<h2 id="doc1_375">対応するCHTMLタグ</h2>
+<h2 id="doc1_377">対応するCHTMLタグ</h2>
 
 <p class="first_ja">変換可能なＣＨＴＭＬタグは以下のとおりです。</p>
 
 <div class="table">
-<table id="doc1_377" class="data" rules="groups">
+<table id="doc1_379" class="data" rules="groups">
 <caption>対応タグ一覧</caption>
 <colgroup span="7">
 <col>
@@ -1384,7 +1390,7 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 <td align="center">○</td>
 <td align="center">○</td>
 <td align="center">○</td>
-<td align="left"><span class="note"><a href="#doc1_932" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="必ず閉じてください。そのうち対応します。"><sup>(7)</sup></a></span></td>
+<td align="left"><span class="note"><a href="#doc1_934" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="必ず閉じてください。そのうち対応します。"><sup>(7)</sup></a></span></td>
 </tr>
 <tr class="even">
 <td></td>
@@ -1447,18 +1453,18 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 
 <div class="footnote">
 <ol>
-<li id="doc1_932" value="7"> 必ず閉じてください。そのうち対応します。</ol>
+<li id="doc1_934" value="7"> 必ず閉じてください。そのうち対応します。</ol>
 </div>
 
 
-<h2 id="doc1_1083">独自拡張タグ</h2>
+<h2 id="doc1_1085">独自拡張タグ</h2>
 
 
 <ol>
 <li> <p>&lt;CHXJ:IF&gt;<br></br></p>
-<p>&lt;CHXJ:IF&gt;タグと&lt;/CHXJ:IF&gt;タグではさまれたタグやテキストは、変換せずに<b>そのまま</b><span class="note"><a href="#doc1_1093" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="変換しませんので注意が必要です"><sup>(8)</sup></a></span>出力します。必須の属性としてlangがあります。lang属性を指定することによって、例えば、<b>「HDML機の場合のみ出力させる」</b>といったことを可能にします。<br></br><br></br>ex)</p>
+<p>&lt;CHXJ:IF&gt;タグと&lt;/CHXJ:IF&gt;タグではさまれたタグやテキストは、変換せずに<b>そのまま</b><span class="note"><a href="#doc1_1095" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="変換しませんので注意が必要です"><sup>(8)</sup></a></span>出力します。必須の属性としてlangがあります。lang属性を指定することによって、例えば、<b>「HDML機の場合のみ出力させる」</b>といったことを可能にします。<br></br><br></br>ex)</p>
 
-<div id="doc1_1103" class="caption">HTML文書中にHDML機の場合のみ有効にしたいタグ、または文書がある場合</div>
+<div id="doc1_1105" class="caption">HTML文書中にHDML機の場合のみ有効にしたいタグ、または文書がある場合</div>
 <pre class="program" style="margin-top:0">
        &lt;CHXJ:IF lang=&quot;HDML&quot; &gt;
          &lt;NODISPLAY&gt;
@@ -1472,7 +1478,7 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 <p><br></br></p>
 <p>ex)</p>
 
-<div id="doc1_1107" class="caption">i-Modeのみ出力したい文書がある場合</div>
+<div id="doc1_1109" class="caption">i-Modeのみ出力したい文書がある場合</div>
 <pre class="program" style="margin-top:0">
        &lt;CHXJ:IF lang=&quot;chtml&quot; &gt;
          シークレットコードがどーのこーの。
@@ -1483,7 +1489,7 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 <p><br></br></p>
 <p>また、lang属性は、複数指定することも可能です。<br></br></p>
 
-<div id="doc1_1113" class="caption">HDML機,J-PHONE機は以下を出力します</div>
+<div id="doc1_1115" class="caption">HDML機,J-PHONE機は以下を出力します</div>
 <pre class="program" style="margin-top:0">
        &lt;CHXJ:IF lang=&quot;chtml&quot; lang=&quot;jhtml&quot;&gt;
        あなたの携帯は、HDML機かJ-HTML機です。
@@ -1496,26 +1502,26 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 
 <div class="footnote">
 <ol>
-<li id="doc1_1093" value="8"> 変換しませんので注意が必要です</ol>
+<li id="doc1_1095" value="8"> 変換しませんので注意が必要です</ol>
 </div>
 
 
-<h2 id="doc1_1120">絵文字について</h2>
+<h2 id="doc1_1122">絵文字について</h2>
 
-<p class="first_ja">i-Mode用の絵文字を書いておけば、アクセスしたキャリアによって、mod_chxjが対応の絵文字に自動変換します。ソースに2byteのバイナリコードを直接書いても、１０進参照文字列<span class="note"><a href="#doc1_1122" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="１６進参照文字列には対応していません"><sup>(9)</sup></a></span>（&amp;#XXX;の形）で書いても、どちらでも変換対象になります。１０進参照文字列で書いた場合は、mod_chxjにより、自動で２バイトコードに変換します。</p>
+<p class="first_ja">i-Mode用の絵文字を書いておけば、アクセスしたキャリアによって、mod_chxjが対応の絵文字に自動変換します。ソースに2byteのバイナリコードを直接書いても、１０進参照文字列<span class="note"><a href="#doc1_1124" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="１６進参照文字列には対応していません"><sup>(9)</sup></a></span>（&amp;#XXX;の形）で書いても、どちらでも変換対象になります。１０進参照文字列で書いた場合は、mod_chxjにより、自動で２バイトコードに変換します。</p>
 
 <div class="footnote">
 <ol>
-<li id="doc1_1122" value="9"> １６進参照文字列には対応していません</ol>
+<li id="doc1_1124" value="9"> １６進参照文字列には対応していません</ol>
 </div>
 
 
-<h3 id="doc1_1125">絵文字変換定義</h3>
+<h3 id="doc1_1127">絵文字変換定義</h3>
 
-<p class="first_ja">絵文字の変換に関する動作を変えたい場合（例えば「ハートがあったら、ＡＵの場合はスペードに」とか、「変換定義がおかしい」といった場合）は、emoji.xmlファイルを直接編集することによって定義を変更することが可能です。emoji.xmlはXMLファイルとなっていますので、vi等で簡単に定義を変更することができます<span class="note"><a href="#doc1_1127" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="厳密にはXMLになっていないので、日本語の記述はＳＪＩＳでお願いします。"><sup>(10)</sup></a></span>。</p>
+<p class="first_ja">絵文字の変換に関する動作を変えたい場合（例えば「ハートがあったら、ＡＵの場合はスペードに」とか、「変換定義がおかしい」といった場合）は、emoji.xmlファイルを直接編集することによって定義を変更することが可能です。emoji.xmlはXMLファイルとなっていますので、vi等で簡単に定義を変更することができます<span class="note"><a href="#doc1_1129" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="厳密にはXMLになっていないので、日本語の記述はＳＪＩＳでお願いします。"><sup>(10)</sup></a></span>。</p>
 <p><br></br>以下に、emoji.xmlファイルの一部を記します。</p>
 
-<div id="doc1_1132" class="caption">emoji.xml</div>
+<div id="doc1_1134" class="caption">emoji.xml</div>
 <pre class="program" style="margin-top:0">
 &lt;?xml encoding=&quot;Shift_JIS&quot; &gt;
 
@@ -1551,52 +1557,52 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 
 <div class="footnote">
 <ol>
-<li id="doc1_1127" value="10"> 厳密にはXMLになっていないので、日本語の記述はＳＪＩＳでお願いします。</ol>
+<li id="doc1_1129" value="10"> 厳密にはXMLになっていないので、日本語の記述はＳＪＩＳでお願いします。</ol>
 </div>
 
 
-<h2 id="doc1_1170">デバイス定義 device_data.xml</h2>
+<h2 id="doc1_1172">デバイス定義 device_data.xml</h2>
 
 <p class="first_ja">mod_chxjの動作を決定付ける重要な定義です。変換対象の端末は全て、device_data.xmlファイルに定義される必要があります。定義されていない端末は、mod_chxjとしては、認識することができません。認識できない場合には、変換せずにそのまま出力します。ただし、Perl互換の正規表現によって定義できるため、正規表現の書き方によっては全ての機種に対応させることも可能です。</p>
 
-<h2 id="doc1_1173">イメージ画像変換機能</h2>
+<h2 id="doc1_1175">イメージ画像変換機能</h2>
 
 <p class="first_ja">mod_chxjには、JPEG、GIF、PNG、BMPファイルを置いておくだけで、デバイス定義に従って、それぞれのキャリア対応のフォーマットに変換する機能があります。画像のサイズ（縦Ｘ横）も、端末の画面サイズに合わせて変換します。画像のサイズ（バイト数）については、デバイス定義中のキャッシュサイズを見て、その値よりも小さくなるように<b>努力</b>しますが、元の画像が大きすぎる場合や、複雑な画像の場合には、キャッシュサイズよりも小さくできずに表示できない場合があります。<br></br>それぞれのタグで指定する場合には、ファイル名の拡張子（.jpgや.gif等）をはずした形で指定します。<br></br>本機能には３つのモードが存在します。そのモードを以下に記します。</p>
 
-<h3 id="doc1_1182">サムネイルモード</h3>
+<h3 id="doc1_1184">サムネイルモード</h3>
 
 <p class="first_ja">端末側画面サイズの約３分の１程度のサイズ（縦Ｘ横）に画像を縮小表示します。</p>
 
-<div id="doc1_1184" class="caption">サムネイルモード 使用例</div>
+<div id="doc1_1186" class="caption">サムネイルモード 使用例</div>
 <pre class="program" style="margin-top:0">
   &lt;IMG SRC=&quot;/img/logo?Mode=Thumbnail&quot;&gt;
   
 </pre>
 
 
-<h3 id="doc1_1188">壁紙モード</h3>
+<h3 id="doc1_1190">壁紙モード</h3>
 
 <p class="first_ja">端末側画面のサイズにマッチするサイズに拡大・縮小します。横長の画像の場合には、縦幅を合わせた後に左右をトリミングします。</p>
 
-<div id="doc1_1190" class="caption">壁紙モード 使用例</div>
+<div id="doc1_1192" class="caption">壁紙モード 使用例</div>
 <pre class="program" style="margin-top:0">
   &lt;IMG SRC=&quot;/img/logo?Mode=WP&quot;&gt;
   
 </pre>
 
 
-<h3 id="doc1_1194">EzGetモード</h3>
+<h3 id="doc1_1196">EzGetモード</h3>
 
 <p class="first_ja">壁紙ダウンロードを行いたい場合に使用します。EzGETモードは、壁紙モードで出力される画像サイズと同一サイズの画像が使用されます。</p>
 
-<div id="doc1_1196" class="caption">EzGetモード 使用例</div>
+<div id="doc1_1198" class="caption">EzGetモード 使用例</div>
 <pre class="program" style="margin-top:0">
   &lt;A HREF=&quot;/img/logo?Mode=EzGet&quot;&gt;
   
 </pre>
 
 
-<h3 id="doc1_1200">その他の機能</h3>
+<h3 id="doc1_1202">その他の機能</h3>
 
 <p class="first_ja">モードの他に、画像サイズ（縦Ｘ横）を直接指定することも可能です。<b>w</b>パラメータ、<b>h</b>パラメータを使用して指定します。</p>
 
@@ -1604,7 +1610,7 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 <li> wパラメータ<br></br>横幅を指定します。
 <li> hパラメータ<br></br>縦幅を指定します。
 
-<div id="doc1_1220" class="caption">w/hパラメータ 使用例</div>
+<div id="doc1_1222" class="caption">w/hパラメータ 使用例</div>
 <pre class="program" style="margin-top:0">
   &lt;IMG SRC=&quot;/img/logo?w=100&amp;h=200&quot;&gt;
   
@@ -1614,25 +1620,25 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 
 <p>上記全てのモード、パラメータはＧＥＴリクエストとしてのみ使用できます。</p>
 
-<h2 id="doc1_1231">ＱＲコード出力機能</h2>
+<h2 id="doc1_1233">ＱＲコード出力機能</h2>
 
 
-<h3 id="doc1_1233">ＱＲコード出力ハンドラの登録</h3>
+<h3 id="doc1_1235">ＱＲコード出力ハンドラの登録</h3>
 
 <p class="first_ja">ＱＲコード出力機能を使用するには、ＱＲコードハンドラを登録します。httpd.confに以下の記述を追加します。</p>
 
-<div id="doc1_1235" class="caption">httpd.conf</div>
+<div id="doc1_1237" class="caption">httpd.conf</div>
 <pre class="program" style="margin-top:0">
   AddHandler chxj-qrcode .qrc
 </pre>
 
 <p>なお、ハンドラを登録しないでも、出力フィルターを経由させることで、ＱＲコードを出力させることも可能です。（※ＱＲコードの動的出力を参照）</p>
 
-<h3 id="doc1_1239">ＱＲコードソースファイルの設置</h3>
+<h3 id="doc1_1241">ＱＲコードソースファイルの設置</h3>
 
 <p class="first_ja">ハンドラを登録したら、その登録した拡張子を持つファイルを用意します。</p>
 
-<div id="doc1_1241" class="caption">例：a.qrc</div>
+<div id="doc1_1243" class="caption">例：a.qrc</div>
 <pre class="program" style="margin-top:0">
   &lt;?xml version=1.0 ?&gt;
   
@@ -1655,11 +1661,11 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 <li> dataタグdataタグは、ＱＲコードに出力するデータを指定します。改行した場合は、改行文字もＱＲコード内に符号化されます。</ol>
 
 
-<h3 id="doc1_1263">ＱＲコードの動的出力機能</h3>
+<h3 id="doc1_1265">ＱＲコードの動的出力機能</h3>
 
 <p class="first_ja">プログラム等を使用し、動的にＱＲコードを出力したい場合は、上記の.qrcファイルの内容をそのままOutputFilterに通してあげればＯＫです。つまり、ChxjConvertRuleディレクティブで&quot;EngineOn&quot;と指定したURIが指すディレクトリに設置すれば良いということです。mod_chxj内部で、Content-Typeがtext/xmlの場合、QRCode用のファイルであるかどうかを一度読み込んで判断するので、Content-Typeには、text/xmlを設定してください。</p>
 
-<div id="doc1_1265" class="caption">phpでＱＲコードを動的に出力する例</div>
+<div id="doc1_1267" class="caption">phpでＱＲコードを動的に出力する例</div>
 <pre class="program" style="margin-top:0">
     &lt;php
       $version = $_POST[&quot;version&quot;];
@@ -1683,40 +1689,40 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 
 <p>そして、上記のコードを、mod_chxj変換エンジンが処理するはずであるところに設置すれば完了です。</p>
 
-<h2 id="doc1_1270">Cookieシミュレート機能(EXPERIMENTAL)</h2>
+<h2 id="doc1_1272">Cookieシミュレート機能(EXPERIMENTAL)</h2>
 
 
-<h3 id="doc1_1272">Cookieシミュレート機能(EXPERIMENTAL)</h3>
+<h3 id="doc1_1274">Cookieシミュレート機能(EXPERIMENTAL)</h3>
 
 <p class="first_ja">Cookieを受け付けない（無視する）端末のためにCookieをシミュレートします。本機能を有効にするためにはChxjConvertRuleディレクティブを使用する必要があります。ChxjConvertRuleディレクティブの第２パラメータにCookieOnを指定します。</p>
 
-<div id="doc1_1274" class="caption">Cookieシミュレート機能を有効にする例</div>
+<div id="doc1_1276" class="caption">Cookieシミュレート機能を有効にする例</div>
 <pre class="program" style="margin-top:0">
     ChxjConvertRule &quot;^/chxj.+$&quot; &quot;EngineOn,CookieOn&quot; &quot;NONE&quot;
   
 </pre>
 
 
-<h3 id="doc1_1278">One-Time ID</h3>
+<h3 id="doc1_1280">One-Time ID</h3>
 
 <p class="first_ja">Cookieシミュレートでは、aタグ、imgタグ、formタグのURL部にOne-Time IDを埋め込むことで実現します。そのため、ユーザがブラウザの戻るボタン等で戻った場合はCookieを取得できなくなります。</p>
 
-<h3 id="doc1_1281">Cookieの保存場所</h3>
+<h3 id="doc1_1283">Cookieの保存場所</h3>
 
 <p class="first_ja">Cookieの内容は、サーバ側に保存されます。保存ディレクトリはChxjCookieDirディレクティブを使用することで指定することができます。指定しなかった場合は、/tmpに保存されます。</p>
 
-<div id="doc1_1283" class="caption">ChxjCookieDirの例</div>
+<div id="doc1_1285" class="caption">ChxjCookieDirの例</div>
 <pre class="program" style="margin-top:0">
     ChxjCookieDir /var/abc
   
 </pre>
 
 
-<h3 id="doc1_1287">Cookieの保持期間</h3>
+<h3 id="doc1_1289">Cookieの保持期間</h3>
 
 <p class="first_ja">ChxjCookieTimeoutディレクティブで保持期間を指定することができます。指定しなかった場合は1800秒でサーバに保存されているCookieは削除されます。</p>
 
-<div id="doc1_1289" class="caption">ChxjCookieTimeoutの例</div>
+<div id="doc1_1291" class="caption">ChxjCookieTimeoutの例</div>
 <pre class="program" style="margin-top:0">
     &lt;Location /&gt;
       ChxjCookieTimeout 10
@@ -1726,10 +1732,10 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 
 <p>上記の例は、10秒でタイムアウト(サーバから削除)するように指定しています。</p>
 
-<h2 id="doc1_1294">Refererシミュレート機能(EXPERIMENTAL)</h2>
+<h2 id="doc1_1296">Refererシミュレート機能(EXPERIMENTAL)</h2>
 
 
-<h3 id="doc1_1296">Refererシミュレート機能(EXPERIMENTAL)</h3>
+<h3 id="doc1_1298">Refererシミュレート機能(EXPERIMENTAL)</h3>
 
 <p class="first_ja">DoCoMo端末などのRefererに対応していない機種のためにRefererシミュレート機能を提供します。本機能は、Cookieシミュレート機能を有効にすると、自動で有効になります(将来的には変更予定)。</p>
 </body>

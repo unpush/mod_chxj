@@ -6,27 +6,28 @@
   <subtitle></subtitle>
   <author>Atsushi Konno</author>
   <date>29 Mar 2005</date>
+  <date>Last modified: 21 Jan 2008</date>
 </head>
 <body>
 <section title="Overview">
 
-mod_chxjはオープンソースの携帯向けコンテンツ変換Apache2.0用モジュールであり、
+mod_chxjはオープンソースの携帯向けコンテンツ変換Apache2.x用モジュールであり、
 CHTML（DoCoMo i-Mode用 CHTML3.0)で記述された文書や通常のHTMLで記述された文書を、アクセスに来た端末のUser-Agentヘッダを見て、それぞれの端末にあった形式に変換します。
 HTML文書に限らず、画像（jpg、gif、png）、絵文字についても、定義ファイルに従ってそれぞれのキャリアにあった絵文字に変換します。
 Cookie非対応端末、Refer非対応端末のために、Set-Cookie、CookieヘッダやRefererヘッダをシミュレートすることもできます（EXPERIMENTAL)。
-
+<note>Apache2.2はバージョン0.8.1から対応</note>
 
 </section>
 <section title="インストール">
 <subsection title="準備">
 mod_chxjをインストールする前に、下記のものを用意する必要があります。
 <ol>
-  <li>Apache2.0のヘッダーファイル群</li>
-  <li>Apache2.0用のapxs</li>
+  <li>Apache2.xのヘッダーファイル群</li>
+  <li>Apache2.x用のapxs</li>
   <li>apr(Apache Portable Runtime)ライブラリとそのヘッダファイル郡(apu含む)</li>
   <li>automake、autoconf、libtool1.3.X</li>
   <li>ImageMagick(MagickWand)</li>
-  <li>libiconvまたはlibiconv_hook</li>
+  <li>libiconvまたはlibiconv_hook(SJIS-WIN、EUCJP-WIN対応が望ましい)</li>
   <li>Linux</li>
 </ol>
 </subsection>
@@ -43,13 +44,12 @@ $ ./buildconf.sh
 </li>
 <li>Configure
 
-以下は、/usr/include/apache2.0に、Apache2.0のヘッダーファイルが存在する場合です。
+以下は、/usr/include/apache2.xに、Apache2.xのヘッダーファイルが存在する場合です。
 <program title="Configure">
-$ ./configure --with-apache-header=/usr/include/apache2.0
+$ ./configure --with-apache-header=/usr/include/apache2.x
 </program>
 <note>--with-apache-headerは必須です。</note>
-<note>FreeBSD等の場合は--with-iconvも必須です。</note>
-<note>場合によっては--with-aprや--with-apuも必要です。</note>
+<note>環境によっては--with-iconvや--with-apr、--with-apuも必要です</note>
 </li>
 <li>mod_chxj.soを生成します
 <program title="make">
@@ -88,7 +88,7 @@ $ cp etc/emoji.xml /etc/apache2/chxj
 
 <program title="httpd.conf">
 #====================================================================================
-# モジュールをApache2.0にロード
+# モジュールをApache2.xにロード
 #====================================================================================
 LoadModule chxj_module /usr/lib/apache2/modules/mod_chxj.so
 
@@ -122,7 +122,7 @@ ChxjConvertRule "^/chxj.+$" "EngineOn" "NONE"
 
 <program title="httpd.conf">
 #====================================================================================
-# モジュールをApache2.0にロード
+# モジュールをApache2.xにロード
 #====================================================================================
 LoadModule chxj_module /usr/lib/apache2/modules/mod_chxj.so
 
@@ -158,7 +158,7 @@ ChxjConvertRule "^/chxj.+$" "EngineOn" "EUC-JP"
 
 <program title="httpd.conf">
 #====================================================================================
-# モジュールをApache2.0にロード
+# モジュールをApache2.xにロード
 #====================================================================================
 LoadModule chxj_module /usr/lib/apache2/modules/mod_chxj.so
 
