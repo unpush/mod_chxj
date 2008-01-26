@@ -5,18 +5,21 @@ AC_PREREQ(2.59)
 AC_CONFIG_SRCDIR([src/mod_chxj.c])
 AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
-AC_CONFIG_HEADERS([include/config.h])
+AM_CONFIG_HEADER(include/config.h)
 
 
 # Checks for programs.
+AC_PROG_CPP
 AC_PROG_CC
 AC_PROG_INSTALL
 AM_PROG_LIBTOOL
 
+AC_LANG(C)
+
 # Checks for libraries.
 AC_CHECK_LIB([apr-0],  [main])
 
-AC_ARG_WITH(apache-header, [  --with-apache-header=ARG The directory with the header file of apache2.0 is specified. ]) 
+AC_ARG_WITH(apache-header, [  --with-apache-header=ARG The directory with the header file of apache2.x is specified. ]) 
 #[, ACTION-IF-GIVEN[, ACTION-IF-NOT-GIVEN]])
 if test "x$with_apache_header" = "x"; then
     AC_MSG_ERROR([

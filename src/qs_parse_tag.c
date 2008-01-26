@@ -20,25 +20,23 @@
 #include "qs_parse_attr.h"
 #include "qs_parse_tag.h"
 
-static char* s_get_tag_name(Doc* doc, const char* s, int len) ; 
+static char *s_get_tag_name(Doc *doc, const char *s, int len) ; 
 
 
-
-Node*
-qs_parse_tag(Doc* doc, const char* s, int len) 
+Node *
+qs_parse_tag(Doc *doc, const char *s, int len) 
 {
-  Node*  node;
-  char*  tag_name;
-  char*  sp;
+  Node   *node;
+  char   *tag_name;
+  char   *sp;
   int    ll;
   int    next_point;
 
-  sp         = (char*)s;
+  sp         = (char *)s;
   ll         = len;
   next_point = 0;
 
   QX_LOGGER_DEBUG("start parse_tag()");
-
 
   /* 
    * s[0] == '<' && s[len-1] == '>' 
@@ -76,15 +74,13 @@ qs_parse_tag(Doc* doc, const char* s, int len)
 }
 
 
-
-
-static char* 
-s_get_tag_name(Doc* doc, const char* s, int len)  
+static char *
+s_get_tag_name(Doc *doc, const char *s, int len)  
 {
   int ii;
   int sp;
   int size;
-  char* return_value = NULL;
+  char *return_value = NULL;
 
   /* ignore space. */
   for (ii = 0; ii < len; ii++) {
@@ -111,11 +107,10 @@ s_get_tag_name(Doc* doc, const char* s, int len)
 }
 
 
-
-Node*
-qs_new_tag(Doc* doc) 
+Node *
+qs_new_tag(Doc *doc) 
 {
-  Node* node      = (Node*)apr_palloc(doc->pool, sizeof(Node));
+  Node *node      = (Node *)apr_palloc(doc->pool, sizeof(Node));
   node->next      = NULL;
   node->parent    = NULL;
   node->child     = NULL;
@@ -129,10 +124,8 @@ qs_new_tag(Doc* doc)
 }
 
 
-
-
-Node*
-qs_add_attr(Doc* doc, Node* node, Attr* attr) 
+Node *
+qs_add_attr(Doc *doc, Node *node, Attr *attr) 
 {
   if (node == NULL)
     QX_LOGGER_FATAL("qs_add_attr() node is null");

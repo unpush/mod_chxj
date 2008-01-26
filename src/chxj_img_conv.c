@@ -17,13 +17,10 @@
 #include "mod_chxj.h"
 
 
-char* 
-chxj_img_conv(
-  request_rec*  r, 
-  device_table* spec, 
-  const char*   s)
+char *
+chxj_img_conv(request_rec *r, device_table *spec, const char *s)
 {
-  char* dst;
+  char *dst;
 
   dst = apr_pstrdup(r->pool, s);
 

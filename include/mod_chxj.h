@@ -26,6 +26,42 @@
 # define UNUSED(x) x
 #endif
 
+#define STRCASEEQ(a,b,c,d) \
+  ((((a) == *(d))|| ((b) == *(d))) && strcasecmp((c),(d)) == 0)
+
+#define IS_SJIS_STRING(str) \
+  (  STRCASEEQ('s','S',"sjis",           (str)) \
+  || STRCASEEQ('s','S',"shift-jis",      (str)) \
+  || STRCASEEQ('s','S',"shift_jis",      (str)) \
+  || STRCASEEQ('s','S',"shift_jisx0213", (str)) \
+  || STRCASEEQ('s','S',"sjis-open",      (str)) \
+  || STRCASEEQ('s','S',"sjis-win",       (str)) \
+  || STRCASEEQ('c','C',"cp932",          (str)) \
+  || STRCASEEQ('m','M',"ms_kanji",       (str)) \
+  || STRCASEEQ('m','M',"ms932",          (str)) \
+  || STRCASEEQ('c','C',"csshiftjis",     (str)) \
+  || STRCASEEQ('c','C',"cswindows31j",   (str)) \
+  || STRCASEEQ('w','W',"windows-31j",    (str)))
+
+#define IS_EUCJP_STRING(str) \
+  (  STRCASEEQ('e','E',"euc-jp",              (str)) \
+  || STRCASEEQ('e','E',"eucjp-win",           (str)) \
+  || STRCASEEQ('e','E',"eucjp-ms",            (str)) \
+  || STRCASEEQ('e','E',"eucjp-open",          (str)) \
+  || STRCASEEQ('e','E',"euc-jp-win",          (str)) \
+  || STRCASEEQ('c','C',"cseucpkdfmtjapanese", (str)) \
+  || STRCASEEQ('e','E',"euc-jisx0213",        (str)) \
+  || STRCASEEQ('e','E',"euc-jp-ms",           (str)) \
+  || STRCASEEQ('e','E',"cseucpkdfmtjapanese", (str)))
+
+#define IS_UTF8_STRING(str) \
+  (  STRCASEEQ('u','U',"utf8",                (str)) \
+  || STRCASEEQ('u','U',"utf-8",               (str)))
+
+#define MOD_CHXJ_INTERNAL_ENCODING      "CP932"
+
+#define GET_SPEC_CHARSET(spec) ((spec)->charset)
+#define GET_EMOJI_INDEX(conf) ((conf)->emoji_index)
 
 #include <string.h>
 
@@ -164,64 +200,77 @@
 #endif
 
 
-typedef struct imode_emoji_t imode_emoji_t;
+/*===============================================================*/
+/* Emoji Data Structure.                                         */
+/*===============================================================*/
+typedef struct emoji_data_t {
+  char *hex_string;
+  char *dec_string;
+  char hex[8];
+} emoji_data_t;
 
-struct imode_emoji_t {
-  char  hex1byte;
-  char  hex2byte;
-  char* string;
+typedef struct imode_emoji_t {
+  emoji_data_t sjis;
+  emoji_data_t euc;
+  emoji_data_t unicode;
+  emoji_data_t utf8;
   char *description;
-};
+} imode_emoji_t;
 
-typedef struct ezweb_emoji_t ezweb_emoji_t;
+typedef struct ezweb_type_t {
+  int no;
+  emoji_data_t sjis;
+  emoji_data_t unicode;
+  emoji_data_t utf8;
+} ezweb_type_t;
 
-struct ezweb_emoji_t {
-  char* typeA;
-  char* typeB;
-  char* typeC;
-  char* typeD;
-};
+typedef struct ezweb_emoji_t {
+  ezweb_type_t typeA;
+  ezweb_type_t typeB;
+  ezweb_type_t typeC;
+  ezweb_type_t typeD;
+} ezweb_emoji_t;
 
-typedef struct jphone_emoji_t jphone_emoji_t;
+typedef struct softbank_emoji_t {
+  int no;
+  emoji_data_t sjis;
+  emoji_data_t unicode;
+  emoji_data_t utf8;
+} softbank_emoji_t;
 
-struct jphone_emoji_t {
-  char* string;
-};
+typedef struct emoji_t {
+  struct emoji_t *next;
+  int             no;
+  imode_emoji_t  imode;
+  ezweb_emoji_t  ezweb;
+  softbank_emoji_t softbank;
+} emoji_t;
 
-typedef struct emoji_t emoji_t;
-
-struct emoji_t {
-  struct emoji_t*  next;
-  int              no;
-  imode_emoji_t*   imode;
-  ezweb_emoji_t*   ezweb;
-  jphone_emoji_t*  jphone;
-};
 
 typedef struct chxjconvrule_entry chxjconvrule_entry;
 
 struct chxjconvrule_entry {
-  char*        pattern;
-  ap_regex_t*  regexp;
+  char         *pattern;
+  ap_regex_t   *regexp;
   int          flags;
   int          action;
-  char*        encoding;
+  char         *encoding;
   int          pc_flag;
-  char*        user_agent;
+  char         *user_agent;
 };
 
 typedef struct tag_handler tag_handler;
 
 struct tag_handler {
-  char* (*start_tag_handler)(void* doc, Node* node); 
-  char* (*end_tag_handler)(void* doc, Node* node); 
+  char *(*start_tag_handler)(void *doc, Node *node); 
+  char *(*end_tag_handler)(void *doc, Node *node); 
 };
 
 #include "chxj_specified_device.h"
 
 typedef struct {
   spec_type    type; 
-  tag_handler* handler;
+  tag_handler *handler;
 } tag_handlers;
 
 typedef enum {
@@ -274,25 +323,33 @@ typedef enum {
 
 typedef struct mod_chxj_config mod_chxj_config;
 
+#include "chxj_emoji.h"
+
 struct mod_chxj_config {
   int                   image;
 
-  char*                 device_data_file;
-  char*                 emoji_data_file;
+  char                  *device_data_file;
+  char                  *emoji_data_file;
 
-  char*                 image_cache_dir;
-  char*                 image_copyright;
-  device_table_list*    devices;
-  emoji_t*              emoji;
-  emoji_t*              emoji_tail;
-  char*                 server_side_encoding;
+  char                  *image_cache_dir;
+  char                  *image_copyright;
+  device_table_list     *devices;
+  emoji_t               *emoji;
+  emoji_t               *emoji_tail;
+  char                  *server_side_encoding;
 
-  char*                 dir; /* for LOG */
+  char                  *dir; /* for LOG */
 
-  apr_array_header_t*   convrules;
+  apr_array_header_t    *convrules;
 
-  char*                 cookie_db_dir;
+  char                  *cookie_db_dir;
   long                  cookie_timeout;
+
+  /* Index array for Emoji retrieval */
+  emoji_t               *emoji_index[EMOJI_COUNT]; 
+  emoji_t               *emoji_index_eucjp[EMOJI_COUNT]; 
+  emoji_t               *emoji_index_sjis[EMOJI_COUNT]; 
+  emoji_t               *emoji_index_utf8[EMOJI_COUNT]; 
 };
 
 
@@ -314,7 +371,7 @@ struct mod_chxj_config {
 #define CONVRULE_PC_FLAG_OFF_BIT      (0x00000002)
 
 typedef struct {
-  apr_global_mutex_t* cookie_db_lock;
+  apr_global_mutex_t *cookie_db_lock;
 } mod_chxj_global_config;
 
 typedef struct {
@@ -322,7 +379,7 @@ typedef struct {
 
   apr_bucket_brigade *bb;
 
-  char* buffer;
+  char *buffer;
 } mod_chxj_ctx;
 
 #include "chxj_tag_util.h"
@@ -344,6 +401,7 @@ module AP_MODULE_DECLARE_DATA chxj_module;
 #define DBG3(X,Y,Za,Zb,Zc)  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za),(Zb),(Zc))
 #define DBG4(X,Y,Za,Zb,Zc,Zd)  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za),(Zb),(Zc),(Zd))
 #define DBG5(X,Y,Za,Zb,Zc,Zd,Ze)  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za),(Zb),(Zc),(Zd),(Ze))
+#define DBG6(X,Y,Za,Zb,Zc,Zd,Ze,Zf)  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za),(Zb),(Zc),(Zd),(Ze),(Zf))
 #define SDBG(X,Y)  ap_log_error(APLOG_MARK,APLOG_DEBUG,0,(X),(Y))
 #define SDBG1(X,Y,Za)  ap_log_error(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za))
 #define SDBG2(X,Y,Za,Zb)  ap_log_error(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za),(Zb))
@@ -353,6 +411,7 @@ module AP_MODULE_DECLARE_DATA chxj_module;
 #define ERR(X,Y)  ap_log_rerror(APLOG_MARK,APLOG_ERR,0,(X),(Y))
 #define ERR1(X,Y,Za)  ap_log_rerror(APLOG_MARK,APLOG_ERR,0,(X),(Y),(Za))
 #define ERR2(X,Y,Za,Zb)  ap_log_rerror(APLOG_MARK,APLOG_ERR,0,(X),(Y),(Za),(Zb))
+#define ERR3(X,Y,Za,Zb,Zc)  ap_log_rerror(APLOG_MARK,APLOG_ERR,0,(X),(Y),(Za),(Zb),(Zc))
 #define SERR(X,Y)  ap_log_error(APLOG_MARK,APLOG_ERR,0,(X),(Y))
 #define SERR1(X,Y,Za)  ap_log_error(APLOG_MARK,APLOG_ERR,0,(X),(Y),(Za))
 #define SERR2(X,Y,Za,Zb)  ap_log_error(APLOG_MARK,APLOG_ERR,0,(X),(Y),(Za),(Zb))
@@ -365,13 +424,13 @@ extern tag_handler  xhtml_handler[];
 extern tag_handler  hdml_handler[];
 extern tag_handler  jhtml_handler[];
 
-extern char* chxj_node_exchange( 
-  device_table* spec,
-  request_rec*  r,
-  void*         pdoc,
-  Doc*          doc,
-  Node*         node,
-  int           indent
+extern char *chxj_node_exchange( 
+  device_table *spec,
+  request_rec  *r,
+  void         *pdoc,
+  Doc          *doc,
+  Node         *node,
+  int         indent
 );
 
 

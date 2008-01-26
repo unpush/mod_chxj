@@ -17,16 +17,17 @@
 #include "qs_parse_string.h"
 #include "qs_log.h"
 
+
 /**
  * ignore space
  */
 int
-qs_ignore_sp(Doc* UNUSED(doc), const char* s, int len) 
+qs_ignore_sp(Doc *UNUSED(doc), const char *s, int len) 
 {
   int ii;
-  char* sp;
+  char *sp;
 
-  sp = (char*)s;
+  sp = (char *)s;
 
   for(ii=0;
       *sp && is_white_space(*sp) && ii<len;
@@ -38,10 +39,10 @@ qs_ignore_sp(Doc* UNUSED(doc), const char* s, int len)
 
 
 int
-qs_ignore_sp_and_quote(Doc* UNUSED(doc), const char* s, int len) 
+qs_ignore_sp_and_quote(Doc *UNUSED(doc), const char *s, int len) 
 {
   int   ii;
-  char* sp = (char*)s;
+  char *sp = (char *)s;
 
   for(ii=0;
       *sp && (is_white_space(*sp) || is_quote(*sp)) && ii<len;

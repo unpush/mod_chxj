@@ -17,110 +17,130 @@
 #include <stdio.h>
 #include "mod_chxj.h"
 #include "chxj_load_emoji_data.h"
+#include "chxj_emoji.h"
 
-static char* s_load_emoji_set_tag(
-  Doc*             doc,
-  apr_pool_t*      p,
-  mod_chxj_config* conf,
-  Node*            node);
+static char *s_load_emoji_set_tag(
+  Doc              *doc,
+  apr_pool_t       *p,
+  mod_chxj_config  *conf,
+  Node             *node);
 
-static char* s_set_emoji_data(
-  Doc*             doc,
-  apr_pool_t*      p,
-  mod_chxj_config* conf,
-  Node*            node);
+static char *s_set_emoji_data(
+  Doc              *doc,
+  apr_pool_t       *p,
+  mod_chxj_config  *conf,
+  Node             *node);
 
-static char* s_load_emoji_emoji_tag(
-  Doc*             doc,
-  apr_pool_t*      p,
-  mod_chxj_config* conf,
-  Node*            node);
+static char *s_load_emoji_emoji_tag(
+  Doc              *doc,
+  apr_pool_t       *p,
+  mod_chxj_config  *conf,
+  Node             *node);
 
 static void  s_emoji_add_to_tail(
-  mod_chxj_config* conf,
-  emoji_t*         emoji);
+  mod_chxj_config  *conf,
+  emoji_t          *emoji);
 
-static char* s_load_emoji_no_tag(
-  Doc*        doc,
-  apr_pool_t* p,
-  emoji_t*    em,
-  Node*       node);
+static char *s_load_emoji_no_tag(
+  Doc         *doc,
+  apr_pool_t  *p,
+  emoji_t     *em,
+  Node        *node);
 
-static char* s_load_emoji_imode_tag( Doc* doc, apr_pool_t* p, emoji_t* em, Node* node);
+static char *s_load_emoji_imode_tag(
+  Doc        *doc,
+  apr_pool_t *p,
+  emoji_t    *em,
+  Node       *node);
 
-static char* s_load_emoji_ezweb_tag( Doc* doc, apr_pool_t* p, emoji_t* em, Node* node);
+static char *s_load_emoji_ezweb_tag(
+  Doc        *doc,
+  apr_pool_t *p,
+  emoji_t    *em,
+  Node       *node);
 
-static char* s_load_emoji_jphone_tag( Doc* doc, apr_pool_t* p, emoji_t* em, Node* node);
+static char *s_load_emoji_softbank_tag(
+  Doc        *doc,
+  apr_pool_t *p,
+  emoji_t    *em,
+  Node       *node);
 
-static char  s_hexstring_to_byte(char* s);
+static char  s_hexstring_to_byte(char *s);
+
+static char *
+s_load_emoji_ezweb_type_tag(
+  Doc          *doc,
+  apr_pool_t   *p,
+  Node         *node,
+  ezweb_type_t *type);
 
 
 /**
- * load emoji.xml
+ * The emoji data is loaded on the memory.
  */
-char* 
+char *
 chxj_load_emoji_data(
-  Doc* doc,
-  apr_pool_t *p,
-  mod_chxj_config* conf) 
+  Doc             *doc,
+  apr_pool_t      *p,
+  mod_chxj_config *conf) 
 {
-  char* rtn;
+  char *rtn;
 
   conf->emoji      = NULL;
   conf->emoji_tail = NULL;
-
-  if ((rtn = s_set_emoji_data(doc, p, conf,qs_get_root(doc))) != NULL)
+  if ((rtn = s_set_emoji_data(doc, p, conf,qs_get_root(doc))) != NULL) {
     return rtn;
-
+  }
+  chxj_emoji_init(conf);
   return NULL;
 }
 
+
 /**
- * <emoji>
  */
-static char*
+static char *
 s_set_emoji_data(
-  Doc* doc,
-  apr_pool_t* p,
-  mod_chxj_config* conf,
-  Node* node) 
+  Doc              *doc,
+  apr_pool_t       *p,
+  mod_chxj_config  *conf,
+  Node             *node) 
 {
-  Node* child;
-  char* rtn;
+  Node *child;
+  char *rtn;
 
   for (child = qs_get_child_node(doc,node);
        child;
        child = qs_get_next_node(doc,child)) {
-
-    char* name = qs_get_node_name(doc,child);
-
-    if ((*name == 'e' || *name == 'E') && strcasecmp(name, "emoji") == 0) {
-      if ((rtn = s_load_emoji_emoji_tag(doc, p, conf, child)))
+    char *name = qs_get_node_name(doc,child);
+    if ((*name == 'e' || *name == 'E') 
+        && strcasecmp(name, "emoji") == 0) {
+      if ((rtn = s_load_emoji_emoji_tag(doc, p, conf, child))) {
         return rtn;
+      }
     }
   }
   return NULL;
 }
 
-static char* 
+
+static char *
 s_load_emoji_emoji_tag(
-  Doc* doc,
-  apr_pool_t* p,
-  mod_chxj_config* conf,
-  Node* node)
+  Doc              *doc,
+  apr_pool_t       *p,
+  mod_chxj_config  *conf,
+  Node             *node)
 {
-  Node* child;
-  char* rtn;
+  Node *child;
+  char *rtn;
 
   for (child = qs_get_child_node(doc, node);
        child ;
        child = qs_get_next_node(doc, child)) {
-
-    char* name = qs_get_node_name(doc, child);
-
+    char *name = qs_get_node_name(doc, child);
     if ((*name == 's' || *name == 'S') && strcasecmp(name, "set") == 0) {
-      if ((rtn = s_load_emoji_set_tag(doc, p, conf, child)) != NULL) 
+      if ((rtn = s_load_emoji_set_tag(doc, p, conf, child)) != NULL) {
         return rtn;
+      }
     }
   }
 
@@ -128,42 +148,41 @@ s_load_emoji_emoji_tag(
 }
 
 
-static char*
+static char *
 s_load_emoji_set_tag(
-  Doc*             doc,
-  apr_pool_t*      p,
-  mod_chxj_config* conf,
-  Node*            node)
+  Doc              *doc,
+  apr_pool_t       *p,
+  mod_chxj_config  *conf,
+  Node             *node)
 {
-  Node*    child;
-  emoji_t* em;
-  char*    rtn;
+  Node     *child;
+  emoji_t  *em;
+  char     *rtn;
 
   em         = apr_palloc(p, sizeof(emoji_t));
-  em->imode  = apr_palloc(p, sizeof(imode_emoji_t));
-  em->ezweb  = apr_palloc(p, sizeof(ezweb_emoji_t));
-  em->jphone = apr_palloc(p, sizeof(jphone_emoji_t));
-  
+  memset(&em->imode, 0, sizeof(imode_emoji_t));
+  memset(&em->ezweb, 0, sizeof(ezweb_emoji_t));
+  memset(&em->softbank, 0, sizeof(softbank_emoji_t));
   for (child = qs_get_child_node(doc, node);
        child;
        child = qs_get_next_node(doc, child)) {
-
-    char* name  = qs_get_node_name(doc, child);
-
+    char *name  = qs_get_node_name(doc, child);
     switch (*name) {
     case 'n':
     case 'N':
       if (strcasecmp(name, "no") == 0) {
-        if ((rtn = s_load_emoji_no_tag(doc, p, em, child)) != NULL)
+        if ((rtn = s_load_emoji_no_tag(doc, p, em, child)) != NULL) {
           return rtn;
+        }
       }
       break;
     
     case 'i':
     case 'I':
       if (strcasecmp(name, "imode") == 0) {
-        if ((rtn = s_load_emoji_imode_tag(doc, p, em, child)) != NULL)
+        if ((rtn = s_load_emoji_imode_tag(doc, p, em, child)) != NULL) {
           return rtn;
+        }
       }
       break;
 
@@ -175,120 +194,179 @@ s_load_emoji_set_tag(
       }
       break;
 
-    case 'j':
-    case 'J':
-      if (strcasecmp(name, "jphone") == 0) {
-        if ((rtn = s_load_emoji_jphone_tag(doc, p, em, child)) != NULL)
+    case 's':
+    case 'S':
+      if (strcasecmp(name, "softbank") == 0) {
+        if ((rtn = s_load_emoji_softbank_tag(doc, p, em, child)) != NULL)
           return rtn;
       }
       break;
-
     default:
       break;
     }
   }
-
   s_emoji_add_to_tail(conf, em);
-
   return NULL;
 }
 
 
-static char*
+static char *
 s_load_emoji_no_tag(
-  Doc*        doc,
-  apr_pool_t* p,
-  emoji_t*    em,
-  Node*       node)
+  Doc         *doc,
+  apr_pool_t  *p,
+  emoji_t     *em,
+  Node        *node)
 {
   int len;
   int ii;
 
-  Node* child = qs_get_child_node(doc,node);
-  char* name  = qs_get_node_name(doc,  child);
-  char* value = qs_get_node_value(doc, child);
-
-  if ((*name == 't' || *name == 'T') && strcasecmp(name, "text") == 0) {
+  Node *child = qs_get_child_node(doc,node);
+  char *name  = qs_get_node_name(doc,  child);
+  char *value = qs_get_node_value(doc, child);
+  if (STRCASEEQ('t','T',"text",name)) {
     len = strlen(value);
-
     for (ii=0; ii<len; ii++) {
-      if (value[ii] < '0' || value[ii] > '9')
-        return apr_psprintf(p, "invalid data <no> tag [%s]", value);
+      if (value[ii] < '0' || value[ii] > '9') {
+        return apr_psprintf(p, 
+                            "invalid data <no> tag [%s]",
+                             value);
+      }
     }
     em->no = atoi(value);
   }
-
   return NULL;
 }
 
-static char*
+
+static char *
 s_load_emoji_imode_tag(
-  Doc*        doc,
-  apr_pool_t* p,
-  emoji_t*    em,
-  Node*       node)
+  Doc         *doc,
+  apr_pool_t  *p,
+  emoji_t     *em,
+  Node        *node)
 {
-  Node* child;
-
-  em->imode->hex1byte    = 0;
-  em->imode->hex2byte    = 0;
-  em->imode->string      = NULL;
-  em->imode->description = NULL;
-
+  Node *child;
   for (child = qs_get_child_node(doc, node);
        child ;
        child = qs_get_next_node(doc, child)) {
-
-    char* name  = qs_get_node_name(doc, child);
-
+    char *name  = qs_get_node_name(doc, child);
     switch (*name) {
-    case 'h':
-    case 'H':
-      if (strcasecmp(name, "hex1") == 0) {
-        Node* hex1node = qs_get_child_node(doc, child);
-        if (hex1node) {
-  
-          char* cname  = qs_get_node_name(doc, hex1node);
-          char* cvalue = qs_get_node_value(doc, hex1node);
-  
-          if ((*cname == 't' || *cname == 'T') && strcasecmp(cname, "text") == 0)
-            em->imode->hex1byte = s_hexstring_to_byte(cvalue);
-        }
-        else {
-          em->imode->hex1byte    = 0;
+    case 's':
+    case 'S':
+      if (strcasecmp(name, "sjis-hex") == 0) {
+        Node *hex_node = qs_get_child_node(doc, child);
+        if (hex_node) {
+          char *cname = qs_get_node_name(doc, hex_node);
+          char *cvalue = qs_get_node_value(doc, hex_node);
+          if (STRCASEEQ('t','T',"text",cname)) {
+            em->imode.sjis.hex_string = apr_pstrdup(p, cvalue);
+            em->imode.sjis.hex[0] = s_hexstring_to_byte(cvalue);
+            em->imode.sjis.hex[1] = s_hexstring_to_byte(&cvalue[2]);
+          }
         }
       }
-      else
-      if ((*name == 'h' || *name == 'H') && strcasecmp(name, "hex2") == 0) {
-        Node* hex2node = qs_get_child_node(doc, child);
-        if (hex2node) {
-          char* cname  = qs_get_node_name(doc, hex2node);
-          char* cvalue = qs_get_node_value(doc, hex2node);
-
-          if ((*cname == 't' || *cname == 'T') && strcasecmp(cname, "text") == 0)
-            em->imode->hex2byte = s_hexstring_to_byte(cvalue);
-        }
-        else {
-          em->imode->hex2byte    = 0;
+      else if (strcasecmp(name, "sjis-dec") == 0) {
+        Node *dec_node = qs_get_child_node(doc, child);
+        if (dec_node) {
+          char *cname = qs_get_node_name(doc, dec_node);
+          char *cvalue = qs_get_node_value(doc, dec_node);
+          if (STRCASEEQ('t','T',"text",cname)) {
+            em->imode.sjis.dec_string = apr_pstrdup(p, cvalue);
+          }
         }
       }
       break;
 
-    case 's':
-    case 'S':
-      if (strcasecmp(name, "string") == 0) {
-        Node* string_node = qs_get_child_node(doc, child);
-
-        if (string_node) {
-          char* cname = qs_get_node_name(doc, string_node);
-          char* cvalue = qs_get_node_value(doc, string_node);
-
-          if ((*cname == 't' || *cname == 'T') && strcasecmp(cname, "text") == 0)
-            em->imode->string = apr_pstrdup(p, cvalue);
+    case 'e':
+    case 'E':
+      if (strcasecmp(name, "eucjp-hex") == 0) {
+        Node *hex_node = qs_get_child_node(doc, child);
+        if (hex_node) {
+          char *cname = qs_get_node_name(doc, hex_node);
+          char *cvalue = qs_get_node_value(doc, hex_node);
+          if (STRCASEEQ('t','T',"text", cname)) {
+            char test[7];
+            memset(test, 0, 7);
+            strncpy(test, cvalue, 6);
+            if (strlen(test) < 6) {
+              return apr_pstrdup(p, "invalid imode::eucjp-hex");
+            }
+            em->imode.euc.hex_string = apr_pstrdup(p, cvalue);
+            em->imode.euc.hex[0] = s_hexstring_to_byte(cvalue);
+            em->imode.euc.hex[1] = s_hexstring_to_byte(&cvalue[2]);
+            em->imode.euc.hex[2] = s_hexstring_to_byte(&cvalue[4]);
+          }
         }
-        else {
-          em->imode->string    = apr_palloc(p, 1);
-          em->imode->string[0] = 0;
+      }
+      else if (strcasecmp(name, "eucjp-dec") == 0) {
+        Node *dec_node = qs_get_child_node(doc, child);
+        if (dec_node) {
+          char *cname = qs_get_node_name(doc, dec_node);
+          char *cvalue = qs_get_node_value(doc, dec_node);
+          if (STRCASEEQ('t','T',"text", cname)) {
+            em->imode.euc.dec_string = apr_pstrdup(p, cvalue);
+          }
+        }
+      }
+      break;
+
+    case 'u':
+    case 'U':
+      if (strcasecmp(name, "unicode-hex") == 0) {
+        Node *hex_node = qs_get_child_node(doc, child);
+        if (hex_node) {
+          char *cname = qs_get_node_name(doc, hex_node);
+          char *cvalue = qs_get_node_value(doc, hex_node);
+          if (STRCASEEQ('t','T',"text", cname)) {
+            char test[5];
+            memset(test, 0, 5);
+            strncpy(test, cvalue, 4);
+            if (strlen(test) < 4) {
+              return apr_pstrdup(p, "invalid imode::unicode-hex");
+            }
+            em->imode.unicode.hex_string = apr_pstrdup(p, cvalue);
+            em->imode.unicode.hex[0] = s_hexstring_to_byte(cvalue);
+            em->imode.unicode.hex[1] = s_hexstring_to_byte(&cvalue[2]);
+          }
+        }
+      }
+      else if (strcasecmp(name, "unicode-dec") == 0) {
+        Node *dec_node = qs_get_child_node(doc, child);
+        if (dec_node) {
+          char *cname = qs_get_node_name(doc, dec_node);
+          char *cvalue = qs_get_node_value(doc, dec_node);
+          if (STRCASEEQ('t','T',"text", cname)) {
+            em->imode.unicode.dec_string = apr_pstrdup(p, cvalue);
+          }
+        }
+      }
+      else if (strcasecmp(name, "utf8-hex") == 0) {
+        Node *hex_node = qs_get_child_node(doc, child);
+        if (hex_node) {
+          char *cname = qs_get_node_name(doc, hex_node);
+          char *cvalue = qs_get_node_value(doc, hex_node);
+          if (STRCASEEQ('t','T',"text", cname)) {
+            char test[7];
+            memset(test, 0, 7);
+            strncpy(test, cvalue, 6);
+            if (strlen(test) < 6) {
+              return apr_pstrdup(p, "invalid imode::utf8-hex");
+            }
+            em->imode.utf8.hex_string = apr_pstrdup(p, cvalue);
+            em->imode.utf8.hex[0] = s_hexstring_to_byte(cvalue);
+            em->imode.utf8.hex[1] = s_hexstring_to_byte(&cvalue[2]);
+            em->imode.utf8.hex[2] = s_hexstring_to_byte(&cvalue[4]);
+          }
+        }
+      }
+      else if (strcasecmp(name, "utf8-dec") == 0) {
+        Node *dec_node = qs_get_child_node(doc, child);
+        if (dec_node) {
+          char *cname = qs_get_node_name(doc, dec_node);
+          char *cvalue = qs_get_node_value(doc, dec_node);
+          if (STRCASEEQ('t','T',"text", cname)) {
+            em->imode.utf8.dec_string = apr_pstrdup(p, cvalue);
+          }
         }
       }
       break;
@@ -297,17 +375,16 @@ s_load_emoji_imode_tag(
     case 'D':
       if (strcasecmp(name, "description") == 0) {
         Node* description_node = qs_get_child_node(doc, child);
-  
         if (description_node) {
           char* cname = qs_get_node_name(doc, description_node);
           char* cvalue = qs_get_node_value(doc, description_node);
-  
-          if ((*cname == 't' || *cname == 'T') && strcasecmp(cname, "text") == 0)
-            em->imode->description = apr_pstrdup(p, cvalue);
+          if (STRCASEEQ('t','T',"text", cname)) {
+            em->imode.description = apr_pstrdup(p, cvalue);
+          }
         }
         else {
-          em->imode->description    = apr_palloc(p, 1);
-          em->imode->description[0] = 0;
+          em->imode.description    = apr_palloc(p, 1);
+          em->imode.description[0] = 0;
         }
       }
       break;
@@ -316,104 +393,41 @@ s_load_emoji_imode_tag(
       break;
     }
   }
-
   return NULL;
 }
 
 
-static char*
+static char *
 s_load_emoji_ezweb_tag(
-  Doc*        doc,
-  apr_pool_t* p,
-  emoji_t*    em,
-  Node*       node)
+  Doc         *doc,
+  apr_pool_t  *p,
+  emoji_t     *em,
+  Node        *node)
 {
-  Node* child;
-
-
-  em->ezweb->typeA = NULL;
-  em->ezweb->typeB = NULL;
-  em->ezweb->typeC = NULL;
-  em->ezweb->typeD = NULL;
-
+  Node *child;
+  char *rtn;
   for (child = qs_get_child_node(doc, node);
        child ;
        child = qs_get_next_node(doc, child)) {
-
-    char* name  = qs_get_node_name(doc, child);
-
-    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "A") == 0) {
-
-      Node* typeAnode = qs_get_child_node(doc, child);
-
-      if (typeAnode) {
-
-        char* cname = qs_get_node_name(doc, typeAnode);
-        char* cvalue = qs_get_node_value(doc, typeAnode);
-
-        if ((*cname == 't' || *cname == 'T') && strcasecmp(cname, "text") == 0)
-          em->ezweb->typeA = apr_pstrdup(p,cvalue);
-      }
-      else {
-        em->ezweb->typeA    = apr_palloc(p, 1);
-        em->ezweb->typeA[0] = 0;
-      }
-
-    }
-    else
-    if ((*name == 'b' || *name == 'B') && strcasecmp(name, "B") == 0) {
-
-      Node* typeBnode = qs_get_child_node(doc, child);
-
-      if (typeBnode) {
-
-        char* cname = qs_get_node_name(doc, typeBnode);
-        char* cvalue = qs_get_node_value(doc, typeBnode);
-
-        if ((*cname == 't' || *cname == 'T') && strcasecmp(cname, "text") == 0)
-          em->ezweb->typeB = apr_pstrdup(p,cvalue);
-
-      }
-      else {
-        em->ezweb->typeB    = apr_palloc(p, 1);
-        em->ezweb->typeB[0] = 0;
+    char *name  = qs_get_node_name(doc, child);
+    if (STRCASEEQ('a','A',"a", name)) {
+      if ((rtn = s_load_emoji_ezweb_type_tag(doc, p, child, &em->ezweb.typeA)) != NULL) {
+        return rtn;
       }
     }
-    else
-    if ((*name == 'c' || *name == 'C') && strcasecmp(name, "C") == 0) {
-
-      Node* typeCnode = qs_get_child_node(doc, child);
-
-      if (typeCnode) {
-
-        char* cname  = qs_get_node_name(doc, typeCnode);
-        char* cvalue = qs_get_node_value(doc, typeCnode);
-
-        if ((*cname == 't' || *cname == 'T') && strcasecmp(cname, "text") == 0)
-          em->ezweb->typeC = apr_pstrdup(p,cvalue);
-      }
-      else {
-        em->ezweb->typeC = apr_palloc(p, 1);
-        em->ezweb->typeC[0] = 0;
+    else if (STRCASEEQ('b','B',"b",name)) {
+      if ((rtn = s_load_emoji_ezweb_type_tag(doc, p, child, &em->ezweb.typeB)) != NULL) {
+        return rtn;
       }
     }
-    else
-    if ((*name == 'd' || *name == 'D') && strcasecmp(name, "D") == 0) {
-
-      Node* typeDnode = qs_get_child_node(doc, child);
-
-      if (typeDnode) {
-
-        char* cname  = qs_get_node_name(doc, typeDnode);
-        char* cvalue = qs_get_node_value(doc, typeDnode);
-
-        if ((*cname == 't' || *cname == 'T') && strcasecmp(cname, "text") == 0)
-          em->ezweb->typeD = apr_pstrdup(p,cvalue);
-
+    else if (STRCASEEQ('c','C',"c",name)) {
+      if ((rtn = s_load_emoji_ezweb_type_tag(doc, p, child, &em->ezweb.typeC)) != NULL) {
+        return rtn;
       }
-      else {
-        em->ezweb->typeD = apr_palloc(p, 1);
-        em->ezweb->typeD[0] = 0;
+    }
+    else if (STRCASEEQ('d','D',"d",name)) {
+      if ((rtn = s_load_emoji_ezweb_type_tag(doc, p, child, &em->ezweb.typeD)) != NULL) {
+        return rtn;
       }
     }
   }
@@ -422,94 +436,313 @@ s_load_emoji_ezweb_tag(
 }
 
 
-static char*
-s_load_emoji_jphone_tag(
-  Doc*        doc,
-  apr_pool_t* p,
-  emoji_t*    em,
-  Node*       node)
+static char *
+s_load_emoji_ezweb_type_tag(
+  Doc          *doc,
+  apr_pool_t   *p,
+  Node         *node,
+  ezweb_type_t *type)
 {
-  Node* child;
-
-
-  em->jphone->string = NULL;
-
+  Node *child;
   for (child = qs_get_child_node(doc, node);
        child ;
        child = qs_get_next_node(doc, child)) {
-
-    char* name  = qs_get_node_name(doc, child);
-
-    if ((*name == 's' || *name == 'S') && strcasecmp(name, "string") == 0) {
-
-      Node* stringnode = qs_get_child_node(doc, child);
-
-      if (stringnode) {
-
-        char* cname  = qs_get_node_name(doc, stringnode);
-        char* cvalue = qs_get_node_value(doc, stringnode);
-
-        if ((*cname == 't' || *cname == 'T') && strcasecmp(cname, "text") == 0) {
-          unsigned int   ii;
-          int   jj;
-          char* tmp;
- 
-          tmp = apr_palloc(p, strlen(cvalue)+1);
-          memset(tmp, 0, strlen(cvalue)+1);
-
-          for (jj=0,ii=0; ii< strlen(cvalue); ii++) {
-            if (strncasecmp(&cvalue[ii] , ESCAPE_CHAR_LT, strlen(ESCAPE_CHAR_LT)) == 0) {
-              tmp[jj] = '<';
-              jj++;
-              ii += (strlen(ESCAPE_CHAR_LT) - 1);
-            }
-            else
-            if (strncasecmp(&cvalue[ii] , ESCAPE_CHAR_GT, strlen(ESCAPE_CHAR_GT)) == 0) {
-              tmp[jj] = '>';
-              jj++;
-              ii += (strlen(ESCAPE_CHAR_GT) - 1);
-            }
-            else {
-              tmp[jj] = cvalue[ii];
-              jj++;
+    char *name  = qs_get_node_name(doc, child);
+    switch(*name) {
+    case 'n':
+    case 'N':
+      if (strcasecmp(name, "no") == 0) {
+        Node *hex_node = qs_get_child_node(doc, child);
+        if (hex_node) {
+          char *cname = qs_get_node_name(doc, hex_node);
+          char *cvalue = qs_get_node_value(doc, hex_node);
+          if (STRCASEEQ('t','T',"text",cname)) {
+            int len = strlen(cvalue);
+            int ii;
+            for (ii=0; ii<len; ii++) {
+              if (cvalue[ii] < '0' || cvalue[ii] > '9') {
+                return apr_psprintf(p, 
+                                    "invalid ezweb::no [%s]",
+                                     cvalue);
+              }
             }
           }
-          em->jphone->string = apr_pstrdup(p,tmp);
+          type->no = atoi(cvalue);
         }
       }
-      else {
-        em->jphone->string    = apr_palloc(p, 1);
-        em->jphone->string[0] = 0;
+      break;
+
+    case 's':
+    case 'S':
+      if (strcasecmp(name, "sjis-hex") == 0) {
+        Node *hex_node = qs_get_child_node(doc, child);
+        if (hex_node) {
+          char *cname = qs_get_node_name(doc, hex_node);
+          char *cvalue = qs_get_node_value(doc, hex_node);
+          if (STRCASEEQ('t','T',"text",cname)) {
+            char test[5];
+            memset(test, 0, 5);
+            strncpy(test, cvalue, 4);
+            if (strlen(test) < 4) {
+              return apr_psprintf(p, 
+                                  "invalid ezweb::sjis-hex [%s]",
+                                  test);
+            }
+            type->sjis.hex_string = apr_pstrdup(p, cvalue);
+            type->sjis.hex[0] = s_hexstring_to_byte(cvalue);
+            type->sjis.hex[1] = s_hexstring_to_byte(&cvalue[2]);
+          }
+        }
       }
+      else if (strcasecmp(name, "sjis-dec") == 0) {
+        Node *dec_node = qs_get_child_node(doc, child);
+        if (dec_node) {
+          char *cname = qs_get_node_name(doc, dec_node);
+          char *cvalue = qs_get_node_value(doc, dec_node);
+          if (STRCASEEQ('t','T',"text",cname)) {
+            type->sjis.dec_string = apr_pstrdup(p, cvalue);
+          }
+        }
+      }
+      break;
+
+    case 'u':
+    case 'U':
+      if (strcasecmp(name, "unicode-hex") == 0) {
+        Node *hex_node = qs_get_child_node(doc, child);
+        if (hex_node) {
+          char *cname = qs_get_node_name(doc, hex_node);
+          char *cvalue = qs_get_node_value(doc, hex_node);
+          if (STRCASEEQ('t','T',"text", cname)) {
+            char test[5];
+            memset(test, 0, 5);
+            strncpy(test, cvalue, 4);
+            if (strlen(test) < 4) {
+              return apr_psprintf(p, 
+                                  "invalid ezweb::unicode-hex [%s]",
+                                  test);
+            }
+            type->unicode.hex_string = apr_pstrdup(p, cvalue);
+            type->unicode.hex[0] = s_hexstring_to_byte(cvalue);
+            type->unicode.hex[1] = s_hexstring_to_byte(&cvalue[2]);
+          }
+        }
+      }
+      else if (strcasecmp(name, "unicode-dec") == 0) {
+        Node *dec_node = qs_get_child_node(doc, child);
+        if (dec_node) {
+          char *cname = qs_get_node_name(doc, dec_node);
+          char *cvalue = qs_get_node_value(doc, dec_node);
+          if (STRCASEEQ('t','T',"text", cname)) {
+            type->unicode.dec_string = apr_pstrdup(p, cvalue);
+          }
+        }
+      }
+      else if (strcasecmp(name, "utf8-hex") == 0) {
+        Node *hex_node = qs_get_child_node(doc, child);
+        if (hex_node) {
+          char *cname = qs_get_node_name(doc, hex_node);
+          char *cvalue = qs_get_node_value(doc, hex_node);
+          if (STRCASEEQ('t','T',"text", cname)) {
+            char test[7];
+            memset(test, 0, 7);
+            strncpy(test, cvalue, 6);
+            if (strlen(test) < 6) {
+              return apr_psprintf(p, 
+                                  "invalid ezweb::utf8-hex [%s]",
+                                  test);
+            }
+            type->utf8.hex_string = apr_pstrdup(p, cvalue);
+            type->utf8.hex[0] = s_hexstring_to_byte(cvalue);
+            type->utf8.hex[1] = s_hexstring_to_byte(&cvalue[2]);
+            type->utf8.hex[2] = s_hexstring_to_byte(&cvalue[4]);
+          }
+        }
+      }
+      else if (strcasecmp(name, "utf8-dec") == 0) {
+        Node *dec_node = qs_get_child_node(doc, child);
+        if (dec_node) {
+          char *cname = qs_get_node_name(doc, dec_node);
+          char *cvalue = qs_get_node_value(doc, dec_node);
+          if (STRCASEEQ('t','T',"text", cname)) {
+            type->utf8.dec_string = apr_pstrdup(p, cvalue);
+          }
+        }
+      }
+      break;
+
+    default:
+      break;
     }
   }
-
   return NULL;
 }
 
+
+static char *
+s_load_emoji_softbank_tag(
+  Doc         *doc,
+  apr_pool_t  *p,
+  emoji_t     *em,
+  Node        *node)
+{
+  Node *child;
+  for (child = qs_get_child_node(doc, node);
+       child ;
+       child = qs_get_next_node(doc, child)) {
+    char *name  = qs_get_node_name(doc, child);
+    switch(*name) {
+    case 'n':
+    case 'N':
+      if (strcasecmp(name, "no") == 0) {
+        Node *hex_node = qs_get_child_node(doc, child);
+        if (hex_node) {
+          char *cname = qs_get_node_name(doc, hex_node);
+          char *cvalue = qs_get_node_value(doc, hex_node);
+          if (STRCASEEQ('t','T',"text",cname)) {
+            int len = strlen(cvalue);
+            int ii;
+            for (ii=0; ii<len; ii++) {
+              if (cvalue[ii] < '0' || cvalue[ii] > '9') {
+                return apr_psprintf(p, 
+                                    "invalid softbank::no [%s]",
+                                     cvalue);
+              }
+            }
+          }
+          em->softbank.no = atoi(cvalue);
+        }
+      }
+      break;
+
+    case 's':
+    case 'S':
+      if (strcasecmp(name, "sjis-hex") == 0) {
+        Node *hex_node = qs_get_child_node(doc, child);
+        if (hex_node) {
+          char *cname = qs_get_node_name(doc, hex_node);
+          char *cvalue = qs_get_node_value(doc, hex_node);
+          if (STRCASEEQ('t','T',"text",cname)) {
+            char test[11];
+            memset(test, 0, 11);
+            strncpy(test, cvalue, 10);
+            if (strlen(test) < 10) {
+              return apr_psprintf(p,
+                                 "invalid softbank::sjis-hex [%s]",
+                                 test);
+            }
+            em->softbank.sjis.hex_string = apr_pstrdup(p, cvalue);
+            em->softbank.sjis.hex[0] = s_hexstring_to_byte(cvalue);
+            em->softbank.sjis.hex[1] = s_hexstring_to_byte(&cvalue[2]);
+            em->softbank.sjis.hex[2] = s_hexstring_to_byte(&cvalue[4]);
+            em->softbank.sjis.hex[3] = s_hexstring_to_byte(&cvalue[6]);
+            em->softbank.sjis.hex[4] = s_hexstring_to_byte(&cvalue[8]);
+          }
+        }
+      }
+      else if (strcasecmp(name, "sjis-dec") == 0) {
+        Node *dec_node = qs_get_child_node(doc, child);
+        if (dec_node) {
+          char *cname = qs_get_node_name(doc, dec_node);
+          char *cvalue = qs_get_node_value(doc, dec_node);
+          if (STRCASEEQ('t','T',"text",cname)) {
+            em->softbank.sjis.dec_string = apr_pstrdup(p, cvalue);
+          }
+        }
+      }
+      break;
+
+    case 'u':
+    case 'U':
+      if (strcasecmp(name, "unicode-hex") == 0) {
+        Node *hex_node = qs_get_child_node(doc, child);
+        if (hex_node) {
+          char *cname = qs_get_node_name(doc, hex_node);
+          char *cvalue = qs_get_node_value(doc, hex_node);
+          if (STRCASEEQ('t','T',"text", cname)) {
+            char test[5];
+            memset(test, 0, 5);
+            strncpy(test, cvalue, 4);
+            if (strlen(test) < 4) {
+              return apr_psprintf(p, 
+                                 "invalid softbank::unicode-hex [%s]",
+                                 test);
+            }
+            em->softbank.unicode.hex_string = apr_pstrdup(p, cvalue);
+            em->softbank.unicode.hex[0] = s_hexstring_to_byte(cvalue);
+            em->softbank.unicode.hex[1] = s_hexstring_to_byte(&cvalue[2]);
+          }
+        }
+      }
+      else if (strcasecmp(name, "unicode-dec") == 0) {
+        Node *dec_node = qs_get_child_node(doc, child);
+        if (dec_node) {
+          char *cname = qs_get_node_name(doc, dec_node);
+          char *cvalue = qs_get_node_value(doc, dec_node);
+          if (STRCASEEQ('t','T',"text", cname)) {
+            em->softbank.unicode.dec_string = apr_pstrdup(p, cvalue);
+          }
+        }
+      }
+      else if (strcasecmp(name, "utf8-hex") == 0) {
+        Node *hex_node = qs_get_child_node(doc, child);
+        if (hex_node) {
+          char *cname = qs_get_node_name(doc, hex_node);
+          char *cvalue = qs_get_node_value(doc, hex_node);
+          if (STRCASEEQ('t','T',"text", cname)) {
+            char test[7];
+            memset(test, 0, 7);
+            strncpy(test, cvalue, 6);
+            if (strlen(test) < 6) {
+              return apr_psprintf(p, 
+                                 "invalid softbank::utf8-hex [%s]",
+                                 test);
+            }
+            em->softbank.utf8.hex_string = apr_pstrdup(p, cvalue);
+            em->softbank.utf8.hex[0] = s_hexstring_to_byte(cvalue);
+            em->softbank.utf8.hex[1] = s_hexstring_to_byte(&cvalue[2]);
+            em->softbank.utf8.hex[2] = s_hexstring_to_byte(&cvalue[4]);
+          }
+        }
+      }
+      else if (strcasecmp(name, "utf8-dec") == 0) {
+        Node *dec_node = qs_get_child_node(doc, child);
+        if (dec_node) {
+          char *cname = qs_get_node_name(doc, dec_node);
+          char *cvalue = qs_get_node_value(doc, dec_node);
+          if (STRCASEEQ('t','T',"text", cname)) {
+            em->softbank.utf8.dec_string = apr_pstrdup(p, cvalue);
+          }
+        }
+      }
+      break;
+
+    default:
+      break;
+    }
+  }
+  return NULL;
+}
 
 
 static void
 s_emoji_add_to_tail(
-  mod_chxj_config* conf,
-  emoji_t*         emoji)
+  mod_chxj_config *conf,
+  emoji_t         *emoji)
 {
   emoji->next = NULL;
-
   if (conf->emoji == NULL) {
     conf->emoji      = emoji;
     conf->emoji_tail = emoji;
     return;
   }
-
   conf->emoji_tail->next = emoji;
   conf->emoji_tail       = emoji;
 }
 
 
-
 static char 
-s_hexstring_to_byte(char* s)
+s_hexstring_to_byte(char *s)
 {
   int  len;
   int  ii;
@@ -517,7 +750,7 @@ s_hexstring_to_byte(char* s)
 
   len = strlen(s);
 
-  for (ii=0; ii<len; ii++) {
+  for (ii=0; ii<len && ii<2; ii++) {
     switch(s[ii]) {
     case '1':
     case '2':

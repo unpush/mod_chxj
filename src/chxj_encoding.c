@@ -29,26 +29,32 @@
 #  endif
 #endif
 
+static char *
+do_encoding(
+  request_rec *r,
+  char **ibuf,
+  apr_size_t *ilenp,
+  char **obuf,
+  apr_size_t *olenp,
+  char *from_code,
+  char *to_code);
 
-char*
-chxj_encoding(request_rec *r, const char* src, apr_size_t* len)
+char *
+chxj_encoding(request_rec *r, const char *src, apr_size_t *len)
 {
-  char*               obuf;
-  char*               ibuf;
-  char*               spos;
+  char                *obuf;
+  char                *ibuf;
+  char                *spos;
   
-  iconv_t             cd;
-  size_t              result;
   apr_size_t          ilen;
   apr_size_t          olen;
-  mod_chxj_config*    dconf;
-  chxjconvrule_entry* entryp;
+  mod_chxj_config     *dconf;
+  chxjconvrule_entry  *entryp;
+  char                *rtn;
 
-
-  DBG2(r,"start chxj_encoding() input[%.*s]", (int)len, src);
+  DBG3(r,"start chxj_encoding() len=[%d] input[%.*s]", (int)*len, (int)*len, src);
 
   dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
-
   if (dconf == NULL) {
     DBG(r,"none encoding.");
     return (char*)src;
@@ -61,7 +67,7 @@ chxj_encoding(request_rec *r, const char* src, apr_size_t* len)
   }
 
   if ((*(entryp->encoding) == 'n' || *(entryp->encoding) == 'N') 
-  &&   strcasecmp(entryp->encoding, "NONE") == 0) {
+      &&   strcasecmp(entryp->encoding, "NONE") == 0) {
     DBG(r,"none encoding.");
     return (char*)src;
   }
@@ -77,44 +83,157 @@ chxj_encoding(request_rec *r, const char* src, apr_size_t* len)
   olen = ilen * 4 + 1;
   spos = obuf = apr_palloc(r->pool, olen);
   if (obuf == NULL) {
-    DBG(r,"end   chxj_encoding()");
+    DBG(r,"memory allocation failure. end   chxj_encoding()");
     return ibuf;
   }
-  DBG2(r,"encode convert [%s] -> [%s]", entryp->encoding, "CP932");
 
   memset(obuf, 0, olen);
-  cd = iconv_open("CP932", entryp->encoding);
-  if (cd == (iconv_t)-1) {
-    DBG(r,"end   chxj_encoding()");
+  rtn = NULL;
+  if (IS_EUCJP_STRING(entryp->encoding)) {
+    DBG2(r,"try encode convert [%s] -> [%s]", 
+      "EUCJP-WIN",        MOD_CHXJ_INTERNAL_ENCODING);
+    rtn = do_encoding(r, 
+                      &ibuf, 
+                      &ilen, 
+                      &obuf, 
+                      &olen, 
+                      "EUCJP-WIN", 
+                      MOD_CHXJ_INTERNAL_ENCODING);
+    DBG1(r, "rtn:[%s]", rtn);
+  }
+  if (rtn == NULL) {
+    DBG2(r,"encode convert [%s] -> [%s]", 
+      entryp->encoding,MOD_CHXJ_INTERNAL_ENCODING);
+    rtn = do_encoding(r, 
+                      &ibuf, 
+                      &ilen, 
+                      &obuf, 
+                      &olen, 
+                      entryp->encoding, 
+                      MOD_CHXJ_INTERNAL_ENCODING);
+  }
+  if (rtn == NULL) {
+    ERR1(r, "error: convert charactor encoding failure.[%s]", ibuf);
     return ibuf;
   }
-  while (ilen > 0) {
-    result = iconv(cd, &ibuf, &ilen, &obuf, &olen);
-    if (result == (size_t)(-1)) {
-      break;
-    }
-  }
   *len = olen;
-  iconv_close(cd);
-
   DBG3(r,"end   chxj_encoding() len=[%d] obuf=[%.*s]", (int)*len, (int)*len, spos);
+  DBG1(r,"end   chxj_encoding() obuf=[%s]", spos);
   return spos;
 }
 
 
-char*
-chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
+char *
+chxj_encoding_by_spec(
+  request_rec        *r,
+  device_table       *spec,
+  const char         *src,
+  apr_size_t         *len)
 {
-  char*               obuf;
-  char*               ibuf;
-  char*               spos;
+  char                *obuf;
+  char                *ibuf;
+  
+  apr_size_t          ilen;
+  apr_size_t          olen;
+  char                *rtn;
+
+  DBG3(r,"start chxj_encoding_by_spec() len=[%d] input[%.*s]", (int)*len, (int)*len, src);
+
+  ilen = *len;
+  ibuf = apr_palloc(r->pool, ilen+1);
+  if (ibuf == NULL) {
+    ERR2(r, "%s:%d allocation error: not enough memory", __FILE__,__LINE__);
+    return (char*)src;
+  }
+  memset(ibuf, 0, ilen+1);
+  memcpy(ibuf, src, ilen);
+
+  olen = ilen * 4 + 1;
+  obuf = apr_palloc(r->pool, olen);
+  if (obuf == NULL) {
+    ERR2(r, "%s:%d allocation error: not enough memory", __FILE__,__LINE__);
+    return ibuf;
+  }
+
+  memset(obuf, 0, (int)olen);
+  rtn = do_encoding(r, &ibuf, &ilen, &obuf, &olen, MOD_CHXJ_INTERNAL_ENCODING, spec->charset);
+  if (rtn == NULL) {
+    ERR3(r, "%s:%d error: convert charactor encoding failure.[%s]",__FILE__,__LINE__,ibuf);
+    return ibuf;
+  }
+  *len = strlen(rtn);
+  DBG3(r,"end   chxj_encoding() len=[%d] obuf=[%.*s]", (int)*len, (int)*len, rtn);
+  return rtn;
+}
+
+
+static char *
+do_encoding(
+  request_rec *r,
+  char **ibuf,
+  apr_size_t *ilenp,
+  char **obuf,
+  apr_size_t *olenp,
+  char *from_code,
+  char *to_code)
+{
+  iconv_t cd;
+  size_t  result;
+  apr_size_t ilen;
+  apr_size_t olen;
+  char *spos = *obuf;
+
+  DBG2(r,"start do_encoding() from:[%s] --> to:[%s]", from_code, to_code);
+
+  ilen = *ilenp;
+  olen = *olenp;
+
+  memset(*obuf, 0, olen);
+  cd = (iconv_t)-1;
+  cd = iconv_open(to_code, from_code);
+  if (cd == (iconv_t)-1) {
+    ERR(r, "iconv_open failure.");
+    return NULL;
+  }
+  while (ilen > 0) {
+    errno = 0;
+    result = iconv(cd, ibuf, &ilen, obuf, &olen);
+    if (result == (size_t)(-1)) {
+      if (errno == E2BIG) {
+        ERR(r, "outbuf is not an enough size. ");
+        return NULL;
+      }
+      else if (errno == EILSEQ) {
+        ERR(r, "invalid multi byte character string to the input. ");
+        return NULL;
+      }
+      else if (errno == EINVAL) {
+        ERR(r, "Imperfect character string in the input.");
+        return NULL;
+      }
+      break;
+    }
+  }
+  iconv_close(cd);
+  *olenp = strlen(spos);
+  DBG3(r, "end do_encoding() from:[%s] --> to:[%s] spos:[%s]", from_code, to_code, spos);
+  return spos;
+}
+
+
+char *
+chxj_rencoding(request_rec *r, const char *src, apr_size_t *len)
+{
+  char                *obuf;
+  char                *ibuf;
+  char                *spos;
   
   iconv_t             cd;
   size_t              result;
   apr_size_t          ilen;
   apr_size_t          olen;
-  mod_chxj_config*    dconf;
-  chxjconvrule_entry* entryp;
+  mod_chxj_config     *dconf;
+  chxjconvrule_entry  *entryp;
 
   DBG(r,"start chxj_rencoding()");
 
@@ -133,7 +252,7 @@ chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
   }
 
   if ((*(entryp->encoding) == 'n' || *(entryp->encoding) == 'N') 
-  &&   strcasecmp(entryp->encoding, "NONE") == 0) {
+      &&   strcasecmp(entryp->encoding, "NONE") == 0) {
     DBG(r,"none encoding.");
     DBG(r,"end   chxj_rencoding()");
     return (char*)src;
@@ -143,7 +262,7 @@ chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
   ibuf = apr_palloc(r->pool, ilen+1);
   if (! ibuf) {
     DBG(r,"end   chxj_rencoding()");
-    return (char*)src;
+    return (char *)src;
   }
 
   memset(ibuf, 0,   ilen+1);
@@ -155,11 +274,11 @@ chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
     DBG(r,"end   chxj_rencoding()");
     return ibuf;
   }
-  DBG2(r,"encode convert [%s] -> [%s]", "CP932", entryp->encoding);
+  DBG2(r,"encode convert [%s] -> [%s]", MOD_CHXJ_INTERNAL_ENCODING, entryp->encoding);
 
   memset(obuf, 0, olen);
 
-  cd = iconv_open(entryp->encoding, "CP932");
+  cd = iconv_open(entryp->encoding, MOD_CHXJ_INTERNAL_ENCODING);
   if (cd == (iconv_t)-1) {
     DBG(r,"end   chxj_rencoding()");
     return ibuf;
@@ -180,18 +299,18 @@ chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
 }
 
 
-char*
-chxj_encoding_parameter(request_rec* r, const char* value)
+char *
+chxj_encoding_parameter(request_rec *r, const char *value)
 {
-  char* src;
-  char* src_sv;
-  char* pstat;
-  char* spos;
-  char* pair;
-  char* key;
-  char* val;
-  char* vstat;
-  char* param;
+  char *src;
+  char *src_sv;
+  char *pstat;
+  char *spos;
+  char *pair;
+  char *key;
+  char *val;
+  char *vstat;
+  char *param;
 
   int   use_amp_flag;
   

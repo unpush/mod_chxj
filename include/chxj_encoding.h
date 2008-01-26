@@ -38,5 +38,12 @@ extern char* chxj_encoding_parameter(
   request_rec*       r, 
   const char*        value);
 
+extern char *
+chxj_encoding_by_spec(
+  request_rec        *r,
+  device_table       *spec,
+  const char         *src,
+  apr_size_t         *len);
+
 #endif
 

@@ -35,18 +35,17 @@
 #  endif
 #endif
 
-static int s_cut_tag (const char* s, int len) ;
-static int s_cut_text(const char* s, int len) ;
-static void qs_dump_node(Doc* doc, Node* node, int indent);
+static int s_cut_tag (const char *s, int len) ;
+static int s_cut_text(const char *s, int len) ;
+static void qs_dump_node(Doc *doc, Node *node, int indent);
 
-
-Node*
-qs_parse_string(Doc* doc, const char* src, int srclen) 
+Node *
+qs_parse_string(Doc *doc, const char *src, int srclen) 
 {
   int     ii;
   char    encoding[256];
-  char*   osrc;
-  char*   ibuf;
+  char    *osrc;
+  char    *ibuf;
   size_t  olen;
   size_t  ilen;
   iconv_t cd;
@@ -68,14 +67,14 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
 
     if ((unsigned char)'<' == src[ii]) {
       int endpoint = s_cut_tag(&src[ii], srclen - ii);
-      Node* node   = NULL;
+      Node *node   = NULL;
       node = qs_parse_tag(doc, &src[ii], endpoint);
       ii += endpoint;
 
       if (node->name[0] != '?') break; 
 
       if (strcasecmp(node->name, "?xml") == 0) {
-        Attr* parse_attr;
+        Attr *parse_attr;
         for(parse_attr = node->attr;
             parse_attr && *encoding == '\0'; 
             parse_attr = parse_attr->next) {
@@ -128,11 +127,11 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
   }
 
   if (strcasecmp(encoding, "NONE") != 0 && strlen(encoding) != 0) {
-    char* sv_osrc;
+    char *sv_osrc;
     olen = srclen * 4 + 1;
-    sv_osrc = osrc =(char*)apr_palloc(doc->pool, olen);
+    sv_osrc = osrc =(char *)apr_palloc(doc->pool, olen);
     memset((char*)osrc, 0, olen);
-    if ((cd = iconv_open("CP932", encoding)) != (iconv_t) -1) {
+    if ((cd = iconv_open(MOD_CHXJ_INTERNAL_ENCODING, encoding)) != (iconv_t) -1) {
       ilen = srclen;
       ibuf = apr_palloc(doc->pool, ilen+1);
       memset(ibuf, 0, ilen+1);
@@ -159,7 +158,7 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
     }
     if ((unsigned char)'<' == src[ii]) {
       int endpoint = s_cut_tag(&src[ii], srclen - ii);
-      Node* node   = NULL;
+      Node *node   = NULL;
       node = qs_parse_tag(doc, &src[ii], endpoint);
 
       ii += endpoint;
@@ -227,7 +226,7 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
     else {
       /* TEXT */
       int endpoint = s_cut_text(&src[ii], srclen - ii);
-      Node* node = qs_new_tag(doc);
+      Node *node = qs_new_tag(doc);
       node->value = (char*)apr_palloc(doc->pool,endpoint+1);
       node->name  = (char*)apr_palloc(doc->pool,4+1);
       node->otext = (char*)apr_palloc(doc->pool,endpoint+1);
@@ -257,13 +256,13 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
 
 
 static void
-qs_dump_node(Doc* doc, Node* node, int indent) 
+qs_dump_node(Doc *doc, Node *node, int indent) 
 {
-  Node* p = (Node*)qs_get_child_node(doc,node);
+  Node *p = (Node *)qs_get_child_node(doc,node);
 
-  for (;p;p = (Node*)qs_get_next_node(doc,p)) {
-    Attr* attr;
-    if ((char*)qs_get_node_value(doc,p) != NULL) {
+  for (;p;p = (Node *)qs_get_next_node(doc,p)) {
+    Attr *attr;
+    if ((char *)qs_get_node_value(doc,p) != NULL) {
       DBG5(doc->r,"%*.*sNode:[%s][%s]\n", indent,indent," ",
                       (char*)qs_get_node_name(doc,p),
                       (char*)qs_get_node_value(doc,p));
@@ -280,9 +279,53 @@ qs_dump_node(Doc* doc, Node* node, int indent)
 }
 
 
+void
+qs_dump_node_to_file(FILE *fp, Doc *doc, Node *node, int indent) 
+{
+  Node *p = (Node *)qs_get_child_node(doc,node);
+
+  for (;p;p = (Node *)qs_get_next_node(doc,p)) {
+    Attr *attr;
+    if ((char *)qs_get_node_value(doc,p) != NULL) {
+      fprintf(fp,
+             "%*.*sNode:[%s][%s]\n",
+             indent,
+             indent,
+             " ",
+             (char*)qs_get_node_name(doc,p),
+             (char*)qs_get_node_value(doc,p));
+    }
+    else {
+      fprintf(fp,
+              "%*.*sNode:[%s]\n",
+              indent,
+              indent,
+              " ", 
+              qs_get_node_name(doc,p));
+    }
+    for (attr = (Attr*)qs_get_attr(doc,p); 
+         attr; 
+         attr = (Attr*)qs_get_next_attr(doc,attr)) {
+      fprintf(fp,
+              "%*.*s  ATTR:[%s]\n",
+              indent,
+              indent,
+              " ", 
+              (char *)qs_get_attr_name(doc,attr));
+      fprintf(fp,
+              "%*.*s  VAL :[%s]\n",
+              indent,
+              indent,
+              " ", 
+              (char *)qs_get_attr_value(doc,attr));
+    }
+    qs_dump_node_to_file(fp,doc,p, indent+4);
+  }
+}
+
 
 static int
-s_cut_tag(const char* s, int len) 
+s_cut_tag(const char *s, int len) 
 {
   int lv = 0;
   int ii;
@@ -314,7 +357,7 @@ s_cut_tag(const char* s, int len)
 }
 
 static int
-s_cut_text(const char* s, int len) 
+s_cut_text(const char *s, int len) 
 {
   int ii;
 
@@ -331,17 +374,16 @@ s_cut_text(const char* s, int len)
 
     if (s[ii] == '<') 
       break;
-
   }
 
   return ii;
 }
 
 
-Node*
-qs_init_root_node(Doc* doc) 
+Node *
+qs_init_root_node(Doc *doc) 
 {
-  doc->root_node = (Node*)apr_palloc(doc->pool,sizeof(struct Node));
+  doc->root_node = (Node *)apr_palloc(doc->pool,sizeof(struct Node));
   if (doc->root_node == NULL) 
     QX_LOGGER_FATAL("Out Of Memory");
 
@@ -350,7 +392,7 @@ qs_init_root_node(Doc* doc)
   doc->root_node->child  = NULL;
   doc->root_node->attr   = NULL;
 
-  doc->root_node->name   = (char*)apr_palloc(doc->pool,5);
+  doc->root_node->name   = (char *)apr_palloc(doc->pool, 5);
   if (doc->root_node->name == NULL) {
     QX_LOGGER_FATAL("Out Of Memory");
   }
@@ -361,9 +403,8 @@ qs_init_root_node(Doc* doc)
 }
 
 
-
 void
-qs_add_child_node(Doc* doc,Node* node) 
+qs_add_child_node(Doc *doc, Node *node) 
 {
   node->next       = NULL;
   node->child      = NULL;
@@ -383,75 +424,73 @@ qs_add_child_node(Doc* doc,Node* node)
 }
 
 
-
-
-Node*
-qs_get_root(Doc* doc) {
+Node *
+qs_get_root(Doc *doc) 
+{
   return doc->root_node;
 }
 
 
-
-
-char* 
-qs_get_node_value(Doc* UNUSED(doc), Node* node) {
+char * 
+qs_get_node_value(Doc *UNUSED(doc), Node *node) 
+{
   return node->value;
 }
 
 
-
-
-char*
-qs_get_node_name(Doc* UNUSED(doc), Node* node) {
+char *
+qs_get_node_name(Doc *UNUSED(doc), Node *node) 
+{
   return node->name;
 }
 
 
 
-Node*
-qs_get_child_node(Doc* UNUSED(doc), Node* node) {
+Node *
+qs_get_child_node(Doc *UNUSED(doc), Node *node) 
+{
   return node->child;
 }
 
 
-
-
-Node*
-qs_get_next_node(Doc* UNUSED(doc), Node* node) {
+Node *
+qs_get_next_node(Doc *UNUSED(doc), Node *node)
+{
   return node->next;
 }
 
 
-
-Attr*
-qs_get_attr(Doc* UNUSED(doc), Node* node) {
+Attr *
+qs_get_attr(Doc *UNUSED(doc), Node *node)
+{
   return node->attr;
 }
 
 
-
-
-Attr*
-qs_get_next_attr(Doc* UNUSED(doc), Attr* attr) {
+Attr *
+qs_get_next_attr(Doc *UNUSED(doc), Attr *attr)
+{
   return attr->next;
 }
 
 
-
-char*
-qs_get_attr_name(Doc* UNUSED(doc), Attr* attr) {
+char *
+qs_get_attr_name(Doc *UNUSED(doc), Attr *attr) 
+{
   return attr->name;
 }
 
 
-
-char*
-qs_get_attr_value(Doc* UNUSED(doc), Attr* attr) {
+char *
+qs_get_attr_value(Doc *UNUSED(doc), Attr *attr) 
+{
   return attr->value;
 }
 
+
 int 
-qs_get_node_size(Doc* UNUSED(doc), Node* node) {
+qs_get_node_size(Doc *UNUSED(doc), Node *node)
+{
   return node->size;
 }
 /*

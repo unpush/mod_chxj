@@ -17,7 +17,7 @@
 #include "chxj_str_util.h"
 
 int
-chxj_chk_numeric(const char* s)
+chxj_chk_numeric(const char *s)
 {
   int len = strlen(s);
   int ii;
@@ -37,7 +37,7 @@ chxj_chk_numeric(const char* s)
 
 
 int
-chxj_atoi(const char* s)
+chxj_atoi(const char *s)
 {
   int len = strlen(s);
   int ii;
@@ -74,8 +74,6 @@ chxj_atoi(const char* s)
 
   return result;
 }
-
-
 /*
  * vim:ts=2 et
  */

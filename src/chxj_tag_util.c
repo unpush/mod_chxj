@@ -16,6 +16,7 @@
  */
 #include "chxj_tag_util.h"
 
+
 /**
  * The value of the VALUE attribute that the object tag node maintains is
  * acquired.
@@ -27,10 +28,10 @@
  * @return The value of the VALUE attribute that the object tag node maintains
  *         is returned. NULL is returned when not found.
  */
-char*
-qs_get_value_attr(Doc* doc, Node* node, request_rec* r)
+char *
+qs_get_value_attr(Doc *doc, Node *node, request_rec *r)
 {
-  Attr*        attr;
+  Attr *attr;
 
   /*--------------------------------------------------------------------------*/
   /* The object tag node is scanned.                                          */
@@ -38,9 +39,8 @@ qs_get_value_attr(Doc* doc, Node* node, request_rec* r)
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-
-    char* name;
-    char* value;
+    char *name;
+    char *value;
 
     name  = qs_get_attr_name(doc,attr);
     value = qs_get_attr_value(doc,attr);
@@ -58,6 +58,7 @@ qs_get_value_attr(Doc* doc, Node* node, request_rec* r)
   return NULL;
 }
 
+
 /**
  * The value of the checked tag is acquired.
  *
@@ -68,11 +69,11 @@ qs_get_value_attr(Doc* doc, Node* node, request_rec* r)
  * @return The value of the checked tag is returned. NULL is returned when
  *         not found.
  */
-char*
-qs_get_checked_attr(Doc* doc, Node* tag, request_rec* r)
+char *
+qs_get_checked_attr(Doc *doc, Node *tag, request_rec *r)
 {
-  Attr*        attr;
-  int          found_flag = 0;
+  Attr *attr;
+  int  found_flag = 0;
 
   /*--------------------------------------------------------------------------*/
   /* The object tag node is scanned.                                          */
@@ -80,7 +81,7 @@ qs_get_checked_attr(Doc* doc, Node* tag, request_rec* r)
   for (attr = qs_get_attr(doc,tag);
        attr != NULL;
        attr = qs_get_next_attr(doc,attr)) {
-    char* name  = qs_get_attr_name(doc,attr);
+    char *name  = qs_get_attr_name(doc,attr);
     if ((*name == 'c' || *name == 'C') && strcasecmp(name, "checked") == 0) {
       /*----------------------------------------------------------------------*/
       /* The VALUE attribute was found.                                       */
@@ -109,10 +110,10 @@ qs_get_checked_attr(Doc* doc, Node* tag, request_rec* r)
  * @return The value of the type attribute is returned. NULL is returned when
  *         not found.
  */
-char*
-qs_get_type_attr(Doc* doc, Node* tag, request_rec* r)
+char *
+qs_get_type_attr(Doc *doc, Node *tag, request_rec *r)
 {
-  Attr*        attr;
+  Attr *attr;
 
   /*--------------------------------------------------------------------------*/
   /* The object tag node is scanned.                                          */
@@ -120,9 +121,8 @@ qs_get_type_attr(Doc* doc, Node* tag, request_rec* r)
   for (attr = qs_get_attr(doc,tag);
        attr != NULL;
        attr = qs_get_next_attr(doc,attr)) {
-
-    char* name  = qs_get_attr_name(doc,attr);
-    char* value = qs_get_attr_value(doc,attr);
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
 
     if ((*name == 't' || *name == 'T') && strcasecmp(name, "type") == 0) 
       /*----------------------------------------------------------------------*/
@@ -136,20 +136,22 @@ qs_get_type_attr(Doc* doc, Node* tag, request_rec* r)
   return NULL;
 }
 
+
 /**
  * The character string area in 0 bytes is allocated.
  *
  * @param r    [i]   To use POOL, the pointer to request_rec is specified.
  * @return The allocated 0 byte character string is returned.
  */
-char*
-qs_alloc_zero_byte_string(request_rec* r)
+char *
+qs_alloc_zero_byte_string(request_rec *r)
 {
-  char* tgt = apr_palloc(r->pool, 1);
+  char *tgt = apr_palloc(r->pool, 1);
   tgt[0] = '\0';
 
   return tgt;
 }
+
 
 /**
  * A consecutive head and the last WHITESPACE are removed.
@@ -158,10 +160,10 @@ qs_alloc_zero_byte_string(request_rec* r)
  * @param s    [i]   The character string that should be removed is specified.
  * @return The character string that has been removed is returned.
  */
-char*
-qs_trim_string(request_rec* r, char* s)
+char *
+qs_trim_string(request_rec *r, char *s)
 {
-  char* ss = apr_pstrdup(r->pool, s);
+  char *ss = apr_pstrdup(r->pool, s);
   int len = strlen(s);
   int ii;
 
@@ -176,6 +178,7 @@ qs_trim_string(request_rec* r, char* s)
   return ss;
 }
 
+
 /**
  * The value of child TEXT of tag that maintains the SELECTED attribute is 
  * returned. 
@@ -187,30 +190,28 @@ qs_trim_string(request_rec* r, char* s)
  * @reutrn  The value of child TEXT of tag that maintains the SELECTED 
  *          attribute is returned. NULL is returned when not found. 
  */
-char*
-qs_get_selected_value_text(Doc *doc, Node* node, request_rec* r)
+char *
+qs_get_selected_value_text(Doc *doc, Node *node, request_rec *r)
 {
-  Node* child;
-  Node* selchild;
-  char* result   = NULL;
+  Node *child;
+  Node *selchild;
+  char *result   = NULL;
 
   for (child = qs_get_child_node(doc,node);
        child != NULL; 
        child = qs_get_next_node(doc,child)) {
-
-    char* name = qs_get_node_name(doc,child);
+    char *name = qs_get_node_name(doc,child);
 
     /*------------------------------------------------------------------------*/
     /* <OPTION> tag                                                           */
     /*------------------------------------------------------------------------*/
     if ((*name == 'o' || *name == 'O') && strcasecmp(name, "option") == 0) {
-      Attr* attr;
+      Attr *attr;
 
       for (attr =  qs_get_attr(doc,child); 
            attr != NULL; 
            attr = qs_get_next_attr(doc,attr)) {
-
-        char* name  = qs_get_attr_name(doc,attr);
+        char *name  = qs_get_attr_name(doc,attr);
 
         DBG1(r, "qs_get_selected_value name::[%s]" , name);
 
@@ -238,6 +239,7 @@ qs_get_selected_value_text(Doc *doc, Node* node, request_rec* r)
   return NULL;
 }
 
+
 /**
  * The value of tag that maintains the SELECTED attribute is acquired. 
  *
@@ -248,29 +250,28 @@ qs_get_selected_value_text(Doc *doc, Node* node, request_rec* r)
  * @return The value of tag that maintains the SELECTED attribute is 
  *         returned. NULL is returned when not found. 
  */
-char*
-qs_get_selected_value(Doc* doc, Node* node, request_rec* r)
+char *
+qs_get_selected_value(Doc *doc, Node *node, request_rec *r)
 {
-  Node*         child;
-  char*         result    = NULL;
+  Node *child;
+  char *result    = NULL;
 
   for (child = qs_get_child_node(doc,node); 
        child != NULL; 
        child = qs_get_next_node(doc,child)) {
-
-    char* name = qs_get_node_name(doc,child);
+    char *name = qs_get_node_name(doc,child);
 
     /*------------------------------------------------------------------------*/
     /* <OPTION> tag                                                           */
     /*------------------------------------------------------------------------*/
     if ((*name == 'o' || *name == 'O') && strcasecmp(name, "option") == 0) {
-      Attr* attr;
+      Attr *attr;
 
       for (attr = qs_get_attr(doc,child); 
            attr; 
            attr = qs_get_next_attr(doc,attr)) {
 
-        char* name  = qs_get_attr_name(doc,attr);
+        char *name  = qs_get_attr_name(doc,attr);
 
         DBG1(r, "qs_get_selected_value name::[%s]" , name);
 
@@ -292,6 +293,7 @@ qs_get_selected_value(Doc* doc, Node* node, request_rec* r)
   return NULL;
 }
 
+
 /**
  * The value of the SIZE attribute is acquired.
  *
@@ -303,17 +305,16 @@ qs_get_selected_value(Doc* doc, Node* node, request_rec* r)
  * @return The value of the SIZE attribute is returned. NULL is
  *         returned when not is.
  */
-char*
-qs_get_name_attr(Doc* doc, Node* tag, request_rec* r)
+char *
+qs_get_name_attr(Doc *doc, Node *tag, request_rec *r)
 {
-  Attr* attr;
+  Attr *attr;
 
   for (attr = qs_get_attr(doc,tag); 
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
-
-    char* name  = qs_get_attr_name(doc,attr);
-    char* value = qs_get_attr_value(doc,attr);
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
 
     if ((*name == 'n' || *name == 'N') && strcasecmp(name, "name") == 0)
       return apr_pstrdup(r->pool, value);
@@ -322,6 +323,7 @@ qs_get_name_attr(Doc* doc, Node* tag, request_rec* r)
   return NULL;
 }
 
+
 /**
  * The value of the SIZE attribute is acquired.
  *
@@ -333,17 +335,16 @@ qs_get_name_attr(Doc* doc, Node* tag, request_rec* r)
  * @return The value of the SIZE attribute is returned. NULL is
  *         returned when not is.
  */
-char*
-qs_get_size_attr(Doc* doc, Node* tag, request_rec* r)
+char *
+qs_get_size_attr(Doc *doc, Node *tag, request_rec *r)
 {
-  Attr* attr;
+  Attr *attr;
 
   for (attr = qs_get_attr(doc,tag); 
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
-
-    char* name  = qs_get_attr_name(doc,attr);
-    char* value = qs_get_attr_value(doc,attr);
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
 
     if ((*name == 's' || *name == 'S') && strcasecmp(name, "size") == 0)
       return apr_pstrdup(r->pool, value);
@@ -351,6 +352,7 @@ qs_get_size_attr(Doc* doc, Node* tag, request_rec* r)
 
   return NULL;
 }
+
 
 /**
  * The value of the ACCESSKEY attribute is acquired.
@@ -363,24 +365,24 @@ qs_get_size_attr(Doc* doc, Node* tag, request_rec* r)
  * @return The value of the ACCESSKEY attribute is returned. NULL is
  *         returned when not is.
  */
-char*
-qs_get_accesskey_attr(Doc* doc, Node* tag, request_rec* r)
+char *
+qs_get_accesskey_attr(Doc *doc, Node *tag, request_rec *r)
 {
-  Attr* attr;
+  Attr *attr;
 
   for (attr = qs_get_attr(doc,tag); 
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
 
-    char* name  = qs_get_attr_name(doc,attr);
-    char* value = qs_get_attr_value(doc,attr);
-
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
     if ((*name == 'a' || *name == 'A') && strcasecmp(name, "accesskey") == 0)
       return apr_pstrdup(r->pool, value);
   }
 
   return NULL;
 }
+
 
 /**
  * The value of the ISTYLE attribute is acquired.
@@ -393,17 +395,17 @@ qs_get_accesskey_attr(Doc* doc, Node* tag, request_rec* r)
  * @return The value of the ISTYLE attribute is returned. NULL is
  *         returned when not is.
  */
-char*
-qs_get_istyle_attr(Doc* doc, Node* tag, request_rec* r)
+char *
+qs_get_istyle_attr(Doc *doc, Node *tag, request_rec *r)
 {
-  Attr*        attr;
+  Attr *attr;
 
   for (attr = qs_get_attr(doc,tag); 
        attr != NULL; 
        attr = qs_get_next_attr(doc,attr)) {
 
-    char* name  = qs_get_attr_name(doc,attr);
-    char* value = qs_get_attr_value(doc,attr);
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
 
     if ((*name == 'i' || *name == 'I') && strcasecmp(name, "istyle") == 0)
       return apr_pstrdup(r->pool, value);
@@ -411,6 +413,7 @@ qs_get_istyle_attr(Doc* doc, Node* tag, request_rec* r)
 
   return NULL;
 }
+
 
 /**
  * The value of the MAXLENGTH attribute is acquired from the tag node of the
@@ -424,17 +427,17 @@ qs_get_istyle_attr(Doc* doc, Node* tag, request_rec* r)
  * @return The value of the MAXLENGTH attribute is returned. NULL is
  *         returned when not is.
  */
-char*
-qs_get_maxlength_attr(Doc* doc, Node* tag, request_rec* r)
+char *
+qs_get_maxlength_attr(Doc *doc, Node *tag, request_rec *r)
 {
-  Attr*        attr;
+  Attr *attr;
 
   for (attr = qs_get_attr(doc,tag);
        attr != NULL; 
        attr = qs_get_next_attr(doc,attr)) {
 
-    char* name  = qs_get_attr_name(doc,attr);
-    char* value = qs_get_attr_value(doc,attr);
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
 
     if ((*name == 'm' || *name == 'M') && strcasecmp(name, "maxlength") == 0)
       return apr_pstrdup(r->pool, value);
@@ -442,6 +445,7 @@ qs_get_maxlength_attr(Doc* doc, Node* tag, request_rec* r)
 
   return NULL;
 }
+
 
 /**
  * It is scanned whether the CHECKBOX tag of the object is CHECKED. 
@@ -454,15 +458,14 @@ qs_get_maxlength_attr(Doc* doc, Node* tag, request_rec* r)
  * @return 1 is returned when it is CHECKED and, additionally, 0 is returned. 
  */
 int
-qs_is_checked_checkbox_attr(Doc* doc, Node* tag, request_rec* UNUSED(r))
+qs_is_checked_checkbox_attr(Doc *doc, Node *tag, request_rec *UNUSED(r))
 {
-  Attr* attr;
+  Attr *attr;
 
   for (attr = qs_get_attr(doc,tag);
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
-
-    char* name  = qs_get_attr_name(doc,attr);
+    char *name  = qs_get_attr_name(doc,attr);
 
     if ((*name == 'c' || *name == 'C') && strcasecmp(name, "checked") == 0)
       return 1;
@@ -473,17 +476,16 @@ qs_is_checked_checkbox_attr(Doc* doc, Node* tag, request_rec* UNUSED(r))
 
 
 int
-chxj_chxjif_is_mine(device_table* spec, Doc* doc, Node* tag)
+chxj_chxjif_is_mine(device_table *spec, Doc *doc, Node *tag)
 {
-  request_rec* r = doc->r;
-  Attr* attr;
+  request_rec *r = doc->r;
+  Attr *attr;
 
   for (attr = qs_get_attr(doc,tag);
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
-
-    char* name  = qs_get_attr_name(doc,attr);
-    char* value = qs_get_attr_value(doc,attr);
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
 
     if ((*name == 'l' || *name == 'L') && strcasecmp(name, "lang") == 0) {
 
@@ -531,6 +533,7 @@ chxj_chxjif_is_mine(device_table* spec, Doc* doc, Node* tag)
   return 0;
 }
 
+
 /**
  * The value of the DESTLANG attribute is acquired from the tag node of the
  * object.
@@ -543,17 +546,17 @@ chxj_chxjif_is_mine(device_table* spec, Doc* doc, Node* tag)
  * @return The value of the DESTLANG attribute is returned. NULL is
  *         returned when not is.
  */
-char*
-qs_get_destlang_attr(Doc* doc, Node* tag, request_rec* r)
+char *
+qs_get_destlang_attr(Doc *doc, Node *tag, request_rec *r)
 {
-  Attr*        attr;
+  Attr *attr;
 
   for (attr = qs_get_attr(doc,tag);
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
 
-    char* name  = qs_get_attr_name(doc,attr);
-    char* value = qs_get_attr_value(doc,attr);
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
 
     if ((*name == 'd' || *name == 'D') && strcasecmp(name, "destlang") == 0)
       return apr_pstrdup(r->pool, value);
@@ -573,10 +576,10 @@ qs_get_destlang_attr(Doc* doc, Node* tag, request_rec* r)
  * @return The value of the PARSE attribute is returned. NULL is returned when
  *         not found.
  */
-char*
-qs_get_parse_attr(Doc* doc, Node* tag, request_rec* r)
+char *
+qs_get_parse_attr(Doc *doc, Node *tag, request_rec *r)
 {
-  Attr*        attr;
+  Attr *attr;
 
   /*--------------------------------------------------------------------------*/
   /* The object tag node is scanned.                                          */
@@ -584,9 +587,8 @@ qs_get_parse_attr(Doc* doc, Node* tag, request_rec* r)
   for (attr = qs_get_attr(doc,tag);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-
-    char* name  = qs_get_attr_name(doc,attr);
-    char* value = qs_get_attr_value(doc,attr);
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
 
     if ((*name == 'p' || *name == 'P') && strcasecmp(name, "parse") == 0) {
       /*----------------------------------------------------------------------*/
@@ -601,7 +603,6 @@ qs_get_parse_attr(Doc* doc, Node* tag, request_rec* r)
   /*--------------------------------------------------------------------------*/
   return NULL;
 }
-
 /*
  * vim:ts=2 et
  */

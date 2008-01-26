@@ -17,33 +17,33 @@
 #include "mod_chxj.h"
 
 static device_table  UNKNOWN_DEVICE      = {
-  .next = NULL,
-  .device_id = "",
-  .device_name = "UNKNOWN",
-  .html_spec_type = CHXJ_SPEC_UNKNOWN,
-  .width = 640,
-  .heigh = 480,
+  .next               = NULL,
+  .device_id          = "",
+  .device_name        = "UNKNOWN",
+  .html_spec_type     = CHXJ_SPEC_UNKNOWN,
+  .width              = 640,
+  .heigh              = 480,
   /*--------------------------------------------------------------------------*/
   /* Walll Paper Size                                                         */
   /*--------------------------------------------------------------------------*/
-  .wp_width = 640,
-  .wp_heigh = 480,
+  .wp_width           = 640,
+  .wp_heigh           = 480,
   /*--------------------------------------------------------------------------*/
   /* Cache Size                                                               */
   /*--------------------------------------------------------------------------*/
-  .cache    = 10000000,
+  .cache              = 10000000,
   /*--------------------------------------------------------------------------*/
   /* Correspondence image format                                              */
   /* 1: It is possible to display it.                                         */
   /* 0: It is not possible to display it.                                     */
   /*--------------------------------------------------------------------------*/
-  .available_gif = 1,
-  .available_jpeg = 1,
-  .available_png = 1,
-  .available_bmp2 = 1,
-  .available_bmp4 = 1,
-  .dpi_width = 96,
-  .dpi_heigh = 96,
+  .available_gif      = 1,
+  .available_jpeg     = 1,
+  .available_png      = 1,
+  .available_bmp2     = 1,
+  .available_bmp4     = 1,
+  .dpi_width          = 96,
+  .dpi_heigh          = 96,
   /*--------------------------------------------------------------------------*/
   /* Color number type                                                        */
   /* 2       : 2        Colors                                                */
@@ -54,8 +54,8 @@ static device_table  UNKNOWN_DEVICE      = {
   /* 262144  : 262144   Colors                                                */
   /* 15680000: 15680000 over colors                                           */
   /*--------------------------------------------------------------------------*/
-  .color = 15680000,
-  .emoji_type = NULL,
+  .color              = 15680000,
+  .emoji_type         = NULL,
 };
 
 /**
@@ -64,15 +64,15 @@ static device_table  UNKNOWN_DEVICE      = {
  * @param userAgent UserAgent is appointed here,
  * @return The style which corresponds is returned.
  */
-device_table*
-chxj_specified_device(request_rec* r, const char* user_agent) 
+device_table *
+chxj_specified_device(request_rec *r, const char *user_agent) 
 {
   ap_regmatch_t        match[10];
-  device_table*        returnType = &UNKNOWN_DEVICE;
-  device_table_list*   dtl;
-  device_table*        dt;
-  mod_chxj_config*     conf; 
-  char*                device_id;
+  device_table         *returnType = &UNKNOWN_DEVICE;
+  device_table_list    *dtl;
+  device_table         *dt;
+  mod_chxj_config      *conf; 
+  char                 *device_id;
 
   if (! user_agent) 
     return returnType;
@@ -130,8 +130,6 @@ chxj_specified_device(request_rec* r, const char* user_agent)
 
   return returnType;
 }
-
 /*
  * vim:ts=2 et
  */
-

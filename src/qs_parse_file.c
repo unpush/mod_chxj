@@ -30,18 +30,17 @@
 #include "qs_log.h"
 
 
-Node*
-qs_parse_file(Doc* doc, const char* filename) 
+Node *
+qs_parse_file(Doc *doc, const char *filename) 
 {
-  char*       tgt;
-  Node*       return_value;
+  char        *tgt;
+  Node        *return_value;
   struct stat st;
   int         rtn;
   int         fd;
 
   tgt          = NULL;
   return_value = NULL;
-
 
   memset(&st, 0, sizeof(struct stat));
 

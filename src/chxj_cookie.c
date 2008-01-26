@@ -30,35 +30,35 @@
 #include "apr_base64.h"
 #include "apr_uri.h"
 
-static char* s_get_hostname_from_url(request_rec* r, char* value);
-static char* s_cut_until_end_hostname(request_rec*, char* value);
+static char *s_get_hostname_from_url(request_rec *r, char *value);
+static char *s_cut_until_end_hostname(request_rec *, char *value);
 
 /*
  *
  */
-cookie_t*
-chxj_save_cookie(request_rec* r)
+cookie_t *
+chxj_save_cookie(request_rec *r)
 {
   int                 ii;
-  apr_array_header_t* headers;
-  apr_table_entry_t*  hentryp;
+  apr_array_header_t *headers;
+  apr_table_entry_t   *hentryp;
   apr_status_t        retval;
   apr_datum_t         dbmkey;
   apr_datum_t         dbmval;
-  apr_dbm_t*          f;
+  apr_dbm_t           *f;
   apr_uuid_t          uuid;
-  char*               uuid_string;
-  unsigned char*      md5_value;
-  char*               old_cookie_id;
-  char*               store_string;
-  mod_chxj_config*    dconf;
-  chxjconvrule_entry* entryp;
-  apr_file_t*         file;
-  apr_table_t*        new_cookie_table;
+  char                *uuid_string;
+  unsigned char       *md5_value;
+  char                *old_cookie_id;
+  char                *store_string;
+  mod_chxj_config     *dconf;
+  chxjconvrule_entry  *entryp;
+  apr_file_t          *file;
+  apr_table_t         *new_cookie_table;
   int                 has_cookie = 0;
-  cookie_t*           cookie;
-  cookie_t*           old_cookie;
-  char*               refer_string;
+  cookie_t            *cookie;
+  cookie_t            *old_cookie;
+  char                *refer_string;
   apr_uri_t           parsed_uri;
   int                 has_refer;
 
@@ -95,9 +95,9 @@ chxj_save_cookie(request_rec* r)
       DBG(r, "=====================================");
       DBG2(r, "cookie=[%s:%s]", hentryp[ii].key, hentryp[ii].val);
 
-      char* key;
-      char* val;
-      char* buff;
+      char *key;
+      char *val;
+      char *buff;
 
 
       buff = apr_pstrdup(r->pool, hentryp[ii].val);
@@ -268,24 +268,24 @@ on_error:
 /*
  *
  */
-cookie_t*
-chxj_update_cookie(request_rec* r, cookie_t* old_cookie)
+cookie_t *
+chxj_update_cookie(request_rec *r, cookie_t *old_cookie)
 {
   int                 ii;
-  apr_array_header_t* headers;
-  apr_table_entry_t*  hentryp;
+  apr_array_header_t  *headers;
+  apr_table_entry_t   *hentryp;
   apr_status_t        retval;
   apr_datum_t         dbmkey;
   apr_datum_t         dbmval;
-  apr_dbm_t*          f;
+  apr_dbm_t           *f;
   apr_uuid_t          uuid;
-  char*               uuid_string;
-  unsigned char*      md5_value;
-  char*               store_string;
-  mod_chxj_config*    dconf;
-  chxjconvrule_entry* entryp;
-  apr_file_t*         file;
-  cookie_t*           cookie;
+  char                *uuid_string;
+  unsigned char       *md5_value;
+  char                *store_string;
+  mod_chxj_config     *dconf;
+  chxjconvrule_entry  *entryp;
+  apr_file_t          *file;
+  cookie_t            *cookie;
 
 
   DBG(r, "start chxj_update_cookie()");
@@ -425,23 +425,23 @@ on_error:
  *
  * @return loaded data.
  */
-cookie_t*
-chxj_load_cookie(request_rec* r, char* cookie_id)
+cookie_t *
+chxj_load_cookie(request_rec *r, char *cookie_id)
 {
   apr_status_t            retval;
   apr_datum_t             dbmkey;
   apr_datum_t             dbmval;
-  apr_dbm_t*              f;
-  mod_chxj_config*        dconf;
-  chxjconvrule_entry*     entryp;
-  apr_file_t*             file;
-  cookie_t*               cookie;
-  apr_table_t*            load_cookie_table;
-  char*                   load_string;
-  char*                   pstat;
-  char*                   key;
-  char*                   val;
-  char*                   pair;
+  apr_dbm_t               *f;
+  mod_chxj_config         *dconf;
+  chxjconvrule_entry      *entryp;
+  apr_file_t              *file;
+  cookie_t                *cookie;
+  apr_table_t             *load_cookie_table;
+  char                    *load_string;
+  char                    *pstat;
+  char                    *key;
+  char                    *val;
+  char                    *pair;
 
   DBG(r, "========================================================");
   DBG(r, "========================================================");
@@ -507,17 +507,17 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
     memset(load_string, 0, dbmval.dsize+1);
     memcpy(load_string, dbmval.dptr, dbmval.dsize);
 
-    char* header_cookie = apr_palloc(r->pool, 1);
+    char *header_cookie = apr_palloc(r->pool, 1);
 
     header_cookie[0] = 0;
     for (;;) {
-      char* tmp_sem;
+      char *tmp_sem;
       pair = apr_strtok(load_string, "\n", &pstat);  
       load_string = NULL;
       if (!pair) break;
 
       DBG1(r, "Cookie:[%s]", pair);
-      char* tmp_pair;
+      char *tmp_pair;
 
       tmp_pair = apr_pstrdup(r->pool, pair);
       val = strchr(tmp_pair, '=');
@@ -579,11 +579,11 @@ on_error0:
 }
 
 
-char*
-chxj_add_cookie_parameter(request_rec* r, char* value, cookie_t* cookie)
+char *
+chxj_add_cookie_parameter(request_rec *r, char *value, cookie_t *cookie)
 {
-  char* qs;
-  char* dst;
+  char *qs;
+  char *dst;
 
   DBG1(r, "start chxj_add_cookie_parameter() cookie_id=[%s]", (cookie) ? cookie->cookie_id : NULL);
 
@@ -619,9 +619,9 @@ on_error:
 
 
 int
-chxj_cookie_check_host(request_rec* r, char* value) 
+chxj_cookie_check_host(request_rec *r, char *value) 
 {
-  char* hostnm;
+  char *hostnm;
 
   DBG1(r, "hostname=[%s]", r->hostname);
 
@@ -636,8 +636,8 @@ chxj_cookie_check_host(request_rec* r, char* value)
 }
 
 
-static char*
-s_get_hostname_from_url(request_rec* r, char* value)
+static char *
+s_get_hostname_from_url(request_rec *r, char *value)
 {
   if (!value) 
     return NULL; 
@@ -652,11 +652,11 @@ s_get_hostname_from_url(request_rec* r, char* value)
 }
 
 
-static char* 
-s_cut_until_end_hostname(request_rec* r, char* value)
+static char *
+s_cut_until_end_hostname(request_rec *r, char *value)
 {
-  char* sp;
-  char* hostnm;
+  char *sp;
+  char *hostnm;
 
   hostnm = sp = apr_pstrdup(r->pool, value);
   for (;*sp; sp++) {
@@ -669,14 +669,14 @@ s_cut_until_end_hostname(request_rec* r, char* value)
 }
 
 
-apr_file_t*
-chxj_cookie_db_lock(request_rec* r)
+apr_file_t *
+chxj_cookie_db_lock(request_rec *r)
 {
-  apr_file_t*      file;
+  apr_file_t       *file;
   apr_status_t     rv;
-  mod_chxj_config* dconf;
+  mod_chxj_config  *dconf;
 
-  dconf = (mod_chxj_config*)ap_get_module_config(r->per_dir_config, &chxj_module);
+  dconf = (mod_chxj_config *)ap_get_module_config(r->per_dir_config, &chxj_module);
 
   rv = apr_file_open(&file, 
                      chxj_cookie_db_lock_name_create(r, dconf->cookie_db_dir),
@@ -700,7 +700,7 @@ chxj_cookie_db_lock(request_rec* r)
 
 
 void
-chxj_cookie_db_unlock(request_rec* r, apr_file_t* file)
+chxj_cookie_db_unlock(request_rec *r, apr_file_t *file)
 {
   apr_status_t rv;
 
@@ -715,13 +715,13 @@ chxj_cookie_db_unlock(request_rec* r, apr_file_t* file)
 
 
 void
-chxj_delete_cookie(request_rec* r, char* cookie_id)
+chxj_delete_cookie(request_rec *r, char *cookie_id)
 {
   apr_status_t      retval;
   apr_datum_t       dbmkey;
-  apr_dbm_t*        f;
-  apr_file_t*       file;
-  mod_chxj_config*  dconf;
+  apr_dbm_t         *f;
+  apr_file_t        *file;
+  mod_chxj_config   *dconf;
 
   DBG(r, "start chxj_delete_cookie()");
 
@@ -770,10 +770,10 @@ on_error0:
 }
 
 
-char*
-chxj_cookie_db_name_create(request_rec* r, const char* dir)
+char *
+chxj_cookie_db_name_create(request_rec *r, const char *dir)
 {
-  char* dst;
+  char *dst;
 
   if (!dir) {
     dst = apr_pstrdup(r->pool, DEFAULT_COOKIE_DB_DIR);
@@ -793,10 +793,10 @@ chxj_cookie_db_name_create(request_rec* r, const char* dir)
 }
 
 
-char*
-chxj_cookie_db_lock_name_create(request_rec* r, const char* dir)
+char *
+chxj_cookie_db_lock_name_create(request_rec *r, const char *dir)
 {
-  char* dst;
+  char *dst;
   DBG(r, "start  chxj_cookie_db_lock_name_create()");
 
   if (!dir) {
@@ -822,15 +822,15 @@ chxj_cookie_db_lock_name_create(request_rec* r, const char* dir)
  *
  */
 void
-chxj_save_cookie_expire(request_rec* r, cookie_t* cookie)
+chxj_save_cookie_expire(request_rec *r, cookie_t *cookie)
 {
   apr_status_t            retval;
   apr_datum_t             dbmkey;
   apr_datum_t             dbmval;
-  apr_dbm_t*              f;
-  apr_file_t*             file;
-  mod_chxj_config*        dconf;
-  char*                   store_string;
+  apr_dbm_t               *f;
+  apr_file_t              *file;
+  mod_chxj_config         *dconf;
+  char                    *store_string;
 
   DBG(r, "start chxj_save_cookie_expire()");
   if (!cookie) {
@@ -897,10 +897,10 @@ chxj_save_cookie_expire(request_rec* r, cookie_t* cookie)
 }
 
 
-char*
-chxj_cookie_expire_db_name_create(request_rec* r, const char* dir)
+char *
+chxj_cookie_expire_db_name_create(request_rec *r, const char *dir)
 {
-  char* dst;
+  char *dst;
 
   if (!dir) {
     dst = apr_pstrdup(r->pool, DEFAULT_COOKIE_DB_DIR);
@@ -920,10 +920,10 @@ chxj_cookie_expire_db_name_create(request_rec* r, const char* dir)
 }
 
 
-char*
-chxj_cookie_expire_db_lock_name_create(request_rec* r, const char* dir)
+char *
+chxj_cookie_expire_db_lock_name_create(request_rec *r, const char *dir)
 {
-  char* dst;
+  char *dst;
 
   if (!dir) {
     dst = apr_pstrdup(r->pool, DEFAULT_COOKIE_DB_DIR);
@@ -942,14 +942,14 @@ chxj_cookie_expire_db_lock_name_create(request_rec* r, const char* dir)
 }
 
 
-apr_file_t*
-chxj_cookie_expire_db_lock(request_rec* r)
+apr_file_t *
+chxj_cookie_expire_db_lock(request_rec *r)
 {
-  apr_file_t*      file;
+  apr_file_t       *file;
   apr_status_t     rv;
-  mod_chxj_config* dconf;
+  mod_chxj_config  *dconf;
 
-  dconf = (mod_chxj_config*)ap_get_module_config(r->per_dir_config, &chxj_module);
+  dconf = (mod_chxj_config *)ap_get_module_config(r->per_dir_config, &chxj_module);
 
   rv = apr_file_open(&file, 
                      chxj_cookie_expire_db_lock_name_create(r, dconf->cookie_db_dir),
@@ -973,7 +973,7 @@ chxj_cookie_expire_db_lock(request_rec* r)
 
 
 void
-chxj_cookie_expire_db_unlock(request_rec* r, apr_file_t* file)
+chxj_cookie_expire_db_unlock(request_rec *r, apr_file_t *file)
 {
   apr_status_t rv;
 
@@ -987,13 +987,13 @@ chxj_cookie_expire_db_unlock(request_rec* r, apr_file_t* file)
 }
 
 void
-chxj_delete_cookie_expire(request_rec* r, char* cookie_id)
+chxj_delete_cookie_expire(request_rec *r, char *cookie_id)
 {
   apr_status_t      retval;
   apr_datum_t       dbmkey;
-  apr_dbm_t*        f;
-  apr_file_t*       file;
-  mod_chxj_config*  dconf;
+  apr_dbm_t         *f;
+  apr_file_t        *file;
+  mod_chxj_config   *dconf;
 
   DBG(r, "start chxj_delete_cookie_expire()");
 
@@ -1043,14 +1043,14 @@ on_error0:
 
 
 void
-chxj_cookie_expire_gc(request_rec* r)
+chxj_cookie_expire_gc(request_rec *r)
 {
   apr_status_t      retval;
   apr_datum_t       dbmkey;
   apr_datum_t       dbmval;
-  apr_dbm_t*        f;
-  apr_file_t*       file;
-  mod_chxj_config*  dconf;
+  apr_dbm_t         *f;
+  apr_file_t        *file;
+  mod_chxj_config   *dconf;
   time_t            now_time;
 
   DBG(r, "start chxj_cookie_expire_gc()");
@@ -1087,8 +1087,8 @@ chxj_cookie_expire_gc(request_rec* r)
   if (retval == APR_SUCCESS) {
     DBG2(r, "firstkey=[%.*s]", (int)dbmkey.dsize, dbmkey.dptr);
     do {
-      char* tmp;
-      char* old_cookie_id;
+      char *tmp;
+      char *old_cookie_id;
       int   val_time;
       int   cmp_time;
 

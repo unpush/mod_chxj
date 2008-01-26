@@ -21,16 +21,16 @@
 #include "qs_ignore_sp.h"
 
 
-Attr*
-qs_parse_attr(Doc* doc, const char*s, int len, int *pos) 
+Attr *
+qs_parse_attr(Doc *doc, const char *s, int len, int *pos) 
 {
   int   ii;
   int   start_pos;
   int   size;
   int   novalue;
-  char* name;
-  char* value;
-  Attr* attr;
+  char  *name;
+  char  *value;
+  Attr  *attr;
   int   use_quote;
   int   backslash;
 
@@ -164,12 +164,12 @@ qs_parse_attr(Doc* doc, const char*s, int len, int *pos)
 }
 
 
-Attr*
-qs_new_attr(Doc* doc) 
+Attr *
+qs_new_attr(Doc *doc) 
 {
-  Attr* attr;
+  Attr *attr;
 
-  attr = (Attr*)apr_palloc(doc->pool,sizeof(Attr));
+  attr = (Attr *)apr_palloc(doc->pool,sizeof(Attr));
 
   if (attr == NULL) {
     QX_LOGGER_FATAL("Out Of Memory");

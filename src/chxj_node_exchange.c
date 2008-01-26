@@ -80,14 +80,14 @@ tag_handlers chxj_tag_handlers[] = {
  *
  * @return The character string after it converts it is returned. 
  */
-char*
+char *
 chxj_node_exchange(
   device_table *spec,
   request_rec  *r,
   void         *pdoc, 
   Doc          *doc, 
   Node         *node, 
-  int           indent
+  int          indent
 )
 {
   Node         *child;
@@ -103,7 +103,7 @@ chxj_node_exchange(
        child;
        child = qs_get_next_node(doc,child)) {
 
-    char* name;
+    char *name;
 
     name = qs_get_node_name(doc,child);
 

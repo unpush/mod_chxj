@@ -38,6 +38,7 @@ typedef enum {
 #include "mod_chxj.h"
 #include "chxj_cookie.h"
 
+#define GET_HTML_SPEC_TYPE(X) ((X)->html_spec_type)
 
 typedef struct device_table_t device_table;
 
@@ -83,8 +84,11 @@ struct device_table_t {
   /* 15680000: 15680000 over colors                                           */
   /*--------------------------------------------------------------------------*/
   int                    color;
-  char*                  emoji_type;
+  char                   *emoji_type;
+  char                   *charset;
 };
+
+#define GET_EMOJI_TYPE(spec) ((spec)->emoji_type)
 
 typedef struct device_table_list_t  device_table_list;
 

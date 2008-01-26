@@ -87,7 +87,6 @@ static char *s_chtml10_end_div_tag        (void *pdoc, Node *node);
 
 static void  s_init_chtml10(chtml10_t *chtml, Doc *doc, request_rec *r, device_table *spec);
 
-static int   s_chtml10_search_emoji(chtml10_t *chtml, char *txt, char **rslt);
 static char *s_chtml10_chxjif_tag        (void *pdoc, Node *node);
 static char *s_chtml10_text              (void *pdoc, Node *node);
 
@@ -367,7 +366,12 @@ chxj_exchange_chtml10(
   chtml10.entryp    = entryp;
   chtml10.cookie    = cookie;
 
-  ap_set_content_type(r, "text/html; charset=Windows-31J");
+  if (IS_SJIS_STRING(GET_SPEC_CHARSET(spec))) {
+    ap_set_content_type(r, "text/html; charset=Windows-31J");
+  }
+  else {
+    ap_set_content_type(r, "text/html; charset=UTF-8");
+  }
 
   /*--------------------------------------------------------------------------*/
   /* The character string of the input is analyzed.                           */
@@ -438,63 +442,6 @@ s_init_chtml10(
   chtml10->out  = qs_alloc_zero_byte_string(r);
   chtml10->conf = ap_get_module_config(r->per_dir_config, &chxj_module);
   chtml10->doc->parse_mode = PARSE_MODE_CHTML;
-}
-
-
-/**
- * Corresponding EMOJI to a current character-code is retrieved. 
- * The substitution character string is stored in the rslt pointer if agreeing.
- *
- * @param chtml10   [i]   The pointer to the CHTML structure is specified. 
- * @param txt     [i]   The character string to want to examine whether it is 
- *                      EMOJI is specified. 
- * @param rslt    [o]   The pointer to the pointer that stores the result is 
- *                      specified. 
- * @return When corresponding EMOJI exists, it returns it excluding 0. 
- */
-static int
-s_chtml10_search_emoji(chtml10_t *chtml10, char *txt, char **rslt)
-{
-  emoji_t       *ee;
-  request_rec   *r;
-  device_table  *spec;
-  int           len;
-
-  spec = chtml10->spec;
-
-  len = strlen(txt);
-  r = chtml10->doc->r;
-
-  if (!spec) {
-    DBG(r,"spec is NULL");
-  }
-
-  for (ee = chtml10->conf->emoji;
-       ee;
-       ee = ee->next) {
-
-    if (!ee->imode) {
-      DBG(r,"emoji->imode is NULL");
-      continue;
-    }
-
-    if (ee->imode->string
-    &&  txt
-    &&  strlen(ee->imode->string) > 0
-    &&  *ee->imode->string == *txt
-    &&  strncasecmp(ee->imode->string, txt, strlen(ee->imode->string)) == 0) {
-      if (!spec || !spec->emoji_type) {
-        *rslt = apr_palloc(r->pool, 3);
-        (*rslt)[0] = ee->imode->hex1byte & 0xff;
-        (*rslt)[1] = ee->imode->hex2byte & 0xff;
-        (*rslt)[2] = 0;
-        return strlen(ee->imode->string);
-      }
-
-      return 0;
-    }
-  }
-  return 0;
 }
 
 
@@ -2829,16 +2776,6 @@ s_chtml10_text(void *pdoc, Node *child)
   tdst_len = 0;
   
   for (ii=0; ii<qs_get_node_size(doc,child); ii++) {
-    char *out;
-    int   rtn;
-
-    rtn = s_chtml10_search_emoji(chtml10, &textval[ii], &out);
-    if (rtn) {
-      tdst = qs_out_apr_pstrcat(r, tdst, out, &tdst_len);
-      ii+=(rtn - 1);
-      continue;
-    }
-  
     if (is_sjis_kanji(textval[ii])) {
       one_byte[0] = textval[ii+0];
       tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);

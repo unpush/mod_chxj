@@ -16,10 +16,30 @@
  */
 #ifndef __CHXJ_EMOJI_H__
 #define __CHXJ_EMOJI_H__
-char *
+
+#define EMOJI_COUNT     (252)
+#define REFSTRING_MAX_LEN (16)
+#define EMOJI_BINCODE_MAX_LEN (16)
+#define META_EMOJI_PREFIX "&chxjEmoji"
+#define META_EMOJI_PREFIX_LEN (10)
+
+extern void
+chxj_emoji_init(
+  mod_chxj_config *conf);
+
+extern char *
 chxj_emoji_to_meta_emoji(
   request_rec         *r,
   chxjconvrule_entry  *entryp,
-  char                *src,
+  const char          *src,
   apr_size_t          *ilen);
+
+extern char *
+chxj_meta_emoji_to_emoji(
+  request_rec         *r,
+  device_table        *spec,
+  chxjconvrule_entry  *entryp,
+  emoji_t             **emoji_table,
+  char                *src);
+
 #endif

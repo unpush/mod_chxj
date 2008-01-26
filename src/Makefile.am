@@ -28,10 +28,12 @@ libmod_chxj_la_SOURCES = mod_chxj.c \
     chxj_encoding.c \
     chxj_node_exchange.c \
     chxj_url_encode.c \
-    chxj_cookie.c
+    chxj_cookie.c \
+    chxj_emoji.c
 
 
 libmod_chxj_la_CFLAGS = $(AM_CFLAGS) -O2 -prefer-pic @QDEFS@ @DDEFS@ -I. -I../include -I@with_apache_header@ 
+AM_CFLAGS = @CFLAGS@ -O2 -prefer-pic @QDEFS@ @DDEFS@ -I. -I../include -I@with_apache_header@
 
 lib_LTLIBRARIES = libmod_chxj.la
 

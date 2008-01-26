@@ -21,18 +21,15 @@
 #include "http_log.h"
 
 
-
-
-
 void
-qs_log(Doc* doc, int log_level,const char* f, int l, char* msg) 
+qs_log(Doc *doc, int log_level,const char *f, int l, char *msg) 
 {
   switch(log_level) {
   case QX_LOG_DEBUG:
 #ifdef USE_LOG
 #ifdef DEBUG
     do {
-      FILE* fp = fopen("/tmp/debug.log", "a");
+      FILE *fp = fopen("/tmp/debug.log", "a");
       fprintf(fp, "DBG:[%20.20s][%10d]: - <%s>\n", f,l,msg);
       fclose(fp);
     }
@@ -53,7 +50,7 @@ qs_log(Doc* doc, int log_level,const char* f, int l, char* msg)
   case QX_LOG_WARN:
 #ifdef USE_LOG
     do {
-      FILE* fp = fopen("/tmp/debug.log", "a");
+      FILE *fp = fopen("/tmp/debug.log", "a");
       fprintf(fp, "WRN:[%20.20s][%10d]: - <%s>\n", f,l,msg);
       fclose(fp);
     }
@@ -63,7 +60,7 @@ qs_log(Doc* doc, int log_level,const char* f, int l, char* msg)
   case QX_LOG_ERROR:
 #ifdef USE_LOG
     do {
-      FILE* fp = fopen("/tmp/debug.log", "a");
+      FILE *fp = fopen("/tmp/debug.log", "a");
       fprintf(fp, "ERR:[%20.20s][%10d]: - <%s>\n", f,l,msg);
       fclose(fp);
     }
@@ -73,7 +70,7 @@ qs_log(Doc* doc, int log_level,const char* f, int l, char* msg)
   case QX_LOG_FATAL:
 #ifdef USE_LOG
     do {
-      FILE* fp = fopen("/tmp/debug.log", "a");
+      FILE *fp = fopen("/tmp/debug.log", "a");
       fprintf(fp, "FTL:[%20.20s][%10d]: - <%s>\n", f,l,msg);
       fclose(fp);
     }
@@ -88,7 +85,7 @@ qs_log(Doc* doc, int log_level,const char* f, int l, char* msg)
 }
 
 void
-qs_log_int(Doc* UNUSED(doc), int UNUSED(log_level),const char* UNUSED(f), int UNUSED(l), char* UNUSED(msg), int UNUSED(val)) 
+qs_log_int(Doc *UNUSED(doc), int UNUSED(log_level),const char *UNUSED(f), int UNUSED(l), char *UNUSED(msg), int UNUSED(val)) 
 {
 #if 0
 #ifdef USE_LOG

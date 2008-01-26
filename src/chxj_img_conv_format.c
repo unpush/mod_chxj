@@ -60,10 +60,10 @@ typedef struct query_string_param_t query_string_param_t;
 
 struct query_string_param_t {
   img_conv_mode_t   mode;
-  char*             user_agent;
+  char              *user_agent;
   ua_use_flag_t     ua_flag;
 
-  char*             name;      /* for EZGET */
+  char              *name;      /* for EZGET */
   long              offset;    /* for EZGET */
   long              count;     /* for EZGET */
   int               width;
@@ -92,6 +92,7 @@ static device_table v_ignore_spec = {
   96,
   65536,
   NULL,
+  "SJIS",
 };
 
 /*----------------------------------------------------------------------------*/
@@ -161,72 +162,72 @@ static const char* HDML_FAIL_PAGE =
 /*----------------------------------------------------------------------------*/
 /* Prototype declaration                                                      */
 /*----------------------------------------------------------------------------*/
-static char*        s_create_workfile(  request_rec*, 
-                                        mod_chxj_config* , 
-                                        const char*, 
-                                        query_string_param_t*);
+static char *s_create_workfile(request_rec *, 
+                               mod_chxj_config *, 
+                               const char *,
+                               query_string_param_t *);
 
-static apr_status_t s_create_cache_file(request_rec*          r, 
-                                        const char*           tmpfile, 
-                                        device_table*         spec,
-                                        apr_finfo_t*          st,
-                                        query_string_param_t* qsp);
+static apr_status_t s_create_cache_file(request_rec  *r, 
+                                        const char   *tmpfile, 
+                                        device_table *spec,
+                                        apr_finfo_t  *st,
+                                        query_string_param_t *qsp);
 
-static apr_status_t s_send_cache_file(  device_table*         spec,
-                                        query_string_param_t* query_string,
-                                        request_rec*          r,
-                                        const char*           tmpfile);
+static apr_status_t s_send_cache_file(  device_table          *spec,
+                                        query_string_param_t  *query_string,
+                                        request_rec           *r,
+                                        const char            *tmpfile);
 
-static apr_status_t s_header_only_cache_file(device_table*         spec, 
-                                             query_string_param_t* query_string, 
-                                             request_rec*          r, 
-                                             const char*           tmpfile);
+static apr_status_t s_header_only_cache_file(device_table         *spec, 
+                                             query_string_param_t *query_string, 
+                                             request_rec          *r, 
+                                             const char           *tmpfile);
 
-static query_string_param_t* s_get_query_string_param(request_rec *r);
+static query_string_param_t *s_get_query_string_param(request_rec *r);
 
-static unsigned short s_add_crc(        const char* writedata, 
-                                        apr_size_t witebyte);
+static unsigned short s_add_crc(const char *writedata, 
+                                apr_size_t witebyte);
 
-static MagickWand* s_fixup_size(MagickWand* , 
-                                request_rec* r, 
-                                device_table* spec, 
+static MagickWand *s_fixup_size(MagickWand *, 
+                                request_rec *r, 
+                                device_table *spec, 
                                 query_string_param_t *qsp);
 
-static MagickWand* s_fixup_color(MagickWand* magick_wand, 
-                                 request_rec* r, 
-                                 device_table* spec, 
+static MagickWand *s_fixup_color(MagickWand *magick_wand, 
+                                 request_rec *r, 
+                                 device_table *spec, 
                                  img_conv_mode_t mode);
-static MagickWand* s_fixup_depth(MagickWand* magick_wand, 
-                                 request_rec* r, device_table* spec);
-static MagickWand* s_img_down_sizing(MagickWand* magick_wand, 
-                                request_rec* r, device_table* spec);
+static MagickWand *s_fixup_depth(MagickWand *magick_wand, 
+                                 request_rec *r, device_table *spec);
+static MagickWand *s_img_down_sizing(MagickWand *magick_wand, 
+                                request_rec *r, device_table *spec);
 
-static MagickWand* s_add_copyright(MagickWand*   magick_wand,
-                                   request_rec*  r,
-                                   device_table* spec);
+static MagickWand *s_add_copyright(MagickWand    *magick_wand,
+                                   request_rec   *r,
+                                   device_table  *spec);
 
-static char* s_create_blob_data(request_rec*          r,
-                                device_table*         spec,
-                                query_string_param_t* qsp,
-                                char*                 indata,
-                                apr_size_t*           len);
+static char *s_create_blob_data(request_rec           *r,
+                                device_table          *spec,
+                                query_string_param_t  *qsp,
+                                char                  *indata,
+                                apr_size_t            *len);
 
-static int s_img_conv_format_from_file(request_rec*          r, 
-                                       mod_chxj_config*      conf, 
-                                       const char*           user_agent,
-                                       query_string_param_t* qsp,
-                                       device_table*         spec);
+static int s_img_conv_format_from_file(request_rec           *r, 
+                                       mod_chxj_config       *conf, 
+                                       const char            *user_agent,
+                                       query_string_param_t  *qsp,
+                                       device_table          *spec);
 
 
 
 int 
-chxj_img_conv_format_handler(request_rec* r)
+chxj_img_conv_format_handler(request_rec *r)
 {
-  mod_chxj_config*      conf;
-  query_string_param_t* qsp;
-  char*                 user_agent;
-  device_table*         spec;
-  chxjconvrule_entry*   entryp;
+  mod_chxj_config       *conf;
+  query_string_param_t  *qsp;
+  char                  *user_agent;
+  device_table          *spec;
+  chxjconvrule_entry    *entryp;
 
   DBG(r, "start chxj_img_conv_format_handler()");
   
@@ -295,20 +296,20 @@ chxj_img_conv_format_handler(request_rec* r)
  * @param src [i]   It is former image binary data.
  * @param len [i/o] It is length of former image binary data.
  */
-char*
-chxj_exchange_image(request_rec *r, const char** src, apr_size_t* len)
+char *
+chxj_exchange_image(request_rec *r, const char **src, apr_size_t *len)
 {
-  mod_chxj_config*      conf;
-  query_string_param_t* qsp;
-  char*                 user_agent;
-  device_table*         spec;
-  char*                 dst;
-  char*                 conv_check;
-  chxjconvrule_entry* entryp;
+  mod_chxj_config       *conf;
+  query_string_param_t  *qsp;
+  char                  *user_agent;
+  device_table          *spec;
+  char                  *dst;
+  char                  *conv_check;
+  chxjconvrule_entry    *entryp;
 
   DBG(r, "start chxj_exchange_image()");
 
-  conv_check = (char*)apr_table_get(r->headers_in, "CHXJ_IMG_CONV");
+  conv_check = (char *)apr_table_get(r->headers_in, "CHXJ_IMG_CONV");
   if (conv_check) {
     DBG(r, "end chxj_exchnage_image() already convert.");
     return NULL;
@@ -360,16 +361,16 @@ chxj_exchange_image(request_rec *r, const char** src, apr_size_t* len)
 
 static int
 s_img_conv_format_from_file(
-                request_rec*          r, 
-                mod_chxj_config*    conf, 
-                const char*           user_agent,
-                query_string_param_t* qsp,
-                device_table*       spec)
+                request_rec           *r, 
+                mod_chxj_config       *conf, 
+                const char            *user_agent,
+                query_string_param_t  *qsp,
+                device_table          *spec)
 {
   apr_status_t   rv;
   apr_finfo_t    st;
   apr_finfo_t    cache_st;
-  char*          tmpfile;
+  char           *tmpfile;
 
   /*--------------------------------------------------------------------------*/
   /* Create Workfile Name                                                     */
@@ -416,11 +417,11 @@ s_img_conv_format_from_file(
 
 
 static apr_status_t
-s_create_cache_file(request_rec*       r, 
-                       const char*     tmpfile, 
-                       device_table* spec, 
-                       apr_finfo_t*    st, 
-                       query_string_param_t *qsp)
+s_create_cache_file(request_rec *r, 
+                    const char *tmpfile, 
+                    device_table *spec, 
+                    apr_finfo_t  *st, 
+                    query_string_param_t *qsp)
 {
   apr_status_t       rv;
   apr_size_t         readbyte;
@@ -428,21 +429,21 @@ s_create_cache_file(request_rec*       r,
   unsigned short     crc;
   img_conv_mode_t    mode = qsp->mode;
 
-  char*              writedata = NULL;
-  char*              readdata  = NULL;
+  char               *writedata = NULL;
+  char               *readdata  = NULL;
 
-  apr_file_t*        fout;
-  apr_file_t*        fin;
+  apr_file_t         *fout;
+  apr_file_t         *fin;
 
-  MagickWand*        magick_wand;
+  MagickWand         *magick_wand;
 
   if ((*r->handler == 'c' || *r->handler == 'C') 
-  &&  strcasecmp(r->handler, "chxj-qrcode") == 0) {
+      &&  strcasecmp(r->handler, "chxj-qrcode") == 0) {
     /*------------------------------------------------------------------------*/
     /* QRCODE用のファイルの場合                                               */
     /*------------------------------------------------------------------------*/
     Doc       doc;
-    Node*     root;
+    Node      *root;
     qr_code_t qrcode;
     int       sts;
 
@@ -634,7 +635,7 @@ s_create_cache_file(request_rec*       r,
       return HTTP_NOT_FOUND;
   }
   else {
-    char* fmt;
+    char *fmt;
     fmt = MagickGetImageFormat(magick_wand);
     if (fmt == NULL) {
       if (MagickSetImageFormat(magick_wand, "jpg") == MagickFalse) {
@@ -663,7 +664,7 @@ s_create_cache_file(request_rec*       r,
     }
   }
 
-  writedata = (char*)MagickGetImageBlob(magick_wand, &writebyte);
+  writedata = (char *)MagickGetImageBlob(magick_wand, &writebyte);
 
   if (! writebyte) {
     DestroyMagickWand(magick_wand);
@@ -724,21 +725,21 @@ s_create_cache_file(request_rec*       r,
 }
 
 
-static char*
-s_create_blob_data(request_rec* r, 
-                   device_table* spec, 
+static char *
+s_create_blob_data(request_rec   *r, 
+                   device_table  *spec, 
                    query_string_param_t *qsp,
-                   char* indata,
-                   apr_size_t* len)
+                   char        *indata,
+                   apr_size_t  *len)
 {
   apr_size_t         writebyte;
   unsigned short     crc;
   img_conv_mode_t    mode = qsp->mode;
 
-  char*              writedata = NULL;
-  char*              dst       = NULL;
+  char               *writedata = NULL;
+  char               *dst       = NULL;
 
-  MagickWand*        magick_wand;
+  MagickWand         *magick_wand;
 
   magick_wand = NewMagickWand();
 
@@ -912,11 +913,12 @@ s_create_blob_data(request_rec* r,
   return dst;
 }
 
-static MagickWand* 
-s_fixup_size(MagickWand* magick_wand, 
-                request_rec* r, 
-                device_table* spec, 
-                query_string_param_t *qsp)
+
+static MagickWand *
+s_fixup_size(MagickWand *magick_wand, 
+             request_rec *r, 
+             device_table *spec, 
+             query_string_param_t *qsp)
 {
   img_conv_mode_t mode = qsp->mode;
   int oldw;
@@ -1062,8 +1064,9 @@ s_fixup_size(MagickWand* magick_wand,
   return magick_wand;
 }
 
-static MagickWand*
-s_fixup_color(MagickWand* magick_wand, request_rec* r, device_table* spec, img_conv_mode_t UNUSED(mode))
+
+static MagickWand *
+s_fixup_color(MagickWand *magick_wand, request_rec *r, device_table *spec, img_conv_mode_t UNUSED(mode))
 {
   DBG(r,"start chxj_fixup_clor()");
 
@@ -1113,8 +1116,8 @@ s_fixup_color(MagickWand* magick_wand, request_rec* r, device_table* spec, img_c
 
 
 
-static MagickWand*
-s_fixup_depth(MagickWand* magick_wand, request_rec* r, device_table* spec)
+static MagickWand *
+s_fixup_depth(MagickWand *magick_wand, request_rec *r, device_table *spec)
 {
   if (spec->html_spec_type == CHXJ_SPEC_UNKNOWN) {
     DBG(r, "Pass s_fixup_depth proc");
@@ -1174,10 +1177,10 @@ s_fixup_depth(MagickWand* magick_wand, request_rec* r, device_table* spec)
 }
 
 
-static MagickWand*
-s_add_copyright(MagickWand* magick_wand, request_rec* r, device_table* spec)
+static MagickWand *
+s_add_copyright(MagickWand *magick_wand, request_rec *r, device_table *spec)
 {
-  mod_chxj_config* conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  mod_chxj_config *conf = ap_get_module_config(r->per_dir_config, &chxj_module);
 
   if (spec->html_spec_type == CHXJ_SPEC_UNKNOWN) {
     DBG(r, "Pass add_copiright proc");
@@ -1224,17 +1227,18 @@ on_error:
   return NULL;
 }
 
-static MagickWand*
-s_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table* spec)
+
+static MagickWand *
+s_img_down_sizing(MagickWand *magick_wand, request_rec *r, device_table *spec)
 {
   MagickBooleanType  status;
   unsigned long quality = 70;
   apr_size_t    writebyte = 0;
-  char*         writedata;
+  char          *writedata;
   apr_size_t    prev_size = 0;
   int           revers_flag = 0;
 
-  writedata = (char*)MagickGetImageBlob(magick_wand, &writebyte);
+  writedata = (char *)MagickGetImageBlob(magick_wand, &writebyte);
   prev_size = writebyte;
 
   do {
@@ -1243,7 +1247,7 @@ s_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table* spec)
       return NULL;
     }
 
-    writedata = (char*)MagickGetImageBlob(magick_wand, &writebyte);
+    writedata = (char *)MagickGetImageBlob(magick_wand, &writebyte);
     if (writebyte >= prev_size || revers_flag) {
       DBG2(r, "quality=[%ld] size=[%d]", (long)quality, (int)writebyte);
       revers_flag = 1;
@@ -1339,13 +1343,17 @@ s_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table* spec)
 }
 
 static apr_status_t 
-s_send_cache_file(device_table* spec, query_string_param_t* query_string, request_rec* r, const char* tmpfile)
+s_send_cache_file(
+  device_table *spec, 
+  query_string_param_t *query_string, 
+  request_rec *r, 
+  const char *tmpfile)
 {
   apr_status_t rv;
   apr_finfo_t  st;
-  apr_file_t*  fout;
+  apr_file_t   *fout;
   apr_size_t   sendbyte;
-  char*        contentLength;
+  char         *contentLength;
 
   rv = apr_stat(&st, tmpfile, APR_FINFO_MIN, r->pool);
   if (rv != APR_SUCCESS)
@@ -1392,7 +1400,7 @@ s_send_cache_file(device_table* spec, query_string_param_t* query_string, reques
   }
   else
   if (query_string->mode == IMG_CONV_MODE_EZGET) {
-    char* name = apr_pstrdup(r->pool, basename(r->filename));
+    char *name = apr_pstrdup(r->pool, basename(r->filename));
     name[strlen(name)-4] = 0;
     if (strcasecmp(r->content_type, "image/jpeg") == 0) {
 
@@ -1454,11 +1462,15 @@ s_send_cache_file(device_table* spec, query_string_param_t* query_string, reques
 }
 
 static apr_status_t 
-s_header_only_cache_file(device_table* spec, query_string_param_t* query_string, request_rec* r, const char* tmpfile)
+s_header_only_cache_file(
+  device_table *spec,
+  query_string_param_t *query_string, 
+  request_rec *r,
+  const char *tmpfile)
 {
   apr_status_t rv;
   apr_finfo_t  st;
-  char*        contentLength;
+  char         *contentLength;
 
   rv = apr_stat(&st, tmpfile, APR_FINFO_MIN, r->pool);
   if (rv != APR_SUCCESS)
@@ -1534,19 +1546,18 @@ s_header_only_cache_file(device_table* spec, query_string_param_t* query_string,
 }
 
 
-
-static char*
+static char *
 s_create_workfile(
-                request_rec*          r, 
-                mod_chxj_config*      conf, 
-                const char*           user_agent, 
-                query_string_param_t *qsp)
+  request_rec *r, 
+  mod_chxj_config *conf, 
+  const char *user_agent, 
+  query_string_param_t *qsp)
 {
   int ii;
   int jj;
   int len;
-  char* w = apr_palloc(r->pool, 256);
-  char* fname;
+  char *w = apr_palloc(r->pool, 256);
+  char *fname;
 
   memset(w, 0, 256);
   switch (qsp->mode) {
@@ -1595,8 +1606,9 @@ s_create_workfile(
   return apr_psprintf(r->pool, "%s/%s", conf->image_cache_dir,w);
 }
 
+
 static unsigned short
-s_add_crc(const char* writedata, apr_size_t writebyte)
+s_add_crc(const char *writedata, apr_size_t writebyte)
 {
   unsigned short crc = 0xffff;
   apr_size_t     ii;
@@ -1609,17 +1621,18 @@ s_add_crc(const char* writedata, apr_size_t writebyte)
   return crc;
 }
 
+
 int
 chxj_trans_name(request_rec *r)
 {
-  const char* ccp;
-  char* docroot;
+  const char *ccp;
+  char *docroot;
   int len;
   apr_finfo_t st;
   apr_status_t rv;
-  mod_chxj_config* conf;
+  mod_chxj_config *conf;
   int ii;
-  char*      ext[] = {
+  char *ext[] = {
           "jpg",
           "jpeg",
           "png",
@@ -1628,9 +1641,9 @@ chxj_trans_name(request_rec *r)
           "qrc",    /* QRCode出力用ファイルの拡張子 */
           "",
   };
-  char*    fname;
-  char*    idx;
-  char*    filename_sv;
+  char     *fname;
+  char     *idx;
+  char     *filename_sv;
   int      do_ext_check = TRUE;
   int      next_ok      = FALSE;
 
@@ -1675,8 +1688,8 @@ chxj_trans_name(request_rec *r)
 
 
   if (r->server->path 
-  &&  *filename_sv == *r->server->path 
-  &&  strncmp(filename_sv, r->server->path, r->server->pathlen) == 0)
+      &&  *filename_sv == *r->server->path 
+      &&  strncmp(filename_sv, r->server->path, r->server->pathlen) == 0)
     filename_sv = apr_pstrcat(r->pool, docroot, (filename_sv + r->server->pathlen), NULL);
   else
     filename_sv = apr_pstrcat(r->pool, docroot, filename_sv, NULL);
@@ -1685,7 +1698,7 @@ chxj_trans_name(request_rec *r)
 
   do_ext_check = TRUE;
   for (ii=0; ii<7-1; ii++) {
-    char* pos = strrchr(filename_sv, '.');
+    char *pos = strrchr(filename_sv, '.');
     if (pos && pos++) {
       if (strcasecmp(pos, ext[ii]) == 0) {
         do_ext_check = FALSE;
@@ -1719,7 +1732,7 @@ chxj_trans_name(request_rec *r)
     return DECLINED;
   }
   for (ii=0; ii<7-1; ii++) {
-    char* pos = strrchr(fname, '.');
+    char *pos = strrchr(fname, '.');
     if (pos && pos++) {
       if (strcasecmp(pos, ext[ii]) == 0) {
         next_ok = TRUE;
@@ -1748,22 +1761,21 @@ chxj_trans_name(request_rec *r)
 }
 
 
-
 /**
  * It converts it from QUERYSTRING.
  *
  * @param r   [i]
  */
-static query_string_param_t*
+static query_string_param_t *
 s_get_query_string_param(request_rec *r)
 {
-  char* pair;
-  char* name;
-  char* value;
-  char* pstate;
-  char* vstate;
-  char* s;
-  query_string_param_t* param;
+  char *pair;
+  char *name;
+  char *value;
+  char *pstate;
+  char *vstate;
+  char *s;
+  query_string_param_t *param;
 
   s = apr_pstrdup(r->pool, r->parsed_uri.query);
   param = apr_palloc(r->pool, sizeof(query_string_param_t));

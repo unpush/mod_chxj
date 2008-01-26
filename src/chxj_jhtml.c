@@ -23,64 +23,66 @@
 
 #define GET_JHTML(X) ((jhtml_t*)(X))
 
-static char* s_jhtml_start_html_tag     (void* pdoc, Node* node);
-static char* s_jhtml_end_html_tag       (void* pdoc, Node* node);
-static char* s_jhtml_start_meta_tag     (void* pdoc, Node* node);
-static char* s_jhtml_end_meta_tag       (void* pdoc, Node* node);
-static char* s_jhtml_start_head_tag     (void* pdoc, Node* node);
-static char* s_jhtml_end_head_tag       (void* pdoc, Node* node);
-static char* s_jhtml_start_title_tag    (void* pdoc, Node* node);
-static char* s_jhtml_end_title_tag      (void* pdoc, Node* node);
-static char* s_jhtml_start_base_tag     (void* pdoc, Node* node);
-static char* s_jhtml_end_base_tag       (void* pdoc, Node* node);
-static char* s_jhtml_start_body_tag     (void* pdoc, Node* node);
-static char* s_jhtml_end_body_tag       (void* pdoc, Node* node);
-static char* s_jhtml_start_a_tag        (void* pdoc, Node* node);
-static char* s_jhtml_end_a_tag          (void* pdoc, Node* node);
-static char* s_jhtml_start_pre_tag      (void* pdoc, Node* node);
-static char* s_jhtml_end_pre_tag        (void* pdoc, Node* node);
-static char* s_jhtml_start_p_tag        (void* pdoc, Node* node);
-static char* s_jhtml_end_p_tag          (void* pdoc, Node* node);
-static char* s_jhtml_start_ul_tag       (void* pdoc, Node* node);
-static char* s_jhtml_end_ul_tag         (void* pdoc, Node* node);
-static char* s_jhtml_start_ol_tag       (void* pdoc, Node* node);
-static char* s_jhtml_end_ol_tag         (void* pdoc, Node* node);
-static char* s_jhtml_start_li_tag       (void* pdoc, Node* node);
-static char* s_jhtml_end_li_tag         (void* pdoc, Node* node);
-static char* s_jhtml_start_br_tag       (void* pdoc, Node* node);
-static char* s_jhtml_end_br_tag         (void* pdoc, Node* node);
-static char* s_jhtml_start_tr_tag       (void* pdoc, Node* node);
-static char* s_jhtml_end_tr_tag         (void* pdoc, Node* node);
-static char* s_jhtml_start_font_tag     (void* pdoc, Node* node);
-static char* s_jhtml_end_font_tag       (void* pdoc, Node* node);
-static char* s_jhtml_start_form_tag     (void* pdoc, Node* node);
-static char* s_jhtml_end_form_tag       (void* pdoc, Node* node);
-static char* s_jhtml_start_input_tag    (void* pdoc, Node* node);
-static char* s_jhtml_end_input_tag      (void* pdoc, Node* node);
-static char* s_jhtml_start_center_tag   (void* pdoc, Node* node);
-static char* s_jhtml_end_center_tag     (void* pdoc, Node* node);
-static char* s_jhtml_start_hr_tag       (void* pdoc, Node* node);
-static char* s_jhtml_end_hr_tag         (void* pdoc, Node* node);
-static char* s_jhtml_start_img_tag      (void* pdoc, Node* node);
-static char* s_jhtml_end_img_tag        (void* pdoc, Node* node);
-static char* s_jhtml_start_select_tag   (void* pdoc, Node* node);
-static char* s_jhtml_end_select_tag     (void* pdoc, Node* node);
-static char* s_jhtml_start_option_tag   (void* pdoc, Node* node);
-static char* s_jhtml_end_option_tag     (void* pdoc, Node* node);
-static char* s_jhtml_start_div_tag      (void* pdoc, Node* node);
-static char* s_jhtml_end_div_tag        (void* pdoc, Node* node);
-static char* s_jhtml_start_textarea_tag (void* pdoc, Node* node);
-static char* s_jhtml_end_textarea_tag   (void* pdoc, Node* node);
-static char* s_jhtml_start_b_tag        (void* pdoc, Node* node);
-static char* s_jhtml_end_b_tag          (void* pdoc, Node* node);
-static char* s_jhtml_chxjif_tag         (void* pdoc, Node* node); 
-static char* s_jhtml_text_tag           (void* pdoc, Node* node);
+static char *s_jhtml_start_html_tag     (void *pdoc, Node *node);
+static char *s_jhtml_end_html_tag       (void *pdoc, Node *node);
+static char *s_jhtml_start_meta_tag     (void *pdoc, Node *node);
+static char *s_jhtml_end_meta_tag       (void *pdoc, Node *node);
+static char *s_jhtml_start_head_tag     (void *pdoc, Node *node);
+static char *s_jhtml_end_head_tag       (void *pdoc, Node *node);
+static char *s_jhtml_start_title_tag    (void *pdoc, Node *node);
+static char *s_jhtml_end_title_tag      (void *pdoc, Node *node);
+static char *s_jhtml_start_base_tag     (void *pdoc, Node *node);
+static char *s_jhtml_end_base_tag       (void *pdoc, Node *node);
+static char *s_jhtml_start_body_tag     (void *pdoc, Node *node);
+static char *s_jhtml_end_body_tag       (void *pdoc, Node *node);
+static char *s_jhtml_start_a_tag        (void *pdoc, Node *node);
+static char *s_jhtml_end_a_tag          (void *pdoc, Node *node);
+static char *s_jhtml_start_pre_tag      (void *pdoc, Node *node);
+static char *s_jhtml_end_pre_tag        (void *pdoc, Node *node);
+static char *s_jhtml_start_p_tag        (void *pdoc, Node *node);
+static char *s_jhtml_end_p_tag          (void *pdoc, Node *node);
+static char *s_jhtml_start_ul_tag       (void *pdoc, Node *node);
+static char *s_jhtml_end_ul_tag         (void *pdoc, Node *node);
+static char *s_jhtml_start_ol_tag       (void *pdoc, Node *node);
+static char *s_jhtml_end_ol_tag         (void *pdoc, Node *node);
+static char *s_jhtml_start_li_tag       (void *pdoc, Node *node);
+static char *s_jhtml_end_li_tag         (void *pdoc, Node *node);
+static char *s_jhtml_start_br_tag       (void *pdoc, Node *node);
+static char *s_jhtml_end_br_tag         (void *pdoc, Node *node);
+static char *s_jhtml_start_tr_tag       (void *pdoc, Node *node);
+static char *s_jhtml_end_tr_tag         (void *pdoc, Node *node);
+static char *s_jhtml_start_font_tag     (void *pdoc, Node *node);
+static char *s_jhtml_end_font_tag       (void *pdoc, Node *node);
+static char *s_jhtml_start_form_tag     (void *pdoc, Node *node);
+static char *s_jhtml_end_form_tag       (void *pdoc, Node *node);
+static char *s_jhtml_start_input_tag    (void *pdoc, Node *node);
+static char *s_jhtml_end_input_tag      (void *pdoc, Node *node);
+static char *s_jhtml_start_center_tag   (void *pdoc, Node *node);
+static char *s_jhtml_end_center_tag     (void *pdoc, Node *node);
+static char *s_jhtml_start_hr_tag       (void *pdoc, Node *node);
+static char *s_jhtml_end_hr_tag         (void *pdoc, Node *node);
+static char *s_jhtml_start_img_tag      (void *pdoc, Node *node);
+static char *s_jhtml_end_img_tag        (void *pdoc, Node *node);
+static char *s_jhtml_start_select_tag   (void *pdoc, Node *node);
+static char *s_jhtml_end_select_tag     (void *pdoc, Node *node);
+static char *s_jhtml_start_option_tag   (void *pdoc, Node *node);
+static char *s_jhtml_end_option_tag     (void *pdoc, Node *node);
+static char *s_jhtml_start_div_tag      (void *pdoc, Node *node);
+static char *s_jhtml_end_div_tag        (void *pdoc, Node *node);
+static char *s_jhtml_start_textarea_tag (void *pdoc, Node *node);
+static char *s_jhtml_end_textarea_tag   (void *pdoc, Node *node);
+static char *s_jhtml_start_b_tag        (void *pdoc, Node *node);
+static char *s_jhtml_end_b_tag          (void *pdoc, Node *node);
+static char *s_jhtml_chxjif_tag         (void *pdoc, Node *node); 
+static char *s_jhtml_text_tag           (void *pdoc, Node *node);
 
-static void  s_init_jhtml(jhtml_t* jhtml, Doc* doc, request_rec* r, device_table* spec);
+static void  s_init_jhtml(
+  jhtml_t *jhtml,
+  Doc *doc,
+  request_rec *r, 
+  device_table *spec);
 
-static int   s_jhtml_search_emoji(jhtml_t* jhtml, char* txt, char** rslt);
-
-static char* chxj_istyle_to_mode(request_rec* r, const char* s);
+static char *chxj_istyle_to_mode(request_rec *r, const char *s);
 
 
 
@@ -322,19 +324,19 @@ tag_handler jhtml_handler[] = {
  * @param src   [i]   The character string before the converting is appointed.
  * @return The character string after the converting is returned.
  */
-char*
+char *
 chxj_exchange_jhtml(
-  request_rec*        r,
-  device_table*       spec,
-  const char*         src,
+  request_rec         *r,
+  device_table        *spec,
+  const char          *src,
   apr_size_t          srclen,
-  apr_size_t*         dstlen,
-  chxjconvrule_entry* entryp,
-  cookie_t*           cookie
+  apr_size_t          *dstlen,
+  chxjconvrule_entry  *entryp,
+  cookie_t            *cookie
 )
 {
-  char*     dst;
-  char*     ss;
+  char      *dst;
+  char      *ss;
   jhtml_t   jhtml;
   Doc       doc;
 
@@ -344,7 +346,7 @@ chxj_exchange_jhtml(
   /* If qrcode xml                                                            */
   /*--------------------------------------------------------------------------*/
   *dstlen = srclen;
-  dst = chxj_qr_code_blob_handler(r, src, (size_t*)dstlen);
+  dst = chxj_qr_code_blob_handler(r, src, (size_t *)dstlen);
   if (dst) {
     DBG(r,"I found qrcode xml");
     return dst;
@@ -359,7 +361,12 @@ chxj_exchange_jhtml(
   jhtml.entryp = entryp;
   jhtml.cookie = cookie;
 
-  ap_set_content_type(r, "text/html; charset=Windows-31J");
+  if (IS_SJIS_STRING(GET_SPEC_CHARSET(spec))) {
+    ap_set_content_type(r, "text/html; charset=Windows-31J");
+  }
+  else {
+    ap_set_content_type(r, "text/html; charset=UTF-8");
+  }
 
   /*--------------------------------------------------------------------------*/
   /* The character string of the input is analyzed.                           */
@@ -413,7 +420,7 @@ chxj_exchange_jhtml(
  * @param spec  [i]   The pointer to the device_table
  */
 static void
-s_init_jhtml(jhtml_t* jhtml, Doc* doc, request_rec* r, device_table* spec)
+s_init_jhtml(jhtml_t *jhtml, Doc *doc, request_rec *r, device_table *spec)
 {
   memset(doc,   0, sizeof(Doc));
   memset(jhtml, 0, sizeof(jhtml_t));
@@ -428,74 +435,6 @@ s_init_jhtml(jhtml_t* jhtml, Doc* doc, request_rec* r, device_table* spec)
 
 
 /**
- * Corresponding EMOJI to a current character-code is retrieved. 
- * The substitution character string is stored in the rslt pointer if agreeing.
- *
- * @param jhtml   [i]   The pointer to the CHTML structure is specified. 
- * @param txt     [i]   The character string to want to examine whether it is 
- *                      EMOJI is specified. 
- * @param rslt    [o]   The pointer to the pointer that stores the result is 
- *                      specified. 
- * @return When corresponding EMOJI exists, it returns it excluding 0. 
- */
-static int
-s_jhtml_search_emoji(jhtml_t* jhtml, char* txt, char** rslt)
-{
-  emoji_t*      ee;
-  request_rec*  r;
-  device_table* spec;
-  int           len;
-
-  spec = jhtml->spec;
-
-  len = strlen(txt);
-  r = jhtml->doc->r;
-
-  if (! spec) DBG(r,"spec is NULL");
-
-  for (ee = jhtml->conf->emoji;
-       ee;
-       ee = ee->next) {
-
-    unsigned char hex1byte;
-    unsigned char hex2byte;
-
-    if (! ee->imode) { 
-      DBG(r,"emoji->imode is NULL");
-      continue;
-    }
-
-    hex1byte = ee->imode->hex1byte & 0xff;
-    hex2byte = ee->imode->hex2byte & 0xff;
-
-    if (ee->imode->string
-    &&  strlen(ee->imode->string) > 0
-    &&  strncasecmp(ee->imode->string, txt, strlen(ee->imode->string)) == 0) {
-      if (spec == NULL || spec->emoji_type == NULL) {
-        *rslt = apr_psprintf(r->pool,"%s", ee->jphone->string);
-        return strlen(ee->imode->string);
-      }
-
-      return 0;
-    }
-
-    if (len >= 2
-    && ((unsigned char)txt[0] & 0xff) == ((unsigned char)hex1byte)
-    && ((unsigned char)txt[1] & 0xff) == ((unsigned char)hex2byte)) {
-      if (spec == NULL || spec->emoji_type == NULL) {
-        *rslt = apr_psprintf(r->pool,"%s", ee->jphone->string);
-        return 2;
-      }
-
-      return 0;
-    }
-  }
-
-  return 0;
-}
-
-
-/**
  * It is a handler who processes the HTML tag.
  *
  * @param pdoc  [i/o] The pointer to the CHTML structure at the output
@@ -503,7 +442,7 @@ s_jhtml_search_emoji(jhtml_t* jhtml, char* txt, char** rslt)
  * @param node   [i]   The HTML tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
+static char *
 s_jhtml_start_html_tag(void *pdoc, Node *UNUSED(node)) 
 {
   jhtml_t      *jhtml;
@@ -535,12 +474,12 @@ s_jhtml_start_html_tag(void *pdoc, Node *UNUSED(node))
  * @param node   [i]   The HTML tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_end_html_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_jhtml_end_html_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t*      jhtml = GET_JHTML(pdoc);
-  Doc*          doc = jhtml->doc;
-  request_rec*  r   = doc->r;
+  jhtml_t       *jhtml = GET_JHTML(pdoc);
+  Doc           *doc = jhtml->doc;
+  request_rec   *r   = doc->r;
 
   DBG(r, "start s_jhtml_end_html_tag()");
 
@@ -560,13 +499,13 @@ s_jhtml_end_html_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The META tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_start_meta_tag(void* pdoc, Node* node) 
+static char *
+s_jhtml_start_meta_tag(void *pdoc, Node *node) 
 {
-  jhtml_t*     jhtml;
-  Doc*         doc;
-  request_rec* r;
-  Attr*        attr;
+  jhtml_t      *jhtml;
+  Doc          *doc;
+  request_rec  *r;
+  Attr         *attr;
   int          content_type_flag;
   int          refresh_flag;
 
@@ -585,8 +524,8 @@ s_jhtml_start_meta_tag(void* pdoc, Node* node)
        attr;
        attr = qs_get_next_attr(doc,attr)) {
 
-    char* name;
-    char* value;
+    char *name;
+    char *value;
 
     name   = qs_get_attr_name(doc,attr);
     value  = qs_get_attr_value(doc,attr);
@@ -688,10 +627,10 @@ s_jhtml_start_meta_tag(void* pdoc, Node* node)
  * @param node   [i]   The META tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_end_meta_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_jhtml_end_meta_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t* jhtml;
+  jhtml_t *jhtml;
 
   jhtml = GET_JHTML(pdoc);
 
@@ -707,12 +646,12 @@ s_jhtml_end_meta_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The HEAD tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_start_head_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_jhtml_start_head_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  jhtml_t*      jhtml;
-  Doc*          doc;
-  request_rec*  r;
+  jhtml_t       *jhtml;
+  Doc           *doc;
+  request_rec   *r;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
@@ -732,12 +671,12 @@ s_jhtml_start_head_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The HEAD tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_end_head_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_jhtml_end_head_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t*      jhtml;
-  Doc*          doc;
-  request_rec*  r;
+  jhtml_t       *jhtml;
+  Doc           *doc;
+  request_rec   *r;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
@@ -757,12 +696,12 @@ s_jhtml_end_head_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The TITLE tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_start_title_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_jhtml_start_title_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  jhtml_t*     jhtml;
-  Doc*         doc;
-  request_rec* r;
+  jhtml_t      *jhtml;
+  Doc          *doc;
+  request_rec  *r;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
@@ -782,12 +721,12 @@ s_jhtml_start_title_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The TITLE tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_end_title_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_jhtml_end_title_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t*      jhtml;
-  Doc*          doc;
-  request_rec*  r;
+  jhtml_t       *jhtml;
+  Doc           *doc;
+  request_rec   *r;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
@@ -807,13 +746,13 @@ s_jhtml_end_title_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The BASE tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_start_base_tag(void* pdoc, Node* node) 
+static char *
+s_jhtml_start_base_tag(void *pdoc, Node *node) 
 {
-  jhtml_t*      jhtml;
-  Attr*         attr;
-  Doc*          doc;
-  request_rec*  r;
+  jhtml_t       *jhtml;
+  Attr          *attr;
+  Doc           *doc;
+  request_rec   *r;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
@@ -828,8 +767,8 @@ s_jhtml_start_base_tag(void* pdoc, Node* node)
        attr;
        attr = qs_get_next_attr(doc,attr)) {
 
-    char* name;
-    char* value;
+    char *name;
+    char *value;
 
     name  = qs_get_attr_name(doc,attr);
     value = qs_get_attr_value(doc,attr);
@@ -858,10 +797,10 @@ s_jhtml_start_base_tag(void* pdoc, Node* node)
  * @param node   [i]   The BASE tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_end_base_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_jhtml_end_base_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t* jhtml;
+  jhtml_t *jhtml;
 
   jhtml = GET_JHTML(pdoc);
 
@@ -877,13 +816,13 @@ s_jhtml_end_base_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The BODY tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_start_body_tag(void* pdoc, Node* node) 
+static char *
+s_jhtml_start_body_tag(void *pdoc, Node *node) 
 {
-  jhtml_t*     jhtml;
-  Doc*         doc;
-  request_rec* r;
-  Attr*        attr;
+  jhtml_t      *jhtml;
+  Doc          *doc;
+  request_rec  *r;
+  Attr         *attr;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
@@ -898,8 +837,8 @@ s_jhtml_start_body_tag(void* pdoc, Node* node)
        attr;
        attr = qs_get_next_attr(doc,attr)) {
 
-    char* name;
-    char* value;
+    char *name;
+    char *value;
 
     name   = qs_get_attr_name(doc,attr);
     value  = qs_get_attr_value(doc,attr);
@@ -969,12 +908,12 @@ s_jhtml_start_body_tag(void* pdoc, Node* node)
  * @param node   [i]   The BODY tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_end_body_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_jhtml_end_body_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t*      jhtml;
-  Doc*          doc;
-  request_rec*  r;
+  jhtml_t       *jhtml;
+  Doc           *doc;
+  request_rec   *r;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
@@ -994,13 +933,13 @@ s_jhtml_end_body_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The A tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_start_a_tag(void* pdoc, Node* node) 
+static char *
+s_jhtml_start_a_tag(void *pdoc, Node *node) 
 {
-  jhtml_t*      jhtml;
-  Doc*          doc;
-  request_rec*  r;
-  Attr*         attr;
+  jhtml_t       *jhtml;
+  Doc           *doc;
+  request_rec   *r;
+  Attr          *attr;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
@@ -1015,8 +954,8 @@ s_jhtml_start_a_tag(void* pdoc, Node* node)
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
 
-    char* name;
-    char* value;
+    char *name;
+    char *value;
 
     name  = qs_get_attr_name(doc,attr);
     value = qs_get_attr_value(doc,attr);
@@ -1153,12 +1092,12 @@ s_jhtml_start_a_tag(void* pdoc, Node* node)
  * @param node   [i]   The A tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_end_a_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_jhtml_end_a_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t*     jhtml;
-  Doc*         doc;
-  request_rec* r;
+  jhtml_t      *jhtml;
+  Doc          *doc;
+  request_rec  *r;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
@@ -1178,12 +1117,12 @@ s_jhtml_end_a_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The BR tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_start_br_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_jhtml_start_br_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  jhtml_t*     jhtml;
-  Doc*         doc;
-  request_rec* r;
+  jhtml_t      *jhtml;
+  Doc          *doc;
+  request_rec  *r;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
@@ -1203,10 +1142,10 @@ s_jhtml_start_br_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The BR tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_end_br_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_jhtml_end_br_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t*  jhtml;
+  jhtml_t  *jhtml;
 
   jhtml = GET_JHTML(pdoc);
 
@@ -1222,12 +1161,12 @@ s_jhtml_end_br_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The TR tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_start_tr_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_jhtml_start_tr_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  jhtml_t*     jhtml;
-  Doc*         doc;
-  request_rec* r;
+  jhtml_t      *jhtml;
+  Doc          *doc;
+  request_rec  *r;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
@@ -1247,10 +1186,10 @@ s_jhtml_start_tr_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The TR tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_end_tr_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_jhtml_end_tr_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t* jhtml;
+  jhtml_t *jhtml;
 
   jhtml = GET_JHTML(pdoc);
 
@@ -1266,13 +1205,13 @@ s_jhtml_end_tr_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The FONT tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_start_font_tag(void* pdoc, Node* node) 
+static char *
+s_jhtml_start_font_tag(void *pdoc, Node *node) 
 {
-  jhtml_t*      jhtml;
-  Doc*          doc;
-  request_rec*  r;
-  Attr*         attr;
+  jhtml_t       *jhtml;
+  Doc           *doc;
+  request_rec   *r;
+  Attr          *attr;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
@@ -1287,8 +1226,8 @@ s_jhtml_start_font_tag(void* pdoc, Node* node)
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
 
-    char* name;
-    char* value;
+    char *name;
+    char *value;
 
     name  = qs_get_attr_name(doc,attr);
     value = qs_get_attr_value(doc,attr);
@@ -1324,11 +1263,11 @@ s_jhtml_start_font_tag(void* pdoc, Node* node)
  * @param node   [i]   The FONT tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_end_font_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_jhtml_end_font_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t*     jhtml;
-  request_rec* r;
+  jhtml_t      *jhtml;
+  request_rec  *r;
 
   jhtml = GET_JHTML(pdoc);
   r     = jhtml->doc->r;
@@ -1347,13 +1286,13 @@ s_jhtml_end_font_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The FORM tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_start_form_tag(void* pdoc, Node* node) 
+static char *
+s_jhtml_start_form_tag(void *pdoc, Node *node) 
 {
-  jhtml_t*     jhtml;
-  Doc*         doc;
-  request_rec* r;
-  Attr*        attr;
+  jhtml_t      *jhtml;
+  Doc          *doc;
+  request_rec  *r;
+  Attr         *attr;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
@@ -1368,8 +1307,8 @@ s_jhtml_start_form_tag(void* pdoc, Node* node)
        attr;
        attr = qs_get_next_attr(doc,attr)) {
 
-    char* name;
-    char* value;
+    char *name;
+    char *value;
 
     name  = qs_get_attr_name(doc,attr);
     value = qs_get_attr_value(doc,attr);
@@ -1431,12 +1370,12 @@ s_jhtml_start_form_tag(void* pdoc, Node* node)
  * @param node   [i]   The FORM tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_end_form_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_jhtml_end_form_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t*     jhtml = GET_JHTML(pdoc);
-  Doc*         doc   = jhtml->doc;
-  request_rec* r     = doc->r;
+  jhtml_t      *jhtml = GET_JHTML(pdoc);
+  Doc          *doc   = jhtml->doc;
+  request_rec  *r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</form>", NULL);
 
@@ -1452,20 +1391,20 @@ s_jhtml_end_form_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The INPUT tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_start_input_tag(void* pdoc, Node* node) 
+static char *
+s_jhtml_start_input_tag(void *pdoc, Node *node) 
 {
-  jhtml_t*      jhtml;
-  Doc*          doc;
-  request_rec*  r;
-  char*         max_length;
-  char*         type;
-  char*         name;
-  char*         value;
-  char*         istyle;
-  char*         size;
-  char*         checked;
-  char*         accesskey;
+  jhtml_t       *jhtml;
+  Doc           *doc;
+  request_rec   *r;
+  char          *max_length;
+  char          *type;
+  char          *name;
+  char          *value;
+  char          *istyle;
+  char          *size;
+  char          *checked;
+  char          *accesskey;
 
   jhtml       = GET_JHTML(pdoc);
   doc         = jhtml->doc;
@@ -1597,10 +1536,10 @@ s_jhtml_start_input_tag(void* pdoc, Node* node)
  * @param node   [i]   The INPUT tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_end_input_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_jhtml_end_input_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t*  jhtml = GET_JHTML(pdoc);
+  jhtml_t *jhtml = GET_JHTML(pdoc);
 
   return jhtml->out;
 }
@@ -1614,12 +1553,12 @@ s_jhtml_end_input_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The CENTER tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_start_center_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_jhtml_start_center_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  jhtml_t*      jhtml = GET_JHTML(pdoc);
-  Doc*          doc   = jhtml->doc;
-  request_rec*  r     = doc->r;
+  jhtml_t       *jhtml = GET_JHTML(pdoc);
+  Doc           *doc   = jhtml->doc;
+  request_rec   *r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<center>", NULL);
 
@@ -1635,12 +1574,12 @@ s_jhtml_start_center_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The CENTER tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_end_center_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_jhtml_end_center_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t*      jhtml;
-  Doc*          doc;
-  request_rec*  r;
+  jhtml_t *jhtml;
+  Doc     *doc;
+  request_rec *r;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
@@ -1660,12 +1599,12 @@ s_jhtml_end_center_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The li tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_start_li_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_jhtml_start_li_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  jhtml_t*      jhtml;
-  Doc*          doc;
-  request_rec*  r;
+  jhtml_t       *jhtml;
+  Doc           *doc;
+  request_rec   *r;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
@@ -1685,12 +1624,12 @@ s_jhtml_start_li_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The li tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_end_li_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_jhtml_end_li_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t*      jhtml;
-  Doc*          doc;
-  request_rec*  r;
+  jhtml_t       *jhtml;
+  Doc           *doc;
+  request_rec   *r;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
@@ -1710,12 +1649,12 @@ s_jhtml_end_li_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The OL tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_start_ol_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_jhtml_start_ol_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  jhtml_t*      jhtml;
-  Doc*          doc;
-  request_rec*  r;
+  jhtml_t       *jhtml;
+  Doc           *doc;
+  request_rec   *r;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
@@ -1735,12 +1674,12 @@ s_jhtml_start_ol_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The OL tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_end_ol_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_jhtml_end_ol_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t*      jhtml;
-  Doc*          doc;
-  request_rec*  r;
+  jhtml_t       *jhtml;
+  Doc           *doc;
+  request_rec   *r;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
@@ -1760,12 +1699,12 @@ s_jhtml_end_ol_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The P tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_start_p_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_jhtml_start_p_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  jhtml_t*      jhtml;
-  Doc*          doc;
-  request_rec*  r;
+  jhtml_t       *jhtml;
+  Doc           *doc;
+  request_rec   *r;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
@@ -1785,12 +1724,12 @@ s_jhtml_start_p_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The P tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_end_p_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_jhtml_end_p_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t*      jhtml = GET_JHTML(pdoc);
-  Doc*          doc   = jhtml->doc;
-  request_rec*  r     = doc->r;
+  jhtml_t       *jhtml = GET_JHTML(pdoc);
+  Doc           *doc   = jhtml->doc;
+  request_rec   *r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</p>", NULL);
 
@@ -1806,12 +1745,12 @@ s_jhtml_end_p_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The PRE tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_start_pre_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_jhtml_start_pre_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  jhtml_t*      jhtml = GET_JHTML(pdoc);
-  Doc*          doc   = jhtml->doc;
-  request_rec*  r     = doc->r;
+  jhtml_t       *jhtml = GET_JHTML(pdoc);
+  Doc           *doc   = jhtml->doc;
+  request_rec   *r     = doc->r;
 
   jhtml->pre_flag++;
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<pre>", NULL);
@@ -1828,12 +1767,12 @@ s_jhtml_start_pre_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The PRE tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_end_pre_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_jhtml_end_pre_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t*      jhtml = GET_JHTML(pdoc);
-  Doc*          doc   = jhtml->doc;
-  request_rec*  r     = doc->r;
+  jhtml_t       *jhtml = GET_JHTML(pdoc);
+  Doc           *doc   = jhtml->doc;
+  request_rec   *r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</pre>", NULL);
   jhtml->pre_flag--;
@@ -1850,12 +1789,12 @@ s_jhtml_end_pre_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The UL tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_start_ul_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_jhtml_start_ul_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  jhtml_t*      jhtml = GET_JHTML(pdoc);
-  Doc*          doc   = jhtml->doc;
-  request_rec*  r     = doc->r;
+  jhtml_t       *jhtml = GET_JHTML(pdoc);
+  Doc           *doc   = jhtml->doc;
+  request_rec   *r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<ul>", NULL);
 
@@ -1871,12 +1810,12 @@ s_jhtml_start_ul_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The UL tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_end_ul_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_jhtml_end_ul_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t*      jhtml = GET_JHTML(pdoc);
-  Doc*          doc   = jhtml->doc;
-  request_rec*  r     = doc->r;
+  jhtml_t       *jhtml = GET_JHTML(pdoc);
+  Doc           *doc   = jhtml->doc;
+  request_rec   *r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</ul>", NULL);
 
@@ -1892,21 +1831,21 @@ s_jhtml_end_ul_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The HR tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_start_hr_tag(void* pdoc, Node* node) 
+static char *
+s_jhtml_start_hr_tag(void *pdoc, Node *node) 
 {
-  jhtml_t*     jhtml = GET_JHTML(pdoc);
-  Doc*         doc   = jhtml->doc;
-  request_rec* r     = doc->r;
-  Attr*        attr;
+  jhtml_t      *jhtml = GET_JHTML(pdoc);
+  Doc          *doc   = jhtml->doc;
+  request_rec  *r     = doc->r;
+  Attr         *attr;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<hr ", NULL);
  
   for (attr = qs_get_attr(doc,node);
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
-    char* name = qs_get_attr_name(doc,attr);
-    char* value = qs_get_attr_value(doc,attr);
+    char *name = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
     if ((*name == 'a' || *name == 'A') && strcasecmp(name, "align") == 0) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
@@ -1964,10 +1903,10 @@ s_jhtml_start_hr_tag(void* pdoc, Node* node)
  * @param node   [i]   The HR tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_end_hr_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_jhtml_end_hr_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t* jhtml = GET_JHTML(pdoc);
+  jhtml_t *jhtml = GET_JHTML(pdoc);
 
   return jhtml->out;
 }
@@ -1981,15 +1920,15 @@ s_jhtml_end_hr_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The IMG tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_start_img_tag(void* pdoc, Node* node) 
+static char *
+s_jhtml_start_img_tag(void *pdoc, Node *node) 
 {
-  jhtml_t*      jhtml = GET_JHTML(pdoc);
-  Doc*          doc   = jhtml->doc;
-  request_rec*  r     = doc->r;
-  Attr*         attr;
+  jhtml_t       *jhtml = GET_JHTML(pdoc);
+  Doc           *doc   = jhtml->doc;
+  request_rec   *r     = doc->r;
+  Attr          *attr;
 #ifndef IMG_NOT_CONVERT_FILENAME
-  device_table* spec = jhtml->spec;
+  device_table  *spec = jhtml->spec;
 #endif
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<img", NULL);
@@ -2001,8 +1940,8 @@ s_jhtml_start_img_tag(void* pdoc, Node* node)
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-    char* name  = qs_get_attr_name(doc,attr);
-    char* value = qs_get_attr_value(doc,attr);
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
 
     if ((*name == 's' || *name == 'S') && strcasecmp(name, "src") == 0) {
       /*----------------------------------------------------------------------*/
@@ -2107,10 +2046,10 @@ s_jhtml_start_img_tag(void* pdoc, Node* node)
  * @param node   [i]   The IMG tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_end_img_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_jhtml_end_img_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t*  jhtml = GET_JHTML(pdoc);
+  jhtml_t *jhtml = GET_JHTML(pdoc);
 
   return jhtml->out;
 }
@@ -2124,13 +2063,13 @@ s_jhtml_end_img_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The SELECT tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
+static char *
 s_jhtml_start_select_tag(void *pdoc, Node *child)
 {
   jhtml_t     *jhtml = GET_JHTML(pdoc);
   Doc         *doc   = jhtml->doc;
   request_rec *r     = doc->r;
-  Attr *attr;
+  Attr        *attr;
 
   char *size      = NULL;
   char *name      = NULL;
@@ -2139,8 +2078,8 @@ s_jhtml_start_select_tag(void *pdoc, Node *child)
   for (attr = qs_get_attr(doc,child);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-    char* nm  = qs_get_attr_name(doc,attr);
-    char* val = qs_get_attr_value(doc,attr);
+    char *nm  = qs_get_attr_name(doc,attr);
+    char *val = qs_get_attr_value(doc,attr);
 
     if ((*nm == 's' || *nm == 'S') && strcasecmp(nm, "size") == 0) {
       /*----------------------------------------------------------------------*/
@@ -2183,12 +2122,12 @@ s_jhtml_start_select_tag(void *pdoc, Node *child)
  * @param node   [i]   The SELECT tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_end_select_tag(void* pdoc, Node* UNUSED(child))
+static char *
+s_jhtml_end_select_tag(void *pdoc, Node *UNUSED(child))
 {
-  jhtml_t*     jhtml = GET_JHTML(pdoc);
-  Doc*         doc   = jhtml->doc;
-  request_rec* r     = doc->r;
+  jhtml_t      *jhtml = GET_JHTML(pdoc);
+  Doc          *doc   = jhtml->doc;
+  request_rec  *r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</select>\n", NULL);
 
@@ -2203,23 +2142,23 @@ s_jhtml_end_select_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The OPTION tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_start_option_tag(void* pdoc, Node* child)
+static char *
+s_jhtml_start_option_tag(void *pdoc, Node *child)
 {
-  jhtml_t*     jhtml = GET_JHTML(pdoc);
-  Doc*         doc   = jhtml->doc;
-  request_rec* r     = doc->r;
-  Attr*        attr;
+  jhtml_t      *jhtml = GET_JHTML(pdoc);
+  Doc          *doc   = jhtml->doc;
+  request_rec  *r     = doc->r;
+  Attr         *attr;
 
-  char* selected   = NULL;
-  char* value      = NULL;
+  char         *selected   = NULL;
+  char         *value      = NULL;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<option", NULL);
   for (attr = qs_get_attr(doc,child);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-    char* nm  = qs_get_attr_name(doc,attr);
-    char* val = qs_get_attr_value(doc,attr);
+    char *nm  = qs_get_attr_name(doc,attr);
+    char *val = qs_get_attr_value(doc,attr);
 
     if ((*nm == 's' || *nm == 'S') && strcasecmp(nm, "selected") == 0) {
       /*----------------------------------------------------------------------*/
@@ -2258,10 +2197,10 @@ s_jhtml_start_option_tag(void* pdoc, Node* child)
  * @param node   [i]   The OPTION tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_end_option_tag(void* pdoc, Node* UNUSED(child))
+static char *
+s_jhtml_end_option_tag(void *pdoc, Node *UNUSED(child))
 {
-  jhtml_t*  jhtml;
+  jhtml_t *jhtml;
 
   jhtml = GET_JHTML(pdoc);
 
@@ -2279,15 +2218,15 @@ s_jhtml_end_option_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The DIV tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_start_div_tag(void* pdoc, Node* child)
+static char *
+s_jhtml_start_div_tag(void *pdoc, Node *child)
 {
-  jhtml_t*     jhtml;
-  Doc*         doc;
-  request_rec* r;
-  Attr*        attr;
+  jhtml_t      *jhtml;
+  Doc          *doc;
+  request_rec  *r;
+  Attr         *attr;
 
-  char*        align;
+  char         *align;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
@@ -2300,8 +2239,8 @@ s_jhtml_start_div_tag(void* pdoc, Node* child)
        attr;
        attr = qs_get_next_attr(doc,attr)) {
 
-    char* nm;
-    char* val;
+    char *nm;
+    char *val;
 
     nm  = qs_get_attr_name(doc,attr);
     val = qs_get_attr_value(doc,attr);
@@ -2332,12 +2271,12 @@ s_jhtml_start_div_tag(void* pdoc, Node* child)
  * @param node   [i]   The DIV tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_end_div_tag(void* pdoc, Node* UNUSED(child))
+static char *
+s_jhtml_end_div_tag(void *pdoc, Node *UNUSED(child))
 {
-  jhtml_t*     jhtml;
-  Doc*         doc;
-  request_rec* r;
+  jhtml_t      *jhtml;
+  Doc          *doc;
+  request_rec  *r;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
@@ -2349,10 +2288,10 @@ s_jhtml_end_div_tag(void* pdoc, Node* UNUSED(child))
 }
 
 
-static char*
-chxj_istyle_to_mode(request_rec* r, const char* s)
+static char *
+chxj_istyle_to_mode(request_rec *r, const char *s)
 {
-  char* tmp;
+  char *tmp;
 
   if (s) {
     switch (s[0]) {
@@ -2373,13 +2312,13 @@ chxj_istyle_to_mode(request_rec* r, const char* s)
 }
 
 
-static char*
-s_jhtml_chxjif_tag(void* pdoc, Node* node)
+static char *
+s_jhtml_chxjif_tag(void *pdoc, Node *node)
 {
-  jhtml_t*     jhtml;
-  Doc*         doc;
-  Node*        child;
-  request_rec* r;
+  jhtml_t      *jhtml;
+  Doc          *doc;
+  Node         *child;
+  request_rec  *r;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
@@ -2403,13 +2342,13 @@ s_jhtml_chxjif_tag(void* pdoc, Node* node)
  * @param node   [i]   The TEXTAREA tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_start_textarea_tag(void* pdoc, Node* node) 
+static char *
+s_jhtml_start_textarea_tag(void *pdoc, Node *node) 
 {
-  jhtml_t*      jhtml;
-  Doc*          doc;
-  request_rec*  r;
-  Attr*         attr;
+  jhtml_t       *jhtml;
+  Doc           *doc;
+  request_rec   *r;
+  Attr          *attr;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
@@ -2421,9 +2360,8 @@ s_jhtml_start_textarea_tag(void* pdoc, Node* node)
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-
-    char* name;
-    char* value;
+    char *name;
+    char *value;
 
     name  = qs_get_attr_name(doc,attr);
     value = qs_get_attr_value(doc,attr);
@@ -2455,12 +2393,12 @@ s_jhtml_start_textarea_tag(void* pdoc, Node* node)
  * @param node   [i]   The TEXTAREA tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_end_textarea_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_jhtml_end_textarea_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t*      jhtml;
-  Doc*          doc;
-  request_rec*  r;
+  jhtml_t       *jhtml;
+  Doc           *doc;
+  request_rec   *r;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
@@ -2481,12 +2419,12 @@ s_jhtml_end_textarea_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The B tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_start_b_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_jhtml_start_b_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  jhtml_t*      jhtml;
-  Doc*          doc;
-  request_rec*  r;
+  jhtml_t       *jhtml;
+  Doc           *doc;
+  request_rec   *r;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
@@ -2506,30 +2444,30 @@ s_jhtml_start_b_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The B tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_end_b_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_jhtml_end_b_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t*      jhtml = GET_JHTML(pdoc);
-  Doc*          doc   = jhtml->doc;
-  request_rec*  r     = doc->r;
+  jhtml_t       *jhtml = GET_JHTML(pdoc);
+  Doc           *doc   = jhtml->doc;
+  request_rec   *r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</b>\r\n", NULL);
 
   return jhtml->out;
 }
 
-static char*
-s_jhtml_text_tag(void* pdoc, Node* child)
+static char *
+s_jhtml_text_tag(void *pdoc, Node *child)
 {
-  jhtml_t*     jhtml;
-  Doc*         doc;
-  char*        textval;
-  char*        tmp;
-  char*        tdst;
+  jhtml_t      *jhtml;
+  Doc          *doc;
+  char         *textval;
+  char         *tmp;
+  char         *tdst;
   char         one_byte[2];
   int          ii;
   int          tdst_len;
-  request_rec* r;
+  request_rec  *r;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
@@ -2548,14 +2486,6 @@ s_jhtml_text_tag(void* pdoc, Node* child)
   tdst_len = 0;
 
   for (ii=0; ii<qs_get_node_size(doc,child); ii++) {
-    char* out;
-    int rtn = s_jhtml_search_emoji(jhtml, &textval[ii], &out);
-    if (rtn) {
-      tdst = qs_out_apr_pstrcat(r, tdst, out, &tdst_len);
-      ii+=(rtn - 1);
-      continue;
-    }
-
     if (is_sjis_kanji(textval[ii])) {
       one_byte[0] = textval[ii+0];
       tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
