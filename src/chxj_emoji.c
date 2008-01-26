@@ -751,9 +751,20 @@ meta_emoji_to_emoji(
   int len = strlen(src);
   char *outbuf = apr_palloc(r->pool, 1);
   outbuf[0] = 0;
+  int enc = SJIS;
 
+  if (IS_SJIS_STRING(GET_SPEC_CHARSET(spec))) {
+    enc = SJIS;
+  }
+  else {
+    enc = UTF8;
+  }
+  
   for (i=0; i<len; i++) {
-    if (is_sjis_kanji(src[i])) {
+    /* 
+     * The character-code has the possibility of UTF-8 and SJIS here. 
+     */
+    if (enc == SJIS && is_sjis_kanji(src[i])) {
       char tmp[3];
       tmp[0] = src[i+0];
       tmp[1] = src[i+1];
@@ -761,6 +772,53 @@ meta_emoji_to_emoji(
       outbuf = apr_pstrcat(r->pool, outbuf, tmp, NULL);
       i++;
       continue;
+    }
+    if (enc == UTF8) {
+      if ((0xe0 & src[i]) == 0xc0) { 
+        /* 2byte charactor */
+        char tmp[3];
+        tmp[0] = src[i+0];
+        tmp[1] = src[i+1];
+        tmp[2] = 0;
+        DBG1(r, "DETECT UTF8 2BYTE CHARACTOR=[%s]", tmp);
+        outbuf = apr_pstrcat(r->pool, outbuf, tmp, NULL);
+        i++;
+        continue;
+      }
+      if ((0xf0 & src[i]) == 0xe0) {
+        /* 3byte charactor */
+        char tmp[4];
+        tmp[0] = src[i+0];
+        tmp[1] = src[i+1];
+        tmp[2] = src[i+2];
+        tmp[3] = 0;
+        DBG1(r, "DETECT UTF8 3BYTE CHARACTOR=[%s]", tmp);
+        outbuf = apr_pstrcat(r->pool, outbuf, tmp, NULL);
+        i+=2;
+        continue;
+      }
+      if ((0xf8 & src[i]) == 0xf0) {
+        /* 4byte charactor */
+        char tmp[5];
+        tmp[0] = src[i+0];
+        tmp[1] = src[i+1];
+        tmp[2] = src[i+2];
+        tmp[3] = src[i+3];
+        tmp[4] = 0;
+        DBG1(r, "DETECT UTF8 4BYTE CHARACTOR=[%s]", tmp);
+        outbuf = apr_pstrcat(r->pool, outbuf, tmp, NULL);
+        i+=3;
+        continue;
+      }
+      if ((0xc0 & src[i]) == 0x80) { 
+        /* unknown charactor */
+        char tmp[2];
+        tmp[0] = src[i+0];
+        tmp[1] = 0;
+        DBG1(r, "DETECT UTF8 OTHER CHARACTOR=[%s]", tmp);
+        outbuf = apr_pstrcat(r->pool, outbuf, tmp, NULL);
+        continue;
+      }
     }
     if (src[i] == '&') {
       if (strncasecmp(META_EMOJI_PREFIX, &src[i], META_EMOJI_PREFIX_LEN) == 0) {
@@ -773,7 +831,7 @@ meta_emoji_to_emoji(
                              "%.*s",
                              emoji_len - META_EMOJI_PREFIX_LEN - 1, 
                              &src[i + META_EMOJI_PREFIX_LEN]);
-        DBG3(r, "Found EMOJI:[%.*s] no:[%s]", emoji_len, &src[i], strno);
+        DBG4(r, "Found EMOJI:[%.*s] no:[%s] emoji_len:[%d]", emoji_len, &src[i], strno, emoji_len);
         err = 0;
         for (cl=0; cl<(int)strlen(strno); cl++) {
           if (! isdigit(strno[cl])) {
@@ -783,10 +841,12 @@ meta_emoji_to_emoji(
           }
         }
         if (! err) {
+          DBG3(r, "Found EMOJI src:[%.*s] --> to:[%s]", emoji_len, &src[i], callback(r, emoji_table[atoi(strno) - 1], spec));
           outbuf = apr_pstrcat(r->pool,
                                outbuf,
                                callback(r, emoji_table[atoi(strno) - 1], spec),
                                NULL);
+          DBG1(r, "Found EMOJI substitute result:[%s]", outbuf);
         }
         i += (emoji_len - 1);
         continue;
