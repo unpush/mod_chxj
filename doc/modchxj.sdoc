@@ -288,14 +288,14 @@ ChxjImageCopyright "A.Konno"
        <b>DoCoMoд╬╛ь╣ч</b>
        <program title="DoCoMo">copy="NO",A.Konno</program>
 
-       <b>Vodafone</b>д╬╛ь╣чд╧бвеье╣е▌еєе╣е╪е├е└д╦
+       <b>SoftBank/Vodafone</b>д╬╛ь╣чд╧бвеье╣е▌еєе╣е╪е├е└д╦
 
-       <program title="Vodafone/J-PHONE">
+       <program title="SoftBank/Vodafone/J-PHONE">
          x-jphone-copyright:no-transfer
        </program>
 
        дЄ╦фдс╣■д▀д▐д╣бг
-       <note>Vodafoneд╬╛ь╣чд╧бвеъепеие╣е╚г╒г╥г╠д╬║╟╕хдм.pnzдлбв.jpzд╟╜кдядыдшджд╦е└е▀б╝дЄ╔╒д▒д╩д▒дьд╨д╩дъд▐д╗дєбг</note>
+       <note>SoftBank/Vodafoneд╬╛ь╣чд╧бвеъепеие╣е╚г╒г╥г╠д╬║╟╕хдм.pnzдлбв.jpzд╟╜кдядыдшджд╦е└е▀б╝дЄ╔╒д▒д╩д▒дьд╨д╩дъд▐д╗дєбг</note>
     </li>
   </ol>
   </li>
@@ -797,7 +797,7 @@ XHTML╡бд╬╛ь╣чд╧бв<b>&lt;IMG LOCALSRC="XX"&gt;</b>д╬"XX"д╬╔Ї╩мд╦┼Ўд╞д╧дсдщдьд╞бв├
 <br />
 <br />
   <li>&lt;jphone&gt;═╫┴╟<br />
-евепе╗е╣д╖д╞днд┐├╝╦ЎдмбвVodafone/J-Phone├╝╦Ўд╟двд├д┐╛ь╣чбв&lt;jphone&gt;═╫┴╟д╦─ъ╡┴д╡дьд╞ддды├═д╦╩╤┤╣д╖д▐д╣бг
+евепе╗е╣д╖д╞днд┐├╝╦ЎдмбвSoftBank/Vodafone/J-Phone├╝╦Ўд╟двд├д┐╛ь╣чбв&lt;jphone&gt;═╫┴╟д╦─ъ╡┴д╡дьд╞ддды├═д╦╩╤┤╣д╖д▐д╣бг
 &lt;jphone&gt;═╫┴╟д╧бв&lt;string&gt;═╫┴╟дЄ╩▌╗¤д╖д╞ддд╞бвд│д│д╟─ъ╡┴д╡дьд╞ддды├═дЄ─╛└▄╗╚═╤д╖д▐д╣бг
   </li>
 </ol><br />

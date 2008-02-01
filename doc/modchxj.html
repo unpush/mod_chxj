@@ -1030,20 +1030,20 @@ ChxjImageCopyright &quot;A.Konno&quot;
 copy=&quot;NO&quot;,A.Konno
 </pre>
 
-<p><b>Vodafone</b>の場合は、レスポンスヘッダに</p>
+<p><b>SoftBank/Vodafone</b>の場合は、レスポンスヘッダに</p>
 
-<div id="doc1_205" class="caption">Vodafone/J-PHONE</div>
+<div id="doc1_205" class="caption">SoftBank/Vodafone/J-PHONE</div>
 <pre class="program" style="margin-top:0">
          x-jphone-copyright:no-transfer
        
 </pre>
 
-<p>を埋め込みます。<span class="note"><a href="#doc1_208" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="Vodafoneの場合は、リクエストＵＲＬの最後が.pnzか、.jpzで終わるようにダミーを付けなければなりません。"><sup>(5)</sup></a></span></p></ol></ol>
+<p>を埋め込みます。<span class="note"><a href="#doc1_208" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="SoftBank/Vodafoneの場合は、リクエストＵＲＬの最後が.pnzか、.jpzで終わるようにダミーを付けなければなりません。"><sup>(5)</sup></a></span></p></ol></ol>
 
 
 <div class="footnote">
 <ol>
-<li id="doc1_208" value="5"> Vodafoneの場合は、リクエストＵＲＬの最後が.pnzか、.jpzで終わるようにダミーを付けなければなりません。</ol>
+<li id="doc1_208" value="5"> SoftBank/Vodafoneの場合は、リクエストＵＲＬの最後が.pnzか、.jpzで終わるようにダミーを付けなければなりません。</ol>
 </div>
 
 
@@ -1551,7 +1551,7 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 <ol>
 <li> &lt;imode&gt;要素<br></br>まず、元となるi-Mode用の絵文字は、&lt;imode&gt;タグにはさまれた間に定義されています。&lt;imode&gt;要素は、２バイトコード要素(&lt;hex1&gt;&lt;hex2&gt;)と、１０進参照文字列要素(&lt;string&gt;)を保持していて、この２つの要素を変換元の値として使用します。アクセスしてきた端末が、i-Mode機であった場合で、かつＣＨＴＭＬ中に１０進参照文字列が絵文字として書かれている場合には、&lt;hex1&gt;&lt;hex2&gt;要素に定義されている値に置換します。
 <br></br><br></br><li> &lt;ezweb&gt;要素<br></br>アクセスしてきた端末が、AU機であった場合、&lt;ezweb&gt;要素に定義されている値に変換します。&lt;ezweb&gt;要素は、&lt;A&gt;～&lt;D&gt;要素を持っていて、それぞれAUの絵文字タイプＡ～Ｄに対応していますので、もし、Ｄタイプの絵文字端末であったなら、&lt;D&gt;要素に定義されている値に変換します。ここで定義されている値は、HDML機の場合は、<b>&lt;IMG ICON=&quot;XX&quot;&gt;</b>の&quot;XX&quot;の部分に当てはめられて、置換されます。XHTML機の場合は、<b>&lt;IMG LOCALSRC=&quot;XX&quot;&gt;</b>の&quot;XX&quot;の部分に当てはめられて、置換されます。
-<br></br><br></br><li> &lt;jphone&gt;要素<br></br>アクセスしてきた端末が、Vodafone/J-Phone端末であった場合、&lt;jphone&gt;要素に定義されている値に変換します。&lt;jphone&gt;要素は、&lt;string&gt;要素を保持していて、ここで定義されている値を直接使用します。</ol>
+<br></br><br></br><li> &lt;jphone&gt;要素<br></br>アクセスしてきた端末が、SoftBank/Vodafone/J-Phone端末であった場合、&lt;jphone&gt;要素に定義されている値に変換します。&lt;jphone&gt;要素は、&lt;string&gt;要素を保持していて、ここで定義されている値を直接使用します。</ol>
 
 <p><br></br>emoji.xmlに定義されていない絵文字で、変換したい絵文字がある場合には、このファイルに新たな定義を足せば、変換するようになります。</p>
 

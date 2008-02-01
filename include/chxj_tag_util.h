@@ -81,7 +81,7 @@ extern char* qs_alloc_zero_byte_string(
   request_rec* r);
 
 extern char* qs_trim_string(
-  request_rec* r, 
+  apr_pool_t*  p, 
   char*        s);
 
 extern int   chxj_chxjif_is_mine(

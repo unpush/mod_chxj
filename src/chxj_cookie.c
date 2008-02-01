@@ -93,7 +93,7 @@ chxj_save_cookie(request_rec *r)
   for (ii=0; ii<headers->nelts; ii++) {
     if (strcasecmp(hentryp[ii].key, "Set-Cookie") == 0) {
       DBG(r, "=====================================");
-      DBG2(r, "cookie=[%s:%s]", hentryp[ii].key, hentryp[ii].val);
+      DBG(r, "cookie=[%s:%s]", hentryp[ii].key, hentryp[ii].val);
 
       char *key;
       char *val;
@@ -133,7 +133,7 @@ chxj_save_cookie(request_rec *r)
       refer_string = apr_pstrcat(r->pool, refer_string, "?", r->args, NULL);
     }
     apr_table_setn(new_cookie_table, REFERER_COOKIE_KEY, refer_string);
-    DBG1(r, "ADD REFER[%s]", refer_string);
+    DBG(r, "ADD REFER[%s]", refer_string);
     has_cookie++;
   }
 
@@ -180,7 +180,7 @@ chxj_save_cookie(request_rec *r)
                            r->pool);
   if (retval != APR_SUCCESS) {
     DBG(r, "end chxj_save_cookie()");
-    ERR2(r, "could not open dbm (type %s) auth file: %s", 
+    ERR(r, "could not open dbm (type %s) auth file: %s", 
             "default", 
             chxj_cookie_db_name_create(r,dconf->cookie_db_dir));
     chxj_cookie_db_unlock(r, file);
@@ -207,11 +207,11 @@ chxj_save_cookie(request_rec *r)
   memset(cookie->cookie_id, 0, APR_MD5_DIGESTSIZE+1);
   apr_base64_encode(cookie->cookie_id, (char*)md5_value, APR_MD5_DIGESTSIZE);
 
-  DBG1(r, "cookie->cookie_id=[%s]", cookie->cookie_id);
+  DBG(r, "cookie->cookie_id=[%s]", cookie->cookie_id);
 
   cookie->cookie_id = chxj_url_encode(r,cookie->cookie_id);
 
-  DBG1(r, "cookie->cookie_id=[%s]", cookie->cookie_id);
+  DBG(r, "cookie->cookie_id=[%s]", cookie->cookie_id);
 
   /*
    * create key
@@ -249,7 +249,7 @@ chxj_save_cookie(request_rec *r)
    */
   retval = apr_dbm_store(f, dbmkey, dbmval);
   if (retval != APR_SUCCESS) {
-    ERR1(r, "Cannot store Cookie data to DBM file `%s'",
+    ERR(r, "Cannot store Cookie data to DBM file `%s'",
             chxj_cookie_db_name_create(r, dconf->cookie_db_dir));
     goto on_error;
   }
@@ -332,7 +332,7 @@ chxj_update_cookie(request_rec *r, cookie_t *old_cookie)
                            APR_OS_DEFAULT, 
                            r->pool);
   if (retval != APR_SUCCESS) {
-    ERR2(r, "could not open dbm (type %s) auth file: %s", 
+    ERR(r, "could not open dbm (type %s) auth file: %s", 
             "default", 
             chxj_cookie_db_name_create(r,dconf->cookie_db_dir));
     chxj_cookie_db_unlock(r, file);
@@ -386,7 +386,7 @@ chxj_update_cookie(request_rec *r, cookie_t *old_cookie)
                                "\n",
                                NULL);
 
-    DBG2(r, "OLD COOKIE VALUE=[%s][%s]", hentryp[ii].key, hentryp[ii].val);
+    DBG(r, "OLD COOKIE VALUE=[%s][%s]", hentryp[ii].key, hentryp[ii].val);
     store_string = apr_pstrcat(r->pool, 
                                store_string, 
                                hentryp[ii].key, 
@@ -402,7 +402,7 @@ chxj_update_cookie(request_rec *r, cookie_t *old_cookie)
    */
   retval = apr_dbm_store(f, dbmkey, dbmval);
   if (retval != APR_SUCCESS) {
-    ERR1(r, "Cannot store Cookie data to DBM file `%s'",
+    ERR(r, "Cannot store Cookie data to DBM file `%s'",
             chxj_cookie_db_name_create(r, dconf->cookie_db_dir));
     goto on_error;
   }
@@ -447,7 +447,7 @@ chxj_load_cookie(request_rec *r, char *cookie_id)
   DBG(r, "========================================================");
   DBG(r, "========================================================");
   DBG(r, "========================================================");
-  DBG1(r, "start chxj_load_cookie() cookie_id=[%s]", cookie_id);
+  DBG(r, "start chxj_load_cookie() cookie_id=[%s]", cookie_id);
   chxj_cookie_expire_gc(r);
 
   cookie = (cookie_t*)apr_palloc(r->pool, sizeof(cookie_t));
@@ -479,10 +479,10 @@ chxj_load_cookie(request_rec *r, char *cookie_id)
                            APR_OS_DEFAULT, 
                            r->pool);
   if (retval != APR_SUCCESS) {
-    ERR2(r, 
-         "could not open dbm (type %s) auth file: %s", 
-         "default", 
-         chxj_cookie_db_name_create(r, dconf->cookie_db_dir));
+    ERR(r, 
+        "could not open dbm (type %s) auth file: %s", 
+        "default", 
+        chxj_cookie_db_name_create(r, dconf->cookie_db_dir));
     goto on_error1;
   }
 
@@ -496,7 +496,7 @@ chxj_load_cookie(request_rec *r, char *cookie_id)
   
     retval = apr_dbm_fetch(f, dbmkey, &dbmval);
     if (retval != APR_SUCCESS) {
-      ERR2(r, 
+      ERR(r, 
            "could not fetch dbm (type %s) auth file: %s", "default", 
            chxj_cookie_db_name_create(r, dconf->cookie_db_dir));
       goto on_error2;
@@ -516,7 +516,7 @@ chxj_load_cookie(request_rec *r, char *cookie_id)
       load_string = NULL;
       if (!pair) break;
 
-      DBG1(r, "Cookie:[%s]", pair);
+      DBG(r, "Cookie:[%s]", pair);
       char *tmp_pair;
 
       tmp_pair = apr_pstrdup(r->pool, pair);
@@ -585,7 +585,7 @@ chxj_add_cookie_parameter(request_rec *r, char *value, cookie_t *cookie)
   char *qs;
   char *dst;
 
-  DBG1(r, "start chxj_add_cookie_parameter() cookie_id=[%s]", (cookie) ? cookie->cookie_id : NULL);
+  DBG(r, "start chxj_add_cookie_parameter() cookie_id=[%s]", (cookie) ? cookie->cookie_id : NULL);
 
   dst = apr_pstrdup(r->pool, value);
 
@@ -608,7 +608,7 @@ chxj_add_cookie_parameter(request_rec *r, char *value, cookie_t *cookie)
     dst = apr_psprintf(r->pool, "%s?%s=%s", dst, CHXJ_COOKIE_PARAM, cookie->cookie_id);
   }
 
-  DBG1(r, "end   chxj_add_cookie_parameter() dst=[%s]", dst);
+  DBG(r, "end   chxj_add_cookie_parameter() dst=[%s]", dst);
 
   return dst;
 
@@ -623,7 +623,7 @@ chxj_cookie_check_host(request_rec *r, char *value)
 {
   char *hostnm;
 
-  DBG1(r, "hostname=[%s]", r->hostname);
+  DBG(r, "hostname=[%s]", r->hostname);
 
   hostnm = s_get_hostname_from_url(r, value);
   if (hostnm) {
@@ -739,10 +739,10 @@ chxj_delete_cookie(request_rec *r, char *cookie_id)
                            APR_OS_DEFAULT,
                            r->pool);
   if (retval != APR_SUCCESS) {
-    ERR2(r, 
-         "could not open dbm (type %s) auth file: %s", 
-         "default", 
-         chxj_cookie_db_name_create(r,dconf->cookie_db_dir));
+    ERR(r, 
+        "could not open dbm (type %s) auth file: %s", 
+        "default", 
+        chxj_cookie_db_name_create(r,dconf->cookie_db_dir));
     goto on_error1;
   }
 
@@ -808,7 +808,7 @@ chxj_cookie_db_lock_name_create(request_rec *r, const char *dir)
     dst = apr_pstrdup(r->pool, dir);
     DBG(r, " ");
   }
-  DBG1(r, "dst[strlen(dst)-1]=[%c]", dst[strlen(dst)-1]);
+  DBG(r, "dst[strlen(dst)-1]=[%c]", dst[strlen(dst)-1]);
   if (dst[strlen(dst)-1] != '/') {
     dst = apr_pstrcat(r->pool, dst, "/", COOKIE_DB_LOCK_NAME, NULL);
   }
@@ -859,8 +859,8 @@ chxj_save_cookie_expire(request_rec *r, cookie_t *cookie)
                            APR_OS_DEFAULT, 
                            r->pool);
   if (retval != APR_SUCCESS) {
-    ERR2(r, "could not open dbm (type %s) auth file: %s", 
-            "default", 
+    ERR(r, "could not open dbm (type %s) auth file: %s", 
+           "default", 
             chxj_cookie_expire_db_name_create(r,dconf->cookie_db_dir));
     chxj_cookie_expire_db_unlock(r, file);
     return;
@@ -885,7 +885,7 @@ chxj_save_cookie_expire(request_rec *r, cookie_t *cookie)
    */
   retval = apr_dbm_store(f, dbmkey, dbmval);
   if (retval != APR_SUCCESS) {
-    ERR1(r, "Cannot store Cookie data to DBM file `%s'",
+    ERR(r, "Cannot store Cookie data to DBM file `%s'",
             chxj_cookie_db_name_create(r, dconf->cookie_db_dir));
   }
 
@@ -1011,10 +1011,10 @@ chxj_delete_cookie_expire(request_rec *r, char *cookie_id)
                            APR_OS_DEFAULT,
                            r->pool);
   if (retval != APR_SUCCESS) {
-    ERR2(r, 
-         "could not open dbm (type %s) auth file: %s", 
-         "default", 
-         chxj_cookie_expire_db_name_create(r,dconf->cookie_db_dir));
+    ERR(r, 
+        "could not open dbm (type %s) auth file: %s", 
+        "default", 
+        chxj_cookie_expire_db_name_create(r,dconf->cookie_db_dir));
     goto on_error1;
   }
 
@@ -1069,10 +1069,10 @@ chxj_cookie_expire_gc(request_rec *r)
                            APR_OS_DEFAULT,
                            r->pool);
   if (retval != APR_SUCCESS) {
-    ERR2(r, 
-         "could not open dbm (type %s) auth file: %s", 
-         "default", 
-         chxj_cookie_expire_db_name_create(r,dconf->cookie_db_dir));
+    ERR(r, 
+        "could not open dbm (type %s) auth file: %s", 
+        "default", 
+        chxj_cookie_expire_db_name_create(r,dconf->cookie_db_dir));
     goto on_error1;
   }
 
@@ -1085,7 +1085,7 @@ chxj_cookie_expire_gc(request_rec *r)
 
   retval = apr_dbm_firstkey(f, &dbmkey);
   if (retval == APR_SUCCESS) {
-    DBG2(r, "firstkey=[%.*s]", (int)dbmkey.dsize, dbmkey.dptr);
+    DBG(r, "firstkey=[%.*s]", (int)dbmkey.dsize, dbmkey.dptr);
     do {
       char *tmp;
       char *old_cookie_id;
@@ -1108,8 +1108,8 @@ chxj_cookie_expire_gc(request_rec *r)
       else
         cmp_time = now_time - dconf->cookie_timeout;
 
-      DBG1(r, "dconf->cookie_timeout=[%d]", (int)dconf->cookie_timeout);
-      DBG4(r, "key=[%.*s] cmp_time=[%d] val_time=[%d]", (int)dbmkey.dsize, dbmkey.dptr, cmp_time, val_time);
+      DBG(r, "dconf->cookie_timeout=[%d]", (int)dconf->cookie_timeout);
+      DBG(r, "key=[%.*s] cmp_time=[%d] val_time=[%d]", (int)dbmkey.dsize, dbmkey.dptr, cmp_time, val_time);
       if (cmp_time >= val_time) {
         apr_dbm_delete(f, dbmkey);
 
@@ -1118,7 +1118,7 @@ chxj_cookie_expire_gc(request_rec *r)
         memcpy(old_cookie_id, dbmkey.dptr, dbmkey.dsize);
 
         chxj_delete_cookie(r,old_cookie_id);
-        DBG1(r, "detect timeout cookie [%s]", old_cookie_id);
+        DBG(r, "detect timeout cookie [%s]", old_cookie_id);
       }
 
       retval = apr_dbm_nextkey(f, &dbmkey);

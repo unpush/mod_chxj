@@ -45,5 +45,13 @@ chxj_encoding_by_spec(
   const char         *src,
   apr_size_t         *len);
 
+extern char *
+chxj_convert_encoding(
+  request_rec        *r,
+  const char         *from_encoding,
+  const char         *to_encoding,
+  const char         *src,
+  apr_size_t         *len);
+
 #endif
 

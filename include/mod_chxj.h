@@ -17,6 +17,14 @@
 #ifndef __MOD_CHXJ_H__
 #define __MOD_CHXJ_H__
 
+#define DEBUG_FD(format, args...) do { \
+  FILE*fp=fopen("/tmp/mod_chxj.log","a");       \
+  fprintf(fp,"%s:%d ",__FILE__,__LINE__);       \
+  fprintf(fp,format, ##args);                   \
+  fprintf(fp,"\n");                             \
+  fclose(fp);                                   \
+} while(0)
+
 #ifdef UNUSED
 #elif defined(__GNUC__)
 # define UNUSED(x) UNUSED_ ## x __attribute__((unused))
@@ -28,6 +36,8 @@
 
 #define STRCASEEQ(a,b,c,d) \
   ((((a) == *(d))|| ((b) == *(d))) && strcasecmp((c),(d)) == 0)
+#define STRNCASEEQ(a,b,c,d,e) \
+  ((((a) == *(d))|| ((b) == *(d))) && strncasecmp((c),(d),(e)) == 0)
 
 #define IS_SJIS_STRING(str) \
   (  STRCASEEQ('s','S',"sjis",           (str)) \
@@ -60,8 +70,13 @@
 
 #define MOD_CHXJ_INTERNAL_ENCODING      "CP932"
 
-#define GET_SPEC_CHARSET(spec) ((spec)->charset)
+#define GET_SPEC_CHARSET(spec) ((spec) ? (spec)->charset : "")
 #define GET_EMOJI_INDEX(conf) ((conf)->emoji_index)
+
+#define NONE  (-1)
+#define SJIS  (0)
+#define EUCJP (1)
+#define UTF8  (2)
 
 #include <string.h>
 
@@ -200,51 +215,6 @@
 #endif
 
 
-/*===============================================================*/
-/* Emoji Data Structure.                                         */
-/*===============================================================*/
-typedef struct emoji_data_t {
-  char *hex_string;
-  char *dec_string;
-  char hex[8];
-} emoji_data_t;
-
-typedef struct imode_emoji_t {
-  emoji_data_t sjis;
-  emoji_data_t euc;
-  emoji_data_t unicode;
-  emoji_data_t utf8;
-  char *description;
-} imode_emoji_t;
-
-typedef struct ezweb_type_t {
-  int no;
-  emoji_data_t sjis;
-  emoji_data_t unicode;
-  emoji_data_t utf8;
-} ezweb_type_t;
-
-typedef struct ezweb_emoji_t {
-  ezweb_type_t typeA;
-  ezweb_type_t typeB;
-  ezweb_type_t typeC;
-  ezweb_type_t typeD;
-} ezweb_emoji_t;
-
-typedef struct softbank_emoji_t {
-  int no;
-  emoji_data_t sjis;
-  emoji_data_t unicode;
-  emoji_data_t utf8;
-} softbank_emoji_t;
-
-typedef struct emoji_t {
-  struct emoji_t *next;
-  int             no;
-  imode_emoji_t  imode;
-  ezweb_emoji_t  ezweb;
-  softbank_emoji_t softbank;
-} emoji_t;
 
 
 typedef struct chxjconvrule_entry chxjconvrule_entry;
@@ -336,6 +306,10 @@ struct mod_chxj_config {
   device_table_list     *devices;
   emoji_t               *emoji;
   emoji_t               *emoji_tail;
+  ezweb2imode_t         *ezweb2imode;
+  ezweb2imode_t         *ezweb2imode_tail;
+  softbank2imode_t      *softbank2imode;
+  softbank2imode_t      *softbank2imode_tail;
   char                  *server_side_encoding;
 
   char                  *dir; /* for LOG */
@@ -350,6 +324,12 @@ struct mod_chxj_config {
   emoji_t               *emoji_index_eucjp[EMOJI_COUNT]; 
   emoji_t               *emoji_index_sjis[EMOJI_COUNT]; 
   emoji_t               *emoji_index_utf8[EMOJI_COUNT]; 
+
+  ezweb2imode_t         *emoji_ezweb2imode_sjis[EMOJI_EZWEB2IMODE_COUNT];
+  ezweb2imode_t         *emoji_ezweb2imode_utf8[EMOJI_EZWEB2IMODE_COUNT];
+  softbank2imode_t      *emoji_softbank2imode_webcode[EMOJI_SOFTBANK2IMODE_COUNT];
+  softbank2imode_t      *emoji_softbank2imode_sjis[EMOJI_SOFTBANK2IMODE_COUNT];
+  softbank2imode_t      *emoji_softbank2imode_utf8[EMOJI_SOFTBANK2IMODE_COUNT];
 };
 
 
@@ -371,7 +351,7 @@ struct mod_chxj_config {
 #define CONVRULE_PC_FLAG_OFF_BIT      (0x00000002)
 
 typedef struct {
-  apr_global_mutex_t *cookie_db_lock;
+  apr_global_mutex_t    *cookie_db_lock;
 } mod_chxj_global_config;
 
 typedef struct {
@@ -395,26 +375,14 @@ module AP_MODULE_DECLARE_DATA chxj_module;
 #define CHXJ_IMG_OFF    (0)
 
 
-#define DBG(X,Y)  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(request_rec*)(X),(Y))
-#define DBG1(X,Y,Za)  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za))
-#define DBG2(X,Y,Za,Zb)  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za),(Zb))
-#define DBG3(X,Y,Za,Zb,Zc)  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za),(Zb),(Zc))
-#define DBG4(X,Y,Za,Zb,Zc,Zd)  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za),(Zb),(Zc),(Zd))
-#define DBG5(X,Y,Za,Zb,Zc,Zd,Ze)  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za),(Zb),(Zc),(Zd),(Ze))
-#define DBG6(X,Y,Za,Zb,Zc,Zd,Ze,Zf)  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za),(Zb),(Zc),(Zd),(Ze),(Zf))
-#define SDBG(X,Y)  ap_log_error(APLOG_MARK,APLOG_DEBUG,0,(X),(Y))
-#define SDBG1(X,Y,Za)  ap_log_error(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za))
-#define SDBG2(X,Y,Za,Zb)  ap_log_error(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za),(Zb))
-#define SDBG3(X,Y,Za,Zb,Zc)  ap_log_error(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za),(Zb),(Zc))
-#define SDBG4(X,Y,Za,Zb,Zc,Zd)  ap_log_error(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za),(Zb),(Zc),(Zd))
-#define SDBG5(X,Y,Za,Zb,Zc,Zd,Ze)  ap_log_error(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za),(Zb),(Zc),(Zd),(Ze))
-#define ERR(X,Y)  ap_log_rerror(APLOG_MARK,APLOG_ERR,0,(X),(Y))
-#define ERR1(X,Y,Za)  ap_log_rerror(APLOG_MARK,APLOG_ERR,0,(X),(Y),(Za))
-#define ERR2(X,Y,Za,Zb)  ap_log_rerror(APLOG_MARK,APLOG_ERR,0,(X),(Y),(Za),(Zb))
-#define ERR3(X,Y,Za,Zb,Zc)  ap_log_rerror(APLOG_MARK,APLOG_ERR,0,(X),(Y),(Za),(Zb),(Zc))
-#define SERR(X,Y)  ap_log_error(APLOG_MARK,APLOG_ERR,0,(X),(Y))
-#define SERR1(X,Y,Za)  ap_log_error(APLOG_MARK,APLOG_ERR,0,(X),(Y),(Za))
-#define SERR2(X,Y,Za,Zb)  ap_log_error(APLOG_MARK,APLOG_ERR,0,(X),(Y),(Za),(Zb))
+#define DBG(rec,format, args...)  \
+  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(request_rec*)(rec),(format), ##args)
+#define SDBG(rec,format, args...) \
+  ap_log_error(APLOG_MARK,APLOG_DEBUG,0,(rec),(format), ##args)
+#define ERR(rec,format, args...)  \
+  ap_log_rerror(APLOG_MARK,APLOG_ERR,0,(request_rec*)(rec),(format), ##args)
+#define SERR(rec,format, args...) \
+  ap_log_error(APLOG_MARK,APLOG_ERR,0,(rec),(format), ##args)
 
 extern tag_handlers chxj_tag_handlers[];
 extern tag_handler  chtml10_handler[];

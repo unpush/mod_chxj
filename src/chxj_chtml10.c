@@ -346,7 +346,7 @@ chxj_exchange_chtml10(
 
   dst = NULL;
 
-  DBG1(r, "start chxj_exchange_chtml10() cookie_id=[%s]", (cookie) ? cookie->cookie_id : "");
+  DBG(r, "start chxj_exchange_chtml10() cookie_id=[%s]", (cookie) ? cookie->cookie_id : "");
 
   /*--------------------------------------------------------------------------*/
   /* If qrcode xml                                                            */
@@ -410,7 +410,7 @@ chxj_exchange_chtml10(
   chxj_dump_out("[dst] CHTML -> CHTML1.0", dst, *dstlen);
 #endif
 
-  DBG1(r, "end   chxj_exchange_chtml10() cookie_id=[%s]", (cookie) ? cookie->cookie_id : "");
+  DBG(r, "end   chxj_exchange_chtml10() cookie_id=[%s]", (cookie) ? cookie->cookie_id : "");
 
   return dst;
 }
@@ -2763,7 +2763,7 @@ s_chtml10_text(void *pdoc, Node *child)
   r       = doc->r;
   
   textval = qs_get_node_value(doc,child);
-  textval = qs_trim_string(r, textval);
+  textval = qs_trim_string(r->pool, textval);
 
   if (strlen(textval) == 0)
     return chtml10->out;

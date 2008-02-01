@@ -2375,7 +2375,7 @@ s_xhtml_1_0_text_tag(void *pdoc, Node *child)
   int          tdst_len;
   
   textval = qs_get_node_value(doc,child);
-  textval = qs_trim_string(xhtml->doc->r, textval);
+  textval = qs_trim_string(r->pool, textval);
   if (strlen(textval) == 0)
     return xhtml->out;
   

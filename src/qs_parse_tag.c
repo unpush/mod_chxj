@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 #include <stdio.h>
+#include "mod_chxj.h"
 #include "qs_parse_string.h"
 #include "qs_log.h"
 #include "qs_parse_attr.h"
@@ -36,8 +37,6 @@ qs_parse_tag(Doc *doc, const char *s, int len)
   ll         = len;
   next_point = 0;
 
-  QX_LOGGER_DEBUG("start parse_tag()");
-
   /* 
    * s[0] == '<' && s[len-1] == '>' 
    */
@@ -49,27 +48,17 @@ qs_parse_tag(Doc *doc, const char *s, int len)
   memset(node->otext, 0, len+2);
   memcpy(node->otext, sp, len+1);
 
-  QX_LOGGER_DEBUG(tag_name);
-
   ll -= (strlen(tag_name));
-  QX_LOGGER_DEBUG_INT("ll",ll);
   sp += (strlen(tag_name)+1);
   for (;;) {
     Attr* attr = qs_parse_attr(doc,sp, ll, &next_point);
     if (attr == NULL) {
-      QX_LOGGER_DEBUG("End of QS_PARSE_ATTR()");
       break;
     }
-    QX_LOGGER_DEBUG(attr->name);
-    QX_LOGGER_DEBUG(attr->value);
     sp += next_point;
     ll -= next_point;
-    QX_LOGGER_DEBUG_INT(sp, ll);
     node = (Node*)qs_add_attr(doc,node, attr);
   }
-
-  QX_LOGGER_DEBUG("end parse_tag()");
-
   return node;
 }
 

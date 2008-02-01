@@ -92,7 +92,7 @@ chxj_specified_device(request_rec *r, const char *user_agent)
       continue;
     }
 
-    DBG1(r, "pattern is [%s]", dtl->pattern);
+    DBG(r, "pattern is [%s]", dtl->pattern);
     if (! dtl->regexp) {
       DBG(r,"compile failed.");
       return returnType;
@@ -100,10 +100,10 @@ chxj_specified_device(request_rec *r, const char *user_agent)
 
     if (ap_regexec((const ap_regex_t *)dtl->regexp, user_agent, (apr_size_t)dtl->regexp->re_nsub + 1, match, 0) == 0) {
       device_id = ap_pregsub(r->pool, "$1", user_agent, dtl->regexp->re_nsub + 1, match);
-      DBG1(r, "device_id:[%s]", device_id);
+      DBG(r, "device_id:[%s]", device_id);
       for (dt = dtl->table; dt; dt = dt->next) {
         if (strcasecmp(device_id, dt->device_id) == 0) {
-          DBG1(r, "device_name:[%s]", dt->device_name);
+          DBG(r, "device_name:[%s]", dt->device_name);
           returnType = dt;
           break;
         }

@@ -35,8 +35,9 @@
 #  endif
 #endif
 
-static int s_cut_tag (const char *s, int len) ;
-static int s_cut_text(const char *s, int len) ;
+static int s_cut_tag (const char *s, int len);
+static int s_cut_text(const char *s, int len);
+static int s_cut_cdata_text(const char *s, int len);
 static void qs_dump_node(Doc *doc, Node *node, int indent);
 
 Node *
@@ -188,9 +189,31 @@ qs_parse_string(Doc *doc, const char *src, int srclen)
         if (doc->parse_mode != PARSE_MODE_NO_PARSE)
           continue;
       }
-      if (*node->name == '!' && strncmp(node->name, "!--", 3) == 0) {
-        /* comment tag */
-        continue;
+      if (*node->name == '!') {
+        if (strncmp(node->name, "!--", 3) == 0) {
+          /* comment tag */
+          continue;
+        }
+        if (strncasecmp(node->name,"![CDATA[", 8) == 0) {
+          /* CDATA TEXT */
+          int endpoint = s_cut_cdata_text(&node->name[8], strlen(node->name) - 8);
+          Node *cdata_node = qs_new_tag(doc);
+          cdata_node->value = (char*)apr_palloc(doc->pool,endpoint+1);
+          cdata_node->name  = (char*)apr_palloc(doc->pool,4+1);
+          cdata_node->otext = (char*)apr_palloc(doc->pool,endpoint+1);
+          cdata_node->size  = endpoint;
+          memset(cdata_node->value, 0, endpoint+1);
+          memset(cdata_node->otext, 0, endpoint+1);
+          memset(cdata_node->name,  0, 4+1       );
+          memcpy(cdata_node->value, &node->name[8], endpoint);
+          memcpy(cdata_node->name,  "text",   4);
+
+          /* save raw cdata tag */
+          memcpy(cdata_node->otext,node->name, endpoint);
+    
+          qs_add_child_node(doc,cdata_node);
+          continue;
+        }
       }
       qs_add_child_node(doc,node);
 
@@ -243,9 +266,6 @@ qs_parse_string(Doc *doc, const char *src, int srclen)
     }
   }
 #ifdef DEBUG
-  QX_LOGGER_DEBUG("parse_string end");
-#endif
-#ifdef DEBUG
   if (doc->r != NULL) {
     qs_dump_node(doc, doc->root_node, 0);
   }
@@ -263,16 +283,16 @@ qs_dump_node(Doc *doc, Node *node, int indent)
   for (;p;p = (Node *)qs_get_next_node(doc,p)) {
     Attr *attr;
     if ((char *)qs_get_node_value(doc,p) != NULL) {
-      DBG5(doc->r,"%*.*sNode:[%s][%s]\n", indent,indent," ",
+      DBG(doc->r,"%*.*sNode:[%s][%s]\n", indent,indent," ",
                       (char*)qs_get_node_name(doc,p),
                       (char*)qs_get_node_value(doc,p));
     }
     else {
-      DBG4(doc->r,"%*.*sNode:[%s]\n", indent,indent," ", qs_get_node_name(doc,p));
+      DBG(doc->r,"%*.*sNode:[%s]\n", indent,indent," ", qs_get_node_name(doc,p));
     }
     for (attr = (Attr*)qs_get_attr(doc,p); attr; attr = (Attr*)qs_get_next_attr(doc,attr)) {
-      DBG4(doc->r,"%*.*s  ATTR:[%s]\n", indent,indent," ", (char *)qs_get_attr_name(doc,attr));
-      DBG4(doc->r,"%*.*s  VAL :[%s]\n", indent,indent," ", (char *)qs_get_attr_value(doc,attr));
+      DBG(doc->r,"%*.*s  ATTR:[%s]\n", indent,indent," ", (char *)qs_get_attr_name(doc,attr));
+      DBG(doc->r,"%*.*s  VAL :[%s]\n", indent,indent," ", (char *)qs_get_attr_value(doc,attr));
     }
     qs_dump_node(doc,p, indent+4);
   }
@@ -329,6 +349,7 @@ s_cut_tag(const char *s, int len)
 {
   int lv = 0;
   int ii;
+  int cdata_flg = 0;
 
   for (ii=0;ii<len; ii++) {
     if (is_sjis_kanji(s[ii])) {
@@ -341,20 +362,36 @@ s_cut_tag(const char *s, int len)
     if (is_white_space(s[ii])) 
       continue;
 
-    if (s[ii] == '<') {
+    if (!cdata_flg && s[ii] == '<') {
+      if (strncasecmp("<![CDATA[", &s[ii], 9) == 0) {
+        /*
+         * found cdata tag.
+         */
+        cdata_flg = 1;
+      }
       lv++;
       continue;
     }
 
     if (s[ii] == '>') {
-      lv--;
-      if (lv == 0) 
-        break;
-      continue;
+      if (!cdata_flg) {
+        if (--lv == 0) 
+          break;
+        continue;
+      }
+      else {
+        if (ii && s[ii-1] == ']') {
+          cdata_flg = 0;
+          if (--lv == 0)
+            break;
+          continue;
+        }
+      }
     }
   }
   return ii;
 }
+
 
 static int
 s_cut_text(const char *s, int len) 
@@ -373,6 +410,30 @@ s_cut_text(const char *s, int len)
       continue;
 
     if (s[ii] == '<') 
+      break;
+  }
+
+  return ii;
+}
+
+
+static int
+s_cut_cdata_text(const char *s, int len) 
+{
+  int ii;
+
+  for (ii=0;ii<len-2; ii++) {
+    if (is_sjis_kanji(s[ii])) {
+      ii++;
+      continue;
+    }
+    if (is_sjis_kana(s[ii])) 
+      continue;
+
+    if (is_white_space(s[ii])) 
+      continue;
+
+    if (s[ii] == ']' && s[ii+1] == ']' && s[ii+2] == '>') 
       break;
   }
 
@@ -415,9 +476,6 @@ qs_add_child_node(Doc *doc, Node *node)
     doc->now_parent_node->child_tail = node;
   }
   else {
-#ifdef DEBUG
-    QX_LOGGER_DEBUG("search child free node");
-#endif
     doc->now_parent_node->child_tail->next = node;
     doc->now_parent_node->child_tail       = node;
   }

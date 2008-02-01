@@ -460,7 +460,7 @@ s_jhtml_start_html_tag(void *pdoc, Node *UNUSED(node))
   /*--------------------------------------------------------------------------*/
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<html>\n", NULL);
 
-  DBG1(r, "end s_jhtml_start_html_tag()[%s]", jhtml->out);
+  DBG(r, "end s_jhtml_start_html_tag()[%s]", jhtml->out);
 
   return jhtml->out;
 }
@@ -485,7 +485,7 @@ s_jhtml_end_html_tag(void *pdoc, Node *UNUSED(child))
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</html>\n", NULL);
 
-  DBG1(r, "end s_jhtml_end_html_tag() OUT:[%s]", jhtml->out);
+  DBG(r, "end s_jhtml_end_html_tag() OUT:[%s]", jhtml->out);
 
   return jhtml->out;
 }
@@ -2474,7 +2474,7 @@ s_jhtml_text_tag(void *pdoc, Node *child)
   r     = doc->r;
 
   textval = qs_get_node_value(doc,child);
-  textval = qs_trim_string(jhtml->doc->r, textval);
+  textval = qs_trim_string(r->pool, textval);
   if (strlen(textval) == 0)
     return jhtml->out;
 

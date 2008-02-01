@@ -24,7 +24,7 @@
 extern int chxj_img_conv_format_handler(
   request_rec*         r);
 
-extern char* chxj_exchange_image(
+extern char* chxj_convert_image(
   request_rec*         r, 
   const char**         src, 
   apr_size_t*          len);

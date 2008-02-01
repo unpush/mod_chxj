@@ -225,14 +225,14 @@ chxj_exchange(request_rec *r, const char **src, apr_size_t *len)
   else
     user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
 
-  DBG1(r,"User-Agent:[%s]", user_agent);
+  DBG(r,"User-Agent:[%s]", user_agent);
   DBG(r, "start chxj_exchange()");
-  DBG1(r,"content type is %s", r->content_type);
+  DBG(r,"content type is %s", r->content_type);
 
 
   if (*(char*)r->content_type == 't' 
   && strncmp(r->content_type, "text/html",   9) != 0) {
-    DBG1(r,"content type is %s", r->content_type);
+    DBG(r,"content type is %s", r->content_type);
     return (char*)*src;
   }
 
@@ -261,18 +261,23 @@ chxj_exchange(request_rec *r, const char **src, apr_size_t *len)
 
   if (!r->header_only) {
     char *tmp = NULL;
-    /* convert Emoji code to META Emoji */
-    tmp = chxj_emoji_to_meta_emoji(r,
-                                   entryp,
-                                   (const char *)*src,
-                                   (apr_size_t*)len);
-
-    /* convert charactor code */
-    if (convert_routine[GET_HTML_SPEC_TYPE(spec)].encoder) {
-      tmp = convert_routine[GET_HTML_SPEC_TYPE(spec)].encoder(r, 
-                                                              tmp, 
-                                                              (apr_size_t*)len);
+    if (strncasecmp(r->content_type, "text/", 5) == 0) {
+      /* convert Emoji code to META Emoji */
+      tmp = chxj_emoji_to_meta_emoji(r,
+                                     entryp->encoding,
+                                     (const char *)*src,
+                                     (apr_size_t*)len);
+      /* convert charactor code */
+      if (convert_routine[GET_HTML_SPEC_TYPE(spec)].encoder) {
+        tmp = convert_routine[GET_HTML_SPEC_TYPE(spec)].encoder(r, 
+                                                                tmp, 
+                                                                (apr_size_t*)len);
+      }
     }
+    else {
+      tmp = (char *)*src;
+    }
+
     if (tmp) {
       /* for PC */
       dst = tmp;
@@ -287,21 +292,23 @@ chxj_exchange(request_rec *r, const char **src, apr_size_t *len)
                                                                 len, 
                                                                 entryp, 
                                                                 cookie);
-      /* convert SJIS to device charactor code */
-      if (! IS_SJIS_STRING(GET_SPEC_CHARSET(spec))) {
-        dst = chxj_encoding_by_spec(r, 
-                                    spec,
-                                    dst,
-                                    len);
+      if (strncasecmp(r->content_type, "text/", 5) == 0) {
+        /* convert SJIS to device charactor code */
+        if (! IS_SJIS_STRING(GET_SPEC_CHARSET(spec))) {
+          dst = chxj_encoding_by_spec(r, 
+                                      spec,
+                                      dst,
+                                      len);
+        }
+  
+        /* convert META Emoji to Emoji code */
+        dst = chxj_meta_emoji_to_emoji(r,
+                                       spec,
+                                       entryp,
+                                       GET_EMOJI_INDEX(dconf),
+                                       dst);
+        *len = strlen(dst);
       }
-
-      /* convert META Emoji to Emoji code */
-      dst = chxj_meta_emoji_to_emoji(r,
-                                     spec,
-                                     entryp,
-                                     GET_EMOJI_INDEX(dconf),
-                                     dst);
-      *len = strlen(dst);
     }
   }
 
@@ -371,7 +378,7 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry *entryp)
   }
 
   buff = apr_pstrdup(r->pool, r->args);
-  DBG1(r, "r->args=[%s]", buff);
+  DBG(r, "r->args=[%s]", buff);
 
   /* _chxj_dmy */
   /* _chxj_c_ */
@@ -428,7 +435,7 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry *entryp)
     }
     else
     if (strcasecmp(name, CHXJ_COOKIE_PARAM) == 0) {
-      DBG1(r, "found cookie parameter[%s]", value);
+      DBG(r, "found cookie parameter[%s]", value);
       DBG(r, "call start chxj_load_cookie()");
       cookie = chxj_load_cookie(r, value);
       DBG(r, "call end   chxj_load_cookie()");
@@ -439,7 +446,7 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry *entryp)
   }
   r->args = result;
 
-  DBG1(r, "result r->args=[%s]", r->args);
+  DBG(r, "result r->args=[%s]", r->args);
   DBG(r, "end   chxj_convert_input_header()");
   return 0;
 }
@@ -457,7 +464,8 @@ chxj_input_convert(
   request_rec         *r, 
   const char          **src, 
   apr_size_t          *len, 
-  chxjconvrule_entry  *entryp)
+  chxjconvrule_entry  *entryp,
+  device_table        *spec)
 {
   char     *pair;
   char     *name;
@@ -468,15 +476,56 @@ chxj_input_convert(
   char     *result;
   cookie_t *cookie;
   char     *buff_pre;
-  int   no_update_flag = 0;
+  int      no_update_flag = 0;
+  int      cenc;         /* client side encoding */
+  char     *(*func_emoji_to_meta_emoji)(request_rec *, const char *, const char *, apr_size_t *);
 
+  /* judge client encoding */
+  if (IS_SJIS_STRING(GET_SPEC_CHARSET(spec))) {
+    cenc = SJIS;
+  }
+  else if (IS_EUCJP_STRING(GET_SPEC_CHARSET(spec))) {
+    cenc = EUCJP;
+  }
+  else if (IS_UTF8_STRING(GET_SPEC_CHARSET(spec))) {
+    cenc = UTF8;
+  }
+  switch(GET_HTML_SPEC_TYPE(spec)) {
+  case CHXJ_SPEC_XHtml_Mobile_1_0:
+  case CHXJ_SPEC_Hdml:
+    func_emoji_to_meta_emoji = chxj_postdata_ezweb_emoji_to_meta_emoji;
+    break;
+  case CHXJ_SPEC_Jhtml:
+    func_emoji_to_meta_emoji = chxj_postdata_softbank_emoji_to_meta_emoji;
+    break;
+  case CHXJ_SPEC_Chtml_1_0:
+  case CHXJ_SPEC_Chtml_2_0:
+  case CHXJ_SPEC_Chtml_3_0:
+  case CHXJ_SPEC_Chtml_4_0:
+  case CHXJ_SPEC_Chtml_5_0:
+  case CHXJ_SPEC_Chtml_6_0:
+  case CHXJ_SPEC_Chtml_7_0:
+  default:
+#if 0
+    func_emoji_to_meta_emoji = chxj_postdata_imode_emoji_to_meta_emoji;
+#else
+    /* XXX とりあえず */
+    func_emoji_to_meta_emoji = chxj_postdata_softbank_emoji_to_meta_emoji;
+#endif
+    break;
+  }
+
+  /* 
+   * Now, the character-code of the client has been understood !!
+   */
   s        = apr_pstrdup(r->pool, *src);
   buff_pre = apr_pstrdup(r->pool, *src);
 
   result = qs_alloc_zero_byte_string(r);
-
-  DBG1(r, "BEFORE input convert source = [%s]", s);
-
+  
+  DBG(r, "============== POST ===============");
+  DBG(r, "BEFORE input convert source = [%s]", s);
+  DBG(r, "============== POST ===============");
   for (;;) {
     char *pair_sv;
 
@@ -509,29 +558,28 @@ chxj_input_convert(
     name  = apr_strtok(pair, "=", &vstate);
     value = apr_strtok(NULL, "=", &vstate);
     if (strncasecmp(name, "_chxj", 5) != 0) {
+      char *new_val, *new_nam;
+      apr_size_t new_nam_len, new_val_len;
       if (strlen(result) != 0) 
         result = apr_pstrcat(r->pool, result, "&", NULL);
-
-      if (strcasecmp(entryp->encoding, "NONE") != 0 
-      &&  value && strlen(value)) {
-        apr_size_t dlen;
-        char*      dvalue;
-
-        dlen   = strlen(value);
-        value = chxj_url_decode(r, value);
-        dvalue = chxj_rencoding(r, value, &dlen);
-        dvalue = chxj_url_encode(r,dvalue);
-        result = apr_pstrcat(r->pool, result, name, "=", dvalue, NULL);
-
-      }
-      else {
-        result = apr_pstrcat(r->pool, result, name, "=", value, NULL);
-      }
+      new_nam = chxj_url_decode(r, apr_pstrdup(r->pool, name));
+      new_val = chxj_url_decode(r, apr_pstrdup(r->pool, (value) ? value : ""));
+      new_nam_len = strlen(new_nam);
+      new_val_len = strlen(new_val);
+      new_nam = func_emoji_to_meta_emoji(r,GET_SPEC_CHARSET(spec), new_nam, &new_nam_len);
+      new_val = func_emoji_to_meta_emoji(r,GET_SPEC_CHARSET(spec), new_val, &new_val_len);
+      new_nam = chxj_convert_encoding(r, GET_SPEC_CHARSET(spec), entryp->encoding, new_nam, &new_nam_len);
+      new_val = chxj_convert_encoding(r, GET_SPEC_CHARSET(spec), entryp->encoding, new_val, &new_val_len);
+      new_nam = chxj_postdata_meta_emoji_to_emoji(r,entryp->encoding, new_nam, spec);
+      new_val = chxj_postdata_meta_emoji_to_emoji(r,entryp->encoding, new_val, spec);
+      new_nam = chxj_url_encode(r,new_nam);
+      new_val = chxj_url_encode(r,new_val);
+      result = apr_pstrcat(r->pool, result, new_nam, "=", new_val, NULL);
+      DBG(r, "result:[%s]", result);
     }
-    else
-    if (strncasecmp(name, "_chxj_c_", 8) == 0 
-    ||  strncasecmp(name, "_chxj_r_", 8) == 0
-    ||  strncasecmp(name, "_chxj_s_", 8) == 0) {
+    else if (strncasecmp(name, "_chxj_c_", 8) == 0 
+        ||  strncasecmp(name, "_chxj_r_", 8) == 0
+        ||  strncasecmp(name, "_chxj_s_", 8) == 0) {
       if (value == NULL)
         continue;
 
@@ -556,9 +604,8 @@ chxj_input_convert(
         result = apr_pstrcat(r->pool, result, &name[8], "=", value, NULL);
       }
     }
-    else
-    if (strcasecmp(name, CHXJ_COOKIE_PARAM) == 0) {
-      DBG1(r, "found cookie parameter[%s]", value);
+    else if (strcasecmp(name, CHXJ_COOKIE_PARAM) == 0) {
+      DBG(r, "found cookie parameter[%s]", value);
       DBG(r, "call start chxj_load_cookie()");
       cookie = chxj_load_cookie(r, value);
       DBG(r, "call end   chxj_load_cookie()");
@@ -569,7 +616,7 @@ chxj_input_convert(
   }
   *len = strlen(result);
 
-  DBG1(r, "AFTER input convert result = [%s]", result);
+  DBG(r, "AFTER input convert result = [%s]", result);
 
   return result;
 }
@@ -651,7 +698,6 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
   dconf  = ap_get_module_config(r->per_dir_config, &chxj_module);
   entryp = chxj_apply_convrule(r, dconf->convrules);
 
-
   for (b = APR_BRIGADE_FIRST(bb);
        b != APR_BRIGADE_SENTINEL(bb); 
        b = APR_BUCKET_NEXT(b)) {
@@ -666,7 +712,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
 
         ctx = (mod_chxj_ctx*)f->ctx;
 
-        DBG1(r, "content_type=[%s]", r->content_type);
+        DBG(r, "content_type=[%s]", r->content_type);
 
         if (r->content_type 
         && *(char*)r->content_type == 't' 
@@ -680,16 +726,16 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
             memset(tmp, 0, ctx->len + 1);
             memcpy(tmp, ctx->buffer, ctx->len);
 
-#if 0
-            DBG2(r, "input data=[%s] len=[%d]", tmp, ctx->len);
+#if 1
+            DBG(r, "input data=[%s] len=[%d]", tmp, ctx->len);
 #endif
 
             ctx->buffer = chxj_exchange(r, 
                                         (const char**)&tmp, 
                                         (apr_size_t*)&ctx->len);
 
-#if 0
-            DBG2(r, "output data=[%.*s]", ctx->len,ctx->buffer);
+#if 1
+            DBG(r, "output data=[%.*s]", ctx->len,ctx->buffer);
 #endif
           }
           else {
@@ -751,8 +797,8 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
         }
 
         if (r->content_type 
-        && *(char*)r->content_type == 'i' 
-        && strncmp(r->content_type, "image/", 6) == 0) {
+            && *(char*)r->content_type == 'i' 
+            && strncmp(r->content_type, "image/", 6) == 0) {
           if (ctx->len) {
             char *tmp;
 
@@ -761,21 +807,21 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
             memset(tmp, 0, ctx->len + 1);
             memcpy(tmp, ctx->buffer, ctx->len);
 
-#if 0
-            DBG1(r, "input data=[%s]", tmp);
+#if 1
+            DBG(r, "input data=[%s]", tmp);
 #endif
 
 
             ctx->buffer = 
-              chxj_exchange_image(r, 
-                                  (const char**)&tmp,
-                                  (apr_size_t*)&ctx->len);
+              chxj_convert_image(r, 
+                                 (const char**)&tmp,
+                                 (apr_size_t*)&ctx->len);
 
             if (ctx->buffer == NULL)
               ctx->buffer = tmp;
 
-#if 0
-            DBG2(r, "output data=[%.*s]", ctx->len,ctx->buffer);
+#if 1
+            DBG(r, "output data=[%.*s]", ctx->len,ctx->buffer);
 #endif
           }
         }
@@ -793,7 +839,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
         return rv;
       }
       else {
-        DBG1(r, " SAVE COOKIE[%x]", entryp->action);
+        DBG(r, " SAVE COOKIE[%x]", entryp->action);
 
         /*
          * save cookie.
@@ -820,12 +866,12 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
              */
             location_header = (char *)apr_table_get(r->headers_out, "Location");
             if (location_header) {
-              DBG1(r, "Location Header=[%s]", location_header);
+              DBG(r, "Location Header=[%s]", location_header);
               location_header = chxj_add_cookie_parameter(r,
                                                           location_header,
                                                           cookie);
               apr_table_setn(r->headers_out, "Location", location_header);
-              DBG1(r, "Location Header=[%s]", location_header);
+              DBG(r, "Location Header=[%s]", location_header);
             }
             break;
 
@@ -842,7 +888,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
     }
     else
     if (apr_bucket_read(b, &data, &len, APR_BLOCK_READ) == APR_SUCCESS) {
-      DBG2(r, "read data[%.*s]",(int)len, data);
+      DBG(r, "read data[%.*s]",(int)len, data);
 
       if (f->ctx == NULL) {
         /*--------------------------------------------------------------------*/
@@ -1005,7 +1051,7 @@ chxj_input_filter(ap_filter_t         *f,
       data_bucket = apr_palloc(r->pool, len+1);
       memset((void*)data_bucket, 0, len+1);
       memcpy(data_bucket, data, len);
-      DBG1(r, "(in)POSTDATA:[%s]", data_bucket);
+      DBG(r, "(in)POSTDATA:[%s]", data_bucket);
   
       data_brigade = apr_pstrcat(r->pool, data_brigade, data_bucket, NULL);
     }
@@ -1029,20 +1075,17 @@ chxj_input_filter(ap_filter_t         *f,
     r, 
     (const char**)&data_brigade, 
     (apr_size_t*)&len,
-    entryp
-    );
+    entryp,
+    spec);
 
   if (len > 0) {
-    DBG1(r, "(in:exchange)POSTDATA:[%s]", data_brigade);
-
+    DBG(r, "(in:exchange)POSTDATA:[%s]", data_brigade);
     obb = apr_brigade_create(r->pool, c->bucket_alloc);
-
     tmp_heap = apr_bucket_heap_create(data_brigade, 
                                       len, 
                                       NULL, 
                                       f->c->bucket_alloc);
     eos      = apr_bucket_eos_create(f->c->bucket_alloc);
-
     APR_BRIGADE_INSERT_TAIL(obb, tmp_heap);
     APR_BRIGADE_INSERT_TAIL(obb, eos);
     APR_BRIGADE_CONCAT(bb, obb);
@@ -1066,9 +1109,11 @@ chxj_global_config_create(apr_pool_t *pool, server_rec *s)
   /*--------------------------------------------------------------------------*/
   conf = (mod_chxj_global_config*)apr_palloc(pool, 
                   sizeof(mod_chxj_global_config));
+
 #if 0
   conf->cookie_db_lock = NULL;
 #endif
+
   SDBG(s, "end   chxj_global_config_create()");
 
   return conf;
@@ -1089,9 +1134,7 @@ chxj_init_module(apr_pool_t *p,
   SDBG(s, "start chxj_init_module()");
 
   apr_pool_userdata_get(&user_data, CHXJ_MOD_CONFIG_KEY, s->process->pool);
-  SDBG(s, " ");
   if (user_data == NULL) {
-    SDBG(s, " ");
     /*
      * dummy user_data set.
      */
@@ -1115,7 +1158,6 @@ chxj_init_module(apr_pool_t *p,
 static void 
 chxj_child_init(apr_pool_t *UNUSED(p), server_rec *s)
 {
-
   SDBG(s, "start chxj_child_init()");
   SDBG(s, "end   chxj_child_init()");
 }
@@ -1266,8 +1308,12 @@ chxj_merge_per_dir_config(apr_pool_t *p, void *basev, void *addv)
   mrg->image            = CHXJ_IMG_OFF;
   mrg->image_cache_dir  = NULL;
   mrg->image_copyright  = NULL;
-  mrg->emoji            = NULL;
-  mrg->emoji_tail       = NULL;
+  mrg->emoji               = NULL;
+  mrg->emoji_tail          = NULL;
+  mrg->ezweb2imode         = NULL;
+  mrg->ezweb2imode_tail    = NULL;
+  mrg->softbank2imode      = NULL;
+  mrg->softbank2imode_tail = NULL;
 
   mrg->dir = apr_pstrdup(p, add->dir);
 
@@ -1281,15 +1327,23 @@ chxj_merge_per_dir_config(apr_pool_t *p, void *basev, void *addv)
   }
 
   if (! add->emoji_data_file) {
-    mrg->emoji = base->emoji;
-    mrg->emoji_tail = base->emoji_tail;
-    mrg->emoji_data_file = apr_pstrdup(p, base->emoji_data_file);
+    mrg->emoji               = base->emoji;
+    mrg->emoji_tail          = base->emoji_tail;
+    mrg->emoji_data_file     = apr_pstrdup(p, base->emoji_data_file);
+    mrg->ezweb2imode         = base->ezweb2imode;
+    mrg->ezweb2imode_tail    = base->ezweb2imode_tail;
+    mrg->softbank2imode      = base->softbank2imode;
+    mrg->softbank2imode_tail = base->softbank2imode_tail;
     chxj_emoji_init(mrg);
   }
   else {
-    mrg->emoji = add->emoji;
-    mrg->emoji_tail = add->emoji_tail;
-    mrg->emoji_data_file = apr_pstrdup(p, add->emoji_data_file);
+    mrg->emoji               = add->emoji;
+    mrg->emoji_tail          = add->emoji_tail;
+    mrg->emoji_data_file     = apr_pstrdup(p, add->emoji_data_file);
+    mrg->ezweb2imode         = add->ezweb2imode;
+    mrg->ezweb2imode_tail    = add->ezweb2imode_tail;
+    mrg->softbank2imode      = add->softbank2imode;
+    mrg->softbank2imode_tail = add->softbank2imode_tail;
     chxj_emoji_init(mrg);
   }
 
