@@ -1729,7 +1729,7 @@ static char*
 s_chtml30_start_img_tag(void* pdoc, Node* node) 
 {
 #ifndef IMG_NOT_CONVERT_FILENAME
-  device_table* spec;
+  device_table *spec;
 #endif
   chtml30_t*    chtml30;
   Doc*          doc;

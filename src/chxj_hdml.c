@@ -2232,7 +2232,7 @@ s_hdml_start_img_tag(void* pdoc, Node* node)
   hdml_t*       hdml;
   Doc*          doc;
 #ifndef IMG_NOT_CONVERT_FILENAME
-  device_table_t* spec;
+  device_table  *spec;
 #endif
   Attr*         attr;
 

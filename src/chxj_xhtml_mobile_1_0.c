@@ -2051,7 +2051,7 @@ s_xhtml_1_0_start_img_tag(void* pdoc, Node* node)
   Attr*         attr;
 
 #ifndef IMG_NOT_CONVERT_FILENAME
-  device_table_t* spec = xhtml->spec;
+  device_table  *spec = xhtml->spec;
 #endif
 
   xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<img", NULL);
