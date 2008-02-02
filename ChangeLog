@@ -1,3 +1,9 @@
+libapache2-mod-chxj (0.8.2-1) unstable; urgency=low
+
+  * Fixed Bug to which compile error occurs when A is specified.
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Sun,  3 Feb 2008 01:40:33 +0900
+
 libapache2-mod-chxj (0.8.1-1) unstable; urgency=low
 
   * Changed for Apache 2.2.x.
