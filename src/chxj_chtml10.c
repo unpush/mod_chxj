@@ -2042,7 +2042,7 @@ s_chtml10_start_img_tag(void *pdoc, Node *node)
   request_rec  *r;
   Attr         *attr;
 #ifndef IMG_NOT_CONVERT_FILENAME
-  device_table_t *spec;
+  device_table *spec;
 #endif
 
   chtml10 = GET_CHTML10(pdoc);

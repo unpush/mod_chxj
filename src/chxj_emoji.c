@@ -2513,7 +2513,6 @@ cmp_as_imode2imode_utf8_bin(
   long src_value = 0;
   long target_value = 0;
 
-#if 1
   src_value = (long)(0xff & src[0]);
   src_value <<= 8;
   src_value |= (long)(0xff & src[1]);
@@ -2525,12 +2524,7 @@ cmp_as_imode2imode_utf8_bin(
   target_value |= (long)(0xff & target->imode.utf8.hex[1]);
   target_value <<= 8;
   target_value |= (long)(0xff & target->imode.utf8.hex[2]);
-#else
-  src_value = strtol(src, NULL, 16);
-  target_value = strtol(target->imode.utf8.hex_string, NULL, 16);
-#endif
-DBG(dbg_r, "src_value =[%d] target_value = [%d]", src_value, target_value);  
-DBG(dbg_r, "src_value=[%.3s] target_value=[%s]", src, target->imode.utf8.hex_string);
+
   return src_value - target_value;
 }
 
