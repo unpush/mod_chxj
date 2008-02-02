@@ -1,23 +1,23 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 AC_INIT([mod_chxj],[0.9.0])
-AC_PREREQ(2.59)
+AC_PREREQ(2.61)
 AC_CONFIG_SRCDIR([src/mod_chxj.c])
 AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
-AM_CONFIG_HEADER(include/config.h)
+AC_CONFIG_HEADERS([include/config.h])
 
 
 # Checks for programs.
 AC_PROG_CPP
 AC_PROG_CC
 AC_PROG_INSTALL
-AM_PROG_LIBTOOL
+AC_PROG_LIBTOOL
 
 AC_LANG(C)
 
 # Checks for libraries.
-AC_CHECK_LIB([apr-0],  [main])
+AC_CHECK_LIB([apr-1],  [main])
 
 AC_ARG_WITH(apache-header, [  --with-apache-header=ARG The directory with the header file of apache2.x is specified. ]) 
 #[, ACTION-IF-GIVEN[, ACTION-IF-NOT-GIVEN]])

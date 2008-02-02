@@ -464,23 +464,6 @@ dbg_r = r;
       case UTF8:
         DBG(r, "mb src[%d]=[\\x%x][\\x%x][\\x%x]", i, (unsigned char)src[i], (unsigned char)src[i+1], (unsigned char)src[i+2]);
         DBG(r, "DETECT UTF8 BIN");
-        tmp = is_emoji_as_utf8_bin(r, &src[i]);
-        if (tmp) {
-          char *meta_emoji = apr_psprintf(r->pool, 
-                                          "%s%d;", 
-                                          META_EMOJI_PREFIX,
-                                          tmp->no);
-          DBG(r, "FOUND EMOJI :[%s]", meta_emoji);
-          outbuf = apr_pstrcat(r->pool, 
-                               outbuf, 
-                               apr_psprintf(r->pool, 
-                                            "%s", 
-                                            meta_emoji), 
-                               NULL);
-          i+=2;
-          continue;
-        }
-        DBG(r, "NOT FOUND EMOJI");
         if ((0xe0 & src[i]) == 0xc0) { 
           /* 2byte charactor */
           mb[0] = src[i+0];
@@ -490,6 +473,23 @@ dbg_r = r;
         }
         else if ((0xf0 & src[i]) == 0xe0) {
           /* 3byte charactor */
+          tmp = is_emoji_as_utf8_bin(r, &src[i]);
+          if (tmp) {
+            char *meta_emoji = apr_psprintf(r->pool, 
+                                            "%s%d;", 
+                                            META_EMOJI_PREFIX,
+                                            tmp->no);
+            DBG(r, "FOUND EMOJI :[%s]", meta_emoji);
+            outbuf = apr_pstrcat(r->pool, 
+                                 outbuf, 
+                                 apr_psprintf(r->pool, 
+                                              "%s", 
+                                              meta_emoji), 
+                                 NULL);
+            i+=2;
+            continue;
+          }
+          DBG(r, "NOT FOUND EMOJI");
           mb[0] = src[i+0];
           mb[1] = src[i+1];
           mb[2] = src[i+2];
@@ -1566,42 +1566,78 @@ callback_meta_emoji_au_sjis_emoji(
   emoji_t      *emoji,
   device_table *spec)
 {
+  apr_size_t dmy_len;
   DBG(r, "use KDDI SJIS");
   char *emoji_type = GET_EMOJI_TYPE(spec);
   if (emoji_type) {
     switch (*emoji_type) {
     case 'A':
     case 'a':
+      if (!chxj_chk_numeric(emoji->ezweb.typeA.no)) {
+        return apr_psprintf(r->pool,
+                            "%.2s",
+                            emoji->ezweb.typeA.sjis.hex);
+      }
+      dmy_len = strlen(emoji->ezweb.typeA.no);
       return apr_psprintf(r->pool,
-                          "%.*s",
-                          2,
-                          emoji->ezweb.typeA.sjis.hex);
+                          "%s",
+                          chxj_convert_encoding(r,
+                                                MOD_CHXJ_INTERNAL_ENCODING,
+                                                "CP932",
+                                                emoji->ezweb.typeA.no,
+                                                &dmy_len));
     case 'B':
     case 'b':
+      if (!chxj_chk_numeric(emoji->ezweb.typeB.no)) {
+        return apr_psprintf(r->pool,
+                            "%.2s",
+                            emoji->ezweb.typeB.sjis.hex);
+      }
+      dmy_len = strlen(emoji->ezweb.typeB.no);
       return apr_psprintf(r->pool,
-                          "%.*s",
-                          2,
-                          emoji->ezweb.typeB.sjis.hex);
+                          "%s",
+                          chxj_convert_encoding(r,
+                                                MOD_CHXJ_INTERNAL_ENCODING,
+                                                "CP932",
+                                                emoji->ezweb.typeB.no,
+                                                &dmy_len));
     case 'C':
     case 'c':
+      if (!chxj_chk_numeric(emoji->ezweb.typeC.no)) {
+        return apr_psprintf(r->pool,
+                            "%.2s",
+                            emoji->ezweb.typeC.sjis.hex);
+      }
+      dmy_len = strlen(emoji->ezweb.typeC.no);
       return apr_psprintf(r->pool,
-                          "%.*s",
-                          2,
-                          emoji->ezweb.typeC.sjis.hex);
+                          "%s",
+                          chxj_convert_encoding(r,
+                                                MOD_CHXJ_INTERNAL_ENCODING,
+                                                "CP932",
+                                                emoji->ezweb.typeC.no,
+                                                &dmy_len));
     case 'D':
     case 'd':
+      if (!chxj_chk_numeric(emoji->ezweb.typeD.no)) {
+        return apr_psprintf(r->pool,
+                            "%.2s",
+                            emoji->ezweb.typeD.sjis.hex);
+      }
+      dmy_len = strlen(emoji->ezweb.typeD.no);
       return apr_psprintf(r->pool,
-                          "%.*s",
-                          2,
-                          emoji->ezweb.typeD.sjis.hex);
+                          "%s",
+                          chxj_convert_encoding(r,
+                                                MOD_CHXJ_INTERNAL_ENCODING,
+                                                "CP932",
+                                                emoji->ezweb.typeD.no,
+                                                &dmy_len));
     default:
       break;
     }
   }
   ERR(r, "Invalid KDDI spec(emoji_type) [%s]", emoji_type);
   return apr_psprintf(r->pool,
-                      "%.*s",
-                      2,
+                      "%.2s",
                       emoji->ezweb.typeD.sjis.hex);
 }
 
@@ -1872,37 +1908,6 @@ dbg_r = r;
       case UTF8:
         DBG(r, "mb src[%d]=[\\x%x][\\x%x][\\x%x]", 
             i, (unsigned char)src[i], (unsigned char)src[i+1], (unsigned char)src[i+2]);
-        DBG(r, "DETECT UTF8 BIN");
-        tmp = is_emoji_as_ezweb2imode_utf8_bin(r, &src[i]);
-        if (tmp) {
-          char *meta_emoji;
-          if (!chxj_chk_numeric(tmp->imode_no)) {
-            meta_emoji = apr_psprintf(r->pool, 
-                                      "%s%s;", 
-                                      META_EMOJI_PREFIX,
-                                      tmp->imode_no);
-          }
-          else {
-            apr_size_t imode_no_len = strlen(tmp->imode_no);
-            meta_emoji = apr_psprintf(r->pool, 
-                                      "%s", 
-                                      chxj_convert_encoding(r, 
-                                                            MOD_CHXJ_INTERNAL_ENCODING,
-                                                            encoding,
-                                                            tmp->imode_no,
-                                                            &imode_no_len));
-          }
-          DBG(r, "FOUND EMOJI :[%s]", meta_emoji);
-          outbuf = apr_pstrcat(r->pool, 
-                               outbuf, 
-                               apr_psprintf(r->pool, 
-                                            "%s", 
-                                            meta_emoji), 
-                               NULL);
-          i+=2;
-          continue;
-        }
-        DBG(r, "NOT FOUND EMOJI");
         if ((0xe0 & src[i]) == 0xc0) { 
           /* 2byte charactor */
           mb[0] = src[i+0];
@@ -1911,6 +1916,37 @@ dbg_r = r;
           i++;
         }
         else if ((0xf0 & src[i]) == 0xe0) {
+          DBG(r, "DETECT UTF8 BIN");
+          tmp = is_emoji_as_ezweb2imode_utf8_bin(r, &src[i]);
+          if (tmp) {
+            char *meta_emoji;
+            if (!chxj_chk_numeric(tmp->imode_no)) {
+              meta_emoji = apr_psprintf(r->pool, 
+                                        "%s%s;", 
+                                        META_EMOJI_PREFIX,
+                                        tmp->imode_no);
+            }
+            else {
+              apr_size_t imode_no_len = strlen(tmp->imode_no);
+              meta_emoji = apr_psprintf(r->pool, 
+                                        "%s", 
+                                        chxj_convert_encoding(r, 
+                                                              MOD_CHXJ_INTERNAL_ENCODING,
+                                                              encoding,
+                                                              tmp->imode_no,
+                                                              &imode_no_len));
+            }
+            DBG(r, "FOUND EMOJI :[%s]", meta_emoji);
+            outbuf = apr_pstrcat(r->pool, 
+                                 outbuf, 
+                                 apr_psprintf(r->pool, 
+                                              "%s", 
+                                              meta_emoji), 
+                                 NULL);
+            i+=2;
+            continue;
+          }
+          DBG(r, "NOT FOUND EMOJI");
           /* 3byte charactor */
           mb[0] = src[i+0];
           mb[1] = src[i+1];

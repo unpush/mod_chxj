@@ -8,27 +8,17 @@ header("Pragma: no-cache");
   </head>
   <body>
 <center>
-絵文字表示ﾃｽﾄ(UTF8)
+絵文字表示ﾃｽﾄ(UTF-8)
 </center>
-REFSTRING(16進数:UTF8)<br>
-&amp;#xee98be; =&gt; [&#xee98be;]<br>
-&amp;#xee9d97; =&gt; [&#xee9d97;]<br>
-REFSTRING(10進数:UTF8)<br>
-&amp;#15636670; =&gt; [&#15636670;]<br>
-&amp;#15637911; =&gt; [&#15637911;]<br>
-REFSTRING(16進数:UNICODE)<br>
-&amp;#xe63e; =&gt; [&#xe63e;]<br>
-&amp;#xe757; =&gt; [&#xe757;]<br>
-REFSTRING(10進数:UNICODE)<br>
-&amp;#58942; =&gt; [&#58942;]<br>
-&amp;#59223; =&gt; [&#59223;]<br>
-2ﾊﾞｲﾄｺｰﾄﾞ<br>
-&amp;#xe63e; =&gt; []<br>
-&amp;#xe757; =&gt; []<br>
 <hr>
-<a href="post1_utf8.php" accesskey="2">絵文字入力のﾃｽﾄ</a>
+<a href="post1_utf8.php" accesskey="2">絵文字入力のﾃｽﾄ</a><br>
+<hr>
+<a href="all-16.php" accesskey="3">16進参照文字列絵文表示ﾃｽﾄ</a><br>
+<a href="all-10.php" accesskey="4">10進参照文字列絵文表示ﾃｽﾄ</a><br>
+<a href="all-2.php"  accesskey="5">ﾊﾞｲﾅﾘ絵文表示ﾃｽﾄ</a><br>
 <hr>
 <a href="../2.php" accesskey="1">戻る</a><br>
 <a href="../1.php" accesskey="0">ﾄｯﾌﾟへ</a><br>
+<hr>
   </body>
 </html>

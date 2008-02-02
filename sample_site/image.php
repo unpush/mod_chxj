@@ -7,14 +7,14 @@ header("Pragma: no-cache");
   <head>
   </head>
   <body>
-    <center>å‹•çš„ç”»åƒã®ï¾ƒï½½ï¾„</center>
+    <center>Æ°Åª²èÁü¤ÎÃ½Ä</center>
     <br>
     <hr>
     <br>
     <img src="./img.php">
     <br>
     <hr>
-    &#63888;<a href="2.php" accesskey="0">æˆ»ã‚‹</a><br>
+    &#63888;<a href="2.php" accesskey="0">Ìá¤ë</a><br>
     <hr>
     Copyright(C) 2005-2008 Atsushi Konno <br>
     All rights reserved.
