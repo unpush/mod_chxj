@@ -175,4 +175,10 @@ chxj_postdata_meta_emoji_to_emoji(
   const char          *src,
   device_table        *spec);
 
+extern char *
+chxj_postdata_imode_emoji_to_meta_emoji(
+  request_rec         *r,
+  const char          *encoding,
+  const char          *src,
+  apr_size_t          *iolen);
 #endif

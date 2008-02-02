@@ -506,12 +506,7 @@ chxj_input_convert(
   case CHXJ_SPEC_Chtml_6_0:
   case CHXJ_SPEC_Chtml_7_0:
   default:
-#if 0
     func_emoji_to_meta_emoji = chxj_postdata_imode_emoji_to_meta_emoji;
-#else
-    /* XXX とりあえず */
-    func_emoji_to_meta_emoji = chxj_postdata_softbank_emoji_to_meta_emoji;
-#endif
     break;
   }
 
