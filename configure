@@ -19606,6 +19606,7 @@ fi
 
 
   if test "x$APR_CONFIG" = "xno" ; then
+    $APR_CONFIG = ""
     # Extract the first word of "apr-1-config", so it can be a program name with args.
 set dummy apr-1-config; ac_word=$2
 { echo "$as_me:$LINENO: checking for $ac_word" >&5
@@ -19649,8 +19650,8 @@ fi
 
 
     if test "x$APR_CONFIG" = "xno" ; then
-      { { echo "$as_me:$LINENO: error: apr-config not found." >&5
-echo "$as_me: error: apr-config not found." >&2;}
+      { { echo "$as_me:$LINENO: error: apr-config or apr-1-config not found." >&5
+echo "$as_me: error: apr-config or apr-1-config not found." >&2;}
    { (exit 1); exit 1; }; }
     fi
   fi
