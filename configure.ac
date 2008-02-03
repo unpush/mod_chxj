@@ -100,21 +100,27 @@ if test "x$WAND_CONFIG" = "xno" ; then
     AC_MSG_ERROR([wand-config not found.])
 fi
 
+
 if test "x$with_apr_config" = "x" ; then
-  AC_PATH_PROG(APR_CONFIG, apr-config, no,
-     /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
+  AC_PATH_PROG(APR_CONFIG, apr-config, no, /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
   if test "x$APR_CONFIG" = "xno" ; then
+    AC_PATH_PROG(APR_CONFIG, apr-1-config, no, /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
+    if test "x$APR_CONFIG" = "xno" ; then
       AC_MSG_ERROR([apr-config not found.])
+    fi
   fi
 fi
 if test "x$with_apr_config" != "x" ; then
   APR_CONFIG=$with_apr_config
 fi
+
 if test "x$with_apu_config" = "x" ; then
-  AC_PATH_PROG(APU_CONFIG, apu-config, no,
-     /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
+  AC_PATH_PROG(APU_CONFIG, apu-config, no, /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
   if test "x$APU_CONFIG" = "xno" ; then
+    AC_PATH_PROG(APU_CONFIG, apu-1-config, no, /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
+    if test "x$APU_CONFIG" = "xno" ; then
       AC_MSG_ERROR([apu-config not found.])
+    fi
   fi
 fi
 if test "x$with_apu_config" != "x" ; then

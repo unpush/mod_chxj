@@ -20354,6 +20354,7 @@ echo "$as_me: error: wand-config not found." >&2;}
    { (exit 1); exit 1; }; }
 fi
 
+
 if test "x$with_apr_config" = "x" ; then
   # Extract the first word of "apr-config", so it can be a program name with args.
 set dummy apr-config; ac_word=$2
@@ -20398,14 +20399,59 @@ fi
 
 
   if test "x$APR_CONFIG" = "xno" ; then
+    # Extract the first word of "apr-1-config", so it can be a program name with args.
+set dummy apr-1-config; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_APR_CONFIG+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $APR_CONFIG in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_APR_CONFIG="$APR_CONFIG" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+as_dummy="/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin"
+for as_dir in $as_dummy
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_APR_CONFIG="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  test -z "$ac_cv_path_APR_CONFIG" && ac_cv_path_APR_CONFIG="no"
+  ;;
+esac
+fi
+APR_CONFIG=$ac_cv_path_APR_CONFIG
+if test -n "$APR_CONFIG"; then
+  { echo "$as_me:$LINENO: result: $APR_CONFIG" >&5
+echo "${ECHO_T}$APR_CONFIG" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+    if test "x$APR_CONFIG" = "xno" ; then
       { { echo "$as_me:$LINENO: error: apr-config not found." >&5
 echo "$as_me: error: apr-config not found." >&2;}
    { (exit 1); exit 1; }; }
+    fi
   fi
 fi
 if test "x$with_apr_config" != "x" ; then
   APR_CONFIG=$with_apr_config
 fi
+
 if test "x$with_apu_config" = "x" ; then
   # Extract the first word of "apu-config", so it can be a program name with args.
 set dummy apu-config; ac_word=$2
@@ -20450,9 +20496,53 @@ fi
 
 
   if test "x$APU_CONFIG" = "xno" ; then
+    # Extract the first word of "apu-1-config", so it can be a program name with args.
+set dummy apu-1-config; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_APU_CONFIG+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $APU_CONFIG in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_APU_CONFIG="$APU_CONFIG" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+as_dummy="/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin"
+for as_dir in $as_dummy
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_APU_CONFIG="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  test -z "$ac_cv_path_APU_CONFIG" && ac_cv_path_APU_CONFIG="no"
+  ;;
+esac
+fi
+APU_CONFIG=$ac_cv_path_APU_CONFIG
+if test -n "$APU_CONFIG"; then
+  { echo "$as_me:$LINENO: result: $APU_CONFIG" >&5
+echo "${ECHO_T}$APU_CONFIG" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+    if test "x$APU_CONFIG" = "xno" ; then
       { { echo "$as_me:$LINENO: error: apu-config not found." >&5
 echo "$as_me: error: apu-config not found." >&2;}
    { (exit 1); exit 1; }; }
+    fi
   fi
 fi
 if test "x$with_apu_config" != "x" ; then
