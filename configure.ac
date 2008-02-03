@@ -14,7 +14,7 @@ AC_PROG_INSTALL
 AM_PROG_LIBTOOL
 
 # Checks for libraries.
-AC_CHECK_LIB([apr-0],  [main])
+AC_CHECK_LIB([apr-1],  [main])
 
 AC_ARG_WITH(apache-header, [  --with-apache-header=ARG The directory with the header file of apache2.0 is specified. ]) 
 #[, ACTION-IF-GIVEN[, ACTION-IF-NOT-GIVEN]])
@@ -98,20 +98,24 @@ if test "x$WAND_CONFIG" = "xno" ; then
 fi
 
 if test "x$with_apr_config" = "x" ; then
-  AC_PATH_PROG(APR_CONFIG, apr-config, no,
-     /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
+  AC_PATH_PROG(APR_CONFIG, apr-config, no, /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
   if test "x$APR_CONFIG" = "xno" ; then
+    AC_PATH_PROG(APR_CONFIG, apr-1-config, no, /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
+    if test "x$APR_CONFIG" = "xno" ; then
       AC_MSG_ERROR([apr-config not found.])
+    fi
   fi
 fi
 if test "x$with_apr_config" != "x" ; then
   APR_CONFIG=$with_apr_config
 fi
 if test "x$with_apu_config" = "x" ; then
-  AC_PATH_PROG(APU_CONFIG, apu-config, no,
-     /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
+  AC_PATH_PROG(APU_CONFIG, apu-config, no, /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
   if test "x$APU_CONFIG" = "xno" ; then
+    AC_PATH_PROG(APU_CONFIG, apu-1-config, no, /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
+    if test "x$APU_CONFIG" = "xno" ; then
       AC_MSG_ERROR([apu-config not found.])
+    fi
   fi
 fi
 if test "x$with_apu_config" != "x" ; then

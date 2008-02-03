@@ -27,8 +27,8 @@
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
-/* Define to 1 if you have the `apr-0' library (-lapr-0). */
-#undef HAVE_LIBAPR_0
+/* Define to 1 if you have the `apr-1' library (-lapr-1). */
+#undef HAVE_LIBAPR_1
 
 /* Define to 1 if you have the <libgen.h> header file. */
 #undef HAVE_LIBGEN_H

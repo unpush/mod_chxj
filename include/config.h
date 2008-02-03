@@ -28,8 +28,8 @@
 /* Define to 1 if you have the <inttypes.h> header file. */
 #define HAVE_INTTYPES_H 1
 
-/* Define to 1 if you have the `apr-0' library (-lapr-0). */
-/* #undef HAVE_LIBAPR_0 */
+/* Define to 1 if you have the `apr-1' library (-lapr-1). */
+#define HAVE_LIBAPR_1 1
 
 /* Define to 1 if you have the <libgen.h> header file. */
 #define HAVE_LIBGEN_H 1
