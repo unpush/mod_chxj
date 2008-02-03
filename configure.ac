@@ -102,7 +102,7 @@ if test "x$with_apr_config" = "x" ; then
   if test "x$APR_CONFIG" = "xno" ; then
     AC_PATH_PROG(APR_1_CONFIG, apr-1-config, no, /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
     if test "x$APR_1_CONFIG" = "xno" ; then
-      AC_MSG_ERROR([apr-config or apr-1-config not found.])
+      AC_MSG_ERROR([apr-config and apr-1-config not found.])
     else
       APR_CONFIG="$APR_1_CONFIG"
     fi
@@ -114,9 +114,11 @@ fi
 if test "x$with_apu_config" = "x" ; then
   AC_PATH_PROG(APU_CONFIG, apu-config, no, /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
   if test "x$APU_CONFIG" = "xno" ; then
-    AC_PATH_PROG(APU_CONFIG, apu-1-config, no, /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
-    if test "x$APU_CONFIG" = "xno" ; then
-      AC_MSG_ERROR([apu-config not found.])
+    AC_PATH_PROG(APU_1_CONFIG, apu-1-config, no, /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
+    if test "x$APU_1_CONFIG" = "xno" ; then
+      AC_MSG_ERROR([apu-config and apu-1-config not found.])
+    else
+      APU_CONFIG="$APU_1_CONFIG"
     fi
   fi
 fi
