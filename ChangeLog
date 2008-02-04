@@ -1,3 +1,10 @@
+libapache2-mod-chxj (0.8.3-1) unstable; urgency=high
+
+  * Fixed Bug
+    - The image conversion is not operated at the access by PC.
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Mon,  4 Feb 2008 12:53:21 +0900
+
 libapache2-mod-chxj (0.8.2-1) unstable; urgency=low
 
   * Fixed Bug to which compile error occurs when A is specified.

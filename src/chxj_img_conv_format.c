@@ -177,6 +177,9 @@ static apr_status_t s_send_cache_file(  device_table*         spec,
                                         request_rec*          r,
                                         const char*           tmpfile);
 
+static apr_status_t s_send_original_file(request_rec* r, 
+                                         const char* originalfile);
+
 static apr_status_t s_header_only_cache_file(device_table*         spec, 
                                              query_string_param_t* query_string, 
                                              request_rec*          r, 
@@ -370,6 +373,13 @@ s_img_conv_format_from_file(
   apr_finfo_t    st;
   apr_finfo_t    cache_st;
   char*          tmpfile;
+
+  if (spec->html_spec_type == CHXJ_SPEC_UNKNOWN) {
+    /* 
+     * If ``ua'' parameter is specified, it must be CHXJ_SPEC_HTML. 
+     */
+    return s_send_original_file(r, r->filename);
+  }
 
   /*--------------------------------------------------------------------------*/
   /* Create Workfile Name                                                     */
@@ -1449,6 +1459,34 @@ s_send_cache_file(device_table* spec, query_string_param_t* query_string, reques
       DBG1(r, "send file data[%d]byte", (int)sendbyte);
     }
   }
+  
+  return OK;
+}
+
+
+static apr_status_t 
+s_send_original_file(request_rec* r, const char* originalfile)
+{
+  apr_status_t rv;
+  apr_finfo_t  st;
+  apr_file_t*  fout;
+  apr_size_t   sendbyte = 0;
+
+  rv = apr_stat(&st, originalfile, APR_FINFO_MIN, r->pool);
+  if (rv != APR_SUCCESS)
+    return HTTP_NOT_FOUND;
+
+  rv = apr_file_open(&fout, originalfile, 
+    APR_READ | APR_BINARY, APR_OS_DEFAULT, r->pool);
+  if (rv != APR_SUCCESS) {
+    DBG1(r, "originalfile open failed[%s]", originalfile);
+    return HTTP_NOT_FOUND;
+  }
+
+  ap_send_fd(fout, r, 0, st.size, &sendbyte);
+  apr_file_close(fout);
+  ap_rflush(r);
+  DBG1(r, "send file data[%d]byte", (int)sendbyte);
   
   return OK;
 }

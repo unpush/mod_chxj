@@ -185,14 +185,14 @@ chxj_headers_fixup(request_rec *r)
  * @param len [i/o] It is length of former HTML character string. 
  */
 static char* 
-chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
+chxj_exchange(request_rec *r, const char** src, apr_size_t* len, device_table *spec, const char *ua)
 {
-  char*               user_agent;
-  char*               dst;
-  char*               tmp;
-  cookie_t*           cookie;
-  mod_chxj_config*    dconf; 
-  chxjconvrule_entry* entryp;
+  char                *user_agent;
+  char                *dst;
+  char                *tmp;
+  cookie_t            *cookie;
+  mod_chxj_config     *dconf; 
+  chxjconvrule_entry  *entryp;
 
   dst  = apr_pstrcat(r->pool, (char*)*src, NULL);
 
@@ -224,7 +224,10 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len)
     return (char*)*src;
   }
 
-  device_table* spec = chxj_specified_device(r, user_agent);
+  if (ua && user_agent && strcasecmp(user_agent, ua) != 0) {
+    /* again */
+    spec = chxj_specified_device(r, user_agent);
+  }
 
   /*
    * save cookie.
@@ -610,17 +613,18 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
   apr_bucket*         b;
   const char*         data;
   char*               contentLength;
+  char*               user_agent;
   apr_size_t          len;
   mod_chxj_ctx*       ctx;
   cookie_t*           cookie;
   char*               location_header;
   mod_chxj_config*    dconf;
-  chxjconvrule_entry* entryp;
+  chxjconvrule_entry  *entryp;
+  device_table        *spec;
 
 
 
   DBG(f->r, "start of chxj_output_filter()");
-
   r  = f->r;
   rv = APR_SUCCESS;
 
@@ -631,8 +635,10 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
       f->r->chunked = 1;
   }
 
-  dconf  = ap_get_module_config(r->per_dir_config, &chxj_module);
-  entryp = chxj_apply_convrule(r, dconf->convrules);
+  dconf      = ap_get_module_config(r->per_dir_config, &chxj_module);
+  entryp     = chxj_apply_convrule(r, dconf->convrules);
+  user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
+  spec       = chxj_specified_device(r, user_agent);
 
 
   for (b = APR_BRIGADE_FIRST(bb);
@@ -651,9 +657,10 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
 
         DBG1(r, "content_type=[%s]", r->content_type);
 
-        if (r->content_type 
-        && *(char*)r->content_type == 't' 
-        && strncmp(r->content_type, "text/html",   9) == 0) {
+        if (spec->html_spec_type != CHXJ_SPEC_UNKNOWN 
+            && r->content_type 
+            && *(char*)r->content_type == 't' 
+            && strncmp(r->content_type, "text/html",   9) == 0) {
 
           if (ctx->len) {
             char* tmp;
@@ -669,7 +676,9 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
 
             ctx->buffer = chxj_exchange(r, 
                                         (const char**)&tmp, 
-                                        (apr_size_t*)&ctx->len);
+                                        (apr_size_t*)&ctx->len,
+                                        spec,
+                                        user_agent);
 
 #if 0
             DBG2(r, "output data=[%.*s]", ctx->len,ctx->buffer);
@@ -680,13 +689,15 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
             ctx->len += 1;
             ctx->buffer = chxj_exchange(r, 
                                         (const char**)&ctx->buffer, 
-                                        (apr_size_t*)&ctx->len);
+                                        (apr_size_t*)&ctx->len,
+                                        spec,
+                                        user_agent);
 
           }
         }
         if (r->content_type
-        && *(char*)r->content_type == 't'
-        && strncmp(r->content_type, "text/xml",   8) == 0) {
+            && *(char*)r->content_type == 't'
+            && strncmp(r->content_type, "text/xml",   8) == 0) {
           DBG(r, "text/XML");
 
           Doc       doc;
@@ -733,9 +744,10 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
           }
         }
 
-        if (r->content_type 
-        && *(char*)r->content_type == 'i' 
-        && strncmp(r->content_type, "image/", 6) == 0) {
+        if (spec->html_spec_type != CHXJ_SPEC_UNKNOWN 
+            && r->content_type 
+            && *(char*)r->content_type == 'i' 
+            && strncmp(r->content_type, "image/", 6) == 0) {
           if (ctx->len) {
             char* tmp;
 
