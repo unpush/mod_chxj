@@ -1258,6 +1258,7 @@ chxj_create_per_dir_config(apr_pool_t *p, char *arg)
   conf->emoji_tail       = NULL;
   conf->image            = CHXJ_IMG_OFF;
   conf->image_cache_dir  = apr_psprintf(p, "%s",DEFAULT_IMAGE_CACHE_DIR);
+  conf->image_cache_limit = 0;
   conf->server_side_encoding = NULL;
   conf->cookie_db_dir    = NULL;
   conf->cookie_timeout   = 0;
@@ -1299,6 +1300,7 @@ chxj_merge_per_dir_config(apr_pool_t *p, void *basev, void *addv)
   mrg->image            = CHXJ_IMG_OFF;
   mrg->image_cache_dir  = NULL;
   mrg->image_copyright  = NULL;
+  mrg->image_cache_limit  = 0;
   mrg->emoji            = NULL;
   mrg->emoji_tail       = NULL;
 
@@ -1330,10 +1332,19 @@ chxj_merge_per_dir_config(apr_pool_t *p, void *basev, void *addv)
     mrg->image = add->image;
 
 
-  if (strcasecmp(add->image_cache_dir ,DEFAULT_IMAGE_CACHE_DIR)==0) 
+  if (strcasecmp(add->image_cache_dir ,DEFAULT_IMAGE_CACHE_DIR)==0) {
     mrg->image_cache_dir = apr_pstrdup(p, base->image_cache_dir);
-  else 
+  }
+  else {
     mrg->image_cache_dir = apr_pstrdup(p, add->image_cache_dir);
+  }
+
+  if (add->image_cache_limit) {
+    mrg->image_cache_limit = add->image_cache_limit;
+  }
+  else {
+    mrg->image_cache_limit = base->image_cache_limit;
+  }
 
   if (add->image_copyright) 
     mrg->image_copyright = apr_pstrdup(p, add->image_copyright);

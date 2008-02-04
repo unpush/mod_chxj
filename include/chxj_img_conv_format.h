@@ -20,6 +20,9 @@
 
 #define DEFAULT_IMAGE_CACHE_DIR "/tmp"
 
+/* default: 100KByte */
+#define DEFAULT_IMAGE_CACHE_LIMIT (100*1024)
+
 
 extern int chxj_img_conv_format_handler(
   request_rec*         r);

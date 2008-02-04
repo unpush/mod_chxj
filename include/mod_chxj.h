@@ -282,6 +282,7 @@ struct mod_chxj_config {
 
   char*                 image_cache_dir;
   char*                 image_copyright;
+  unsigned long         image_cache_limit;
   device_table_list*    devices;
   emoji_t*              emoji;
   emoji_t*              emoji_tail;

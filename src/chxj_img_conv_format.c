@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 #include <libgen.h>
+#include <limits.h>
 #include "mod_chxj.h"
 #include "chxj_img_conv_format.h"
 #include "chxj_specified_device.h"
@@ -170,7 +171,8 @@ static apr_status_t s_create_cache_file(request_rec*          r,
                                         const char*           tmpfile, 
                                         device_table*         spec,
                                         apr_finfo_t*          st,
-                                        query_string_param_t* qsp);
+                                        query_string_param_t* qsp,
+                                        mod_chxj_config       *conf);
 
 static apr_status_t s_send_cache_file(  device_table*         spec,
                                         query_string_param_t* query_string,
@@ -401,7 +403,7 @@ s_img_conv_format_from_file(
     /* It tries to make the cash file when it doesn't exist or there is       */
     /* change time later since the making time of the cash file.              */
     /*------------------------------------------------------------------------*/
-    rv = s_create_cache_file(r,tmpfile, spec, &st, qsp);
+    rv = s_create_cache_file(r,tmpfile, spec, &st, qsp, conf);
     if (rv != OK)
       return rv;
   }
@@ -430,7 +432,8 @@ s_create_cache_file(request_rec*       r,
                        const char*     tmpfile, 
                        device_table* spec, 
                        apr_finfo_t*    st, 
-                       query_string_param_t *qsp)
+                       query_string_param_t *qsp,
+                       mod_chxj_config      *conf)
 {
   apr_status_t       rv;
   apr_size_t         readbyte;
@@ -443,6 +446,7 @@ s_create_cache_file(request_rec*       r,
 
   apr_file_t*        fout;
   apr_file_t*        fin;
+  apr_finfo_t        cache_dir_st;
 
   MagickWand*        magick_wand;
 
@@ -684,6 +688,72 @@ s_create_cache_file(request_rec*       r,
 
   DBG(r, "end convert and compression");
   
+  /* check limit */
+#if 0
+KONNO
+#endif
+  rv = apr_stat(&cache_dir_st, conf->image_cache_dir, APR_FINFO_MIN, r->pool);
+  if (rv != APR_SUCCESS) {
+    DestroyMagickWand(magick_wand);
+    ERR1(r,"dir stat error.[%s]", conf->image_cache_dir);
+    return HTTP_INTERNAL_SERVER_ERROR;
+  }
+  
+DBG1(r, "conf->image_cache_limit=[%ld]", conf->image_cache_limit);
+  for (;;) {
+    /* delete candidate */
+    apr_finfo_t dcf;   
+    /* get dir files size */
+    apr_dir_t *dir;
+    unsigned long total_size = 0;
+    int found_file = 0;
+    unsigned long max_size = (! conf->image_cache_limit) ? DEFAULT_IMAGE_CACHE_LIMIT : conf->image_cache_limit;
+    char *delete_file_name;
+
+    rv = apr_dir_open(&dir, conf->image_cache_dir, r->pool);
+    if (rv != APR_SUCCESS) { 
+      DestroyMagickWand(magick_wand);
+      ERR1(r,"dir open error.[%s]", conf->image_cache_dir);
+      return HTTP_INTERNAL_SERVER_ERROR;
+    }
+    memset(&dcf, 0, sizeof(apr_finfo_t));
+    dcf.atime = (apr_time_t)LONG_LONG_MAX;
+    for (;;) {
+      apr_finfo_t dirf;
+      rv = apr_dir_read(&dirf, APR_FINFO_SIZE|APR_FINFO_NAME|APR_FINFO_DIRENT|APR_FINFO_ATIME , dir);
+      if (rv != APR_SUCCESS) {
+        break;
+      }
+      if (dirf.name && strcmp(dirf.name, ".") != 0 && strcmp(dirf.name, "..") != 0) {
+        total_size += (unsigned long)dirf.size;
+        DBG3(r, "dirf.name=[%s] dirf.size=[%ld] dirf.atime=[%lld]", dirf.name, (long)dirf.size, (long long int)dirf.atime);
+        if (dcf.atime >= dirf.atime) {
+          memcpy(&dcf, &dirf, sizeof(apr_finfo_t));
+        }
+        found_file++;
+      }
+    }
+    apr_dir_close(dir);
+    if (total_size + writebyte < max_size || found_file == 0) {
+      DBG3(r, "There is an enough size in cache. total_size:[%lu] max_size:[%lu] found_file=[%d]", total_size, max_size, found_file);
+      break;
+    }
+    DBG2(r, "Image Cache dir is full. total_size:[%lu] max_size:[%lu]", total_size + writebyte, max_size);
+    /* search delete candidate */
+    delete_file_name = apr_psprintf(r->pool, "%s/%s", conf->image_cache_dir, dcf.name);
+    DBG2(r, "delete image cache target:[%s] atime:[%lld]", delete_file_name, dcf.atime);
+    rv = apr_file_remove(delete_file_name, r->pool);
+    if (rv != APR_SUCCESS) {
+      ERR1(r, "cache file delete failure.[%s]", delete_file_name);
+      return HTTP_INTERNAL_SERVER_ERROR;
+    }
+    DBG1(r, "deleted image cache target:[%s]", delete_file_name);
+    if (total_size + writebyte - dcf.size < max_size) {
+      DBG(r, "OK, there is an enough size in cache.");
+      break;
+    }
+  }
+
   /* to cache */
   rv = apr_file_open(&fout, tmpfile,
                   APR_WRITE| APR_CREATE | APR_BINARY | APR_SHARELOCK ,APR_OS_DEFAULT,
