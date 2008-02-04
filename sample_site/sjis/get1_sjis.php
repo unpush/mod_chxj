@@ -11,14 +11,14 @@ header("Pragma: no-cache");
   $data = $_POST[""];
 ?>
 <center>
-絵文字入力のﾃｽﾄ(SJISでPOST)
+絵文字入力のﾃｽﾄ(SJISでGET)
 </center>
 <hr>
-    <form name="" method="post" action="post1_sjis.php">
+    <form name="" method="pget" action="get1_sjis.php">
       <input type="text" name="" value="<?=${data}?>" />
       <input type="submit" value="" />
     </form>
-ﾎﾟｽﾄされた値は、、、<br>
+ｹﾞｯﾄされた値は、、、<br>
 [
 <?php
   echo "HEX:[" . bin2hex($data) . "]<br>";

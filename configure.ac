@@ -78,10 +78,17 @@ fi
 
 if test "x$with_apxs" = "x" ; then
   AC_PATH_PROG(APXS, apxs, no,
-      /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/usr/local/apache/bin)
+               /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/usr/local/apache/bin)
   if test "x$APXS" = "xno"; then
-      AC_MSG_ERROR([apxs not found.])
+      AC_PATH_PROG(APXS2, apxs2, no,
+                   /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/usr/local/apache/bin)
+      if test "x$APXS2" = "xno" ; then
+        AC_MSG_ERROR([apxs not found.])
+      fi
   fi
+fi
+if test "x$APXS2" != "x" ; then
+  APXS="$APXS2"
 fi
 if test "x$with_apxs" != "x" ; then
   APXS=$with_apxs
@@ -104,9 +111,11 @@ fi
 if test "x$with_apr_config" = "x" ; then
   AC_PATH_PROG(APR_CONFIG, apr-config, no, /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
   if test "x$APR_CONFIG" = "xno" ; then
-    AC_PATH_PROG(APR_CONFIG, apr-1-config, no, /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
-    if test "x$APR_CONFIG" = "xno" ; then
-      AC_MSG_ERROR([apr-config not found.])
+    AC_PATH_PROG(APR_1_CONFIG, apr-1-config, no, /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
+    if test "x$APR_1_CONFIG" = "xno" ; then
+      AC_MSG_ERROR([apr-config and apr-1-config not found.])
+    else
+      APR_CONFIG="$APR_1_CONFIG"
     fi
   fi
 fi
@@ -117,15 +126,18 @@ fi
 if test "x$with_apu_config" = "x" ; then
   AC_PATH_PROG(APU_CONFIG, apu-config, no, /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
   if test "x$APU_CONFIG" = "xno" ; then
-    AC_PATH_PROG(APU_CONFIG, apu-1-config, no, /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
-    if test "x$APU_CONFIG" = "xno" ; then
-      AC_MSG_ERROR([apu-config not found.])
+    AC_PATH_PROG(APU_1_CONFIG, apu-1-config, no, /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
+    if test "x$APU_1_CONFIG" = "xno" ; then
+      AC_MSG_ERROR([apu-config and apu-1-config not found.])
+    else
+      APU_CONFIG="$APU_1_CONFIG"
     fi
   fi
 fi
 if test "x$with_apu_config" != "x" ; then
   APU_CONFIG=$with_apu_config
 fi
+
 
 AC_ARG_WITH(iconv, [  --with-iconv=ARG  specify the place of the libiconv directory.])
 AC_ARG_WITH(iconv_hook, [  --with-iconv_hook=ARG  specify the place of the libiconv_hook directory.])

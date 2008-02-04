@@ -24,6 +24,8 @@
 #include "chxj_url_encode.h"
 #include "qs_parse_string.h"
 
+#include <limits.h>
+
 #include "http_core.h"
 
 #include <wand/magick_wand.h>
@@ -171,12 +173,16 @@ static apr_status_t s_create_cache_file(request_rec  *r,
                                         const char   *tmpfile, 
                                         device_table *spec,
                                         apr_finfo_t  *st,
-                                        query_string_param_t *qsp);
+                                        query_string_param_t* qsp,
+                                        mod_chxj_config       *conf);
 
 static apr_status_t s_send_cache_file(  device_table          *spec,
                                         query_string_param_t  *query_string,
                                         request_rec           *r,
                                         const char            *tmpfile);
+
+static apr_status_t s_send_original_file(request_rec* r,
+                                         const char* originalfile);
 
 static apr_status_t s_header_only_cache_file(device_table         *spec, 
                                              query_string_param_t *query_string, 
@@ -372,6 +378,13 @@ s_img_conv_format_from_file(
   apr_finfo_t    cache_st;
   char           *tmpfile;
 
+  if (spec->html_spec_type == CHXJ_SPEC_UNKNOWN) {
+    /*
+     * If ``ua'' parameter is specified, it must be CHXJ_SPEC_HTML.
+     */
+    return s_send_original_file(r, r->filename);
+  }
+
   /*--------------------------------------------------------------------------*/
   /* Create Workfile Name                                                     */
   /*--------------------------------------------------------------------------*/
@@ -392,7 +405,7 @@ s_img_conv_format_from_file(
     /* It tries to make the cash file when it doesn't exist or there is       */
     /* change time later since the making time of the cash file.              */
     /*------------------------------------------------------------------------*/
-    rv = s_create_cache_file(r,tmpfile, spec, &st, qsp);
+    rv = s_create_cache_file(r,tmpfile, spec, &st, qsp, conf);
     if (rv != OK)
       return rv;
   }
@@ -417,11 +430,12 @@ s_img_conv_format_from_file(
 
 
 static apr_status_t
-s_create_cache_file(request_rec *r, 
-                    const char *tmpfile, 
-                    device_table *spec, 
-                    apr_finfo_t  *st, 
-                    query_string_param_t *qsp)
+s_create_cache_file(request_rec          *r, 
+                    const char           *tmpfile, 
+                    device_table         *spec, 
+                    apr_finfo_t          *st, 
+                    query_string_param_t *qsp,
+                    mod_chxj_config      *conf)
 {
   apr_status_t       rv;
   apr_size_t         readbyte;
@@ -436,6 +450,8 @@ s_create_cache_file(request_rec *r,
   apr_file_t         *fin;
 
   MagickWand         *magick_wand;
+
+  apr_finfo_t        cache_dir_st;
 
   if ((*r->handler == 'c' || *r->handler == 'C') 
       &&  strcasecmp(r->handler, "chxj-qrcode") == 0) {
@@ -674,6 +690,71 @@ s_create_cache_file(request_rec *r,
   }
 
   DBG(r, "end convert and compression");
+
+  /* check limit */
+  rv = apr_stat(&cache_dir_st, conf->image_cache_dir, APR_FINFO_MIN, r->pool);
+  if (rv != APR_SUCCESS) {
+    DestroyMagickWand(magick_wand);
+    ERR(r,"dir stat error.[%s]", conf->image_cache_dir);
+    return HTTP_INTERNAL_SERVER_ERROR;
+  }
+  
+  for (;;) {
+    /* delete candidate */
+    apr_finfo_t dcf;   
+    /* get dir files size */
+    apr_dir_t *dir;
+    unsigned long total_size = 0;
+    int found_file = 0;
+    unsigned long max_size = (! conf->image_cache_limit) ? DEFAULT_IMAGE_CACHE_LIMIT : conf->image_cache_limit;
+    char *delete_file_name;
+
+    rv = apr_dir_open(&dir, conf->image_cache_dir, r->pool);
+    if (rv != APR_SUCCESS) { 
+      DestroyMagickWand(magick_wand);
+      ERR(r,"dir open error.[%s]", conf->image_cache_dir);
+      return HTTP_INTERNAL_SERVER_ERROR;
+    }
+    memset(&dcf, 0, sizeof(apr_finfo_t));
+    dcf.atime = (apr_time_t)LONG_LONG_MAX;
+    for (;;) {
+      apr_finfo_t dirf;
+      rv = apr_dir_read(&dirf, APR_FINFO_SIZE|APR_FINFO_NAME|APR_FINFO_DIRENT|APR_FINFO_ATIME , dir);
+      if (rv != APR_SUCCESS) {
+        break;
+      }
+      if (dirf.name && strcmp(dirf.name, ".") != 0 && strcmp(dirf.name, "..") != 0) {
+        total_size += (unsigned long)dirf.size;
+        DBG(r, "dirf.name=[%s] dirf.size=[%ld] dirf.atime=[%lld]", 
+               dirf.name, (long)dirf.size, (long long int)dirf.atime);
+        if (dcf.atime >= dirf.atime) {
+          memcpy(&dcf, &dirf, sizeof(apr_finfo_t));
+        }
+        found_file++;
+      }
+    }
+    apr_dir_close(dir);
+    if (total_size + writebyte < max_size || found_file == 0) {
+      DBG(r, "There is an enough size in cache. total_size:[%lu] max_size:[%lu] found_file=[%d]",
+             total_size, max_size, found_file);
+      break;
+    }
+    DBG(r, "Image Cache dir is full. total_size:[%lu] max_size:[%lu]", 
+           total_size + writebyte, max_size);
+    /* search delete candidate */
+    delete_file_name = apr_psprintf(r->pool, "%s/%s", conf->image_cache_dir, dcf.name);
+    DBG(r, "delete image cache target:[%s] atime:[%lld]", delete_file_name, dcf.atime);
+    rv = apr_file_remove(delete_file_name, r->pool);
+    if (rv != APR_SUCCESS) {
+      ERR(r, "cache file delete failure.[%s]", delete_file_name);
+      return HTTP_INTERNAL_SERVER_ERROR;
+    }
+    DBG(r, "deleted image cache target:[%s]", delete_file_name);
+    if (total_size + writebyte - dcf.size < max_size) {
+      DBG(r, "OK, there is an enough size in cache.");
+      break;
+    }
+  }
   
   /* to cache */
   rv = apr_file_open(&fout, tmpfile,
@@ -1461,6 +1542,35 @@ s_send_cache_file(
   
   return OK;
 }
+
+
+static apr_status_t
+s_send_original_file(request_rec* r, const char* originalfile)
+{
+  apr_status_t rv;
+  apr_finfo_t  st;
+  apr_file_t*  fout;
+  apr_size_t   sendbyte = 0;
+
+  rv = apr_stat(&st, originalfile, APR_FINFO_MIN, r->pool);
+  if (rv != APR_SUCCESS)
+    return HTTP_NOT_FOUND;
+
+  rv = apr_file_open(&fout, originalfile,
+    APR_READ | APR_BINARY, APR_OS_DEFAULT, r->pool);
+  if (rv != APR_SUCCESS) {
+    DBG(r, "originalfile open failed[%s]", originalfile);
+    return HTTP_NOT_FOUND;
+  }
+
+  ap_send_fd(fout, r, 0, st.size, &sendbyte);
+  apr_file_close(fout);
+  ap_rflush(r);
+  DBG(r, "send file data[%d]byte", (int)sendbyte);
+
+  return OK;
+}
+
 
 static apr_status_t 
 s_header_only_cache_file(
