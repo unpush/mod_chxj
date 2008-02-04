@@ -2,8 +2,8 @@ libapache2-mod-chxj (0.8.3-1) unstable; urgency=high
 
   * Fixed Bug  
     - The image conversion is not operated at the access by PC. 
-	- Bug that doesn't erase cache file.
-	  + default limit size is 100KByte.
+    - Bug that doesn't erase cache file.
+      + default limit size is 10MByte.
 	    but the setting cannot be changed now. 
 
  -- Atsushi Konno <konn@users.sourceforge.jp>  Mon,  4 Feb 2008 12:53:21 +0900
