@@ -375,6 +375,7 @@ extern char* chxj_node_exchange(
   int           indent
 );
 
+#define IMAGE_CACHE_LIMIT_FMT_LEN  (20)
 
 
 #endif

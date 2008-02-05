@@ -1,3 +1,13 @@
+libapache2-mod-chxj (0.8.4-1) unstable; urgency=low
+
+  * Fixed Bug that deb package doesn't correspond to Apache2.2. 
+  * Added features: 
+    ``ChxjImageCacheLimit'' directive.
+  * Added Document:
+    ``ChxjImageCacheLimit'' directive.
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Tue,  5 Feb 2008 20:33:16 +0900
+
 libapache2-mod-chxj (0.8.3-1) unstable; urgency=high
 
   * Fixed Bug  

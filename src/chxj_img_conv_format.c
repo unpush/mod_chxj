@@ -283,10 +283,6 @@ chxj_img_conv_format_handler(request_rec* r)
   DBG1(r,"found device_name=[%s]", spec->device_name);
   DBG1(r,"User-Agent=[%s]", user_agent);
 
-#if 0
-  if (spec->width == 0 || spec->heigh == 0)
-    return DECLINED;
-#endif
 
   return s_img_conv_format_from_file(r, conf, user_agent, qsp, spec);
 }
@@ -689,9 +685,6 @@ s_create_cache_file(request_rec*       r,
   DBG(r, "end convert and compression");
   
   /* check limit */
-#if 0
-KONNO
-#endif
   rv = apr_stat(&cache_dir_st, conf->image_cache_dir, APR_FINFO_MIN, r->pool);
   if (rv != APR_SUCCESS) {
     DestroyMagickWand(magick_wand);
@@ -699,7 +692,6 @@ KONNO
     return HTTP_INTERNAL_SERVER_ERROR;
   }
   
-DBG1(r, "conf->image_cache_limit=[%ld]", conf->image_cache_limit);
   for (;;) {
     /* delete candidate */
     apr_finfo_t dcf;   
@@ -734,9 +726,15 @@ DBG1(r, "conf->image_cache_limit=[%ld]", conf->image_cache_limit);
       }
     }
     apr_dir_close(dir);
-    if (total_size + writebyte < max_size || found_file == 0) {
-      DBG3(r, "There is an enough size in cache. total_size:[%lu] max_size:[%lu] found_file=[%d]", total_size, max_size, found_file);
+    if (total_size + writebyte < max_size) {
+      DBG4(r, "There is an enough size in cache. total_size:[%lu] max_size:[%lu] found_file=[%d] max_size=[%lu]", total_size, max_size, found_file, max_size);
       break;
+    }
+    if (found_file == 0 && writebyte >= max_size) {
+      ERR(r, "cache space is too small...");
+      ERR1(r, "At least the same size as %luByte is necessary for me.", (unsigned long)writebyte); 
+      ERR(r, "Please specify the ChxjImageCacheLimit that is larger than now value. ");
+      return HTTP_INTERNAL_SERVER_ERROR;
     }
     DBG2(r, "Image Cache dir is full. total_size:[%lu] max_size:[%lu]", total_size + writebyte, max_size);
     /* search delete candidate */

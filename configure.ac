@@ -74,10 +74,16 @@ fi
 
 
 if test "x$with_apxs" = "x" ; then
-  AC_PATH_PROG(APXS, apxs, no,
+  AC_PATH_PROG(APXS2, apxs2, no,
       /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/usr/local/apache/bin)
-  if test "x$APXS" = "xno"; then
+  if test "x$APXS2" = "xno"; then
+    AC_PATH_PROG(APXS, apxs, no,
+      /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/usr/local/apache/bin)
+    if test "x$APXS" = "xno" ; then
       AC_MSG_ERROR([apxs not found.])
+    fi
+  else
+    APXS="$APXS2"
   fi
 fi
 if test "x$with_apxs" != "x" ; then
