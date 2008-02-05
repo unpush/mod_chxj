@@ -25,6 +25,7 @@
 
 #include "mod_chxj.h"
 
+#if 0
 #if defined(HAVE_LIBICONV_HOOK)
 #  include "iconv_hook/iconv.h"
 #else
@@ -34,6 +35,9 @@
 #    error "Please install libiconv or libiconv_hook. and Please set LD_LIBRARY_PATH."
 #  endif
 #endif
+#endif
+
+#include <iconv.h>
 
 static int s_cut_tag (const char *s, int len);
 static int s_cut_text(const char *s, int len);

@@ -77,18 +77,17 @@ fi
 
 
 if test "x$with_apxs" = "x" ; then
-  AC_PATH_PROG(APXS, apxs, no,
+  AC_PATH_PROG(APXS2, apxs2, no,
                /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/usr/local/apache/bin)
-  if test "x$APXS" = "xno"; then
-      AC_PATH_PROG(APXS2, apxs2, no,
+  if test "x$APXS2" = "xno"; then
+      AC_PATH_PROG(APXS, apxs, no,
                    /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/usr/local/apache/bin)
-      if test "x$APXS2" = "xno" ; then
+      if test "x$APXS" = "xno" ; then
         AC_MSG_ERROR([apxs not found.])
       fi
+  else
+    APXS="$APXS2"
   fi
-fi
-if test "x$APXS2" != "x" ; then
-  APXS="$APXS2"
 fi
 if test "x$with_apxs" != "x" ; then
   APXS=$with_apxs
@@ -139,51 +138,51 @@ if test "x$with_apu_config" != "x" ; then
 fi
 
 
-AC_ARG_WITH(iconv, [  --with-iconv=ARG  specify the place of the libiconv directory.])
-AC_ARG_WITH(iconv_hook, [  --with-iconv_hook=ARG  specify the place of the libiconv_hook directory.])
-if test "x$with_iconv" = "x" -a "x$with_iconv_hook" = "x" ; then
-  AC_CHECK_LIB([iconv_hook], [iconv_open], [
-      with_iconv="ok"
-      AC_DEFINE([HAVE_LIBICONV_HOOK], [], [Define to 1 if you have the iconv library file.])
-      LIBS="${LIBS} -liconv_hook"
-  ],[
-    AC_CHECK_LIB([iconv], [iconv_open], [
-      with_iconv="ok"
-      AC_DEFINE([HAVE_LIBICONV], [], [Define to 1 if you have the iconv library file.])
-      LIBS="${LIBS} -liconv"
-  ], [
-      witn_iconv=""
-  ],[])
-  ],[])
-fi
-
-if test "x$with_iconv" != "xok" ; then
-  if test "x$with_iconv" = "xyes" ; then
-      AC_MSG_ERROR([
-  Please specify the --with-iconv option. And, please specify the place of the libiconv program. 
-  ])
-  fi
-  if test "x$with_iconv" != "x" ; then
-    LIBS="${LIBS} -L$with_iconv -liconv "
-    AC_DEFINE([HAVE_LIBICONV], [], [Define to 1 if you have the iconv library file.])
-  fi
-fi
-if test "x$with_iconv" = "x" ; then
-  if test "x$with_iconv_hook" = "xyes" ; then
-      AC_MSG_ERROR([
-  Please specify the --with-iconv-hook option. And, please specify the place of the libiconv_hook program. 
-  ])
-  fi
-  if test "x$with_iconv_hook" != "x" ; then
-    LIBS="${LIBS} -L${with_iconv_hook} -liconv_hook "
-    AC_DEFINE([HAVE_LIBICONV_HOOK], [], [Define to 1 if you have the iconv_hook library file.])
-  fi
-  if test "x$with_iconv_hook" = "x" ; then
-      AC_MSG_ERROR([
-  Please specify the --with-iconv-hook option. And, please specify the place of the libiconv_hook program. 
-  ])
-  fi
-fi
+#AC_ARG_WITH(iconv, [  --with-iconv=ARG  specify the place of the libiconv directory.])
+#AC_ARG_WITH(iconv_hook, [  --with-iconv_hook=ARG  specify the place of the libiconv_hook directory.])
+#if test "x$with_iconv" = "x" -a "x$with_iconv_hook" = "x" ; then
+#  AC_CHECK_LIB([iconv_hook], [iconv_open], [
+#      with_iconv="ok"
+#      AC_DEFINE([HAVE_LIBICONV_HOOK], [], [Define to 1 if you have the iconv library file.])
+#      LIBS="${LIBS} -liconv_hook"
+#  ],[
+#    AC_CHECK_LIB([iconv], [iconv_open], [
+#      with_iconv="ok"
+#      AC_DEFINE([HAVE_LIBICONV], [], [Define to 1 if you have the iconv library file.])
+#      LIBS="${LIBS} -liconv"
+#  ], [
+#      witn_iconv=""
+#  ],[])
+#  ],[])
+#fi
+#
+#if test "x$with_iconv" != "xok" ; then
+#  if test "x$with_iconv" = "xyes" ; then
+#      AC_MSG_ERROR([
+#  Please specify the --with-iconv option. And, please specify the place of the libiconv program. 
+#  ])
+#  fi
+#  if test "x$with_iconv" != "x" ; then
+#    LIBS="${LIBS} -L$with_iconv -liconv "
+#    AC_DEFINE([HAVE_LIBICONV], [], [Define to 1 if you have the iconv library file.])
+#  fi
+#fi
+#if test "x$with_iconv" = "x" ; then
+#  if test "x$with_iconv_hook" = "xyes" ; then
+#      AC_MSG_ERROR([
+#  Please specify the --with-iconv-hook option. And, please specify the place of the libiconv_hook program. 
+#  ])
+#  fi
+#  if test "x$with_iconv_hook" != "x" ; then
+#    LIBS="${LIBS} -L${with_iconv_hook} -liconv_hook "
+#    AC_DEFINE([HAVE_LIBICONV_HOOK], [], [Define to 1 if you have the iconv_hook library file.])
+#  fi
+#  if test "x$with_iconv_hook" = "x" ; then
+#      AC_MSG_ERROR([
+#  Please specify the --with-iconv-hook option. And, please specify the place of the libiconv_hook program. 
+#  ])
+#  fi
+#fi
 
 
 case $host_os in

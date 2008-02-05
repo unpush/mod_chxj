@@ -6,28 +6,28 @@
   <subtitle></subtitle>
   <author>Atsushi Konno</author>
   <date>29 Mar 2005</date>
-  <date>Last modified: 21 Jan 2008</date>
+  <date>Last modified: Tue,  5 Feb 2008 13:20:28 +0900</date>
 </head>
 <body>
 <section title="Overview">
 
-mod_chxjはオープンソースの携帯向けコンテンツ変換Apache2.x用モジュールであり、
+mod_chxjはオープンソースの携帯向けコンテンツ変換Apache2.0用モジュールであり、
 CHTML（DoCoMo i-Mode用 CHTML3.0)で記述された文書や通常のHTMLで記述された文書を、アクセスに来た端末のUser-Agentヘッダを見て、それぞれの端末にあった形式に変換します。
 HTML文書に限らず、画像（jpg、gif、png）、絵文字についても、定義ファイルに従ってそれぞれのキャリアにあった絵文字に変換します。
 Cookie非対応端末、Refer非対応端末のために、Set-Cookie、CookieヘッダやRefererヘッダをシミュレートすることもできます（EXPERIMENTAL)。
-<note>Apache2.2はバージョン0.8.1から対応</note>
+
 
 </section>
 <section title="インストール">
 <subsection title="準備">
 mod_chxjをインストールする前に、下記のものを用意する必要があります。
 <ol>
-  <li>Apache2.xのヘッダーファイル群</li>
-  <li>Apache2.x用のapxs</li>
+  <li>Apache2.0のヘッダーファイル群</li>
+  <li>Apache2.0用のapxs</li>
   <li>apr(Apache Portable Runtime)ライブラリとそのヘッダファイル郡(apu含む)</li>
   <li>automake、autoconf、libtool1.3.X</li>
   <li>ImageMagick(MagickWand)</li>
-  <li>libiconvまたはlibiconv_hook(SJIS-WIN、EUCJP-WIN対応が望ましい)</li>
+  <li>libiconvまたはlibiconv_hook</li>
   <li>Linux</li>
 </ol>
 </subsection>
@@ -44,12 +44,13 @@ $ ./buildconf.sh
 </li>
 <li>Configure
 
-以下は、/usr/include/apache2.xに、Apache2.xのヘッダーファイルが存在する場合です。
+以下は、/usr/include/apache2.0に、Apache2.0のヘッダーファイルが存在する場合です。
 <program title="Configure">
-$ ./configure --with-apache-header=/usr/include/apache2.x
+$ ./configure --with-apache-header=/usr/include/apache2.0
 </program>
 <note>--with-apache-headerは必須です。</note>
-<note>環境によっては--with-iconvや--with-apr、--with-apuも必要です</note>
+<note>FreeBSD等の場合は--with-iconvも必須です。</note>
+<note>場合によっては--with-aprや--with-apuも必要です。</note>
 </li>
 <li>mod_chxj.soを生成します
 <program title="make">
@@ -88,7 +89,7 @@ $ cp etc/emoji.xml /etc/apache2/chxj
 
 <program title="httpd.conf">
 #====================================================================================
-# モジュールをApache2.xにロード
+# モジュールをApache2.0にロード
 #====================================================================================
 LoadModule chxj_module /usr/lib/apache2/modules/mod_chxj.so
 
@@ -122,7 +123,7 @@ ChxjConvertRule "^/chxj.+$" "EngineOn" "NONE"
 
 <program title="httpd.conf">
 #====================================================================================
-# モジュールをApache2.xにロード
+# モジュールをApache2.0にロード
 #====================================================================================
 LoadModule chxj_module /usr/lib/apache2/modules/mod_chxj.so
 
@@ -158,7 +159,7 @@ ChxjConvertRule "^/chxj.+$" "EngineOn" "EUC-JP"
 
 <program title="httpd.conf">
 #====================================================================================
-# モジュールをApache2.xにロード
+# モジュールをApache2.0にロード
 #====================================================================================
 LoadModule chxj_module /usr/lib/apache2/modules/mod_chxj.so
 
@@ -266,6 +267,21 @@ ChxjImageCopyright "A.Konno"
       <br />
     </li>
 
+    <li>ChxjImageCacheLimit<br />
+      mod_chxj画像変換ハンドラが使用する変換後の画像をおいておくディレクトリの許容量を指定します。
+      単位はbyte。
+
+      <program title="ChxjImageCacheLimit">
+      ChxjImageCacheLimit 1024
+      </program>
+
+      mod_chxjに画像変換キャッシュ最大サイズとして1kbyteと指定。
+      ※このとき変換結果が1kbyte以上あるような場合にはINTERNAL_SERVER_ERRORを返します。
+       十分な領域を確保するか、画像サイズを小さくしてください。
+      <br />
+      <br />
+    </li>
+
 
     <li>ChxjImageCopyright<br />
       mod_chxjの画像変換ハンドラに、転送禁止設定を行うよう指示します。
@@ -367,10 +383,17 @@ ChxjConvRule "^/chxj.+$" "EngineOn" "EUC-JP"
     ChxjImageCacheDir   /tmp
   </program> 
   </li>
+  <li>ChxjImageCacheLimit<br />
+  イメージの一時ファイル保存許容量を指定します。
+  下記は1MByteの例。
+  <program title="ex)">
+    ChxjImageCacheLimit   1048576
+  </program>
+  </li>
   <li>ChxjImageCopyright<br />
   イメージに著作権情報を付与します。
   <program title="ex)">
-    ChxjImageCacheDir   "chosakuken jyoho"
+    ChxjImageCopyright   "chosakuken jyoho"
   </program> 
   </li>
   <li>ChxjConvertRule<br />

@@ -1279,7 +1279,6 @@ chxj_create_per_dir_config(apr_pool_t *p, char *arg)
   conf->server_side_encoding = NULL;
   conf->cookie_db_dir    = NULL;
   conf->cookie_timeout   = 0;
-  conf->image_cache_limit = DEFAULT_IMAGE_CACHE_LIMIT; 
 
   if (arg == NULL) {
     conf->dir                  = NULL;
@@ -1680,6 +1679,35 @@ cmd_set_image_cache_dir(cmd_parms *parms, void *mconfig, const char *arg)
 
 
 static const char *
+cmd_set_image_cache_limit(cmd_parms *parms, void *mconfig, const char* arg)
+{
+  mod_chxj_config* conf;
+  Doc              doc;
+
+  doc.r = NULL;
+
+  if (strlen(arg) > IMAGE_CACHE_LIMIT_FMT_LEN)
+    return "cache size is too long.";
+
+  conf = (mod_chxj_config*)mconfig;
+  errno = 0;
+  /*
+   * I use strtol function because strtoul is not portable function.
+   */
+  conf->image_cache_limit = (unsigned long)strtol(arg, NULL, 10);
+  switch (errno) {
+  case EINVAL:
+    return apr_psprintf(parms->pool, "ChxjImageCacheLimit invalid value [%s] errno:[%d]", arg, errno);
+  case ERANGE:
+    return apr_psprintf(parms->pool, "ChxjImageCacheLimit Out of range [%s] errno:[%d]", arg, errno);
+  default:
+    break;
+  }
+  return NULL;
+}
+
+
+static const char*
 cmd_set_image_copyright(cmd_parms *parms, void *mconfig, const char *arg) 
 {
   mod_chxj_config  *conf;
@@ -1857,6 +1885,12 @@ static const command_rec cmds[] = {
     NULL,
     OR_ALL,
     "Image Cache Directory"),
+  AP_INIT_TAKE1(
+    "ChxjImageCacheLimit",
+    cmd_set_image_cache_limit,
+    NULL,
+    OR_ALL,
+    "Image Cache Limit"),
   AP_INIT_TAKE1(
     "ChxjImageCopyright",
     cmd_set_image_copyright,

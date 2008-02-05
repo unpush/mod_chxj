@@ -692,6 +692,7 @@ s_create_cache_file(request_rec          *r,
   DBG(r, "end convert and compression");
 
   /* check limit */
+  /* XXX:START - I will rewrite it when leaving. */
   rv = apr_stat(&cache_dir_st, conf->image_cache_dir, APR_FINFO_MIN, r->pool);
   if (rv != APR_SUCCESS) {
     DestroyMagickWand(magick_wand);
@@ -708,6 +709,7 @@ s_create_cache_file(request_rec          *r,
     int found_file = 0;
     unsigned long max_size = (! conf->image_cache_limit) ? DEFAULT_IMAGE_CACHE_LIMIT : conf->image_cache_limit;
     char *delete_file_name;
+    DBG(r, "conf->image_cache_limit:[%lu] max_size:[%lu]", conf->image_cache_limit, max_size);
 
     rv = apr_dir_open(&dir, conf->image_cache_dir, r->pool);
     if (rv != APR_SUCCESS) { 
@@ -734,10 +736,17 @@ s_create_cache_file(request_rec          *r,
       }
     }
     apr_dir_close(dir);
-    if (total_size + writebyte < max_size || found_file == 0) {
-      DBG(r, "There is an enough size in cache. total_size:[%lu] max_size:[%lu] found_file=[%d]",
-             total_size, max_size, found_file);
+    if (total_size + writebyte < max_size) {
+      DBG(r, "There is an enough size in cache. total_size:[%lu] max_size:[%lu] found_file=[%d] max_size=[%lu]", total_size, max_size, found_file, max_size);
       break;
+    }
+    if (found_file == 0 && writebyte >= max_size) {
+      ERR(r, "================================================");
+      ERR(r, "cache space is too small...");
+      ERR(r, "At least the same size as %luByte is necessary for me.", (unsigned long)writebyte);
+      ERR(r, "Please specify the ChxjImageCacheLimit that is larger than now value. ");
+      ERR(r, "================================================");
+      return HTTP_INTERNAL_SERVER_ERROR;
     }
     DBG(r, "Image Cache dir is full. total_size:[%lu] max_size:[%lu]", 
            total_size + writebyte, max_size);
@@ -755,6 +764,7 @@ s_create_cache_file(request_rec          *r,
       break;
     }
   }
+  /* XXX:END - I will rewrite it when leaving. */
   
   /* to cache */
   rv = apr_file_open(&fout, tmpfile,

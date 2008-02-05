@@ -33,12 +33,6 @@
 /* Define to 1 if you have the <libgen.h> header file. */
 #undef HAVE_LIBGEN_H
 
-/* Define to 1 if you have the iconv library file. */
-#undef HAVE_LIBICONV
-
-/* Define to 1 if you have the iconv_hook library file. */
-#undef HAVE_LIBICONV_HOOK
-
 /* Define to 1 if your system has a GNU libc compatible `malloc' function, and
    to 0 otherwise. */
 #undef HAVE_MALLOC
