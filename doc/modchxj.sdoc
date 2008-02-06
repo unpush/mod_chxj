@@ -11,7 +11,7 @@
 <body>
 <section title="Overview">
 
-mod_chxjはオープンソースの携帯向けコンテンツ変換Apache2.0用モジュールであり、
+mod_chxjはオープンソースの携帯向けコンテンツ変換Apache2.x用モジュールであり、
 CHTML（DoCoMo i-Mode用 CHTML3.0)で記述された文書や通常のHTMLで記述された文書を、アクセスに来た端末のUser-Agentヘッダを見て、それぞれの端末にあった形式に変換します。
 HTML文書に限らず、画像（jpg、gif、png）、絵文字についても、定義ファイルに従ってそれぞれのキャリアにあった絵文字に変換します。
 Cookie非対応端末、Refer非対応端末のために、Set-Cookie、CookieヘッダやRefererヘッダをシミュレートすることもできます（EXPERIMENTAL)。
@@ -22,12 +22,11 @@ Cookie非対応端末、Refer非対応端末のために、Set-Cookie、CookieヘッダやRefererヘッ
 <subsection title="準備">
 mod_chxjをインストールする前に、下記のものを用意する必要があります。
 <ol>
-  <li>Apache2.0のヘッダーファイル群</li>
-  <li>Apache2.0用のapxs</li>
+  <li>Apache2.xのヘッダーファイル群</li>
+  <li>Apache2.x用のapxs</li>
   <li>apr(Apache Portable Runtime)ライブラリとそのヘッダファイル郡(apu含む)</li>
   <li>automake、autoconf、libtool1.3.X</li>
   <li>ImageMagick(MagickWand)</li>
-  <li>libiconvまたはlibiconv_hook</li>
   <li>Linux</li>
 </ol>
 </subsection>
@@ -37,20 +36,18 @@ mod_chxjは<a href="http://sourceforge.jp/projects/modchxj/">こちら</a>からダウン
 <subsection title="インストール">
 以下にmod_chxjインストール手順を示します。
 <ol>
-<li>Configure スクリプトを生成します<program title="Configure スクリプトの生成">
+<li>Configure スクリプトを生成します(必須ではない)<program title="Configure スクリプトの生成">
 $ ./buildconf.sh
 </program> 
 <note>"$"はプロンプトをあらわします。</note>
 </li>
 <li>Configure
 
-以下は、/usr/include/apache2.0に、Apache2.0のヘッダーファイルが存在する場合です。
 <program title="Configure">
-$ ./configure --with-apache-header=/usr/include/apache2.0
+$ ./configure
 </program>
-<note>--with-apache-headerは必須です。</note>
-<note>FreeBSD等の場合は--with-iconvも必須です。</note>
 <note>場合によっては--with-aprや--with-apuも必要です。</note>
+<note>0.8.xの場合には--with-apache-headerが必須です</note>
 </li>
 <li>mod_chxj.soを生成します
 <program title="make">
@@ -65,6 +62,7 @@ $ make install
 <li>データの設置
 etcディレクトリは以下のdevice_data.xmlとemoji.xmlをApache
 からアクセスできるところに配置します。
+<note>0.9.0からemoji.xml、device_data.xmlの定義フォーマットを変更しましたのでバージョンをあわせてください</note>
 
 以下、/etc/apache2/chxjディレクトリにchxj用設定ファイルを用意する場合
 
@@ -239,6 +237,7 @@ ChxjConvertRule "^/.+$" "EngineOn" "EUC-JP"
 ChxjImageEngine On
 ChxjImageCacheDir /tmp
 ChxjImageCopyright "A.Konno"
+ChxjImageCacheLimit 10485760
 &lt;/Location&gt;
 </program>
 
@@ -267,20 +266,6 @@ ChxjImageCopyright "A.Konno"
       <br />
     </li>
 
-    <li>ChxjImageCacheLimit<br />
-      mod_chxj画像変換ハンドラが使用する変換後の画像をおいておくディレクトリの許容量を指定します。
-      単位はbyte。
-
-      <program title="ChxjImageCacheLimit">
-      ChxjImageCacheLimit 1024
-      </program>
-
-      mod_chxjに画像変換キャッシュ最大サイズとして1kbyteと指定。
-      ※このとき変換結果が1kbyte以上あるような場合にはINTERNAL_SERVER_ERRORを返します。
-       十分な領域を確保するか、画像サイズを小さくしてください。
-      <br />
-      <br />
-    </li>
 
 
     <li>ChxjImageCopyright<br />
@@ -312,6 +297,21 @@ ChxjImageCopyright "A.Konno"
 
        を埋め込みます。
        <note>SoftBank/Vodafoneの場合は、リクエストＵＲＬの最後が.pnzか、.jpzで終わるようにダミーを付けなければなりません。</note>
+    </li>
+
+    <li>ChxjImageCacheLimit<br />
+      mod_chxj画像変換ハンドラが使用する変換後の画像をおいておくディレクトリの許容量を指定します。
+      単位はbyte。
+
+      <program title="ChxjImageCacheLimit">
+      ChxjImageCacheLimit 1024
+      </program>
+
+      mod_chxjに画像変換キャッシュ最大サイズとして1kbyteと指定。
+      ※このとき変換結果が1kbyte以上あるような場合にはINTERNAL_SERVER_ERRORを返します。
+       十分な領域を確保するか、画像サイズを小さくしてください。
+      <br />
+      <br />
     </li>
   </ol>
   </li>

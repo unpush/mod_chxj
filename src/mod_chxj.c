@@ -128,7 +128,7 @@ converter_t convert_routine[] = {
   },
 };
 
-static int chxj_convert_input_header(request_rec *r,chxjconvrule_entry *entryp);
+static int chxj_convert_input_header(request_rec *r,chxjconvrule_entry *entryp, device_table *spec);
 
 /**
  * Only when User-Agent is specified, the User-Agent header is camouflaged. 
@@ -175,7 +175,7 @@ chxj_headers_fixup(request_rec *r)
                      HTTP_USER_AGENT, 
                      entryp->user_agent);
 
-    chxj_convert_input_header(r,entryp);
+    chxj_convert_input_header(r,entryp,spec);
 
     break;
   
@@ -328,12 +328,39 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len, device_table *s
 
 
 /**
+ * POSTDATA and GETDATA convertor.
+ */
+static char *
+chxj_convert_emoji_param_list(request_rec *r, device_table *spec, chxjconvrule_entry *entryp, char *result, const char *name, const char *value,
+  char *(*func_emoji_to_meta_emoji)(request_rec *, const char *, const char *, apr_size_t *))
+{
+  char *new_val, *new_nam;
+  apr_size_t new_nam_len, new_val_len;
+  if (strlen(result) != 0)
+    result = apr_pstrcat(r->pool, result, "&", NULL);
+  new_nam = chxj_url_decode(r, apr_pstrdup(r->pool, name));
+  new_val = chxj_url_decode(r, apr_pstrdup(r->pool, (value) ? value : ""));
+  new_nam_len = strlen(new_nam);
+  new_val_len = strlen(new_val);
+  new_nam = func_emoji_to_meta_emoji(r,GET_SPEC_CHARSET(spec), new_nam, &new_nam_len);
+  new_val = func_emoji_to_meta_emoji(r,GET_SPEC_CHARSET(spec), new_val, &new_val_len);
+  new_nam = chxj_convert_encoding(r, GET_SPEC_CHARSET(spec), entryp->encoding, new_nam, &new_nam_len);
+  new_val = chxj_convert_encoding(r, GET_SPEC_CHARSET(spec), entryp->encoding, new_val, &new_val_len);
+  new_nam = chxj_postdata_meta_emoji_to_emoji(r,entryp->encoding, new_nam, spec);
+  new_val = chxj_postdata_meta_emoji_to_emoji(r,entryp->encoding, new_val, spec);
+  new_nam = chxj_url_encode(r,new_nam);
+  new_val = chxj_url_encode(r,new_val);
+  return apr_pstrcat(r->pool, result, new_nam, "=", new_val, NULL);
+}
+
+
+/**
  * It converts it from HEADER.
  *
  * @param r   [i]
  */
 static int
-chxj_convert_input_header(request_rec *r,chxjconvrule_entry *entryp) 
+chxj_convert_input_header(request_rec *r,chxjconvrule_entry *entryp, device_table *spec) 
 {
 
   char       *buff;
@@ -347,6 +374,7 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry *entryp)
   char       *vstate;
   cookie_t   *cookie;
   int        no_update_flag = 0;
+  char     *(*func_emoji_to_meta_emoji)(request_rec *, const char *, const char *, apr_size_t *);
 
   DBG(r, "start chxj_convert_input_header()");
 
@@ -383,6 +411,27 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry *entryp)
   buff = apr_pstrdup(r->pool, r->args);
   DBG(r, "r->args=[%s]", buff);
 
+  /* use postdata convert functions */
+  switch(GET_HTML_SPEC_TYPE(spec)) {
+  case CHXJ_SPEC_XHtml_Mobile_1_0:
+  case CHXJ_SPEC_Hdml:
+    func_emoji_to_meta_emoji = chxj_postdata_ezweb_emoji_to_meta_emoji;
+    break;
+  case CHXJ_SPEC_Jhtml:
+    func_emoji_to_meta_emoji = chxj_postdata_softbank_emoji_to_meta_emoji;
+    break;
+  case CHXJ_SPEC_Chtml_1_0:
+  case CHXJ_SPEC_Chtml_2_0:
+  case CHXJ_SPEC_Chtml_3_0:
+  case CHXJ_SPEC_Chtml_4_0:
+  case CHXJ_SPEC_Chtml_5_0:
+  case CHXJ_SPEC_Chtml_6_0:
+  case CHXJ_SPEC_Chtml_7_0:
+  default:
+    func_emoji_to_meta_emoji = chxj_postdata_imode_emoji_to_meta_emoji;
+    break;
+  }
+
   /* _chxj_dmy */
   /* _chxj_c_ */
   /* _chxj_r_ */
@@ -405,14 +454,8 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry *entryp)
         result = apr_pstrcat(r->pool, result, "&", NULL);
 
       if (strcasecmp(entryp->encoding, "NONE") != 0 && value && strlen(value)) {
-        apr_size_t dlen;
-        char *dvalue;
-
-        dlen   = strlen(value);
-        value = chxj_url_decode(r, value);
-        dvalue = chxj_rencoding(r, value, &dlen);
-        dvalue = chxj_url_encode(r, dvalue);
-        result = apr_pstrcat(r->pool, result, name, "=", dvalue, NULL);
+        result = chxj_convert_emoji_param_list(r, spec, entryp, result, name, value, func_emoji_to_meta_emoji);
+        DBG(r, "result:[%s]", result);
       }
       else {
         if (strcmp(name, pair_sv) != 0)
@@ -449,7 +492,8 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry *entryp)
   }
   r->args = result;
 
-  DBG(r, "result r->args=[%s]", r->args);
+  DBG(r, "GETDATA:[%s]", r->args);
+  DBG(r, "GETDATA result r->args=[%s]", r->args);
   DBG(r, "end   chxj_convert_input_header()");
   return 0;
 }
@@ -556,23 +600,7 @@ chxj_input_convert(
     name  = apr_strtok(pair, "=", &vstate);
     value = apr_strtok(NULL, "=", &vstate);
     if (strncasecmp(name, "_chxj", 5) != 0) {
-      char *new_val, *new_nam;
-      apr_size_t new_nam_len, new_val_len;
-      if (strlen(result) != 0) 
-        result = apr_pstrcat(r->pool, result, "&", NULL);
-      new_nam = chxj_url_decode(r, apr_pstrdup(r->pool, name));
-      new_val = chxj_url_decode(r, apr_pstrdup(r->pool, (value) ? value : ""));
-      new_nam_len = strlen(new_nam);
-      new_val_len = strlen(new_val);
-      new_nam = func_emoji_to_meta_emoji(r,GET_SPEC_CHARSET(spec), new_nam, &new_nam_len);
-      new_val = func_emoji_to_meta_emoji(r,GET_SPEC_CHARSET(spec), new_val, &new_val_len);
-      new_nam = chxj_convert_encoding(r, GET_SPEC_CHARSET(spec), entryp->encoding, new_nam, &new_nam_len);
-      new_val = chxj_convert_encoding(r, GET_SPEC_CHARSET(spec), entryp->encoding, new_val, &new_val_len);
-      new_nam = chxj_postdata_meta_emoji_to_emoji(r,entryp->encoding, new_nam, spec);
-      new_val = chxj_postdata_meta_emoji_to_emoji(r,entryp->encoding, new_val, spec);
-      new_nam = chxj_url_encode(r,new_nam);
-      new_val = chxj_url_encode(r,new_val);
-      result = apr_pstrcat(r->pool, result, new_nam, "=", new_val, NULL);
+      result = chxj_convert_emoji_param_list(r, spec, entryp, result, name, value, func_emoji_to_meta_emoji);
       DBG(r, "result:[%s]", result);
     }
     else if (strncasecmp(name, "_chxj_c_", 8) == 0 

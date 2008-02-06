@@ -8,13 +8,13 @@ header("Pragma: no-cache");
   </head>
   <body>
 <?php
-  $data = $_POST["øŸ"];
+  $data = $_GET["øŸ"];
 ?>
 <center>
 ŠG•¶Žš“ü—Í‚ÌÃ½Ä(SJIS‚ÅGET)
 </center>
 <hr>
-    <form name="øŸ" method="pget" action="get1_sjis.php">
+    <form name="øŸ" method="get" action="get1_sjis.php">
       <input type="text" name="øŸ" value="<?=${data}?>" />
       <input type="submit" value="ùü" />
     </form>

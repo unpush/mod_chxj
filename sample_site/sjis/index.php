@@ -12,7 +12,7 @@ header("Pragma: no-cache");
 </center>
 <hr>
 <a href="post1_sjis.php" accesskey="2">絵文字入力のﾃｽﾄ(POST)</a><br>
-<a href="post1_sjis.php" accesskey="3">絵文字入力のﾃｽﾄ(GET)</a><br>
+<a href="get1_sjis.php" accesskey="3">絵文字入力のﾃｽﾄ(GET)</a><br>
 <hr>
 <a href="all-16.php" accesskey="4">16進参照文字列絵文表示ﾃｽﾄ</a><br>
 <a href="all-10.php" accesskey="5">10進参照文字列絵文表示ﾃｽﾄ</a><br>
