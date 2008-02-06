@@ -36,6 +36,12 @@ extern int chxj_trans_name(
   request_rec*         r);
 
 
+/* micro second */
+#define CACHE_RECHECK_WAIT        (200000)
+
+/* retry count of creating cache file */
+#define CACHE_RETRY_COUNT         (5)
+
 #endif
 /*
  * vim:ts=4 et

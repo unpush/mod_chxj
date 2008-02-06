@@ -384,6 +384,8 @@ module AP_MODULE_DECLARE_DATA chxj_module;
   ap_log_rerror(APLOG_MARK,APLOG_ERR,0,(request_rec*)(rec),(format), ##args)
 #define SERR(rec,format, args...) \
   ap_log_error(APLOG_MARK,APLOG_ERR,0,(rec),(format), ##args)
+#define WRN(rec,format, args...)  \
+  ap_log_rerror(APLOG_MARK,APLOG_WARNING,0,(rec),(format), ##args)
 
 extern tag_handlers chxj_tag_handlers[];
 extern tag_handler  chtml10_handler[];

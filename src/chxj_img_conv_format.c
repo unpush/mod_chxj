@@ -377,6 +377,7 @@ s_img_conv_format_from_file(
   apr_finfo_t    st;
   apr_finfo_t    cache_st;
   char           *tmpfile;
+  int            try_count;
 
   if (spec->html_spec_type == CHXJ_SPEC_UNKNOWN) {
     /*
@@ -395,37 +396,42 @@ s_img_conv_format_from_file(
   if (rv != APR_SUCCESS)
     return HTTP_NOT_FOUND;
 
+  try_count = CACHE_RETRY_COUNT;
+  do {
+    rv = apr_stat(&cache_st, tmpfile, APR_FINFO_MIN, r->pool);
 
-  DBG(r,"found [%s]", r->filename);
-  rv = apr_stat(&cache_st, tmpfile, APR_FINFO_MIN, r->pool);
-  DBG(r,"found [%s]", r->filename);
+    if (rv != APR_SUCCESS || cache_st.ctime < st.mtime) {
+      /*------------------------------------------------------------------------*/
+      /* It tries to make the cash file when it doesn't exist or there is       */
+      /* change time later since the making time of the cash file.              */
+      /*------------------------------------------------------------------------*/
+      rv = s_create_cache_file(r,tmpfile, spec, &st, qsp, conf);
+      if (rv != OK)
+        return rv;
+    }
 
-  if (rv != APR_SUCCESS || cache_st.ctime < st.mtime) {
-    /*------------------------------------------------------------------------*/
-    /* It tries to make the cash file when it doesn't exist or there is       */
-    /* change time later since the making time of the cash file.              */
-    /*------------------------------------------------------------------------*/
-    rv = s_create_cache_file(r,tmpfile, spec, &st, qsp, conf);
-    if (rv != OK)
-      return rv;
-  }
-
-  DBG(r,"color=[%d]", spec->color);
-  if (! r->header_only)  {
-    rv = s_send_cache_file(spec, qsp,r, tmpfile);
-    if (rv != OK) 
-      return rv;
-  }
-  else {
-    rv = s_header_only_cache_file(spec, qsp, r, tmpfile);
-    if (rv != OK) 
-      return rv;
+    DBG(r,"color=[%d]", spec->color);
+    if (! r->header_only)  {
+      rv = s_send_cache_file(spec, qsp,r, tmpfile);
+    }
+    else {
+      rv = s_header_only_cache_file(spec, qsp, r, tmpfile);
+    }
+    if (rv == OK) break;
+    if (rv == HTTP_NOT_FOUND) {
+      DBG(r, "recheck wait... try_count[%d]", try_count);
+      apr_sleep(CACHE_RECHECK_WAIT);
+    }
+  } while (try_count--);
+  if (try_count <= 0) {
+    WRN(r, "cache retry failure....");
+    WRN(r, "cache file was deleted...");
   }
   apr_table_setn(r->headers_in, "CHXJ_IMG_CONV", "done");
 
   DBG(r,"end chxj_img_conv_format");
 
-  return OK;
+  return rv;
 }
 
 

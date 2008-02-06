@@ -21,11 +21,7 @@ AC_CHECK_LIB([apr-1],  [main])
 
 AC_ARG_WITH(apache-header, [  --with-apache-header=ARG The directory with the header file of apache2.x is specified. ]) 
 #[, ACTION-IF-GIVEN[, ACTION-IF-NOT-GIVEN]])
-if test "x$with_apache_header" = "x"; then
-    AC_MSG_ERROR([
-Please specify the --with-apache-header option.
-])
-fi
+
 if test "x$with_apache_header" = "xyes"; then
     AC_MSG_ERROR([
 Please specify the --with-apache-header option. And, please specify the place of the header file. 
@@ -137,53 +133,10 @@ if test "x$with_apu_config" != "x" ; then
   APU_CONFIG=$with_apu_config
 fi
 
-
-#AC_ARG_WITH(iconv, [  --with-iconv=ARG  specify the place of the libiconv directory.])
-#AC_ARG_WITH(iconv_hook, [  --with-iconv_hook=ARG  specify the place of the libiconv_hook directory.])
-#if test "x$with_iconv" = "x" -a "x$with_iconv_hook" = "x" ; then
-#  AC_CHECK_LIB([iconv_hook], [iconv_open], [
-#      with_iconv="ok"
-#      AC_DEFINE([HAVE_LIBICONV_HOOK], [], [Define to 1 if you have the iconv library file.])
-#      LIBS="${LIBS} -liconv_hook"
-#  ],[
-#    AC_CHECK_LIB([iconv], [iconv_open], [
-#      with_iconv="ok"
-#      AC_DEFINE([HAVE_LIBICONV], [], [Define to 1 if you have the iconv library file.])
-#      LIBS="${LIBS} -liconv"
-#  ], [
-#      witn_iconv=""
-#  ],[])
-#  ],[])
-#fi
-#
-#if test "x$with_iconv" != "xok" ; then
-#  if test "x$with_iconv" = "xyes" ; then
-#      AC_MSG_ERROR([
-#  Please specify the --with-iconv option. And, please specify the place of the libiconv program. 
-#  ])
-#  fi
-#  if test "x$with_iconv" != "x" ; then
-#    LIBS="${LIBS} -L$with_iconv -liconv "
-#    AC_DEFINE([HAVE_LIBICONV], [], [Define to 1 if you have the iconv library file.])
-#  fi
-#fi
-#if test "x$with_iconv" = "x" ; then
-#  if test "x$with_iconv_hook" = "xyes" ; then
-#      AC_MSG_ERROR([
-#  Please specify the --with-iconv-hook option. And, please specify the place of the libiconv_hook program. 
-#  ])
-#  fi
-#  if test "x$with_iconv_hook" != "x" ; then
-#    LIBS="${LIBS} -L${with_iconv_hook} -liconv_hook "
-#    AC_DEFINE([HAVE_LIBICONV_HOOK], [], [Define to 1 if you have the iconv_hook library file.])
-#  fi
-#  if test "x$with_iconv_hook" = "x" ; then
-#      AC_MSG_ERROR([
-#  Please specify the --with-iconv-hook option. And, please specify the place of the libiconv_hook program. 
-#  ])
-#  fi
-#fi
-
+if test "x$with_apache_header" = "x" ; then
+  with_apache_header=`${APXS} -q includedir`
+  AC_SUBST(with_apache_header)
+fi
 
 case $host_os in
   freebsd*)
@@ -198,7 +151,9 @@ LIBS="${LIBS} `${APU_CONFIG} --ldflags` `${APU_CONFIG} --libs` "
 CFLAGS="${CFLAGS} `${WAND_CONFIG} --cppflags` `${WAND_CONFIG} --cflags`"
 CFLAGS="${CFLAGS} `${APR_CONFIG} --includes` `${APR_CONFIG} --cflags` `${APR_CONFIG} --cppflags`"
 CFLAGS="${CFLAGS} `${APU_CONFIG} --includes`"
-CPPFLAGS="${CPPFLAGS} `${APR_CONFIG} --includes` -I${with_apache_header}"
+CFLAGS="${CFLAGS} -I${with_apache_header}"
+CPPFLAGS="${CPPFLAGS} `${APR_CONFIG} --includes` "
+CPPFLAGS="${CPPFLAGS} -I${with_apache_header}"
 AC_SUBST(with_apache_header)
 AC_SUBST(CC)
 AC_SUBST(QDEFS)

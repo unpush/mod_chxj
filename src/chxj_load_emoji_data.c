@@ -186,6 +186,8 @@ s_set_emoji_data(
 {
   Node *child;
   char *rtn;
+  int has_ezweb2imode_tag = 0;
+  int has_softbank2imode_tag = 0;
 
   for (child = qs_get_child_node(doc,node);
        child;
@@ -200,12 +202,17 @@ s_set_emoji_data(
       if ((rtn = s_load_ezweb2imode_tag(doc, p, conf, child))) {
         return rtn;
       }
+      has_ezweb2imode_tag = 1;
     }
     else if (STRCASEEQ('s','S',"softbank2imode", name)) {
       if ((rtn = s_load_softbank2imode_tag(doc, p, conf, child))) {
         return rtn;
       }
+      has_softbank2imode_tag = 1;
     }
+  }
+  if (!has_ezweb2imode_tag || !has_softbank2imode_tag) {
+    return apr_pstrdup(p,"``emoji.xml'' is too old(not 0.9.0 nor later). Please setup emoji.xml for a new definition(0.9.0 or later). ");
   }
   return NULL;
 }
