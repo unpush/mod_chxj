@@ -977,7 +977,7 @@ chxj_calc_ecc(qr_code_t* qrcode,
       ecc_count = v_ecc_spec_table[qrcode->version*4+qrcode->level].rs[rs_pos].total_code_count - data_count;
 
 #ifdef QR_CODE_DEBUG
-      DBG2(r,"data_count[%d] ecc_count[%d]", data_count, ecc_count);
+      DBG(r,"data_count[%d] ecc_count[%d]", data_count, ecc_count);
 #endif
 
       rs_block[now_rs_num] = (unsigned char*)apr_palloc(qrcode->r->pool, data_count + ecc_count + 1);
@@ -1016,7 +1016,7 @@ chxj_calc_ecc(qr_code_t* qrcode,
         for (jj=ecc_count + data_count - 1; jj>=0; jj--)
           debug_rows = apr_pstrcat(r->pool, debug_rows, apr_psprintf(r->pool, "[%d]", tmp[jj]), NULL);
 
-        DBG1(r,"rows [%s]", debug_rows);
+        DBG(r,"rows [%s]", debug_rows);
       } while(0);
       /* for DEBUG END */
 #endif
@@ -1027,7 +1027,7 @@ chxj_calc_ecc(qr_code_t* qrcode,
         int tgt = tmp[ii--];
         int shisu = v_galois_int_to_log[tgt];
 #ifdef QR_CODE_DEBUG
-        DBG2(r,"tgt[%d] shisu[%d]", tgt, shisu);
+        DBG(r,"tgt[%d] shisu[%d]", tgt, shisu);
 #endif
         if (tgt == 0)
           continue;
@@ -1046,7 +1046,7 @@ chxj_calc_ecc(qr_code_t* qrcode,
           for (jj=ecc_count + data_count - 1; jj>=0; jj--)
             debug_rows = apr_pstrcat(r->pool, debug_rows, apr_psprintf(r->pool, "[%d]", tmp[jj]), NULL);
 
-          DBG1(r,"rows [%s]", debug_rows);
+          DBG(r,"rows [%s]", debug_rows);
         } while(0);
         /* for DEBUG END */
 #endif
@@ -1109,7 +1109,7 @@ chxj_calc_ecc(qr_code_t* qrcode,
   do {
     DBG(r,"######### AFTER BLOCK DUMP ###############");
     for (ii=0; ii<rslt_pos; ii++) {
-      DBG1(r,"[%d]", dst[ii]);
+      DBG(r,"[%d]", dst[ii]);
     }
   } while(0);
 #endif

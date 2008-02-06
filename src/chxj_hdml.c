@@ -385,7 +385,7 @@ chxj_exchange_hdml(
     /* The Location header generates tag in an initial HDML machine for the   */
     /* uncorrespon dence.                                                     */
     /*------------------------------------------------------------------------*/
-    DBG1(r, "Location is not null[Location:%s]", buf);
+    DBG(r, "Location is not null[Location:%s]", buf);
     s_output_to_hdml_out(&hdml, 
         "<HDML VERSION=3.0 MARKABLE=TRUE PUBLIC=TRUE>\n"
         "<NODISPLAY MARKABLE=TRUE PUBLIC=TRUE TITLE=\" \">\n"
@@ -408,8 +408,8 @@ chxj_exchange_hdml(
     memset(ss, 0, srclen + 1);
     memcpy(ss, src, srclen);
     
-    DBG1(r, "input strlen(src)=[%d]\n", (int)srclen);
-    DBG1(r, "[[[[%s]]]\n", src);
+    DBG(r, "input strlen(src)=[%d]\n", (int)srclen);
+    DBG(r, "[[[[%s]]]\n", src);
 
     qs_init_malloc(&doc); 
     qs_init_root_node(&doc);
@@ -424,7 +424,7 @@ chxj_exchange_hdml(
     chxj_node_exchange(spec,r,(void*)&hdml, &doc, qs_get_root(&doc), 0);
     dst = hdml.out;
 
-    DBG1(r,"tmp=[%s]", dst);
+    DBG(r,"tmp=[%s]", dst);
     qs_all_free(&doc,QX_LOGMARK);
   }
 
@@ -1768,7 +1768,7 @@ s_hdml_do_input_radio_tag(hdml_t* hdml, Node* tag)
   for (ii=0; ii<MAX_RADIO_COUNT; ii++) {
     if (! hdml->radio_name_list[ii]) {
       /* @todo Oops..  */
-      DBG1(r, "Oops... radio list is null[%d]", ii);
+      DBG(r, "Oops... radio list is null[%d]", ii);
       /*----------------------------------------------------------------------*/
       /* Processing is ended because it doesn't happen off the fly.           */
       /*----------------------------------------------------------------------*/
@@ -1875,7 +1875,7 @@ s_hdml_do_input_radio_tag(hdml_t* hdml, Node* tag)
     }
 
     if (hdml->radio_checked_value[ii]) {
-      DBG1(r,"radio button is checked. checked value is [%s]", 
+      DBG(r,"radio button is checked. checked value is [%s]", 
         hdml->radio_checked_value[ii]);
       s_output_to_init_vars(hdml, 
                     apr_psprintf(r->pool, 
@@ -2398,13 +2398,13 @@ s_hdml_start_select_tag(void* pdoc, Node* node)
         selval = qs_alloc_zero_byte_string(r);
       }
       else {
-        DBG1(r, "selected value found[%s]" , selval);
+        DBG(r, "selected value found[%s]" , selval);
       }
       selvaltxt = qs_get_selected_value_text(doc, node, r);
       if (!selvaltxt)
         selvaltxt = qs_alloc_zero_byte_string(r);
 
-      DBG1(r, "selvaltxt:[%s]" ,selvaltxt);
+      DBG(r, "selvaltxt:[%s]" ,selvaltxt);
 
       s_output_to_init_vars(hdml, 
                       apr_psprintf(r->pool, 
@@ -2486,7 +2486,7 @@ s_hdml_start_option_tag(void* pdoc, Node* node)
   else
     txtval = qs_get_node_value(doc, child);
 
-  DBG1(r, "txtval:[%s]" , txtval);
+  DBG(r, "txtval:[%s]" , txtval);
 
   if (val && txtval) {
     s_output_to_hdml_card(hdml, 
@@ -2733,11 +2733,11 @@ s_hdml_count_radio_tag(hdml_t* hdml, Node* node)
     /*------------------------------------------------------------------------*/
     for (ii=0; ii<MAX_RADIO_COUNT; ii++) {
       if (! hdml->radio_name_list[ii]) {
-        DBG1(r, "new name:[%s]", rname);
+        DBG(r, "new name:[%s]", rname);
         break;
       }
       if (strcasecmp(hdml->radio_name_list[ii], rname) == 0) {
-        DBG1(r, "already registered name:[%s]", rname);
+        DBG(r, "already registered name:[%s]", rname);
         break;
       }
     }
@@ -2750,7 +2750,7 @@ s_hdml_count_radio_tag(hdml_t* hdml, Node* node)
       continue;
     }
 
-    DBG1(r,"add radio name:[%s]" ,rname);
+    DBG(r,"add radio name:[%s]" ,rname);
 
     hdml->radio_name_list[ii] = apr_pstrdup(r->pool, rname);
 
@@ -2851,7 +2851,7 @@ s_output_to_postdata(hdml_t* hdml, char* s)
                           qs_trim_string(r, s),
                           NULL);
 
-  DBG1(r, "POSTDATA:[%s]", hdml->postdata[hdml->pure_form_cnt] );
+  DBG(r, "POSTDATA:[%s]", hdml->postdata[hdml->pure_form_cnt] );
 }
 
 
@@ -2909,7 +2909,7 @@ s_output_to_init_vars(hdml_t* hdml, char* s)
 
   hdml->init_vars = apr_pstrcat(r->pool, hdml->init_vars, qs_trim_string(r,s), NULL);
 
-  DBG1(r, "INIT_VARS:[%s]", hdml->init_vars);
+  DBG(r, "INIT_VARS:[%s]", hdml->init_vars);
 }
 
 

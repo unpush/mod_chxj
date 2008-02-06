@@ -19316,16 +19316,6 @@ if test "${with_apache_header+set}" = set; then
   withval=$with_apache_header;
 fi
 
-#[, ACTION-IF-GIVEN[, ACTION-IF-NOT-GIVEN]])
-if test "x$with_apache_header" = "x"; then
-    { { echo "$as_me:$LINENO: error:
-Please specify the --with-apache-header option.
-" >&5
-echo "$as_me: error:
-Please specify the --with-apache-header option.
-" >&2;}
-   { (exit 1); exit 1; }; }
-fi
 if test "x$with_apache_header" = "xyes"; then
     { { echo "$as_me:$LINENO: error:
 Please specify the --with-apache-header option. And, please specify the place of the header file.
@@ -20031,6 +20021,9 @@ case $host_os in
     ;;
 esac
 
+if test "x${with_apache_header}" = "x" ; then
+  with_apache_header=`${APXS} -q includedir`
+fi
 
 LIBS="${LIBS} `${WAND_CONFIG} --ldflags` `${WAND_CONFIG} --libs | sed -e s/-ldpstk//` "
 LIBS="${LIBS} `${APR_CONFIG} --ldflags` `${APR_CONFIG} --libs` "

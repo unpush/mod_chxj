@@ -48,7 +48,7 @@ s_apply_rule(request_rec* r, chxjconvrule_entry* pp)
 
   uri = r->uri;
 
-  DBG2(r,"convert rule pattern=[%s] uri=[%s]", pp->pattern, uri);
+  DBG(r,"convert rule pattern=[%s] uri=[%s]", pp->pattern, uri);
 
   rtn = ap_regexec((const ap_regex_t*)pp->regexp, uri, AP_MAX_REG_MATCH, (ap_regmatch_t*)regmatch, 0);
   if (rtn == 0) {

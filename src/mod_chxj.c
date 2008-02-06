@@ -215,14 +215,14 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len, device_table *s
   else
     user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
 
-  DBG1(r,"User-Agent:[%s]", user_agent);
+  DBG(r,"User-Agent:[%s]", user_agent);
   DBG(r, "start chxj_exchange()");
-  DBG1(r,"content type is %s", r->content_type);
+  DBG(r,"content type is %s", r->content_type);
 
 
   if (*(char*)r->content_type == 't' 
   && strncmp(r->content_type, "text/html",   9) != 0) {
-    DBG1(r,"content type is %s", r->content_type);
+    DBG(r,"content type is %s", r->content_type);
     return (char*)*src;
   }
 
@@ -344,7 +344,7 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp)
   }
 
   buff = apr_pstrdup(r->pool, r->args);
-  DBG1(r, "r->args=[%s]", buff);
+  DBG(r, "r->args=[%s]", buff);
 
   /* _chxj_dmy */
   /* _chxj_c_ */
@@ -373,12 +373,12 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp)
 
         dlen   = strlen(value);
         value = chxj_url_decode(r, value);
-        DBG1(r, "************ before encoding[%s]", value);
+        DBG(r, "************ before encoding[%s]", value);
 
         dvalue = chxj_rencoding(r, value, &dlen);
         dvalue = chxj_url_encode(r, dvalue);
 
-        DBG1(r, "************ after encoding[%s]", dvalue);
+        DBG(r, "************ after encoding[%s]", dvalue);
 
         result = apr_pstrcat(r->pool, result, name, "=", dvalue, NULL);
       }
@@ -406,7 +406,7 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp)
     }
     else
     if (strcasecmp(name, CHXJ_COOKIE_PARAM) == 0) {
-      DBG1(r, "found cookie parameter[%s]", value);
+      DBG(r, "found cookie parameter[%s]", value);
       DBG(r, "call start chxj_load_cookie()");
       cookie = chxj_load_cookie(r, value);
       DBG(r, "call end   chxj_load_cookie()");
@@ -417,7 +417,7 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp)
   }
   r->args = result;
 
-  DBG1(r, "result r->args=[%s]", r->args);
+  DBG(r, "result r->args=[%s]", r->args);
   DBG(r, "end   chxj_convert_input_header()");
   return 0;
 }
@@ -453,7 +453,7 @@ chxj_input_convert(
 
   result = qs_alloc_zero_byte_string(r);
 
-  DBG1(r, "BEFORE input convert source = [%s]", s);
+  DBG(r, "BEFORE input convert source = [%s]", s);
 
   for (;;) {
     char* pair_sv;
@@ -497,12 +497,12 @@ chxj_input_convert(
 
         dlen   = strlen(value);
         value = chxj_url_decode(r, value);
-        DBG1(r, "************ before encoding[%s]", value);
+        DBG(r, "************ before encoding[%s]", value);
 
         dvalue = chxj_rencoding(r, value, &dlen);
         dvalue = chxj_url_encode(r,dvalue);
 
-        DBG1(r, "************ after encoding[%s]", dvalue);
+        DBG(r, "************ after encoding[%s]", dvalue);
 
         result = apr_pstrcat(r->pool, result, name, "=", dvalue, NULL);
 
@@ -530,12 +530,12 @@ chxj_input_convert(
 
         dlen   = strlen(value);
         value = chxj_url_decode(r, value);
-        DBG1(r, "************ before encoding[%s]", value);
+        DBG(r, "************ before encoding[%s]", value);
 
         dvalue = chxj_rencoding(r, value, &dlen);
         dvalue = chxj_url_encode(r,dvalue);
 
-        DBG1(r, "************ after encoding[%s]", dvalue);
+        DBG(r, "************ after encoding[%s]", dvalue);
 
         result = apr_pstrcat(r->pool, result, &name[8], "=", dvalue, NULL);
 
@@ -546,7 +546,7 @@ chxj_input_convert(
     }
     else
     if (strcasecmp(name, CHXJ_COOKIE_PARAM) == 0) {
-      DBG1(r, "found cookie parameter[%s]", value);
+      DBG(r, "found cookie parameter[%s]", value);
       DBG(r, "call start chxj_load_cookie()");
       cookie = chxj_load_cookie(r, value);
       DBG(r, "call end   chxj_load_cookie()");
@@ -557,7 +557,7 @@ chxj_input_convert(
   }
   *len = strlen(result);
 
-  DBG1(r, "AFTER input convert result = [%s]", result);
+  DBG(r, "AFTER input convert result = [%s]", result);
 
   return result;
 }
@@ -657,7 +657,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
 
         ctx = (mod_chxj_ctx*)f->ctx;
 
-        DBG1(r, "content_type=[%s]", r->content_type);
+        DBG(r, "content_type=[%s]", r->content_type);
 
         if (spec->html_spec_type != CHXJ_SPEC_UNKNOWN 
             && r->content_type 
@@ -673,7 +673,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
             memcpy(tmp, ctx->buffer, ctx->len);
 
 #if 0
-            DBG2(r, "input data=[%s] len=[%d]", tmp, ctx->len);
+            DBG(r, "input data=[%s] len=[%d]", tmp, ctx->len);
 #endif
 
             ctx->buffer = chxj_exchange(r, 
@@ -683,7 +683,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
                                         user_agent);
 
 #if 0
-            DBG2(r, "output data=[%.*s]", ctx->len,ctx->buffer);
+            DBG(r, "output data=[%.*s]", ctx->len,ctx->buffer);
 #endif
           }
           else {
@@ -759,7 +759,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
             memcpy(tmp, ctx->buffer, ctx->len);
 
 #if 0
-            DBG1(r, "input data=[%s]", tmp);
+            DBG(r, "input data=[%s]", tmp);
 #endif
 
 
@@ -772,7 +772,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
               ctx->buffer = tmp;
 
 #if 0
-            DBG2(r, "output data=[%.*s]", ctx->len,ctx->buffer);
+            DBG(r, "output data=[%.*s]", ctx->len,ctx->buffer);
 #endif
           }
         }
@@ -790,7 +790,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
         return rv;
       }
       else {
-        DBG1(r, " SAVE COOKIE[%x]", entryp->action);
+        DBG(r, " SAVE COOKIE[%x]", entryp->action);
 
         /*
          * save cookie.
@@ -815,12 +815,12 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
              */
             location_header = (char*)apr_table_get(r->headers_out, "Location");
             if (location_header) {
-              DBG1(r, "Location Header=[%s]", location_header);
+              DBG(r, "Location Header=[%s]", location_header);
               location_header = chxj_add_cookie_parameter(r,
                                                           location_header,
                                                           cookie);
               apr_table_setn(r->headers_out, "Location", location_header);
-              DBG1(r, "Location Header=[%s]", location_header);
+              DBG(r, "Location Header=[%s]", location_header);
             }
             break;
 
@@ -837,7 +837,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
     }
     else
     if (apr_bucket_read(b, &data, &len, APR_BLOCK_READ) == APR_SUCCESS) {
-      DBG2(r, "read data[%.*s]",(int)len, data);
+      DBG(r, "read data[%.*s]",(int)len, data);
 
       if (f->ctx == NULL) {
         /*--------------------------------------------------------------------*/
@@ -1001,7 +1001,7 @@ chxj_input_filter(ap_filter_t*        f,
       data_bucket = apr_palloc(r->pool, len+1);
       memset((void*)data_bucket, 0, len+1);
       memcpy(data_bucket, data, len);
-      DBG1(r, "(in)POSTDATA:[%s]", data_bucket);
+      DBG(r, "(in)POSTDATA:[%s]", data_bucket);
   
       data_brigade = apr_pstrcat(r->pool, data_brigade, data_bucket, NULL);
     }
@@ -1029,7 +1029,7 @@ chxj_input_filter(ap_filter_t*        f,
     );
 
   if (len > 0) {
-    DBG1(r, "(in:exchange)POSTDATA:[%s]", data_brigade);
+    DBG(r, "(in:exchange)POSTDATA:[%s]", data_brigade);
 
     obb = apr_brigade_create(r->pool, c->bucket_alloc);
 

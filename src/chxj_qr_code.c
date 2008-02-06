@@ -827,7 +827,7 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
     binstr = apr_pstrcat(r->pool, binstr, 
                   s_get_char_bit_count(qrcode, strlen(qrcode->indata)), NULL);
 #ifdef QR_CODE_DEBUG
-    DBG1(r, "s_get_char_bit_count()[%s]", binstr);
+    DBG(r, "s_get_char_bit_count()[%s]", binstr);
 #endif
 
     /*------------------------------------------------------------------------*/
@@ -835,7 +835,7 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
     /*------------------------------------------------------------------------*/
     data_code_count = v_data_code_count[qrcode->version][qrcode->level];
 #ifdef QR_CODE_DEBUG
-    DBG1(r,"data_code_count=[%d]", data_code_count);
+    DBG(r,"data_code_count=[%d]", data_code_count);
 #endif
 
     /*------------------------------------------------------------------------*/
@@ -872,7 +872,7 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
   /*--------------------------------------------------------------------------*/
   binstr = apr_pstrcat(r->pool, binstr, real_data, NULL);
 #ifdef QR_CODE_DEBUG
-  DBG1(r,"Before TERM BIT[%s]", binstr);
+  DBG(r,"Before TERM BIT[%s]", binstr);
 #endif
   if ((size_t)(data_code_count * 8) > strlen(binstr)) {
     int binstr_len = strlen(binstr);
@@ -881,7 +881,7 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
     }
   }
 #ifdef QR_CODE_DEBUG
-  DBG3(r, "After TERM BIT[%s] len[%d]bit [%f]byte", binstr, strlen(binstr), (float)(((float)strlen(binstr))/8.0));
+  DBG(r, "After TERM BIT[%s] len[%d]bit [%f]byte", binstr, strlen(binstr), (float)(((float)strlen(binstr))/8.0));
   DBG(r,"add term data");
 #endif
 
@@ -890,7 +890,7 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
   /*--------------------------------------------------------------------------*/
   binstr = s_tidy_8bit_code(qrcode, binstr, data_code_count);
 #ifdef QR_CODE_DEBUG
-  DBG1(r,"After Tidy 8 BIT[%s]", binstr);
+  DBG(r,"After Tidy 8 BIT[%s]", binstr);
   DBG(r,"s_tidy_8bit_code()");
 #endif
 
@@ -911,7 +911,7 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
     for (ii=0; ii<data_code_count; ii++) {
       rows = apr_pstrcat(r->pool, rows, apr_psprintf(r->pool, "[%02x]\n", (unsigned char)decstr[ii]), NULL);
     }
-    DBG1(r,"decstr[%s]", rows);
+    DBG(r,"decstr[%s]", rows);
   }while(0);
 #endif
 
@@ -923,7 +923,7 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
   eccstr = apr_palloc(r->pool, module_count* module_count);
   data_total_count = chxj_calc_ecc(qrcode, (unsigned char*)decstr, eccstr);
 #ifdef QR_CODE_DEBUG
-  DBG1(r,"chxj_calc_ecc() total_count[%d]", data_total_count);
+  DBG(r,"chxj_calc_ecc() total_count[%d]", data_total_count);
 #endif
 
   /*--------------------------------------------------------------------------*/
@@ -954,7 +954,7 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
   /* 最適マスクで再度作りなおし                                               */
   /*--------------------------------------------------------------------------*/
 #ifdef QR_CODE_DEBUG
-  DBG1(r, "selected mask[%d]", min_mask_pattern);
+  DBG(r, "selected mask[%d]", min_mask_pattern);
 #endif
 
   s_init_modules(qrcode, min_mask_pattern, module);
@@ -972,7 +972,7 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
   do {
     int xx, yy;
     int module_count = v_module_count_table[qrcode->version];
-    DBG1(r,"loop to [%d]", module_count);
+    DBG(r,"loop to [%d]", module_count);
     for (yy=0; yy<module_count; yy++) {
       char *rows ;
 
@@ -981,7 +981,7 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
       for (xx=0; xx<module_count; xx++)
         rows = apr_pstrcat(r->pool, rows, "[", apr_psprintf(r->pool, "%c", module[yy][xx]), "]", NULL);
 
-      DBG2(r,"%d:%s", yy,rows);
+      DBG(r,"%d:%s", yy,rows);
     }
   } while(0);
   /* DEBUG END */
@@ -1229,10 +1229,10 @@ chxj_qrcode_node_to_qrcode(qr_code_t* qrcode, Node* node)
     }
   }
 #ifdef QR_CODE_DEBUG
-  DBG1(r,"qrcode->version[%d]", qrcode->version);
-  DBG1(r,"qrcode->level[%d]", qrcode->level);
-  DBG1(r,"qrcode->mode[%d]", qrcode->mode);
-  DBG1(r,"qrcode->indata[%s]", qrcode->indata);
+  DBG(r,"qrcode->version[%d]", qrcode->version);
+  DBG(r,"qrcode->level[%d]", qrcode->level);
+  DBG(r,"qrcode->mode[%d]", qrcode->mode);
+  DBG(r,"qrcode->indata[%s]", qrcode->indata);
 #endif
 }
 
@@ -1248,7 +1248,7 @@ s_get_mode_spec(qr_code_t *qrcode)
   memset(result, 0, 5);
   memcpy(result, v_mode_table[qrcode->mode], 4);
 #ifdef QR_CODE_DEBUG
-  DBG1(r,"Mode Spec[%s]", result);
+  DBG(r,"Mode Spec[%s]", result);
 #endif
 
   return result;
@@ -1267,7 +1267,7 @@ s_get_char_bit_count(qr_code_t* qrcode, int len)
   char* result;
   int data_capacity   = v_capacity_table[qrcode->version*4+qrcode->level].size[qrcode->mode];
 
-  DBG1(qrcode->r, "len [%d]", len);
+  DBG(qrcode->r, "len [%d]", len);
   if (qrcode->mode == QR_KANJI_MODE && data_capacity * 2 < len) {
     len = data_capacity * 2;
   }
@@ -1280,7 +1280,7 @@ s_get_char_bit_count(qr_code_t* qrcode, int len)
     len /= 2;
   }
 
-  DBG1(qrcode->r, "len [%d]", len);
+  DBG(qrcode->r, "len [%d]", len);
 
   tmp = (char*)apr_palloc(qrcode->r->pool, bit_count + 1);
   for (ii=0; ii<bit_count; ii++) {
@@ -1298,7 +1298,7 @@ s_get_char_bit_count(qr_code_t* qrcode, int len)
   result[bit_count] = '\0';
 
 #ifdef QR_CODE_DEBUG
-  DBG1(qrcode->r, "Character Count bit [%s]", result);
+  DBG(qrcode->r, "Character Count bit [%s]", result);
 #endif
 
   return result;
@@ -1559,7 +1559,7 @@ s_data_to_bin_8bit(qr_code_t* qrcode, int UNUSED(data_code_count))
   result[kk] = 0;
 
 #ifdef QR_CODE_DEBUG
-  DBG2(qrcode->r, "input data --> 2bin result[%s] len:[%d]", result, strlen(result));
+  DBG(qrcode->r, "input data --> 2bin result[%s] len:[%d]", result, strlen(result));
 #endif
 
   return result;
@@ -1637,7 +1637,7 @@ s_data_to_bin_kanji(qr_code_t* qrcode, int UNUSED(data_code_count))
   result[kk] = 0;
 
 #ifdef QR_CODE_DEBUG
-  DBG2(qrcode->r, "input data --> 2bin result[%s] len:[%d]", result, strlen(result));
+  DBG(qrcode->r, "input data --> 2bin result[%s] len:[%d]", result, strlen(result));
 #endif
 
   return result;
@@ -1657,7 +1657,7 @@ s_tidy_8bit_code(qr_code_t* qrcode, const char* indata, int data_code_count)
   char* result;
 
 #ifdef QR_CODE_DEBUG
-  DBG2(qrcode->r, "len[%d] data_code_count * 8 [%d]", len, data_code_count * 8);
+  DBG(qrcode->r, "len[%d] data_code_count * 8 [%d]", len, data_code_count * 8);
 #endif
 
   assert (len <= data_code_count * 8);
@@ -1691,7 +1691,7 @@ s_tidy_8bit_code(qr_code_t* qrcode, const char* indata, int data_code_count)
   }
 
 #ifdef QR_CODE_DEBUG
-  DBG2(qrcode->r, "tidy len[%d] data_code_count[%d]", strlen(result)/8, data_code_count);
+  DBG(qrcode->r, "tidy len[%d] data_code_count[%d]", strlen(result)/8, data_code_count);
 #endif
 
   return result;
@@ -1834,7 +1834,7 @@ s_setup_timing_pattern(qr_code_t* qrcode, char* dst[])
   int xx, yy;
 #ifdef QR_CODE_DEBUG
   DBG(qrcode->r, "start s_setup_timing_pattern()");
-  DBG1(qrcode->r, "module_count[%d]", module_count);
+  DBG(qrcode->r, "module_count[%d]", module_count);
 #endif
 
   yy=6;
@@ -1930,7 +1930,7 @@ s_setup_type_info(qr_code_t* qrcode, char* dst[], qr_mask_pattern_t pat)
 
 #ifdef QR_CODE_DEBUG
   DBG(qrcode->r, "start s_setup_type_info()");
-  DBG1(qrcode->r, "module_count[%d]", module_count);
+  DBG(qrcode->r, "module_count[%d]", module_count);
 #endif
 
   /* 形式情報データの生成 */
@@ -2057,8 +2057,8 @@ s_map_data(qr_code_t* qrcode,
 
 #ifdef QR_CODE_DEBUG
   DBG(qrcode->r, "start s_map_data()");
-  DBG1(qrcode->r, "module_count[%d]", module_count);
-  DBG1(qrcode->r, "data_count[%d]", data_count);
+  DBG(qrcode->r, "module_count[%d]", module_count);
+  DBG(qrcode->r, "data_count[%d]", data_count);
 #endif
   in_pos = 0;
   now_bit = 7;

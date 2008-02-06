@@ -212,7 +212,7 @@ qs_get_selected_value_text(Doc *doc, Node* node, request_rec* r)
 
         char* name  = qs_get_attr_name(doc,attr);
 
-        DBG1(r, "qs_get_selected_value name::[%s]" , name);
+        DBG(r, "qs_get_selected_value name::[%s]" , name);
 
         if ((*name == 's'|| *name == 'S') && strcasecmp(name, "selected") == 0) {
           /*------------------------------------------------------------------*/
@@ -272,7 +272,7 @@ qs_get_selected_value(Doc* doc, Node* node, request_rec* r)
 
         char* name  = qs_get_attr_name(doc,attr);
 
-        DBG1(r, "qs_get_selected_value name::[%s]" , name);
+        DBG(r, "qs_get_selected_value name::[%s]" , name);
 
         if ((*name == 's' || *name == 'S') && strcasecmp(name, "selected") == 0)
           /*------------------------------------------------------------------*/
@@ -487,7 +487,7 @@ chxj_chxjif_is_mine(device_table* spec, Doc* doc, Node* tag)
 
     if ((*name == 'l' || *name == 'L') && strcasecmp(name, "lang") == 0) {
 
-      DBG2(r, "lang found [%s] spec [%d]", value, spec->html_spec_type);
+      DBG(r, "lang found [%s] spec [%d]", value, spec->html_spec_type);
 
       if ((*value == 'x' || *value == 'X') && strcasecmp(value, "xhtml") == 0) {
         if (spec->html_spec_type == CHXJ_SPEC_XHtml_Mobile_1_0) {

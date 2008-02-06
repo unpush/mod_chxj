@@ -339,24 +339,11 @@ module AP_MODULE_DECLARE_DATA chxj_module;
 #define CHXJ_IMG_OFF    (0)
 
 
-#define DBG(X,Y)  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(request_rec*)(X),(Y))
-#define DBG1(X,Y,Za)  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za))
-#define DBG2(X,Y,Za,Zb)  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za),(Zb))
-#define DBG3(X,Y,Za,Zb,Zc)  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za),(Zb),(Zc))
-#define DBG4(X,Y,Za,Zb,Zc,Zd)  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za),(Zb),(Zc),(Zd))
-#define DBG5(X,Y,Za,Zb,Zc,Zd,Ze)  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za),(Zb),(Zc),(Zd),(Ze))
+#define DBG(X,args...)  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(request_rec*)(X),##args)
 #define SDBG(X,Y)  ap_log_error(APLOG_MARK,APLOG_DEBUG,0,(X),(Y))
-#define SDBG1(X,Y,Za)  ap_log_error(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za))
-#define SDBG2(X,Y,Za,Zb)  ap_log_error(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za),(Zb))
-#define SDBG3(X,Y,Za,Zb,Zc)  ap_log_error(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za),(Zb),(Zc))
-#define SDBG4(X,Y,Za,Zb,Zc,Zd)  ap_log_error(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za),(Zb),(Zc),(Zd))
-#define SDBG5(X,Y,Za,Zb,Zc,Zd,Ze)  ap_log_error(APLOG_MARK,APLOG_DEBUG,0,(X),(Y),(Za),(Zb),(Zc),(Zd),(Ze))
-#define ERR(X,Y)  ap_log_rerror(APLOG_MARK,APLOG_ERR,0,(X),(Y))
-#define ERR1(X,Y,Za)  ap_log_rerror(APLOG_MARK,APLOG_ERR,0,(X),(Y),(Za))
-#define ERR2(X,Y,Za,Zb)  ap_log_rerror(APLOG_MARK,APLOG_ERR,0,(X),(Y),(Za),(Zb))
+#define ERR(X,args...)  ap_log_rerror(APLOG_MARK,APLOG_ERR,0,(X), ##args)
 #define SERR(X,Y)  ap_log_error(APLOG_MARK,APLOG_ERR,0,(X),(Y))
-#define SERR1(X,Y,Za)  ap_log_error(APLOG_MARK,APLOG_ERR,0,(X),(Y),(Za))
-#define SERR2(X,Y,Za,Zb)  ap_log_error(APLOG_MARK,APLOG_ERR,0,(X),(Y),(Za),(Zb))
+#define WRN(rec,format,args...)  ap_log_rerror(APLOG_MARK,APLOG_WARNING,0,(rec),(format), ##args)
 
 extern tag_handlers chxj_tag_handlers[];
 extern tag_handler  chtml10_handler[];

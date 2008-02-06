@@ -264,16 +264,16 @@ qs_dump_node(Doc* doc, Node* node, int indent)
   for (;p;p = (Node*)qs_get_next_node(doc,p)) {
     Attr* attr;
     if ((char*)qs_get_node_value(doc,p) != NULL) {
-      DBG5(doc->r,"%*.*sNode:[%s][%s]\n", indent,indent," ",
+      DBG(doc->r,"%*.*sNode:[%s][%s]\n", indent,indent," ",
                       (char*)qs_get_node_name(doc,p),
                       (char*)qs_get_node_value(doc,p));
     }
     else {
-      DBG4(doc->r,"%*.*sNode:[%s]\n", indent,indent," ", qs_get_node_name(doc,p));
+      DBG(doc->r,"%*.*sNode:[%s]\n", indent,indent," ", qs_get_node_name(doc,p));
     }
     for (attr = (Attr*)qs_get_attr(doc,p); attr; attr = (Attr*)qs_get_next_attr(doc,attr)) {
-      DBG4(doc->r,"%*.*s  ATTR:[%s]\n", indent,indent," ", (char *)qs_get_attr_name(doc,attr));
-      DBG4(doc->r,"%*.*s  VAL :[%s]\n", indent,indent," ", (char *)qs_get_attr_value(doc,attr));
+      DBG(doc->r,"%*.*s  ATTR:[%s]\n", indent,indent," ", (char *)qs_get_attr_name(doc,attr));
+      DBG(doc->r,"%*.*s  VAL :[%s]\n", indent,indent," ", (char *)qs_get_attr_value(doc,attr));
     }
     qs_dump_node(doc,p, indent+4);
   }

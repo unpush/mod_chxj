@@ -80,7 +80,7 @@ chxj_encoding(request_rec *r, const char* src, apr_size_t* len)
     DBG(r,"end   chxj_encoding()");
     return ibuf;
   }
-  DBG2(r,"encode convert [%s] -> [%s]", entryp->encoding, "CP932");
+  DBG(r,"encode convert [%s] -> [%s]", entryp->encoding, "CP932");
 
   memset(obuf, 0, olen);
   cd = iconv_open("CP932", entryp->encoding);
@@ -97,7 +97,7 @@ chxj_encoding(request_rec *r, const char* src, apr_size_t* len)
   *len = olen;
   iconv_close(cd);
 
-  DBG3(r,"end   chxj_encoding() len=[%d] obuf=[%.*s]", (int)*len, (int)*len, spos);
+  DBG(r,"end   chxj_encoding() len=[%d] obuf=[%.*s]", (int)*len, (int)*len, spos);
   return spos;
 }
 
@@ -155,7 +155,7 @@ chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
     DBG(r,"end   chxj_rencoding()");
     return ibuf;
   }
-  DBG2(r,"encode convert [%s] -> [%s]", "CP932", entryp->encoding);
+  DBG(r,"encode convert [%s] -> [%s]", "CP932", entryp->encoding);
 
   memset(obuf, 0, olen);
 
@@ -174,7 +174,7 @@ chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
   *len = olen;
   iconv_close(cd);
 
-  DBG3(r,"end   chxj_rencoding() len=[%d] obuf=[%.*s]", (int)*len, (int)*len, spos);
+  DBG(r,"end   chxj_rencoding() len=[%d] obuf=[%.*s]", (int)*len, (int)*len, spos);
 
   return spos;
 }

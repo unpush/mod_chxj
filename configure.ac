@@ -17,12 +17,6 @@ AM_PROG_LIBTOOL
 AC_CHECK_LIB([apr-1],  [main])
 
 AC_ARG_WITH(apache-header, [  --with-apache-header=ARG The directory with the header file of apache2.0 is specified. ]) 
-#[, ACTION-IF-GIVEN[, ACTION-IF-NOT-GIVEN]])
-if test "x$with_apache_header" = "x"; then
-    AC_MSG_ERROR([
-Please specify the --with-apache-header option.
-])
-fi
 if test "x$with_apache_header" = "xyes"; then
     AC_MSG_ERROR([
 Please specify the --with-apache-header option. And, please specify the place of the header file. 
@@ -185,6 +179,9 @@ case $host_os in
     ;;
 esac
 
+if test "x${with_apache_header}" = "x" ; then
+  with_apache_header=`${APXS} -q includedir`
+fi
 
 LIBS="${LIBS} `${WAND_CONFIG} --ldflags` `${WAND_CONFIG} --libs | sed -e s/-ldpstk//` "
 LIBS="${LIBS} `${APR_CONFIG} --ldflags` `${APR_CONFIG} --libs` "

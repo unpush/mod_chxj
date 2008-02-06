@@ -280,8 +280,8 @@ chxj_img_conv_format_handler(request_rec* r)
   else
     spec = chxj_specified_device(r, user_agent);
 
-  DBG1(r,"found device_name=[%s]", spec->device_name);
-  DBG1(r,"User-Agent=[%s]", user_agent);
+  DBG(r,"found device_name=[%s]", spec->device_name);
+  DBG(r,"User-Agent=[%s]", user_agent);
 
 
   return s_img_conv_format_from_file(r, conf, user_agent, qsp, spec);
@@ -344,8 +344,8 @@ chxj_exchange_image(request_rec *r, const char** src, apr_size_t* len)
   else
     spec = chxj_specified_device(r, user_agent);
 
-  DBG1(r,"found device_name=[%s]", spec->device_name);
-  DBG1(r, "User-Agent=[%s]", user_agent);
+  DBG(r,"found device_name=[%s]", spec->device_name);
+  DBG(r, "User-Agent=[%s]", user_agent);
 
   if (spec->width == 0 || spec->heigh == 0) 
     return NULL;
@@ -371,6 +371,7 @@ s_img_conv_format_from_file(
   apr_finfo_t    st;
   apr_finfo_t    cache_st;
   char*          tmpfile;
+  int            try_count;
 
   if (spec->html_spec_type == CHXJ_SPEC_UNKNOWN) {
     /* 
@@ -383,53 +384,58 @@ s_img_conv_format_from_file(
   /* Create Workfile Name                                                     */
   /*--------------------------------------------------------------------------*/
   tmpfile = s_create_workfile(r, conf, user_agent, qsp);
-  DBG1(r,"workfile=[%s]", tmpfile);
+  DBG(r,"workfile=[%s]", tmpfile);
 
   rv = apr_stat(&st, r->filename, APR_FINFO_MIN, r->pool);
   if (rv != APR_SUCCESS)
     return HTTP_NOT_FOUND;
 
-
-  DBG1(r,"found [%s]", r->filename);
-  rv = apr_stat(&cache_st, tmpfile, APR_FINFO_MIN, r->pool);
-  DBG1(r,"found [%s]", r->filename);
-
-  if (rv != APR_SUCCESS || cache_st.ctime < st.mtime) {
-    /*------------------------------------------------------------------------*/
-    /* It tries to make the cash file when it doesn't exist or there is       */
-    /* change time later since the making time of the cash file.              */
-    /*------------------------------------------------------------------------*/
-    rv = s_create_cache_file(r,tmpfile, spec, &st, qsp, conf);
-    if (rv != OK)
-      return rv;
-  }
-
-  DBG1(r,"color=[%d]", spec->color);
-  if (! r->header_only)  {
-    rv = s_send_cache_file(spec, qsp,r, tmpfile);
-    if (rv != OK) 
-      return rv;
-  }
-  else {
-    rv = s_header_only_cache_file(spec, qsp, r, tmpfile);
-    if (rv != OK) 
-      return rv;
+  try_count = CACHE_RETRY_COUNT;
+  do {
+    rv = apr_stat(&cache_st, tmpfile, APR_FINFO_MIN, r->pool);
+  
+    if (rv != APR_SUCCESS || cache_st.ctime < st.mtime) {
+      /*------------------------------------------------------------------------*/
+      /* It tries to make the cash file when it doesn't exist or there is       */
+      /* change time later since the making time of the cash file.              */
+      /*------------------------------------------------------------------------*/
+      rv = s_create_cache_file(r,tmpfile, spec, &st, qsp, conf);
+      if (rv != OK)
+        return rv;
+    }
+  
+    DBG(r,"color=[%d]", spec->color);
+    if (! r->header_only)  {
+      rv = s_send_cache_file(spec, qsp,r, tmpfile);
+    }
+    else {
+      rv = s_header_only_cache_file(spec, qsp, r, tmpfile);
+    }
+    if (rv == OK) break;
+    if (rv == HTTP_NOT_FOUND) {
+      DBG(r, "recheck wait... try_count[%d]", try_count);
+      apr_sleep(CACHE_RECHECK_WAIT);
+    }
+  } while (try_count--); 
+  if (try_count <= 0) {
+    WRN(r, "cache retry failure....");
+    WRN(r, "cache file was deleted...");
   }
   apr_table_setn(r->headers_in, "CHXJ_IMG_CONV", "done");
 
   DBG(r,"end chxj_img_conv_format");
 
-  return OK;
+  return rv;
 }
 
 
 static apr_status_t
 s_create_cache_file(request_rec*       r, 
-                       const char*     tmpfile, 
-                       device_table* spec, 
-                       apr_finfo_t*    st, 
-                       query_string_param_t *qsp,
-                       mod_chxj_config      *conf)
+                    const char*     tmpfile, 
+                    device_table* spec, 
+                    apr_finfo_t*    st, 
+                    query_string_param_t *qsp,
+                    mod_chxj_config      *conf)
 {
   apr_status_t       rv;
   apr_size_t         readbyte;
@@ -487,14 +493,14 @@ s_create_cache_file(request_rec*       r,
                     APR_OS_DEFAULT, 
                     r->pool);
     if (rv != APR_SUCCESS) {
-      DBG1(r,"file open failed.[%s]", r->filename);
+      DBG(r,"file open failed.[%s]", r->filename);
       return HTTP_NOT_FOUND;
     }
   
     readdata = apr_palloc(r->pool, st->size);
     rv = apr_file_read_full(fin, (void*)readdata, st->size, &readbyte);
     if (rv != APR_SUCCESS || readbyte != st->size) {
-      DBG1(r,"file read failed.[%s]", r->filename);
+      DBG(r,"file read failed.[%s]", r->filename);
       apr_file_close(fin);
   
       return HTTP_NOT_FOUND;
@@ -677,7 +683,7 @@ s_create_cache_file(request_rec*       r,
 
   if (! writebyte) {
     DestroyMagickWand(magick_wand);
-    ERR1(r,"convert failure to Jpeg [%s]", tmpfile);
+    ERR(r,"convert failure to Jpeg [%s]", tmpfile);
 
     return HTTP_INTERNAL_SERVER_ERROR;
   }
@@ -688,7 +694,7 @@ s_create_cache_file(request_rec*       r,
   rv = apr_stat(&cache_dir_st, conf->image_cache_dir, APR_FINFO_MIN, r->pool);
   if (rv != APR_SUCCESS) {
     DestroyMagickWand(magick_wand);
-    ERR1(r,"dir stat error.[%s]", conf->image_cache_dir);
+    ERR(r,"dir stat error.[%s]", conf->image_cache_dir);
     return HTTP_INTERNAL_SERVER_ERROR;
   }
   
@@ -705,7 +711,7 @@ s_create_cache_file(request_rec*       r,
     rv = apr_dir_open(&dir, conf->image_cache_dir, r->pool);
     if (rv != APR_SUCCESS) { 
       DestroyMagickWand(magick_wand);
-      ERR1(r,"dir open error.[%s]", conf->image_cache_dir);
+      ERR(r,"dir open error.[%s]", conf->image_cache_dir);
       return HTTP_INTERNAL_SERVER_ERROR;
     }
     memset(&dcf, 0, sizeof(apr_finfo_t));
@@ -718,7 +724,7 @@ s_create_cache_file(request_rec*       r,
       }
       if (dirf.name && strcmp(dirf.name, ".") != 0 && strcmp(dirf.name, "..") != 0) {
         total_size += (unsigned long)dirf.size;
-        DBG3(r, "dirf.name=[%s] dirf.size=[%ld] dirf.atime=[%lld]", dirf.name, (long)dirf.size, (long long int)dirf.atime);
+        DBG(r, "dirf.name=[%s] dirf.size=[%ld] dirf.atime=[%lld]", dirf.name, (long)dirf.size, (long long int)dirf.atime);
         if (dcf.atime >= dirf.atime) {
           memcpy(&dcf, &dirf, sizeof(apr_finfo_t));
         }
@@ -727,25 +733,27 @@ s_create_cache_file(request_rec*       r,
     }
     apr_dir_close(dir);
     if (total_size + writebyte < max_size) {
-      DBG4(r, "There is an enough size in cache. total_size:[%lu] max_size:[%lu] found_file=[%d] max_size=[%lu]", total_size, max_size, found_file, max_size);
+      DBG(r, "There is an enough size in cache. total_size:[%lu] max_size:[%lu] found_file=[%d] max_size=[%lu]", total_size, max_size, found_file, max_size);
       break;
     }
     if (found_file == 0 && writebyte >= max_size) {
+      ERR(r, "==========================================");
       ERR(r, "cache space is too small...");
-      ERR1(r, "At least the same size as %luByte is necessary for me.", (unsigned long)writebyte); 
+      ERR(r, "At least the same size as %luByte is necessary for me.", (unsigned long)writebyte); 
       ERR(r, "Please specify the ChxjImageCacheLimit that is larger than now value. ");
+      ERR(r, "==========================================");
       return HTTP_INTERNAL_SERVER_ERROR;
     }
-    DBG2(r, "Image Cache dir is full. total_size:[%lu] max_size:[%lu]", total_size + writebyte, max_size);
+    DBG(r, "Image Cache dir is full. total_size:[%lu] max_size:[%lu]", total_size + writebyte, max_size);
     /* search delete candidate */
     delete_file_name = apr_psprintf(r->pool, "%s/%s", conf->image_cache_dir, dcf.name);
-    DBG2(r, "delete image cache target:[%s] atime:[%lld]", delete_file_name, dcf.atime);
+    DBG(r, "delete image cache target:[%s] atime:[%lld]", delete_file_name, dcf.atime);
     rv = apr_file_remove(delete_file_name, r->pool);
     if (rv != APR_SUCCESS) {
-      ERR1(r, "cache file delete failure.[%s]", delete_file_name);
+      ERR(r, "cache file delete failure.[%s]", delete_file_name);
       return HTTP_INTERNAL_SERVER_ERROR;
     }
-    DBG1(r, "deleted image cache target:[%s]", delete_file_name);
+    DBG(r, "deleted image cache target:[%s]", delete_file_name);
     if (total_size + writebyte - dcf.size < max_size) {
       DBG(r, "OK, there is an enough size in cache.");
       break;
@@ -758,7 +766,7 @@ s_create_cache_file(request_rec*       r,
                   r->pool);
   if (rv != APR_SUCCESS) {
     DestroyMagickWand(magick_wand);
-    ERR1(r,"file open error.[%s]", tmpfile);
+    ERR(r,"file open error.[%s]", tmpfile);
     return HTTP_INTERNAL_SERVER_ERROR;
   }
 
@@ -794,7 +802,7 @@ s_create_cache_file(request_rec*       r,
 
   rv = apr_file_close(fout);
   if (rv != APR_SUCCESS) {
-    DBG1(r,"file write error.[%s]", tmpfile);
+    DBG(r,"file write error.[%s]", tmpfile);
     return HTTP_INTERNAL_SERVER_ERROR;
   }
 
@@ -1007,14 +1015,14 @@ s_fixup_size(MagickWand* magick_wand,
   oldw = MagickGetImageWidth(magick_wand);
   oldh = MagickGetImageHeight(magick_wand);
 
-  DBG1(r,"detect width=[%d]", oldw);
-  DBG1(r,"detect heigh=[%d]", oldh);
+  DBG(r,"detect width=[%d]", oldw);
+  DBG(r,"detect heigh=[%d]", oldh);
 
   neww = oldw;
   newh = oldh;
 
-  DBG1(r,"detect spec width=[%d]", spec->width);
-  DBG1(r,"detect spec heigh=[%d]", spec->heigh);
+  DBG(r,"detect spec width=[%d]", spec->width);
+  DBG(r,"detect spec heigh=[%d]", spec->heigh);
 
   c_width = spec->width;
   c_heigh = spec->heigh;
@@ -1052,7 +1060,7 @@ s_fixup_size(MagickWand* magick_wand,
     neww = (int)((double)neww * (double)((double)c_heigh / (double)newh));
     newh = (int)((double)newh * (double)((double)c_heigh / (double)newh));
 
-    DBG2(r,"newh = [%d] neww = [%d]", newh, neww);
+    DBG(r,"newh = [%d] neww = [%d]", newh, neww);
     break;
 
   default:
@@ -1074,8 +1082,8 @@ s_fixup_size(MagickWand* magick_wand,
   }
 
   if (spec->html_spec_type != CHXJ_SPEC_UNKNOWN) {
-    DBG2(r,"convert width=[%d --> %d]", oldw, neww);
-    DBG2(r,"convert heigh=[%d --> %d]", oldh, newh);
+    DBG(r,"convert width=[%d --> %d]", oldw, neww);
+    DBG(r,"convert heigh=[%d --> %d]", oldh, newh);
   
     MagickResetIterator(magick_wand);
   
@@ -1101,11 +1109,11 @@ s_fixup_size(MagickWand* magick_wand,
   
       case IMG_CONV_MODE_NORMAL:
         if (qsp->width) {
-          DBG2(r,"convert width=[%d --> %d]", neww, qsp->width);
+          DBG(r,"convert width=[%d --> %d]", neww, qsp->width);
           neww = qsp->width;
         }
         if (qsp->height) {
-          DBG2(r,"convert heigh=[%d --> %d]", newh, qsp->height);
+          DBG(r,"convert heigh=[%d --> %d]", newh, qsp->height);
           newh = qsp->height;
         }
   
@@ -1152,7 +1160,7 @@ s_fixup_color(MagickWand* magick_wand, request_rec* r, device_table* spec, img_c
 
   if (spec->color >= 256) {
 
-    DBG1(r,"call MagickQuantizeImage() spec->color=[%d]",spec->color);
+    DBG(r,"call MagickQuantizeImage() spec->color=[%d]",spec->color);
 
     if (MagickQuantizeImage(magick_wand,
                            spec->color,
@@ -1164,11 +1172,11 @@ s_fixup_color(MagickWand* magick_wand, request_rec* r, device_table* spec, img_c
       return NULL;
     }
 
-    DBG1(r,"call end MagickQuantizeImage() spec->color=[%d]",spec->color);
+    DBG(r,"call end MagickQuantizeImage() spec->color=[%d]",spec->color);
 
   }
   else {
-    DBG1(r,"call MagickQuantizeImage() spec->color=[%d]",spec->color);
+    DBG(r,"call MagickQuantizeImage() spec->color=[%d]",spec->color);
 
     if (MagickQuantizeImage(magick_wand,
                            spec->color,
@@ -1180,7 +1188,7 @@ s_fixup_color(MagickWand* magick_wand, request_rec* r, device_table* spec, img_c
       return NULL;
     }
 
-    DBG1(r,"call end MagickQuantizeImage() spec->color=[%d]",spec->color);
+    DBG(r,"call end MagickQuantizeImage() spec->color=[%d]",spec->color);
   }
 
 
@@ -1264,7 +1272,7 @@ s_add_copyright(MagickWand* magick_wand, request_rec* r, device_table* spec)
 
   if (conf->image_copyright) {
 
-    DBG1(r, "Add COPYRIGHT [%s]", conf->image_copyright);
+    DBG(r, "Add COPYRIGHT [%s]", conf->image_copyright);
 
     if (spec->html_spec_type == CHXJ_SPEC_Jhtml) {
       apr_table_setn(r->headers_out, "x-jphone-copyright", "no-transfer");
@@ -1323,7 +1331,7 @@ s_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table* spec)
 
     writedata = (char*)MagickGetImageBlob(magick_wand, &writebyte);
     if (writebyte >= prev_size || revers_flag) {
-      DBG2(r, "quality=[%ld] size=[%d]", (long)quality, (int)writebyte);
+      DBG(r, "quality=[%ld] size=[%d]", (long)quality, (int)writebyte);
       revers_flag = 1;
       quality += 10;
       if (quality > 100) {
@@ -1337,7 +1345,7 @@ s_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table* spec)
       continue;
     }
 
-    DBG2(r, "quality=[%ld] size=[%d]", (long)quality, (int)writebyte);
+    DBG(r, "quality=[%ld] size=[%d]", (long)quality, (int)writebyte);
 
     if (spec->cache == 0)
       break;
@@ -1405,7 +1413,7 @@ s_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table* spec)
 
       writedata = (char*)MagickGetImageBlob(magick_wand, &writebyte);
 
-      DBG2(r,"now_color=[%ld] size=[%d]", (long)now_color, (int)writebyte);
+      DBG(r,"now_color=[%ld] size=[%d]", (long)now_color, (int)writebyte);
 
       /* Once per request */
       break;
@@ -1429,10 +1437,10 @@ s_send_cache_file(device_table* spec, query_string_param_t* query_string, reques
   if (rv != APR_SUCCESS)
     return HTTP_NOT_FOUND;
 
-  DBG1(r, "mode:[%d]",    query_string->mode);
-  DBG1(r, "name:[%s]",    query_string->name);
-  DBG1(r, "offset:[%ld]", query_string->offset);
-  DBG1(r, "count:[%ld]",  query_string->count);
+  DBG(r, "mode:[%d]",    query_string->mode);
+  DBG(r, "name:[%s]",    query_string->name);
+  DBG(r, "offset:[%ld]", query_string->offset);
+  DBG(r, "count:[%ld]",  query_string->count);
 
   if (spec->available_jpeg) {
     r->content_type = apr_psprintf(r->pool, "image/jpeg");
@@ -1454,19 +1462,19 @@ s_send_cache_file(device_table* spec, query_string_param_t* query_string, reques
     contentLength = apr_psprintf(r->pool, "%d", (int)st.size);
     apr_table_setn(r->headers_out, "Content-Length", (const char*)contentLength);
   
-    DBG1(r,"Content-Length:[%d]", (int)st.size);
+    DBG(r,"Content-Length:[%d]", (int)st.size);
 
     rv = apr_file_open(&fout, tmpfile, 
       APR_READ | APR_BINARY, APR_OS_DEFAULT, r->pool);
     if (rv != APR_SUCCESS) {
-      DBG1(r, "tmpfile open failed[%s]", tmpfile);
+      DBG(r, "cache file open failed[%s]", tmpfile);
       return HTTP_NOT_FOUND;
     }
 
     ap_send_fd(fout, r, 0, st.size, &sendbyte);
     apr_file_close(fout);
     ap_rflush(r);
-    DBG1(r, "send file data[%d]byte", (int)sendbyte);
+    DBG(r, "send file data[%d]byte", (int)sendbyte);
   }
   else
   if (query_string->mode == IMG_CONV_MODE_EZGET) {
@@ -1511,20 +1519,20 @@ s_send_cache_file(device_table* spec, query_string_param_t* query_string, reques
       contentLength = apr_psprintf(r->pool, "%ld", query_string->count);
       apr_table_setn(r->headers_out, "Content-Length", (const char*)contentLength);
   
-      DBG1(r, "Content-Length:[%d]", (int)st.size);
+      DBG(r, "Content-Length:[%d]", (int)st.size);
 
       rv = apr_file_open(&fout, tmpfile, 
         APR_READ | APR_BINARY, APR_OS_DEFAULT, r->pool);
 
       if (rv != APR_SUCCESS) {
-        DBG1(r,"tmpfile open failed[%s]", tmpfile);
+        DBG(r,"tmpfile open failed[%s]", tmpfile);
         return HTTP_NOT_FOUND;
       }
 
       ap_send_fd(fout, r, query_string->offset, query_string->count, &sendbyte);
       apr_file_close(fout);
       ap_rflush(r);
-      DBG1(r, "send file data[%d]byte", (int)sendbyte);
+      DBG(r, "send file data[%d]byte", (int)sendbyte);
     }
   }
   
@@ -1547,14 +1555,14 @@ s_send_original_file(request_rec* r, const char* originalfile)
   rv = apr_file_open(&fout, originalfile, 
     APR_READ | APR_BINARY, APR_OS_DEFAULT, r->pool);
   if (rv != APR_SUCCESS) {
-    DBG1(r, "originalfile open failed[%s]", originalfile);
+    DBG(r, "originalfile open failed[%s]", originalfile);
     return HTTP_NOT_FOUND;
   }
 
   ap_send_fd(fout, r, 0, st.size, &sendbyte);
   apr_file_close(fout);
   ap_rflush(r);
-  DBG1(r, "send file data[%d]byte", (int)sendbyte);
+  DBG(r, "send file data[%d]byte", (int)sendbyte);
   
   return OK;
 }
@@ -1570,10 +1578,10 @@ s_header_only_cache_file(device_table* spec, query_string_param_t* query_string,
   if (rv != APR_SUCCESS)
     return HTTP_NOT_FOUND;
 
-  DBG1(r, "mode:[%d]",    query_string->mode);
-  DBG1(r, "name:[%s]",    query_string->name);
-  DBG1(r, "offset:[%ld]", query_string->offset);
-  DBG1(r, "count:[%ld]",  query_string->count);
+  DBG(r, "mode:[%d]",    query_string->mode);
+  DBG(r, "name:[%s]",    query_string->name);
+  DBG(r, "offset:[%ld]", query_string->offset);
+  DBG(r, "count:[%ld]",  query_string->count);
 
   if (spec->available_jpeg) {
     r->content_type = apr_psprintf(r->pool, "image/jpeg");
@@ -1595,7 +1603,7 @@ s_header_only_cache_file(device_table* spec, query_string_param_t* query_string,
     contentLength = apr_psprintf(r->pool, "%d", (int)st.size);
     apr_table_setn(r->headers_out, "Content-Length", (const char*)contentLength);
   
-    DBG1(r,"Content-Length:[%d]", (int)st.size);
+    DBG(r,"Content-Length:[%d]", (int)st.size);
   }
   else
   if (query_string->mode == IMG_CONV_MODE_EZGET) {
@@ -1632,7 +1640,7 @@ s_header_only_cache_file(device_table* spec, query_string_param_t* query_string,
       contentLength = apr_psprintf(r->pool, "%ld", query_string->count);
       apr_table_setn(r->headers_out, "Content-Length", (const char*)contentLength);
   
-      DBG1(r, "Content-Length:[%d]", (int)st.size);
+      DBG(r, "Content-Length:[%d]", (int)st.size);
     }
   }
   
@@ -1658,12 +1666,12 @@ s_create_workfile(
   switch (qsp->mode) {
   case IMG_CONV_MODE_THUMBNAIL:
     fname = apr_psprintf(r->pool, "%s.%s.thumbnail", r->filename, user_agent);
-    DBG1(r, "mode=thumbnail [%s]", fname);
+    DBG(r, "mode=thumbnail [%s]", fname);
     break;
   case IMG_CONV_MODE_WALLPAPER:
   case IMG_CONV_MODE_EZGET:
     fname = apr_psprintf(r->pool, "%s.%s.wallpaper", r->filename, user_agent);
-    DBG1(r, "mode=WallPaper [%s]", fname);
+    DBG(r, "mode=WallPaper [%s]", fname);
     break;
   case IMG_CONV_MODE_NORMAL:
   default:
@@ -1676,7 +1684,7 @@ s_create_workfile(
     if (qsp->height)
       fname = apr_psprintf(r->pool, "%s.h%d", fname, qsp->height);
 
-    DBG1(r,"mode=normal [%s]", fname);
+    DBG(r,"mode=normal [%s]", fname);
     break;
   }
   if (qsp->ua_flag == UA_IGN) {
@@ -1745,7 +1753,7 @@ chxj_trans_name(request_rec *r)
   conf = ap_get_module_config(r->per_dir_config, &chxj_module);
 
   if (conf == NULL) {
-    DBG1(r, "end chxj_trans_name() conf is null[%s]", r->uri);
+    DBG(r, "end chxj_trans_name() conf is null[%s]", r->uri);
     return DECLINED;
   }
 
@@ -1755,7 +1763,7 @@ chxj_trans_name(request_rec *r)
   }
 
 
-  DBG1(r,"Match URI[%s]", r->uri);
+  DBG(r,"Match URI[%s]", r->uri);
 
 
   if (r->filename == NULL) 
@@ -1767,7 +1775,7 @@ chxj_trans_name(request_rec *r)
   else 
     filename_sv = r->filename;
 
-  DBG1(r,"r->filename[%s]", filename_sv);
+  DBG(r,"r->filename[%s]", filename_sv);
 
   ccp = ap_document_root(r);
   if (ccp == NULL)
@@ -1787,7 +1795,7 @@ chxj_trans_name(request_rec *r)
   else
     filename_sv = apr_pstrcat(r->pool, docroot, filename_sv, NULL);
 
-  DBG1(r,"URI[%s]", filename_sv);
+  DBG(r,"URI[%s]", filename_sv);
 
   do_ext_check = TRUE;
   for (ii=0; ii<7-1; ii++) {
@@ -1809,7 +1817,7 @@ chxj_trans_name(request_rec *r)
       else 
         fname = apr_psprintf(r->pool, "%s.%s", filename_sv, ext[ii]);
   
-      DBG1(r,"search [%s]", fname);
+      DBG(r,"search [%s]", fname);
   
       rv = apr_stat(&st, fname, APR_FINFO_MIN, r->pool);
       if (rv == APR_SUCCESS) {
@@ -1821,7 +1829,7 @@ chxj_trans_name(request_rec *r)
     }
   }
   if (fname == NULL) {
-    DBG1(r,"NotFound [%s]", r->filename);
+    DBG(r,"NotFound [%s]", r->filename);
     return DECLINED;
   }
   for (ii=0; ii<7-1; ii++) {
@@ -1835,12 +1843,12 @@ chxj_trans_name(request_rec *r)
   }
 
   if (! next_ok)  {
-    DBG1(r,"NotFound [%s]", r->filename);
+    DBG(r,"NotFound [%s]", r->filename);
     return DECLINED;
   }
 
   if (r->handler == NULL || strcasecmp(r->handler, "chxj-qrcode") != 0) {
-    DBG1(r,"Found [%s]", fname);
+    DBG(r,"Found [%s]", fname);
 
     r->filename = apr_psprintf(r->pool, "%s", fname);
   

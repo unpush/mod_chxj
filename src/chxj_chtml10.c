@@ -347,7 +347,7 @@ chxj_exchange_chtml10(
 
   dst = NULL;
 
-  DBG1(r, "start chxj_exchange_chtml10() cookie_id=[%s]", (cookie) ? cookie->cookie_id : "");
+  DBG(r, "start chxj_exchange_chtml10() cookie_id=[%s]", (cookie) ? cookie->cookie_id : "");
 
   /*--------------------------------------------------------------------------*/
   /* If qrcode xml                                                            */
@@ -406,7 +406,7 @@ chxj_exchange_chtml10(
   chxj_dump_out("[dst] CHTML -> CHTML1.0", dst, *dstlen);
 #endif
 
-  DBG1(r, "end   chxj_exchange_chtml10() cookie_id=[%s]", (cookie) ? cookie->cookie_id : "");
+  DBG(r, "end   chxj_exchange_chtml10() cookie_id=[%s]", (cookie) ? cookie->cookie_id : "");
 
   return dst;
 }
