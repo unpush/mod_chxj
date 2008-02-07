@@ -4425,7 +4425,7 @@
   <!--=======================================================================-->
   <!-- DoCoMo                                                                -->
   <!--=======================================================================-->
-  <user_agent pattern="^DoCoMo/1.0/([^   /]+)$">
+  <user_agent pattern="^DoCoMo/1.0/([^   /]+)(/ser.+)?$">
 
     <device>
       <device_id>D501i</device_id>
@@ -4997,7 +4997,7 @@
       <charset>SJIS</charset>
     </device>
   </user_agent>
-  <user_agent pattern="^DoCoMo/1.0/([^   /]+)/c[0-9][0-9]$">
+  <user_agent pattern="^DoCoMo/1.0/([^   /]+)/c[0-9][0-9](/ser.+)?$">
     <device>
       <device_id>ISIM60</device_id>
       <device_name>ISIM60</device_name>
@@ -5970,7 +5970,7 @@
   </user_agent>
 
   <!-- Sale in 2007.6 F904i_H -->
-  <user_agent pattern="^DoCoMo/2.0[ 	]+(F904i)\(c100;TB;W24H17\)$">
+  <user_agent pattern="^DoCoMo/2.0[ 	]+(F904i)\(c100;TB;W24H17(;ser[^;]+)?(;icc[^;]+)?\)$">
     <!--
       DoCoMo/2.0 F904i(c100;TB;W24H17)
     -->
@@ -5997,7 +5997,7 @@
     </device>
   </user_agent>
   <!-- Sale in 2007.6 F904i_H -->
-  <user_agent pattern="^DoCoMo/2.0[ 	]+(F904i)\(c100;TB;W20H14\)$">
+  <user_agent pattern="^DoCoMo/2.0[ 	]+(F904i)\(c100;TB;W20H14(;ser[^;]+)?(;icc[^;]+)?\)$">
     <!--
       DoCoMo/2.0 F904i(c100;TB;W20H14)
     -->
@@ -6024,7 +6024,7 @@
     </device>
   </user_agent>
   <!-- Sale in 2007.6 F904i_H -->
-  <user_agent pattern="^DoCoMo/2.0[ 	]+(F904i)\(c100;TB;W30H22\)$">
+  <user_agent pattern="^DoCoMo/2.0[ 	]+(F904i)\(c100;TB;W30H22(;ser[^;]+)?(;icc[^;]+)?\)$">
     <!--
       DoCoMo/2.0 F904i(c100;TB;W30H22)
     -->
@@ -6052,7 +6052,7 @@
   </user_agent>
 
   <!-- Sale in 2007.6 F904i_W -->
-  <user_agent pattern="^DoCoMo/2.0[ 	]+(F904i)\(c100;TB;W24H12\)$">
+  <user_agent pattern="^DoCoMo/2.0[ 	]+(F904i)\(c100;TB;W24H12(;ser[^;]+)?(;icc[^;]+)?\)$">
     <!--
       DoCoMo/2.0 F904i(c100;TB;W24H12)
     -->
@@ -6079,7 +6079,7 @@
     </device>
   </user_agent>
   <!-- Sale in 2007.6 F904i_W -->
-  <user_agent pattern="^DoCoMo/2.0[ 	]+(F904i)\(c100;TB;W24H10\)$">
+  <user_agent pattern="^DoCoMo/2.0[ 	]+(F904i)\(c100;TB;W24H10(;ser[^;]+)?(;icc[^;]+)?\)$">
     <!--
       DoCoMo/2.0 F904i(c100;TB;W24H10)
     -->
@@ -6106,7 +6106,7 @@
     </device>
   </user_agent>
   <!-- Sale in 2007.6 F904i_W -->
-  <user_agent pattern="^DoCoMo/2.0[ 	]+(F904i)\(c100;TB;W30H15\)$">
+  <user_agent pattern="^DoCoMo/2.0[ 	]+(F904i)\(c100;TB;W30H15(;ser[^;]+)?(;icc[^;]+)?\)$">
     <!--
       DoCoMo/2.0 F904i(c100;TB;W30H15)
     -->
@@ -6133,7 +6133,7 @@
     </device>
   </user_agent>
   <!-- Sale in 2007.11 F905i_H -->
-  <user_agent pattern="^DoCoMo/2.0[ 	]+(F905i)\(c100;TB;W24H17\)$">
+  <user_agent pattern="^DoCoMo/2.0[ 	]+(F905i)\(c100;TB;W24H17(;ser[^;]+)?(;icc[^;]+)?\)$">
     <!--
       DoCoMo/2.0 F905i(c100;TB;W24H17)
     -->
@@ -6160,7 +6160,7 @@
     </device>
   </user_agent>
   <!-- Sale in 2007.11 F905i_H -->
-  <user_agent pattern="^DoCoMo/2.0[ 	]+(F905i)\(c100;TB;W20H14\)$">
+  <user_agent pattern="^DoCoMo/2.0[ 	]+(F905i)\(c100;TB;W20H14(;ser[^;]+)?(;icc[^;]+)?\)$">
     <!--
       DoCoMo/2.0 F905i(c100;TB;W20H14)
     -->
@@ -6187,7 +6187,7 @@
     </device>
   </user_agent>
   <!-- Sale in 2007.11 F905i_H -->
-  <user_agent pattern="^DoCoMo/2.0[ 	]+(F905i)\(c100;TB;W30H22\)$">
+  <user_agent pattern="^DoCoMo/2.0[ 	]+(F905i)\(c100;TB;W30H22(;ser[^;]+)?(;icc[^;]+)?\)$">
     <!--
       DoCoMo/2.0 F905i(c100;TB;W30H22)
     -->
@@ -6214,7 +6214,7 @@
     </device>
   </user_agent>
   <!-- Sale in 2007.11 F905i_H -->
-  <user_agent pattern="^DoCoMo/2.0[ 	]+(F905i)\(c100;TB;W17H12\)$">
+  <user_agent pattern="^DoCoMo/2.0[ 	]+(F905i)\(c100;TB;W17H12(;ser[^;]+)?(;icc[^;]+)?\)$">
     <!--
       DoCoMo/2.0 F905i(c100;TB;W17H12)
     -->
@@ -6241,7 +6241,7 @@
     </device>
   </user_agent>
   <!-- Sale in 2007.11 F905i_H -->
-  <user_agent pattern="^DoCoMo/2.0[ 	]+(F905i)\(c100;TB;W40H29\)$">
+  <user_agent pattern="^DoCoMo/2.0[ 	]+(F905i)\(c100;TB;W40H29(;ser[^;]+)?(;icc[^;]+)?\)$">
     <!--
       DoCoMo/2.0 F905i(c100;TB;W40H29)
     -->
@@ -6268,7 +6268,7 @@
     </device>
   </user_agent>
   <!-- Sale in 2007.11 F905i_W -->
-  <user_agent pattern="^DoCoMo/2.0[ 	]+(F905i)\(c100;TB;W24H12\)$">
+  <user_agent pattern="^DoCoMo/2.0[ 	]+(F905i)\(c100;TB;W24H12(;ser[^;]+)?(;icc[^;]+)?\)$">
     <!--
       DoCoMo/2.0 F905i(c100;TB;W24H12)
     -->
@@ -6295,7 +6295,7 @@
     </device>
   </user_agent>
   <!-- Sale in 2007.11 F905i_W -->
-  <user_agent pattern="^DoCoMo/2.0[ 	]+(F905i)\(c100;TB;W20H10\)$">
+  <user_agent pattern="^DoCoMo/2.0[ 	]+(F905i)\(c100;TB;W20H10(;ser[^;]+)?(;icc[^;]+)?\)$">
     <!--
       DoCoMo/2.0 F905i(c100;TB;W20H10)
     -->
@@ -6322,7 +6322,7 @@
     </device>
   </user_agent>
   <!-- Sale in 2007.11 F905i_W -->
-  <user_agent pattern="^DoCoMo/2.0[ 	]+(F905i)\(c100;TB;W30H15\)$">
+  <user_agent pattern="^DoCoMo/2.0[ 	]+(F905i)\(c100;TB;W30H15(;ser[^;]+)?(;icc[^;]+)?\)$">
     <!--
       DoCoMo/2.0 F905i(c100;TB;W30H15)
     -->
@@ -6349,7 +6349,7 @@
     </device>
   </user_agent>
   <!-- Sale in 2007.11 F905i_W -->
-  <user_agent pattern="^DoCoMo/2.0[ 	]+(F905i)\(c100;TB;W17H8\)$">
+  <user_agent pattern="^DoCoMo/2.0[ 	]+(F905i)\(c100;TB;W17H8(;ser[^;]+)?(;icc[^;]+)?\)$">
     <!--
       DoCoMo/2.0 F905i(c100;TB;W17H8)
     -->
@@ -6376,7 +6376,7 @@
     </device>
   </user_agent>
   <!-- Sale in 2007.11 F905i_W -->
-  <user_agent pattern="^DoCoMo/2.0[ 	]+(F905i)\(c100;TB;W40H20\)$">
+  <user_agent pattern="^DoCoMo/2.0[ 	]+(F905i)\(c100;TB;W40H20(;ser[^;]+)?(;icc[^;]+)?\)$">
     <!--
       DoCoMo/2.0 F905i(c100;TB;W40H20)
     -->
@@ -6403,7 +6403,7 @@
     </device>
   </user_agent>
   <!-- Sale in 2007.11 SH905i -->
-  <user_agent pattern="^DoCoMo/2.0[ 	]+(SH905i)\(c100;TB;W24H16\)$">
+  <user_agent pattern="^DoCoMo/2.0[ 	]+(SH905i)\(c100;TB;W24H16(;ser[^;]+)?(;icc[^;]+)?\)$">
     <!--
       DoCoMo/2.0 SH905i(c100;TB;W24H16)
     -->
@@ -6430,7 +6430,7 @@
     </device>
   </user_agent>
   <!-- Sale in 2007.11 SH905i -->
-  <user_agent pattern="^DoCoMo/2.0[ 	]+(SH905i)\(c100;TB;W20H13\)$">
+  <user_agent pattern="^DoCoMo/2.0[ 	]+(SH905i)\(c100;TB;W20H13(;ser[^;]+)?(;icc[^;]+)?\)$">
     <!--
       DoCoMo/2.0 SH905i(c100;TB;W20H13)
     -->
@@ -6457,7 +6457,7 @@
     </device>
   </user_agent>
   <!-- Sale in 2007.11 SH905i -->
-  <user_agent pattern="^DoCoMo/2.0[ 	]+(SH905i)\(c100;TB;W30H20\)$">
+  <user_agent pattern="^DoCoMo/2.0[ 	]+(SH905i)\(c100;TB;W30H20(;ser[^;]+)?(;icc[^;]+)?\)$">
     <!--
       DoCoMo/2.0 SH905i(c100;TB;W30H20)
     -->
@@ -6484,7 +6484,7 @@
     </device>
   </user_agent>
   <!-- Sale in 2007.11 SH905i -->
-  <user_agent pattern="^DoCoMo/2.0[ 	]+(SH905i)\(c100;TB;W16H10\)$">
+  <user_agent pattern="^DoCoMo/2.0[ 	]+(SH905i)\(c100;TB;W16H10(;ser[^;]+)?(;icc[^;]+)?\)$">
     <!--
       DoCoMo/2.0 SH905i(c100;TB;W16H10)
     -->
@@ -6512,7 +6512,7 @@
   </user_agent>
 
   <!-- Sale in 2007.11 SH905i -->
-  <user_agent pattern="^DoCoMo/2.0[ 	]+(SH905i)\(c100;TB;W24H16\)$">
+  <user_agent pattern="^DoCoMo/2.0[ 	]+(SH905i)\(c100;TB;W24H16(;ser[^;]+)?(;icc[^;]+)?\)$">
     <!--
       DoCoMo/2.0 SH905i(c100;TB;W24H16)
     -->
@@ -6539,7 +6539,7 @@
     </device>
   </user_agent>
   <!-- Sale in 2007.11 SH905i -->
-  <user_agent pattern="^DoCoMo/2.0[ 	]+(SH905i)\(c100;TB;W24H12\)$">
+  <user_agent pattern="^DoCoMo/2.0[ 	]+(SH905i)\(c100;TB;W24H12(;ser[^;]+)?(;icc[^;]+)?\)$">
     <!--
       DoCoMo/2.0 SH905i(c100;TB;W24H12)
     -->
@@ -6566,7 +6566,7 @@
     </device>
   </user_agent>
   <!-- Sale in 2007.11 SH905i -->
-  <user_agent pattern="^DoCoMo/2.0[ 	]+(SH905i)\(c100;TB;W20H10\)$">
+  <user_agent pattern="^DoCoMo/2.0[ 	]+(SH905i)\(c100;TB;W20H10(;ser[^;]+)?(;icc[^;]+)?\)$">
     <!--
       DoCoMo/2.0 SH905i(c100;TB;W20H10)
     -->
@@ -6593,7 +6593,7 @@
     </device>
   </user_agent>
   <!-- Sale in 2007.11 SH905i -->
-  <user_agent pattern="^DoCoMo/2.0[ 	]+(SH905i)\(c100;TB;W30H15\)$">
+  <user_agent pattern="^DoCoMo/2.0[ 	]+(SH905i)\(c100;TB;W30H15(;ser[^;]+)?(;icc[^;]+)?\)$">
     <!--
       DoCoMo/2.0 SH905i(c100;TB;W30H15)
     -->
@@ -6620,7 +6620,7 @@
     </device>
   </user_agent>
   <!-- Sale in 2007.11 SH905i -->
-  <user_agent pattern="^DoCoMo/2.0[ 	]+(SH905i)\(c100;TB;W16H08\)$">
+  <user_agent pattern="^DoCoMo/2.0[ 	]+(SH905i)\(c100;TB;W16H08(;ser[^;]+)?(;icc[^;]+)?\)$">
     <!--
       DoCoMo/2.0 SH905i(c100;TB;W16H08)
     -->
@@ -6647,7 +6647,7 @@
     </device>
   </user_agent>
 
-  <user_agent pattern="^DoCoMo/2.0[  ]+([^( ]+)\(.+\)$">
+  <user_agent pattern="^DoCoMo/2.0[  ]+([^( ]+)\(.+(;ser[^;]+)?(;icc[^;]+)?\)$">
     <device>
       <device_id>N2001</device_id>
       <device_name>N2001</device_name>
@@ -9995,7 +9995,7 @@
 
 
 
-  <user_agent pattern="^DoCoMo/1.0/([^   /]+)/c[0-9][0-9]/TB$">
+  <user_agent pattern="^DoCoMo/1.0/([^   /]+)/c[0-9][0-9]/TB(/ser.+)?$">
     <device>
       <device_id>F504i</device_id>
       <device_name>F504i</device_name>
@@ -10506,7 +10506,7 @@
 
 
 
-  <user_agent pattern="^DoCoMo/1.0/([^   /]+)/c[0-9][0-9]/TB/W[0-9][0-9]H[0-9][0-9]$$">
+  <user_agent pattern="^DoCoMo/1.0/([^   /]+)/c[0-9][0-9]/TB/W[0-9][0-9]H[0-9][0-9](/ser.+)?$">
     <device>
       <device_id>P213i</device_id>
       <device_name>prosolid(P213i)</device_name>

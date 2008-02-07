@@ -691,7 +691,6 @@ s_create_cache_file(request_rec          *r,
   if (! writebyte) {
     DestroyMagickWand(magick_wand);
     ERR(r,"convert failure to Jpeg [%s]", tmpfile);
-
     return HTTP_INTERNAL_SERVER_ERROR;
   }
 
@@ -703,6 +702,7 @@ s_create_cache_file(request_rec          *r,
   if (rv != APR_SUCCESS) {
     DestroyMagickWand(magick_wand);
     ERR(r,"dir stat error.[%s]", conf->image_cache_dir);
+    if (writedata) free(writedata);
     return HTTP_INTERNAL_SERVER_ERROR;
   }
   
@@ -721,6 +721,7 @@ s_create_cache_file(request_rec          *r,
     if (rv != APR_SUCCESS) { 
       DestroyMagickWand(magick_wand);
       ERR(r,"dir open error.[%s]", conf->image_cache_dir);
+      if (writedata) free(writedata);
       return HTTP_INTERNAL_SERVER_ERROR;
     }
     memset(&dcf, 0, sizeof(apr_finfo_t));
@@ -752,6 +753,8 @@ s_create_cache_file(request_rec          *r,
       ERR(r, "At least the same size as %luByte is necessary for me.", (unsigned long)writebyte);
       ERR(r, "Please specify the ChxjImageCacheLimit that is larger than now value. ");
       ERR(r, "================================================");
+      DestroyMagickWand(magick_wand);
+      if (writedata) free(writedata);
       return HTTP_INTERNAL_SERVER_ERROR;
     }
     DBG(r, "Image Cache dir is full. total_size:[%lu] max_size:[%lu]", 
@@ -762,6 +765,7 @@ s_create_cache_file(request_rec          *r,
     rv = apr_file_remove(delete_file_name, r->pool);
     if (rv != APR_SUCCESS) {
       ERR(r, "cache file delete failure.[%s]", delete_file_name);
+      if (writedata) free(writedata);
       return HTTP_INTERNAL_SERVER_ERROR;
     }
     DBG(r, "deleted image cache target:[%s]", delete_file_name);
@@ -778,6 +782,7 @@ s_create_cache_file(request_rec          *r,
                   r->pool);
   if (rv != APR_SUCCESS) {
     DestroyMagickWand(magick_wand);
+    if (writedata) free(writedata);
     ERR(r,"file open error.[%s]", tmpfile);
     return HTTP_INTERNAL_SERVER_ERROR;
   }
@@ -786,6 +791,7 @@ s_create_cache_file(request_rec          *r,
   if (rv != APR_SUCCESS) {
     DestroyMagickWand(magick_wand);
     apr_file_close(fout);
+    if (writedata) free(writedata);
     return HTTP_INTERNAL_SERVER_ERROR;
   }
 
@@ -800,17 +806,23 @@ s_create_cache_file(request_rec          *r,
     rv = apr_file_putc((crc >> 8)  & 0xff, fout);
     if (rv != APR_SUCCESS) {
       DestroyMagickWand(magick_wand);
+      if (writedata) free(writedata);
       return HTTP_INTERNAL_SERVER_ERROR;
     }
 
     rv = apr_file_putc( crc        & 0xff, fout);
     if (rv != APR_SUCCESS) {
       DestroyMagickWand(magick_wand);
+      if (writedata) free(writedata);
       return HTTP_INTERNAL_SERVER_ERROR;
     }
   }
 
   DestroyMagickWand(magick_wand);
+
+  DBG(r,"free writedata area");
+  if (writedata) free(writedata);
+  DBG(r,"free writedata area");
 
   rv = apr_file_close(fout);
   if (rv != APR_SUCCESS) {
