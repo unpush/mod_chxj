@@ -11,7 +11,11 @@ AM_CONFIG_HEADER(include/config.h)
 # Checks for programs.
 AC_PROG_CC
 AC_PROG_INSTALL
+
+
 AM_PROG_LIBTOOL
+AC_SUBST(LIBTOOL_DEPS)
+
 
 # Checks for libraries.
 AC_CHECK_LIB([apr-1],  [main])

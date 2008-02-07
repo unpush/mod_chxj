@@ -12,13 +12,14 @@ rm -f ./config.log
 rm -f ./config.sub
 rm -f ./config.status
 rm -f ./install-sh
-rm -f ./libtool
+#rm -f ./libtool
 #rm -f ./ltmain.sh
 rm -f ./missing
 rm -f ./mkinstalldirs
 aclocal 
 autoheader
 automake -a -c 
+#automake 
 autoconf
 rm -rf autom4te.cache
 
