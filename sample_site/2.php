@@ -33,6 +33,9 @@ header("Pragma: no-cache");
     ýí<a href="sjis/index.php" accesskey="7">³¨Ê¸»ú¤ÎŽÃŽ½ŽÄ(SJIS)</a><br>
     ýî<a href="euc/index.php" accesskey="8">³¨Ê¸»ú¤ÎŽÃŽ½ŽÄ(EUCJP)</a><br>
     ýï<a href="utf8/index.php" accesskey="9">³¨Ê¸»ú¤ÎŽÃŽ½ŽÄ(UTF8)</a><br>
+    <hr>
+     <a href="bbs/bbs.php">´Ê°×·Ç¼¨ÈÄ¤ÎŽÃŽ½ŽÄ(UTF8)</a><br>
+    <hr>
     ýð<a href="1.php" accesskey="0">ŽÄŽ¯ŽÌŽß¤ØÌá¤ë</a><br>
     <hr>
     Copyright(C) 2005 Atsushi Konno <br>
