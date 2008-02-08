@@ -29,6 +29,7 @@ libmod_chxj_la_SOURCES = mod_chxj.c \
     chxj_node_exchange.c \
     chxj_url_encode.c \
     chxj_cookie.c \
+    chxj_preg_replace.c \
     chxj_emoji.c
 
 

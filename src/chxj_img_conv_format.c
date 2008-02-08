@@ -23,6 +23,7 @@
 #include "chxj_apply_convrule.h"
 #include "chxj_url_encode.h"
 #include "qs_parse_string.h"
+#include "chxj_preg_replace.h"
 
 #include <limits.h>
 
@@ -161,10 +162,15 @@ static const char* HDML_FAIL_PAGE =
   "  </DISPLAY>\r\n"
   "<HDML>\r\n";
 
+static ap_regex_t *v_docomo_serial_pattern1 = NULL;
+static ap_regex_t *v_docomo_serial_pattern2 = NULL;
+static ap_regex_t *v_docomo_serial_pattern3 = NULL;
+static ap_regex_t *v_softbank_serial_pattern1 = NULL;
+
 /*----------------------------------------------------------------------------*/
 /* Prototype declaration                                                      */
 /*----------------------------------------------------------------------------*/
-static char *s_create_workfile(request_rec *, 
+static char *s_create_workfile_name(request_rec *, 
                                mod_chxj_config *, 
                                const char *,
                                query_string_param_t *);
@@ -389,7 +395,7 @@ s_img_conv_format_from_file(
   /*--------------------------------------------------------------------------*/
   /* Create Workfile Name                                                     */
   /*--------------------------------------------------------------------------*/
-  tmpfile = s_create_workfile(r, conf, user_agent, qsp);
+  tmpfile = s_create_workfile_name(r, conf, user_agent, qsp);
   DBG(r,"workfile=[%s]", tmpfile);
 
   rv = apr_stat(&st, r->filename, APR_FINFO_MIN, r->pool);
@@ -1685,8 +1691,25 @@ s_header_only_cache_file(
 }
 
 
+static void
+s_init_serial_pattern(apr_pool_t *p)
+{
+  if (!v_docomo_serial_pattern1) {
+    v_docomo_serial_pattern1 = chxj_compile_for_preg_replace(p, "/ser[^;\\)]+");
+  }
+  if (!v_docomo_serial_pattern2) {
+    v_docomo_serial_pattern2 = chxj_compile_for_preg_replace(p, ";ser[^;\\)]+");
+  }
+  if (!v_docomo_serial_pattern3) {
+    v_docomo_serial_pattern3 = chxj_compile_for_preg_replace(p, ";icc[^;\\)]+");
+  }
+  if (!v_softbank_serial_pattern1) {
+    v_softbank_serial_pattern1 = chxj_compile_for_preg_replace(p, "/SN[0-9a-zA-Z][0-9a-zA-Z][0-9a-zA-Z][0-9a-zA-Z][0-9a-zA-Z][0-9a-zA-Z][0-9a-zA-Z][0-9a-zA-Z][0-9a-zA-Z][0-9a-zA-Z][0-9a-zA-Z] ");
+  }
+}
+
 static char *
-s_create_workfile(
+s_create_workfile_name(
   request_rec *r, 
   mod_chxj_config *conf, 
   const char *user_agent, 
@@ -1697,6 +1720,17 @@ s_create_workfile(
   int len;
   char *w = apr_palloc(r->pool, 256);
   char *fname;
+  char *new_user_agent;
+
+  s_init_serial_pattern(r->pool);
+
+  /* for DoCoMo */
+  new_user_agent = chxj_preg_replace(r->pool, v_docomo_serial_pattern1, "", user_agent);
+  new_user_agent = chxj_preg_replace(r->pool, v_docomo_serial_pattern2, "", new_user_agent);
+  new_user_agent = chxj_preg_replace(r->pool, v_docomo_serial_pattern3, "", new_user_agent);
+
+  /* for SoftBank */
+  new_user_agent = chxj_preg_replace(r->pool, v_softbank_serial_pattern1, " ", new_user_agent);
 
   memset(w, 0, 256);
   switch (qsp->mode) {
