@@ -2,7 +2,8 @@ libapache2-mod-chxj (0.8.4-1) unstable; urgency=low
 
   * Fixed Bug that deb package doesn't correspond to Apache2.2. 
   * Added features: 
-    ``ChxjImageCacheLimit'' directive.
+    - ``ChxjImageCacheLimit'' directive.
+    - The serial number of "image workfile name" is deleted. 
   * Added Document:
     ``ChxjImageCacheLimit'' directive.
 
