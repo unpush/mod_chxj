@@ -34,7 +34,6 @@ s_compile_regex(apr_pool_t *p, const char *pattern)
 {
   char *new_pat;
   new_pat = s_init_pattern(p, pattern);
-fprintf(stderr, "pattern string=[%s]\n", new_pat);
   return ap_pregcomp(p, new_pat, AP_REG_EXTENDED|AP_REG_ICASE);
 }
 
@@ -54,13 +53,11 @@ s_one_time_replace(apr_pool_t *p, ap_regex_t *regexp, const char *replacement, c
     /* Match */
     char *one = ap_pregsub(p, "$1", str, regexp->re_nsub + 1, match);
     char *three = ap_pregsub(p, "$3", str, regexp->re_nsub + 1, match);
-fprintf(stderr, "MATCH\n");
     if (strlen(replacement)) {
       return apr_pstrcat(p, one, replacement, three, NULL);
     }
     return apr_pstrcat(p, one, three, NULL);
   }
-fprintf(stderr, "NOT MATCH \n");
   /* Not Match */
   return NULL;
 }
