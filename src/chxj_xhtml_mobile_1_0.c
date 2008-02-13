@@ -565,7 +565,7 @@ s_xhtml_1_0_start_meta_tag(void *pdoc, Node *node)
        attr = qs_get_next_attr(doc,attr)) {
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
-    if (strcasecmp(name, "name") == 0) {
+    if (STRCASEEQ('n','N', "name", name)) {
       xhtml->out = apr_pstrcat(r->pool,
                       xhtml->out,
                       " ", 
@@ -575,8 +575,7 @@ s_xhtml_1_0_start_meta_tag(void *pdoc, Node *node)
                       "\"", 
                       NULL);
     }
-    else
-    if (strcasecmp(name, "http-equiv") == 0) {
+    else if (STRCASEEQ('h','H',"http-equiv", name)) {
       xhtml->out = apr_pstrcat(r->pool,
                       xhtml->out,
                       " ", 
@@ -585,21 +584,32 @@ s_xhtml_1_0_start_meta_tag(void *pdoc, Node *node)
                       value,
                       "\"", 
                       NULL);
-      if ((*value == 'c' || *value == 'C') && strcasecmp(value, "content-type") == 0) {
+      if (STRCASEEQ('c','C',"content-type", value)) {
         content_type_flag = 1;
       }
     }
-    else
-    if (strcasecmp(name, "content") == 0) {
+    else if (STRCASEEQ('c','C',"content", name)) {
       if (content_type_flag) {
-        xhtml->out = apr_pstrcat(r->pool,
-                        xhtml->out, 
-                        " ", 
-                        name, 
-                        "=\"", 
-                        "text/html; charset=Windows-31J", 
-                        "\"", 
-                        NULL);
+        if (IS_SJIS_STRING(GET_SPEC_CHARSET(xhtml->spec))) {
+          xhtml->out = apr_pstrcat(r->pool,
+                                   xhtml->out, 
+                                   " ", 
+                                   name, 
+                                   "=\"", 
+                                   "text/html; charset=Windows-31J", 
+                                   "\"", 
+                                   NULL);
+        }
+        else {
+          xhtml->out = apr_pstrcat(r->pool,
+                                   xhtml->out, 
+                                   " ", 
+                                   name, 
+                                   "=\"", 
+                                   "text/html; charset=UTF-8", 
+                                   "\"", 
+                                   NULL);
+        }
       }
       else {
         xhtml->out = apr_pstrcat(r->pool,

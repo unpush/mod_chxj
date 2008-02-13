@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "mod_chxj.h"
 #include "chxj_chtml20.h"
 #include "chxj_hdml.h"
 #include "chxj_str_util.h"
@@ -89,6 +90,7 @@ static void  s_init_chtml20(chtml20_t *chtml, Doc *doc, request_rec *r, device_t
 
 static char *s_chtml20_chxjif_tag(void *pdoc, Node *node); 
 static char *s_chtml20_text_tag(void *pdoc, Node *node);
+
 
 
 tag_handler chtml20_handler[] = {
@@ -543,11 +545,9 @@ s_chtml20_start_meta_tag(void *pdoc, Node *node)
                         "\"",
                         NULL);
   
-        if ((*value == 'c' || *value == 'C') 
-        && strcasecmp(value, "content-type") == 0)
+        if (STRCASEEQ('c','C',"content-type",value))
           content_type_flag = 1;
-        if ((*value == 'r' || *value == 'R')
-        && strcasecmp(value, "refresh") == 0)
+        if (STRCASEEQ('r','R',"refresh", value))
           refresh_flag = 1;
       }
       break;
@@ -556,17 +556,28 @@ s_chtml20_start_meta_tag(void *pdoc, Node *node)
     case 'C':
       if (strcasecmp(name, "content") == 0) {
         if (content_type_flag) {
-          chtml20->out = apr_pstrcat(r->pool,
-                          chtml20->out,
-                          " ",
-                          name,
-                          "=\"",
-                          "text/html; charset=Windows-31J",
-                          "\"",
-                          NULL);
+          if (IS_SJIS_STRING(GET_SPEC_CHARSET(chtml20->spec))) {
+            chtml20->out = apr_pstrcat(r->pool,
+                                       chtml20->out,
+                                       " ",
+                                       name,
+                                       "=\"",
+                                       "text/html; charset=Windows-31J",
+                                       "\"",
+                                       NULL);
+          }
+          else {
+            chtml20->out = apr_pstrcat(r->pool,
+                                       chtml20->out,
+                                       " ",
+                                       name,
+                                       "=\"",
+                                       "text/html; charset=UTF-8",
+                                       "\"",
+                                       NULL);
+          }
         }
-        else
-        if (refresh_flag) {
+        else if (refresh_flag) {
           char* buf = apr_pstrdup(r->pool, value);
           char* sec;
           char* url;

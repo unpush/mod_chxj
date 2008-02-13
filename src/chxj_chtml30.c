@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "mod_chxj.h"
 #include "chxj_chtml30.h"
 #include "chxj_hdml.h"
 #include "chxj_str_util.h"
@@ -542,12 +543,10 @@ s_chtml30_start_meta_tag(void *pdoc, Node *node)
                                    "\"",
                                    NULL);
   
-        if ((*value == 'c' || *value == 'C') 
-        && strcasecmp(value, "content-type") == 0)
+        if (STRCASEEQ('c','C',"content-type", value))
           content_type_flag = 1;
   
-        if ((*value == 'r' || *value == 'R')
-        && strcasecmp(value, "refresh") == 0)
+        if (STRCASEEQ('r','R',"refresh", value))
           refresh_flag = 1;
       }
       break;
@@ -556,14 +555,26 @@ s_chtml30_start_meta_tag(void *pdoc, Node *node)
     case 'C':
       if (strcasecmp(name, "content") == 0) {
         if (content_type_flag) {
-          chtml30->out = apr_pstrcat(r->pool,
-                                     chtml30->out,
-                                     " ",
-                                     name,
-                                     "=\"",
-                                    "text/html; charset=Windows-31J",
-                                    "\"",
-                                    NULL);
+          if (IS_SJIS_STRING(GET_SPEC_CHARSET(chtml30->spec))) {
+            chtml30->out = apr_pstrcat(r->pool,
+                                       chtml30->out,
+                                       " ",
+                                       name,
+                                       "=\"",
+                                      "text/html; charset=Windows-31J",
+                                      "\"",
+                                      NULL);
+          }
+          else {
+            chtml30->out = apr_pstrcat(r->pool,
+                                       chtml30->out,
+                                       " ",
+                                       name,
+                                       "=\"",
+                                      "text/html; charset=UTF-8",
+                                      "\"",
+                                      NULL);
+          }
         }
         else
         if (refresh_flag) {
