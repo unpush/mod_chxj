@@ -1124,7 +1124,7 @@ s_chtml10_start_base_tag(void *pdoc, Node *node)
     name  = qs_get_attr_name(doc,attr);
     value = qs_get_attr_value(doc,attr);
 
-    if ((*name == 'h' || *name == 'H') && strcasecmp(name, "href") == 0) {
+    if (STRCASEEQ('h','H',"href", name)) {
       chtml10->out = apr_pstrcat(r->pool, 
                       chtml10->out, 
                       " href=\"", 
