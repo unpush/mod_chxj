@@ -543,13 +543,12 @@ s_jhtml_start_meta_tag(void *pdoc, Node *node)
                         value,
                         "\"",
                         NULL);
-        if ((*value == 'c' || *value == 'C') 
-        && strcasecmp(value, "content-type") == 0) {
+        if (STRCASEEQ('c','C',"content-type", value)) {
           content_type_flag = 1;
         }
-        if ((*value == 'r' || *value == 'R')
-        && strcasecmp(value, "refresh") == 0)
+        if (STRCASEEQ('r','R',"refresh", value)) {
           refresh_flag = 1;
+        }
       }
       break;
 
@@ -560,14 +559,26 @@ s_jhtml_start_meta_tag(void *pdoc, Node *node)
         /* CHTML 2.0                                                            */
         /*----------------------------------------------------------------------*/
         if (content_type_flag)  {
-          jhtml->out = apr_pstrcat(r->pool,
-                                  jhtml->out,
-                                  " ",
-                                  name,
-                                  "=\"",
-                                  "text/html; charset=Windows-31J",
-                                  "\"",
-                                  NULL);
+          if (IS_SJIS_STRING(GET_SPEC_CHARSET(jhtml->spec))) {
+            jhtml->out = apr_pstrcat(r->pool,
+                                    jhtml->out,
+                                    " ",
+                                    name,
+                                    "=\"",
+                                    "text/html; charset=Windows-31J",
+                                    "\"",
+                                    NULL);
+          }
+          else {
+            jhtml->out = apr_pstrcat(r->pool,
+                                    jhtml->out,
+                                    " ",
+                                    name,
+                                    "=\"",
+                                    "text/html; charset=UTF-8",
+                                    "\"",
+                                    NULL);
+          }
         }
         else
         if (refresh_flag) {

@@ -5,6 +5,7 @@ header("Pragma: no-cache");
 ?>
 <html>
   <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=EUCJP-WIN">
     <title>mod_chxjŽÃŽ½ŽÄŽ»Ž²ŽÄ</title>
   </head>
   <body>
