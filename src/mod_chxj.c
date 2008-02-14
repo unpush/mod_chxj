@@ -833,8 +833,16 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
 
         if (spec->html_spec_type != CHXJ_SPEC_UNKNOWN
             && r->content_type
-            && *(char*)r->content_type == 'i'
-            && strncmp(r->content_type, "image/", 6) == 0) {
+            && ( *r->content_type == 'i' || *r->content_type == 'I')
+            && strncasecmp("image/", r->content_type, 6) == 0
+            && ( STRCASEEQ('j','J',"jpeg",            &r->content_type[6])         /* JPEG */
+              || STRCASEEQ('j','J',"jp2",             &r->content_type[6])         /* JPEG2000 */
+              || STRCASEEQ('j','J',"jpeg2000",        &r->content_type[6])         /* JPEG2000 */
+              || STRCASEEQ('j','J',"jpeg2000-image",  &r->content_type[6])         /* JPEG2000 */
+              || STRCASEEQ('x','X',"x-jpeg2000-image",&r->content_type[6])         /* JPEG2000 */
+              || STRCASEEQ('p','P',"png",             &r->content_type[6])         /* PNG */
+              || STRCASEEQ('x','X',"x-png",           &r->content_type[6])         /* PNG */
+              || STRCASEEQ('g','G',"gif",             &r->content_type[6]))) {     /* GIF */
           if (ctx->len) {
             char *tmp;
 

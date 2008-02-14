@@ -39,7 +39,7 @@
              ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r,"%s %s %d %s\n",__FILE__,(__func__),__LINE__,description); \
              description=(char *) MagickRelinquishMemory(description); \
              DestroyMagickWand(magick_wand); \
-          }while(1)
+          }while(0)
 
 /*----------------------------------------------------------------------------*/
 /* モード指示子テーブル                                                       */
