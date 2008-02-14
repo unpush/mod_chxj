@@ -1,3 +1,12 @@
+libapache2-mod-chxj (0.8.5-1) unstable; urgency=low
+
+  * Fixed Bug
+    - when the image of non-correspondence is converted, and aborted.
+  * Changed features.
+    - Being able to convert the image changed only to jpeg, png, and gif. 
+
+ -- Atsushi Konno <konn@users.sorceforge.jp>  Thu, 14 Feb 2008 20:53:02 +0900
+
 libapache2-mod-chxj (0.8.4-1) unstable; urgency=low
 
   * Fixed Bug that deb package doesn't correspond to Apache2.2. 
