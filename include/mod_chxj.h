@@ -53,6 +53,9 @@
 #  endif
 #endif
 
+#define STRCASEEQ(a,b,c,d) \
+  ((((a) == *(d))|| ((b) == *(d))) && strcasecmp((c),(d)) == 0)
+
 #include "qs_ignore_sp.h"
 #include "qs_log.h"
 #include "qs_malloc.h"
