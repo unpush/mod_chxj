@@ -325,7 +325,7 @@ tag_handler jhtml_handler[] = {
  * @return The character string after the converting is returned.
  */
 char *
-chxj_exchange_jhtml(
+chxj_convert_jhtml(
   request_rec         *r,
   device_table        *spec,
   const char          *src,
@@ -388,7 +388,7 @@ chxj_exchange_jhtml(
   /*--------------------------------------------------------------------------*/
   /* It converts it from CHTML to JHTML.                                      */
   /*--------------------------------------------------------------------------*/
-  chxj_node_exchange(spec,r,(void*)&jhtml, &doc, qs_get_root(&doc), 0);
+  chxj_node_convert(spec,r,(void*)&jhtml, &doc, qs_get_root(&doc), 0);
   dst = jhtml.out;
 
   qs_all_free(&doc,QX_LOGMARK);

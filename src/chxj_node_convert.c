@@ -81,7 +81,7 @@ tag_handlers chxj_tag_handlers[] = {
  * @return The character string after it converts it is returned. 
  */
 char *
-chxj_node_exchange(
+chxj_node_convert(
   device_table *spec,
   request_rec  *r,
   void         *pdoc, 
@@ -117,7 +117,7 @@ chxj_node_exchange(
         if (handlers[tagHTML].start_tag_handler) 
           handlers[tagHTML].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagHTML].end_tag_handler)
           handlers[tagHTML].end_tag_handler(pdoc, child);
@@ -130,7 +130,7 @@ chxj_node_exchange(
         if (handlers[tagHEAD].start_tag_handler) 
           handlers[tagHEAD].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagHEAD].end_tag_handler)
           handlers[tagHEAD].end_tag_handler(pdoc, child);
@@ -154,7 +154,7 @@ chxj_node_exchange(
         if (handlers[tagH1].start_tag_handler) 
           handlers[tagH1].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagH1].end_tag_handler)
           handlers[tagH1].end_tag_handler(pdoc, child);
@@ -167,7 +167,7 @@ chxj_node_exchange(
         if (handlers[tagH2].start_tag_handler) 
           handlers[tagH2].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagH2].end_tag_handler)
           handlers[tagH2].end_tag_handler(pdoc, child);
@@ -180,7 +180,7 @@ chxj_node_exchange(
         if (handlers[tagH3].start_tag_handler) 
           handlers[tagH3].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagH3].end_tag_handler)
           handlers[tagH3].end_tag_handler(pdoc, child);
@@ -193,7 +193,7 @@ chxj_node_exchange(
         if (handlers[tagH4].start_tag_handler) 
           handlers[tagH4].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagH4].end_tag_handler)
           handlers[tagH4].end_tag_handler(pdoc, child);
@@ -206,7 +206,7 @@ chxj_node_exchange(
         if (handlers[tagH5].start_tag_handler) 
           handlers[tagH5].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagH5].end_tag_handler)
           handlers[tagH5].end_tag_handler(pdoc, child);
@@ -219,7 +219,7 @@ chxj_node_exchange(
         if (handlers[tagH6].start_tag_handler) 
           handlers[tagH6].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagH6].end_tag_handler)
           handlers[tagH6].end_tag_handler(pdoc, child);
@@ -236,7 +236,7 @@ chxj_node_exchange(
         if (handlers[tagP].start_tag_handler) 
           handlers[tagP].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagP].end_tag_handler)
           handlers[tagP].end_tag_handler(pdoc, child);
@@ -249,7 +249,7 @@ chxj_node_exchange(
         if (handlers[tagPRE].start_tag_handler) 
           handlers[tagPRE].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagPRE].end_tag_handler)
           handlers[tagPRE].end_tag_handler(pdoc, child);
@@ -265,7 +265,7 @@ chxj_node_exchange(
         if (handlers[tagNOBR].start_tag_handler) 
           handlers[tagNOBR].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagNOBR].end_tag_handler)
           handlers[tagNOBR].end_tag_handler(pdoc, child);
@@ -281,7 +281,7 @@ chxj_node_exchange(
         if (handlers[tagUL].start_tag_handler) 
           handlers[tagUL].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagUL].end_tag_handler)
           handlers[tagUL].end_tag_handler(pdoc, child);
@@ -297,7 +297,7 @@ chxj_node_exchange(
         if (handlers[tagLI].start_tag_handler) 
           handlers[tagLI].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagLI].end_tag_handler)
           handlers[tagLI].end_tag_handler(pdoc, child);
@@ -310,7 +310,7 @@ chxj_node_exchange(
         if (handlers[tagLEGEND].start_tag_handler) 
           handlers[tagLEGEND].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagLEGEND].end_tag_handler)
           handlers[tagLEGEND].end_tag_handler(pdoc, child);
@@ -323,7 +323,7 @@ chxj_node_exchange(
         if (handlers[tagLABEL].start_tag_handler) 
           handlers[tagLABEL].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagLABEL].end_tag_handler)
           handlers[tagLABEL].end_tag_handler(pdoc, child);
@@ -340,7 +340,7 @@ chxj_node_exchange(
         if (handlers[tagOL].start_tag_handler) 
           handlers[tagOL].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagOL].end_tag_handler)
           handlers[tagOL].end_tag_handler(pdoc, child);
@@ -353,7 +353,7 @@ chxj_node_exchange(
         if (handlers[tagOPTION].start_tag_handler) 
           handlers[tagOPTION].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagOPTION].end_tag_handler)
           handlers[tagOPTION].end_tag_handler(pdoc, child);
@@ -370,7 +370,7 @@ chxj_node_exchange(
         if (handlers[tagMETA].start_tag_handler) 
           handlers[tagMETA].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagMETA].end_tag_handler)
           handlers[tagMETA].end_tag_handler(pdoc, child);
@@ -386,7 +386,7 @@ chxj_node_exchange(
         if (handlers[tagB].start_tag_handler) 
           handlers[tagB].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagB].end_tag_handler)
           handlers[tagB].end_tag_handler(pdoc, child);
@@ -399,7 +399,7 @@ chxj_node_exchange(
         if (handlers[tagBASE].start_tag_handler) 
           handlers[tagBASE].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagBASE].end_tag_handler)
           handlers[tagBASE].end_tag_handler(pdoc, child);
@@ -412,7 +412,7 @@ chxj_node_exchange(
         if (handlers[tagBODY].start_tag_handler) 
           handlers[tagBODY].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagBODY].end_tag_handler)
           handlers[tagBODY].end_tag_handler(pdoc, child);
@@ -425,7 +425,7 @@ chxj_node_exchange(
         if (handlers[tagBR].start_tag_handler) 
           handlers[tagBR].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagBR].end_tag_handler)
           handlers[tagBR].end_tag_handler(pdoc, child);
@@ -441,7 +441,7 @@ chxj_node_exchange(
         if (handlers[tagA].start_tag_handler) 
           handlers[tagA].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagA].end_tag_handler)
           handlers[tagA].end_tag_handler(pdoc, child);
@@ -457,7 +457,7 @@ chxj_node_exchange(
         if (handlers[tagFONT].start_tag_handler) 
           handlers[tagFONT].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagFONT].end_tag_handler)
           handlers[tagFONT].end_tag_handler(pdoc, child);
@@ -470,7 +470,7 @@ chxj_node_exchange(
         if (handlers[tagFORM].start_tag_handler) 
           handlers[tagFORM].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagFORM].end_tag_handler)
           handlers[tagFORM].end_tag_handler(pdoc, child);
@@ -483,7 +483,7 @@ chxj_node_exchange(
         if (handlers[tagFIELDSET].start_tag_handler) 
           handlers[tagFIELDSET].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagFIELDSET].end_tag_handler)
           handlers[tagFIELDSET].end_tag_handler(pdoc, child);
@@ -499,7 +499,7 @@ chxj_node_exchange(
         if (handlers[tagINPUT].start_tag_handler) 
           handlers[tagINPUT].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagINPUT].end_tag_handler)
           handlers[tagINPUT].end_tag_handler(pdoc, child);
@@ -512,7 +512,7 @@ chxj_node_exchange(
         if (handlers[tagIMG].start_tag_handler) 
           handlers[tagIMG].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagIMG].end_tag_handler)
           handlers[tagIMG].end_tag_handler(pdoc, child);
@@ -528,7 +528,7 @@ chxj_node_exchange(
         if (handlers[tagSELECT].start_tag_handler) 
           handlers[tagSELECT].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagSELECT].end_tag_handler)
           handlers[tagSELECT].end_tag_handler(pdoc, child);
@@ -540,10 +540,6 @@ chxj_node_exchange(
       if (strcasecmp(name, "style") == 0) {
         if (handlers[tagSTYLE].start_tag_handler) 
           handlers[tagSTYLE].start_tag_handler(pdoc, child);
-#if 0
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
-#endif
-
         if (handlers[tagSTYLE].end_tag_handler)
           handlers[tagSTYLE].end_tag_handler(pdoc, child);
       }
@@ -555,7 +551,7 @@ chxj_node_exchange(
         if (handlers[tagSPAN].start_tag_handler) 
           handlers[tagSPAN].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagSPAN].end_tag_handler)
           handlers[tagSPAN].end_tag_handler(pdoc, child);
@@ -568,7 +564,7 @@ chxj_node_exchange(
         if (handlers[tagSMALL].start_tag_handler) 
           handlers[tagSMALL].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagSMALL].end_tag_handler)
           handlers[tagSMALL].end_tag_handler(pdoc, child);
@@ -584,7 +580,7 @@ chxj_node_exchange(
         if (handlers[tagDIV].start_tag_handler) 
           handlers[tagDIV].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagDIV].end_tag_handler)
           handlers[tagDIV].end_tag_handler(pdoc, child);
@@ -600,7 +596,7 @@ chxj_node_exchange(
         if (handlers[tagCENTER].start_tag_handler) 
           handlers[tagCENTER].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagCENTER].end_tag_handler)
           handlers[tagCENTER].end_tag_handler(pdoc, child);
@@ -616,7 +612,7 @@ chxj_node_exchange(
           parse_attr = qs_get_parse_attr(doc, child, r);
 
           if (parse_attr && strcasecmp(parse_attr, "true") == 0) {
-            chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+            chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
           }
           else {
             if (handlers[tagCHXJIF].start_tag_handler)
@@ -635,7 +631,7 @@ chxj_node_exchange(
         if (handlers[tagTEXTAREA].start_tag_handler) 
           handlers[tagTEXTAREA].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagTEXTAREA].end_tag_handler)
           handlers[tagTEXTAREA].end_tag_handler(pdoc, child);
@@ -648,7 +644,7 @@ chxj_node_exchange(
         if (handlers[tagTITLE].start_tag_handler) 
           handlers[tagTITLE].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagTITLE].end_tag_handler)
           handlers[tagTITLE].end_tag_handler(pdoc, child);
@@ -661,7 +657,7 @@ chxj_node_exchange(
         if (handlers[tagTABLE].start_tag_handler) 
           handlers[tagTABLE].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagTABLE].end_tag_handler)
           handlers[tagTABLE].end_tag_handler(pdoc, child);
@@ -674,7 +670,7 @@ chxj_node_exchange(
         if (handlers[tagTBODY].start_tag_handler) 
           handlers[tagTBODY].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagTBODY].end_tag_handler)
           handlers[tagTBODY].end_tag_handler(pdoc, child);
@@ -687,7 +683,7 @@ chxj_node_exchange(
         if (handlers[tagTH].start_tag_handler) 
           handlers[tagTH].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagTH].end_tag_handler)
           handlers[tagTH].end_tag_handler(pdoc, child);
@@ -700,7 +696,7 @@ chxj_node_exchange(
         if (handlers[tagTR].start_tag_handler) 
           handlers[tagTR].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagTR].end_tag_handler)
           handlers[tagTR].end_tag_handler(pdoc, child);
@@ -713,7 +709,7 @@ chxj_node_exchange(
         if (handlers[tagTD].start_tag_handler) 
           handlers[tagTD].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
 
         if (handlers[tagTD].end_tag_handler)
           handlers[tagTD].end_tag_handler(pdoc, child);
@@ -729,7 +725,7 @@ chxj_node_exchange(
       break;
 
     default:
-      chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+      chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
     }
   }
 

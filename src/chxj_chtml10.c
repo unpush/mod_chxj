@@ -329,7 +329,7 @@ tag_handler chtml10_handler[] = {
  * @return The character string after the converting is returned.
  */
 char *
-chxj_exchange_chtml10(
+chxj_convert_chtml10(
   request_rec        *r,
   device_table       *spec,
   const char         *src,
@@ -346,7 +346,7 @@ chxj_exchange_chtml10(
 
   dst = NULL;
 
-  DBG(r, "start chxj_exchange_chtml10() cookie_id=[%s]", (cookie) ? cookie->cookie_id : "");
+  DBG(r, "start chxj_convert_chtml10() cookie_id=[%s]", (cookie) ? cookie->cookie_id : "");
 
   /*--------------------------------------------------------------------------*/
   /* If qrcode xml                                                            */
@@ -392,7 +392,7 @@ chxj_exchange_chtml10(
   /*--------------------------------------------------------------------------*/
   /* It converts it from CHTML to CHTML.                                      */
   /*--------------------------------------------------------------------------*/
-  chxj_node_exchange(spec,r,(void *)&chtml10, &doc, qs_get_root(&doc), 0);
+  chxj_node_convert(spec,r,(void *)&chtml10, &doc, qs_get_root(&doc), 0);
   dst = chtml10.out;
 
 
@@ -410,7 +410,7 @@ chxj_exchange_chtml10(
   chxj_dump_out("[dst] CHTML -> CHTML1.0", dst, *dstlen);
 #endif
 
-  DBG(r, "end   chxj_exchange_chtml10() cookie_id=[%s]", (cookie) ? cookie->cookie_id : "");
+  DBG(r, "end   chxj_convert_chtml10() cookie_id=[%s]", (cookie) ? cookie->cookie_id : "");
 
   return dst;
 }

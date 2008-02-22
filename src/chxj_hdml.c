@@ -329,7 +329,7 @@ tag_handler hdml_handler[] = {
  * @return         The character string after the converting is returned.
  */
 char *
-chxj_exchange_hdml(
+chxj_convert_hdml(
   request_rec         *r, 
   device_table        *spec, 
   const char          *src, 
@@ -419,7 +419,7 @@ chxj_exchange_hdml(
     /*------------------------------------------------------------------------*/
     s_hdml_count_radio_tag(&hdml, qs_get_root(&doc));
 
-    chxj_node_exchange(spec,r,(void*)&hdml, &doc, qs_get_root(&doc), 0);
+    chxj_node_convert(spec,r,(void*)&hdml, &doc, qs_get_root(&doc), 0);
     dst = hdml.out;
 
     DBG(r,"tmp=[%s]", dst);

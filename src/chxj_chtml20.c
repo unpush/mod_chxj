@@ -331,7 +331,7 @@ tag_handler chtml20_handler[] = {
  * @return The character string after the converting is returned.
  */
 char *
-chxj_exchange_chtml20(
+chxj_convert_chtml20(
   request_rec         *r,
   device_table        *spec,
   const char          *src,
@@ -392,7 +392,7 @@ chxj_exchange_chtml20(
   /*--------------------------------------------------------------------------*/
   /* It converts it from CHTML to CHTML.                                      */
   /*--------------------------------------------------------------------------*/
-  chxj_node_exchange(spec,r,(void*)&chtml20, &doc, qs_get_root(&doc), 0);
+  chxj_node_convert(spec,r,(void*)&chtml20, &doc, qs_get_root(&doc), 0);
   dst = chtml20.out;
 
   qs_all_free(&doc,QX_LOGMARK);

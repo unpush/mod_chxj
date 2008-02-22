@@ -73,52 +73,52 @@ converter_t convert_routine[] = {
   },
   {
     /* CHXJ_SPEC_Chtml_1_0        */
-    .converter = chxj_exchange_chtml10,
+    .converter = chxj_convert_chtml10,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_Chtml_2_0        */
-    .converter = chxj_exchange_chtml20,
+    .converter = chxj_convert_chtml20,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_Chtml_3_0        */
-    .converter = chxj_exchange_chtml30,
+    .converter = chxj_convert_chtml30,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_Chtml_4_0        */
-    .converter = chxj_exchange_chtml30,
+    .converter = chxj_convert_chtml30,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_Chtml_5_0        */
-    .converter = chxj_exchange_chtml30,
+    .converter = chxj_convert_chtml30,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_Chtml_6_0        */
-    .converter = chxj_exchange_chtml30,
+    .converter = chxj_convert_chtml30,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_Chtml_7_0        */
-    .converter = chxj_exchange_chtml30,
+    .converter = chxj_convert_chtml30,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_XHtml_Mobile_1_0 */
-    .converter = chxj_exchange_xhtml_mobile_1_0,
+    .converter = chxj_convert_xhtml_mobile_1_0,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_Hdml             */
-    .converter = chxj_exchange_hdml,
+    .converter = chxj_convert_hdml,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_Jhtml            */
-    .converter = chxj_exchange_jhtml,
+    .converter = chxj_convert_jhtml,
     .encoder  = chxj_encoding,
   },
   {
@@ -198,7 +198,7 @@ chxj_headers_fixup(request_rec *r)
  * @param len [i/o] It is length of former HTML character string. 
  */
 static char *
-chxj_exchange(request_rec *r, const char** src, apr_size_t* len, device_table *spec, const char *ua)
+chxj_convert_html(request_rec *r, const char** src, apr_size_t* len, device_table *spec, const char *ua)
 {
   char                *user_agent;
   char                *dst;
@@ -226,7 +226,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len, device_table *s
     user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
 
   DBG(r,"User-Agent:[%s]", user_agent);
-  DBG(r, "start chxj_exchange()");
+  DBG(r, "start chxj_convert_html()");
   DBG(r,"content type is %s", r->content_type);
 
 
@@ -321,7 +321,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len, device_table *s
   }
   dst[*len] = 0;
 
-  DBG(r, "end chxj_exchange()");
+  DBG(r, "end chxj_convert_html()");
 
   return dst;
 }
@@ -761,7 +761,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
             DBG(r, "input data=[%s] len=[%d]", tmp, ctx->len);
 #endif
 
-            ctx->buffer = chxj_exchange(r, 
+            ctx->buffer = chxj_convert_html(r, 
                                         (const char**)&tmp, 
                                         (apr_size_t*)&ctx->len,
                                         spec,
@@ -774,7 +774,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
           else {
             ctx->buffer = apr_psprintf(r->pool, "\n");
             ctx->len += 1;
-            ctx->buffer = chxj_exchange(r, 
+            ctx->buffer = chxj_convert_html(r, 
                                         (const char**)&ctx->buffer, 
                                         (apr_size_t*)&ctx->len,
                                         spec,
@@ -1123,7 +1123,7 @@ chxj_input_filter(ap_filter_t         *f,
     spec);
 
   if (len > 0) {
-    DBG(r, "(in:exchange)POSTDATA:[%s]", data_brigade);
+    DBG(r, "(in:convert)POSTDATA:[%s]", data_brigade);
     obb = apr_brigade_create(r->pool, c->bucket_alloc);
     tmp_heap = apr_bucket_heap_create(data_brigade, 
                                       len, 

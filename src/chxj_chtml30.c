@@ -329,7 +329,7 @@ tag_handler chtml30_handler[] = {
  * @return The character string after the converting is returned.
  */
 char*
-chxj_exchange_chtml30(
+chxj_convert_chtml30(
   request_rec         *r,
   device_table        *spec,
   const char          *src,
@@ -390,7 +390,7 @@ chxj_exchange_chtml30(
   /*--------------------------------------------------------------------------*/
   /* It converts it from CHTML to CHTML.                                      */
   /*--------------------------------------------------------------------------*/
-  chxj_node_exchange(spec,r,(void*)&chtml30, &doc, qs_get_root(&doc), 0);
+  chxj_node_convert(spec,r,(void*)&chtml30, &doc, qs_get_root(&doc), 0);
   dst = chtml30.out;
 
   qs_all_free(&doc,QX_LOGMARK);

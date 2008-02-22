@@ -336,7 +336,7 @@ tag_handler xhtml_handler[] = {
  * @return The character string after the converting is returned.
  */
 char *
-chxj_exchange_xhtml_mobile_1_0(
+chxj_convert_xhtml_mobile_1_0(
   request_rec     *r,
   device_table    *spec,
   const char      *src,
@@ -351,7 +351,7 @@ chxj_exchange_xhtml_mobile_1_0(
   xhtml_t   xhtml;
   Doc       doc;
 
-  DBG(r,"start chxj_exchange_xhtml_mobile_1_0()");
+  DBG(r,"start chxj_convert_xhtml_mobile_1_0()");
 
   /*--------------------------------------------------------------------------*/
   /* If qrcode xml                                                            */
@@ -398,7 +398,7 @@ chxj_exchange_xhtml_mobile_1_0(
   /*--------------------------------------------------------------------------*/
   /* It converts it from CHTML to XHTML.                                      */
   /*--------------------------------------------------------------------------*/
-  chxj_node_exchange(spec,r,(void*)&xhtml, &doc, qs_get_root(&doc), 0);
+  chxj_node_convert(spec,r,(void*)&xhtml, &doc, qs_get_root(&doc), 0);
   dst = xhtml.out;  
 
   qs_all_free(&doc,QX_LOGMARK);
@@ -415,7 +415,7 @@ chxj_exchange_xhtml_mobile_1_0(
   chxj_dump_out("[dst] CHTML->XHTML", dst, *dstlen);
 #endif
 
-  DBG(r,"end chxj_exchange_xhtml_mobile_1_0()");
+  DBG(r,"end chxj_convert_xhtml_mobile_1_0()");
 
   return dst;
 }
