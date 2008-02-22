@@ -1880,6 +1880,32 @@
       <dpi_heigh>96</dpi_heigh>
       <charset>SJIS</charset>
     </device>
+    <!-- Sale in 2008.01 W61SH -->
+    <!--
+      KDDI-SH34 UP.Browser/6.0.7.2 (GUI) MMP/1.1
+    -->
+    <device>
+      <device_id>SH34</device_id>
+      <device_name>W61SH</device_name>
+      <html_spec_type>XHTML_MOBILE_1_0</html_spec_type>
+      <width>229</width>
+      <heigh>323</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>9000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+      <charset>SJIS</charset>
+    </device>
+
 
     <!--=====================================================================-->
     <!-- A5000 series                                                        -->
@@ -15585,6 +15611,31 @@
 
       <wp_width>480</wp_width>
       <wp_heigh>640</wp_heigh>
+      <cache>307200</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+      <charset>UTF8</charset>
+    </device>
+    <!-- Sale in 2008.01 920SC -->
+    <!--
+      SoftBank/1.0/920SC/SCJ001/SN*********** Browser/Browser/1.0 Profile/MIDP-2.0 Configuration/CLDC-1.1
+    -->
+    <device>
+      <device_id>920SH</device_id>
+      <device_name>SoftBank 920SH</device_name>
+      <html_spec_type>JHTML</html_spec_type>
+      <width>230</width>
+      <heigh>264</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
       <cache>307200</cache>
       <dpi_width>96</dpi_width>
       <dpi_heigh>96</dpi_heigh>
