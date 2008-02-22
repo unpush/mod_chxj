@@ -43,7 +43,7 @@ struct chtml30_t {
 /*----------------------------------------------------------------------------*/
 /* Prototype                                                                  */
 /*----------------------------------------------------------------------------*/
-extern char* chxj_exchange_chtml30(
+extern char* chxj_convert_chtml30(
   request_rec*          r,
   device_table*         spec,
   const char*           src,

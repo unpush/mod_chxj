@@ -395,7 +395,7 @@ extern tag_handler  xhtml_handler[];
 extern tag_handler  hdml_handler[];
 extern tag_handler  jhtml_handler[];
 
-extern char *chxj_node_exchange( 
+extern char *chxj_node_convert( 
   device_table *spec,
   request_rec  *r,
   void         *pdoc,

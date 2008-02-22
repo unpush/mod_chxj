@@ -43,7 +43,7 @@ struct jhtml_t {
 /*----------------------------------------------------------------------------*/
 /* Prototype                                                                  */
 /*----------------------------------------------------------------------------*/
-extern char* chxj_exchange_jhtml(
+extern char* chxj_convert_jhtml(
   request_rec*              r,
   device_table*             spec,
   const char*               src,

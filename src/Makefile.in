@@ -70,7 +70,7 @@ am_libmod_chxj_la_OBJECTS = libmod_chxj_la-mod_chxj.lo \
 	libmod_chxj_la-chxj_qr_code.lo libmod_chxj_la-chxj_calc_ecc.lo \
 	libmod_chxj_la-chxj_apply_convrule.lo \
 	libmod_chxj_la-chxj_encoding.lo \
-	libmod_chxj_la-chxj_node_exchange.lo \
+	libmod_chxj_la-chxj_node_convert.lo \
 	libmod_chxj_la-chxj_url_encode.lo \
 	libmod_chxj_la-chxj_cookie.lo \
 	libmod_chxj_la-chxj_preg_replace.lo \
@@ -242,7 +242,7 @@ libmod_chxj_la_SOURCES = mod_chxj.c \
     chxj_calc_ecc.c \
     chxj_apply_convrule.c \
     chxj_encoding.c \
-    chxj_node_exchange.c \
+    chxj_node_convert.c \
     chxj_url_encode.c \
     chxj_cookie.c \
     chxj_preg_replace.c \
@@ -335,7 +335,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmod_chxj_la-chxj_jhtml.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmod_chxj_la-chxj_load_device_data.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmod_chxj_la-chxj_load_emoji_data.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmod_chxj_la-chxj_node_exchange.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmod_chxj_la-chxj_node_convert.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmod_chxj_la-chxj_preg_replace.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmod_chxj_la-chxj_qr_code.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmod_chxj_la-chxj_specified_device.Plo@am__quote@
@@ -555,12 +555,12 @@ libmod_chxj_la-chxj_encoding.lo: chxj_encoding.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmod_chxj_la_CFLAGS) $(CFLAGS) -c -o libmod_chxj_la-chxj_encoding.lo `test -f 'chxj_encoding.c' || echo '$(srcdir)/'`chxj_encoding.c
 
-libmod_chxj_la-chxj_node_exchange.lo: chxj_node_exchange.c
-@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmod_chxj_la_CFLAGS) $(CFLAGS) -MT libmod_chxj_la-chxj_node_exchange.lo -MD -MP -MF $(DEPDIR)/libmod_chxj_la-chxj_node_exchange.Tpo -c -o libmod_chxj_la-chxj_node_exchange.lo `test -f 'chxj_node_exchange.c' || echo '$(srcdir)/'`chxj_node_exchange.c
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/libmod_chxj_la-chxj_node_exchange.Tpo $(DEPDIR)/libmod_chxj_la-chxj_node_exchange.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='chxj_node_exchange.c' object='libmod_chxj_la-chxj_node_exchange.lo' libtool=yes @AMDEPBACKSLASH@
+libmod_chxj_la-chxj_node_convert.lo: chxj_node_convert.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmod_chxj_la_CFLAGS) $(CFLAGS) -MT libmod_chxj_la-chxj_node_convert.lo -MD -MP -MF $(DEPDIR)/libmod_chxj_la-chxj_node_convert.Tpo -c -o libmod_chxj_la-chxj_node_convert.lo `test -f 'chxj_node_convert.c' || echo '$(srcdir)/'`chxj_node_convert.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/libmod_chxj_la-chxj_node_convert.Tpo $(DEPDIR)/libmod_chxj_la-chxj_node_convert.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='chxj_node_convert.c' object='libmod_chxj_la-chxj_node_convert.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmod_chxj_la_CFLAGS) $(CFLAGS) -c -o libmod_chxj_la-chxj_node_exchange.lo `test -f 'chxj_node_exchange.c' || echo '$(srcdir)/'`chxj_node_exchange.c
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmod_chxj_la_CFLAGS) $(CFLAGS) -c -o libmod_chxj_la-chxj_node_convert.lo `test -f 'chxj_node_convert.c' || echo '$(srcdir)/'`chxj_node_convert.c
 
 libmod_chxj_la-chxj_url_encode.lo: chxj_url_encode.c
 @am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmod_chxj_la_CFLAGS) $(CFLAGS) -MT libmod_chxj_la-chxj_url_encode.lo -MD -MP -MF $(DEPDIR)/libmod_chxj_la-chxj_url_encode.Tpo -c -o libmod_chxj_la-chxj_url_encode.lo `test -f 'chxj_url_encode.c' || echo '$(srcdir)/'`chxj_url_encode.c

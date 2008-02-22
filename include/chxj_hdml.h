@@ -101,7 +101,7 @@ struct hdml_t {
 /*============================================================================*/
 /* Prototype declaration.                                                     */
 /*============================================================================*/
-extern char* chxj_exchange_hdml(
+extern char* chxj_convert_hdml(
   request_rec*        r, 
   device_table*       spec,
   const char*         src,
