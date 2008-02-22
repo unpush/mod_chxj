@@ -9,6 +9,10 @@ header("Pragma: no-cache");
   <body>
 <?php
   $data = $_POST[""];
+  if (strlen($data) == 0) {
+    /* for PC */
+    $data = $_POST["&#58942;"];
+  }
 ?>
 <center>
 絵文字入力のﾃｽﾄ(SJISでPOST)
@@ -19,7 +23,6 @@ header("Pragma: no-cache");
       <input type="submit" value="" />
     </form>
 ﾎﾟｽﾄされた値は、、、<br>
-[
 <?php
   echo "HEX:[" . bin2hex($data) . "]<br>";
   echo "BIN:[" . $data . "]<br>";

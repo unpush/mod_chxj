@@ -9,9 +9,13 @@ header("Pragma: no-cache");
   <body>
 <?php
   $data = $_GET[""];
+  if (strlen($data) == 0) {
+    /* for PC */
+    $data = $_GET["&#58942;"];
+  }
 ?>
 <center>
-絵文字入力のﾃｽﾄ(EUCJPでGET)
+絵文字入力のﾃｽﾄ(UTF8でGET)
 </center>
 <hr>
     <form name="" method="get" action="get1_utf8.php">

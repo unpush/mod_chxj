@@ -9,6 +9,10 @@ header("Pragma: no-cache");
   <body>
 <?php
   $data = $_POST["ü¡"];
+  if (strlen($data) == 0) {
+    /* for PC */
+    $data = $_POST["&#58942;"];
+  }
 ?>
 <center>
 ³¨Ê¸»úÆþÎÏ¤ÎŽÃŽ½ŽÄ(EUCJP)

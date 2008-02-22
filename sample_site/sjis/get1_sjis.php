@@ -9,6 +9,10 @@ header("Pragma: no-cache");
   <body>
 <?php
   $data = $_GET["øŸ"];
+  if (strlen($data) == 0) {
+    /* for PC */
+    $data = $_GET["&#58942;"];
+  }
 ?>
 <center>
 ŠG•¶Žš“ü—Í‚ÌÃ½Ä(SJIS‚ÅGET)
