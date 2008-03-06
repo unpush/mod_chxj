@@ -403,7 +403,6 @@ chxj_exchange_hdml(
     /*------------------------------------------------------------------------*/
     /* Here, the parsing of the received character string is done             */
     /*------------------------------------------------------------------------*/
-    // char *ss = apr_pstrdup(r->pool, src);
     char *ss = apr_palloc(r->pool, srclen + 1);
     memset(ss, 0, srclen + 1);
     memcpy(ss, src, srclen);

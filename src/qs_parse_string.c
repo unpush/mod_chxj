@@ -35,6 +35,8 @@
 #  endif
 #endif
 
+#define NL_COUNT_MAX  (10)
+
 static int s_cut_tag (const char* s, int len) ;
 static int s_cut_text(const char* s, int len) ;
 static void qs_dump_node(Doc* doc, Node* node, int indent);
@@ -44,6 +46,7 @@ Node*
 qs_parse_string(Doc* doc, const char* src, int srclen) 
 {
   int     ii;
+  int     nl_cnt = 0;
   char    encoding[256];
   char*   osrc;
   char*   ibuf;
@@ -63,6 +66,9 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
    * Because I want to specify encoding.
    */
   for (ii=0; ii<srclen; ii++) {
+    if (src[ii] == '\n')  nl_cnt++;
+    if (nl_cnt >= NL_COUNT_MAX) break; /* not found <?xml ...> */
+
     if (is_white_space(src[ii]))
       continue;
 
