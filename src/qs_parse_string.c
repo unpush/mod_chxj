@@ -158,15 +158,20 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
   /*
    * Now, true parsing is done here. 
    */
+  nl_cnt = 1;
   for (ii=0; ii<srclen; ii++) {
     if (doc->parse_mode != PARSE_MODE_NO_PARSE 
-    && is_white_space(src[ii])) {
+        && is_white_space(src[ii])) {
+      if (src[ii] == '\n') 
+        nl_cnt++;
+
       continue;
     }
     if ((unsigned char)'<' == src[ii]) {
       int endpoint = s_cut_tag(&src[ii], srclen - ii);
       Node* node   = NULL;
       node = qs_parse_tag(doc, &src[ii], endpoint);
+      node->line = nl_cnt;
 
       ii += endpoint;
       if (node->name[0] == '/' ) {
@@ -184,7 +189,7 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
         else
         if (doc->parse_mode == PARSE_MODE_NO_PARSE) {
           if ((node->name[1] == 'c' || node->name[1] == 'C')
-          &&  strcasecmp(&node->name[1], "chxj:if") == 0) {
+              &&  strcasecmp(&node->name[1], "chxj:if") == 0) {
             if (doc->now_parent_node->parent != NULL) {
               doc->now_parent_node = doc->now_parent_node->parent;
               doc->parse_mode = PARSE_MODE_CHTML;
@@ -206,9 +211,9 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
           continue;
       }
 
-      if (doc->parse_mode == PARSE_MODE_CHTML && 
-      (*node->name == 'c' || *node->name == 'C') &&
-      strcasecmp(node->name, "chxj:if") == 0) {
+      if (doc->parse_mode == PARSE_MODE_CHTML 
+          && (*node->name == 'c' || *node->name == 'C') 
+          &&  strcasecmp(node->name, "chxj:if") == 0) {
         Attr* parse_attr;
 
         doc->parse_mode = PARSE_MODE_NO_PARSE;
@@ -238,6 +243,7 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
       node->name  = (char*)apr_palloc(doc->pool,4+1);
       node->otext = (char*)apr_palloc(doc->pool,endpoint+1);
       node->size  = endpoint;
+      node->line  = nl_cnt;
       memset(node->value, 0, endpoint+1);
       memset(node->otext, 0, endpoint+1);
       memset(node->name,  0, 4+1       );

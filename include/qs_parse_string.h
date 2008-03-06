@@ -123,6 +123,7 @@ struct Node {
   char*          value;
   int            size;
   char*          otext;
+  int            line;
 };
 
 typedef struct pointer_table_t {
