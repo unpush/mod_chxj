@@ -61,8 +61,7 @@ chxj_encoding(request_rec *r, const char* src, apr_size_t* len)
     return (char*)src;
   }
 
-  if ((*(entryp->encoding) == 'n' || *(entryp->encoding) == 'N') 
-  &&   strcasecmp(entryp->encoding, "NONE") == 0) {
+  if (STRCASEEQ('n','N',"none", entryp->encoding)) {
     DBG(r,"none encoding.");
     return (char*)src;
   }
@@ -148,8 +147,7 @@ chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
     return (char*)src;
   }
 
-  if ((*(entryp->encoding) == 'n' || *(entryp->encoding) == 'N') 
-  &&   strcasecmp(entryp->encoding, "NONE") == 0) {
+  if (STRCASEEQ('n','N',"none", entryp->encoding)) {
     DBG(r,"none encoding.");
     DBG(r,"end   chxj_rencoding()");
     return (char*)src;
