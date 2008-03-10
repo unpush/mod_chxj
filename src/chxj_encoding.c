@@ -175,6 +175,9 @@ chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
 
   cd = iconv_open(entryp->encoding, "CP932");
   if (cd == (iconv_t)-1) {
+    if (EINVAL == errno) {
+      ERR(r, "The conversion from %s to %s is not supported by the implementation.", "CP932", entryp->encoding);
+    }
     DBG(r,"end   chxj_rencoding()");
     return ibuf;
   }
@@ -182,9 +185,19 @@ chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
   while (ilen > 0) {
     result = iconv(cd, &ibuf, &ilen, &obuf, &olen);
     if (result == (size_t)(-1)) {
+      if (E2BIG == errno) {
+        ERR(r, "There is not sufficient room at *outbuf");
+      }
+      else if (EILSEQ == errno) {
+        ERR(r, "An invalid multibyte sequence has been encountered in the input. input:[%s]", ibuf);
+      }
+      else if (EINVAL == errno) {
+        ERR(r, "An incomplete multibyte sequence has been encountered in the input. input:[%s]", ibuf);
+      }
       break;
     }
   }
+
   *len = olen;
   iconv_close(cd);
 
