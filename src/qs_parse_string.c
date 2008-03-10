@@ -72,7 +72,6 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
   else {
     node_stack = calloc(sizeof(struct node_stack), 1);
   }
-fprintf(stderr, "%s:%d\n", __FILE__,__LINE__);
 
   /* 
    * It is the pre reading. 
@@ -173,10 +172,9 @@ fprintf(stderr, "%s:%d\n", __FILE__,__LINE__);
    */
   nl_cnt = 1;
   for (ii=0; ii<srclen; ii++) {
+    if (src[ii] == '\n') nl_cnt++;
     if (doc->parse_mode != PARSE_MODE_NO_PARSE 
         && is_white_space(src[ii])) {
-      if (src[ii] == '\n') 
-        nl_cnt++;
 
       continue;
     }
@@ -193,6 +191,12 @@ fprintf(stderr, "%s:%d\n", __FILE__,__LINE__);
             if (doc->now_parent_node->parent != NULL) {
               doc->now_parent_node = doc->now_parent_node->parent;
               doc->parse_mode = PARSE_MODE_CHTML;
+            }
+            Node *prevNode = qs_pop_node(doc,node_stack);
+            if (prevNode && strcasecmp(prevNode->name, &node->name[1]) != 0) {
+              if (doc->r) ERR(doc->r, "tag parse error (perhaps, not close). tag_name:[%s] line:[%d]", prevNode->name, prevNode->line);
+              else        fprintf(stderr, "error :tag parse error (perhaps, not close). tag_name:[%s] line:[%d]\n", prevNode->name, prevNode->line);
+              qs_push_node(doc, prevNode, node_stack);
             }
           }
           else {
@@ -212,6 +216,7 @@ fprintf(stderr, "%s:%d\n", __FILE__,__LINE__);
 
         if (doc->parse_mode != PARSE_MODE_NO_PARSE)
           continue;
+
       }
       if (*node->name == '!' && strncmp(node->name, "!--", 3) == 0) {
         /* comment tag */
@@ -277,7 +282,7 @@ fprintf(stderr, "%s:%d\n", __FILE__,__LINE__);
     qs_dump_node(doc, doc->root_node, 0);
   }
 #endif
-  qs_dump_node_stack(doc, node_stack);
+  // qs_dump_node_stack(doc, node_stack);
   qs_free_node_stack(doc, node_stack);
   return doc->root_node;
 }
@@ -500,7 +505,6 @@ static void
 qs_push_node(Doc* doc, Node *node, NodeStack stack)
 {
   NodeStackElement elem;
-fprintf(stderr, "%s:%d name:[%s]\n", __FILE__,__LINE__, node->name);
   if (doc->r != NULL) {
     elem = apr_palloc(doc->r->pool, sizeof(struct node_stack_element));
     memset(elem, 0, sizeof(struct node_stack_element));
@@ -525,7 +529,6 @@ fprintf(stderr, "%s:%d name:[%s]\n", __FILE__,__LINE__, node->name);
   }
   list_insert(elem, stack->head);
   stack->tail = elem;
-fprintf(stderr, "%s:%d name:[%s]\n", __FILE__,__LINE__, node->name);
 }
 
 #include "apr_ring.h"
@@ -535,8 +538,9 @@ qs_pop_node(Doc *doc, NodeStack stack)
 {
   NodeStackElement tail = stack->tail;
   Node *result = tail->node;
-  stack->tail = (NodeStackElement)(tail->ref - APR_OFFSETOF(struct node_stack_element, next));
+
   list_remove(tail);
+  stack->tail = (NodeStackElement)((unsigned int)stack->head->ref - (unsigned int)APR_OFFSETOF(struct node_stack_element, next));
   if (doc->r == NULL)
     free(tail);
   return result;
@@ -548,7 +552,7 @@ qs_dump_node_stack(Doc *doc, NodeStack stack)
   NodeStackElement elm;
   for (elm = stack->head->next;elm != stack->head; elm = elm->next) {
     if (doc->r) DBG(doc->r, "name:[%s]", elm->node->name);
-     else       fprintf(stderr, "name:[%s]\n", elm->node->name);
+     else       fprintf(stderr, "[%x] name:[%s] next:[%x]\n", (unsigned int)elm, elm->node->name, (unsigned int)elm->next);
   }
 }
 
