@@ -20,6 +20,7 @@
 #include "chxj_url_encode.h"
 
 #include <iconv.h>
+#include <errno.h>
 
 static char *
 do_encoding(
@@ -58,8 +59,7 @@ chxj_encoding(request_rec *r, const char *src, apr_size_t *len)
     return (char*)src;
   }
 
-  if ((*(entryp->encoding) == 'n' || *(entryp->encoding) == 'N') 
-      &&   strcasecmp(entryp->encoding, "NONE") == 0) {
+  if (STRCASEEQ('n','N', "none", entryp->encoding)) {
     DBG(r,"none encoding.");
     return (char*)src;
   }
@@ -375,7 +375,7 @@ chxj_rencoding(
         return NULL;
       }
       else if (errno == EINVAL) {
-        ERR(r, "Imperfect character string in the input.");
+        ERR(r, "Imperfect character string in the input. input:[%s]", ibuf);
         return NULL;
       }
       break;
