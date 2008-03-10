@@ -129,8 +129,8 @@ struct Node {
 typedef struct pointer_table_t {
   unsigned int            address;
   unsigned long           size;
-  struct pointer_table_t* next;
-  struct pointer_table_t* prev;
+  struct pointer_table_t *next;
+  struct pointer_table_t *prev;
 } Pointer_Table;
 
 
@@ -157,10 +157,36 @@ typedef struct _doc {
   apr_allocator_t *allocator;
   apr_pool_t      *pool;
 
+
 #ifndef __NON_MOD_CHXJ__
   request_rec *r;
 #endif
 } Doc;
+
+
+typedef struct node_stack_element {
+  Node *node;
+  struct node_stack_element *next;
+  struct node_stack_element **ref;
+} *NodeStackElement;
+
+typedef struct node_stack {
+  NodeStackElement head;
+  NodeStackElement tail;
+} *NodeStack;
+
+#define list_insert(node, point) do {           \
+    node->ref = point->ref;                     \
+    *node->ref = node;                          \
+    node->next = point;                         \
+    point->ref = &node->next;                   \
+} while (0)
+
+#define list_pop(node) do {                     \
+    *node->ref = node->next;                    \
+    node->next->ref = node->ref;                \
+} while (0)
+
 
 /*
  * Prototype Declare

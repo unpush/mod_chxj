@@ -40,6 +40,10 @@
 static int s_cut_tag (const char* s, int len) ;
 static int s_cut_text(const char* s, int len) ;
 static void qs_dump_node(Doc* doc, Node* node, int indent);
+static void qs_push_node(Doc* doc, Node *node, NodeStack stack);
+static Node *qs_pop_node(Doc* doc, NodeStack stack);
+static void qs_dump_node_stack(Doc *doc, NodeStack stack);
+static void qs_free_node_stack(Doc *doc, NodeStack stack);
 
 
 Node*
@@ -56,10 +60,19 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
 
   osrc = NULL;
   ibuf = NULL;
+  NodeStack node_stack;
 
   memset(encoding, 0, 256);
 
   doc->now_parent_node = qs_init_root_node(doc);
+  if (doc->r != NULL) {
+    node_stack = apr_palloc(doc->r->pool, sizeof(struct node_stack));
+    memset(node_stack, 0, sizeof(struct node_stack));
+  }
+  else {
+    node_stack = calloc(sizeof(struct node_stack), 1);
+  }
+fprintf(stderr, "%s:%d\n", __FILE__,__LINE__);
 
   /* 
    * It is the pre reading. 
@@ -205,6 +218,7 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
         continue;
       }
       qs_add_child_node(doc,node);
+      qs_push_node(doc, node, node_stack);
 
       if (doc->parse_mode == PARSE_MODE_NO_PARSE) {
         if (node->name[0] == '/')
@@ -263,7 +277,8 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
     qs_dump_node(doc, doc->root_node, 0);
   }
 #endif
-
+  qs_dump_node_stack(doc, node_stack);
+  qs_free_node_stack(doc, node_stack);
   return doc->root_node;
 }
 
@@ -375,7 +390,7 @@ qs_init_root_node(Doc* doc)
 
 
 void
-qs_add_child_node(Doc* doc,Node* node) 
+qs_add_child_node(Doc *doc,Node *node) 
 {
   node->next       = NULL;
   node->child      = NULL;
@@ -397,74 +412,159 @@ qs_add_child_node(Doc* doc,Node* node)
 
 
 
-Node*
-qs_get_root(Doc* doc) {
+Node *
+qs_get_root(Doc *doc) {
   return doc->root_node;
 }
 
 
 
 
-char* 
-qs_get_node_value(Doc* UNUSED(doc), Node* node) {
+char * 
+qs_get_node_value(Doc *UNUSED(doc), Node *node) {
   return node->value;
 }
 
 
 
 
-char*
-qs_get_node_name(Doc* UNUSED(doc), Node* node) {
+char *
+qs_get_node_name(Doc *UNUSED(doc), Node *node) {
   return node->name;
 }
 
 
 
-Node*
-qs_get_child_node(Doc* UNUSED(doc), Node* node) {
+Node *
+qs_get_child_node(Doc *UNUSED(doc), Node *node) {
   return node->child;
 }
 
 
 
 
-Node*
-qs_get_next_node(Doc* UNUSED(doc), Node* node) {
+Node *
+qs_get_next_node(Doc* UNUSED(doc), Node *node) {
   return node->next;
 }
 
 
 
-Attr*
-qs_get_attr(Doc* UNUSED(doc), Node* node) {
+Attr *
+qs_get_attr(Doc *UNUSED(doc), Node *node) {
   return node->attr;
 }
 
 
 
 
-Attr*
-qs_get_next_attr(Doc* UNUSED(doc), Attr* attr) {
+Attr *
+qs_get_next_attr(Doc *UNUSED(doc), Attr *attr) {
   return attr->next;
 }
 
 
 
-char*
-qs_get_attr_name(Doc* UNUSED(doc), Attr* attr) {
+char *
+qs_get_attr_name(Doc *UNUSED(doc), Attr *attr) {
   return attr->name;
 }
 
 
 
-char*
-qs_get_attr_value(Doc* UNUSED(doc), Attr* attr) {
+char *
+qs_get_attr_value(Doc *UNUSED(doc), Attr *attr) {
   return attr->value;
 }
 
 int 
-qs_get_node_size(Doc* UNUSED(doc), Node* node) {
+qs_get_node_size(Doc *UNUSED(doc), Node *node) {
   return node->size;
+}
+
+
+#define list_insert(node, point) do {           \
+    node->ref = point->ref;                     \
+    *node->ref = node;                          \
+    node->next = point;                         \
+    point->ref = &node->next;                   \
+} while (0)
+
+#define list_remove(node) do {                  \
+    *node->ref = node->next;                    \
+    node->next->ref = node->ref;                \
+} while (0)
+
+
+static void 
+qs_push_node(Doc* doc, Node *node, NodeStack stack)
+{
+  NodeStackElement elem;
+fprintf(stderr, "%s:%d name:[%s]\n", __FILE__,__LINE__, node->name);
+  if (doc->r != NULL) {
+    elem = apr_palloc(doc->r->pool, sizeof(struct node_stack_element));
+    memset(elem, 0, sizeof(struct node_stack_element));
+  }
+  else {
+    elem = malloc(sizeof(struct node_stack_element));
+    memset(elem, 0, sizeof(struct node_stack_element));
+  }
+  elem->node = node;
+  if (stack->head == NULL) {
+    /* add dummy head */
+    if (doc->r != NULL) {
+      stack->head = apr_palloc(doc->r->pool, sizeof(struct node_stack_element));
+      memset(stack->head, 0, sizeof(struct node_stack_element));
+    }
+    else {
+      stack->head = malloc(sizeof(struct node_stack_element));
+      memset(stack->head, 0, sizeof(struct node_stack_element));
+    }
+    stack->head->next = stack->head;
+    stack->head->ref = &stack->head->next;
+  }
+  list_insert(elem, stack->head);
+  stack->tail = elem;
+fprintf(stderr, "%s:%d name:[%s]\n", __FILE__,__LINE__, node->name);
+}
+
+#include "apr_ring.h"
+
+static Node *
+qs_pop_node(Doc *doc, NodeStack stack)
+{
+  NodeStackElement tail = stack->tail;
+  Node *result = tail->node;
+  stack->tail = (NodeStackElement)(tail->ref - APR_OFFSETOF(struct node_stack_element, next));
+  list_remove(tail);
+  if (doc->r == NULL)
+    free(tail);
+  return result;
+}
+
+static void
+qs_dump_node_stack(Doc *doc, NodeStack stack)
+{
+  NodeStackElement elm;
+  for (elm = stack->head->next;elm != stack->head; elm = elm->next) {
+    if (doc->r) DBG(doc->r, "name:[%s]", elm->node->name);
+     else       fprintf(stderr, "name:[%s]\n", elm->node->name);
+  }
+}
+
+static void
+qs_free_node_stack(Doc *doc, NodeStack stack)
+{
+  if (doc->r == NULL) {
+    NodeStackElement elm;
+    NodeStackElement next;
+    for (elm = stack->head->next;elm != stack->head; elm = next) {
+      next = elm->next;
+      free(elm);
+    }
+    free(stack->head);
+    free(stack);
+  }
 }
 /*
  * vim:ts=2 et
