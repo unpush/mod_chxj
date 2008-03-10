@@ -208,17 +208,17 @@ chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
 
 
 char*
-chxj_encoding_parameter(request_rec* r, const char* value)
+chxj_encoding_parameter(request_rec *r, const char *value)
 {
-  char* src;
-  char* src_sv;
-  char* pstat;
-  char* spos;
-  char* pair;
-  char* key;
-  char* val;
-  char* vstat;
-  char* param;
+  char *src;
+  char *src_sv;
+  char *pstat;
+  char *spos;
+  char *pair;
+  char *key;
+  char *val;
+  char *vstat;
+  char *param;
 
   int   use_amp_flag;
   
