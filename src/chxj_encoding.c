@@ -18,6 +18,7 @@
 #include "chxj_encoding.h"
 #include "chxj_apply_convrule.h"
 #include "chxj_url_encode.h"
+#include <errno.h>
 
 #if defined(HAVE_LIBICONV_HOOK)
 #  include "iconv_hook/iconv.h"
@@ -85,12 +86,27 @@ chxj_encoding(request_rec *r, const char* src, apr_size_t* len)
   memset(obuf, 0, olen);
   cd = iconv_open("CP932", entryp->encoding);
   if (cd == (iconv_t)-1) {
+    if (EINVAL == errno) {
+      ERR(r, "The conversion from %s to %s is not supported by the implementation.", entryp->encoding, "CP932");
+    }
+    else {
+      ERR(r, "iconv open failed. from:[%s] to:[%s] errno:[%d]", entryp->encoding, "CP932", errno);
+    }
     DBG(r,"end   chxj_encoding()");
     return ibuf;
   }
   while (ilen > 0) {
     result = iconv(cd, &ibuf, &ilen, &obuf, &olen);
     if (result == (size_t)(-1)) {
+      if (E2BIG == errno) {
+        ERR(r, "There is not sufficient room at *outbuf.");
+      }
+      else if (EILSEQ == errno) {
+        ERR(r, "An invalid multibyte sequence has been encountered in the input. input:[%s]", ibuf);
+      }
+      else if (EINVAL == errno) {
+        ERR(r, "An incomplete multibyte sequence has been encountered in the input. input:[%s]", ibuf);
+      }
       break;
     }
   }
