@@ -61,6 +61,7 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
   osrc = NULL;
   ibuf = NULL;
   NodeStack node_stack;
+  NodeStack err_stack;
 
   memset(encoding, 0, 256);
 
@@ -68,9 +69,12 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
   if (doc->r != NULL) {
     node_stack = apr_palloc(doc->r->pool, sizeof(struct node_stack));
     memset(node_stack, 0, sizeof(struct node_stack));
+    err_stack = apr_palloc(doc->r->pool, sizeof(struct node_stack));
+    memset(node_stack, 0, sizeof(struct node_stack));
   }
   else {
     node_stack = calloc(sizeof(struct node_stack), 1);
+    err_stack  = calloc(sizeof(struct node_stack), 1);
   }
 
   /* 
@@ -192,11 +196,43 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
               doc->now_parent_node = doc->now_parent_node->parent;
               doc->parse_mode = PARSE_MODE_CHTML;
             }
-            Node *prevNode = qs_pop_node(doc,node_stack);
-            if (prevNode && strcasecmp(prevNode->name, &node->name[1]) != 0) {
-              if (doc->r) ERR(doc->r, "tag parse error (perhaps, not close). tag_name:[%s] line:[%d]", prevNode->name, prevNode->line);
-              else        fprintf(stderr, "error :tag parse error (perhaps, not close). tag_name:[%s] line:[%d]\n", prevNode->name, prevNode->line);
-              qs_push_node(doc, prevNode, node_stack);
+            Node *prevNode;
+            int err = 0;
+            for (prevNode = qs_pop_node(doc,node_stack);
+                 prevNode;
+                 prevNode = qs_pop_node(doc, node_stack)) {
+              if (prevNode && strcasecmp(prevNode->name, &node->name[1]) != 0) {
+                qs_push_node(doc, prevNode, err_stack);
+                err++;
+                continue;
+              }
+              break;
+            }
+            if (err) {
+              Node *tmpNode = qs_pop_node(doc,node_stack);
+              if (tmpNode == NULL && err != 1) {
+                if (doc->r) 
+                  ERR(doc->r, "tag parse error (perhaps, miss spell). tag_name:[%s] line:[%d]", &node->name[1], node->line);
+                else
+                  fprintf(stderr, "error :tag parse error (perhaps, miss spell). tag_name:[%s] line:[%d]\n", &node->name[1], node->line);
+                for (prevNode = qs_pop_node(doc,err_stack);
+                     prevNode;
+                     prevNode = qs_pop_node(doc, err_stack)) {
+                  qs_push_node(doc, prevNode, node_stack);
+                }
+              }
+              else {
+                for (prevNode = qs_pop_node(doc,err_stack);
+                     prevNode;
+                     prevNode = qs_pop_node(doc, err_stack)) {
+                  if (doc->r)
+                    ERR(doc->r, "tag parse error (perhaps, not close). tag_name:[%s] line:[%d]", prevNode->name, prevNode->line);
+                  else
+                    fprintf(stderr, "error :tag parse error (perhaps, not close). tag_name:[%s] line:[%d]\n", prevNode->name, prevNode->line);
+                }
+                qs_push_node(doc, tmpNode, node_stack);
+              }
+              err = 0;
             }
           }
           else {
@@ -283,7 +319,21 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
   }
 #endif
   // qs_dump_node_stack(doc, node_stack);
-  qs_free_node_stack(doc, node_stack);
+  {
+    Node* prevNode;
+    for (prevNode = qs_pop_node(doc,node_stack);
+         prevNode;
+         prevNode = qs_pop_node(doc, node_stack)) {
+      if (has_child(prevNode->name)) {
+        if (doc->r)
+          ERR(doc->r, "tag parse error (perhaps, not close). tag_name:[%s] line:[%d]", prevNode->name, prevNode->line);
+        else
+          fprintf(stderr, "error :tag parse error (perhaps, not close). tag_name:[%s] line:[%d]\n", prevNode->name, prevNode->line);
+      }
+    }
+  }
+  qs_free_node_stack(doc, node_stack); node_stack = NULL;
+  qs_free_node_stack(doc, err_stack);  err_stack = NULL;
   return doc->root_node;
 }
 
@@ -537,7 +587,12 @@ static Node *
 qs_pop_node(Doc *doc, NodeStack stack)
 {
   NodeStackElement tail = stack->tail;
-  Node *result = tail->node;
+  Node *result;
+
+  if (tail == NULL) return NULL;
+  if (tail == stack->head) return NULL;
+  result = tail->node;
+
 
   list_remove(tail);
   stack->tail = (NodeStackElement)((unsigned int)stack->head->ref - (unsigned int)APR_OFFSETOF(struct node_stack_element, next));
@@ -559,14 +614,12 @@ qs_dump_node_stack(Doc *doc, NodeStack stack)
 static void
 qs_free_node_stack(Doc *doc, NodeStack stack)
 {
-  if (doc->r == NULL) {
-    NodeStackElement elm;
-    NodeStackElement next;
-    for (elm = stack->head->next;elm != stack->head; elm = next) {
-      next = elm->next;
-      free(elm);
-    }
-    free(stack->head);
+  if (doc->r == NULL && stack != NULL) {
+    Node* elm;
+    for (elm = qs_pop_node(doc, stack);elm; elm = qs_pop_node(doc,stack))
+      ;
+    if (stack->head) 
+      free(stack->head);
     free(stack);
   }
 }
