@@ -1,3 +1,11 @@
+libapache2-mod-chxj (0.8.6-1) unstable; urgency=low
+
+  * Added error messages
+    - the error message of the parsing machine of HTML. 
+    - the error message when the character-code is converted. 
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Wed, 12 Mar 2008 01:49:16 +0900
+
 libapache2-mod-chxj (0.8.5-1) unstable; urgency=low
 
   * Fixed Bug
