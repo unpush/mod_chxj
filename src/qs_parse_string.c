@@ -70,7 +70,7 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
     node_stack = apr_palloc(doc->r->pool, sizeof(struct node_stack));
     memset(node_stack, 0, sizeof(struct node_stack));
     err_stack = apr_palloc(doc->r->pool, sizeof(struct node_stack));
-    memset(node_stack, 0, sizeof(struct node_stack));
+    memset(err_stack, 0, sizeof(struct node_stack));
   }
   else {
     node_stack = calloc(sizeof(struct node_stack), 1);
@@ -598,6 +598,7 @@ qs_pop_node(Doc *doc, NodeStack stack)
   stack->tail = (NodeStackElement)((unsigned int)stack->head->ref - (unsigned int)APR_OFFSETOF(struct node_stack_element, next));
   if (doc->r == NULL)
     free(tail);
+
   return result;
 }
 
