@@ -44,6 +44,7 @@ static void qs_push_node(Doc* doc, Node *node, NodeStack stack);
 static Node *qs_pop_node(Doc* doc, NodeStack stack);
 static void qs_dump_node_stack(Doc *doc, NodeStack stack);
 static void qs_free_node_stack(Doc *doc, NodeStack stack);
+static void s_error_check(Doc *doc, Node *node, NodeStack node_stack, NodeStack err_stack);
 
 
 Node*
@@ -196,44 +197,7 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
               doc->now_parent_node = doc->now_parent_node->parent;
               doc->parse_mode = PARSE_MODE_CHTML;
             }
-            Node *prevNode;
-            int err = 0;
-            for (prevNode = qs_pop_node(doc,node_stack);
-                 prevNode;
-                 prevNode = qs_pop_node(doc, node_stack)) {
-              if (prevNode && strcasecmp(prevNode->name, &node->name[1]) != 0) {
-                qs_push_node(doc, prevNode, err_stack);
-                err++;
-                continue;
-              }
-              break;
-            }
-            if (err) {
-              Node *tmpNode = qs_pop_node(doc,node_stack);
-              if (tmpNode == NULL && err != 1) {
-                if (doc->r) 
-                  ERR(doc->r, "tag parse error (perhaps, miss spell). tag_name:[%s] line:[%d]", &node->name[1], node->line);
-                else
-                  fprintf(stderr, "error :tag parse error (perhaps, miss spell). tag_name:[%s] line:[%d]\n", &node->name[1], node->line);
-                for (prevNode = qs_pop_node(doc,err_stack);
-                     prevNode;
-                     prevNode = qs_pop_node(doc, err_stack)) {
-                  qs_push_node(doc, prevNode, node_stack);
-                }
-              }
-              else {
-                for (prevNode = qs_pop_node(doc,err_stack);
-                     prevNode;
-                     prevNode = qs_pop_node(doc, err_stack)) {
-                  if (doc->r)
-                    ERR(doc->r, "tag parse error (perhaps, not close). tag_name:[%s] line:[%d]", prevNode->name, prevNode->line);
-                  else
-                    fprintf(stderr, "error :tag parse error (perhaps, not close). tag_name:[%s] line:[%d]\n", prevNode->name, prevNode->line);
-                }
-                qs_push_node(doc, tmpNode, node_stack);
-              }
-              err = 0;
-            }
+            s_error_check(doc, node, node_stack, err_stack);
           }
           else {
             continue;
@@ -335,6 +299,50 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
   qs_free_node_stack(doc, node_stack); node_stack = NULL;
   qs_free_node_stack(doc, err_stack);  err_stack = NULL;
   return doc->root_node;
+}
+
+
+static void
+s_error_check(Doc *doc, Node *node, NodeStack node_stack, NodeStack err_stack) 
+{
+  Node *prevNode;
+  int err = 0;
+  for (prevNode = qs_pop_node(doc,node_stack);
+       prevNode;
+       prevNode = qs_pop_node(doc, node_stack)) {
+    if (prevNode && strcasecmp(prevNode->name, &node->name[1]) != 0) {
+      qs_push_node(doc, prevNode, err_stack);
+      err++;
+      continue;
+    }
+    break;
+  }
+  if (err) {
+    Node *tmpNode = qs_pop_node(doc,node_stack);
+    if (tmpNode == NULL && err != 1) {
+      if (doc->r) 
+        ERR(doc->r, "tag parse error (perhaps, miss spell). tag_name:[%s] line:[%d]", &node->name[1], node->line);
+      else
+        fprintf(stderr, "error :tag parse error (perhaps, miss spell). tag_name:[%s] line:[%d]\n", &node->name[1], node->line);
+      for (prevNode = qs_pop_node(doc,err_stack);
+           prevNode;
+           prevNode = qs_pop_node(doc, err_stack)) {
+        qs_push_node(doc, prevNode, node_stack);
+      }
+    }
+    else {
+      for (prevNode = qs_pop_node(doc,err_stack);
+           prevNode;
+           prevNode = qs_pop_node(doc, err_stack)) {
+        if (doc->r)
+          ERR(doc->r, "tag parse error (perhaps, not close). tag_name:[%s] line:[%d]", prevNode->name, prevNode->line);
+        else
+          fprintf(stderr, "error :tag parse error (perhaps, not close). tag_name:[%s] line:[%d]\n", prevNode->name, prevNode->line);
+      }
+      qs_push_node(doc, tmpNode, node_stack);
+    }
+    err = 0;
+  }
 }
 
 
