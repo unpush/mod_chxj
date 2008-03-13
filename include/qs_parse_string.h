@@ -163,31 +163,6 @@ typedef struct _doc {
 #endif
 } Doc;
 
-
-typedef struct node_stack_element {
-  Node *node;
-  struct node_stack_element *next;
-  struct node_stack_element **ref;
-} *NodeStackElement;
-
-typedef struct node_stack {
-  NodeStackElement head;
-  NodeStackElement tail;
-} *NodeStack;
-
-#define list_insert(node, point) do {           \
-    node->ref = point->ref;                     \
-    *node->ref = node;                          \
-    node->next = point;                         \
-    point->ref = &node->next;                   \
-} while (0)
-
-#define list_pop(node) do {                     \
-    *node->ref = node->next;                    \
-    node->next->ref = node->ref;                \
-} while (0)
-
-
 /*
  * Prototype Declare
  */

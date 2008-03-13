@@ -37,6 +37,17 @@
 
 #define NL_COUNT_MAX  (10)
 
+typedef struct node_stack_element {
+  Node *node;
+  struct node_stack_element *next;
+  struct node_stack_element **ref;
+} *NodeStackElement;
+
+typedef struct node_stack {
+  NodeStackElement head;
+  NodeStackElement tail;
+} *NodeStack;
+
 static int s_cut_tag (const char* s, int len) ;
 static int s_cut_text(const char* s, int len) ;
 static void qs_dump_node(Doc* doc, Node* node, int indent);
