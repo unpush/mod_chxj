@@ -182,6 +182,7 @@ chxj_headers_fixup(request_rec *r)
     if (r->method_number != M_POST
         || content_type == NULL
         || ! STRCASEEQ('a','A', "application/x-www-form-urlencoded", content_type)) {
+      DBG(r, "NOT POST METHOD:[%d]", r->method_number);
       break;
     }
     content_length = (char*)apr_table_get(r->headers_in, HTTP_CONTENT_LENGTH);
@@ -191,15 +192,15 @@ chxj_headers_fixup(request_rec *r)
       if (STRCASEEQ('A','a', "application/x-www-form-urlencoded", content_type)) {
         long cl = (long)chxj_atoi(content_length) * 3;
         if (cl > 0) {
-          apr_table_setn(r->headers_in, "CHXJ_ORIG_CONTENT_LENGTH", content_length);
+          apr_table_setn(r->headers_in, CHXJ_HTTP_ORIG_CONTENT_LENGTH, content_length);
           apr_table_setn(r->headers_in, "Content-Length", apr_psprintf(r->pool, "%ld", cl));
         }
       }
     }
-
     break;
   
   default:
+    DBG(r, "user-agent:[%s] is PC?", user_agent);
     break;
 
   }
@@ -1040,10 +1041,12 @@ chxj_input_filter(ap_filter_t         *f,
   char                *data_brigade;
   char                *content_type;
   char                *content_length;
+  char                *orig_content_length;
   device_table        *spec;
   char                *user_agent;
   mod_chxj_config     *dconf;
   chxjconvrule_entry  *entryp;
+  mod_chxj_ctx        *ctx = f->ctx;
 
   r = f->r;
   c = r->connection;
@@ -1052,12 +1055,17 @@ chxj_input_filter(ap_filter_t         *f,
 
   data_brigade = qs_alloc_zero_byte_string(r);
 
+  DBG(r, "remaining:[%qd]",   r->remaining);
+  DBG(r, "read_length:[%qd]", r->read_length);
+  DBG(r, "eos_sent:[%d]", r->eos_sent);
+  DBG(r, "clength:[%qd]", r->clength);
 
   ibb = apr_brigade_create(r->pool, c->bucket_alloc);
   obb = apr_brigade_create(r->pool, c->bucket_alloc);
 
   content_type    = (char *)apr_table_get(r->headers_in, "Content-Type");
   content_length  = (char *)apr_table_get(r->headers_in, "Content-Length");
+  orig_content_length  = (char *)apr_table_get(r->headers_in, CHXJ_HTTP_ORIG_CONTENT_LENGTH);
   if (mode != AP_MODE_READBYTES 
       || r->method_number != M_POST
       || content_type == NULL
@@ -1068,12 +1076,32 @@ chxj_input_filter(ap_filter_t         *f,
     ap_remove_input_filter(f);
     return ap_get_brigade(f->next, bb, mode, block, readbytes);
   }
+  DBG(r, "CONTENT-LENGTH:[%s]", content_length);
+  DBG(r, "CONTENT-TYPE:[%s]", content_type);
+  DBG(r, "READBYTES:[%qd]", readbytes);
+  if (! ctx) {
+    f->ctx = ctx = apr_palloc(r->pool, sizeof(*ctx));
+    ctx->len = 0;
+    if (orig_content_length && strlen(orig_content_length) && ! chxj_chk_numeric(orig_content_length)) {
+      ctx->len = (apr_size_t)chxj_atoi(orig_content_length);
+    }
+    else if (content_length && strlen(content_length) && ! chxj_chk_numeric(content_length)) {
+      ctx->len = (apr_size_t)chxj_atoi(content_length);
+    }
+  }
+  if (ctx->len == 0) {
+    DBG(r, "ctx->len is 0");
+    eos = apr_bucket_eos_create(f->c->bucket_alloc);
+    APR_BRIGADE_INSERT_TAIL(bb, eos);
+    return APR_SUCCESS;
+  }
 
   dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
 
   entryp = chxj_apply_convrule(r, dconf->convrules);
   if (!entryp || !(entryp->action & CONVRULE_ENGINE_ON_BIT)) {
     DBG(r,"EngineOff");
+    ctx->len = 0;
 
     ap_remove_input_filter(f);
     return ap_get_brigade(f->next, bb, mode, block, readbytes);
@@ -1096,16 +1124,20 @@ chxj_input_filter(ap_filter_t         *f,
     break;
 
   default:
+    DBG(r, "chxj_specified_device() != MOBILE");
+    ctx->len = 0;
     ap_remove_input_filter(f);
     return ap_get_brigade(f->next, bb, mode, block, readbytes);
   }
 
 
+  DBG(r, "start ap_get_brigade() ctx->len:[%d]", ctx->len);
   rv = ap_get_brigade(f->next, ibb, mode, block, readbytes);
   if (rv != APR_SUCCESS) {
     DBG(r, "ap_get_brigade() failed");
     return rv;
   }
+  DBG(r, "end ap_get_brigade()");
 
   for (b =  APR_BRIGADE_FIRST(ibb); 
        b != APR_BRIGADE_SENTINEL(ibb);
@@ -1121,7 +1153,8 @@ chxj_input_filter(ap_filter_t         *f,
       data_bucket = apr_palloc(r->pool, len+1);
       memset((void*)data_bucket, 0, len+1);
       memcpy(data_bucket, data, len);
-      DBG(r, "(in)POSTDATA:[%.*s]LEN:[%d] method_number:[%d]", len, data_bucket, len, r->method_number);
+      ctx->len -= len;
+      DBG(r, "(in)POSTDATA:[%.*s]LEN:[%d] method_number:[%d] content_length:[%s]", len, data_bucket, len, r->method_number, content_length);
   
       data_brigade = apr_pstrcat(r->pool, data_brigade, data_bucket, NULL);
     }
@@ -1150,17 +1183,6 @@ chxj_input_filter(ap_filter_t         *f,
 
   if (len > 0) {
     DBG(r, "(in:convert)POSTDATA:[%.*s]:LEN:[%d]", len, data_brigade, len);
-#if 0
-    obb = apr_brigade_create(r->pool, c->bucket_alloc);
-    tmp_heap = apr_bucket_heap_create(data_brigade, 
-                                      len, 
-                                      NULL, 
-                                      f->c->bucket_alloc);
-    eos      = apr_bucket_eos_create(f->c->bucket_alloc);
-    APR_BRIGADE_INSERT_TAIL(obb, tmp_heap);
-    APR_BRIGADE_INSERT_TAIL(obb, eos);
-    APR_BRIGADE_CONCAT(bb, obb);
-#else
     if (STRCASEEQ('P','p', "post", r->method)) {
       char *new_area;
       if (STRCASEEQ('a','A', "application/x-www-form-urlencoded", content_type)) {
@@ -1176,17 +1198,26 @@ chxj_input_filter(ap_filter_t         *f,
             }
             data_brigade = new_area;
             len = cl;
-DBG(r, "new_area[%s] len[%d]", new_area, strlen(new_area));
           }
         }
       }
     }
-    b = apr_bucket_pool_create(data_brigade, len, r->pool, c->bucket_alloc);
-    APR_BRIGADE_INSERT_TAIL(bb, b);
-    eos      = apr_bucket_eos_create(f->c->bucket_alloc);
+    if (ctx->len > 0) {
+      b = apr_bucket_pool_create(data_brigade, len, r->pool, c->bucket_alloc);
+      APR_BRIGADE_INSERT_TAIL(bb, b);
+    }
+    if (ctx->len <= 0) {
+      ctx->len = 0;
+      b = apr_bucket_pool_create(data_brigade, len, r->pool, c->bucket_alloc);
+      APR_BRIGADE_INSERT_TAIL(bb, b);
+      eos = apr_bucket_eos_create(f->c->bucket_alloc);
+      APR_BRIGADE_INSERT_TAIL(bb, eos);
+    }
+  }
+  else {
+    ctx->len = 0;
+    eos = apr_bucket_eos_create(f->c->bucket_alloc);
     APR_BRIGADE_INSERT_TAIL(bb, eos);
-#endif
-
   }
 
   DBG(r, "end of chxj_input_filter()");
@@ -1304,6 +1335,7 @@ chxj_insert_filter(request_rec *r)
   }
 
   if (entryp->action & CONVRULE_ENGINE_ON_BIT) {
+    DBG(r, "INSERT FILTER method:[%s]", r->method);
     ap_add_input_filter("chxj_input_filter",   NULL, r, r->connection);
     ap_add_output_filter("chxj_output_filter", NULL, r, r->connection);
   }
