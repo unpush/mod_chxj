@@ -87,35 +87,35 @@ struct device_table_t {
 typedef struct device_table_list_t  device_table_list;
 
 struct device_table_list_t {
-  struct device_table_list_t* next;
+  struct device_table_list_t  *next;
 
-  char*                       pattern;
-  ap_regex_t*                 regexp;
-  device_table*               table;
-  device_table*               tail;
+  char                        *pattern;
+  ap_regex_t                  *regexp;
+  device_table                *table;
+  device_table                *tail;
 };
 
 typedef struct converter_t converter_t;
 
 struct converter_t {
   /* convert routine */
-  char* (*converter)(request_rec*                r,
-                     struct device_table_t*      spec,
-                     const char*                 src, 
+  char* (*converter)(request_rec                 *r,
+                     struct device_table_t       *spec,
+                     const char                  *src, 
                      apr_size_t                  srclen, 
-                     apr_size_t*                 dstlen,
-                     struct chxjconvrule_entry*  entryp,
-                     cookie_t*                   cookie);
+                     apr_size_t                  *dstlen,
+                     struct chxjconvrule_entry   *entryp,
+                     cookie_t                    *cookie);
 
-  char* (*encoder)(request_rec* r,
-                   const char*  src,
-                   apr_size_t*  len);
+  char* (*encoder)(request_rec  *r,
+                   const char   *src,
+                   apr_size_t   *len);
 };
 
 extern converter_t convert_routine[];
 
 extern device_table* chxj_specified_device(
-  request_rec*            r, 
-  const char*             user_agent);
+  request_rec             *r, 
+  const char              *user_agent);
 
 #endif
