@@ -246,7 +246,9 @@ qs_parse_string(Doc *doc, const char *src, int srclen)
         }
       }
       qs_add_child_node(doc,node);
-      qs_push_node(doc, node, node_stack);
+      if (has_child(node->name)) {
+        qs_push_node(doc, node, node_stack);
+      }
 
       if (doc->parse_mode == PARSE_MODE_NO_PARSE) {
         if (node->name[0] == '/')
