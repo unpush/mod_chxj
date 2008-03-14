@@ -142,11 +142,13 @@ chxj_headers_fixup(request_rec *r)
   chxjconvrule_entry  *entryp;
   char                *user_agent;
   device_table        *spec;
+  char                *content_length;
+  char                *content_type;
 
   DBG(r, "start chxj_headers_fixup()");
   dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
 
-  user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
+  user_agent     = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
   spec = chxj_specified_device(r, user_agent);
 
   switch(GET_HTML_SPEC_TYPE(spec)) {
@@ -176,6 +178,24 @@ chxj_headers_fixup(request_rec *r)
                      entryp->user_agent);
 
     chxj_convert_input_header(r,entryp,spec);
+    content_type = (char *)apr_table_get(r->headers_in, "Content-Type");
+    if (r->method_number != M_POST
+        || content_type == NULL
+        || ! STRCASEEQ('a','A', "application/x-www-form-urlencoded", content_type)) {
+      break;
+    }
+    content_length = (char*)apr_table_get(r->headers_in, HTTP_CONTENT_LENGTH);
+    DBG(r, "content-Type:[%s]", content_type);
+    DBG(r, "content-Length:[%s]", content_length);
+    if (content_length && strlen(content_length) != 0) {
+      if (STRCASEEQ('A','a', "application/x-www-form-urlencoded", content_type)) {
+        long cl = (long)chxj_atoi(content_length) * 3;
+        if (cl > 0) {
+          apr_table_setn(r->headers_in, "CHXJ_ORIG_CONTENT_LENGTH", content_length);
+          apr_table_setn(r->headers_in, "Content-Length", apr_psprintf(r->pool, "%ld", cl));
+        }
+      }
+    }
 
     break;
   
@@ -183,6 +203,8 @@ chxj_headers_fixup(request_rec *r)
     break;
 
   }
+
+
 
   DBG(r, "end chxj_headers_fixup()");
 
@@ -1017,6 +1039,7 @@ chxj_input_filter(ap_filter_t         *f,
   char                *data_bucket;
   char                *data_brigade;
   char                *content_type;
+  char                *content_length;
   device_table        *spec;
   char                *user_agent;
   mod_chxj_config     *dconf;
@@ -1033,13 +1056,16 @@ chxj_input_filter(ap_filter_t         *f,
   ibb = apr_brigade_create(r->pool, c->bucket_alloc);
   obb = apr_brigade_create(r->pool, c->bucket_alloc);
 
-  content_type = (char*)apr_table_get(r->headers_in, "Content-Type");
-  if (content_type 
-  && strncasecmp("multipart/form-data", content_type, 19) == 0) {
-
-    DBG(r, "detect multipart/form-data");
+  content_type    = (char *)apr_table_get(r->headers_in, "Content-Type");
+  content_length  = (char *)apr_table_get(r->headers_in, "Content-Length");
+  if (mode != AP_MODE_READBYTES 
+      || r->method_number != M_POST
+      || content_type == NULL
+      || ! STRCASEEQ('a','A', "application/x-www-form-urlencoded", content_type)
+      || content_length == NULL
+      || strlen(content_length) == 0
+      || strcmp("0", content_length) == 0) {
     ap_remove_input_filter(f);
-
     return ap_get_brigade(f->next, bb, mode, block, readbytes);
   }
 
@@ -1095,7 +1121,7 @@ chxj_input_filter(ap_filter_t         *f,
       data_bucket = apr_palloc(r->pool, len+1);
       memset((void*)data_bucket, 0, len+1);
       memcpy(data_bucket, data, len);
-      DBG(r, "(in)POSTDATA:[%s]", data_bucket);
+      DBG(r, "(in)POSTDATA:[%.*s]LEN:[%d] method_number:[%d]", len, data_bucket, len, r->method_number);
   
       data_brigade = apr_pstrcat(r->pool, data_brigade, data_bucket, NULL);
     }
@@ -1123,7 +1149,8 @@ chxj_input_filter(ap_filter_t         *f,
     spec);
 
   if (len > 0) {
-    DBG(r, "(in:convert)POSTDATA:[%s]", data_brigade);
+    DBG(r, "(in:convert)POSTDATA:[%.*s]:LEN:[%d]", len, data_brigade, len);
+#if 0
     obb = apr_brigade_create(r->pool, c->bucket_alloc);
     tmp_heap = apr_bucket_heap_create(data_brigade, 
                                       len, 
@@ -1133,6 +1160,33 @@ chxj_input_filter(ap_filter_t         *f,
     APR_BRIGADE_INSERT_TAIL(obb, tmp_heap);
     APR_BRIGADE_INSERT_TAIL(obb, eos);
     APR_BRIGADE_CONCAT(bb, obb);
+#else
+    if (STRCASEEQ('P','p', "post", r->method)) {
+      char *new_area;
+      if (STRCASEEQ('a','A', "application/x-www-form-urlencoded", content_type)) {
+        if (content_length && strlen(content_length) != 0) {
+          apr_size_t cl = (apr_size_t)chxj_atoi(content_length);
+          new_area = apr_palloc(r->pool, cl + 1); 
+          memset(new_area, 0, cl+1);
+          if (len < cl) {
+            apr_size_t pp;
+            memcpy(new_area, data_brigade, len);
+            for (pp=0; pp<cl-len; pp++) {
+              new_area[len + pp] = '&';
+            }
+            data_brigade = new_area;
+            len = cl;
+DBG(r, "new_area[%s] len[%d]", new_area, strlen(new_area));
+          }
+        }
+      }
+    }
+    b = apr_bucket_pool_create(data_brigade, len, r->pool, c->bucket_alloc);
+    APR_BRIGADE_INSERT_TAIL(bb, b);
+    eos      = apr_bucket_eos_create(f->c->bucket_alloc);
+    APR_BRIGADE_INSERT_TAIL(bb, eos);
+#endif
+
   }
 
   DBG(r, "end of chxj_input_filter()");
@@ -1890,7 +1944,7 @@ cmd_set_cookie_timeout(
 
   dconf = (mod_chxj_config *)mconfig;
 
-  dconf->cookie_timeout = atoi(arg);
+  dconf->cookie_timeout = chxj_atoi(arg);
 
   return NULL;
 }

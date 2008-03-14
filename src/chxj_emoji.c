@@ -548,14 +548,12 @@ dbg_r = r;
           }
           DBG(r, "NOT FOUND EMOJI");
         }
-        if (  ((0x81 <= (unsigned char)src[i]) 
-            && (0x9f >= (unsigned char)src[i]) 
-            && (0x40 <= (unsigned char)src[i+1]) 
-            && (0x7e >= (unsigned char)src[i+1]))
-            ||((0xe0 <= (unsigned char)src[i])
-            && (0xfc >= (unsigned char)src[i])
-            && (0x80 <= (unsigned char)src[i+1])
-            && (0xfc >= (unsigned char)src[i+1]))) {
+        if ( ( ((0x81 <= (unsigned char)src[i]) && (0x9f >= (unsigned char)src[i]))
+             ||((0xe0 <= (unsigned char)src[i]) && (0xfc >= (unsigned char)src[i]))
+             )
+             && 
+             ( ((0x40 <= (unsigned char)src[i+1]) && (0x7e >= (unsigned char)src[i+1]))
+             ||((0x80 <= (unsigned char)src[i+1]) && (0xfc >= (unsigned char)src[i+1])))) {
           /* SJIS MultiByte */
           mb[0] = src[i++]; 
           mb[1] = src[i]; 
