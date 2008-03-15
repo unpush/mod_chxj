@@ -616,7 +616,7 @@ qs_pop_node(Doc *doc, NodeStack stack)
 
 
   list_remove(tail);
-  stack->tail = (NodeStackElement)((unsigned int)stack->head->ref - (unsigned int)APR_OFFSETOF(struct node_stack_element, next));
+  stack->tail = (NodeStackElement)((apr_size_t)stack->head->ref - (apr_size_t)APR_OFFSETOF(struct node_stack_element, next));
   if (doc->r == NULL)
     free(tail);
 
@@ -629,7 +629,7 @@ qs_dump_node_stack(Doc *doc, NodeStack stack)
   NodeStackElement elm;
   for (elm = stack->head->next;elm != stack->head; elm = elm->next) {
     if (doc->r) DBG(doc->r, "name:[%s]", elm->node->name);
-     else       fprintf(stderr, "[%x] name:[%s] next:[%x]\n", (unsigned int)elm, elm->node->name, (unsigned int)elm->next);
+     else       fprintf(stderr, "[%x] name:[%s] next:[%x]\n", (apr_size_t)elm, elm->node->name, (apr_size_t)elm->next);
   }
 }
 

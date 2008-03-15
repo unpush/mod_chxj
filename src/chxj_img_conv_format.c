@@ -756,7 +756,7 @@ s_create_cache_file(request_rec*       r,
     DBG(r, "Image Cache dir is full. total_size:[%lu] max_size:[%lu]", total_size + writebyte, max_size);
     /* search delete candidate */
     delete_file_name = apr_psprintf(r->pool, "%s/%s", conf->image_cache_dir, dcf.name);
-    DBG(r, "delete image cache target:[%s] atime:[%lld]", delete_file_name, dcf.atime);
+    DBG(r, "delete image cache target:[%s] atime:[%lld]", delete_file_name, (long long int)dcf.atime);
     rv = apr_file_remove(delete_file_name, r->pool);
     if (rv != APR_SUCCESS) {
       ERR(r, "cache file delete failure.[%s]", delete_file_name);
