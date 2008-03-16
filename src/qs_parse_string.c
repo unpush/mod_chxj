@@ -46,7 +46,9 @@ static int s_cut_cdata_text(const char *s, int len);
 static void qs_dump_node(Doc *doc, Node *node, int indent);
 static void qs_push_node(Doc *doc, Node *node, NodeStack stack);
 static Node *qs_pop_node(Doc *doc, NodeStack stack);
+#ifdef DUMP_NODE_STACK
 static void qs_dump_node_stack(Doc *doc, NodeStack stack);
+#endif
 static void qs_free_node_stack(Doc *doc, NodeStack stack);
 static void s_error_check(Doc *doc, Node *node, NodeStack node_stack, NodeStack err_stack);
 
@@ -701,22 +703,24 @@ qs_pop_node(Doc *doc, NodeStack stack)
 
 
   list_remove(tail);
-  stack->tail = (NodeStackElement)((unsigned int)stack->head->ref - (unsigned int)APR_OFFSETOF(struct node_stack_element, next));
+  stack->tail = (NodeStackElement)((apr_size_t)stack->head->ref - (apr_size_t)APR_OFFSETOF(struct node_stack_element, next));
   if (doc->r == NULL)
     free(tail);
 
   return result;
 }
 
+#ifdef DUMP_NODE_STACK
 static void
 qs_dump_node_stack(Doc *doc, NodeStack stack)
 {
   NodeStackElement elm;
   for (elm = stack->head->next;elm != stack->head; elm = elm->next) {
     if (doc->r) DBG(doc->r, "name:[%s]", elm->node->name);
-     else       fprintf(stderr, "[%x] name:[%s] next:[%x]\n", (unsigned int)elm, elm->node->name, (unsigned int)elm->next);
+     else       fprintf(stderr, "[%x] name:[%s] next:[%x]\n", (apr_size_t)elm, elm->node->name, (apr_size_t)elm->next);
   }
 }
+#endif
 
 static void
 qs_free_node_stack(Doc *doc, NodeStack stack)
