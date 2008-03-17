@@ -1,3 +1,17 @@
+libapache2-mod-chxj (0.8.7-1) unstable; urgency=low
+
+  * Fixed Bug
+    - Using AC_FUNC_MALLOC by mistake.
+      AC_FUNC_MALLOC is neatly used because it is too good though
+      it is not necessary.
+      AC_FUNC_MALLOC reacts for CentOS due to the bug of autoconf2.59.
+    - When ap_regex.h is not found, pcre.h is used. In that case, to use
+      pcre-config.
+  * Changed Features
+    - Abolition of libiconv. use glibc/iconv.
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Mon, 17 Mar 2008 23:02:33 +0900
+
 libapache2-mod-chxj (0.8.6-1) unstable; urgency=low
 
   * Added error messages

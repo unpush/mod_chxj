@@ -27,7 +27,6 @@ mod_chxjをインストールする前に、下記のものを用意する必要があります。
   <li>apr(Apache Portable Runtime)ライブラリとそのヘッダファイル郡(apu含む)</li>
   <li>automake、autoconf、libtool1.3.X</li>
   <li>ImageMagick(MagickWand)</li>
-  <li>libiconvまたはlibiconv_hook</li>
   <li>Linux</li>
 </ol>
 </subsection>
@@ -46,11 +45,9 @@ $ ./buildconf.sh
 
 以下は、/usr/include/apache2.0に、Apache2.0のヘッダーファイルが存在する場合です。
 <program title="Configure">
-$ ./configure --with-apache-header=/usr/include/apache2.0
+$ ./configure
 </program>
-<note>--with-apache-headerは必須です。</note>
-<note>FreeBSD等の場合は--with-iconvも必須です。</note>
-<note>場合によっては--with-aprや--with-apuも必要です。</note>
+<note>場合によっては--with-apr-configや--with-apu-config、--with-pcre-configも必要です。</note>
 </li>
 <li>mod_chxj.soを生成します
 <program title="make">
@@ -344,7 +341,7 @@ ChxjConvRule "^/chxj.+$" "EngineOn" "EUC-JP"
              EngineOn     ==> 変換エンジンを動作させる指示。動作させたく無い場合は"EngineOff"<br />
              EUC-JP       ==> サーバ側の文字コード。（NONEを指定した場合は文字コード変換しない)<br />
 <br />
-             EUC-JPからCP932に文字コード変換します。(libiconvに依存します)<br/>
+             EUC-JPからCP932に文字コード変換します。(glibc/iconvに依存します)<br/>
              </li>
           </ol>
      
