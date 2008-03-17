@@ -20752,11 +20752,6 @@ fi
 done
 
 if test "x$use_pcre_flag" = "xyes" ; then
-
-cat >>confdefs.h <<\_ACEOF
-#define HAVE_AP_REGEX_H
-_ACEOF
-
   if test "x$with_pcre_config" = "x" ; then
     # Extract the first word of "pcre-config", so it can be a program name with args.
 set dummy pcre-config; ac_word=$2
@@ -20856,6 +20851,12 @@ echo "$as_me: error: pcre-config and pcre-1-config not found." >&2;}
     PCRE_CONFIG=$with_pcre_config
   fi
   CFLAGS="${CFLAGS} `${PCRE_CONFIG} --cflags`"
+else
+
+cat >>confdefs.h <<\_ACEOF
+#define HAVE_AP_REGEX_H
+_ACEOF
+
 fi
 
 # Checks for typedefs, structures, and compiler characteristics.

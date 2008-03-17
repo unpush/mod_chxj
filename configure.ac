@@ -175,7 +175,6 @@ AC_CHECK_HEADERS([ap_config.h])
 #]])
 AC_CHECK_HEADERS([ap_regex.h],use_pcre_flag="no",use_pcre_flag="yes")
 if test "x$use_pcre_flag" = "xyes" ; then
-  AC_DEFINE([HAVE_AP_REGEX_H], [], [Define to 1 if you have the <ap_regex.h> header file.])
   if test "x$with_pcre_config" = "x" ; then
     AC_PATH_PROG(PCRE_CONFIG, pcre-config, no, /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
     if test "x$PCRE_CONFIG" = "xno" ; then
@@ -191,6 +190,8 @@ if test "x$use_pcre_flag" = "xyes" ; then
     PCRE_CONFIG=$with_pcre_config
   fi
   CFLAGS="${CFLAGS} `${PCRE_CONFIG} --cflags`"
+else
+  AC_DEFINE([HAVE_AP_REGEX_H], [], [Define to 1 if you have the <ap_regex.h> header file.])
 fi
 
 # Checks for typedefs, structures, and compiler characteristics.

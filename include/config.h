@@ -14,7 +14,7 @@
 #define HAVE_AP_CONFIG_H 1
 
 /* Define to 1 if you have the <ap_regex.h> header file. */
-#define HAVE_AP_REGEX_H 1
+#define HAVE_AP_REGEX_H 
 
 /* Define to 1 if you have the `close' function. */
 #define HAVE_CLOSE 1
