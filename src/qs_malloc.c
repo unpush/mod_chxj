@@ -51,6 +51,16 @@ qs_all_free(Doc *doc, const char *UNUSED(fname), int UNUSED(line))
     doc->do_init_flag = 0;
   }
 }
+
+#if HAVE_MALLOC == 0
+#undef malloc
+
+#include <sys/types.h>
+
+void *malloc ();
+
+void *rpl_malloc(size_t n) { if (n == 0) n = 1; return malloc (n); }
+#endif
 /*
  * vim:ts=2 et
  */
