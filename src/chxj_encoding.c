@@ -19,16 +19,7 @@
 #include "chxj_apply_convrule.h"
 #include "chxj_url_encode.h"
 #include <errno.h>
-
-#if defined(HAVE_LIBICONV_HOOK)
-#  include "iconv_hook/iconv.h"
-#else
-#  if defined(HAVE_LIBICONV)
-#    include "iconv.h"
-#  else
-#    error "Please install libiconv or libiconv_hook. and Please set LD_LIBRARY_PATH."
-#  endif
-#endif
+#include <iconv.h>
 
 
 char*

@@ -14,7 +14,7 @@
 #define HAVE_AP_CONFIG_H 1
 
 /* Define to 1 if you have the <ap_regex.h> header file. */
-#define HAVE_AP_REGEX_H 
+#define HAVE_AP_REGEX_H 1
 
 /* Define to 1 if you have the `close' function. */
 #define HAVE_CLOSE 1
@@ -33,12 +33,6 @@
 
 /* Define to 1 if you have the <libgen.h> header file. */
 #define HAVE_LIBGEN_H 1
-
-/* Define to 1 if you have the iconv library file. */
-/* #undef HAVE_LIBICONV */
-
-/* Define to 1 if you have the iconv_hook library file. */
-#define HAVE_LIBICONV_HOOK 
 
 /* Define to 1 if your system has a GNU libc compatible `malloc' function, and
    to 0 otherwise. */

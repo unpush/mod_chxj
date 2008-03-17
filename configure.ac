@@ -52,6 +52,13 @@ Please specify the --with-apu-config option. And, please specify the place of th
 ])
 fi
 
+AC_ARG_WITH(pcre-config, [  --with-pcre-config=ARG  Path of pcre-config program file.])
+if test "x$with_pcre_config" = "xyes" ; then
+    AC_MSG_ERROR([
+Please specify the --with-pcre-config option. And, please specify the place of the pcre-config program.
+])
+fi
+
 
 AC_ARG_ENABLE(img-conv-f, [  --enable-img-conv-f      Please specify it when you change the file name of the image being written in the 
 source by the automatic operation.])
@@ -130,52 +137,6 @@ if test "x$with_apu_config" != "x" ; then
   APU_CONFIG=$with_apu_config
 fi
 
-AC_ARG_WITH(iconv, [  --with-iconv=ARG  specify the place of the libiconv directory.])
-AC_ARG_WITH(iconv_hook, [  --with-iconv_hook=ARG  specify the place of the libiconv_hook directory.])
-if test "x$with_iconv" = "x" -a "x$with_iconv_hook" = "x" ; then
-  AC_CHECK_LIB([iconv_hook], [iconv_open], [
-      with_iconv="ok"
-      AC_DEFINE([HAVE_LIBICONV_HOOK], [], [Define to 1 if you have the iconv library file.])
-      LIBS="${LIBS} -liconv_hook"
-  ],[
-    AC_CHECK_LIB([iconv], [iconv_open], [
-      with_iconv="ok"
-      AC_DEFINE([HAVE_LIBICONV], [], [Define to 1 if you have the iconv library file.])
-      LIBS="${LIBS} -liconv"
-  ], [
-      witn_iconv=""
-  ],[])
-  ],[])
-fi
-
-if test "x$with_iconv" != "xok" ; then
-  if test "x$with_iconv" = "xyes" ; then
-      AC_MSG_ERROR([
-  Please specify the --with-iconv option. And, please specify the place of the libiconv program. 
-  ])
-  fi
-  if test "x$with_iconv" != "x" ; then
-    LIBS="${LIBS} -L$with_iconv -liconv "
-    AC_DEFINE([HAVE_LIBICONV], [], [Define to 1 if you have the iconv library file.])
-  fi
-fi
-if test "x$with_iconv" = "x" ; then
-  if test "x$with_iconv_hook" = "xyes" ; then
-      AC_MSG_ERROR([
-  Please specify the --with-iconv-hook option. And, please specify the place of the libiconv_hook program. 
-  ])
-  fi
-  if test "x$with_iconv_hook" != "x" ; then
-    LIBS="${LIBS} -L${with_iconv_hook} -liconv_hook "
-    AC_DEFINE([HAVE_LIBICONV_HOOK], [], [Define to 1 if you have the iconv_hook library file.])
-  fi
-  if test "x$with_iconv_hook" = "x" ; then
-      AC_MSG_ERROR([
-  Please specify the --with-iconv-hook option. And, please specify the place of the libiconv_hook program. 
-  ])
-  fi
-fi
-
 
 case $host_os in
   freebsd*)
@@ -194,12 +155,6 @@ CFLAGS="${CFLAGS} `${WAND_CONFIG} --cppflags` `${WAND_CONFIG} --cflags`"
 CFLAGS="${CFLAGS} `${APR_CONFIG} --includes` `${APR_CONFIG} --cflags` `${APR_CONFIG} --cppflags`"
 CFLAGS="${CFLAGS} `${APU_CONFIG} --includes`"
 CPPFLAGS="${CPPFLAGS} `${APR_CONFIG} --includes` -I${with_apache_header}"
-AC_SUBST(with_apache_header)
-AC_SUBST(CC)
-AC_SUBST(QDEFS)
-AC_SUBST(DDEFS)
-AC_SUBST(LIBS)
-AC_SUBST(CFLAGS)
 
 # Checks for header files.
 AC_HEADER_STDC
@@ -208,16 +163,35 @@ APR_HEADER_DIR="`${APR_CONFIG} --includes | sed -e 's/-I//g' | sed -e 's/ //g'`"
 AC_CHECK_HEADERS([apr_shm.h apr_global_mutex.h])
 AC_CHECK_HEADERS([apr.h])
 AC_CHECK_HEADERS([ap_config.h])
-AC_CHECK_HEADERS([ap_regex.h],
-  AC_DEFINE([HAVE_AP_REGEX_H], [], [Define to 1 if you have the <ap_regex.h> header file.]),[],
-[[
-#ifdef HAVE_APR_H
-#include "apr.h"
-#endif
-#ifdef HAVE_AP_CONFIG_H
-#include "ap_config.h"
-#endif
-]])
+#AC_CHECK_HEADERS([ap_regex.h],
+#  AC_DEFINE([HAVE_AP_REGEX_H], [], [Define to 1 if you have the <ap_regex.h> header file.]),[],
+#[[
+##ifdef HAVE_APR_H
+##include "apr.h"
+##endif
+##ifdef HAVE_AP_CONFIG_H
+##include "ap_config.h"
+##endif
+#]])
+AC_CHECK_HEADERS([ap_regex.h],use_pcre_flag="no",use_pcre_flag="yes")
+if test "x$use_pcre_flag" = "xyes" ; then
+  AC_DEFINE([HAVE_AP_REGEX_H], [], [Define to 1 if you have the <ap_regex.h> header file.])
+  if test "x$with_pcre_config" = "x" ; then
+    AC_PATH_PROG(PCRE_CONFIG, pcre-config, no, /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
+    if test "x$PCRE_CONFIG" = "xno" ; then
+      AC_PATH_PROG(PCRE_1_CONFIG, pcre-1-config, no, /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
+      if test "x$PCRE_1_CONFIG" = "xno" ; then
+        AC_MSG_ERROR([pcre-config and pcre-1-config not found.])
+      else
+        PCRE_CONFIG="$PCRE_1_CONFIG"
+      fi
+    fi
+  fi
+  if test "x$with_pcre_config" != "x" ; then
+    PCRE_CONFIG=$with_pcre_config
+  fi
+  CFLAGS="${CFLAGS} `${PCRE_CONFIG} --cflags`"
+fi
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -226,6 +200,12 @@ AC_C_CONST
 AC_FUNC_MALLOC
 AC_CHECK_FUNCS([open mmap close memset memcpy strcasecmp strncasecmp strstr])
 
+AC_SUBST(with_apache_header)
+AC_SUBST(CC)
+AC_SUBST(QDEFS)
+AC_SUBST(DDEFS)
+AC_SUBST(LIBS)
+AC_SUBST(CFLAGS)
 
 
 AC_CONFIG_FILES([Makefile src/Makefile])

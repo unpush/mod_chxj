@@ -24,16 +24,8 @@
 #include "qs_log.h"
 
 #include "mod_chxj.h"
+#include <iconv.h>
 
-#if defined(HAVE_LIBICONV_HOOK)
-#  include "iconv_hook/iconv.h"
-#else
-#  if defined(HAVE_LIBICONV)
-#    include "iconv.h"
-#  else
-#    error "Please install libiconv or libiconv_hook. and Please set LD_LIBRARY_PATH."
-#  endif
-#endif
 
 #define NL_COUNT_MAX  (10)
 
@@ -53,7 +45,9 @@ static int s_cut_text(const char* s, int len) ;
 static void qs_dump_node(Doc* doc, Node* node, int indent);
 static void qs_push_node(Doc* doc, Node *node, NodeStack stack);
 static Node *qs_pop_node(Doc* doc, NodeStack stack);
+#ifdef DUMP_NODE_STACK
 static void qs_dump_node_stack(Doc *doc, NodeStack stack);
+#endif
 static void qs_free_node_stack(Doc *doc, NodeStack stack);
 static void s_error_check(Doc *doc, Node *node, NodeStack node_stack, NodeStack err_stack);
 
@@ -295,7 +289,9 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
     qs_dump_node(doc, doc->root_node, 0);
   }
 #endif
-  // qs_dump_node_stack(doc, node_stack);
+#ifdef DUMP_NODE_STACK
+  qs_dump_node_stack(doc, node_stack);
+#endif
   {
     Node* prevNode;
     for (prevNode = qs_pop_node(doc,node_stack);
@@ -623,6 +619,7 @@ qs_pop_node(Doc *doc, NodeStack stack)
   return result;
 }
 
+#ifdef DUMP_NODE_STACK
 static void
 qs_dump_node_stack(Doc *doc, NodeStack stack)
 {
@@ -632,6 +629,7 @@ qs_dump_node_stack(Doc *doc, NodeStack stack)
      else       fprintf(stderr, "[%x] name:[%s] next:[%x]\n", (apr_size_t)elm, elm->node->name, (apr_size_t)elm->next);
   }
 }
+#endif
 
 static void
 qs_free_node_stack(Doc *doc, NodeStack stack)
