@@ -154,12 +154,6 @@ CFLAGS="${CFLAGS} `${APU_CONFIG} --includes`"
 CFLAGS="${CFLAGS} -I${with_apache_header}"
 CPPFLAGS="${CPPFLAGS} `${APR_CONFIG} --includes` "
 CPPFLAGS="${CPPFLAGS} -I${with_apache_header}"
-AC_SUBST(with_apache_header)
-AC_SUBST(CC)
-AC_SUBST(QDEFS)
-AC_SUBST(DDEFS)
-AC_SUBST(LIBS)
-AC_SUBST(CFLAGS)
 
 # Checks for header files.
 AC_HEADER_STDC
@@ -168,16 +162,26 @@ APR_HEADER_DIR="`${APR_CONFIG} --includes | sed -e 's/-I//g' | sed -e 's/ //g'`"
 AC_CHECK_HEADERS([apr_shm.h apr_global_mutex.h])
 AC_CHECK_HEADERS([apr.h])
 AC_CHECK_HEADERS([ap_config.h])
-AC_CHECK_HEADERS([ap_regex.h],
-  AC_DEFINE([HAVE_AP_REGEX_H], [], [Define to 1 if you have the <ap_regex.h> header file.]),[],
-[[
-#ifdef HAVE_APR_H
-#include "apr.h"
-#endif
-#ifdef HAVE_AP_CONFIG_H
-#include "ap_config.h"
-#endif
-]])
+AC_CHECK_HEADERS([ap_regex.h],use_pcre_flag="no",use_pcre_flag="yes")
+if test "x$use_pcre_flag" = "xyes" ; then
+  if test "x$with_pcre_config" = "x" ; then
+    AC_PATH_PROG(PCRE_CONFIG, pcre-config, no, /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
+    if test "x$PCRE_CONFIG" = "xno" ; then
+      AC_PATH_PROG(PCRE_1_CONFIG, pcre-1-config, no, /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
+      if test "x$PCRE_1_CONFIG" = "xno" ; then
+        AC_MSG_ERROR([pcre-config and pcre-1-config not found.])
+      else
+        PCRE_CONFIG="$PCRE_1_CONFIG"
+      fi
+    fi
+  fi
+  if test "x$with_pcre_config" != "x" ; then
+    PCRE_CONFIG=$with_pcre_config
+  fi
+  CFLAGS="${CFLAGS} `${PCRE_CONFIG} --cflags`"
+else
+  AC_DEFINE([HAVE_AP_REGEX_H], [], [Define to 1 if you have the <ap_regex.h> header file.])
+fi
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -186,6 +190,12 @@ AC_C_CONST
 AC_FUNC_MALLOC
 AC_CHECK_FUNCS([open mmap close memset memcpy strcasecmp strncasecmp strstr])
 
+AC_SUBST(with_apache_header)
+AC_SUBST(CC)
+AC_SUBST(QDEFS)
+AC_SUBST(DDEFS)
+AC_SUBST(LIBS)
+AC_SUBST(CFLAGS)
 
 
 AC_CONFIG_FILES([Makefile src/Makefile])
