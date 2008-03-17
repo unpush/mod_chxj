@@ -190,10 +190,12 @@ chxj_headers_fixup(request_rec *r)
     DBG(r, "content-Length:[%s]", content_length);
     if (content_length && strlen(content_length) != 0) {
       if (STRCASEEQ('A','a', "application/x-www-form-urlencoded", content_type)) {
-        long cl = (long)chxj_atoi(content_length) * 3;
-        if (cl > 0) {
-          apr_table_setn(r->headers_in, CHXJ_HTTP_ORIG_CONTENT_LENGTH, content_length);
-          apr_table_setn(r->headers_in, "Content-Length", apr_psprintf(r->pool, "%ld", cl));
+        long cl = (long)((double)chxj_atoi(content_length) * 3. / 2.);
+        if (cl <= CHXJ_CONTENT_LENGTH_MAX) {
+          if (cl > 0) {
+            apr_table_setn(r->headers_in, CHXJ_HTTP_ORIG_CONTENT_LENGTH, content_length);
+            apr_table_setn(r->headers_in, "Content-Length", apr_psprintf(r->pool, "%ld", cl));
+          }
         }
       }
     }
@@ -1034,7 +1036,6 @@ chxj_input_filter(ap_filter_t         *f,
   /*--------------------------------------------------------------------------*/
   apr_bucket_brigade  *obb;
   apr_size_t          len;
-  apr_bucket          *tmp_heap;
   apr_bucket          *eos;
   const char          *data;
   char                *data_bucket;
