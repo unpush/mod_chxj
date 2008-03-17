@@ -53,6 +53,11 @@ qs_all_free(Doc* doc, const char* UNUSED(fname), int UNUSED(line))
     doc->do_init_flag = 0;
   }
 }
+
+
+#if HAVE_MALLOC == 0
+#include "malloc.c"
+#endif
 /*
  * vim:ts=2 et
  */
