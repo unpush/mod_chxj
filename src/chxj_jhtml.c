@@ -1464,7 +1464,7 @@ s_jhtml_start_input_tag(void *pdoc, Node *node)
     jhtml->out = apr_pstrcat(r->pool, 
                     jhtml->out, 
                     " name=\"", 
-                    name, 
+                    chxj_jreserved_to_safe_tag(r, name),
                     "\" ", 
                     NULL);
   }
@@ -2378,7 +2378,7 @@ s_jhtml_start_textarea_tag(void *pdoc, Node *node)
     value = qs_get_attr_value(doc,attr);
 
     if ((*name == 'n' || *name == 'N') && strcasecmp(name, "name") == 0) {
-      jhtml->out = apr_pstrcat(r->pool, jhtml->out, " name=\"",value,"\"", NULL);
+      jhtml->out = apr_pstrcat(r->pool, jhtml->out, " name=\"",chxj_jreserved_to_safe_tag(r, value),"\"", NULL);
     }
     else 
     if ((*name == 'r' || *name == 'R') && strcasecmp(name, "rows") == 0) {

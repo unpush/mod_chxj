@@ -60,6 +60,7 @@
 #include "chxj_url_encode.h"
 #include "chxj_str_util.h"
 #include "chxj_emoji.h"
+#include "chxj_jreserved_tag.h"
 
 
 #define CHXJ_VERSION_PREFIX PACKAGE_NAME "/"
@@ -474,6 +475,8 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry *entryp, device_tabl
 
     name  = apr_strtok(pair, "=", &vstate);
     value = apr_strtok(NULL, "=", &vstate);
+    name = chxj_safe_to_jreserved_tag(r, name);
+
     if (strncasecmp(name, "_chxj", 5) != 0) {
       if (strlen(result) != 0) 
         result = apr_pstrcat(r->pool, result, "&", NULL);
@@ -624,6 +627,8 @@ chxj_input_convert(
 
     name  = apr_strtok(pair, "=", &vstate);
     value = apr_strtok(NULL, "=", &vstate);
+    name  = chxj_safe_to_jreserved_tag(r, name);
+
     if (strncasecmp(name, "_chxj", 5) != 0) {
       result = chxj_convert_emoji_param_list(r, spec, entryp, result, name, value, func_emoji_to_meta_emoji);
       DBG(r, "result:[%s]", result);

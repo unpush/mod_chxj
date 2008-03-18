@@ -74,7 +74,8 @@ am_libmod_chxj_la_OBJECTS = libmod_chxj_la-mod_chxj.lo \
 	libmod_chxj_la-chxj_url_encode.lo \
 	libmod_chxj_la-chxj_cookie.lo \
 	libmod_chxj_la-chxj_preg_replace.lo \
-	libmod_chxj_la-chxj_emoji.lo
+	libmod_chxj_la-chxj_emoji.lo \
+	libmod_chxj_la-chxj_jreserved_tag.lo
 libmod_chxj_la_OBJECTS = $(am_libmod_chxj_la_OBJECTS)
 libmod_chxj_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(libmod_chxj_la_CFLAGS) \
@@ -248,7 +249,8 @@ libmod_chxj_la_SOURCES = mod_chxj.c \
     chxj_url_encode.c \
     chxj_cookie.c \
     chxj_preg_replace.c \
-    chxj_emoji.c
+    chxj_emoji.c \
+    chxj_jreserved_tag.c
 
 libmod_chxj_la_CFLAGS = $(AM_CFLAGS) -O2 -prefer-pic @QDEFS@ @DDEFS@ -I. -I../include 
 AM_CFLAGS = @CFLAGS@ -O2 -prefer-pic @QDEFS@ @DDEFS@ -I. -I../include 
@@ -335,6 +337,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmod_chxj_la-chxj_img_conv.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmod_chxj_la-chxj_img_conv_format.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmod_chxj_la-chxj_jhtml.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmod_chxj_la-chxj_jreserved_tag.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmod_chxj_la-chxj_load_device_data.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmod_chxj_la-chxj_load_emoji_data.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmod_chxj_la-chxj_node_convert.Plo@am__quote@
@@ -591,6 +594,13 @@ libmod_chxj_la-chxj_emoji.lo: chxj_emoji.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='chxj_emoji.c' object='libmod_chxj_la-chxj_emoji.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmod_chxj_la_CFLAGS) $(CFLAGS) -c -o libmod_chxj_la-chxj_emoji.lo `test -f 'chxj_emoji.c' || echo '$(srcdir)/'`chxj_emoji.c
+
+libmod_chxj_la-chxj_jreserved_tag.lo: chxj_jreserved_tag.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmod_chxj_la_CFLAGS) $(CFLAGS) -MT libmod_chxj_la-chxj_jreserved_tag.lo -MD -MP -MF $(DEPDIR)/libmod_chxj_la-chxj_jreserved_tag.Tpo -c -o libmod_chxj_la-chxj_jreserved_tag.lo `test -f 'chxj_jreserved_tag.c' || echo '$(srcdir)/'`chxj_jreserved_tag.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/libmod_chxj_la-chxj_jreserved_tag.Tpo $(DEPDIR)/libmod_chxj_la-chxj_jreserved_tag.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='chxj_jreserved_tag.c' object='libmod_chxj_la-chxj_jreserved_tag.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmod_chxj_la_CFLAGS) $(CFLAGS) -c -o libmod_chxj_la-chxj_jreserved_tag.lo `test -f 'chxj_jreserved_tag.c' || echo '$(srcdir)/'`chxj_jreserved_tag.c
 
 mostlyclean-libtool:
 	-rm -f *.lo

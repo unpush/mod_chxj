@@ -30,7 +30,8 @@ libmod_chxj_la_SOURCES = mod_chxj.c \
     chxj_url_encode.c \
     chxj_cookie.c \
     chxj_preg_replace.c \
-    chxj_emoji.c
+    chxj_emoji.c \
+    chxj_jreserved_tag.c
 
 
 libmod_chxj_la_CFLAGS = $(AM_CFLAGS) -O2 -prefer-pic @QDEFS@ @DDEFS@ -I. -I../include 
