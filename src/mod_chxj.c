@@ -198,6 +198,9 @@ chxj_headers_fixup(request_rec *r)
             apr_table_setn(r->headers_in, "Content-Length", apr_psprintf(r->pool, "%ld", cl));
           }
         }
+        else {
+          ERR(r, "too large Content-Length data[%s]", content_length);
+        }
       }
     }
     break;
