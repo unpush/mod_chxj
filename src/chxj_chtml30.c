@@ -89,6 +89,10 @@ static char *s_chtml30_chxjif_tag         (void *pdoc, Node *node);
 static char *s_chtml30_text_tag           (void *pdoc, Node *node);
 static char *s_chtml30_start_dl_tag       (void *pdoc, Node *node);
 static char *s_chtml30_end_dl_tag         (void *pdoc, Node *node);
+static char *s_chtml30_start_dt_tag       (void *pdoc, Node *node);
+static char *s_chtml30_end_dt_tag         (void *pdoc, Node *node);
+static char *s_chtml30_start_dd_tag       (void *pdoc, Node *node);
+static char *s_chtml30_end_dd_tag         (void *pdoc, Node *node);
 
 static void  s_init_chtml30(chtml30_t *chtml, Doc *doc, request_rec *r, device_table *spec);
 
@@ -305,8 +309,8 @@ tag_handler chtml30_handler[] = {
   },
   /* tagDT */
   {
-    NULL,
-    NULL,
+    s_chtml30_start_dt_tag,
+    s_chtml30_end_dt_tag,
   },
   /* tagLEGEND */
   {
@@ -325,8 +329,8 @@ tag_handler chtml30_handler[] = {
   },
   /* tagDD */
   {
-    NULL,
-    NULL,
+    s_chtml30_start_dd_tag,
+    s_chtml30_end_dd_tag,
   },
 };
 
@@ -2818,7 +2822,7 @@ s_chtml30_start_dl_tag(void *pdoc, Node *UNUSED(child))
 
 
 /**
- * It is a handler who processes the DLtag.
+ * It is a handler who processes the DL tag.
  *
  * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
@@ -2840,6 +2844,107 @@ s_chtml30_end_dl_tag(void *pdoc, Node *UNUSED(child))
 
   return chtml30->out;
 }
+
+
+/**
+ * It is a handler who processes the DT tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DL tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml30_start_dt_tag(void *pdoc, Node *UNUSED(child))
+{
+  chtml30_t    *chtml30;
+  Doc          *doc;
+  request_rec  *r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
+
+  chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<dt>", NULL);
+
+  return chtml30->out;
+}
+
+
+/**
+ * It is a handler who processes the DT tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DT tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml30_end_dt_tag(void *pdoc, Node *UNUSED(child))
+{
+  chtml30_t    *chtml30;
+  Doc          *doc;
+  request_rec  *r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
+
+  chtml30->out = apr_pstrcat(r->pool, chtml30->out, "\n", NULL);
+
+  return chtml30->out;
+}
+
+
+/**
+ * It is a handler who processes the DD tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DD tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml30_start_dd_tag(void *pdoc, Node *UNUSED(child))
+{
+  chtml30_t    *chtml30;
+  Doc          *doc;
+  request_rec  *r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
+
+  chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<dd>", NULL);
+
+  return chtml30->out;
+}
+
+
+/**
+ * It is a handler who processes the DD tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DD tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml30_end_dd_tag(void *pdoc, Node *UNUSED(child))
+{
+  chtml30_t    *chtml30;
+  Doc          *doc;
+  request_rec  *r;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  r       = doc->r;
+
+  chtml30->out = apr_pstrcat(r->pool, chtml30->out, "\n", NULL);
+
+  return chtml30->out;
+}
+
 
 /*
  * vim:ts=2 et

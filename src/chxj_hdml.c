@@ -70,6 +70,10 @@ static char *s_hdml_start_img_tag     (void *pdoc,  Node *node);
 static char *s_hdml_end_img_tag       (void *pdoc,  Node *node);
 static char *s_hdml_start_div_tag     (void *pdoc,  Node *node);
 static char *s_hdml_end_div_tag       (void *pdoc,  Node *node);
+static char *s_hdml_start_dt_tag      (void *pdoc,  Node *node);
+static char *s_hdml_end_dt_tag        (void *pdoc,  Node *node);
+static char *s_hdml_start_dd_tag      (void *pdoc,  Node *node);
+static char *s_hdml_end_dd_tag        (void *pdoc,  Node *node);
 
 static char *s_get_form_no          (request_rec *r, hdml_t *hdml);
 
@@ -304,8 +308,8 @@ tag_handler hdml_handler[] = {
   },
   /* tagDT */
   {
-    NULL,
-    NULL,
+    s_hdml_start_dt_tag,
+    s_hdml_end_dt_tag,
   },
   /* tagLEGEND */
   {
@@ -324,8 +328,8 @@ tag_handler hdml_handler[] = {
   },
   /* tagDD */
   {
-    NULL,
-    NULL,
+    s_hdml_start_dd_tag,
+    s_hdml_end_dd_tag,
   },
 };
 
@@ -2869,6 +2873,98 @@ s_hdml_text_tag(void *pdoc, Node *child)
   s_hdml_tag_output_upper_half(hdml, child->parent);
   s_output_to_hdml_out(hdml, tdst);
   hdml->hdml_br_flag = 0;
+
+  return hdml->out;
+}
+
+
+/**
+ * It is a handler who processes the DT tag.
+ *
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DT tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_hdml_start_dt_tag(void *pdoc, Node *UNUSED(node)) 
+{
+  hdml_t *hdml;
+  Doc    *doc;
+
+  hdml = GET_HDML(pdoc);
+  doc  = hdml->doc;
+
+  s_output_to_hdml_out(hdml, "<LINE>");
+
+  return hdml->out;
+}
+
+
+/**
+ * It is a handler who processes the DT tag.
+ *
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DT tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_hdml_end_dt_tag(void *pdoc, Node *UNUSED(node)) 
+{
+  hdml_t *hdml;
+  Doc    *doc;
+
+  hdml = GET_HDML(pdoc);
+  doc  = hdml->doc;
+
+  s_output_to_hdml_out(hdml, "\n");
+
+  return hdml->out;
+}
+
+
+/**
+ * It is a handler who processes the DD tag.
+ *
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DD tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_hdml_start_dd_tag(void *pdoc, Node *UNUSED(node)) 
+{
+  hdml_t *hdml;
+  Doc    *doc;
+
+  hdml = GET_HDML(pdoc);
+  doc  = hdml->doc;
+
+  s_output_to_hdml_out(hdml, "<WRAP>&nbsp;<TAB>");
+
+  return hdml->out;
+}
+
+
+/**
+ * It is a handler who processes the DD tag.
+ *
+ * @param pdoc   [i/o] The pointer to the HDML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DD tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_hdml_end_dd_tag(void *pdoc, Node *UNUSED(node)) 
+{
+  hdml_t *hdml;
+  Doc    *doc;
+
+  hdml = GET_HDML(pdoc);
+  doc  = hdml->doc;
+
+  s_output_to_hdml_out(hdml, "\n");
 
   return hdml->out;
 }

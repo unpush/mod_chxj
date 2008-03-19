@@ -78,6 +78,10 @@ static char *s_jhtml_chxjif_tag         (void *pdoc, Node *node);
 static char *s_jhtml_text_tag           (void *pdoc, Node *node);
 static char *s_jhtml_start_dl_tag       (void *pdoc, Node *node);
 static char *s_jhtml_end_dl_tag         (void *pdoc, Node *node);
+static char *s_jhtml_start_dt_tag       (void *pdoc, Node *node);
+static char *s_jhtml_end_dt_tag         (void *pdoc, Node *node);
+static char *s_jhtml_start_dd_tag       (void *pdoc, Node *node);
+static char *s_jhtml_end_dd_tag         (void *pdoc, Node *node);
 
 static void  s_init_jhtml(
   jhtml_t *jhtml,
@@ -302,8 +306,8 @@ tag_handler jhtml_handler[] = {
   },
   /* tagDT */
   {
-    NULL,
-    NULL,
+    s_jhtml_start_dt_tag,
+    s_jhtml_end_dt_tag,
   },
   /* tagLEGEND */
   {
@@ -322,8 +326,8 @@ tag_handler jhtml_handler[] = {
   },
   /* tagDD */
   {
-    NULL,
-    NULL,
+    s_jhtml_start_dd_tag,
+    s_jhtml_end_dd_tag,
   },
 };
 
@@ -2587,6 +2591,108 @@ s_jhtml_end_dl_tag(void *pdoc, Node *UNUSED(child))
   r     = doc->r;
 
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</dl>\n", NULL);
+
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the DT tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DT tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_start_dt_tag(void *pdoc, Node *UNUSED(child))
+{
+  jhtml_t      *jhtml;
+  Doc          *doc;
+  request_rec  *r;
+
+  jhtml = GET_JHTML(pdoc);
+  doc   = jhtml->doc;
+  r     = doc->r;
+
+
+  jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<dt>", NULL);
+
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the DT tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DT tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_end_dt_tag(void *pdoc, Node *UNUSED(child))
+{
+  jhtml_t      *jhtml;
+  Doc          *doc;
+  request_rec  *r;
+
+  jhtml = GET_JHTML(pdoc);
+  doc   = jhtml->doc;
+  r     = doc->r;
+
+
+  jhtml->out = apr_pstrcat(r->pool, jhtml->out, "\n", NULL);
+
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the DD tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DD tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_start_dd_tag(void *pdoc, Node *UNUSED(child))
+{
+  jhtml_t      *jhtml;
+  Doc          *doc;
+  request_rec  *r;
+
+  jhtml = GET_JHTML(pdoc);
+  doc   = jhtml->doc;
+  r     = doc->r;
+
+  jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<dd>", NULL);
+
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the DD tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DD tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_end_dd_tag(void *pdoc, Node *UNUSED(child))
+{
+  jhtml_t      *jhtml;
+  Doc          *doc;
+  request_rec  *r;
+
+  jhtml = GET_JHTML(pdoc);
+  doc   = jhtml->doc;
+  r     = doc->r;
+
+  jhtml->out = apr_pstrcat(r->pool, jhtml->out, "\n", NULL);
 
   return jhtml->out;
 }

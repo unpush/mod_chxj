@@ -87,6 +87,10 @@ static char *s_chtml20_start_div_tag     (void *pdoc, Node *node);
 static char *s_chtml20_end_div_tag       (void *pdoc, Node *node);
 static char *s_chtml20_start_dl_tag      (void *pdoc, Node *node);
 static char *s_chtml20_end_dl_tag        (void *pdoc, Node *node);
+static char *s_chtml20_start_dt_tag      (void *pdoc, Node *node);
+static char *s_chtml20_end_dt_tag        (void *pdoc, Node *node);
+static char *s_chtml20_start_dd_tag      (void *pdoc, Node *node);
+static char *s_chtml20_end_dd_tag        (void *pdoc, Node *node);
 
 static void  s_init_chtml20(chtml20_t *chtml, Doc *doc, request_rec *r, device_table *spec);
 
@@ -308,8 +312,8 @@ tag_handler chtml20_handler[] = {
   },
   /* tagDT */
   {
-    NULL,
-    NULL,
+    s_chtml20_start_dt_tag,
+    s_chtml20_end_dt_tag,
   },
   /* tagLEGEND */
   {
@@ -328,8 +332,8 @@ tag_handler chtml20_handler[] = {
   },
   /* tagDD */
   {
-    NULL,
-    NULL,
+    s_chtml20_start_dd_tag,
+    s_chtml20_end_dd_tag,
   },
 };
 
@@ -3150,6 +3154,106 @@ s_chtml20_end_dl_tag(void *pdoc, Node *UNUSED(child))
 
   return chtml20->out;
 }
+
+
+/**
+ * It is a handler who processes the DT tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DT tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml20_start_dt_tag(void *pdoc, Node *UNUSED(child))
+{
+  chtml20_t    *chtml20;
+  Doc          *doc;
+  request_rec  *r;
+
+  chtml20 = GET_CHTML20(pdoc);
+  doc     = chtml20->doc;
+  r       = doc->r;
+
+  chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<dt>", NULL);
+
+  return chtml20->out;
+}
+
+
+/**
+ * It is a handler who processes the DT tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DT tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml20_end_dt_tag(void *pdoc, Node *UNUSED(child))
+{
+  chtml20_t    *chtml20;
+  Doc          *doc;
+  request_rec  *r;
+
+  chtml20 = GET_CHTML20(pdoc);
+  doc     = chtml20->doc;
+  r       = doc->r;
+
+  chtml20->out = apr_pstrcat(r->pool, chtml20->out, "\n", NULL);
+
+  return chtml20->out;
+}
+
+/**
+ * It is a handler who processes the DD tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DD tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml20_start_dd_tag(void *pdoc, Node *UNUSED(child))
+{
+  chtml20_t    *chtml20;
+  Doc          *doc;
+  request_rec  *r;
+
+  chtml20 = GET_CHTML20(pdoc);
+  doc     = chtml20->doc;
+  r       = doc->r;
+
+  chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<dd>", NULL);
+
+  return chtml20->out;
+}
+
+
+/**
+ * It is a handler who processes the DD tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DD tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml20_end_dd_tag(void *pdoc, Node *UNUSED(child))
+{
+  chtml20_t    *chtml20;
+  Doc          *doc;
+  request_rec  *r;
+
+  chtml20 = GET_CHTML20(pdoc);
+  doc     = chtml20->doc;
+  r       = doc->r;
+
+  chtml20->out = apr_pstrcat(r->pool, chtml20->out, "\n", NULL);
+
+  return chtml20->out;
+}
+
 /*
  * vim:ts=2 et
  */
