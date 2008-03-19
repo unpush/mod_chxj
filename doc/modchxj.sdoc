@@ -46,8 +46,8 @@ $ ./buildconf.sh
 <program title="Configure">
 $ ./configure
 </program>
-<note>場合によっては--with-aprや--with-apuも必要です。</note>
-<note>0.8.xの場合には--with-apache-headerが必須です</note>
+<note>場合によっては--with-apr-configや--with-apu-configも必要です。</note>
+<note>0.8.6以下の場合には--with-apache-headerが必須です</note>
 </li>
 <li>mod_chxj.soを生成します
 <program title="make">
@@ -709,6 +709,33 @@ ChxjConvRule "^/chxj.+$" "EngineOn" "EUC-JP"
        <td align="center">○</td>
        <td align="center">○</td>
        <td align="left"> </td>
+    </tr>
+    <tr>
+       <td>&lt;DL&gt;</td>
+       <td align="center">　</td>
+       <td align="center">○</td>
+       <td align="center">×</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="left"> </td>
+    </tr>
+    <tr>
+       <td>&lt;DT&gt;</td>
+       <td align="center">　</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="left"><note>必ず閉じてください。そのうち対応します。</note></td>
+    </tr>
+    <tr>
+       <td>&lt;DD&gt;</td>
+       <td align="center">　</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="center">○</td>
+       <td align="left"><note>必ず閉じてください。そのうち対応します。</note></td>
     </tr>
     <tr>
        <td>&lt;CHXJ:IF&gt;</td>
