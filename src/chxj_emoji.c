@@ -480,6 +480,7 @@ dbg_r = r;
         DBG(r, "DETECT UTF8 BIN");
         if ((0xe0 & src[i]) == 0xc0) { 
           /* 2byte charactor */
+          DBG(r, "UTF-8 2byte charactor");
           mb[0] = src[i+0];
           mb[1] = src[i+1];
           mb[2] = 0;
@@ -487,6 +488,7 @@ dbg_r = r;
         }
         else if ((0xf0 & src[i]) == 0xe0) {
           /* 3byte charactor */
+          DBG(r, "UTF-8 3byte charactor");
           tmp = is_emoji_as_utf8_bin(r, &src[i]);
           if (tmp) {
             char *meta_emoji = apr_psprintf(r->pool, 
@@ -512,6 +514,7 @@ dbg_r = r;
         }
         else if ((0xf8 & src[i]) == 0xf0) {
           /* 4byte charactor */
+          DBG(r, "UTF-8 4byte charactor");
           mb[0] = src[i+0];
           mb[1] = src[i+1];
           mb[2] = src[i+2];
@@ -521,6 +524,7 @@ dbg_r = r;
         }
         else if ((0xc0 & src[i]) == 0x80) { 
           /* unknown charactor */
+          DBG(r, "UTF-8 unknown charactor");
           mb[0] = src[i+0];
           mb[1] = 0;
         }

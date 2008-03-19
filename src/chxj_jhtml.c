@@ -20,6 +20,7 @@
 #include "chxj_img_conv.h"
 #include "chxj_qr_code.h"
 #include "chxj_encoding.h"
+#include "chxj_jreserved_tag.h"
 
 #define GET_JHTML(X) ((jhtml_t*)(X))
 

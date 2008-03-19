@@ -373,6 +373,7 @@ typedef struct {
 #define HTTP_CONTENT_LENGTH   "Content-Length"
 #define CHXJ_HTTP_USER_AGENT  "CHXJ_HTTP_USER_AGENT"
 #define CHXJ_HTTP_ORIG_CONTENT_LENGTH "CHXJ_HTTP_ORIG_CONTENT_LENGTH"
+#define FORM_CONTENT_TYPE     "application/x-www-form-urlencoded"
 
 module AP_MODULE_DECLARE_DATA chxj_module;
 

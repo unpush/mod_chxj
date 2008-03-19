@@ -182,15 +182,15 @@ chxj_headers_fixup(request_rec *r)
     content_type = (char *)apr_table_get(r->headers_in, "Content-Type");
     if (r->method_number != M_POST
         || content_type == NULL
-        || ! STRCASEEQ('a','A', "application/x-www-form-urlencoded", content_type)) {
-      DBG(r, "NOT POST METHOD:[%d]", r->method_number);
+        || ! STRNCASEEQ('a','A', FORM_CONTENT_TYPE, content_type, strlen(FORM_CONTENT_TYPE))) {
+      DBG(r, "NOT POST METHOD:[%d] content_type:[%s]", r->method_number, content_type);
       break;
     }
     content_length = (char*)apr_table_get(r->headers_in, HTTP_CONTENT_LENGTH);
     DBG(r, "content-Type:[%s]", content_type);
     DBG(r, "content-Length:[%s]", content_length);
     if (content_length && strlen(content_length) != 0) {
-      if (STRCASEEQ('A','a', "application/x-www-form-urlencoded", content_type)) {
+      if (STRNCASEEQ('A','a', FORM_CONTENT_TYPE, content_type, strlen(FORM_CONTENT_TYPE))) {
         long cl = (long)((double)chxj_atoi(content_length) * 3. / 2.);
         if (cl <= CHXJ_CONTENT_LENGTH_MAX) {
           if (cl > 0) {
@@ -1078,7 +1078,7 @@ chxj_input_filter(ap_filter_t         *f,
   if (mode != AP_MODE_READBYTES 
       || r->method_number != M_POST
       || content_type == NULL
-      || ! STRCASEEQ('a','A', "application/x-www-form-urlencoded", content_type)
+      || ! STRNCASEEQ('a','A', FORM_CONTENT_TYPE, content_type, strlen(FORM_CONTENT_TYPE))
       || content_length == NULL
       || strlen(content_length) == 0
       || strcmp("0", content_length) == 0) {
@@ -1194,7 +1194,7 @@ chxj_input_filter(ap_filter_t         *f,
     DBG(r, "(in:convert)POSTDATA:[%.*s]:LEN:[%d]", len, data_brigade, len);
     if (STRCASEEQ('P','p', "post", r->method)) {
       char *new_area;
-      if (STRCASEEQ('a','A', "application/x-www-form-urlencoded", content_type)) {
+      if (STRNCASEEQ('a','A', FORM_CONTENT_TYPE, content_type, strlen(FORM_CONTENT_TYPE))) {
         if (content_length && strlen(content_length) != 0) {
           apr_size_t cl = (apr_size_t)chxj_atoi(content_length);
           new_area = apr_palloc(r->pool, cl + 1); 
