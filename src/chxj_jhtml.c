@@ -76,6 +76,8 @@ static char *s_jhtml_start_b_tag        (void *pdoc, Node *node);
 static char *s_jhtml_end_b_tag          (void *pdoc, Node *node);
 static char *s_jhtml_chxjif_tag         (void *pdoc, Node *node); 
 static char *s_jhtml_text_tag           (void *pdoc, Node *node);
+static char *s_jhtml_start_dl_tag       (void *pdoc, Node *node);
+static char *s_jhtml_end_dl_tag         (void *pdoc, Node *node);
 
 static void  s_init_jhtml(
   jhtml_t *jhtml,
@@ -309,6 +311,16 @@ tag_handler jhtml_handler[] = {
     NULL,
   },
   /* tagLABEL */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagDL */
+  {
+    s_jhtml_start_dl_tag,
+    s_jhtml_end_dl_tag,
+  },
+  /* tagDD */
   {
     NULL,
     NULL,
@@ -2523,6 +2535,58 @@ s_jhtml_text_tag(void *pdoc, Node *child)
     }
   }
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, tdst, NULL);
+
+  return jhtml->out;
+}
+
+
+
+/**
+ * It is a handler who processes the DL tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DL tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_start_dl_tag(void *pdoc, Node *UNUSED(child))
+{
+  jhtml_t      *jhtml;
+  Doc          *doc;
+  request_rec  *r;
+
+  jhtml = GET_JHTML(pdoc);
+  doc   = jhtml->doc;
+  r     = doc->r;
+
+
+  jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<dl>", NULL);
+
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the DL tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DL tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_end_dl_tag(void *pdoc, Node *UNUSED(child))
+{
+  jhtml_t      *jhtml;
+  Doc          *doc;
+  request_rec  *r;
+
+  jhtml = GET_JHTML(pdoc);
+  doc   = jhtml->doc;
+  r     = doc->r;
+
+  jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</dl>\n", NULL);
 
   return jhtml->out;
 }

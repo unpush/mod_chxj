@@ -85,6 +85,8 @@ static char *s_chtml20_start_option_tag  (void *pdoc, Node *node);
 static char *s_chtml20_end_option_tag    (void *pdoc, Node *node);
 static char *s_chtml20_start_div_tag     (void *pdoc, Node *node);
 static char *s_chtml20_end_div_tag       (void *pdoc, Node *node);
+static char *s_chtml20_start_dl_tag      (void *pdoc, Node *node);
+static char *s_chtml20_end_dl_tag        (void *pdoc, Node *node);
 
 static void  s_init_chtml20(chtml20_t *chtml, Doc *doc, request_rec *r, device_table *spec);
 
@@ -315,6 +317,16 @@ tag_handler chtml20_handler[] = {
     NULL,
   },
   /* tagLABEL */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagDL */
+  {
+    s_chtml20_start_dl_tag,
+    s_chtml20_end_dl_tag,
+  },
+  /* tagDD */
   {
     NULL,
     NULL,
@@ -3085,6 +3097,56 @@ s_chtml20_text_tag(void *pdoc, Node *child)
     }
   }
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, tdst, NULL);
+
+  return chtml20->out;
+}
+
+
+/**
+ * It is a handler who processes the DL tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DL tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml20_start_dl_tag(void *pdoc, Node *UNUSED(child))
+{
+  chtml20_t    *chtml20;
+  Doc          *doc;
+  request_rec  *r;
+
+  chtml20 = GET_CHTML20(pdoc);
+  doc     = chtml20->doc;
+  r       = doc->r;
+
+  chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<dl>", NULL);
+
+  return chtml20->out;
+}
+
+
+/**
+ * It is a handler who processes the DLtag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DL tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml20_end_dl_tag(void *pdoc, Node *UNUSED(child))
+{
+  chtml20_t    *chtml20;
+  Doc          *doc;
+  request_rec  *r;
+
+  chtml20 = GET_CHTML20(pdoc);
+  doc     = chtml20->doc;
+  r       = doc->r;
+
+  chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</dl>\n", NULL);
 
   return chtml20->out;
 }

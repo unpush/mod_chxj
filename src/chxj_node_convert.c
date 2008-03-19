@@ -585,6 +585,45 @@ chxj_node_convert(
         if (handlers[tagDIV].end_tag_handler)
           handlers[tagDIV].end_tag_handler(pdoc, child);
       }
+      /*----------------------------------------------------------------------*/
+      /* <DL>                                                                 */
+      /*----------------------------------------------------------------------*/
+      else 
+      if (strcasecmp(name, "dl") == 0) {
+        if (handlers[tagDL].start_tag_handler) 
+          handlers[tagDL].start_tag_handler(pdoc, child);
+
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
+
+        if (handlers[tagDL].end_tag_handler)
+          handlers[tagDL].end_tag_handler(pdoc, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <DT>                                                                 */
+      /*----------------------------------------------------------------------*/
+      else 
+      if (strcasecmp(name, "dt") == 0) {
+        if (handlers[tagDT].start_tag_handler) 
+          handlers[tagDT].start_tag_handler(pdoc, child);
+
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
+
+        if (handlers[tagDT].end_tag_handler)
+          handlers[tagDT].end_tag_handler(pdoc, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <DD>                                                                 */
+      /*----------------------------------------------------------------------*/
+      else 
+      if (strcasecmp(name, "dd") == 0) {
+        if (handlers[tagDD].start_tag_handler) 
+          handlers[tagDD].start_tag_handler(pdoc, child);
+
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
+
+        if (handlers[tagDD].end_tag_handler)
+          handlers[tagDD].end_tag_handler(pdoc, child);
+      }
       break;
 
     case 'c':
