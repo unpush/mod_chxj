@@ -609,7 +609,7 @@ ChxjConvRule "^/chxj.+$" "EngineOn" "EUC-JP"
        <td align="center">○</td>
        <td align="center">○</td>
        <td align="center">○</td>
-       <td align="left"> </td>
+       <td align="left"><note>SoftBankの予約クエリ名は内部で変換するので指定しても良い</note></td>
     </tr>
     <tr>
        <td> </td>
@@ -639,13 +639,13 @@ ChxjConvRule "^/chxj.+$" "EngineOn" "EUC-JP"
        <td align="left"> </td>
     </tr>
     <tr>
-       <td>&lt;SELECT&lt;</td>
+       <td>&lt;SELECT&gt;</td>
        <td align="center">name</td>
        <td align="center">○</td>
        <td align="center">○</td>
        <td align="center">○</td>
        <td align="center">○</td>
-       <td align="left"> </td>
+       <td align="left">  </td>
     </tr>
     <tr>
        <td> </td>
@@ -804,7 +804,8 @@ POST/GET中のデータについても端末側文字コードからサーバサイドコンテンツの文字コー
 <ol>
   <li>注意: Shift_JISでサーバサイドコンテンツを記述した場合はPOST/GETデータもShift_JISでサーバサイドコンテンツに渡されます。</li>
   <li>注意: EUCJP-WINでサーバサイドコンテンツを記述した場合はPOST/GETデータもEUCJP-WINでサーバサイドコンテンツに渡されます。</li>
-  <li>注意: UTF-8でサーバサイドコンテンツを記述した場合はPOST/GETデータもEUCJP-WINでサーバサイドコンテンツに渡されます。</li>
+  <li>注意: UTF-8でサーバサイドコンテンツを記述した場合はPOST/GETデータもUTF-8でサーバサイドコンテンツに渡されます。</li>
+  <li>注意: 本変換機能は1.0.0以降から</li>
 </ol>
 
 サーバサイドコンテンツの文字コードはChxjConvRuleディレクティブで指定した文字コードになります。
