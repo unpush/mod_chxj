@@ -903,7 +903,7 @@ $ ./configure --with-apu-config=/usr/local/apache2/bin/apu-1-config
 
 <h3 id="doc1_129">--enable-mysql-cookie</h3>
 
-<p class="first_ja">Cookieシミュレート機能を使用する際、保存先をデフォルトのDBMでは無く、MySQLに保存するようにします。DefaultのDBMで良い場合や、Cookieシミュレート機能を使用しない場合は指定する必要はありません。別途MySQLサーバを用意する必要があります。また、本オプションを指定した場合は、--with-mysql-header、--with-mysql-lib-dirも指定します。これはMySQLのヘッダとライブラリが必要なことを意味します。使用するMySQLのライブラリは今のところlibmysqlclient_r.soのみです。</p>
+<p class="first_ja">Cookieシミュレート機能を使用する際、保存先をデフォルトのDBMでは無く、MySQLに保存するようにします。DefaultのDBMで良い場合や、Cookieシミュレート機能を使用しない場合は指定する必要はありません。別途MySQLサーバを用意する必要があります。また、本オプションを指定した場合は、--with-mysql-header、--with-mysql-lib-dirも指定します。これはMySQLのヘッダとライブラリが必要なことを意味します。使用するMySQLのライブラリは今のところlibmysqlclient_r.soのみです。注意) --enable-memcache-cookieとの併用はできません。</p>
 
 <div id="doc1_131" class="caption">--enable-mysql-cookie</div>
 <pre class="program" style="margin-top:0">
@@ -943,7 +943,7 @@ $ ./configure --enable-mysql-cookie --with-mysql-header=/usr/include/mysql \
 
 <h3 id="doc1_150">--enable-memcache-cookie</h3>
 
-<p class="first_ja">Cookieシミュレート機能を使用する際、保存先をデフォルトのDBMでは無く、memcachedに保存するようにします。DefaultのDBMで良い場合や、Cookieシミュレート機能を使用しない場合は指定する必要はありません。別途memcachedを用意する必要があります。また、本オプションを指定した場合は、--with-apr-memcache-header、--with-apr-memcache-lib-dirも指定します。これはapr_memcacheのヘッダとライブラリが必要なことを意味します。</p>
+<p class="first_ja">Cookieシミュレート機能を使用する際、保存先をデフォルトのDBMでは無く、memcachedに保存するようにします。DefaultのDBMで良い場合や、Cookieシミュレート機能を使用しない場合は指定する必要はありません。別途memcachedを用意する必要があります。また、本オプションを指定した場合は、--with-apr-memcache-header、--with-apr-memcache-lib-dirも指定します。これはapr_memcacheのヘッダとライブラリが必要なことを意味します。注意) --enable-mysql-cookieとの併用はできません。</p>
 
 <div id="doc1_152" class="caption">--enable-memcache-cookie</div>
 <pre class="program" style="margin-top:0">

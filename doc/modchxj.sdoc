@@ -116,6 +116,7 @@ mod_chxjをコンパイルするにはconfigureを行う必要があります。
       DefaultのDBMで良い場合や、Cookieシミュレート機能を使用しない場合は指定する必要はありません。
       別途MySQLサーバを用意する必要があります。また、本オプションを指定した場合は、--with-mysql-header、--with-mysql-lib-dirも指定します。
       これはMySQLのヘッダとライブラリが必要なことを意味します。使用するMySQLのライブラリは今のところlibmysqlclient_r.soのみです。
+      注意) --enable-memcache-cookieとの併用はできません。
       <program title="--enable-mysql-cookie">
          $ ./configure --enable-mysql-cookie --with-mysql-header=/usr/include/mysql  --with-mysql-lib-dir=/usr/lib
       </program>
@@ -142,6 +143,7 @@ mod_chxjをコンパイルするにはconfigureを行う必要があります。
       DefaultのDBMで良い場合や、Cookieシミュレート機能を使用しない場合は指定する必要はありません。
       別途memcachedを用意する必要があります。また、本オプションを指定した場合は、--with-apr-memcache-header、--with-apr-memcache-lib-dirも指定します。
       これはapr_memcacheのヘッダとライブラリが必要なことを意味します。
+      注意) --enable-mysql-cookieとの併用はできません。
       <program title="--enable-memcache-cookie">
          $ ./configure --enable-memcache-cookie --with-apr-memcache-header=/usr/include/apr-memcache0 --with-apr-memcache-lib-dir=/usr/lib
       </program>
