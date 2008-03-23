@@ -28,6 +28,11 @@ Please specify the --with-apache-header option. And, please specify the place of
 ])
 fi
 
+dnl ==================================================
+dnl
+dnl apxs
+dnl
+dnl ==================================================
 AC_ARG_WITH(apxs, [  --with-apxs=ARG Path of apxs program file.])
 if test "x$with_apxs" = "x" ; then
   APXS=""
@@ -38,6 +43,11 @@ Please specify the --with-apxs option. And, please specify the place of the apxs
 ])
 fi
 
+dnl ==================================================
+dnl
+dnl apr-config
+dnl
+dnl ==================================================
 AC_ARG_WITH(apr-config, [  --with-apr-config=ARG  Path of apr-config program file.])
 if test "x$with_apr_config" = "xyes" ; then
     AC_MSG_ERROR([
@@ -45,6 +55,11 @@ Please specify the --with-apr-config option. And, please specify the place of th
 ])
 fi
 
+dnl ==================================================
+dnl
+dnl apu-config
+dnl
+dnl ==================================================
 AC_ARG_WITH(apu-config, [  --with-apu-config=ARG  Path of apu-config program file.])
 if test "x$with_apu_config" = "xyes" ; then
     AC_MSG_ERROR([
@@ -59,7 +74,11 @@ Please specify the --with-pcre-config option. And, please specify the place of t
 ])
 fi
 
-
+dnl ==================================================
+dnl
+dnl filename in img tag convertion.
+dnl
+dnl ==================================================
 AC_ARG_ENABLE(img-conv-f, [  --enable-img-conv-f      Please specify it when you change the file name of the image being written in the 
 source by the automatic operation.])
 if test "x$enable_img_conv_f" = "xyes"; then
@@ -68,6 +87,75 @@ else
   QDEFS="-DIMG_NOT_CONVERT_FILENAME"
 fi
 
+
+dnl ==================================================
+dnl
+dnl SAVE COOKIE to memcached Mode
+dnl
+dnl ==================================================
+AC_ARG_ENABLE(memcache-cookie, [  --enable-memcache-cookie Please specify it when you save Cookie in memcached. ])
+AC_ARG_WITH(apr-memcache-header,   [  --with-apr-memcache-header Path of "apr_memcache.h"])
+AC_ARG_WITH(apr-memcache-lib-dir,   [  --with-apr-memcache-lib-dir Path of "libapr_memcache.so"])
+if test "x$enable_memcache_cookie" = "xyes" ; then
+  dnl ======================================
+  dnl use MEMCACHE COOKIE
+  dnl ======================================
+  if test "x$with_apr_memcache_header" = "x" -o "x$with_apr_memcache_header" = "xyes" ; then
+    AC_MSG_ERROR([
+Please specify the --with-apr-memcache-header And, please specify the place of the "apr_memcache.h" header file directory. 
+])
+  fi
+  if test "x$with_apr_memcache_lib_dir" = "x" -o "x$with_apr_memcache_lib_dir" = "xyes" ; then
+    AC_MSG_ERROR([
+Please specify the --with-apr-memcache-lib-dir And, please specify the place of apr-memcache library directory. 
+])
+  fi
+  MEMCACHE_COOKIE_DEFS="-DUSE_MEMCACHE_COOKIE -I${with_apr_memcache_header}"
+  MEMCACHE_COOKIE_LIBS="-L${with_apr_memcache_lib_dir} -lapr_memcache"
+else
+  dnl ======================================
+  dnl no use MEMCACHE COOKIE
+  dnl ======================================
+  MEMCACHE_COOKIE_DEFS=""
+  MEMCACHE_COOKIE_LIBS=""
+fi
+dnl ==================================================
+dnl
+dnl SAVE COOKIE to MySQL Mode
+dnl
+dnl ==================================================
+AC_ARG_ENABLE(mysql-cookie, [  --enable-mysql-cookie    Please specify it when you save Cookie in MySQL. ])
+AC_ARG_WITH(mysql-header,   [  --with-mysql-header=ARG  Path of "mysql.h"])
+AC_ARG_WITH(mysql-lib-dir,  [  --with-mysql-lib-dir=ARG Path of libmysqlclient])
+if test "x$enable_mysql_cookie" = "xyes"; then
+  dnl ======================================
+  dnl use MYSQL COOKIE
+  dnl ======================================
+  if test "x$with_mysql_header" = "x" -o "x$with_mysql_header" = "xyes" ; then
+    AC_MSG_ERROR([
+Please specify the --with-mysql-header And, please specify the place of the "mysql.h" header file. 
+])
+  fi
+  if test "x$with_mysql_lib_dir" = "x" -o "x$with_mysql_lib_dir" = "xyes" ; then
+    AC_MSG_ERROR([
+Please specify the --with-mysql-lib-dir And, please specify the place of mysql library directory. 
+])
+  fi
+  MYSQL_COOKIE_DEFS="-DUSE_MYSQL_COOKIE -I${with_mysql_header}"
+  MYSQL_COOKIE_LIBS="-L${with_mysql_lib_dir} -lmysqlclient_r"
+else
+  dnl ======================================
+  dnl no use MYSQL COOKIE
+  dnl ======================================
+  MYSQL_COOKIE_DEFS=""
+  MYSQL_COOKIE_LIBS=""
+fi
+
+dnl ==================================================
+dnl
+dnl dump log for DEBUG
+dnl
+dnl ==================================================
 AC_ARG_ENABLE(dump-log, [  --enable-dump-log   When the log of conversion is output, it specifies it with the output file. ])
 if test "x$enable_dump_log" = "xyes"; then
   DDEFS="-DDUMP_LOG=\\\"/tmp/dump.log\\\""
@@ -151,10 +239,16 @@ fi
 LIBS="${LIBS} `${WAND_CONFIG} --ldflags` `${WAND_CONFIG} --libs | sed -e s/-ldpstk//` "
 LIBS="${LIBS} `${APR_CONFIG} --ldflags` `${APR_CONFIG} --libs` "
 LIBS="${LIBS} `${APU_CONFIG} --ldflags` `${APU_CONFIG} --libs` "
+LIBS="${LIBS} ${MYSQL_COOKIE_LIBS}"
+LIBS="${LIBS} ${MEMCACHE_COOKIE_LIBS}"
 CFLAGS="${CFLAGS} `${WAND_CONFIG} --cppflags` `${WAND_CONFIG} --cflags`"
 CFLAGS="${CFLAGS} `${APR_CONFIG} --includes` `${APR_CONFIG} --cflags` `${APR_CONFIG} --cppflags`"
 CFLAGS="${CFLAGS} `${APU_CONFIG} --includes`"
+CFLAGS="${CFLAGS} ${MYSQL_COOKIE_DEFS}"
+CFLAGS="${CFLAGS} ${MEMCACHE_COOKIE_DEFS}"
 CPPFLAGS="${CPPFLAGS} `${APR_CONFIG} --includes` -I${with_apache_header}"
+CPPFLAGS="${CPPFLAGS} ${MYSQL_COOKIE_DEFS}"
+CPPFLAGS="${CPPFLAGS} ${MEMCACHE_COOKIE_DEFS}"
 
 # Checks for header files.
 AC_HEADER_STDC

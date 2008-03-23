@@ -6,7 +6,7 @@
   <subtitle></subtitle>
   <author>Atsushi Konno</author>
   <date>29 Mar 2005</date>
-  <date>Last modified: Tue,  5 Feb 2008 13:20:28 +0900</date>
+  <date>Last modified: Tue, 23 Mar 2008 00:34:08 +0900</date>
 </head>
 <body>
 <section title="Overview">
@@ -48,6 +48,7 @@ $ ./buildconf.sh
 $ ./configure
 </program>
 <note>場合によっては--with-apr-configや--with-apu-config、--with-pcre-configも必要です。</note>
+<note>詳細はBuildを参照</note>
 </li>
 <li>mod_chxj.soを生成します
 <program title="make">
@@ -72,6 +73,94 @@ $ cp etc/emoji.xml /etc/apache2/chxj
 </program>
 </li>
 </ol>
+</subsection>
+</section>
+<section title="Build">
+mod_chxjをコンパイルするにはconfigureを行う必要があります。
+以下にconfigureのオプションを記します。
+<subsection title="メイン">
+  <subsection title="--with-apache-header">
+      通常指定する必要はありません。configureでApacheのヘッダファイルの場所が検知できなかった場合や、任意のApacheヘッダファイルを使用したい場合に指定します。
+      <program title="--with-apache-header">
+         $ ./configure --with-apache-header=/usr/include/apache2
+      </program>
+      上記は/usr/include/apache2以下にApacheのヘッダファイルがある場合の例です。
+  </subsection>
+  <subsection title="--with-apxs">
+      通常指定する必要はありません。configureでapxsを検知できなかった場合や、任意のapxsプログラムを指定したい場合に指定します。
+      <program title="--with-apxs">
+         $ ./configure --with-apxs=/usr/local/apache2/bin/apxs2
+      </program>
+      上記は/usr/local/apache2/bin/apxs2を使用するようにapxsに指定しています。
+  </subsection>
+  <subsection title="--with-apr-config">
+      通常指定する必要はありません。
+      configureでapr-configを検知できなかった場合や、任意のapr-configプログラムを指定したい場合に指定します。
+      <program title="--with-apr-config">
+         $ ./configure --with-apr-config=/usr/local/apache2/bin/apr-1-config
+      </program>
+      上記は/usr/local/apache2/bin/apr-1-configを使用するように指定しています。
+  </subsection>
+  <subsection title="--with-apu-config">
+      通常指定する必要はありません。
+      configureでapu-configを検知できなかった場合や、任意のapu-configプログラムを指定したい場合に指定します。
+      <program title="--with-apu-config">
+         $ ./configure --with-apu-config=/usr/local/apache2/bin/apu-1-config
+      </program>
+      上記は/usr/local/apache2/bin/apu-1-configを使用するように指定しています。
+  </subsection>
+</subsection>
+<subsection title="Cookieシミュレート機能でMySQLを使用する場合">
+  <subsection title="--enable-mysql-cookie">
+      Cookieシミュレート機能を使用する際、保存先をデフォルトのDBMでは無く、MySQLに保存するようにします。
+      DefaultのDBMで良い場合や、Cookieシミュレート機能を使用しない場合は指定する必要はありません。
+      別途MySQLサーバを用意する必要があります。また、本オプションを指定した場合は、--with-mysql-header、--with-mysql-lib-dirも指定します。
+      これはMySQLのヘッダとライブラリが必要なことを意味します。使用するMySQLのライブラリは今のところlibmysqlclient_r.soのみです。
+      <program title="--enable-mysql-cookie">
+         $ ./configure --enable-mysql-cookie --with-mysql-header=/usr/include/mysql  --with-mysql-lib-dir=/usr/lib
+      </program>
+      上記は、/usr/include/mysql以下にmysql用のヘッダがあり、/usr/lib以下にlibmysqlclient_r.soがある場合の例です。
+  </subsection>
+  <subsection title="--with-mysql-header">
+      --enable-mysql-cookieを指定した場合は必須です。
+      MySQLのヘッダファイルの場所を指定します。
+      <program title="--with-mysql-header">
+         $ ./configure --enable-mysql-cookie --with-mysql-header=/usr/include/mysql  --with-mysql-lib-dir=/usr/lib
+      </program>
+  </subsection>
+  <subsection title="--with-mysql-lib-dir">
+      --enable-mysql-cookieを指定した場合は必須です。
+      MySQLのライブラリ、libmysqlclient_r.soの設置されているディレクトリを指定します。
+      <program title="--with-mysql-lib-dir">
+         $ ./configure --enable-mysql-cookie --with-mysql-header=/usr/include/mysql  --with-mysql-lib-dir=/usr/lib
+      </program>
+  </subsection>
+</subsection>
+<subsection title="Cookieシミュレート機能でmemcachedを使用する場合">
+  <subsection title="--enable-memcache-cookie">
+      Cookieシミュレート機能を使用する際、保存先をデフォルトのDBMでは無く、memcachedに保存するようにします。
+      DefaultのDBMで良い場合や、Cookieシミュレート機能を使用しない場合は指定する必要はありません。
+      別途memcachedを用意する必要があります。また、本オプションを指定した場合は、--with-apr-memcache-header、--with-apr-memcache-lib-dirも指定します。
+      これはapr_memcacheのヘッダとライブラリが必要なことを意味します。
+      <program title="--enable-memcache-cookie">
+         $ ./configure --enable-memcache-cookie --with-apr-memcache-header=/usr/include/apr-memcache0 --with-apr-memcache-lib-dir=/usr/lib
+      </program>
+      上記は、/usr/include/apr_memcache0以下にapr-memcache用のヘッダがあり、/usr/lib以下にlibapr_memcache.soがある場合の例です。
+  </subsection>
+  <subsection title="--with-apr-memcache-header">
+      --enable-memcache-cookieを指定した場合は必須です。
+      apr-memcacheのヘッダファイルの場所を指定します。
+      <program title="--with-apr-memcache-header">
+         $ ./configure --enable-memcache-cookie --with-apr-memcache-header=/usr/include/apr_memcache0  --with-apr-memcache-lib-dir=/usr/lib
+      </program>
+  </subsection>
+  <subsection title="--with-apr-memcache-lib-dir">
+      --enable-mysql-cookieを指定した場合は必須です。
+      apr-memcacheのライブラリ、libapr_memcache.soの設置されているディレクトリを指定します。
+      <program title="--with-apr-memcache-lib-dir">
+         $ ./configure --enable-memcache-cookie --with-apr-memcache-header=/usr/include/apr_memcache0  --with-apr-memcache-lib-dir=/usr/lib
+      </program>
+  </subsection>
 </subsection>
 </section>
 <section title="Configuration">
@@ -969,10 +1058,83 @@ Cookieシミュレートでは、aタグ、imgタグ、formタグのURL部にOne-Time IDを埋め込むこ
 そのため、ユーザがブラウザの戻るボタン等で戻った場合はCookieを取得できなくなります。
 </subsection>
 <subsection title="Cookieの保存場所">
-Cookieの内容は、サーバ側に保存されます。保存ディレクトリはChxjCookieDirディレクティブを使用することで指定することができます。指定しなかった場合は、/tmpに保存されます。
+Cookieの内容はサーバ側に保存されます。
+デフォルトではDBMを使用し、保存ディレクトリはChxjCookieDirディレクティブを使用することで指定することができます。指定しなかった場合は、/tmpに保存されます。
   <program title="ChxjCookieDirの例">
     ChxjCookieDir /var/abc
   </program>
+
+DBMの代わりにMySQLやmemcachedを指定することもできます。その際は、ChxjCookieDirは指定する必要はありません。
+MySQLを使用するには、configure時にMySQL COOKIE機能を有効にして、コンパイルする必要があります。<note>Buildの項参照</note>
+memcachedを使用するには、configure時にMEMCACHE COOKIE機能を有効にして、コンパイルする必要があります。<note>Buildの項参照</note>
+またMySQLを使用する場合には以下のディレクティブを指定する必要もあります。
+<ol>
+  <li>ChxjCookieMysqlHost<br />
+      MySQLサーバの動作するホストを指定します。
+      <program title="ChxjCookieMysqlHostの例">
+         ChxjCookieMysqlHost "localhost"
+      </program>
+  </li>
+  <li>ChxjCookieMysqlPort<br />
+      MySQLサーバのポート番号を指定します。
+      <program title="ChxjCookieMysqlPortの例">
+         ChxjCookieMysqlPort 3306
+      </program>
+  </li>
+  <li>ChxjCookieMysqlDatabase<br />
+      MySQLサーバのデータベース名を指定します。
+      <program title="ChxjCookieMysqlDatabaseの例">
+         ChxjCookieMysqlDatabase "test_db"
+      </program>
+  </li>
+  <li>ChxjCookieMysqlUsername<br />
+      MySQLサーバに接続する際に使用するユーザ名を指定します。
+      <program title="ChxjCookieMysqlUsernameの例">
+         ChxjCookieMysqlUsername "roottest"
+      </program>
+  </li>
+  <li>ChxjCookieMysqlPassword<br />
+      MySQLサーバに接続する際に使用するパスワードを指定します。
+      <program title="ChxjCookieMysqlPasswordの例">
+         ChxjCookieMysqlPassword "pwtest"
+      </program>
+  </li>
+  <li>ChxjCookieMysqlSocketPath<br />
+      MySQLのソケットパスを指定します。
+      <program title="ChxjCookieMysqlSocketPathの例">
+         ChxjCookieMysqlSocketPath  "/tmp/mysql.sock"
+      </program>
+  </li>
+  <li>ChxjCookieMysqlCharset<br />
+      MySQLのエンコードを指定します。
+      <program title="ChxjCookieMysqlCharsetの例">
+         ChxjCookieMysqlCharset  "utf8"
+      </program>
+  </li>
+  <li>ChxjCookieMysqlTablename<br />
+      MySQLのクッキーを保存するテーブル名を指定します。
+      <program title="ChxjCookieMysqlTablenameの例">
+         ChxjCookieMysqlTablename  "chxj_cookie"
+      </program>
+      上記のように"chxj_cookie"と指定すると、実際に作成されるテーブルは、chxj_cookieとchxj_cookie_expireテーブルの2つになります。
+  </li>
+</ol>
+
+memcachedを使用する場合には以下のディレクティブを指定する必要もあります。
+<ol>
+  <li>ChxjCookieMemcacheHost<br />
+      memcachedの動作するホストを指定します。
+      <program title="ChxjCookieMemcacheHostの例">
+         ChxjCookieMemcacheHost "localhost"
+      </program>
+  </li>
+  <li>ChxjCookieMemcachePort<br />
+      memcachedのポート番号を指定します。
+      <program title="ChxjCookieMemcachePortの例">
+         ChxjCookieMemcachePort 11211
+      </program>
+  </li>
+</ol>
 </subsection>
 <subsection title="Cookieの保持期間">
 ChxjCookieTimeoutディレクティブで保持期間を指定することができます。指定しなかった場合は1800秒でサーバに保存されているCookieは削除されます。

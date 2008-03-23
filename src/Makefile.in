@@ -39,7 +39,7 @@ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
-mkinstalldirs = $(install_sh) -d
+mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/include/config.h
 CONFIG_CLEAN_FILES =
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
@@ -73,7 +73,8 @@ am_libmod_chxj_la_OBJECTS = libmod_chxj_la-mod_chxj.lo \
 	libmod_chxj_la-chxj_node_exchange.lo \
 	libmod_chxj_la-chxj_url_encode.lo \
 	libmod_chxj_la-chxj_preg_replace.lo \
-	libmod_chxj_la-chxj_cookie.lo
+	libmod_chxj_la-chxj_cookie.lo libmod_chxj_la-chxj_mysql.lo \
+	libmod_chxj_la-chxj_memcache.lo
 libmod_chxj_la_OBJECTS = $(am_libmod_chxj_la_OBJECTS)
 libmod_chxj_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(libmod_chxj_la_CFLAGS) \
@@ -247,7 +248,9 @@ libmod_chxj_la_SOURCES = mod_chxj.c \
     chxj_node_exchange.c \
     chxj_url_encode.c \
     chxj_preg_replace.c \
-    chxj_cookie.c
+    chxj_cookie.c \
+    chxj_mysql.c \
+    chxj_memcache.c
 
 libmod_chxj_la_CFLAGS = -O2 -prefer-pic @QDEFS@ @DDEFS@ -I. -I../include -I@with_apache_header@ 
 AM_CFLAGS = @CFLAGS@ -O2 -prefer-pic @QDEFS@ @DDEFS@ -I. -I../include -I@with_apache_header@
@@ -335,6 +338,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmod_chxj_la-chxj_jhtml.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmod_chxj_la-chxj_load_device_data.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmod_chxj_la-chxj_load_emoji_data.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmod_chxj_la-chxj_memcache.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmod_chxj_la-chxj_mysql.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmod_chxj_la-chxj_node_exchange.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmod_chxj_la-chxj_preg_replace.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmod_chxj_la-chxj_qr_code.Plo@am__quote@
@@ -582,6 +587,20 @@ libmod_chxj_la-chxj_cookie.lo: chxj_cookie.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='chxj_cookie.c' object='libmod_chxj_la-chxj_cookie.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmod_chxj_la_CFLAGS) $(CFLAGS) -c -o libmod_chxj_la-chxj_cookie.lo `test -f 'chxj_cookie.c' || echo '$(srcdir)/'`chxj_cookie.c
+
+libmod_chxj_la-chxj_mysql.lo: chxj_mysql.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmod_chxj_la_CFLAGS) $(CFLAGS) -MT libmod_chxj_la-chxj_mysql.lo -MD -MP -MF $(DEPDIR)/libmod_chxj_la-chxj_mysql.Tpo -c -o libmod_chxj_la-chxj_mysql.lo `test -f 'chxj_mysql.c' || echo '$(srcdir)/'`chxj_mysql.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/libmod_chxj_la-chxj_mysql.Tpo $(DEPDIR)/libmod_chxj_la-chxj_mysql.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='chxj_mysql.c' object='libmod_chxj_la-chxj_mysql.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmod_chxj_la_CFLAGS) $(CFLAGS) -c -o libmod_chxj_la-chxj_mysql.lo `test -f 'chxj_mysql.c' || echo '$(srcdir)/'`chxj_mysql.c
+
+libmod_chxj_la-chxj_memcache.lo: chxj_memcache.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmod_chxj_la_CFLAGS) $(CFLAGS) -MT libmod_chxj_la-chxj_memcache.lo -MD -MP -MF $(DEPDIR)/libmod_chxj_la-chxj_memcache.Tpo -c -o libmod_chxj_la-chxj_memcache.lo `test -f 'chxj_memcache.c' || echo '$(srcdir)/'`chxj_memcache.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/libmod_chxj_la-chxj_memcache.Tpo $(DEPDIR)/libmod_chxj_la-chxj_memcache.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='chxj_memcache.c' object='libmod_chxj_la-chxj_memcache.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmod_chxj_la_CFLAGS) $(CFLAGS) -c -o libmod_chxj_la-chxj_memcache.lo `test -f 'chxj_memcache.c' || echo '$(srcdir)/'`chxj_memcache.c
 
 mostlyclean-libtool:
 	-rm -f *.lo

@@ -17,6 +17,9 @@
 #ifndef __MOD_CHXJ_H__
 #define __MOD_CHXJ_H__
 
+#define CHXJ_TRUE    (1)
+#define CHXJ_FALSE   (0)
+
 #ifdef UNUSED
 #elif defined(__GNUC__)
 # define UNUSED(x) UNUSED_ ## x __attribute__((unused))
@@ -277,6 +280,11 @@ typedef enum {
 
 typedef struct mod_chxj_config mod_chxj_config;
 
+#if defined(USE_MYSQL_COOKIE)
+#  include "chxj_mysql.h"
+#elif defined(USE_MEMCACHE_COOKIE)
+#  include "chxj_memcache.h"
+#endif
 struct mod_chxj_config {
   int                   image;
 
@@ -297,6 +305,12 @@ struct mod_chxj_config {
 
   char*                 cookie_db_dir;
   long                  cookie_timeout;
+
+#if defined(USE_MYSQL_COOKIE)
+  mysql_t               mysql;
+#elif defined(USE_MEMCACHE_COOKIE)
+  memcache_t            memcache;
+#endif
 };
 
 

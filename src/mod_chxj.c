@@ -53,6 +53,9 @@
 #include "chxj_chtml20.h"
 #include "chxj_chtml30.h"
 #include "chxj_jhtml.h"
+#ifdef USE_MYSQL_COOKIE
+#include "chxj_mysql.h"
+#endif
 
 #include "chxj_img_conv_format.h"
 #include "chxj_qr_code.h"
@@ -410,7 +413,7 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp)
       DBG(r, "call start chxj_load_cookie()");
       cookie = chxj_load_cookie(r, value);
       DBG(r, "call end   chxj_load_cookie()");
-      if (! no_update_flag) {
+      if (! no_update_flag && cookie) {
         chxj_update_cookie(r, cookie);
       }
     }
@@ -550,7 +553,7 @@ chxj_input_convert(
       DBG(r, "call start chxj_load_cookie()");
       cookie = chxj_load_cookie(r, value);
       DBG(r, "call end   chxj_load_cookie()");
-      if (! no_update_flag) {
+      if (! no_update_flag && cookie) {
         chxj_update_cookie(r, cookie);
       }
     }
@@ -1272,6 +1275,15 @@ chxj_create_per_dir_config(apr_pool_t *p, char *arg)
   conf->server_side_encoding = NULL;
   conf->cookie_db_dir    = NULL;
   conf->cookie_timeout   = 0;
+#if defined(USE_MYSQL_COOKIE)
+  memset((void*)&conf->mysql, 0, sizeof(mysql_t));
+  conf->mysql.port       = MYSQL_PORT;
+  conf->mysql.host       = NULL;
+#elif defined(USE_MEMCACHE_COOKIE)
+  memset((void*)&conf->memcache, 0, sizeof(memcache_t));
+  conf->memcache.host    = NULL;
+  conf->memcache.port    = 0;
+#endif
 
   if (arg == NULL) {
     conf->dir                  = NULL;
@@ -1396,6 +1408,107 @@ chxj_merge_per_dir_config(apr_pool_t *p, void *basev, void *addv)
     mrg->cookie_timeout   = 0;
   }
 
+#if defined(USE_MYSQL_COOKIE)
+  if (add->mysql.host) {
+    mrg->mysql.host = apr_pstrdup(p, add->mysql.host);
+  }
+  else if (base->mysql.host) {
+    mrg->mysql.host = apr_pstrdup(p, base->mysql.host);
+  }
+  else {
+    mrg->mysql.host = NULL;
+  }
+  if (add->mysql.port) {
+    mrg->mysql.port = add->mysql.port;
+  }
+  else if (base->mysql.port) {
+    mrg->mysql.port = base->mysql.port;
+  }
+  else {
+    mrg->mysql.port = 0;
+  }
+
+  if (add->mysql.database) {
+    mrg->mysql.database = apr_pstrdup(p, add->mysql.database);
+  }
+  else if (base->mysql.database) {
+    mrg->mysql.database = apr_pstrdup(p, base->mysql.database);
+  }
+  else {
+    mrg->mysql.database = NULL;
+  }
+
+  if (add->mysql.username) {
+    mrg->mysql.username = apr_pstrdup(p, add->mysql.username);
+  }
+  else if (base->mysql.username) {
+    mrg->mysql.username = apr_pstrdup(p, base->mysql.username);
+  }
+  else {
+    mrg->mysql.username = NULL;
+  }
+
+  if (add->mysql.password) {
+    mrg->mysql.password = apr_pstrdup(p, add->mysql.password);
+  }
+  else if (base->mysql.password) {
+    mrg->mysql.password = apr_pstrdup(p, base->mysql.password);
+  }
+  else {
+    mrg->mysql.password = NULL;
+  }
+
+  if (add->mysql.tablename) {
+    mrg->mysql.tablename = apr_pstrdup(p, add->mysql.tablename);
+  }
+  else if (base->mysql.tablename) {
+    mrg->mysql.tablename = apr_pstrdup(p, base->mysql.tablename);
+  }
+  else {
+    mrg->mysql.tablename = NULL;
+  }
+
+  if (add->mysql.socket_path) {
+    mrg->mysql.socket_path = apr_pstrdup(p, add->mysql.socket_path);
+  }
+  else if (base->mysql.socket_path) {
+    mrg->mysql.socket_path = apr_pstrdup(p, base->mysql.socket_path);
+  }
+  else {
+    mrg->mysql.socket_path = NULL;
+  }
+
+  if (add->mysql.charset) {
+    mrg->mysql.charset = apr_pstrdup(p, add->mysql.charset);
+  }
+  else if (base->mysql.charset) {
+    mrg->mysql.charset = apr_pstrdup(p, base->mysql.charset);
+  }
+  else {
+    mrg->mysql.charset = NULL;
+  }
+  
+#elif defined(USE_MEMCACHE_COOKIE)
+  if (add->memcache.host) {
+    mrg->memcache.host = apr_pstrdup(p, add->memcache.host);
+  }
+  else if (base->memcache.host) {
+    mrg->memcache.host = apr_pstrdup(p, base->memcache.host);
+  }
+  else {
+    mrg->memcache.host = NULL;
+  }
+  if (add->memcache.port) {
+    mrg->memcache.port = add->memcache.port;
+  }
+  else if (base->memcache.port) {
+    mrg->memcache.port = base->memcache.port;
+  }
+  else {
+    mrg->memcache.port = 0;
+  }
+
+#endif
   return mrg;
 }
 
@@ -1848,6 +1961,206 @@ cmd_set_cookie_timeout(
 }
 
 
+#if defined(USE_MYSQL_COOKIE)
+static const char *
+cmd_set_cookie_mysql_database(
+  cmd_parms   *cmd, 
+  void        *mconfig, 
+  const char  *arg)
+{
+  mod_chxj_config  *dconf;
+
+  if (strlen(arg) > 255) 
+    return "mod_chxj: ChxjCookieMysqlDatabase is too long.";
+
+  dconf = (mod_chxj_config *)mconfig;
+
+  dconf->mysql.database = apr_pstrdup(cmd->pool, arg);
+
+  return NULL;
+}
+
+
+static const char *
+cmd_set_cookie_mysql_username(
+  cmd_parms   *cmd, 
+  void        *mconfig, 
+  const char  *arg)
+{
+  mod_chxj_config  *dconf;
+
+  if (strlen(arg) > 255) 
+    return "mod_chxj: ChxjCookieMysqlUsername is too long.";
+
+  dconf = (mod_chxj_config *)mconfig;
+
+  dconf->mysql.username = apr_pstrdup(cmd->pool, arg);
+
+  return NULL;
+}
+
+
+static const char *
+cmd_set_cookie_mysql_password(
+  cmd_parms   *cmd, 
+  void        *mconfig, 
+  const char  *arg)
+{
+  mod_chxj_config  *dconf;
+
+  if (strlen(arg) > 255) 
+    return "mod_chxj: ChxjCookieMysqlPassword is too long.";
+
+  dconf = (mod_chxj_config *)mconfig;
+
+  dconf->mysql.password = apr_pstrdup(cmd->pool, arg);
+
+  return NULL;
+}
+
+
+static const char *
+cmd_set_cookie_mysql_table_name(
+  cmd_parms   *cmd, 
+  void        *mconfig, 
+  const char  *arg)
+{
+  mod_chxj_config  *dconf;
+
+  if (strlen(arg) > 255) 
+    return "mod_chxj: ChxjCookieMysqlTableName is too long.";
+
+  dconf = (mod_chxj_config *)mconfig;
+
+  dconf->mysql.tablename = apr_pstrdup(cmd->pool, arg);
+
+  return NULL;
+}
+
+static const char *
+cmd_set_cookie_mysql_port(
+  cmd_parms   *UNUSED(cmd), 
+  void        *mconfig, 
+  const char  *arg)
+{
+  mod_chxj_config *dconf;
+
+  if (strlen(arg) > 255) 
+    return "mod_chxj: ChxjCookieMysqlPort is too long.";
+
+  dconf = (mod_chxj_config *)mconfig;
+
+  if (chxj_chk_numeric(arg) != 0)
+    return "mod_chxj: ChxjCookieMysqlPort is not numeric.";
+
+  dconf = (mod_chxj_config *)mconfig;
+
+  dconf->mysql.port = chxj_atoi(arg);
+
+  return NULL;
+}
+
+
+static const char *
+cmd_set_cookie_mysql_host(
+  cmd_parms   *cmd, 
+  void        *mconfig, 
+  const char  *arg)
+{
+  mod_chxj_config  *dconf;
+
+  if (strlen(arg) > 255) 
+    return "mod_chxj: ChxjCookieMysqlHost is too long.";
+
+  dconf = (mod_chxj_config *)mconfig;
+
+  dconf->mysql.host = apr_pstrdup(cmd->pool, arg);
+
+  return NULL;
+}
+
+
+static const char *
+cmd_set_cookie_mysql_socket_path(
+  cmd_parms   *cmd, 
+  void        *mconfig, 
+  const char  *arg)
+{
+  mod_chxj_config  *dconf;
+
+  if (strlen(arg) > 4096) 
+    return "mod_chxj: ChxjCookieMysqlSocketPath is too long.";
+
+  dconf = (mod_chxj_config *)mconfig;
+
+  dconf->mysql.socket_path = apr_pstrdup(cmd->pool, arg);
+
+  return NULL;
+}
+
+
+static const char *
+cmd_set_cookie_mysql_charset(
+  cmd_parms   *cmd, 
+  void        *mconfig, 
+  const char  *arg)
+{
+  mod_chxj_config  *dconf;
+
+  if (strlen(arg) > 255) 
+    return "mod_chxj: ChxjCookieMysqlCharset is too long.";
+
+  dconf = (mod_chxj_config *)mconfig;
+
+  dconf->mysql.charset = apr_pstrdup(cmd->pool, arg);
+
+  return NULL;
+}
+#elif defined(USE_MEMCACHE_COOKIE)
+static const char *
+cmd_set_cookie_memcache_port(
+  cmd_parms   *UNUSED(cmd), 
+  void        *mconfig, 
+  const char  *arg)
+{
+  mod_chxj_config *dconf;
+
+  if (strlen(arg) > 255) 
+    return "mod_chxj: ChxjCookieMemcachePort is too long.";
+
+  dconf = (mod_chxj_config *)mconfig;
+
+  if (chxj_chk_numeric(arg) != 0)
+    return "mod_chxj: ChxjCookieMemcachePort is not numeric.";
+
+  dconf = (mod_chxj_config *)mconfig;
+
+  dconf->memcache.port = (apr_port_t)chxj_atoi(arg);
+
+  return NULL;
+}
+
+
+static const char *
+cmd_set_cookie_memcache_host(
+  cmd_parms   *cmd, 
+  void        *mconfig, 
+  const char  *arg)
+{
+  mod_chxj_config  *dconf;
+
+  if (strlen(arg) > 255) 
+    return "mod_chxj: ChxjCookieMemcacheHost is too long.";
+
+  dconf = (mod_chxj_config *)mconfig;
+
+  dconf->memcache.host = apr_pstrdup(cmd->pool, arg);
+
+  return NULL;
+}
+#endif
+
+
 static const command_rec cmds[] = {
   AP_INIT_TAKE1(
     "ChxjLoadDeviceData",
@@ -1903,6 +2216,69 @@ static const command_rec cmds[] = {
     NULL,
     OR_ALL,
     "The compulsion time-out time of the cookie is specified. "),
+#if defined(USE_MYSQL_COOKIE)
+  AP_INIT_TAKE1(
+    "ChxjCookieMysqlHost",
+    cmd_set_cookie_mysql_host,
+    NULL,
+    OR_ALL,
+    "The MySQL database host used by saving Cookie"),
+  AP_INIT_TAKE1(
+    "ChxjCookieMysqlPort",
+    cmd_set_cookie_mysql_port,
+    NULL,
+    OR_ALL,
+    "The MySQL database port used by saving Cookie"),
+  AP_INIT_TAKE1(
+    "ChxjCookieMysqlDatabase",
+    cmd_set_cookie_mysql_database,
+    NULL,
+    OR_ALL,
+    "The MySQL database name used by saving Cookie"),
+  AP_INIT_TAKE1(
+    "ChxjCookieMysqlUsername",
+    cmd_set_cookie_mysql_username,
+    NULL,
+    OR_ALL,
+    "The MySQL username used by saving Cookie"),
+  AP_INIT_TAKE1(
+    "ChxjCookieMysqlPassword",
+    cmd_set_cookie_mysql_password,
+    NULL,
+    OR_ALL,
+    "The MySQL password used by saving Cookie"),
+  AP_INIT_TAKE1(
+    "ChxjCookieMysqlTableName",
+    cmd_set_cookie_mysql_table_name,
+    NULL,
+    OR_ALL,
+    "The MySQL table name used by saving Cookie"),
+  AP_INIT_TAKE1(
+    "ChxjCookieMysqlSocketPath",
+    cmd_set_cookie_mysql_socket_path,
+    NULL,
+    OR_ALL,
+    "The MySQL socket path used by saving Cookie"),
+  AP_INIT_TAKE1(
+    "ChxjCookieMysqlCharset",
+    cmd_set_cookie_mysql_charset,
+    NULL,
+    OR_ALL,
+    "The MySQL charset used by saving Cookie"),
+#elif defined(USE_MEMCACHE_COOKIE)
+  AP_INIT_TAKE1(
+    "ChxjCookieMemcacheHost",
+    cmd_set_cookie_memcache_host,
+    NULL,
+    OR_ALL,
+    "The Memcached host used by saving Cookie"),
+  AP_INIT_TAKE1(
+    "ChxjCookieMemcachePort",
+    cmd_set_cookie_memcache_port,
+    NULL,
+    OR_ALL,
+    "The Memcached port used by saving Cookie"),
+#endif
   {NULL}
 };
 
