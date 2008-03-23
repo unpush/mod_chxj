@@ -48,6 +48,7 @@ $ ./configure
 </program>
 <note>場合によっては--with-apr-configや--with-apu-configも必要です。</note>
 <note>0.8.6以下の場合には--with-apache-headerが必須です</note>
+<note>詳細はBuildを参照</note>
 </li>
 <li>mod_chxj.soを生成します
 <program title="make">
@@ -73,6 +74,68 @@ $ cp etc/emoji.xml /etc/apache2/chxj
 </program>
 </li>
 </ol>
+</subsection>
+</section>
+<section title="Build">
+mod_chxjをコンパイルするにはconfigureを行う必要があります。
+以下にconfigureのオプションを記します。
+<subsection title="メイン">
+  <subsection title="--with-apache-header">
+      通常指定する必要はありません。configureでApacheのヘッダファイルの場所が検知できなかった場合や、任意のApacheヘッダファイルを使用したい場合に指定します。
+      <program title="--with-apache-header">
+         $ ./configure --with-apache-header=/usr/include/apache2
+      </program>
+      上記は/usr/include/apache2以下にApacheのヘッダファイルがある場合の例です。
+  </subsection>
+  <subsection title="--with-apxs">
+      通常指定する必要はありません。configureでapxsを検知できなかった場合や、任意のapxsプログラムを指定したい場合に指定します。
+      <program title="--with-apxs">
+         $ ./configure --with-apxs=/usr/local/apache2/bin/apxs2
+      </program>
+      上記は/usr/local/apache2/bin/apxs2を使用するようにapxsに指定しています。
+  </subsection>
+  <subsection title="--with-apr-config">
+      通常指定する必要はありません。
+      configureでapr-configを検知できなかった場合や、任意のapr-configプログラムを指定したい場合に指定します。
+      <program title="--with-apr-config">
+         $ ./configure --with-apr-config=/usr/local/apache2/bin/apr-1-config
+      </program>
+      上記は/usr/local/apache2/bin/apr-1-configを使用するように指定しています。
+  </subsection>
+  <subsection title="--with-apu-config">
+      通常指定する必要はありません。
+      configureでapu-configを検知できなかった場合や、任意のapu-configプログラムを指定したい場合に指定します。
+      <program title="--with-apu-config">
+         $ ./configure --with-apu-config=/usr/local/apache2/bin/apu-1-config
+      </program>
+      上記は/usr/local/apache2/bin/apu-1-configを使用するように指定しています。
+  </subsection>
+</subsection>
+<subsection title="Cookieシミュレート機能でMySQLを使用する場合">
+  <subsection title="--enable-mysql-cookie">
+      Cookieシミュレート機能を使用する際、保存先をデフォルトのDBMでは無く、MySQLに保存するようにします。
+      DefaultのDBMで良い場合や、Cookieシミュレート機能を使用しない場合は指定する必要はありません。
+      別途MySQLサーバを用意する必要があります。また、本オプションを指定した場合は、--with-mysql-header、--with-mysql-lib-dirも指定します。
+      これはMySQLのヘッダとライブラリが必要なことを意味します。使用するMySQLのライブラリは今のところlibmysqlclient_r.soのみです。
+      <program title="--enable-mysql-cookie">
+         $ ./configure --enable-mysql-cookie --with-mysql-header=/usr/include/mysql  --with-mysql-lib-dir=/usr/lib
+      </program>
+      上記は、/usr/include/mysql以下にmysql用のヘッダがあり、/usr/lib以下にlibmysqlclient_r.soがある場合の例です。
+  </subsection>
+  <subsection title="--with-mysql-header">
+      --enable-mysql-cookieを指定した場合は必須です。
+      MySQLのヘッダファイルの場所を指定します。
+      <program title="--with-mysql-header">
+         $ ./configure --enable-mysql-cookie --with-mysql-header=/usr/include/mysql  --with-mysql-lib-dir=/usr/lib
+      </program>
+  </subsection>
+  <subsection title="--with-mysql-lib-dir">
+      --enable-mysql-cookieを指定した場合は必須です。
+      MySQLのライブラリ、libmysqlclient_r.soの設置されているディレクトリを指定します。
+      <program title="--with-mysql-lib-dir">
+         $ ./configure --enable-mysql-cookie --with-mysql-header=/usr/include/mysql  --with-mysql-lib-dir=/usr/lib
+      </program>
+  </subsection>
 </subsection>
 </section>
 <section title="Configuration">
@@ -1470,7 +1533,8 @@ Cookieの内容はサーバ側に保存されます。
   </program>
 
 DBMの代わりにMySQLを指定することもできます。その際は、ChxjCookieDirは指定する必要はありません。
-MySQLを使用するには、以下のディレクティブを指定する必要があります。
+MySQLを使用するには、configure時にMySQL COOKIE機能を有効にして、コンパイルする必要があります。<note>Buildの項参照</note>
+また以下のディレクティブを指定する必要もあります。
 <ol>
   <li>ChxjCookieMysqlHost<br />
       MySQLサーバの動作するホストを指定します。
