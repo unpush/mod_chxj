@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Script-Type" content="text/javascript">
 <meta name="generator" content="SmartDoc 1.1">
 <meta name="author" content="Atsushi Konno" lang="ja">
-<meta name="date" content="Last modified: Wed, 13 Feb 2008 18:35:16 +0900" lang="ja">
+<meta name="date" content="Last modified: Sat, 23 Mar 2008 03:21:16 +0900" lang="ja">
 <title>mod_chxj</title>
 <style type="text/css">
 <!--
@@ -692,7 +692,7 @@ function setOHPHandler() {
 
 <h1 class="title">mod_chxj<br><span class="subtitle"></span></h1>
 
-<div class="date">Last modified: Wed, 13 Feb 2008 18:35:16 +0900</div>
+<div class="date">Last modified: Sat, 23 Mar 2008 03:21:16 +0900</div>
 <div class="author">Atsushi Konno</div>
 <h2>目次</h2>
 
@@ -748,11 +748,11 @@ function setOHPHandler() {
 <li> <a href="#doc1_1909" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">Cookieシミュレート機能(EXPERIMENTAL)</a>
 <li> <a href="#doc1_1915" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">One-Time ID</a>
 <li> <a href="#doc1_1918" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">Cookieの保存場所</a>
-<li> <a href="#doc1_1924" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">Cookieの保持期間</a>
+<li> <a href="#doc1_1991" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">Cookieの保持期間</a>
 </ul>
-<li> <a href="#doc1_1931" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">Refererシミュレート機能(EXPERIMENTAL)</a>
+<li> <a href="#doc1_1998" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">Refererシミュレート機能(EXPERIMENTAL)</a>
 <ul>
-<li> <a href="#doc1_1933" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">Refererシミュレート機能(EXPERIMENTAL)</a>
+<li> <a href="#doc1_2000" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">Refererシミュレート機能(EXPERIMENTAL)</a>
 </ul>
 </ul>
 </div>
@@ -2110,7 +2110,7 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 
 <h3 id="doc1_1918">Cookieの保存場所</h3>
 
-<p class="first_ja">Cookieの内容は、サーバ側に保存されます。保存ディレクトリはChxjCookieDirディレクティブを使用することで指定することができます。指定しなかった場合は、/tmpに保存されます。</p>
+<p class="first_ja">Cookieの内容はサーバ側に保存されます。デフォルトではDBMを使用し、保存ディレクトリはChxjCookieDirディレクティブを使用することで指定することができます。指定しなかった場合は、/tmpに保存されます。</p>
 
 <div id="doc1_1920" class="caption">ChxjCookieDirの例</div>
 <pre class="program" style="margin-top:0">
@@ -2118,12 +2118,67 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
   
 </pre>
 
+<p>DBMの代わりにMySQLを指定することもできます。その際は、ChxjCookieDirは指定する必要はありません。MySQLを使用するには、以下のディレクティブを指定する必要があります。</p>
 
-<h3 id="doc1_1924">Cookieの保持期間</h3>
+<ol>
+<li> ChxjCookieMysqlHost<br></br> MySQLサーバの動作するホストを指定します。
+<div id="doc1_1929" class="caption">ChxjCookieMysqlHostの例</div>
+<pre class="program" style="margin-top:0">
+         ChxjCookieMysqlHost &quot;localhost&quot;
+      
+</pre>
+<li> ChxjCookieMysqlPort<br></br> MySQLサーバのポート番号を指定します。
+<div id="doc1_1937" class="caption">ChxjCookieMysqlPortの例</div>
+<pre class="program" style="margin-top:0">
+         ChxjCookieMysqlPort 3306
+      
+</pre>
+<li> ChxjCookieMysqlDatabase<br></br> MySQLサーバのデータベース名を指定します。
+<div id="doc1_1945" class="caption">ChxjCookieMysqlDatabaseの例</div>
+<pre class="program" style="margin-top:0">
+         ChxjCookieMysqlDatabase &quot;test_db&quot;
+      
+</pre>
+<li> ChxjCookieMysqlUsername<br></br> MySQLサーバに接続する際に使用するユーザ名を指定します。
+<div id="doc1_1953" class="caption">ChxjCookieMysqlUsernameの例</div>
+<pre class="program" style="margin-top:0">
+         ChxjCookieMysqlUsername &quot;roottest&quot;
+      
+</pre>
+<li> ChxjCookieMysqlPassword<br></br> MySQLサーバに接続する際に使用するパスワードを指定します。
+<div id="doc1_1961" class="caption">ChxjCookieMysqlPasswordの例</div>
+<pre class="program" style="margin-top:0">
+         ChxjCookieMysqlPassword &quot;pwtest&quot;
+      
+</pre>
+<li> ChxjCookieMysqlSocketPath<br></br> MySQLのソケットパスを指定します。
+<div id="doc1_1969" class="caption">ChxjCookieMysqlSocketPathの例</div>
+<pre class="program" style="margin-top:0">
+         ChxjCookieMysqlSocketPath  &quot;/tmp/mysql.sock&quot;
+      
+</pre>
+<li> ChxjCookieMysqlCharset<br></br> MySQLのエンコードを指定します。
+<div id="doc1_1977" class="caption">ChxjCookieMysqlCharsetの例</div>
+<pre class="program" style="margin-top:0">
+         ChxjCookieMysqlCharset  &quot;utf8&quot;
+      
+</pre>
+<li> <p>ChxjCookieMysqlTablename<br></br> MySQLのクッキーを保存するテーブル名を指定します。</p>
+
+<div id="doc1_1985" class="caption">ChxjCookieMysqlTablenameの例</div>
+<pre class="program" style="margin-top:0">
+         ChxjCookieMysqlTablename  &quot;chxj_cookie&quot;
+      
+</pre>
+
+<p>上記のように&quot;chxj_cookie&quot;と指定すると、実際に作成されるテーブルは、chxj_cookieとchxj_cookie_expireテーブルの2つになります。</p></ol>
+
+
+<h3 id="doc1_1991">Cookieの保持期間</h3>
 
 <p class="first_ja">ChxjCookieTimeoutディレクティブで保持期間を指定することができます。指定しなかった場合は1800秒でサーバに保存されているCookieは削除されます。</p>
 
-<div id="doc1_1926" class="caption">ChxjCookieTimeoutの例</div>
+<div id="doc1_1993" class="caption">ChxjCookieTimeoutの例</div>
 <pre class="program" style="margin-top:0">
     &lt;Location /&gt;
       ChxjCookieTimeout 10
@@ -2133,10 +2188,10 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 
 <p>上記の例は、10秒でタイムアウト(サーバから削除)するように指定しています。</p>
 
-<h2 id="doc1_1931">Refererシミュレート機能(EXPERIMENTAL)</h2>
+<h2 id="doc1_1998">Refererシミュレート機能(EXPERIMENTAL)</h2>
 
 
-<h3 id="doc1_1933">Refererシミュレート機能(EXPERIMENTAL)</h3>
+<h3 id="doc1_2000">Refererシミュレート機能(EXPERIMENTAL)</h3>
 
 <p class="first_ja">DoCoMo端末などのRefererに対応していない機種のためにRefererシミュレート機能を提供します。本機能は、Cookieシミュレート機能を有効にすると、自動で有効になります(将来的には変更予定)。</p>
 </body>

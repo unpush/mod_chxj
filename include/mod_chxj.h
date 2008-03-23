@@ -293,9 +293,13 @@ typedef enum {
   tagDD,
 } tag_type;
 
+
 typedef struct mod_chxj_config mod_chxj_config;
 
 #include "chxj_emoji.h"
+#ifdef USE_MYSQL_COOKIE
+#include "chxj_mysql.h"
+#endif
 
 struct mod_chxj_config {
   int                   image;
@@ -333,6 +337,11 @@ struct mod_chxj_config {
   softbank2imode_t      *emoji_softbank2imode_webcode[EMOJI_SOFTBANK2IMODE_COUNT];
   softbank2imode_t      *emoji_softbank2imode_sjis[EMOJI_SOFTBANK2IMODE_COUNT];
   softbank2imode_t      *emoji_softbank2imode_utf8[EMOJI_SOFTBANK2IMODE_COUNT];
+
+
+#ifdef USE_MYSQL_COOKIE
+  mysql_t               mysql;
+#endif
 };
 
 

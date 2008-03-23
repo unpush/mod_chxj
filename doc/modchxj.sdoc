@@ -6,7 +6,7 @@
   <subtitle></subtitle>
   <author>Atsushi Konno</author>
   <date>29 Mar 2005</date>
-  <date>Last modified: Wed, 13 Feb 2008 18:35:16 +0900</date>
+  <date>Last modified: Sat, 23 Mar 2008 03:21:16 +0900</date>
 </head>
 <body>
 <section title="Overview">
@@ -1463,10 +1463,65 @@ Cookieシミュレートでは、aタグ、imgタグ、formタグのURL部にOne-Time IDを埋め込むこ
 そのため、ユーザがブラウザの戻るボタン等で戻った場合はCookieを取得できなくなります。
 </subsection>
 <subsection title="Cookieの保存場所">
-Cookieの内容は、サーバ側に保存されます。保存ディレクトリはChxjCookieDirディレクティブを使用することで指定することができます。指定しなかった場合は、/tmpに保存されます。
+Cookieの内容はサーバ側に保存されます。
+デフォルトではDBMを使用し、保存ディレクトリはChxjCookieDirディレクティブを使用することで指定することができます。指定しなかった場合は、/tmpに保存されます。
   <program title="ChxjCookieDirの例">
     ChxjCookieDir /var/abc
   </program>
+
+DBMの代わりにMySQLを指定することもできます。その際は、ChxjCookieDirは指定する必要はありません。
+MySQLを使用するには、以下のディレクティブを指定する必要があります。
+<ol>
+  <li>ChxjCookieMysqlHost<br />
+      MySQLサーバの動作するホストを指定します。
+      <program title="ChxjCookieMysqlHostの例">
+         ChxjCookieMysqlHost "localhost"
+      </program>
+  </li>
+  <li>ChxjCookieMysqlPort<br />
+      MySQLサーバのポート番号を指定します。
+      <program title="ChxjCookieMysqlPortの例">
+         ChxjCookieMysqlPort 3306
+      </program>
+  </li>
+  <li>ChxjCookieMysqlDatabase<br />
+      MySQLサーバのデータベース名を指定します。
+      <program title="ChxjCookieMysqlDatabaseの例">
+         ChxjCookieMysqlDatabase "test_db"
+      </program>
+  </li>
+  <li>ChxjCookieMysqlUsername<br />
+      MySQLサーバに接続する際に使用するユーザ名を指定します。
+      <program title="ChxjCookieMysqlUsernameの例">
+         ChxjCookieMysqlUsername "roottest"
+      </program>
+  </li>
+  <li>ChxjCookieMysqlPassword<br />
+      MySQLサーバに接続する際に使用するパスワードを指定します。
+      <program title="ChxjCookieMysqlPasswordの例">
+         ChxjCookieMysqlPassword "pwtest"
+      </program>
+  </li>
+  <li>ChxjCookieMysqlSocketPath<br />
+      MySQLのソケットパスを指定します。
+      <program title="ChxjCookieMysqlSocketPathの例">
+         ChxjCookieMysqlSocketPath  "/tmp/mysql.sock"
+      </program>
+  </li>
+  <li>ChxjCookieMysqlCharset<br />
+      MySQLのエンコードを指定します。
+      <program title="ChxjCookieMysqlCharsetの例">
+         ChxjCookieMysqlCharset  "utf8"
+      </program>
+  </li>
+  <li>ChxjCookieMysqlTablename<br />
+      MySQLのクッキーを保存するテーブル名を指定します。
+      <program title="ChxjCookieMysqlTablenameの例">
+         ChxjCookieMysqlTablename  "chxj_cookie"
+      </program>
+      上記のように"chxj_cookie"と指定すると、実際に作成されるテーブルは、chxj_cookieとchxj_cookie_expireテーブルの2つになります。
+  </li>
+</ol>
 </subsection>
 <subsection title="Cookieの保持期間">
 ChxjCookieTimeoutディレクティブで保持期間を指定することができます。指定しなかった場合は1800秒でサーバに保存されているCookieは削除されます。

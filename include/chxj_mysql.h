@@ -18,15 +18,44 @@
 #ifndef __CHXJ_MYSQL_H__
 #define __CHXJ_MYSQL_H__
 
+#include <mysql.h>
 #include "mod_chxj.h"
+#include "apr.h"
 
 
-typedef struct __mysql_t {
+typedef struct {
+  char *host;
+  int  port;
   char *database;
   char *username;
   char *password;
   char *tablename;
-} *mysql_t;
+  int  keep_alive;
+  char *socket_path;
+  char *charset;
+} mysql_t;
 
+#define DEFAULT_MYSQL_HOST "localhost"
+#define DEFAULT_MYSQL_CHARSET "utf8"
+
+extern int chxj_open_mysql_handle(request_rec *r, mod_chxj_config *m);
+extern void chxj_close_mysql_handle();
+extern int chxj_mysql_exist_cookie_table(request_rec *r, mod_chxj_config *m);
+extern int chxj_mysql_create_cookie_table(request_rec *r, mod_chxj_config *m);
+extern char *chxj_mysql_get_cookie_from_cookie_id(request_rec *r, mod_chxj_config *m, const char *cookie_id);
+extern int chxj_mysql_insert_or_update_cookie(request_rec *r, mod_chxj_config *m, const char *cookie_id, const char *data);
+extern int chxj_mysql_rollback(request_rec *r, mod_chxj_config *m);
+extern char *chxj_mysql_load_cookie(request_rec *r, mod_chxj_config *m, const char *cookie_id);
+extern int chxj_mysql_delete_cookie(request_rec *r, mod_chxj_config *m, const char *cookie_id);
+
+/* expire table */
+extern int chxj_mysql_create_cookie_expire_table(request_rec *r, mod_chxj_config *m);
+extern char *chxj_mysql_get_cookie_expire_from_cookie_id(request_rec *r, mod_chxj_config *m, const char *cookie_id);
+extern int chxj_mysql_insert_or_update_cookie_expire(request_rec *r, mod_chxj_config *m, const char *cookie_id);
+extern char *chxj_mysql_load_cookie_expire(request_rec *r, mod_chxj_config *m, const char *cookie_id);
+extern int chxj_mysql_delete_cookie_expire(request_rec *r, mod_chxj_config *m, const char *cookie_id);
+extern int chxj_mysql_exist_cookie_table_expire(request_rec *r, mod_chxj_config *m);
+extern char *chxj_mysql_get_timeout_localtime(request_rec *r, mod_chxj_config *m);
+extern int chxj_mysql_delete_expired_cookie(request_rec *r, mod_chxj_config *m);
 #endif
 #endif
