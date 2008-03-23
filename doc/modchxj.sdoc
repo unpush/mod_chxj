@@ -137,6 +137,32 @@ mod_chxjをコンパイルするにはconfigureを行う必要があります。
       </program>
   </subsection>
 </subsection>
+<subsection title="Cookieシミュレート機能でmemcachedを使用する場合">
+  <subsection title="--enable-memcache-cookie">
+      Cookieシミュレート機能を使用する際、保存先をデフォルトのDBMでは無く、memcachedに保存するようにします。
+      DefaultのDBMで良い場合や、Cookieシミュレート機能を使用しない場合は指定する必要はありません。
+      別途memcachedを用意する必要があります。また、本オプションを指定した場合は、--with-apr-memcache-header、--with-apr-memcache-lib-dirも指定します。
+      これはapr_memcacheのヘッダとライブラリが必要なことを意味します。
+      <program title="--enable-memcache-cookie">
+         $ ./configure --enable-memcache-cookie --with-apr-memcache-header=/usr/include/apr-memcache0 --with-apr-memcache-lib-dir=/usr/lib
+      </program>
+      上記は、/usr/include/apr_memcache0以下にapr-memcache用のヘッダがあり、/usr/lib以下にlibapr_memcache.soがある場合の例です。
+  </subsection>
+  <subsection title="--with-apr-memcache-header">
+      --enable-memcache-cookieを指定した場合は必須です。
+      apr-memcacheのヘッダファイルの場所を指定します。
+      <program title="--with-apr-memcache-header">
+         $ ./configure --enable-memcache-cookie --with-apr-memcache-header=/usr/include/apr_memcache0  --with-apr-memcache-lib-dir=/usr/lib
+      </program>
+  </subsection>
+  <subsection title="--with-apr-memcache-lib-dir">
+      --enable-mysql-cookieを指定した場合は必須です。
+      apr-memcacheのライブラリ、libapr_memcache.soの設置されているディレクトリを指定します。
+      <program title="--with-apr-memcache-lib-dir">
+         $ ./configure --enable-memcache-cookie --with-apr-memcache-header=/usr/include/apr_memcache0  --with-apr-memcache-lib-dir=/usr/lib
+      </program>
+  </subsection>
+</subsection>
 </section>
 <section title="Configuration">
 以下はmod_chxjが/usr/lib/apache2/modulesディレクトリ配下に設置されたものとしています
@@ -1532,9 +1558,10 @@ Cookieの内容はサーバ側に保存されます。
     ChxjCookieDir /var/abc
   </program>
 
-DBMの代わりにMySQLを指定することもできます。その際は、ChxjCookieDirは指定する必要はありません。
+DBMの代わりにMySQLやmemcachedを指定することもできます。その際は、ChxjCookieDirは指定する必要はありません。
 MySQLを使用するには、configure時にMySQL COOKIE機能を有効にして、コンパイルする必要があります。<note>Buildの項参照</note>
-また以下のディレクティブを指定する必要もあります。
+memcachedを使用するには、configure時にMEMCACHE COOKIE機能を有効にして、コンパイルする必要があります。<note>Buildの項参照</note>
+またMySQLを使用する場合には以下のディレクティブを指定する必要もあります。
 <ol>
   <li>ChxjCookieMysqlHost<br />
       MySQLサーバの動作するホストを指定します。
@@ -1584,6 +1611,22 @@ MySQLを使用するには、configure時にMySQL COOKIE機能を有効にして、コンパイルする必
          ChxjCookieMysqlTablename  "chxj_cookie"
       </program>
       上記のように"chxj_cookie"と指定すると、実際に作成されるテーブルは、chxj_cookieとchxj_cookie_expireテーブルの2つになります。
+  </li>
+</ol>
+
+memcachedを使用する場合には以下のディレクティブを指定する必要もあります。
+<ol>
+  <li>ChxjCookieMemcacheHost<br />
+      memcachedの動作するホストを指定します。
+      <program title="ChxjCookieMemcacheHostの例">
+         ChxjCookieMemcacheHost "localhost"
+      </program>
+  </li>
+  <li>ChxjCookieMemcachePort<br />
+      memcachedのポート番号を指定します。
+      <program title="ChxjCookieMemcachePortの例">
+         ChxjCookieMemcachePort 11211
+      </program>
   </li>
 </ol>
 </subsection>

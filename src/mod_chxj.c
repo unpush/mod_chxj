@@ -1413,10 +1413,14 @@ chxj_create_per_dir_config(apr_pool_t *p, char *arg)
   conf->server_side_encoding = NULL;
   conf->cookie_db_dir    = NULL;
   conf->cookie_timeout   = 0;
-#ifdef USE_MYSQL_COOKIE
+#if defined(USE_MYSQL_COOKIE)
   memset((void*)&conf->mysql, 0, sizeof(mysql_t));
   conf->mysql.port       = MYSQL_PORT;
   conf->mysql.host       = NULL;
+#elif defined(USE_MEMCACHE_COOKIE)
+  memset((void*)&conf->memcache, 0, sizeof(memcache_t));
+  conf->memcache.host    = NULL;
+  conf->memcache.port    = 0;
 #endif
 
   if (arg == NULL) {
@@ -1554,7 +1558,7 @@ chxj_merge_per_dir_config(apr_pool_t *p, void *basev, void *addv)
     mrg->cookie_timeout   = 0;
   }
 
-#ifdef USE_MYSQL_COOKIE
+#if defined(USE_MYSQL_COOKIE)
   if (add->mysql.host) {
     mrg->mysql.host = apr_pstrdup(p, add->mysql.host);
   }
@@ -1634,6 +1638,26 @@ chxj_merge_per_dir_config(apr_pool_t *p, void *basev, void *addv)
     mrg->mysql.charset = NULL;
   }
   
+#elif defined(USE_MEMCACHE_COOKIE)
+  if (add->memcache.host) {
+    mrg->memcache.host = apr_pstrdup(p, add->memcache.host);
+  }
+  else if (base->memcache.host) {
+    mrg->memcache.host = apr_pstrdup(p, base->memcache.host);
+  }
+  else {
+    mrg->memcache.host = NULL;
+  }
+  if (add->memcache.port) {
+    mrg->memcache.port = add->memcache.port;
+  }
+  else if (base->memcache.port) {
+    mrg->memcache.port = base->memcache.port;
+  }
+  else {
+    mrg->memcache.port = 0;
+  }
+
 #endif
   return mrg;
 }
@@ -2080,7 +2104,7 @@ cmd_set_cookie_timeout(
 }
 
 
-#ifdef USE_MYSQL_COOKIE
+#if defined(USE_MYSQL_COOKIE)
 static const char *
 cmd_set_cookie_mysql_database(
   cmd_parms   *cmd, 
@@ -2194,7 +2218,6 @@ cmd_set_cookie_mysql_host(
   dconf = (mod_chxj_config *)mconfig;
 
   dconf->mysql.host = apr_pstrdup(cmd->pool, arg);
-fprintf(stderr, "mysql.host=[%s]\n", dconf->mysql.host);
 
   return NULL;
 }
@@ -2233,6 +2256,48 @@ cmd_set_cookie_mysql_charset(
   dconf = (mod_chxj_config *)mconfig;
 
   dconf->mysql.charset = apr_pstrdup(cmd->pool, arg);
+
+  return NULL;
+}
+#elif defined(USE_MEMCACHE_COOKIE)
+static const char *
+cmd_set_cookie_memcache_port(
+  cmd_parms   *UNUSED(cmd), 
+  void        *mconfig, 
+  const char  *arg)
+{
+  mod_chxj_config *dconf;
+
+  if (strlen(arg) > 255) 
+    return "mod_chxj: ChxjCookieMemcachePort is too long.";
+
+  dconf = (mod_chxj_config *)mconfig;
+
+  if (chxj_chk_numeric(arg) != 0)
+    return "mod_chxj: ChxjCookieMemcachePort is not numeric.";
+
+  dconf = (mod_chxj_config *)mconfig;
+
+  dconf->memcache.port = (apr_port_t)chxj_atoi(arg);
+
+  return NULL;
+}
+
+
+static const char *
+cmd_set_cookie_memcache_host(
+  cmd_parms   *cmd, 
+  void        *mconfig, 
+  const char  *arg)
+{
+  mod_chxj_config  *dconf;
+
+  if (strlen(arg) > 255) 
+    return "mod_chxj: ChxjCookieMemcacheHost is too long.";
+
+  dconf = (mod_chxj_config *)mconfig;
+
+  dconf->memcache.host = apr_pstrdup(cmd->pool, arg);
 
   return NULL;
 }
@@ -2294,7 +2359,7 @@ static const command_rec cmds[] = {
     NULL,
     OR_ALL,
     "The compulsion time-out time of the cookie is specified. "),
-#ifdef USE_MYSQL_COOKIE
+#if defined(USE_MYSQL_COOKIE)
   AP_INIT_TAKE1(
     "ChxjCookieMysqlHost",
     cmd_set_cookie_mysql_host,
@@ -2343,6 +2408,19 @@ static const command_rec cmds[] = {
     NULL,
     OR_ALL,
     "The MySQL charset used by saving Cookie"),
+#elif defined(USE_MEMCACHE_COOKIE)
+  AP_INIT_TAKE1(
+    "ChxjCookieMemcacheHost",
+    cmd_set_cookie_memcache_host,
+    NULL,
+    OR_ALL,
+    "The Memcached host used by saving Cookie"),
+  AP_INIT_TAKE1(
+    "ChxjCookieMemcachePort",
+    cmd_set_cookie_memcache_port,
+    NULL,
+    OR_ALL,
+    "The Memcached port used by saving Cookie"),
 #endif
   {NULL}
 };

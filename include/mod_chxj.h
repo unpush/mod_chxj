@@ -25,6 +25,9 @@
   fclose(fp);                                   \
 } while(0)
 
+#define CHXJ_TRUE    (1)
+#define CHXJ_FALSE   (0)
+
 #ifdef UNUSED
 #elif defined(__GNUC__)
 # define UNUSED(x) UNUSED_ ## x __attribute__((unused))
@@ -297,8 +300,10 @@ typedef enum {
 typedef struct mod_chxj_config mod_chxj_config;
 
 #include "chxj_emoji.h"
-#ifdef USE_MYSQL_COOKIE
-#include "chxj_mysql.h"
+#if defined(USE_MYSQL_COOKIE)
+#  include "chxj_mysql.h"
+#elif defined(USE_MEMCACHE_COOKIE)
+#  include "chxj_memcache.h"
 #endif
 
 struct mod_chxj_config {
@@ -339,8 +344,10 @@ struct mod_chxj_config {
   softbank2imode_t      *emoji_softbank2imode_utf8[EMOJI_SOFTBANK2IMODE_COUNT];
 
 
-#ifdef USE_MYSQL_COOKIE
+#if defined(USE_MYSQL_COOKIE)
   mysql_t               mysql;
+#elif defined(USE_MEMCACHE_COOKIE)
+  memcache_t            memcache;
 #endif
 };
 

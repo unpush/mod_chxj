@@ -30,8 +30,10 @@
 #include "apr_base64.h"
 #include "apr_uri.h"
 
-#ifdef USE_MYSQL_COOKIE
-#include "chxj_mysql.h"
+#if defined(USE_MYSQL_COOKIE)
+#  include "chxj_mysql.h"
+#elif defined(USE_MEMCACHE_COOKIE)
+#  include "chxj_memcache.h"
 #endif
 
 static char *s_get_hostname_from_url(request_rec *r, char *value);
@@ -243,7 +245,7 @@ chxj_save_cookie(request_rec *r)
     }
   }
   if (! chxj_mysql_insert_or_update_cookie(r, dconf, cookie->cookie_id, store_string)) {
-    ERR(r, "cannot create cookie table:[%s]", dconf->mysql.tablename);
+    ERR(r, "cannot store to cookie table:[%s]", dconf->mysql.tablename);
     goto on_error;
   }
 
@@ -251,6 +253,17 @@ chxj_save_cookie(request_rec *r)
   /* chxj_close_mysql_handle(); */
 
 #elif defined(USE_MEMCACHE_COOKIE)
+
+  if (! chxj_memcache_init(r, dconf)) {
+    ERR(r, "Cannot create memcache server");
+    goto on_error;
+  }
+
+  if (! chxj_memcache_set_cookie(r, dconf, cookie->cookie_id, store_string)) {
+    ERR(r, "cannot store to memcache host:[%s] port:[%d]", dconf->memcache.host, dconf->memcache.port);
+    goto on_error;
+  }
+  DBG(r, "stored DATA:[%s]", chxj_memcache_get_cookie(r, dconf, cookie->cookie_id));
 
 #else
   file = chxj_cookie_db_lock(r);
@@ -405,6 +418,17 @@ chxj_update_cookie(request_rec *r, cookie_t *old_cookie)
   /* *NEED NOT* close database. */
   /* chxj_close_mysql_handle(); */
 #elif defined(USE_MEMCACHE_COOKIE)
+
+  if (! chxj_memcache_init(r, dconf)) {
+    ERR(r, "Cannot create memcache server");
+    goto on_error;
+  }
+
+  if (! chxj_memcache_set_cookie(r, dconf, cookie->cookie_id, store_string)) {
+    ERR(r, "cannot store to memcache host:[%s] port:[%d]", dconf->memcache.host, dconf->memcache.port);
+    goto on_error;
+  }
+
 #else
   file = chxj_cookie_db_lock(r);
   if (! file) {
@@ -538,6 +562,17 @@ chxj_load_cookie(request_rec *r, char *cookie_id)
   /* chxj_close_mysql_handle(); */
 
 #elif defined(USE_MEMCACHE_COOKIE)
+
+  if (! chxj_memcache_init(r, dconf)) {
+    ERR(r, "Cannot create memcache server");
+    goto on_error0;
+  }
+
+  if (! (load_string = chxj_memcache_get_cookie(r, dconf, cookie->cookie_id))) {
+    ERR(r, "cannot store to memcache host:[%s] port:[%d]", dconf->memcache.host, dconf->memcache.port);
+    goto on_error0;
+  }
+
 #else 
   file = chxj_cookie_db_lock(r);
   if (! file) {
@@ -820,6 +855,17 @@ chxj_delete_cookie(request_rec *r, char *cookie_id)
   }
 
 #elif defined(USE_MEMCACHE_COOKIE)
+
+  if (! chxj_memcache_init(r, dconf)) {
+    ERR(r, "Cannot create memcache server");
+    goto on_error0;
+  }
+
+  if (! chxj_memcache_delete_cookie(r, dconf, cookie_id)) {
+    ERR(r, "cannot store to memcache host:[%s] port:[%d]", dconf->memcache.host, dconf->memcache.port);
+    goto on_error0;
+  }
+
 #else
   file = chxj_cookie_db_lock(r);
   if (! file) {
@@ -974,6 +1020,17 @@ chxj_save_cookie_expire(request_rec *r, cookie_t *cookie)
   /* *NEED NOT* close database. */
   /* chxj_close_mysql_handle(); */
 #elif defined(USE_MEMCACHE_COOKIE)
+
+  if (! chxj_memcache_init(r, dconf)) {
+    ERR(r, "Cannot create memcache server");
+    return;
+  }
+
+  if (! chxj_memcache_reset_cookie(r, dconf, cookie->cookie_id)) {
+    ERR(r, "cannot store to memcache host:[%s] port:[%d]", dconf->memcache.host, dconf->memcache.port);
+    return;
+  }
+
 #else
   file = chxj_cookie_expire_db_lock(r);
   if (! file) {
@@ -1144,6 +1201,10 @@ chxj_delete_cookie_expire(request_rec *r, char *cookie_id)
     goto on_error0;
   }
 #elif defined(USE_MEMCACHE_COOKIE)
+
+  /* nothing */
+  DBG(r, "nothing: cookie_id:[%s]", cookie_id);
+
 #else
   file = chxj_cookie_expire_db_lock(r);
   if (! file) {
@@ -1186,7 +1247,9 @@ on_error1:
   chxj_cookie_expire_db_unlock(r, file);
 #endif
 
+#if !defined(USE_MEMCACHE_COOKIE)
 on_error0:
+#endif
   return;
 
 }
@@ -1215,6 +1278,10 @@ chxj_cookie_expire_gc(request_rec *r)
   }
 
 #elif defined(USE_MEMCACHE_COOKIE)
+
+  /* nothing */
+  DBG(r, "nothing:");
+
 #else
   file = chxj_cookie_expire_db_lock(r);
   if (! file) {
