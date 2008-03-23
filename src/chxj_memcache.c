@@ -109,13 +109,20 @@ chxj_memcache_and_memcache_server_create(request_rec *r, mod_chxj_config *m, apr
 int
 chxj_memcache_set_cookie(request_rec *r, mod_chxj_config *m, const char *cookie_id, const char *store_string)
 {
+  apr_status_t ret;
   apr_uint32_t timeout = (apr_uint32_t) ((m->cookie_timeout) ? m->cookie_timeout : DEFAULT_COOKIE_TIMEOUT);
   DBG(r, "start chxj_memcache_set_cookie()");
 
-  if (apr_memcache_set(mc, cookie_id, (char *)store_string, strlen(store_string), timeout, 0) != APR_SUCCESS) {
-    ERR(r, "failed: apr_memcache_set()");
-    return CHXJ_FALSE;
+  do {
+    if ((ret = apr_memcache_set(mc, cookie_id, (char *)store_string, strlen(store_string), timeout, 0)) != APR_SUCCESS) {
+      if (ret == APR_EAGAIN) {
+        continue;
+      }
+      ERR(r, "failed: apr_memcache_set() ret:[%d]", ret);
+      return CHXJ_FALSE;
+    }
   }
+  while(0);
 
   DBG(r, "end chxj_memcache_set_cookie()");
   return CHXJ_TRUE;
@@ -135,7 +142,7 @@ chxj_memcache_reset_cookie(request_rec *r, mod_chxj_config *m, const char *cooki
     return CHXJ_FALSE;
   }
 
-  if (apr_memcache_set(mc, cookie_id, (char *)store_string, strlen(store_string), timeout, 0) != APR_SUCCESS) {
+  if (! chxj_memcache_set_cookie(r, m, cookie_id, store_string)) {
     ERR(r, "failed: apr_memcache_set()");
     return CHXJ_FALSE;
   }
@@ -154,10 +161,16 @@ chxj_memcache_get_cookie(request_rec *r, mod_chxj_config *UNUSED(m), const char 
   apr_status_t ret;
   DBG(r, "start chxj_memcache_get_cookie()");
 
-  if ((ret = apr_memcache_getp(mc, r->pool, cookie_id, &load_string, &len, 0)) != APR_SUCCESS) {
-    ERR(r, "failed: apr_memcache_get() cookie_id:[%s] ret:[%d]", cookie_id, ret);
-    return NULL;
+  do {
+    if ((ret = apr_memcache_getp(mc, r->pool, cookie_id, &load_string, &len, 0)) != APR_SUCCESS) {
+      if (ret == APR_EAGAIN) {
+        continue;
+      }
+      ERR(r, "failed: apr_memcache_get() cookie_id:[%s] ret:[%d]", cookie_id, ret);
+      return NULL;
+    }
   }
+  while(0);
   
   ret_value = apr_palloc(r->pool, len+1);
   memset(ret_value, 0, len+1);
@@ -171,12 +184,19 @@ chxj_memcache_get_cookie(request_rec *r, mod_chxj_config *UNUSED(m), const char 
 int
 chxj_memcache_delete_cookie(request_rec *r, mod_chxj_config *UNUSED(m),  const char *cookie_id)
 {
+  apr_status_t ret;
   DBG(r, "start chxj_memcache_delete_cookie()");
 
-  if (apr_memcache_delete(mc, cookie_id, 0) != APR_SUCCESS) {
-    ERR(r, "failed: apr_memcache_delete() cookie_id:[%s]", cookie_id);
-    return CHXJ_FALSE;
+  do {
+    if ((ret = apr_memcache_delete(mc, cookie_id, 0)) != APR_SUCCESS) {
+      if (ret == APR_EAGAIN) {
+        continue;
+      }
+      ERR(r, "failed: apr_memcache_delete() cookie_id:[%s] ret:[%d]", cookie_id, ret);
+      return CHXJ_FALSE;
+    }
   }
+  while(0);
 
   DBG(r, "end chxj_memcache_delete_cookie()");
   return CHXJ_TRUE;
