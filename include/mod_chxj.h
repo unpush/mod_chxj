@@ -58,6 +58,8 @@
 
 #define STRCASEEQ(a,b,c,d) \
   ((((a) == *(d))|| ((b) == *(d))) && strcasecmp((c),(d)) == 0)
+#define STRNCASEEQ(a,b,c,d,e) \
+  ((((a) == *(d))|| ((b) == *(d))) && strncasecmp((c),(d),(e)) == 0)
 
 #include "qs_ignore_sp.h"
 #include "qs_log.h"

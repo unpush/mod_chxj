@@ -639,6 +639,29 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
     &&  !f->r->prev) 
       f->r->chunked = 1;
   }
+  if (r->content_type) {
+    if (! STRNCASEEQ('t','T',"text/html",r->content_type, sizeof("text/html")-1)
+    &&  ! STRNCASEEQ('t','T',"text/xml", r->content_type, sizeof("text/xml")-1)
+    &&  ! (STRNCASEEQ('i','I',"image/",  r->content_type, sizeof("image/") -1)
+          && ( STRCASEEQ('j','J',"jpeg",            &r->content_type[6])         /* JPEG */
+            || STRCASEEQ('j','J',"jp2",             &r->content_type[6])         /* JPEG2000 */
+            || STRCASEEQ('j','J',"jpeg2000",        &r->content_type[6])         /* JPEG2000 */
+            || STRCASEEQ('j','J',"jpeg2000-image",  &r->content_type[6])         /* JPEG2000 */
+            || STRCASEEQ('x','X',"x-jpeg2000-image",&r->content_type[6])         /* JPEG2000 */
+            || STRCASEEQ('p','P',"png",             &r->content_type[6])         /* PNG */
+            || STRCASEEQ('x','X',"x-png",           &r->content_type[6])         /* PNG */
+            || STRCASEEQ('g','G',"gif",             &r->content_type[6])))) {     /* GIF */
+      
+      DBG(r, "not convert content-type:[%s]", r->content_type);
+      ap_pass_brigade(f->next, bb);
+      return APR_SUCCESS;
+    }
+  }
+  else {
+    DBG(r, "not convert content-type:[(null)]");
+    ap_pass_brigade(f->next, bb);
+    return APR_SUCCESS;
+  }
 
   dconf      = ap_get_module_config(r->per_dir_config, &chxj_module);
   entryp     = chxj_apply_convrule(r, dconf->convrules);
