@@ -3,6 +3,8 @@ libapache2-mod-chxj (0.9.0-1) unstable; urgency=low
   * Added Features
     - Cookie can have been recorded in MySQL.
     - Cookie can have been recorded in memcached.
+  * Fixed Bug
+    - When mpeg is downloaded, it memory a large amount of consumes it.
 
  -- Atsushi Konno <konn@users.sourceforge.jp>  Mon, 24 Mar 2008 00:57:55 +0900
 
