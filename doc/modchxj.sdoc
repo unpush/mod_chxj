@@ -115,8 +115,8 @@ mod_chxjをコンパイルするにはconfigureを行う必要があります。
       Cookieシミュレート機能を使用する際、保存先をデフォルトのDBMでは無く、MySQLに保存するようにします。
       DefaultのDBMで良い場合や、Cookieシミュレート機能を使用しない場合は指定する必要はありません。
       別途MySQLサーバを用意する必要があります。また、本オプションを指定した場合は、--with-mysql-header、--with-mysql-lib-dirも指定します。
-      これはMySQLのヘッダとライブラリが必要なことを意味します。使用するMySQLのライブラリは今のところlibmysqlclient_r.soのみです。
-      注意) --enable-memcache-cookieとの併用はできません。
+      これはMySQLのヘッダとライブラリが必要なことを意味します。使用するMySQLのライブラリは今のところlibmysqlclient_r.soのみです。<br />
+      <font color="#ff0000">注意) --enable-memcache-cookieとの併用はできません。</font>
       <program title="--enable-mysql-cookie">
          $ ./configure --enable-mysql-cookie --with-mysql-header=/usr/include/mysql  --with-mysql-lib-dir=/usr/lib
       </program>
@@ -142,8 +142,9 @@ mod_chxjをコンパイルするにはconfigureを行う必要があります。
       Cookieシミュレート機能を使用する際、保存先をデフォルトのDBMでは無く、memcachedに保存するようにします。
       DefaultのDBMで良い場合や、Cookieシミュレート機能を使用しない場合は指定する必要はありません。
       別途memcachedを用意する必要があります。また、本オプションを指定した場合は、--with-apr-memcache-header、--with-apr-memcache-lib-dirも指定します。
-      これはapr_memcacheのヘッダとライブラリが必要なことを意味します。
-      注意) --enable-mysql-cookieとの併用はできません。
+      これはapr_memcacheのヘッダとライブラリが必要なことを意味します。<br />
+      <font color="#ff0000">注意) --enable-mysql-cookieとの併用はできません。</font><br />
+      <font color="#ff0000">注意) apr-utilsのバージョンは0.9.7以降である必要があります。</font>
       <program title="--enable-memcache-cookie">
          $ ./configure --enable-memcache-cookie --with-apr-memcache-header=/usr/include/apr-memcache0 --with-apr-memcache-lib-dir=/usr/lib
       </program>

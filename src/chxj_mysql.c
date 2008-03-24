@@ -305,7 +305,7 @@ chxj_mysql_get_cookie_from_cookie_id(request_rec *r, mod_chxj_config *m, const c
 {
   MYSQL_RES *result;
   char query[MAX_STRING_LEN];
-  char *tmp = ap_escape_logitem(r->pool, cookie_id);
+  char *tmp = ap_escape_uri(r->pool, ap_escape_logitem(r->pool, cookie_id));
   char *retval = NULL;
 
   apr_snprintf(query, sizeof(query)-1, "SELECT data, length(data) FROM %s WHERE cookie_id = '%s' FOR UPDATE;", m->mysql.tablename, tmp);
@@ -354,7 +354,7 @@ chxj_mysql_get_cookie_expire_from_cookie_id(request_rec *r, mod_chxj_config *m, 
 {
   MYSQL_RES *result;
   char query[MAX_STRING_LEN];
-  char *tmp = ap_escape_logitem(r->pool, cookie_id);
+  char *tmp = ap_escape_uri(r->pool, ap_escape_logitem(r->pool, cookie_id));
   char *retval = NULL;
 
   apr_snprintf(query, sizeof(query)-1, "SELECT DATE_FORMAT(created_at, '%%Y%%m%%d%%H%%i%%s') FROM %s_expire WHERE cookie_id = '%s' FOR UPDATE;", 
@@ -551,7 +551,7 @@ chxj_mysql_load_cookie(request_rec *r, mod_chxj_config *m, const char *cookie_id
 {
   MYSQL_RES *result;
   char query[MAX_STRING_LEN];
-  char *tmp = ap_escape_logitem(r->pool, cookie_id);
+  char *tmp = ap_escape_uri(r->pool, ap_escape_logitem(r->pool, cookie_id));
   char *retval = NULL;
 
   apr_snprintf(query, sizeof(query)-1, "SELECT data, length(data) FROM %s WHERE cookie_id = '%s';", m->mysql.tablename, tmp);
@@ -602,7 +602,7 @@ chxj_mysql_load_cookie_expire(request_rec *r, mod_chxj_config *m, const char *co
 {
   MYSQL_RES *result;
   char query[MAX_STRING_LEN];
-  char *tmp = ap_escape_logitem(r->pool, cookie_id);
+  char *tmp = ap_escape_uri(r->pool, ap_escape_logitem(r->pool, cookie_id));
   char *retval = NULL;
 
   apr_snprintf(query, sizeof(query)-1, "SELECT DATE_FORMAT(created_at, '%%Y%%m%%d%%H%%i%%s') FROM %s_expire WHERE cookie_id = '%s';", m->mysql.tablename, tmp);
