@@ -132,7 +132,6 @@ chxj_memcache_set_cookie(request_rec *r, mod_chxj_config *m, const char *cookie_
 int
 chxj_memcache_reset_cookie(request_rec *r, mod_chxj_config *m, const char *cookie_id)
 {
-  apr_uint32_t timeout = (apr_uint32_t) ((m->cookie_timeout) ? m->cookie_timeout : DEFAULT_COOKIE_TIMEOUT);
   char *store_string;
   DBG(r, "start chxj_memcache_reset_cookie()");
 
