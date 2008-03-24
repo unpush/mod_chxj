@@ -39,6 +39,12 @@
 
 static char* s_get_hostname_from_url(request_rec* r, char* value);
 static char* s_cut_until_end_hostname(request_rec*, char* value);
+static int valid_domain(request_rec *r, const char *value);
+static int valid_path(request_rec *r, const char *value);
+static int valid_expire(request_rec *r, const char *value);
+static int valid_secure(request_rec *r, const char *value);
+static int check_valid_cookie_attribute(request_rec *r, const char *pair);
+
 
 static char *
 alloc_cookie_id(request_rec *r)
@@ -639,17 +645,22 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
         *val++ = 0;
         apr_table_add(load_cookie_table, key, val);
       }
-      tmp_sem = strchr(pair, ';'); 
+      tmp_pair = apr_pstrdup(r->pool, pair);
+      tmp_sem = strchr(tmp_pair, ';'); 
       if (tmp_sem)
         *tmp_sem = '\0';
 
-      if (strlen(header_cookie)) 
-        header_cookie = apr_pstrcat(r->pool, header_cookie, ";", NULL);
-
-      header_cookie = apr_pstrcat(r->pool, header_cookie, pair, NULL);
+      if (check_valid_cookie_attribute(r, pair)) {
+        if (strlen(header_cookie)) 
+          header_cookie = apr_pstrcat(r->pool, header_cookie, ";", NULL);
+  
+        header_cookie = apr_pstrcat(r->pool, header_cookie, tmp_pair, NULL);
+      }
     }
-    if (strlen(header_cookie))
+    if (strlen(header_cookie)) {
+      DBG(r, "ADD COOKIE to REQUEST HEADER:[%s]", header_cookie);
       apr_table_add(r->headers_in, "Cookie", header_cookie);
+    }
   
     cookie->cookie_headers = (apr_array_header_t*)apr_table_elts(load_cookie_table);
 
@@ -690,6 +701,102 @@ on_error0:
   DBG(r, "========================================================");
   DBG(r, "========================================================");
   return NULL;
+}
+
+static int
+check_valid_cookie_attribute(request_rec *r, const char *value)
+{
+  char *pstat;
+  char *pair;
+  char *first_pair;
+  char *domain_pair;
+  char *path_pair;
+  char *expire_pair;
+  char *secure_pair;
+
+  DBG(r, "start check_valid_cookie_attribute() value:[%s]", value);
+
+  domain_pair = path_pair = expire_pair = secure_pair = NULL;
+
+  /* pass first pair */
+  first_pair = apr_strtok(value, ";", &pstat);  
+
+  for (;;) {
+    pair = apr_strtok(NULL, ";", &pstat);
+    if (! pair) break;
+    pair = qs_trim_string(r, pair);
+    if (STRNCASEEQ('d','D',"domain", pair, sizeof("domain")-1)) {
+      domain_pair = apr_pstrdup(r->pool, pair);
+    }
+    else if (STRNCASEEQ('p','P',"path", pair, sizeof("path")-1)) {
+      path_pair = apr_pstrdup(r->pool, pair);
+    }
+    else if (STRNCASEEQ('e','E',"expire", pair, sizeof("expire")-1)) {
+      expire_pair = apr_pstrdup(r->pool, pair);
+    }
+    else if (STRNCASEEQ('s','S',"secure", pair, sizeof("secure")-1)) {
+      secure_pair = apr_pstrdup(r->pool, pair);
+    }
+  }
+
+  if (domain_pair) {
+    if (!valid_domain(r, domain_pair)) {
+      DBG(r, "invalid domain. domain_pair:[%s]", domain_pair);
+      return CHXJ_FALSE;
+    }
+  }
+  if (path_pair) {
+    if (!valid_path(r, path_pair)) {
+      DBG(r, "invalid path. path_pair:[%s]", path_pair);
+      return CHXJ_FALSE;
+    }
+  }
+  if (expire_pair) {
+    if (!valid_expire(r, expire_pair)) {
+      DBG(r, "invalid expire. expire_pair:[%s]", expire_pair);
+      return CHXJ_FALSE;
+    }
+  }
+  if (secure_pair) {
+    if (!valid_secure(r, secure_pair)) {
+      DBG(r, "invalid secure. secure_pair:[%s]", secure_pair);
+      return CHXJ_FALSE;
+    }
+  }
+  DBG(r, "end check_valid_cookie_attribute() value:[%s]", value);
+  return CHXJ_TRUE;
+}
+
+static int
+valid_domain(request_rec *r, const char *value)
+{
+  DBG(r, "start valid_domain() value:[%s]", value);
+  DBG(r, "end valid_domain() value:[%s]", value);
+  return CHXJ_TRUE;
+}
+
+static int
+valid_path(request_rec *r, const char *value)
+{
+  DBG(r, "start valid_path() value:[%s]", value);
+  DBG(r, "end valid_path() value:[%s]", value);
+  return CHXJ_TRUE;
+}
+
+static int
+valid_expire(request_rec *r, const char *value)
+{
+  DBG(r, "start valid_expire() value:[%s]", value);
+  DBG(r, "end valid_expire() value:[%s]", value);
+  return CHXJ_TRUE;
+}
+
+static int
+valid_secure(request_rec *r, const char *value)
+{
+  DBG(r, "start valid_secure() value:[%s]", value);
+  DBG(r, "end valid_secure() value:[%s]", value);
+  return CHXJ_TRUE;
 }
 
 
