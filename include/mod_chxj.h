@@ -290,22 +290,22 @@ typedef struct mod_chxj_config mod_chxj_config;
 struct mod_chxj_config {
   int                   image;
 
-  char*                 device_data_file;
-  char*                 emoji_data_file;
+  char                  *device_data_file;
+  char                  *emoji_data_file;
 
-  char*                 image_cache_dir;
-  char*                 image_copyright;
+  char                  *image_cache_dir;
+  char                  *image_copyright;
   unsigned long         image_cache_limit;
-  device_table_list*    devices;
-  emoji_t*              emoji;
-  emoji_t*              emoji_tail;
-  char*                 server_side_encoding;
+  device_table_list     *devices;
+  emoji_t               *emoji;
+  emoji_t               *emoji_tail;
+  char                  *server_side_encoding;
 
-  char*                 dir; /* for LOG */
+  char                  *dir; /* for LOG */
 
-  apr_array_header_t*   convrules;
+  apr_array_header_t    *convrules;
 
-  char*                 cookie_db_dir;
+  char                  *cookie_db_dir;
   long                  cookie_timeout;
 
 #if defined(USE_MYSQL_COOKIE)
@@ -350,6 +350,7 @@ typedef struct {
 #define CHXJ_MOD_CONFIG_KEY   "chxj_module_key"
 
 #define HTTP_USER_AGENT       "User-Agent"
+#define HTTP_HOST             "Host"
 #define CHXJ_HTTP_USER_AGENT  "CHXJ_HTTP_USER_AGENT"
 
 module AP_MODULE_DECLARE_DATA chxj_module;

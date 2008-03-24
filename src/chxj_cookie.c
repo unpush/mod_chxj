@@ -20,6 +20,7 @@
 #include "chxj_cookie.h"
 #include "chxj_url_encode.h"
 #include "chxj_apply_convrule.h"
+#include "chxj_str_util.h"
 
 #include "ap_release.h"
 
@@ -713,13 +714,15 @@ check_valid_cookie_attribute(request_rec *r, const char *value)
   char *path_pair;
   char *expire_pair;
   char *secure_pair;
+  char *p;
 
   DBG(r, "start check_valid_cookie_attribute() value:[%s]", value);
 
   domain_pair = path_pair = expire_pair = secure_pair = NULL;
+  p = apr_pstrdup(r->pool, value);
 
   /* pass first pair */
-  first_pair = apr_strtok(value, ";", &pstat);  
+  first_pair = apr_strtok(p, ";", &pstat);  
 
   for (;;) {
     pair = apr_strtok(NULL, ";", &pstat);
@@ -731,7 +734,7 @@ check_valid_cookie_attribute(request_rec *r, const char *value)
     else if (STRNCASEEQ('p','P',"path", pair, sizeof("path")-1)) {
       path_pair = apr_pstrdup(r->pool, pair);
     }
-    else if (STRNCASEEQ('e','E',"expire", pair, sizeof("expire")-1)) {
+    else if (STRNCASEEQ('e','E',"expires", pair, sizeof("expires")-1)) {
       expire_pair = apr_pstrdup(r->pool, pair);
     }
     else if (STRNCASEEQ('s','S',"secure", pair, sizeof("secure")-1)) {
@@ -770,7 +773,29 @@ check_valid_cookie_attribute(request_rec *r, const char *value)
 static int
 valid_domain(request_rec *r, const char *value)
 {
+  int len;
+  char *name;
+  char *val;
+  char *pstat;
+  char *p = apr_pstrdup(r->pool, value);
+  const char *host = apr_table_get(r->headers_in, HTTP_HOST);
+
   DBG(r, "start valid_domain() value:[%s]", value);
+  DBG(r, "host:[%s]", host);
+  if (!host)
+    return CHXJ_TRUE;
+
+  name = apr_strtok(p,"=", &pstat);
+  name = qs_trim_string(r, name);
+  val = apr_strtok(NULL, "=", &pstat);
+  val = qs_trim_string(r, val);
+  len = strlen(host);
+  if (len) {
+    if (chxj_strcasenrcmp(r->pool, host, val, strlen(val))) {
+      DBG(r, "not match domain. host domain:[%s] vs value:[%s]", host, val);
+      return CHXJ_FALSE;
+    }
+  }
   DBG(r, "end valid_domain() value:[%s]", value);
   return CHXJ_TRUE;
 }
@@ -778,8 +803,9 @@ valid_domain(request_rec *r, const char *value)
 static int
 valid_path(request_rec *r, const char *value)
 {
-  DBG(r, "start valid_path() value:[%s]", value);
-  DBG(r, "end valid_path() value:[%s]", value);
+  char *p = apr_pstrdup(r->pool, value);
+  DBG(r, "start valid_path() uri:[%s] value:[%s]", r->uri, value);
+  DBG(r, "end valid_path() uri:[%s] value:[%s]", r->uri, value);
   return CHXJ_TRUE;
 }
 
