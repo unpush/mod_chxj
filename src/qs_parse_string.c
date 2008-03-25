@@ -40,8 +40,8 @@ typedef struct node_stack {
   NodeStackElement tail;
 } *NodeStack;
 
-static int s_cut_tag (const char* s, int len) ;
-static int s_cut_text(const char* s, int len) ;
+static int s_cut_tag (const char* s, int len);
+static int s_cut_text(const char* s, int len, int script);
 static void qs_dump_node(Doc* doc, Node* node, int indent);
 static void qs_push_node(Doc* doc, Node *node, NodeStack stack);
 static Node *qs_pop_node(Doc* doc, NodeStack stack);
@@ -62,6 +62,7 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
   char*   ibuf;
   size_t  olen;
   size_t  ilen;
+  int     script_flag = 0;
   iconv_t cd;
 
   osrc = NULL;
@@ -202,6 +203,9 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
               doc->now_parent_node = doc->now_parent_node->parent;
               doc->parse_mode = PARSE_MODE_CHTML;
             }
+            if (STRCASEEQ('s','S',"script",&node->name[1])) {
+              script_flag = 0;
+            }
             s_error_check(doc, node, node_stack, err_stack);
           }
           else {
@@ -260,10 +264,13 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
       if (doc->parse_mode == PARSE_MODE_CHTML && has_child(node->name)) {
         doc->now_parent_node = node;
       }
+      if (STRCASEEQ('s','S',"script", node->name)) {
+        script_flag = 1;
+      }
     }
     else {
       /* TEXT */
-      int endpoint = s_cut_text(&src[ii], srclen - ii);
+      int endpoint = s_cut_text(&src[ii], srclen - ii, script_flag);
       Node* node = qs_new_tag(doc);
       node->value = (char*)apr_palloc(doc->pool,endpoint+1);
       node->name  = (char*)apr_palloc(doc->pool,4+1);
@@ -385,6 +392,11 @@ s_cut_tag(const char* s, int len)
 {
   int lv = 0;
   int ii;
+  int comment = 0;
+
+  if (strncmp("<!--", s, 4) == 0) {
+    comment = 1;
+  }
 
   for (ii=0;ii<len; ii++) {
     if (is_sjis_kanji(s[ii])) {
@@ -401,8 +413,14 @@ s_cut_tag(const char* s, int len)
       lv++;
       continue;
     }
+    if (comment && s[ii] == '-') {
+      if (strncmp(&s[ii], "-->", 3) == 0) {
+        ii += 2;
+        break;
+      }
+    }
 
-    if (s[ii] == '>') {
+    if (!comment && s[ii] == '>') {
       lv--;
       if (lv == 0) 
         break;
@@ -413,9 +431,11 @@ s_cut_tag(const char* s, int len)
 }
 
 static int
-s_cut_text(const char* s, int len) 
+s_cut_text(const char* s, int len, int script)
 {
-  int ii;
+  register int ii;
+  register int sq = 0;
+  register int dq = 0;
 
   for (ii=0;ii<len; ii++) {
     if (is_sjis_kanji(s[ii])) {
@@ -428,7 +448,24 @@ s_cut_text(const char* s, int len)
     if (is_white_space(s[ii])) 
       continue;
 
-    if (s[ii] == '<') 
+    if (script) {
+      if (s[ii] == '\\') {
+        ii++;
+        continue;
+      }
+      /* single quote */
+      if (s[ii] == '\'' && !dq) {
+        if (sq) sq--;
+        else    sq++;
+      }
+      /* double quote */
+      if (s[ii] == '"' && !sq) {
+        if (dq) dq--;
+        else    dq++;
+      }
+    }
+
+    if (!sq && !dq && s[ii] == '<') 
       break;
 
   }

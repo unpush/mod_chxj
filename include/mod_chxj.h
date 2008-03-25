@@ -20,6 +20,8 @@
 #define CHXJ_TRUE    (1)
 #define CHXJ_FALSE   (0)
 
+/* #define DEBUG_FD(X,args...) {FILE*fp=fopen("/tmp/error.log", "ab");fprintf(fp, X, ##args);fflush(fp);fclose(fp);} */
+
 #ifdef UNUSED
 #elif defined(__GNUC__)
 # define UNUSED(x) UNUSED_ ## x __attribute__((unused))
