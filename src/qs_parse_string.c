@@ -393,9 +393,13 @@ s_cut_tag(const char* s, int len)
   int lv = 0;
   int ii;
   int comment = 0;
+  int cdata = 0;
 
   if (strncmp("<!--", s, 4) == 0) {
     comment = 1;
+  }
+  else if (strncasecmp("<![CDATA[", s, sizeof("<![CDATA[")-1) == 0) {
+    cdata = 1;
   }
 
   for (ii=0;ii<len; ii++) {
@@ -419,8 +423,14 @@ s_cut_tag(const char* s, int len)
         break;
       }
     }
+    if (cdata && s[ii] == ']') {
+      if (strncmp(&s[ii], "]]>", 3) == 0) {
+        ii += 2;
+        break;
+      }
+    }
 
-    if (!comment && s[ii] == '>') {
+    if (!cdata && !comment && s[ii] == '>') {
       lv--;
       if (lv == 0) 
         break;
