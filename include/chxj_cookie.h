@@ -20,6 +20,7 @@
 #include "mod_chxj.h"
 #include "apr_file_io.h"
 #include "apr_tables.h"
+#include "apr_time.h"
 
 #define CHXJ_COOKIE_PARAM               "_chxj_cc"
 #define CHXJ_COOKIE_NOUPDATE_PARAM      "_chxj_nc"
@@ -112,6 +113,8 @@ extern void chxj_cookie_expire_gc(
 extern cookie_t* chxj_update_cookie(
   request_rec* r, 
   cookie_t*    old_cookie);
+
+extern apr_time_t chxj_parse_cookie_expires(const char *s);
 
 #endif
 /*

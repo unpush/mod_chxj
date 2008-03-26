@@ -18,6 +18,7 @@
 #define __CHXJ_STR_UTIL_H__
 
 #include <string.h>
+#include <apr_pools.h>
 
 extern int chxj_chk_numeric(
   const char*          s);
@@ -25,6 +26,8 @@ extern int chxj_chk_numeric(
 extern int chxj_atoi(
   const char*          s);
 
+extern int chxj_strcasenrcmp(apr_pool_t *p, const char *s1, const char *s2, int n);
+extern int chxj_starts_with(const char *str, const char *word);
 #endif
 /*
  * vim:ts=2 et
