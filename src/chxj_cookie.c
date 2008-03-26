@@ -30,6 +30,8 @@
 #include "apr_md5.h"
 #include "apr_base64.h"
 #include "apr_uri.h"
+#include "apr_time.h"
+#include "apr_date.h"
 
 #if defined(USE_MYSQL_COOKIE)
 #  include "chxj_mysql.h"
@@ -42,7 +44,7 @@ static char* s_get_hostname_from_url(request_rec* r, char* value);
 static char* s_cut_until_end_hostname(request_rec*, char* value);
 static int valid_domain(request_rec *r, const char *value);
 static int valid_path(request_rec *r, const char *value);
-static int valid_expire(request_rec *r, const char *value);
+static int valid_expires(request_rec *r, const char *value);
 static int valid_secure(request_rec *r, const char *value);
 static int check_valid_cookie_attribute(request_rec *r, const char *pair);
 
@@ -755,7 +757,7 @@ check_valid_cookie_attribute(request_rec *r, const char *value)
     }
   }
   if (expire_pair) {
-    if (!valid_expire(r, expire_pair)) {
+    if (!valid_expires(r, expire_pair)) {
       DBG(r, "invalid expire. expire_pair:[%s]", expire_pair);
       return CHXJ_FALSE;
     }
@@ -850,18 +852,46 @@ valid_path(request_rec *r, const char *value)
 }
 
 static int
-valid_expire(request_rec *r, const char *value)
+valid_expires(request_rec *r, const char *value)
 {
+  char *name;
+  char *val;
+  char *p = apr_pstrdup(r->pool, value);
+  char *pstat;
+  apr_time_t expires;
+  apr_time_t now;
   DBG(r, "start valid_expire() value:[%s]", value);
-  DBG(r, "end valid_expire() value:[%s]", value);
+
+  name = apr_strtok(p, "=", &pstat);
+  val  = apr_strtok(NULL, "=", &pstat);
+  DBG(r, "name=[%s] val=[%s]", name, val);
+  now = apr_time_now();
+  expires = chxj_parse_cookie_expires(val);
+  DBG(r, "now=[%lld] expires=[%lld]", now, expires);
+  if (expires < now) {
+    DBG(r, "end valid_expire() value:[%s] (expired)", value);
+    return CHXJ_FALSE;
+  }
+  
+  DBG(r, "end valid_expire() value:[%s] (non expired)", value);
   return CHXJ_TRUE;
 }
 
 static int
 valid_secure(request_rec *r, const char *value)
 {
+  const char *scheme;
   DBG(r, "start valid_secure() value:[%s]", value);
-  DBG(r, "end valid_secure() value:[%s]", value);
+#if AP_SERVER_MAJORVERSION_NUMBER == 2 && AP_SERVER_MINORVERSION_NUMBER == 2
+  scheme = ap_run_http_scheme(r);
+#else
+  scheme = ap_run_http_method(r);
+#endif
+  if (strcasecmp("https", scheme)) {
+    DBG(r, "end valid_secure() value:[%s] (non secure)", value);
+    return CHXJ_FALSE;
+  }
+  DBG(r, "end valid_secure() value:[%s] (secure)", value);
   return CHXJ_TRUE;
 }
 
@@ -1539,6 +1569,13 @@ on_error0:
 
   return;
 
+}
+
+apr_time_t
+chxj_parse_cookie_expires(const char *s)
+{
+  if (!s) return (apr_time_t)0;
+  return apr_date_parse_rfc(s);
 }
 /*
  * vim:ts=2 et
