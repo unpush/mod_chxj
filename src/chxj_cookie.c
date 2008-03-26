@@ -804,8 +804,48 @@ static int
 valid_path(request_rec *r, const char *value)
 {
   char *p = apr_pstrdup(r->pool, value);
-  DBG(r, "start valid_path() uri:[%s] value:[%s]", r->uri, value);
-  DBG(r, "end valid_path() uri:[%s] value:[%s]", r->uri, value);
+  char *uri;
+  char *tmp;
+  char *name;
+  char *val;
+  char *pstat;
+
+  DBG(r, "start valid_path() unparsed_uri:[%s] value:[%s]", r->unparsed_uri, value);
+  if (chxj_starts_with(r->unparsed_uri, "http://")) {
+    uri = strchr(&r->unparsed_uri[sizeof("http://")], '/');
+    if (uri != NULL) {
+      uri = apr_pstrdup(r->pool, uri);
+    }
+  }
+  else if (chxj_starts_with(r->unparsed_uri, "https://")) {
+    uri = strchr(&r->unparsed_uri[sizeof("https://")], '/');
+    if (uri != NULL) {
+      uri = apr_pstrdup(r->pool, uri);
+    }
+  }
+  else if (chxj_starts_with(r->unparsed_uri, "/")) {
+    uri = apr_pstrdup(r->pool, r->unparsed_uri);
+  }
+  else {
+    uri = apr_pstrdup(r->pool, "/");
+  }
+  
+  if ((tmp = strchr(uri, '?'))) {
+    *tmp = '\0';
+  }
+  DBG(r, "uri=[%s]", uri);
+  name = apr_strtok(p, "=", &pstat);
+  val = apr_strtok(NULL, "=", &pstat);
+  name = qs_trim_string(r, name);
+  val = qs_trim_string(r, val);
+  DBG(r, "name=[%s] val=[%s]", name, val);
+  
+  DBG(r, "val:[%s] vs uri:[%s]", val, uri);
+  if (! chxj_starts_with(uri, val)) {
+    DBG(r, "end valid_path() unparsed_uri:[%s] value:[%s] (false)", r->unparsed_uri, value);
+    return CHXJ_FALSE;
+  }
+  DBG(r, "end valid_path() unparsed_uri:[%s] value:[%s] (true)", r->unparsed_uri, value);
   return CHXJ_TRUE;
 }
 

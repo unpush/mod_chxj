@@ -108,6 +108,14 @@ chxj_strcasenrcmp(apr_pool_t *p, const char *s1, const char *s2, int n)
 
     return (int)(*ss1p - *ss2p);
 }
+
+
+int
+chxj_starts_with(const char *str, const char *word)
+{
+  int len = strlen(word);
+  return strncasecmp(str, word, len) == 0;
+}
 /*
  * vim:ts=2 et
  */
