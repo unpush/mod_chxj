@@ -618,14 +618,14 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
   apr_bucket*         b;
   const char*         data;
   char*               contentLength;
-  char*               user_agent;
+  char*               user_agent = NULL;
   apr_size_t          len;
-  mod_chxj_ctx*       ctx;
+  mod_chxj_ctx*       ctx = (mod_chxj_ctx *)f->ctx;
   cookie_t*           cookie;
   char*               location_header;
   mod_chxj_config*    dconf;
-  chxjconvrule_entry  *entryp;
-  device_table        *spec;
+  chxjconvrule_entry  *entryp = NULL;
+  device_table        *spec = NULL;
 
 
 
@@ -664,9 +664,11 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
   }
 
   dconf      = ap_get_module_config(r->per_dir_config, &chxj_module);
-  entryp     = chxj_apply_convrule(r, dconf->convrules);
   user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
-  spec       = chxj_specified_device(r, user_agent);
+  if (ctx && ctx->entryp) entryp = ctx->entryp;
+  else                    entryp = chxj_apply_convrule(r, dconf->convrules);
+  if (ctx && ctx->spec)   spec   = ctx->spec;
+  else                    spec   = chxj_specified_device(r, user_agent);
 
 
   for (b = APR_BRIGADE_FIRST(bb);
@@ -679,7 +681,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
       /*----------------------------------------------------------------------*/
       /* End Of File                                                          */
       /*----------------------------------------------------------------------*/
-      if (f->ctx) {
+      if (ctx) {
 
         ctx = (mod_chxj_ctx*)f->ctx;
 
@@ -698,7 +700,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
             memset(tmp, 0, ctx->len + 1);
             memcpy(tmp, ctx->buffer, ctx->len);
 
-#if 0
+#if 1
             DBG(r, "input data=[%s] len=[%d]", tmp, ctx->len);
 #endif
 
@@ -708,7 +710,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
                                         spec,
                                         user_agent);
 
-#if 0
+#if 1
             DBG(r, "output data=[%.*s]", ctx->len,ctx->buffer);
 #endif
           }
@@ -889,6 +891,8 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
         }
         ctx->len = len;
         f->ctx = (void*)ctx;
+        ctx->entryp = entryp;
+        ctx->spec   = spec;
       }
       else {
         /*--------------------------------------------------------------------*/

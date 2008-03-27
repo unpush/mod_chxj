@@ -367,6 +367,8 @@ typedef struct {
 
 typedef struct {
   apr_size_t len;
+  chxjconvrule_entry  *entryp;
+  device_table        *spec;
 
   apr_bucket_brigade *bb;
 
