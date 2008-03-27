@@ -307,7 +307,7 @@ chxj_save_cookie_expire_memcache(request_rec *r, mod_chxj_config *m, const char 
 
 
 int
-chxj_delete_cookie_expire_memcache(request_rec *r, mod_chxj_config *m, const char *cookie_id)
+chxj_delete_cookie_expire_memcache(request_rec *r, mod_chxj_config *UNUSED(m), const char *cookie_id)
 {
   DBG(r, "start chxj_delete_cookie_expire_memcache() cookie_id:[%s]", cookie_id);
   /* PASS */
@@ -317,7 +317,7 @@ chxj_delete_cookie_expire_memcache(request_rec *r, mod_chxj_config *m, const cha
 
 
 int
-chxj_cookie_expire_gc_memcache(request_rec *r, mod_chxj_config *m)
+chxj_cookie_expire_gc_memcache(request_rec *r, mod_chxj_config *UNUSED(m))
 {
   DBG(r, "start chxj_cookie_expire_gc_memcache()");
   /* PASS */

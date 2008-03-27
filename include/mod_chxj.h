@@ -338,6 +338,10 @@ struct mod_chxj_config {
 #define IS_COOKIE_STORE_MEMCACHE(X) ((X) == COOKIE_STORE_TYPE_MEMCACHE)
 #define IS_COOKIE_STORE_NONE(X)     ((X) == COOKIE_STORE_TYPE_NONE)
 
+#define COOKIE_LAZY_ON                (2)
+#define COOKIE_LAZY_OFF               (1)
+#define IS_COOKIE_LAZY(X)             ((X)->cookie_lazy_mode == COOKIE_LAZY_ON)
+
 
 #define CONVRULE_ENGINE_ON_BIT        (0x00000001)
 #define CONVRULE_ENGINE_OFF_BIT       (0x00000002)
