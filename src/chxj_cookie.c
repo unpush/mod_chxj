@@ -233,7 +233,14 @@ chxj_save_cookie(request_rec* r)
                                NULL);
   }
 
-  cookie->cookie_id = alloc_cookie_id(r);
+  if (old_cookie_id && IS_COOKIE_LAZY(dconf)) {
+    DBG(r, "LAZY COOKIE save");
+    cookie->cookie_id = apr_pstrdup(r->pool, old_cookie_id);
+  }
+  else {
+    DBG(r, "NO LAZY COOKIE save");
+    cookie->cookie_id = alloc_cookie_id(r);
+  }
 
 DBG(r, "TYPE:[%d]", dconf->cookie_store_type);
   {
@@ -318,7 +325,14 @@ chxj_update_cookie(request_rec* r, cookie_t* old_cookie)
   chxj_delete_cookie(r,        old_cookie->cookie_id);
   chxj_delete_cookie_expire(r, old_cookie->cookie_id);
 
-  cookie->cookie_id = alloc_cookie_id(r);
+  if (IS_COOKIE_LAZY(dconf)) {
+    DBG(r, "LAZY MODE");
+    cookie->cookie_id = apr_pstrdup(r->pool, old_cookie->cookie_id);
+  }
+  else {
+    DBG(r, "NO LAZY MODE");
+    cookie->cookie_id = alloc_cookie_id(r);
+  }
 
   cookie->cookie_headers = old_cookie->cookie_headers;
   store_string = apr_palloc(r->pool, 1);

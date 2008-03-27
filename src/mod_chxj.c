@@ -2363,10 +2363,10 @@ cmd_set_cookie_lazy_mode(
   dconf = (mod_chxj_config *)mconfig;
 
   if (strcasecmp("TRUE",arg) == 0) {
-    dconf->cookie_lazy_mode = 2;
+    dconf->cookie_lazy_mode = COOKIE_LAZY_ON;
   }
   else {
-    dconf->cookie_lazy_mode = 1;
+    dconf->cookie_lazy_mode = COOKIE_LAZY_OFF;
   }
 
   return NULL;
@@ -2464,7 +2464,7 @@ static const command_rec cmds[] = {
     OR_ALL,
     "It specifies preserving of the cookie ahead. (DBM/MYSQL/MEMCACHE)"),
   AP_INIT_TAKE1(
-    "ChxjCookieLasyMode",
+    "ChxjCookieLazyMode",
     cmd_set_cookie_lazy_mode,
     NULL,
     OR_ALL,
