@@ -11,7 +11,7 @@
 <body>
 <section title="Overview">
 
-mod_chxj¤Ï¥ª¡¼¥×¥ó¥½¡¼¥¹¤Î·ÈÂÓ¸þ¤±¥³¥ó¥Æ¥ó¥ÄÊÑ´¹Apache2.0ÍÑ¥â¥¸¥å¡¼¥ë¤Ç¤¢¤ê¡¢
+mod_chxj¤Ï¥ª¡¼¥×¥ó¥½¡¼¥¹¤Î·ÈÂÓ¸þ¤±¥³¥ó¥Æ¥ó¥ÄÊÑ´¹Apache2.xÍÑ¥â¥¸¥å¡¼¥ë¤Ç¤¢¤ê¡¢
 CHTML¡ÊDoCoMo i-ModeÍÑ CHTML3.0)¤Çµ­½Ò¤µ¤ì¤¿Ê¸½ñ¤äÄÌ¾ï¤ÎHTML¤Çµ­½Ò¤µ¤ì¤¿Ê¸½ñ¤ò¡¢¥¢¥¯¥»¥¹¤ËÍè¤¿Ã¼Ëö¤ÎUser-Agent¥Ø¥Ã¥À¤ò¸«¤Æ¡¢¤½¤ì¤¾¤ì¤ÎÃ¼Ëö¤Ë¤¢¤Ã¤¿·Á¼°¤ËÊÑ´¹¤·¤Þ¤¹¡£
 HTMLÊ¸½ñ¤Ë¸Â¤é¤º¡¢²èÁü¡Êjpg¡¢gif¡¢png¡Ë¡¢³¨Ê¸»ú¤Ë¤Ä¤¤¤Æ¤â¡¢ÄêµÁ¥Õ¥¡¥¤¥ë¤Ë½¾¤Ã¤Æ¤½¤ì¤¾¤ì¤Î¥­¥ã¥ê¥¢¤Ë¤¢¤Ã¤¿³¨Ê¸»ú¤ËÊÑ´¹¤·¤Þ¤¹¡£
 CookieÈóÂÐ±þÃ¼Ëö¡¢ReferÈóÂÐ±þÃ¼Ëö¤Î¤¿¤á¤Ë¡¢Set-Cookie¡¢Cookie¥Ø¥Ã¥À¤äReferer¥Ø¥Ã¥À¤ò¥·¥ß¥å¥ì¡¼¥È¤¹¤ë¤³¤È¤â¤Ç¤­¤Þ¤¹¡ÊEXPERIMENTAL)¡£
@@ -22,9 +22,9 @@ CookieÈóÂÐ±þÃ¼Ëö¡¢ReferÈóÂÐ±þÃ¼Ëö¤Î¤¿¤á¤Ë¡¢Set-Cookie¡¢Cookie¥Ø¥Ã¥À¤äReferer¥Ø¥Ã
 <subsection title="½àÈ÷">
 mod_chxj¤ò¥¤¥ó¥¹¥È¡¼¥ë¤¹¤ëÁ°¤Ë¡¢²¼µ­¤Î¤â¤Î¤òÍÑ°Õ¤¹¤ëÉ¬Í×¤¬¤¢¤ê¤Þ¤¹¡£
 <ol>
-  <li>Apache2.0¤Î¥Ø¥Ã¥À¡¼¥Õ¥¡¥¤¥ë·²</li>
-  <li>Apache2.0ÍÑ¤Îapxs</li>
-  <li>apr(Apache Portable Runtime)¥é¥¤¥Ö¥é¥ê¤È¤½¤Î¥Ø¥Ã¥À¥Õ¥¡¥¤¥ë·´(apu´Þ¤à)</li>
+  <li>Apache2.x¤Î¥Ø¥Ã¥À¡¼¥Õ¥¡¥¤¥ë·²</li>
+  <li>Apache2.xÍÑ¤Îapxs</li>
+  <li>apr(Apache Portable Runtime)¥é¥¤¥Ö¥é¥ê¤È¤½¤Î¥Ø¥Ã¥À¥Õ¥¡¥¤¥ë·´(apu´Þ¤à)<note>memcache¤ò»ÈÍÑ¤¹¤ë¾ì¹ç¡¢apu¤Ï0.9.7°Ê¹ß</note></li>
   <li>automake¡¢autoconf¡¢libtool1.3.X</li>
   <li>ImageMagick(MagickWand)</li>
   <li>Linux</li>
@@ -43,7 +43,6 @@ $ ./buildconf.sh
 </li>
 <li>Configure
 
-°Ê²¼¤Ï¡¢/usr/include/apache2.0¤Ë¡¢Apache2.0¤Î¥Ø¥Ã¥À¡¼¥Õ¥¡¥¤¥ë¤¬Â¸ºß¤¹¤ë¾ì¹ç¤Ç¤¹¡£
 <program title="Configure">
 $ ./configure
 </program>
@@ -116,7 +115,6 @@ mod_chxj¤ò¥³¥ó¥Ñ¥¤¥ë¤¹¤ë¤Ë¤Ïconfigure¤ò¹Ô¤¦É¬Í×¤¬¤¢¤ê¤Þ¤¹¡£
       Default¤ÎDBM¤ÇÎÉ¤¤¾ì¹ç¤ä¡¢Cookie¥·¥ß¥å¥ì¡¼¥Èµ¡Ç½¤ò»ÈÍÑ¤·¤Ê¤¤¾ì¹ç¤Ï»ØÄê¤¹¤ëÉ¬Í×¤Ï¤¢¤ê¤Þ¤»¤ó¡£
       ÊÌÅÓMySQL¥µ¡¼¥Ð¤òÍÑ°Õ¤¹¤ëÉ¬Í×¤¬¤¢¤ê¤Þ¤¹¡£¤Þ¤¿¡¢ËÜ¥ª¥×¥·¥ç¥ó¤ò»ØÄê¤·¤¿¾ì¹ç¤Ï¡¢--with-mysql-header¡¢--with-mysql-lib-dir¤â»ØÄê¤·¤Þ¤¹¡£
       ¤³¤ì¤ÏMySQL¤Î¥Ø¥Ã¥À¤È¥é¥¤¥Ö¥é¥ê¤¬É¬Í×¤Ê¤³¤È¤ò°ÕÌ£¤·¤Þ¤¹¡£»ÈÍÑ¤¹¤ëMySQL¤Î¥é¥¤¥Ö¥é¥ê¤Ïº£¤Î¤È¤³¤ílibmysqlclient_r.so¤Î¤ß¤Ç¤¹¡£
-      Ãí°Õ) --enable-memcache-cookie¤È¤ÎÊ»ÍÑ¤Ï¤Ç¤­¤Þ¤»¤ó¡£
       <program title="--enable-mysql-cookie">
          $ ./configure --enable-mysql-cookie --with-mysql-header=/usr/include/mysql  --with-mysql-lib-dir=/usr/lib
       </program>
@@ -143,7 +141,6 @@ mod_chxj¤ò¥³¥ó¥Ñ¥¤¥ë¤¹¤ë¤Ë¤Ïconfigure¤ò¹Ô¤¦É¬Í×¤¬¤¢¤ê¤Þ¤¹¡£
       Default¤ÎDBM¤ÇÎÉ¤¤¾ì¹ç¤ä¡¢Cookie¥·¥ß¥å¥ì¡¼¥Èµ¡Ç½¤ò»ÈÍÑ¤·¤Ê¤¤¾ì¹ç¤Ï»ØÄê¤¹¤ëÉ¬Í×¤Ï¤¢¤ê¤Þ¤»¤ó¡£
       ÊÌÅÓmemcached¤òÍÑ°Õ¤¹¤ëÉ¬Í×¤¬¤¢¤ê¤Þ¤¹¡£¤Þ¤¿¡¢ËÜ¥ª¥×¥·¥ç¥ó¤ò»ØÄê¤·¤¿¾ì¹ç¤Ï¡¢--with-apr-memcache-header¡¢--with-apr-memcache-lib-dir¤â»ØÄê¤·¤Þ¤¹¡£
       ¤³¤ì¤Ïapr_memcache¤Î¥Ø¥Ã¥À¤È¥é¥¤¥Ö¥é¥ê¤¬É¬Í×¤Ê¤³¤È¤ò°ÕÌ£¤·¤Þ¤¹¡£
-      Ãí°Õ) --enable-mysql-cookie¤È¤ÎÊ»ÍÑ¤Ï¤Ç¤­¤Þ¤»¤ó¡£
       <program title="--enable-memcache-cookie">
          $ ./configure --enable-memcache-cookie --with-apr-memcache-header=/usr/include/apr-memcache0 --with-apr-memcache-lib-dir=/usr/lib
       </program>
@@ -517,7 +514,8 @@ ChxjConvRule "^/chxj.+$" "EngineOn" "EUC-JP"
   </program> 
   </li>
   <li>ChxjCookieDir<br />
-    ¥¯¥Ã¥­¡¼¤ò»ÈÍÑ¤¹¤ë¾ì¹ç¤Ë»ØÄê¤·¤Þ¤¹¡£¥¯¥Ã¥­¡¼¤ÎÆâÍÆ¤òÊÝÂ¸¤¹¤ë¥Ç¥£¥ì¥¯¥È¥ê¤ò»ØÄê¤·¤Þ¤¹¡£
+    ¥¯¥Ã¥­¡¼ÊÝÂ¸Àè¤òdbm¤Ë¤¹¤ë¾ì¹ç¡Ê¥Ç¥Õ¥©¥ë¥È¡Ë»ØÄê¤·¤Þ¤¹¡£
+    ¥¯¥Ã¥­¡¼¤ÎÆâÍÆ¤òÊÝÂ¸¤¹¤ë¥Ç¥£¥ì¥¯¥È¥ê¤ò»ØÄê¤·¤Þ¤¹¡£
     »ØÄê¤·¤Ê¤¤¾ì¹ç¤Ï/tmp¤ËÊÝÂ¸¤µ¤ì¤Þ¤¹¡£
   <program title="ex)">
     &lt;Location /&gt;
@@ -535,6 +533,98 @@ ChxjConvRule "^/chxj.+$" "EngineOn" "EUC-JP"
     &lt;/Location&gt;
   </program> 
   ¾ÜºÙ¤Ï¡ÖCookie¥·¥ß¥å¥ì¡¼¥Èµ¡Ç½¡×¤Î¹à¤ò»²¾È¤¯¤À¤µ¤¤¡£
+  </li>
+  <li>ChxjCookieStoreType<br />
+    ¥¯¥Ã¥­¡¼ÊÝÂ¸Àè¤ò»ØÄê¤·¤Þ¤¹¡£»ØÄê¤Ç¤­¤ë¤â¤Î¤Ï°Ê²¼¤Î¤È¤ª¤ê¡£
+    <table title="ÊÝÂ¸Àè">
+      <thead>
+        <tr>
+          <td>ÃÍ</td><td>°ÕÌ£</td><td>»ØÄêÎã</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>"dbm"</td><td>dbm¤òÁªÂò¤·¤Þ¤¹¡£</td><td>ChxjCookieStoreType "dbm"</td>
+        </tr>
+        <tr>
+          <td>"mysql"</td><td>mysql¤òÁªÂò¤·¤Þ¤¹¡£<font color="#ff0000">Í­¸ú¤Ë¤¹¤ë¤Ë¤Ïconfigure»þ¤ËMYSQL COOKIEµ¡Ç½¤òÍ­¸ú¤Ë¤¹¤ëÉ¬Í×¤¬¤¢¤ê¤Þ¤¹</font></td><td>ChxjCookieStoreType "mysql"</td>
+        </tr>
+        <tr>
+          <td>"memcache"</td><td>memcache¤òÁªÂò¤·¤Þ¤¹¡£<font color="#FF0000">Í­¸ú¤Ë¤¹¤ë¤Ë¤Ïconfigure»þ¤ËMEMCACHE COOKIEµ¡Ç½¤òÍ­¸ú¤Ë¤¹¤ëÉ¬Í×¤¬¤¢¤ê¤Þ¤¹</font></td><td>ChxjCookieStoreType "memcache"</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>ChxjCookieMysqlHost<br />
+      MySQL¥µ¡¼¥Ð¤ÎÆ°ºî¤¹¤ë¥Û¥¹¥È¤ò»ØÄê¤·¤Þ¤¹¡£
+      <program title="ChxjCookieMysqlHost¤ÎÎã">
+         ChxjCookieMysqlHost "localhost"
+      </program>
+      ¾ÜºÙ¤Ï¡ÖCookie¥·¥ß¥å¥ì¡¼¥Èµ¡Ç½¡×¤Î¹à¤ò»²¾È¤¯¤À¤µ¤¤¡£
+  </li>
+  <li>ChxjCookieMysqlPort<br />
+      MySQL¥µ¡¼¥Ð¤Î¥Ý¡¼¥ÈÈÖ¹æ¤ò»ØÄê¤·¤Þ¤¹¡£
+      <program title="ChxjCookieMysqlPort¤ÎÎã">
+         ChxjCookieMysqlPort 3306
+      </program>
+      ¾ÜºÙ¤Ï¡ÖCookie¥·¥ß¥å¥ì¡¼¥Èµ¡Ç½¡×¤Î¹à¤ò»²¾È¤¯¤À¤µ¤¤¡£
+  </li>
+  <li>ChxjCookieMysqlDatabase<br />
+      MySQL¥µ¡¼¥Ð¤Î¥Ç¡¼¥¿¥Ù¡¼¥¹Ì¾¤ò»ØÄê¤·¤Þ¤¹¡£
+      <program title="ChxjCookieMysqlDatabase¤ÎÎã">
+         ChxjCookieMysqlDatabase "test_db"
+      </program>
+      ¾ÜºÙ¤Ï¡ÖCookie¥·¥ß¥å¥ì¡¼¥Èµ¡Ç½¡×¤Î¹à¤ò»²¾È¤¯¤À¤µ¤¤¡£
+  </li>
+  <li>ChxjCookieMysqlUsername<br />
+      MySQL¥µ¡¼¥Ð¤ËÀÜÂ³¤¹¤ëºÝ¤Ë»ÈÍÑ¤¹¤ë¥æ¡¼¥¶Ì¾¤ò»ØÄê¤·¤Þ¤¹¡£
+      <program title="ChxjCookieMysqlUsername¤ÎÎã">
+         ChxjCookieMysqlUsername "roottest"
+      </program>
+      ¾ÜºÙ¤Ï¡ÖCookie¥·¥ß¥å¥ì¡¼¥Èµ¡Ç½¡×¤Î¹à¤ò»²¾È¤¯¤À¤µ¤¤¡£
+  </li>
+  <li>ChxjCookieMysqlPassword<br />
+      MySQL¥µ¡¼¥Ð¤ËÀÜÂ³¤¹¤ëºÝ¤Ë»ÈÍÑ¤¹¤ë¥Ñ¥¹¥ï¡¼¥É¤ò»ØÄê¤·¤Þ¤¹¡£
+      <program title="ChxjCookieMysqlPassword¤ÎÎã">
+         ChxjCookieMysqlPassword "pwtest"
+      </program>
+      ¾ÜºÙ¤Ï¡ÖCookie¥·¥ß¥å¥ì¡¼¥Èµ¡Ç½¡×¤Î¹à¤ò»²¾È¤¯¤À¤µ¤¤¡£
+  </li>
+  <li>ChxjCookieMysqlSocketPath<br />
+      MySQL¤Î¥½¥±¥Ã¥È¥Ñ¥¹¤ò»ØÄê¤·¤Þ¤¹¡£
+      <program title="ChxjCookieMysqlSocketPath¤ÎÎã">
+         ChxjCookieMysqlSocketPath  "/tmp/mysql.sock"
+      </program>
+      ¾ÜºÙ¤Ï¡ÖCookie¥·¥ß¥å¥ì¡¼¥Èµ¡Ç½¡×¤Î¹à¤ò»²¾È¤¯¤À¤µ¤¤¡£
+  </li>
+  <li>ChxjCookieMysqlCharset<br />
+      MySQL¤Î¥¨¥ó¥³¡¼¥É¤ò»ØÄê¤·¤Þ¤¹¡£
+      <program title="ChxjCookieMysqlCharset¤ÎÎã">
+         ChxjCookieMysqlCharset  "utf8"
+      </program>
+      ¾ÜºÙ¤Ï¡ÖCookie¥·¥ß¥å¥ì¡¼¥Èµ¡Ç½¡×¤Î¹à¤ò»²¾È¤¯¤À¤µ¤¤¡£
+  </li>
+  <li>ChxjCookieMysqlTablename<br />
+      MySQL¤Î¥¯¥Ã¥­¡¼¤òÊÝÂ¸¤¹¤ë¥Æ¡¼¥Ö¥ëÌ¾¤ò»ØÄê¤·¤Þ¤¹¡£
+      <program title="ChxjCookieMysqlTablename¤ÎÎã">
+         ChxjCookieMysqlTablename  "chxj_cookie"
+      </program>
+      ¾åµ­¤Î¤è¤¦¤Ë"chxj_cookie"¤È»ØÄê¤¹¤ë¤È¡¢¼ÂºÝ¤ËºîÀ®¤µ¤ì¤ë¥Æ¡¼¥Ö¥ë¤Ï¡¢chxj_cookie¤Èchxj_cookie_expire¥Æ¡¼¥Ö¥ë¤Î2¤Ä¤Ë¤Ê¤ê¤Þ¤¹¡£
+      ¾ÜºÙ¤Ï¡ÖCookie¥·¥ß¥å¥ì¡¼¥Èµ¡Ç½¡×¤Î¹à¤ò»²¾È¤¯¤À¤µ¤¤¡£
+  </li>
+  <li>ChxjCookieMemcacheHost<br />
+      memcached¤ÎÆ°ºî¤¹¤ë¥Û¥¹¥È¤ò»ØÄê¤·¤Þ¤¹¡£
+      <program title="ChxjCookieMemcacheHost¤ÎÎã">
+         ChxjCookieMemcacheHost "localhost"
+      </program>
+      ¾ÜºÙ¤Ï¡ÖCookie¥·¥ß¥å¥ì¡¼¥Èµ¡Ç½¡×¤Î¹à¤ò»²¾È¤¯¤À¤µ¤¤¡£
+  </li>
+  <li>ChxjCookieMemcachePort<br />
+      memcached¤Î¥Ý¡¼¥ÈÈÖ¹æ¤ò»ØÄê¤·¤Þ¤¹¡£
+      <program title="ChxjCookieMemcachePort¤ÎÎã">
+         ChxjCookieMemcachePort 11211
+      </program>
+      ¾ÜºÙ¤Ï¡ÖCookie¥·¥ß¥å¥ì¡¼¥Èµ¡Ç½¡×¤Î¹à¤ò»²¾È¤¯¤À¤µ¤¤¡£
   </li>
 </ol>
 </subsection>
@@ -1046,8 +1136,8 @@ httpd.conf¤Ë°Ê²¼¤Îµ­½Ò¤òÄÉ²Ã¤·¤Þ¤¹¡£
   
 </subsection>
 </section>
-<section title="Cookie¥·¥ß¥å¥ì¡¼¥Èµ¡Ç½(EXPERIMENTAL)">
-<subsection title="Cookie¥·¥ß¥å¥ì¡¼¥Èµ¡Ç½(EXPERIMENTAL)">
+<section title="Cookie¥·¥ß¥å¥ì¡¼¥Èµ¡Ç½">
+<subsection title="Cookie¥·¥ß¥å¥ì¡¼¥Èµ¡Ç½">
   Cookie¤ò¼õ¤±ÉÕ¤±¤Ê¤¤¡ÊÌµ»ë¤¹¤ë¡ËÃ¼Ëö¤Î¤¿¤á¤ËCookie¤ò¥·¥ß¥å¥ì¡¼¥È¤·¤Þ¤¹¡£ËÜµ¡Ç½¤òÍ­¸ú¤Ë¤¹¤ë¤¿¤á¤Ë¤ÏChxjConvertRule¥Ç¥£¥ì¥¯¥Æ¥£¥Ö¤ò»ÈÍÑ¤¹¤ëÉ¬Í×¤¬¤¢¤ê¤Þ¤¹¡£ChxjConvertRule¥Ç¥£¥ì¥¯¥Æ¥£¥Ö¤ÎÂè£²¥Ñ¥é¥á¡¼¥¿¤ËCookieOn¤ò»ØÄê¤·¤Þ¤¹¡£
   
   <program title="Cookie¥·¥ß¥å¥ì¡¼¥Èµ¡Ç½¤òÍ­¸ú¤Ë¤¹¤ëÎã">
@@ -1061,7 +1151,23 @@ Cookie¥·¥ß¥å¥ì¡¼¥È¤Ç¤Ï¡¢a¥¿¥°¡¢img¥¿¥°¡¢form¥¿¥°¤ÎURLÉô¤ËOne-Time ID¤òËä¤á¹þ¤à¤³
 </subsection>
 <subsection title="Cookie¤ÎÊÝÂ¸¾ì½ê">
 Cookie¤ÎÆâÍÆ¤Ï¥µ¡¼¥ÐÂ¦¤ËÊÝÂ¸¤µ¤ì¤Þ¤¹¡£
-¥Ç¥Õ¥©¥ë¥È¤Ç¤ÏDBM¤ò»ÈÍÑ¤·¡¢ÊÝÂ¸¥Ç¥£¥ì¥¯¥È¥ê¤ÏChxjCookieDir¥Ç¥£¥ì¥¯¥Æ¥£¥Ö¤ò»ÈÍÑ¤¹¤ë¤³¤È¤Ç»ØÄê¤¹¤ë¤³¤È¤¬¤Ç¤­¤Þ¤¹¡£»ØÄê¤·¤Ê¤«¤Ã¤¿¾ì¹ç¤Ï¡¢/tmp¤ËÊÝÂ¸¤µ¤ì¤Þ¤¹¡£
+ÊÝÂ¸Àè¤Ë¤Ïdbm¡¢memcached¡¢mysql¤¬ÁªÂò¤Ç¤­¤Þ¤¹¡£<br />
+<font color="#ff0000">Ãí°Õ) memcached¡¢mysql¤òÊÝÂ¸Àè¤ËÁªÂò¤¹¤ë¾ì¹ç¤Ïconfigure»þ¤Ë¤½¤ì¤¾¤ì»ØÄê¤¹¤ëÉ¬Í×¤¬¤¢¤ê¤Þ¤¹</font><br />
+ÊÝÂ¸Àè¤Î»ØÄê¤Ë¤ÏChxjCookieStoreType¥Ç¥£¥ì¥¯¥Æ¥£¥Ö¤ò»ÈÍÑ¤·¤Þ¤¹¡£
+  <program title="ChxjCookieStoreType¤ÇDBM¤ò»ØÄê¤·¤¿Îã">
+    ChxjCookieStoreType "dbm"
+  </program>
+  <program title="ChxjCookieStoreType¤ÇMySQL¤ò»ØÄê¤·¤¿Îã">
+    ChxjCookieStoreType "mysql"
+  </program>
+  <program title="ChxjCookieStoreType¤Çmemcache¤ò»ØÄê¤·¤¿Îã">
+    ChxjCookieStoreType "memcache"
+  </program>
+  ¾åµ­ChxjCookieStoreType¤¬»ØÄê¤µ¤ì¤Ê¤¤¾ì¹ç¤Ïdbm¤¬ÁªÂò¤µ¤ì¤Þ¤¹¡£
+<br />
+
+dbm¤ò»ÈÍÑ¤¹¤ë¾ì¹ç¤Ï¡¢ChxjCookieDir¥Ç¥£¥ì¥¯¥Æ¥£¥Ö¤ò»ØÄê¤·¡¢ÊÝÂ¸¥Ç¥£¥ì¥¯¥È¥ê¤ò»ØÄê¤·¤Þ¤¹¡£»ØÄê¤·¤Ê¤«¤Ã¤¿¾ì¹ç¤Ï/tmp¤ËÊÝÂ¸¤µ¤ì¤Þ¤¹¡£
+
   <program title="ChxjCookieDir¤ÎÎã">
     ChxjCookieDir /var/abc
   </program>
@@ -1069,7 +1175,8 @@ Cookie¤ÎÆâÍÆ¤Ï¥µ¡¼¥ÐÂ¦¤ËÊÝÂ¸¤µ¤ì¤Þ¤¹¡£
 DBM¤ÎÂå¤ï¤ê¤ËMySQL¤ämemcached¤ò»ØÄê¤¹¤ë¤³¤È¤â¤Ç¤­¤Þ¤¹¡£¤½¤ÎºÝ¤Ï¡¢ChxjCookieDir¤Ï»ØÄê¤¹¤ëÉ¬Í×¤Ï¤¢¤ê¤Þ¤»¤ó¡£
 MySQL¤ò»ÈÍÑ¤¹¤ë¤Ë¤Ï¡¢configure»þ¤ËMySQL COOKIEµ¡Ç½¤òÍ­¸ú¤Ë¤·¤Æ¡¢¥³¥ó¥Ñ¥¤¥ë¤¹¤ëÉ¬Í×¤¬¤¢¤ê¤Þ¤¹¡£<note>Build¤Î¹à»²¾È</note>
 memcached¤ò»ÈÍÑ¤¹¤ë¤Ë¤Ï¡¢configure»þ¤ËMEMCACHE COOKIEµ¡Ç½¤òÍ­¸ú¤Ë¤·¤Æ¡¢¥³¥ó¥Ñ¥¤¥ë¤¹¤ëÉ¬Í×¤¬¤¢¤ê¤Þ¤¹¡£<note>Build¤Î¹à»²¾È</note>
-¤Þ¤¿MySQL¤ò»ÈÍÑ¤¹¤ë¾ì¹ç¤Ë¤Ï°Ê²¼¤Î¥Ç¥£¥ì¥¯¥Æ¥£¥Ö¤ò»ØÄê¤¹¤ëÉ¬Í×¤â¤¢¤ê¤Þ¤¹¡£
+
+MySQL¤ò»ÈÍÑ¤¹¤ë¾ì¹ç¤Ë¤ÏChxjCookieStoreType¥Ç¥£¥ì¥¯¥Æ¥£¥Ö¤Î¤Û¤«¤Ë¡¢°Ê²¼¤Î¥Ç¥£¥ì¥¯¥Æ¥£¥Ö¤ò»ØÄê¤¹¤ëÉ¬Í×¤â¤¢¤ê¤Þ¤¹¡£
 <ol>
   <li>ChxjCookieMysqlHost<br />
       MySQL¥µ¡¼¥Ð¤ÎÆ°ºî¤¹¤ë¥Û¥¹¥È¤ò»ØÄê¤·¤Þ¤¹¡£
@@ -1122,7 +1229,7 @@ memcached¤ò»ÈÍÑ¤¹¤ë¤Ë¤Ï¡¢configure»þ¤ËMEMCACHE COOKIEµ¡Ç½¤òÍ­¸ú¤Ë¤·¤Æ¡¢¥³¥ó¥Ñ¥¤¥
   </li>
 </ol>
 
-memcached¤ò»ÈÍÑ¤¹¤ë¾ì¹ç¤Ë¤Ï°Ê²¼¤Î¥Ç¥£¥ì¥¯¥Æ¥£¥Ö¤ò»ØÄê¤¹¤ëÉ¬Í×¤â¤¢¤ê¤Þ¤¹¡£
+memcached¤ò»ÈÍÑ¤¹¤ë¾ì¹ç¤Ë¤ÏChxjCookieStoreType¥Ç¥£¥ì¥¯¥Æ¥£¥Ö¤ÎÂ¾¤Ë°Ê²¼¤Î¥Ç¥£¥ì¥¯¥Æ¥£¥Ö¤ò»ØÄê¤¹¤ëÉ¬Í×¤â¤¢¤ê¤Þ¤¹¡£
 <ol>
   <li>ChxjCookieMemcacheHost<br />
       memcached¤ÎÆ°ºî¤¹¤ë¥Û¥¹¥È¤ò»ØÄê¤·¤Þ¤¹¡£
