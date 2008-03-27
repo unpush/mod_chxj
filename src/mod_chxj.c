@@ -51,8 +51,11 @@
 #include "chxj_chtml20.h"
 #include "chxj_chtml30.h"
 #include "chxj_jhtml.h"
-#ifdef USE_MYSQL_COOKIE
-#include "chxj_mysql.h"
+#if defined(USE_MYSQL_COOKIE)
+#  include "chxj_mysql.h"
+#endif
+#if defined(USE_MEMCACHE_COOKIE)
+#  include "chxj_memcache.h"
 #endif
 
 #include "chxj_img_conv_format.h"
@@ -1436,11 +1439,14 @@ chxj_create_per_dir_config(apr_pool_t *p, char *arg)
   conf->server_side_encoding = NULL;
   conf->cookie_db_dir    = NULL;
   conf->cookie_timeout   = 0;
+  conf->cookie_store_type = COOKIE_STORE_TYPE_NONE;
+  conf->cookie_lazy_mode  = 0;
 #if defined(USE_MYSQL_COOKIE)
   memset((void*)&conf->mysql, 0, sizeof(mysql_t));
   conf->mysql.port       = MYSQL_PORT;
   conf->mysql.host       = NULL;
-#elif defined(USE_MEMCACHE_COOKIE)
+#endif
+#if defined(USE_MEMCACHE_COOKIE)
   memset((void*)&conf->memcache, 0, sizeof(memcache_t));
   conf->memcache.host    = NULL;
   conf->memcache.port    = 0;
@@ -1660,8 +1666,8 @@ chxj_merge_per_dir_config(apr_pool_t *p, void *basev, void *addv)
   else {
     mrg->mysql.charset = NULL;
   }
-  
-#elif defined(USE_MEMCACHE_COOKIE)
+#endif
+#if defined(USE_MEMCACHE_COOKIE)
   if (add->memcache.host) {
     mrg->memcache.host = apr_pstrdup(p, add->memcache.host);
   }
@@ -1680,8 +1686,25 @@ chxj_merge_per_dir_config(apr_pool_t *p, void *basev, void *addv)
   else {
     mrg->memcache.port = 0;
   }
-
 #endif
+  if (add->cookie_store_type) {
+    mrg->cookie_store_type = add->cookie_store_type;
+  }
+  else if (base->cookie_store_type) {
+    mrg->cookie_store_type = base->cookie_store_type;
+  }
+  else {
+    mrg->cookie_store_type = COOKIE_STORE_TYPE_NONE;
+  }
+  if (add->cookie_lazy_mode) {
+    mrg->cookie_lazy_mode = add->cookie_lazy_mode;
+  }
+  else if (base->cookie_lazy_mode) {
+    mrg->cookie_lazy_mode = base->cookie_lazy_mode;
+  }
+  else {
+    mrg->cookie_lazy_mode = 0;
+  }
   return mrg;
 }
 
@@ -2282,7 +2305,8 @@ cmd_set_cookie_mysql_charset(
 
   return NULL;
 }
-#elif defined(USE_MEMCACHE_COOKIE)
+#endif
+#if defined(USE_MEMCACHE_COOKIE)
 static const char *
 cmd_set_cookie_memcache_port(
   cmd_parms   *UNUSED(cmd), 
@@ -2325,6 +2349,57 @@ cmd_set_cookie_memcache_host(
   return NULL;
 }
 #endif
+static const char *
+cmd_set_cookie_lazy_mode(
+  cmd_parms   *UNUSED(cmd),
+  void        *mconfig,
+  const char  *arg)
+{
+  mod_chxj_config  *dconf;
+
+  if (strlen(arg) > 255)
+    return "mod_chxj: ChxjCookieLazyMode is too long.";
+
+  dconf = (mod_chxj_config *)mconfig;
+
+  if (strcasecmp("TRUE",arg) == 0) {
+    dconf->cookie_lazy_mode = 2;
+  }
+  else {
+    dconf->cookie_lazy_mode = 1;
+  }
+
+  return NULL;
+}
+
+static const char *
+cmd_set_cookie_store_type(
+  cmd_parms   *UNUSED(cmd),
+  void        *mconfig,
+  const char  *arg)
+{
+  mod_chxj_config  *dconf;
+
+  if (strlen(arg) > 255)
+    return "mod_chxj: ChxjCookieStoreType is too long.";
+
+  dconf = (mod_chxj_config *)mconfig;
+
+  if (strcasecmp(CHXJ_COOKIE_STORE_TYPE_DBM, arg) == 0) {
+    dconf->cookie_store_type = COOKIE_STORE_TYPE_DBM;
+  }
+  else if (strcasecmp(CHXJ_COOKIE_STORE_TYPE_MYSQL, arg) == 0) {
+    dconf->cookie_store_type = COOKIE_STORE_TYPE_MYSQL;
+  }
+  else if (strcasecmp(CHXJ_COOKIE_STORE_TYPE_MEMCACHE, arg) == 0) {
+    dconf->cookie_store_type = COOKIE_STORE_TYPE_MEMCACHE;
+  }
+  else {
+    dconf->cookie_store_type = COOKIE_STORE_TYPE_NONE;
+  }
+
+  return NULL;
+}
 
 
 static const command_rec cmds[] = {
@@ -2382,6 +2457,18 @@ static const command_rec cmds[] = {
     NULL,
     OR_ALL,
     "The compulsion time-out time of the cookie is specified. "),
+  AP_INIT_TAKE1(
+    "ChxjCookieStoreType",
+    cmd_set_cookie_store_type,
+    NULL,
+    OR_ALL,
+    "It specifies preserving of the cookie ahead. (DBM/MYSQL/MEMCACHE)"),
+  AP_INIT_TAKE1(
+    "ChxjCookieLasyMode",
+    cmd_set_cookie_lazy_mode,
+    NULL,
+    OR_ALL,
+    "OneTimeID is negligently done. (TRUE/FALSE)"),
 #if defined(USE_MYSQL_COOKIE)
   AP_INIT_TAKE1(
     "ChxjCookieMysqlHost",
@@ -2431,7 +2518,8 @@ static const command_rec cmds[] = {
     NULL,
     OR_ALL,
     "The MySQL charset used by saving Cookie"),
-#elif defined(USE_MEMCACHE_COOKIE)
+#endif
+#if defined(USE_MEMCACHE_COOKIE)
   AP_INIT_TAKE1(
     "ChxjCookieMemcacheHost",
     cmd_set_cookie_memcache_host,

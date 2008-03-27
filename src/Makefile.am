@@ -33,7 +33,8 @@ libmod_chxj_la_SOURCES = mod_chxj.c \
     chxj_emoji.c \
     chxj_jreserved_tag.c \
     chxj_mysql.c \
-    chxj_memcache.c
+    chxj_memcache.c \
+    chxj_dbm.c
 
 
 libmod_chxj_la_CFLAGS = $(AM_CFLAGS) -O2 -prefer-pic @QDEFS@ @DDEFS@ -I. -I../include 

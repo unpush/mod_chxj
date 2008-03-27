@@ -21,7 +21,6 @@
 #include "chxj_url_encode.h"
 #include "chxj_apply_convrule.h"
 #include "chxj_str_util.h"
-#include "chxj_tag_util.h"
 
 #include "ap_release.h"
 
@@ -36,12 +35,15 @@
 
 #if defined(USE_MYSQL_COOKIE)
 #  include "chxj_mysql.h"
-#elif defined(USE_MEMCACHE_COOKIE)
+#endif
+#if defined(USE_MEMCACHE_COOKIE)
 #  include "chxj_memcache.h"
 #endif
+#include "chxj_dbm.h"
 
-static char *s_get_hostname_from_url(request_rec *r, char *value);
-static char *s_cut_until_end_hostname(request_rec *, char *value);
+
+static char* s_get_hostname_from_url(request_rec* r, char* value);
+static char* s_cut_until_end_hostname(request_rec*, char* value);
 static int valid_domain(request_rec *r, const char *value);
 static int valid_path(request_rec *r, const char *value);
 static int valid_expires(request_rec *r, const char *value);
@@ -86,32 +88,25 @@ alloc_cookie_id(request_rec *r)
   return cookie_id;
 }
 
+
 /*
  *
  */
-cookie_t *
-chxj_save_cookie(request_rec *r)
+cookie_t*
+chxj_save_cookie(request_rec* r)
 {
   int                 ii;
-  apr_array_header_t *headers;
-  apr_table_entry_t   *hentryp;
+  apr_array_header_t* headers;
+  apr_table_entry_t*  hentryp;
   char                *old_cookie_id;
   char                *store_string;
   mod_chxj_config     *dconf;
   chxjconvrule_entry  *entryp;
-#if !defined(USE_MYSQL_COOKIE) && !defined(USE_MEMCACHE_COOKIE)
-  apr_status_t        retval;
-  apr_datum_t         dbmkey;
-  apr_datum_t         dbmval;
-  apr_dbm_t           *f;
-  char                *uuid_string;
-  apr_file_t          *file;
-#endif
-  apr_table_t         *new_cookie_table;
+  apr_table_t*        new_cookie_table;
   int                 has_cookie = 0;
-  cookie_t            *cookie;
-  cookie_t            *old_cookie;
-  char                *refer_string;
+  cookie_t*           cookie;
+  cookie_t*           old_cookie;
+  char*               refer_string;
   apr_uri_t           parsed_uri;
   int                 has_refer;
 
@@ -148,9 +143,9 @@ chxj_save_cookie(request_rec *r)
       DBG(r, "=====================================");
       DBG(r, "cookie=[%s:%s]", hentryp[ii].key, hentryp[ii].val);
 
-      char *key;
-      char *val;
-      char *buff;
+      char* key;
+      char* val;
+      char* buff;
 
 
       buff = apr_pstrdup(r->pool, hentryp[ii].val);
@@ -240,84 +235,34 @@ chxj_save_cookie(request_rec *r)
 
   cookie->cookie_id = alloc_cookie_id(r);
 
+DBG(r, "TYPE:[%d]", dconf->cookie_store_type);
+  {
+    int done_proc = 0;
 #if defined(USE_MYSQL_COOKIE)
-
-  if (! chxj_open_mysql_handle(r, dconf)) {
-    ERR(r, "Cannot open mysql connection");
-    goto on_error;
-  }
-
-  if (!chxj_mysql_exist_cookie_table(r, dconf)) {
-    DBG(r, "not found cookie table:[%s]", dconf->mysql.tablename);
-    if (!chxj_mysql_create_cookie_table(r, dconf)) {
-      ERR(r, "cannot create cookie table:[%s]", dconf->mysql.tablename);
-      goto on_error;
+    if (IS_COOKIE_STORE_MYSQL(dconf->cookie_store_type)) {
+      if (! chxj_save_cookie_mysql(r, dconf, cookie->cookie_id, store_string)) {
+        ERR(r, "faild: chxj_save_cookie_mysql() cookie_id:[%s]", cookie->cookie_id);
+        goto on_error;
+      }
+      done_proc = 1;
+    }
+#endif
+#if defined(USE_MEMCACHE_COOKIE)
+    if (IS_COOKIE_STORE_MEMCACHE(dconf->cookie_store_type)) {
+      if (! chxj_save_cookie_memcache(r, dconf, cookie->cookie_id, store_string)) {
+        ERR(r, "failed: chxj_save_cookie_memcache() cookie_id:[%s]", cookie->cookie_id);
+        goto on_error;
+      }
+      done_proc = 1;
+    }
+#endif
+    if (IS_COOKIE_STORE_DBM(dconf->cookie_store_type) || ! done_proc) {
+      if (! chxj_save_cookie_dbm(r, dconf, cookie->cookie_id, store_string)) {
+        ERR(r, "failed: chxj_save_cookie_dbm() cookie_id:[%s]", cookie->cookie_id);
+        goto on_error;
+      }
     }
   }
-  if (! chxj_mysql_insert_or_update_cookie(r, dconf, cookie->cookie_id, store_string)) {
-    ERR(r, "cannot store to cookie table:[%s]", dconf->mysql.tablename);
-    goto on_error;
-  }
-
-  /* *NEED NOT* close database. */
-  /* chxj_close_mysql_handle(); */
-
-#elif defined(USE_MEMCACHE_COOKIE)
-
-  if (! chxj_memcache_init(r, dconf)) {
-    ERR(r, "Cannot create memcache server");
-    goto on_error;
-  }
-
-  if (! chxj_memcache_set_cookie(r, dconf, cookie->cookie_id, store_string)) {
-    ERR(r, "cannot store to memcache host:[%s] port:[%d]", dconf->memcache.host, dconf->memcache.port);
-    goto on_error;
-  }
-  DBG(r, "stored DATA:[%s]", chxj_memcache_get_cookie(r, dconf, cookie->cookie_id));
-
-#else
-  file = chxj_cookie_db_lock(r);
-  if (! file) {
-    ERR(r, "mod_chxj: Can't lock cookie db");
-    DBG(r, "end chxj_save_cookie()");
-    return NULL;
-  }
-
-  retval = apr_dbm_open_ex(&f, 
-                           "default", 
-                           chxj_cookie_db_name_create(r, dconf->cookie_db_dir), 
-                           APR_DBM_RWCREATE, 
-                           APR_OS_DEFAULT, 
-                           r->pool);
-  if (retval != APR_SUCCESS) {
-    DBG(r, "end chxj_save_cookie()");
-    ERR(r, "could not open dbm (type %s) auth file: %s", 
-            "default", 
-            chxj_cookie_db_name_create(r,dconf->cookie_db_dir));
-    chxj_cookie_db_unlock(r, file);
-    return NULL;
-  }
-
-
-  /*
-   * create key
-   */
-
-  dbmkey.dptr  = cookie->cookie_id;
-  dbmkey.dsize = strlen(cookie->cookie_id);
-  dbmval.dptr  = store_string;
-  dbmval.dsize = strlen(store_string);
-
-  /*
-   * store to db
-   */
-  retval = apr_dbm_store(f, dbmkey, dbmval);
-  if (retval != APR_SUCCESS) {
-    ERR(r, "Cannot store Cookie data to DBM file `%s'",
-            chxj_cookie_db_name_create(r, dconf->cookie_db_dir));
-    goto on_error;
-  }
-#endif
 
 
   chxj_save_cookie_expire(r, cookie);
@@ -325,11 +270,6 @@ chxj_save_cookie(request_rec *r)
 
 
 on_error:
-#if !defined(USE_MYSQL_COOKIE) && !defined(USE_MEMCACHE_COOKIE)
-  apr_dbm_close(f);
-  chxj_cookie_db_unlock(r, file);
-#endif
-
   DBG(r, "end chxj_save_cookie()");
   return cookie;
 }
@@ -337,23 +277,16 @@ on_error:
 /*
  *
  */
-cookie_t *
-chxj_update_cookie(request_rec *r, cookie_t *old_cookie)
+cookie_t*
+chxj_update_cookie(request_rec* r, cookie_t* old_cookie)
 {
   int                 ii;
-  apr_array_header_t  *headers;
-  apr_table_entry_t   *hentryp;
-  char                *store_string;
-  mod_chxj_config     *dconf;
-  chxjconvrule_entry  *entryp;
-#if !defined(USE_MYSQL_COOKIE) && !defined(USE_MEMCACHE_COOKIE)
-  apr_dbm_t           *f;
-  apr_file_t          *file;
-  apr_datum_t         dbmkey;
-  apr_datum_t         dbmval;
-  apr_status_t        retval;
-#endif
-  cookie_t            *cookie;
+  apr_array_header_t* headers;
+  apr_table_entry_t*  hentryp;
+  char*               store_string;
+  mod_chxj_config*    dconf;
+  chxjconvrule_entry* entryp;
+  cookie_t*           cookie;
 
 
   DBG(r, "start chxj_update_cookie()");
@@ -407,83 +340,34 @@ chxj_update_cookie(request_rec *r, cookie_t *old_cookie)
                                NULL);
   }
 
+  {
+    int done_proc = 0;
 #if defined(USE_MYSQL_COOKIE)
-  if (! chxj_open_mysql_handle(r, dconf)) {
-    ERR(r, "Cannot open mysql connection");
-    goto on_error;
-  }
+    if (IS_COOKIE_STORE_MYSQL(dconf->cookie_store_type)) {
+      if (!chxj_update_cookie_mysql(r, dconf, cookie->cookie_id, store_string)) {
+        ERR(r, "failed: chxj_update_cookie_mysql() cookie_id:[%s]", cookie->cookie_id);
+        goto on_error;
+      }
+      done_proc = 1;
+    }
+#endif
 
-  if (!chxj_mysql_exist_cookie_table(r, dconf)) {
-    DBG(r, "not found cookie table:[%s]", dconf->mysql.tablename);
-    if (!chxj_mysql_create_cookie_table(r, dconf)) {
-      ERR(r, "cannot create cookie table:[%s]", dconf->mysql.tablename);
-      goto on_error;
+#if defined(USE_MEMCACHE_COOKIE)
+    if (IS_COOKIE_STORE_MEMCACHE(dconf->cookie_store_type)) {
+      if (! chxj_update_cookie_memcache(r, dconf, cookie->cookie_id, store_string)) {
+        ERR(r, "failed: chxj_update_cookie_memcache() cookie_id:[%s]", cookie->cookie_id);
+        goto on_error;
+      }
+      done_proc = 1;
+    }
+#endif
+    if (!done_proc || IS_COOKIE_STORE_DBM(dconf->cookie_store_type)) {
+      if (! chxj_update_cookie_dbm(r, dconf, cookie->cookie_id, store_string)) {
+        ERR(r, "failed: chxj_update_cookie_dbm() cookie_id:[%s]", cookie->cookie_id);
+        goto on_error;
+      }
     }
   }
-  if (! chxj_mysql_insert_or_update_cookie(r, dconf, cookie->cookie_id, store_string)) {
-    ERR(r, "cannot create cookie table:[%s]", dconf->mysql.tablename);
-    goto on_error;
-  }
-
-  /* *NEED NOT* close database. */
-  /* chxj_close_mysql_handle(); */
-#elif defined(USE_MEMCACHE_COOKIE)
-
-  if (! chxj_memcache_init(r, dconf)) {
-    ERR(r, "Cannot create memcache server");
-    goto on_error;
-  }
-
-  if (! chxj_memcache_set_cookie(r, dconf, cookie->cookie_id, store_string)) {
-    ERR(r, "cannot store to memcache host:[%s] port:[%d]", dconf->memcache.host, dconf->memcache.port);
-    goto on_error;
-  }
-
-#else
-  file = chxj_cookie_db_lock(r);
-  if (! file) {
-    ERR(r, "mod_chxj: Can't lock cookie db");
-    return NULL;
-  }
-
-  retval = apr_dbm_open_ex(&f, 
-                           "default", 
-                           chxj_cookie_db_name_create(r, dconf->cookie_db_dir), 
-                           APR_DBM_RWCREATE, 
-                           APR_OS_DEFAULT, 
-                           r->pool);
-  if (retval != APR_SUCCESS) {
-    ERR(r, "could not open dbm (type %s) auth file: %s", 
-            "default", 
-            chxj_cookie_db_name_create(r,dconf->cookie_db_dir));
-    chxj_cookie_db_unlock(r, file);
-    return NULL;
-  }
-
-
-  /*
-   * create key
-   */
-
-  dbmkey.dptr  = cookie->cookie_id;
-  dbmkey.dsize = strlen(cookie->cookie_id);
-
-  /*
-   * create val
-   */
-  dbmval.dptr  = store_string;
-  dbmval.dsize = strlen(store_string);
-
-  /*
-   * store to db
-   */
-  retval = apr_dbm_store(f, dbmkey, dbmval);
-  if (retval != APR_SUCCESS) {
-    ERR(r, "Cannot store Cookie data to DBM file `%s'",
-            chxj_cookie_db_name_create(r, dconf->cookie_db_dir));
-    goto on_error;
-  }
-#endif
 
   chxj_save_cookie_expire(r, cookie);
 
@@ -491,11 +375,6 @@ chxj_update_cookie(request_rec *r, cookie_t *old_cookie)
 
 
 on_error:
-#if !defined(USE_MYSQL_COOKIE) && !defined(USE_MEMCACHE_COOKIE)
-  apr_dbm_close(f);
-  chxj_cookie_db_unlock(r, file);
-#endif
-
   DBG(r, "end   chxj_update_cookie()");
   return cookie;
 }
@@ -505,18 +384,11 @@ on_error:
  *
  * @return loaded data.
  */
-cookie_t *
-chxj_load_cookie(request_rec *r, char *cookie_id)
+cookie_t*
+chxj_load_cookie(request_rec* r, char* cookie_id)
 {
   mod_chxj_config         *dconf;
   chxjconvrule_entry      *entryp;
-#if !defined(USE_MYSQL_COOKIE) && !defined(USE_MEMCACHE_COOKIE)
-  apr_status_t            retval;
-  apr_dbm_t               *f;
-  apr_file_t              *file;
-  apr_datum_t             dbmval;
-  apr_datum_t             dbmkey;
-#endif
   cookie_t                *cookie;
   apr_table_t             *load_cookie_table;
   char                    *load_string = NULL;
@@ -549,99 +421,46 @@ chxj_load_cookie(request_rec *r, char *cookie_id)
   }
   load_cookie_table = apr_table_make(r->pool, 0);
 
+  {
+    int done_proc = 0;
 #if defined(USE_MYSQL_COOKIE)
-
-  if (! chxj_open_mysql_handle(r, dconf)) {
-    ERR(r, "Cannot open mysql connection");
-    goto on_error0;
-  }
-
-  if (!chxj_mysql_exist_cookie_table(r, dconf)) {
-    DBG(r, "not found cookie table:[%s]", dconf->mysql.tablename);
-    if (!chxj_mysql_create_cookie_table(r, dconf)) {
-      ERR(r, "cannot create cookie table:[%s]", dconf->mysql.tablename);
-      goto on_error0;
+    if (IS_COOKIE_STORE_MYSQL(dconf->cookie_store_type)) {
+      if (! (load_string = chxj_load_cookie_mysql(r, dconf, cookie->cookie_id))) {
+        ERR(r, "failed: chxj_load_cookie_mysql() cookie_id:[%s]", cookie_id);
+        goto on_error0;
+      }
+      done_proc = 1;
     }
-  }
-  if (!(load_string = chxj_mysql_load_cookie(r, dconf, cookie->cookie_id))) {
-    ERR(r, "not found cookie. cookie_id:[%s]", cookie->cookie_id);
-    goto on_error0;
-  }
-
-  /* *NEED NOT* close database. */
-  /* chxj_close_mysql_handle(); */
-
-#elif defined(USE_MEMCACHE_COOKIE)
-
-  if (! chxj_memcache_init(r, dconf)) {
-    ERR(r, "Cannot create memcache server");
-    goto on_error0;
-  }
-
-  if (! (load_string = chxj_memcache_get_cookie(r, dconf, cookie->cookie_id))) {
-    ERR(r, "cannot store to memcache host:[%s] port:[%d]", dconf->memcache.host, dconf->memcache.port);
-    goto on_error0;
-  }
-
-#else 
-  file = chxj_cookie_db_lock(r);
-  if (! file) {
-    ERR(r, "mod_chxj: Can't lock cookie db");
-    goto on_error0;
-  }
-
-  retval = apr_dbm_open_ex(&f, 
-                           "default", 
-                           chxj_cookie_db_name_create(r, dconf->cookie_db_dir),
-                           APR_DBM_RWCREATE, 
-                           APR_OS_DEFAULT, 
-                           r->pool);
-  if (retval != APR_SUCCESS) {
-    ERR(r, 
-        "could not open dbm (type %s) auth file: %s", 
-        "default", 
-        chxj_cookie_db_name_create(r, dconf->cookie_db_dir));
-    goto on_error1;
-  }
-
-  /*
-   * create key
-   */
-  dbmkey.dptr  = apr_pstrdup(r->pool, cookie->cookie_id);
-  dbmkey.dsize = strlen(dbmkey.dptr);
-
-  if (apr_dbm_exists(f, dbmkey)) {
-    retval = apr_dbm_fetch(f, dbmkey, &dbmval);
-    if (retval != APR_SUCCESS) {
-      ERR(r, 
-           "could not fetch dbm (type %s) auth file: %s", "default", 
-           chxj_cookie_db_name_create(r, dconf->cookie_db_dir));
-      goto on_error2;
-    }
-    load_string = apr_palloc(r->pool, dbmval.dsize+1);
-
-    memset(load_string, 0, dbmval.dsize+1);
-    memcpy(load_string, dbmval.dptr, dbmval.dsize);
-
-  }
-  apr_dbm_close(f);
-  chxj_cookie_db_unlock(r, file);
-
 #endif
+#if defined(USE_MEMCACHE_COOKIE)
+    if (IS_COOKIE_STORE_MEMCACHE(dconf->cookie_store_type)) {
+      if (! (load_string = chxj_load_cookie_memcache(r, dconf, cookie->cookie_id))) {
+        ERR(r, "failed: chxj_load_cookie_memcache() cookie_id:[%s]", cookie_id);
+        goto on_error0;
+      }
+      done_proc = 1;
+    }
+#endif
+    if (!done_proc || IS_COOKIE_STORE_DBM(dconf->cookie_store_type)) {
+      if (! (load_string = chxj_load_cookie_dbm(r, dconf, cookie->cookie_id))) {
+        ERR(r, "failed: chxj_load_cookie_dbm() cookie_id:[%s]", cookie_id);
+        goto on_error0;
+      }
+    }
+  }
 
   if (load_string) {
     DBG(r, "load_string=[%s]", load_string);
     header_cookie = apr_palloc(r->pool, 1);
-
     header_cookie[0] = 0;
     for (;;) {
-      char *tmp_sem;
+      char* tmp_sem;
       pair = apr_strtok(load_string, "\n", &pstat);  
       load_string = NULL;
       if (!pair) break;
 
       DBG(r, "Cookie:[%s]", pair);
-      char *tmp_pair;
+      char* tmp_pair;
 
       tmp_pair = apr_pstrdup(r->pool, pair);
       val = strchr(tmp_pair, '=');
@@ -649,6 +468,7 @@ chxj_load_cookie(request_rec *r, char *cookie_id)
         key = tmp_pair;
         *val++ = 0;
         apr_table_add(load_cookie_table, key, val);
+        DBG(r, "ADD key:[%s] val:[%s]", key, val);
       }
       tmp_pair = apr_pstrdup(r->pool, pair);
       tmp_sem = strchr(tmp_pair, ';'); 
@@ -689,14 +509,6 @@ chxj_load_cookie(request_rec *r, char *cookie_id)
 
   return cookie;
 
-
-#if !defined(USE_MYSQL_COOKIE) && !defined(USE_MEMCACHE_COOKIE)
-on_error2:
-  apr_dbm_close(f);
-
-on_error1:
-  chxj_cookie_db_unlock(r, file);
-#endif
 
 on_error0:
 
@@ -898,11 +710,11 @@ valid_secure(request_rec *r, const char *value)
 }
 
 
-char *
-chxj_add_cookie_parameter(request_rec *r, char *value, cookie_t *cookie)
+char*
+chxj_add_cookie_parameter(request_rec* r, char* value, cookie_t* cookie)
 {
-  char *qs;
-  char *dst;
+  char* qs;
+  char* dst;
 
   DBG(r, "start chxj_add_cookie_parameter() cookie_id=[%s]", (cookie) ? cookie->cookie_id : NULL);
 
@@ -938,9 +750,9 @@ on_error:
 
 
 int
-chxj_cookie_check_host(request_rec *r, char *value) 
+chxj_cookie_check_host(request_rec* r, char* value) 
 {
-  char *hostnm;
+  char* hostnm;
 
   DBG(r, "hostname=[%s]", r->hostname);
 
@@ -955,8 +767,8 @@ chxj_cookie_check_host(request_rec *r, char *value)
 }
 
 
-static char *
-s_get_hostname_from_url(request_rec *r, char *value)
+static char*
+s_get_hostname_from_url(request_rec* r, char* value)
 {
   if (!value) 
     return NULL; 
@@ -971,11 +783,11 @@ s_get_hostname_from_url(request_rec *r, char *value)
 }
 
 
-static char *
-s_cut_until_end_hostname(request_rec *r, char *value)
+static char* 
+s_cut_until_end_hostname(request_rec* r, char* value)
 {
-  char *sp;
-  char *hostnm;
+  char* sp;
+  char* hostnm;
 
   hostnm = sp = apr_pstrdup(r->pool, value);
   for (;*sp; sp++) {
@@ -988,203 +800,59 @@ s_cut_until_end_hostname(request_rec *r, char *value)
 }
 
 
-#if !defined(USE_MYSQL_COOKIE) && !defined(USE_MEMCACHE_COOKIE)
-apr_file_t *
-chxj_cookie_db_lock(request_rec *r)
-{
-  apr_file_t       *file;
-  apr_status_t     rv;
-  mod_chxj_config  *dconf;
-
-  dconf = (mod_chxj_config *)ap_get_module_config(r->per_dir_config, &chxj_module);
-
-  rv = apr_file_open(&file, 
-                     chxj_cookie_db_lock_name_create(r, dconf->cookie_db_dir),
-                     APR_CREATE|APR_WRITE, 
-                     APR_OS_DEFAULT, 
-                     r->pool);
-  if (rv != APR_SUCCESS) {
-    ERR(r, "cookie lock file open failed.");
-    return NULL;
-  }
-
-  rv = apr_file_lock(file,APR_FLOCK_EXCLUSIVE);
-  if (rv != APR_SUCCESS) {
-    ERR(r, "cookie lock file open failed.");
-    apr_file_close(file);
-    return NULL;
-  }
-
-  return file;
-}
-
 
 void
-chxj_cookie_db_unlock(request_rec *r, apr_file_t *file)
+chxj_delete_cookie(request_rec *r, const char *cookie_id)
 {
-  apr_status_t rv;
-
-  rv = apr_file_unlock(file);
-  if (rv != APR_SUCCESS) {
-    ERR(r, "cookie lock file open failed.");
-    return;
-  }
-
-  apr_file_close(file);
-}
-
-#endif
-
-
-void
-chxj_delete_cookie(request_rec *r, char *cookie_id)
-{
-#if !defined(USE_MYSQL_COOKIE) && !defined(USE_MEMCACHE_COOKIE)
-  apr_status_t      retval;
-  apr_file_t        *file;
-  apr_datum_t       dbmkey;
-  apr_dbm_t         *f;
-#endif
-  mod_chxj_config   *dconf;
-
+  int done_proc = 0;
+  mod_chxj_config *dconf;
 
   DBG(r, "start chxj_delete_cookie()");
-
   dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
 
 #if defined(USE_MYSQL_COOKIE)
-  if (!chxj_mysql_delete_cookie(r, dconf, cookie_id)) {
-    ERR(r, "failed: chxj_mysql_delete_cookie() cookie_id:[%s]", cookie_id);
-    goto on_error0;
+  if (IS_COOKIE_STORE_MYSQL(dconf->cookie_store_type)) {
+    if (! chxj_delete_cookie_mysql(r, dconf, cookie_id)) {
+      ERR(r, "failed: chxj_delete_cookie_mysql() cookie_id:[%s]", cookie_id);
+      DBG(r, "end   chxj_delete_cookie()");
+      return;
+    }
+    done_proc = 1;
   }
-
-#elif defined(USE_MEMCACHE_COOKIE)
-
-  if (! chxj_memcache_init(r, dconf)) {
-    ERR(r, "Cannot create memcache server");
-    goto on_error0;
-  }
-
-  if (! chxj_memcache_delete_cookie(r, dconf, cookie_id)) {
-    ERR(r, "cannot store to memcache host:[%s] port:[%d]", dconf->memcache.host, dconf->memcache.port);
-    goto on_error0;
-  }
-
-#else
-  file = chxj_cookie_db_lock(r);
-  if (! file) {
-    ERR(r, "mod_chxj: Can't lock cookie db");
-    goto on_error0;
-  }
-
-  retval = apr_dbm_open_ex(&f,
-                           "default",
-                           chxj_cookie_db_name_create(r, dconf->cookie_db_dir),
-                           APR_DBM_RWCREATE,
-                           APR_OS_DEFAULT,
-                           r->pool);
-  if (retval != APR_SUCCESS) {
-    ERR(r, 
-        "could not open dbm (type %s) auth file: %s", 
-        "default", 
-        chxj_cookie_db_name_create(r,dconf->cookie_db_dir));
-    goto on_error1;
-  }
-
-  /*
-   * create key
-   */
-  dbmkey.dptr  = apr_pstrdup(r->pool, cookie_id);
-  dbmkey.dsize = strlen(dbmkey.dptr);
-  if (apr_dbm_exists(f, dbmkey)) {
-    apr_dbm_delete(f, dbmkey);
-  }
-  apr_dbm_close(f);
-  chxj_cookie_db_unlock(r, file);
 #endif
+
+#if defined(USE_MEMCACHE_COOKIE)
+  if (IS_COOKIE_STORE_MEMCACHE(dconf->cookie_store_type)) {
+    if (! chxj_delete_cookie_memcache(r, dconf, cookie_id)) {
+      ERR(r, "failed: chxj_delete_cookie_memcache() cookie_id:[%s]", cookie_id);
+      DBG(r, "end   chxj_delete_cookie()");
+      return;
+    }
+    done_proc = 1;
+  }
+#endif
+  if (!done_proc || IS_COOKIE_STORE_DBM(dconf->cookie_store_type)) {
+    if (! chxj_delete_cookie_dbm(r, dconf, cookie_id)) {
+      ERR(r, "failed: chxj_delete_cookie_dbm() cookie_id:[%s]", cookie_id);
+      DBG(r, "end   chxj_delete_cookie()");
+      return;
+    }
+  }
 
   DBG(r, "end   chxj_delete_cookie()");
-
-  return;
-
-#if !defined (USE_MYSQL_COOKIE) && !defined(USE_MEMCACHE_COOKIE)
-on_error1:
-  chxj_cookie_db_unlock(r, file);
-#endif
-
-on_error0:
-  return;
-
 }
 
 
-#if !defined(USE_MYSQL_COOKIE) && !defined(USE_MEMCACHE_COOKIE)
-char *
-chxj_cookie_db_name_create(request_rec *r, const char *dir)
-{
-  char *dst;
-
-  if (!dir) {
-    dst = apr_pstrdup(r->pool, DEFAULT_COOKIE_DB_DIR);
-  }
-  else {
-    dst = apr_pstrdup(r->pool, dir);
-  }
-
-  if (dst[strlen(dst)-1] != '/') {
-    dst = apr_pstrcat(r->pool, dst, "/", COOKIE_DB_NAME, NULL);
-  }
-  else {
-    dst = apr_pstrcat(r->pool, dst, COOKIE_DB_NAME, NULL);
-  }
-
-  return dst;
-}
-
-char *
-chxj_cookie_db_lock_name_create(request_rec *r, const char *dir)
-{
-  char *dst;
-  DBG(r, "start  chxj_cookie_db_lock_name_create()");
-
-  if (!dir) {
-    DBG(r, " ");
-    dst = apr_pstrdup(r->pool, DEFAULT_COOKIE_DB_DIR);
-    DBG(r, " ");
-  }
-  else {
-    dst = apr_pstrdup(r->pool, dir);
-    DBG(r, " ");
-  }
-  DBG(r, "dst[strlen(dst)-1]=[%c]", dst[strlen(dst)-1]);
-  if (dst[strlen(dst)-1] != '/') {
-    dst = apr_pstrcat(r->pool, dst, "/", COOKIE_DB_LOCK_NAME, NULL);
-  }
-  else {
-    dst = apr_pstrcat(r->pool, dst, COOKIE_DB_LOCK_NAME, NULL);
-  }
-  DBG(r, "end  chxj_cookie_db_lock_name_create()");
-  return dst;
-}
-#endif
 /*
  *
  */
 void
-chxj_save_cookie_expire(request_rec *r, cookie_t *cookie)
+chxj_save_cookie_expire(request_rec* r, cookie_t* cookie)
 {
+  int done_proc = 0;
   mod_chxj_config         *dconf;
-#if !defined(USE_MYSQL_COOKIE) && !defined(USE_MEMCACHE_COOKIE)
-  apr_status_t            retval;
-  char                    *store_string;
-  apr_file_t              *file;
-  apr_datum_t             dbmkey;
-  apr_datum_t             dbmval;
-  apr_dbm_t               *f;
-#endif
 
   DBG(r, "start chxj_save_cookie_expire()");
-
   if (!cookie) {
     DBG(r, "cookie is NULL");
     return;
@@ -1201,377 +869,115 @@ chxj_save_cookie_expire(request_rec *r, cookie_t *cookie)
   }
 
 #if defined(USE_MYSQL_COOKIE)
-  if (! chxj_open_mysql_handle(r, dconf)) {
-    ERR(r, "Cannot open mysql connection");
-    DBG(r, "end   chxj_save_cookie_expire()");
-    return;
+  if (IS_COOKIE_STORE_MYSQL(dconf->cookie_store_type)) {
+    if (! chxj_save_cookie_expire_mysql(r, dconf, cookie->cookie_id)) {
+      ERR(r, "failed: chxj_save_cookie_expire_mysql() cookie_id:[%s]", cookie->cookie_id);
+      DBG(r, "end   chxj_save_cookie_expire()");
+      return;
+    }
+    done_proc = 1;
   }
-
-  if (!chxj_mysql_exist_cookie_table_expire(r, dconf)) {
-    DBG(r, "not found cookie table:[%s_expire]", dconf->mysql.tablename);
-    if (!chxj_mysql_create_cookie_expire_table(r, dconf)) {
-      ERR(r, "cannot create cookie table:[%s_expire]", dconf->mysql.tablename);
+#endif
+#if defined(USE_MEMCACHE_COOKIE)
+  if (IS_COOKIE_STORE_MEMCACHE(dconf->cookie_store_type)) {
+    if (! chxj_save_cookie_expire_memcache(r, dconf, cookie->cookie_id)) {
+      ERR(r, "failed: chxj_save_cookie_expire_memcache() cookie_id:[%s]", cookie->cookie_id);
+      DBG(r, "end   chxj_save_cookie_expire()");
+      return;
+    }
+    done_proc = 1;
+  }
+#endif
+  if (!done_proc || IS_COOKIE_STORE_DBM(dconf->cookie_store_type)) {
+    if (! chxj_save_cookie_expire_dbm(r, dconf, cookie->cookie_id)) {
+      ERR(r, "failed: chxj_save_cookie_expire_dbm() cookie_id:[%s]", cookie->cookie_id);
       DBG(r, "end   chxj_save_cookie_expire()");
       return;
     }
   }
-  if (! chxj_mysql_insert_or_update_cookie_expire(r, dconf, cookie->cookie_id)) {
-    ERR(r, "cannot create cookie table:[%s_expire]", dconf->mysql.tablename);
-    DBG(r, "end   chxj_save_cookie_expire()");
-    return;
-  }
-
-  /* *NEED NOT* close database. */
-  /* chxj_close_mysql_handle(); */
-#elif defined(USE_MEMCACHE_COOKIE)
-
-  if (! chxj_memcache_init(r, dconf)) {
-    ERR(r, "Cannot create memcache server");
-    return;
-  }
-
-  if (! chxj_memcache_reset_cookie(r, dconf, cookie->cookie_id)) {
-    ERR(r, "cannot store to memcache host:[%s] port:[%d]", dconf->memcache.host, dconf->memcache.port);
-    return;
-  }
-
-#else
-  file = chxj_cookie_expire_db_lock(r);
-  if (! file) {
-    ERR(r, "mod_chxj: Can't lock cookie db");
-    return;
-  }
-
-  DBG(r, " ");
-
-  retval = apr_dbm_open_ex(&f, 
-                           "default", 
-                           chxj_cookie_expire_db_name_create(r, dconf->cookie_db_dir), 
-                           APR_DBM_RWCREATE, 
-                           APR_OS_DEFAULT, 
-                           r->pool);
-  if (retval != APR_SUCCESS) {
-    ERR(r, "could not open dbm (type %s) auth file: %s", 
-           "default", 
-            chxj_cookie_expire_db_name_create(r,dconf->cookie_db_dir));
-    chxj_cookie_expire_db_unlock(r, file);
-    return;
-  }
-  /*
-   * create key
-   */
-
-  dbmkey.dptr  = cookie->cookie_id;
-  dbmkey.dsize = strlen(cookie->cookie_id);
-
-  /*
-   * create val
-   */
-  
-  store_string = apr_psprintf(r->pool, "%d", (int)time(NULL));
-  dbmval.dptr  = store_string;
-  dbmval.dsize = strlen(store_string);
-
-  /*
-   * store to db
-   */
-  retval = apr_dbm_store(f, dbmkey, dbmval);
-  if (retval != APR_SUCCESS) {
-    ERR(r, "Cannot store Cookie data to DBM file `%s'",
-            chxj_cookie_db_name_create(r, dconf->cookie_db_dir));
-  }
-
-
-  apr_dbm_close(f);
-  chxj_cookie_expire_db_unlock(r, file);
-#endif
 
   DBG(r, "end   chxj_save_cookie_expire()");
 }
 
 
-#if !defined(USE_MYSQL_COOKIE) && !defined(USE_MEMCACHE_COOKIE)
-char *
-chxj_cookie_expire_db_name_create(request_rec *r, const char *dir)
-{
-  char *dst;
-
-  if (!dir) {
-    dst = apr_pstrdup(r->pool, DEFAULT_COOKIE_DB_DIR);
-  }
-  else {
-    dst = apr_pstrdup(r->pool, dir);
-  }
-
-  if (dst[strlen(dst)-1] != '/') {
-    dst = apr_pstrcat(r->pool, dst, "/", COOKIE_EXPIRE_DB_NAME, NULL);
-  }
-  else {
-    dst = apr_pstrcat(r->pool, dst, COOKIE_EXPIRE_DB_NAME, NULL);
-  }
-
-  return dst;
-}
-
-
-char *
-chxj_cookie_expire_db_lock_name_create(request_rec *r, const char *dir)
-{
-  char *dst;
-
-  if (!dir) {
-    dst = apr_pstrdup(r->pool, DEFAULT_COOKIE_DB_DIR);
-  }
-  else {
-    dst = apr_pstrdup(r->pool, dir);
-  }
-  if (dst[strlen(dst)-1] != '/') {
-    dst = apr_pstrcat(r->pool, dst, "/", COOKIE_EXPIRE_DB_LOCK_NAME, NULL);
-  }
-  else {
-    dst = apr_pstrcat(r->pool, dst, COOKIE_EXPIRE_DB_LOCK_NAME, NULL);
-  }
-
-  return dst;
-}
-
-
-apr_file_t *
-chxj_cookie_expire_db_lock(request_rec *r)
-{
-  apr_file_t       *file;
-  apr_status_t     rv;
-  mod_chxj_config  *dconf;
-
-  dconf = (mod_chxj_config *)ap_get_module_config(r->per_dir_config, &chxj_module);
-
-  rv = apr_file_open(&file, 
-                     chxj_cookie_expire_db_lock_name_create(r, dconf->cookie_db_dir),
-                     APR_CREATE|APR_WRITE, 
-                     APR_OS_DEFAULT, 
-                     r->pool);
-  if (rv != APR_SUCCESS) {
-    ERR(r, "cookie lock file open failed.");
-    return NULL;
-  }
-
-  rv = apr_file_lock(file,APR_FLOCK_EXCLUSIVE);
-  if (rv != APR_SUCCESS) {
-    ERR(r, "cookie lock file open failed.");
-    apr_file_close(file);
-    return NULL;
-  }
-
-  return file;
-}
-
-
-void
-chxj_cookie_expire_db_unlock(request_rec *r, apr_file_t *file)
-{
-  apr_status_t rv;
-
-  rv = apr_file_unlock(file);
-  if (rv != APR_SUCCESS) {
-    ERR(r, "cookie lock file open failed.");
-    return;
-  }
-
-  apr_file_close(file);
-}
-
-#endif
 
 
 
 void
-chxj_delete_cookie_expire(request_rec *r, char *cookie_id)
+chxj_delete_cookie_expire(request_rec* r, char* cookie_id)
 {
-#if !defined(USE_MYSQL_COOKIE) && !defined(USE_MEMCACHE_COOKIE)
-  apr_status_t      retval;
-  apr_datum_t       dbmkey;
-  apr_dbm_t         *f;
-  apr_file_t        *file;
-#endif
-  mod_chxj_config   *dconf;
+  int done_proc = 0;
+  mod_chxj_config*  dconf;
 
   DBG(r, "start chxj_delete_cookie_expire()");
 
   dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
 
 #if defined(USE_MYSQL_COOKIE)
-  if (!chxj_mysql_delete_cookie_expire(r, dconf, cookie_id)) {
-    ERR(r, "failed: chxj_mysql_delete_cookie() cookie_id:[%s]", cookie_id);
-    goto on_error0;
+  if (IS_COOKIE_STORE_MYSQL(dconf->cookie_store_type)) {
+    if (! chxj_delete_cookie_expire_mysql(r, dconf, cookie_id)) {
+      ERR(r, "failed: chxj_delete_cookie_expire_mysql() cookie_id:[%s]", cookie_id);
+      return;
+    }
+    done_proc = 1;
   }
-#elif defined(USE_MEMCACHE_COOKIE)
-
-  /* nothing */
-  DBG(r, "nothing: cookie_id:[%s]", cookie_id);
-
-#else
-  file = chxj_cookie_expire_db_lock(r);
-  if (! file) {
-    ERR(r, "mod_chxj: Can't lock cookie db");
-    goto on_error0;
-  }
-
-  retval = apr_dbm_open_ex(&f,
-                           "default",
-                           chxj_cookie_expire_db_name_create(r, dconf->cookie_db_dir),
-                           APR_DBM_RWCREATE,
-                           APR_OS_DEFAULT,
-                           r->pool);
-  if (retval != APR_SUCCESS) {
-    ERR(r, 
-        "could not open dbm (type %s) auth file: %s", 
-        "default", 
-        chxj_cookie_expire_db_name_create(r,dconf->cookie_db_dir));
-    goto on_error1;
-  }
-
-  /*
-   * create key
-   */
-  dbmkey.dptr  = apr_pstrdup(r->pool, cookie_id);
-  dbmkey.dsize = strlen(dbmkey.dptr);
-  if (apr_dbm_exists(f, dbmkey)) {
-    apr_dbm_delete(f, dbmkey);
-  }
-  apr_dbm_close(f);
-  chxj_cookie_expire_db_unlock(r, file);
 #endif
+#if defined(USE_MEMCACHE_COOKIE)
+  if (IS_COOKIE_STORE_MEMCACHE(dconf->cookie_store_type)) {
+    if (!chxj_delete_cookie_expire_memcache(r, dconf, cookie_id)) {
+      ERR(r, "failed: chxj_delete_cookie_expire_memcache() cookie_id:[%s]", cookie_id);
+      return;
+    } 
+    done_proc = 1;
+  }
+#endif
+  if (!done_proc || IS_COOKIE_STORE_DBM(dconf->cookie_store_type)) {
+    if (!chxj_delete_cookie_expire_dbm(r, dconf, cookie_id)) {
+      ERR(r, "failed: chxj_delete_cookie_expire_dbm() cookie_id:[%s]", cookie_id);
+      return;
+    } 
+  }
 
   DBG(r, "end   chxj_delete_cookie_expire()");
 
   return;
-
-#if !defined(USE_MYSQL_COOKIE) && !defined(USE_MEMCACHE_COOKIE)
-on_error1:
-  chxj_cookie_expire_db_unlock(r, file);
-#endif
-
-#if !defined(USE_MEMCACHE_COOKIE)
-on_error0:
-#endif
-  return;
-
 }
 
 
 void
-chxj_cookie_expire_gc(request_rec *r)
+chxj_cookie_expire_gc(request_rec* r)
 {
-#if !defined(USE_MYSQL_COOKIE) && !defined(USE_MEMCACHE_COOKIE)
-  apr_status_t      retval;
-  apr_datum_t       dbmkey;
-  apr_datum_t       dbmval;
-  apr_dbm_t         *f;
-  apr_file_t        *file;
-  time_t            now_time;
-#endif
   mod_chxj_config   *dconf;
+  int done_proc = 0;
 
   DBG(r, "start chxj_cookie_expire_gc()");
+
   dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
-
 #if defined(USE_MYSQL_COOKIE)
-  if (!chxj_mysql_delete_expired_cookie(r, dconf)) {
-    ERR(r, "failed chxj_mysql_delete_expired_cookie()");
-    return;
-  }
-
-#elif defined(USE_MEMCACHE_COOKIE)
-
-  /* nothing */
-  DBG(r, "nothing:");
-
-#else
-  file = chxj_cookie_expire_db_lock(r);
-  if (! file) {
-    ERR(r, "mod_chxj: Can't lock cookie db");
-    goto on_error0;
-  }
-
-  retval = apr_dbm_open_ex(&f,
-                           "default",
-                           chxj_cookie_expire_db_name_create(r, dconf->cookie_db_dir),
-                           APR_DBM_RWCREATE,
-                           APR_OS_DEFAULT,
-                           r->pool);
-  if (retval != APR_SUCCESS) {
-    ERR(r, 
-        "could not open dbm (type %s) auth file: %s", 
-        "default", 
-        chxj_cookie_expire_db_name_create(r,dconf->cookie_db_dir));
-    goto on_error1;
-  }
-
-  /*
-   * create key
-   */
-  memset(&dbmkey, 0, sizeof(apr_datum_t));
-
-  now_time = time(NULL);
-
-  retval = apr_dbm_firstkey(f, &dbmkey);
-  if (retval == APR_SUCCESS) {
-    DBG(r, "firstkey=[%.*s]", (int)dbmkey.dsize, dbmkey.dptr);
-    do {
-      char *tmp;
-      char *old_cookie_id;
-      int   val_time;
-      int   cmp_time;
-
-      retval = apr_dbm_fetch(f, dbmkey, &dbmval);
-      if (retval != APR_SUCCESS) {
-        break;
-      }
-      tmp = apr_palloc(r->pool, dbmval.dsize+1);
-      memset(tmp, 0, dbmval.dsize+1);
-      memcpy(tmp, dbmval.dptr, dbmval.dsize);
-
-
-      val_time = atoi(tmp);
-
-      if (dconf->cookie_timeout == 0)
-        cmp_time = now_time - DEFAULT_COOKIE_TIMEOUT;
-      else
-        cmp_time = now_time - dconf->cookie_timeout;
-
-      DBG(r, "dconf->cookie_timeout=[%d]", (int)dconf->cookie_timeout);
-      DBG(r, "key=[%.*s] cmp_time=[%d] val_time=[%d]", (int)dbmkey.dsize, dbmkey.dptr, cmp_time, val_time);
-      if (cmp_time >= val_time) {
-        apr_dbm_delete(f, dbmkey);
-
-        old_cookie_id = apr_palloc(r->pool, dbmkey.dsize+1);
-        memset(old_cookie_id, 0, dbmkey.dsize+1);
-        memcpy(old_cookie_id, dbmkey.dptr, dbmkey.dsize);
-
-        chxj_delete_cookie(r,old_cookie_id);
-        DBG(r, "detect timeout cookie [%s]", old_cookie_id);
-      }
-
-      retval = apr_dbm_nextkey(f, &dbmkey);
-    } while(retval == APR_SUCCESS && dbmkey.dptr != NULL);
-  }
-
-  apr_dbm_close(f);
-  chxj_cookie_expire_db_unlock(r, file);
+  if (IS_COOKIE_STORE_MYSQL(dconf->cookie_store_type)) {
+    if (! chxj_cookie_expire_gc_mysql(r, dconf)) {
+      ERR(r, "failed: chxj_cookie_expire_gc_mysql()");
+      return;
+    }
+    done_proc = 1;
+  } 
 #endif
-
+#if defined(USE_MEMCACHE_COOKIE)
+  if (IS_COOKIE_STORE_MEMCACHE(dconf->cookie_store_type)) {
+    if (! chxj_cookie_expire_gc_memcache(r, dconf)) {
+      ERR(r, "failed: chxj_cookie_expire_gc_memcache()");
+      return;
+    }
+    done_proc = 1;
+  } 
+#endif
+  if (!done_proc) {
+    if (! chxj_cookie_expire_gc_dbm(r, dconf)) {
+      ERR(r, "failed: chxj_cookie_expire_gc_dbm()");
+      return;
+    }
+  }
   DBG(r, "end   chxj_cookie_expire_gc()");
-
-  return;
-
-#if !defined(USE_MYSQL_COOKIE) && !defined(USE_MEMCACHE_COOKIE)
-on_error1:
-  chxj_cookie_expire_db_unlock(r, file);
-on_error0:
-#endif
-
-  return;
-
 }
 
 apr_time_t

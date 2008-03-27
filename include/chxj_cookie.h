@@ -72,9 +72,7 @@ extern void chxj_cookie_db_unlock(
   request_rec*            r, 
   apr_file_t*             file);
 
-extern void chxj_delete_cookie(
-  request_rec*            r, 
-  char*                   cookie_id);
+extern void chxj_delete_cookie(request_rec *r, const char *cookie_id);
 
 extern char* chxj_cookie_db_name_create(
   request_rec*            r, 
@@ -115,7 +113,6 @@ extern cookie_t* chxj_update_cookie(
   cookie_t*    old_cookie);
 
 extern apr_time_t chxj_parse_cookie_expires(const char *s);
-
 #endif
 /*
  * vim:ts=2 et

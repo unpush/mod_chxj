@@ -37,5 +37,14 @@ extern char *chxj_memcache_get_cookie(request_rec *r, mod_chxj_config *m, const 
 extern int chxj_memcache_delete_cookie(request_rec *r, mod_chxj_config *m, const char *cookie_id);
 extern int chxj_memcache_reset_cookie(request_rec *r, mod_chxj_config *m, const char *cookie_id);
 
+
+/* operation for cookie */
+extern int chxj_save_cookie_memcache(request_rec *r, mod_chxj_config *m, const char *cookie_id, const char *store_string);
+extern int chxj_update_cookie_memcache(request_rec *, mod_chxj_config *m, const char *cookie_id, const char *store_string);
+extern char *chxj_load_cookie_memcache(request_rec *r, mod_chxj_config *m, const char *cookie_id);
+extern int chxj_delete_cookie_memcache(request_rec *r, mod_chxj_config *m, const char *cookie_id);
+extern int chxj_save_cookie_expire_memcache(request_rec *r, mod_chxj_config *m, const char *cookie_id);
+extern int chxj_delete_cookie_expire_memcache(request_rec *r, mod_chxj_config *m, const char *cookie_id);
+extern int chxj_cookie_expire_gc_memcache(request_rec *r, mod_chxj_config *m);
 #endif
 #endif
