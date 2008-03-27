@@ -53,9 +53,6 @@
 #include "chxj_chtml20.h"
 #include "chxj_chtml30.h"
 #include "chxj_jhtml.h"
-#ifdef USE_MYSQL_COOKIE
-#include "chxj_mysql.h"
-#endif
 
 #include "chxj_img_conv_format.h"
 #include "chxj_qr_code.h"
