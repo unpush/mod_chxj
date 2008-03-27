@@ -920,6 +920,167 @@ chxj_mysql_delete_expired_cookie(request_rec *r, mod_chxj_config *m)
   return 1;
 }
 
+
+int
+chxj_save_cookie_mysql(request_rec *r, mod_chxj_config *m, const char *cookie_id, const char *store_string)
+{
+  if (! chxj_open_mysql_handle(r, m)) {
+    ERR(r, "Cannot open mysql connection");
+    return CHXJ_FALSE;
+  }
+
+  if (!chxj_mysql_exist_cookie_table(r, m)) {
+    DBG(r, "not found cookie table:[%s]", m->mysql.tablename);
+    if (!chxj_mysql_create_cookie_table(r, m)) {
+      ERR(r, "cannot create cookie table:[%s]", m->mysql.tablename);
+      return CHXJ_FALSE;
+    }
+  }
+  if (! chxj_mysql_insert_or_update_cookie(r, m, cookie_id, store_string)) {
+    ERR(r, "cannot store to cookie table:[%s]", m->mysql.tablename);
+    return CHXJ_FALSE;
+  }
+
+  /* *NEED NOT* close database. */
+  return CHXJ_TRUE;
+}
+
+int
+chxj_update_cookie_mysql(request_rec *r, mod_chxj_config *m, const char *cookie_id, const char *store_string)
+{
+  DBG(r, "start chxj_update_cookie_mysql() cookie_id:[%s]", cookie_id);
+  if (! chxj_open_mysql_handle(r, m)) {
+    ERR(r, "Cannot open mysql connection");
+    DBG(r, "end chxj_update_cookie_mysql() cookie_id:[%s]", cookie_id);
+    return CHXJ_FALSE;
+  }
+
+  if (!chxj_mysql_exist_cookie_table(r, m)) {
+    DBG(r, "not found cookie table:[%s]", m->mysql.tablename);
+    if (!chxj_mysql_create_cookie_table(r, m)) {
+      ERR(r, "cannot create cookie table:[%s]", m->mysql.tablename);
+      DBG(r, "end chxj_update_cookie_mysql() cookie_id:[%s]", cookie_id);
+      return CHXJ_FALSE;
+    }
+  }
+  if (! chxj_mysql_insert_or_update_cookie(r, m, cookie_id, store_string)) {
+    ERR(r, "cannot create cookie table:[%s]", m->mysql.tablename);
+    DBG(r, "end chxj_update_cookie_mysql() cookie_id:[%s]", cookie_id);
+    return CHXJ_FALSE;
+  }
+
+  /* *NEED NOT* close database. */
+  /* chxj_close_mysql_handle(); */
+  DBG(r, "end chxj_update_cookie_mysql() cookie_id:[%s]", cookie_id);
+  return CHXJ_TRUE;
+}
+
+
+char *
+chxj_load_cookie_mysql(request_rec *r, mod_chxj_config *m, const char *cookie_id)
+{
+  char *load_string;
+
+  DBG(r, "start chxj_load_cookie_mysql() cookie_id:[%s]", cookie_id);
+  if (! chxj_open_mysql_handle(r, m)) {
+    ERR(r, "Cannot open mysql connection");
+    DBG(r, "end   chxj_load_cookie_mysql() cookie_id:[%s]", cookie_id);
+    return NULL;
+  }
+
+  if (!chxj_mysql_exist_cookie_table(r, m)) {
+    DBG(r, "not found cookie table:[%s]", m->mysql.tablename);
+    if (!chxj_mysql_create_cookie_table(r, m)) {
+      ERR(r, "cannot create cookie table:[%s]", m->mysql.tablename);
+      DBG(r, "end   chxj_load_cookie_mysql() cookie_id:[%s]", cookie_id);
+      return NULL;
+    }
+  }
+  if (!(load_string = chxj_mysql_load_cookie(r, m, cookie_id))) {
+    ERR(r, "not found cookie. cookie_id:[%s]", cookie_id);
+    DBG(r, "end   chxj_load_cookie_mysql() cookie_id:[%s]", cookie_id);
+    return NULL;
+  }
+
+  /* *NEED NOT* close database. */
+  /* chxj_close_mysql_handle(); */
+  DBG(r, "end   chxj_load_cookie_mysql() cookie_id:[%s]", cookie_id);
+  return load_string;
+}
+
+
+int
+chxj_delete_cookie_mysql(request_rec *r, mod_chxj_config *m, const char *cookie_id)
+{
+  DBG(r, "start chxj_delete_cookie_mysql() cookie_id=[%s]", cookie_id);
+  if (!chxj_mysql_delete_cookie(r, m, cookie_id)) {
+    ERR(r, "failed: chxj_mysql_delete_cookie() cookie_id:[%s]", cookie_id);
+    DBG(r, "end chxj_delete_cookie_mysql() cookie_id=[%s]", cookie_id);
+    return CHXJ_FALSE;
+  }
+  DBG(r, "end chxj_delete_cookie_mysql() cookie_id=[%s]", cookie_id);
+  return CHXJ_TRUE;
+}
+
+
+int
+chxj_save_cookie_expire_mysql(request_rec *r, mod_chxj_config *m, const char *cookie_id)
+{
+  DBG(r, "start chxj_save_cookie_expire_mysql() cookie_id:[%s]", cookie_id);
+  if (! chxj_open_mysql_handle(r, m)) {
+    ERR(r, "Cannot open mysql connection");
+    DBG(r, "end   chxj_save_cookie_expire_mysql()");
+    return CHXJ_FALSE;
+  }
+
+  if (!chxj_mysql_exist_cookie_table_expire(r, m)) {
+    DBG(r, "not found cookie table:[%s_expire]", m->mysql.tablename);
+    if (!chxj_mysql_create_cookie_expire_table(r, m)) {
+      ERR(r, "cannot create cookie table:[%s_expire]", m->mysql.tablename);
+      DBG(r, "end   chxj_save_cookie_expire_mysql()");
+      return CHXJ_FALSE;
+    }
+  }
+  if (! chxj_mysql_insert_or_update_cookie_expire(r, m, cookie_id)) {
+    ERR(r, "cannot create cookie table:[%s_expire]", m->mysql.tablename);
+    DBG(r, "end   chxj_save_cookie_expire_mysql()");
+    return CHXJ_FALSE;
+  }
+
+  /* *NEED NOT* close database. */
+  /* chxj_close_mysql_handle(); */
+
+  DBG(r, "end   chxj_save_cookie_expire_mysql() cookie_id:[%s]", cookie_id);
+  return CHXJ_TRUE;
+}
+
+
+int
+chxj_delete_cookie_expire_mysql(request_rec *r, mod_chxj_config *m, const char *cookie_id)
+{
+  DBG(r, "start chxj_delete_cookie_expire_mysql() cookie_id:[%s]", cookie_id);
+  if (!chxj_mysql_delete_cookie_expire(r, m, cookie_id)) {
+    ERR(r, "failed: chxj_mysql_delete_cookie() cookie_id:[%s]", cookie_id);
+    DBG(r, "end   chxj_delete_cookie_expire_mysql() cookie_id:[%s]", cookie_id);
+    return CHXJ_FALSE;
+  }
+  DBG(r, "end   chxj_delete_cookie_expire_mysql() cookie_id:[%s]", cookie_id);
+  return CHXJ_TRUE;
+}
+
+
+int
+chxj_cookie_expire_gc_mysql(request_rec *r, mod_chxj_config *m)
+{
+  DBG(r, "start chxj_cookie_expire_gc_mysql()");
+  if (!chxj_mysql_delete_expired_cookie(r, m)) {
+    ERR(r, "failed: chxj_mysql_delete_expired_cookie()");
+    DBG(r, "end   chxj_cookie_expire_gc_mysql()");
+    return CHXJ_FALSE;
+  }
+  DBG(r, "end   chxj_cookie_expire_gc_mysql()");
+  return CHXJ_TRUE;
+}
 #endif
 /*
  * vim:ts=2 et

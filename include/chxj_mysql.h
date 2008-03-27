@@ -57,5 +57,15 @@ extern int chxj_mysql_delete_cookie_expire(request_rec *r, mod_chxj_config *m, c
 extern int chxj_mysql_exist_cookie_table_expire(request_rec *r, mod_chxj_config *m);
 extern char *chxj_mysql_get_timeout_localtime(request_rec *r, mod_chxj_config *m);
 extern int chxj_mysql_delete_expired_cookie(request_rec *r, mod_chxj_config *m);
+
+
+/* operation for cookie */
+extern int chxj_save_cookie_mysql(request_rec *r, mod_chxj_config *m, const char *cookie_id, const char *store_string);
+extern int chxj_update_cookie_mysql(request_rec *r, mod_chxj_config *m, const char *cookie_id, const char *store_string);
+extern char *chxj_load_cookie_mysql(request_rec *r, mod_chxj_config *m, const char *cookie_id);
+extern int chxj_delete_cookie_mysql(request_rec *r, mod_chxj_config *m, const char *cookie_id);
+extern int chxj_save_cookie_expire_mysql(request_rec *r, mod_chxj_config *m, const char *cookie_id);
+extern int chxj_delete_cookie_expire_mysql(request_rec *r, mod_chxj_config *m, const char *cookie_id);
+extern int chxj_cookie_expire_gc_mysql(request_rec *r, mod_chxj_config *m);
 #endif
 #endif

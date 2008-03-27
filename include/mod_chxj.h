@@ -286,9 +286,22 @@ typedef struct mod_chxj_config mod_chxj_config;
 
 #if defined(USE_MYSQL_COOKIE)
 #  include "chxj_mysql.h"
-#elif defined(USE_MEMCACHE_COOKIE)
+#endif
+#if defined(USE_MEMCACHE_COOKIE)
 #  include "chxj_memcache.h"
 #endif
+
+/* cookie store type */
+#define CHXJ_COOKIE_STORE_TYPE_DBM      "dbm"
+#define CHXJ_COOKIE_STORE_TYPE_MYSQL    "mysql"
+#define CHXJ_COOKIE_STORE_TYPE_MEMCACHE "memcache"
+typedef enum {
+  COOKIE_STORE_TYPE_NONE     = 0,
+  COOKIE_STORE_TYPE_DBM      = 1,
+  COOKIE_STORE_TYPE_MYSQL    = 2,
+  COOKIE_STORE_TYPE_MEMCACHE = 3, 
+} cookie_store_type_t;
+
 struct mod_chxj_config {
   int                   image;
 
@@ -309,13 +322,21 @@ struct mod_chxj_config {
 
   char                  *cookie_db_dir;
   long                  cookie_timeout;
+  cookie_store_type_t   cookie_store_type;
+  int                   cookie_lazy_mode;
 
 #if defined(USE_MYSQL_COOKIE)
   mysql_t               mysql;
-#elif defined(USE_MEMCACHE_COOKIE)
+#endif
+#if defined(USE_MEMCACHE_COOKIE)
   memcache_t            memcache;
 #endif
 };
+
+#define IS_COOKIE_STORE_DBM(X)      ((X) == COOKIE_STORE_TYPE_DBM)
+#define IS_COOKIE_STORE_MYSQL(X)    ((X) == COOKIE_STORE_TYPE_MYSQL)
+#define IS_COOKIE_STORE_MEMCACHE(X) ((X) == COOKIE_STORE_TYPE_MEMCACHE)
+#define IS_COOKIE_STORE_NONE(X)     ((X) == COOKIE_STORE_TYPE_NONE)
 
 
 #define CONVRULE_ENGINE_ON_BIT        (0x00000001)
@@ -334,6 +355,7 @@ struct mod_chxj_config {
 
 #define CONVRULE_PC_FLAG_ON_BIT       (0x00000001)
 #define CONVRULE_PC_FLAG_OFF_BIT      (0x00000002)
+
 
 typedef struct {
   apr_global_mutex_t* cookie_db_lock;

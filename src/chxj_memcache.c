@@ -203,6 +203,128 @@ chxj_memcache_delete_cookie(request_rec *r, mod_chxj_config *UNUSED(m),  const c
 
 
 
+int
+chxj_save_cookie_memcache(request_rec *r, mod_chxj_config *m, const char *cookie_id, const char *store_string)
+{
+  DBG(r, "start chxj_save_cookie_memcache() cookie_id:[%s]", cookie_id);
+  if (! chxj_memcache_init(r, m)) {
+    ERR(r, "Cannot create memcache server");
+    DBG(r, "end chxj_save_cookie_memcache() cookie_id:[%s]", cookie_id);
+    return CHXJ_FALSE;
+  }
+
+  if (! chxj_memcache_set_cookie(r, m, cookie_id, store_string)) {
+    ERR(r, "cannot store to memcache host:[%s] port:[%d]", m->memcache.host, m->memcache.port);
+    DBG(r, "end chxj_save_cookie_memcache() cookie_id:[%s]", cookie_id);
+    return CHXJ_FALSE;
+  }
+  DBG(r, "stored DATA:[%s]", chxj_memcache_get_cookie(r, m, cookie_id));
+  DBG(r, "end chxj_save_cookie_memcache() cookie_id:[%s]", cookie_id);
+  return CHXJ_TRUE;
+}
+
+
+int
+chxj_update_cookie_memcache(request_rec *r, mod_chxj_config *m, const char *cookie_id, const char *store_string)
+{
+  DBG(r, "start chxj_update_cookie_memcache() cookie_id:[%s]", cookie_id);
+  if (! chxj_memcache_init(r, m)) {
+    ERR(r, "Cannot create memcache server");
+    DBG(r, "end chxj_update_cookie_memcache() cookie_id:[%s]", cookie_id);
+    return CHXJ_FALSE;
+  }
+
+  if (! chxj_memcache_set_cookie(r, m, cookie_id, store_string)) {
+    ERR(r, "cannot store to memcache host:[%s] port:[%d]", m->memcache.host, m->memcache.port);
+    DBG(r, "end chxj_update_cookie_memcache() cookie_id:[%s]", cookie_id);
+    return CHXJ_FALSE;
+  }
+  DBG(r, "end chxj_update_cookie_memcache() cookie_id:[%s]", cookie_id);
+  return CHXJ_TRUE;
+}
+
+
+char *
+chxj_load_cookie_memcache(request_rec *r, mod_chxj_config *m, const char *cookie_id)
+{
+  char *load_string;
+  DBG(r, "start chxj_load_cookie_memcache() cookie_id:[%s]", cookie_id);
+
+  if (! chxj_memcache_init(r, m)) {
+    ERR(r, "Cannot create memcache server");
+    DBG(r, "end   chxj_load_cookie_memcache() cookie_id:[%s]", cookie_id);
+    return NULL;
+  }
+
+  if (! (load_string = chxj_memcache_get_cookie(r, m, cookie_id))) {
+    ERR(r, "cannot store to memcache host:[%s] port:[%d]", m->memcache.host, m->memcache.port);
+    DBG(r, "end   chxj_load_cookie_memcache() cookie_id:[%s]", cookie_id);
+    return NULL;
+  }
+  DBG(r, "end   chxj_load_cookie_memcache() cookie_id:[%s]", cookie_id);
+  return load_string;
+}
+
+
+int
+chxj_delete_cookie_memcache(request_rec *r, mod_chxj_config *m, const char *cookie_id)
+{
+  DBG(r, "start chxj_delete_cookie_memcache() cookie_id:[%s]", cookie_id);
+  if (! chxj_memcache_init(r, m)) {
+    ERR(r, "Cannot create memcache server");
+    DBG(r, "end   chxj_delete_cookie_memcache() cookie_id:[%s]", cookie_id);
+    return CHXJ_FALSE;
+  }
+
+  if (! chxj_memcache_delete_cookie(r, m, cookie_id)) {
+    ERR(r, "cannot store to memcache host:[%s] port:[%d]", m->memcache.host, m->memcache.port);
+    DBG(r, "end   chxj_delete_cookie_memcache() cookie_id:[%s]", cookie_id);
+    return CHXJ_FALSE;
+  }
+  DBG(r, "end   chxj_delete_cookie_memcache() cookie_id:[%s]", cookie_id);
+  return CHXJ_TRUE;
+}
+
+
+int
+chxj_save_cookie_expire_memcache(request_rec *r, mod_chxj_config *m, const char *cookie_id)
+{
+  DBG(r, "start chxj_save_cookie_expire_memcache() cookie_id:[%s]", cookie_id);
+  if (! chxj_memcache_init(r, m)) {
+    ERR(r, "Cannot create memcache server");
+    DBG(r, "end   chxj_save_cookie_expire_memcache() cookie_id:[%s]", cookie_id);
+    return CHXJ_FALSE;
+  }
+
+  if (! chxj_memcache_reset_cookie(r, m, cookie_id)) {
+    ERR(r, "cannot store to memcache host:[%s] port:[%d]", m->memcache.host, m->memcache.port);
+    DBG(r, "end   chxj_save_cookie_expire_memcache() cookie_id:[%s]", cookie_id);
+    return CHXJ_FALSE;
+  }
+  DBG(r, "end   chxj_save_cookie_expire_memcache() cookie_id:[%s]", cookie_id);
+  return CHXJ_TRUE;
+}
+
+
+int
+chxj_delete_cookie_expire_memcache(request_rec *r, mod_chxj_config *m, const char *cookie_id)
+{
+  DBG(r, "start chxj_delete_cookie_expire_memcache() cookie_id:[%s]", cookie_id);
+  /* PASS */
+  DBG(r, "end   chxj_delete_cookie_expire_memcache() cookie_id:[%s]", cookie_id);
+  return CHXJ_TRUE;
+}
+
+
+int
+chxj_cookie_expire_gc_memcache(request_rec *r, mod_chxj_config *m)
+{
+  DBG(r, "start chxj_cookie_expire_gc_memcache()");
+  /* PASS */
+  DBG(r, "end   chxj_cookie_expire_gc_memcache()");
+  return CHXJ_TRUE;
+}
+
 #endif
 /*
  * vim:ts=2 et
