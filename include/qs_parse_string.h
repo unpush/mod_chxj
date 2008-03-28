@@ -19,6 +19,8 @@
 
 #include <httpd.h>
 
+#include "chxj_buffered_write.h"
+
 /*
 #define DEBUG
 #define USE_LOG
@@ -157,6 +159,7 @@ typedef struct _doc {
   apr_allocator_t *allocator;
   apr_pool_t      *pool;
 
+  buf_object buf;
 
 #ifndef __NON_MOD_CHXJ__
   request_rec *r;
