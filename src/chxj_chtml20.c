@@ -90,12 +90,12 @@ static char *s_chtml20_end_option_tag    (void *pdoc, Node *node);
 static char *s_chtml20_start_div_tag     (void *pdoc, Node *node);
 static char *s_chtml20_end_div_tag       (void *pdoc, Node *node);
 
-static void  s_init_chtml20(chtml20_t* chtml, Doc* doc, request_rec* r, device_table* spec);
+static void  s_init_chtml20(chtml20_t *chtml, Doc *doc, request_rec *r, device_table *spec);
 
-static int   s_chtml20_search_emoji(chtml20_t* chtml, char* txt, char** rslt);
+static int   s_chtml20_search_emoji(chtml20_t *chtml, char *txt, char **rslt);
 
-static char* s_chtml20_chxjif_tag(void* pdoc, Node * node); 
-static char* s_chtml20_text_tag(void* pdoc, Node* node);
+static char *s_chtml20_chxjif_tag(void *pdoc, Node *node); 
+static char *s_chtml20_text_tag(void *pdoc, Node *node);
 
 
 tag_handler chtml20_handler[] = {
@@ -335,15 +335,15 @@ tag_handler chtml20_handler[] = {
  * @param src   [i]   The character string before the converting is appointed.
  * @return The character string after the converting is returned.
  */
-char*
+char *
 chxj_exchange_chtml20(
-  request_rec*        r,
-  device_table*       spec,
-  const char*         src,
+  request_rec         *r,
+  device_table *spec,
+  const char *src,
   apr_size_t          srclen,
-  apr_size_t*         dstlen,
-  chxjconvrule_entry* entryp,
-  cookie_t*           cookie
+  apr_size_t *dstlen,
+  chxjconvrule_entry *entryp,
+  cookie_t *cookie
 )
 {
   char *dst = NULL;
@@ -393,7 +393,7 @@ chxj_exchange_chtml20(
   /*--------------------------------------------------------------------------*/
   /* It converts it from CHTML to CHTML.                                      */
   /*--------------------------------------------------------------------------*/
-  chxj_node_exchange(spec,r,(void*)&chtml20, &doc, qs_get_root(&doc), 0);
+  chxj_node_exchange(spec,r,(void *)&chtml20, &doc, qs_get_root(&doc), 0);
   chtml20.out = chxj_buffered_write_flush(chtml20.out, &doc.buf);
   dst = apr_pstrdup(r->pool, chtml20.out);
   chxj_buffered_write_terminate(&doc.buf);
@@ -428,7 +428,7 @@ chxj_exchange_chtml20(
  * @param spec  [i]   The pointer to the device_table
  */
 static void
-s_init_chtml20(chtml20_t* chtml20, Doc* doc, request_rec* r, device_table* spec)
+s_init_chtml20(chtml20_t *chtml20, Doc *doc, request_rec *r, device_table *spec)
 {
   memset(doc,     0, sizeof(Doc));
   memset(chtml20, 0, sizeof(chtml20_t));
@@ -455,11 +455,11 @@ s_init_chtml20(chtml20_t* chtml20, Doc* doc, request_rec* r, device_table* spec)
  * @return When corresponding EMOJI exists, it returns it excluding 0. 
  */
 static int
-s_chtml20_search_emoji(chtml20_t* chtml20, char* txt, char** rslt)
+s_chtml20_search_emoji(chtml20_t *chtml20, char *txt, char **rslt)
 {
-  emoji_t*      ee;
-  request_rec*  r;
-  device_table* spec;
+  emoji_t *ee;
+  request_rec *r;
+  device_table *spec;
   int           len;
 
   spec = chtml20->spec;
@@ -506,12 +506,12 @@ s_chtml20_search_emoji(chtml20_t* chtml20, char* txt, char** rslt)
  * @param node   [i]   The HTML tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_start_html_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_chtml20_start_html_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  Doc*          doc;
-  request_rec*  r;
-  chtml20_t*    chtml20;
+  Doc *doc;
+  request_rec *r;
+  chtml20_t *chtml20;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -533,12 +533,12 @@ s_chtml20_start_html_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The HTML tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_end_html_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml20_end_html_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  Doc*          doc;
-  request_rec*  r;
-  chtml20_t*    chtml20;
+  Doc *doc;
+  request_rec *r;
+  chtml20_t *chtml20;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -557,15 +557,15 @@ s_chtml20_end_html_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The META tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_start_meta_tag(void* pdoc, Node* node) 
+static char *
+s_chtml20_start_meta_tag(void *pdoc, Node *node) 
 {
-  chtml20_t*   chtml20;
-  Doc*         doc;
-  request_rec* r;
-  Attr*        attr;
-  int          content_type_flag;
-  int          refresh_flag;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
+  Attr *attr;
+  int content_type_flag;
+  int refresh_flag;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -582,8 +582,8 @@ s_chtml20_start_meta_tag(void* pdoc, Node* node)
        attr;
        attr = qs_get_next_attr(doc,attr)) {
 
-    char* name;
-    char* value;
+    char *name;
+    char *value;
 
     name   = qs_get_attr_name(doc,attr);
     value  = qs_get_attr_value(doc,attr);
@@ -616,9 +616,9 @@ s_chtml20_start_meta_tag(void* pdoc, Node* node)
           W20_L("=\"text/html; charset=Windows-31J\"");
         }
         else if (refresh_flag) {
-          char* buf = apr_pstrdup(r->pool, value);
-          char* sec;
-          char* url;
+          char *buf = apr_pstrdup(r->pool, value);
+          char *sec;
+          char *url;
 
           url = strchr(buf, ';');
           if (url) {
@@ -663,10 +663,10 @@ s_chtml20_start_meta_tag(void* pdoc, Node* node)
  * @param node   [i]   The META tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_end_meta_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml20_end_meta_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t* chtml20;
+  chtml20_t *chtml20;
 
   chtml20 = GET_CHTML20(pdoc);
 
@@ -682,12 +682,12 @@ s_chtml20_end_meta_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The HEAD tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_start_head_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_chtml20_start_head_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -706,12 +706,12 @@ s_chtml20_start_head_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The HEAD tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_end_head_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml20_end_head_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -730,12 +730,12 @@ s_chtml20_end_head_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The TITLE tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_start_title_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_chtml20_start_title_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -754,12 +754,12 @@ s_chtml20_start_title_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The TITLE tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_end_title_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml20_end_title_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -778,13 +778,13 @@ s_chtml20_end_title_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The BASE tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_start_base_tag(void* pdoc, Node* node) 
+static char *
+s_chtml20_start_base_tag(void *pdoc, Node *node) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
-  Attr*         attr;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
+  Attr *attr;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -798,8 +798,8 @@ s_chtml20_start_base_tag(void* pdoc, Node* node)
        attr;
        attr = qs_get_next_attr(doc,attr)) {
 
-    char* name;
-    char* value;
+    char *name;
+    char *value;
 
     name  = qs_get_attr_name(doc,attr);
     value = qs_get_attr_value(doc,attr);
@@ -823,12 +823,12 @@ s_chtml20_start_base_tag(void* pdoc, Node* node)
  * @param node   [i]   The BASE tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_end_base_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml20_end_base_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -846,13 +846,13 @@ s_chtml20_end_base_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The BODY tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_start_body_tag(void* pdoc, Node* node) 
+static char *
+s_chtml20_start_body_tag(void *pdoc, Node *node) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
-  Attr*         attr;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
+  Attr *attr;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -865,8 +865,8 @@ s_chtml20_start_body_tag(void* pdoc, Node* node)
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-    char* name;
-    char* value;
+    char *name;
+    char *value;
 
     name  = qs_get_attr_name(doc,attr);
     value = qs_get_attr_value(doc,attr);
@@ -945,12 +945,12 @@ s_chtml20_start_body_tag(void* pdoc, Node* node)
  * @param node   [i]   The BODY tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_end_body_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml20_end_body_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -969,13 +969,13 @@ s_chtml20_end_body_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The A tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_start_a_tag(void* pdoc, Node* node) 
+static char *
+s_chtml20_start_a_tag(void *pdoc, Node *node) 
 {
-  Attr*         attr;
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  Attr *attr;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -989,8 +989,8 @@ s_chtml20_start_a_tag(void* pdoc, Node* node)
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
 
-    char* name;
-    char* value;
+    char *name;
+    char *value;
 
     name  = qs_get_attr_name(doc,attr);
     value = qs_get_attr_value(doc,attr);
@@ -1141,12 +1141,12 @@ s_chtml20_start_a_tag(void* pdoc, Node* node)
  * @param node   [i]   The A tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_end_a_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml20_end_a_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -1165,12 +1165,12 @@ s_chtml20_end_a_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The BR tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_start_br_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_chtml20_start_br_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -1189,12 +1189,12 @@ s_chtml20_start_br_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The BR tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_end_br_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml20_end_br_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -1212,12 +1212,12 @@ s_chtml20_end_br_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The TR tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_start_tr_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_chtml20_start_tr_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -1235,12 +1235,12 @@ s_chtml20_start_tr_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The TR tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_end_tr_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml20_end_tr_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -1259,13 +1259,13 @@ s_chtml20_end_tr_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The FONT tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_start_font_tag(void* pdoc, Node* node) 
+static char *
+s_chtml20_start_font_tag(void *pdoc, Node *node) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
-  Attr*         attr;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
+  Attr *attr;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -1280,8 +1280,8 @@ s_chtml20_start_font_tag(void* pdoc, Node* node)
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
 
-    char* name;
-    char* value;
+    char *name;
+    char *value;
 
     name  = qs_get_attr_name(doc,attr);
     value = qs_get_attr_value(doc,attr);
@@ -1323,12 +1323,12 @@ s_chtml20_start_font_tag(void* pdoc, Node* node)
  * @param node   [i]   The FONT tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_end_font_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml20_end_font_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -1347,13 +1347,13 @@ s_chtml20_end_font_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The FORM tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_start_form_tag(void* pdoc, Node* node) 
+static char *
+s_chtml20_start_form_tag(void *pdoc, Node *node) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
-  Attr*         attr;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
+  Attr *attr;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -1367,8 +1367,8 @@ s_chtml20_start_form_tag(void* pdoc, Node* node)
        attr;
        attr = qs_get_next_attr(doc,attr)) {
 
-    char* name;
-    char* value;
+    char *name;
+    char *value;
 
     name  = qs_get_attr_name(doc,attr);
     value = qs_get_attr_value(doc,attr);
@@ -1428,12 +1428,12 @@ s_chtml20_start_form_tag(void* pdoc, Node* node)
  * @param node   [i]   The FORM tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_end_form_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml20_end_form_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -1452,20 +1452,20 @@ s_chtml20_end_form_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The INPUT tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_start_input_tag(void* pdoc, Node* node) 
+static char *
+s_chtml20_start_input_tag(void *pdoc, Node *node) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
-  char*         max_length  = NULL;
-  char*         type        = NULL;
-  char*         name        = NULL;
-  char*         value       = NULL;
-  char*         istyle      = NULL;
-  char*         size        = NULL;
-  char*         checked     = NULL;
-  char*         accesskey   = NULL;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
+  char *max_length  = NULL;
+  char *type        = NULL;
+  char *name        = NULL;
+  char *value       = NULL;
+  char *istyle      = NULL;
+  char *size        = NULL;
+  char *checked     = NULL;
+  char *accesskey   = NULL;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -1557,12 +1557,12 @@ s_chtml20_start_input_tag(void* pdoc, Node* node)
  * @param node   [i]   The INPUT tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_end_input_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml20_end_input_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -1580,12 +1580,12 @@ s_chtml20_end_input_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The CENTER tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_start_center_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_chtml20_start_center_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -1604,12 +1604,12 @@ s_chtml20_start_center_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The CENTER tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_end_center_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml20_end_center_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -1628,12 +1628,12 @@ s_chtml20_end_center_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The UL tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_start_ul_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_chtml20_start_ul_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -1652,8 +1652,8 @@ s_chtml20_start_ul_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The UL tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_end_ul_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml20_end_ul_tag(void *pdoc, Node *UNUSED(child)) 
 {
   chtml20_t*    chtml20;
   Doc*          doc;
@@ -1676,12 +1676,12 @@ s_chtml20_end_ul_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The OL tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_start_ol_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_chtml20_start_ol_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -1700,12 +1700,12 @@ s_chtml20_start_ol_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The OL tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_end_ol_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml20_end_ol_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -1724,12 +1724,12 @@ s_chtml20_end_ol_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The LI tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_start_li_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_chtml20_start_li_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -1748,12 +1748,12 @@ s_chtml20_start_li_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The LI tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_end_li_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml20_end_li_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -1772,13 +1772,13 @@ s_chtml20_end_li_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The HR tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_start_hr_tag(void* pdoc, Node* node) 
+static char *
+s_chtml20_start_hr_tag(void *pdoc, Node *node) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
-  Attr*         attr;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
+  Attr *attr;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -1790,8 +1790,8 @@ s_chtml20_start_hr_tag(void* pdoc, Node* node)
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
 
-    char* name;
-    char* value;
+    char *name;
+    char *value;
 
     name  = qs_get_attr_name(doc,attr);
     value = qs_get_attr_value(doc,attr);
@@ -1870,12 +1870,12 @@ s_chtml20_start_hr_tag(void* pdoc, Node* node)
  * @param node   [i]   The HR tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_end_hr_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml20_end_hr_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -1893,15 +1893,15 @@ s_chtml20_end_hr_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The IMG tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_start_img_tag(void* pdoc, Node* node) 
+static char *
+s_chtml20_start_img_tag(void *pdoc, Node *node) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
-  Attr*         attr;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
+  Attr *attr;
 #ifndef IMG_NOT_CONVERT_FILENAME
-  device_table* spec;
+  device_table *spec;
 #endif
 
   chtml20 = GET_CHTML20(pdoc);
@@ -1920,8 +1920,8 @@ s_chtml20_start_img_tag(void* pdoc, Node* node)
        attr;
        attr = qs_get_next_attr(doc,attr)) {
 
-    char* name;
-    char* value;
+    char *name;
+    char *value;
 
     name  = qs_get_attr_name(doc,attr);
     value = qs_get_attr_value(doc,attr);
@@ -2054,12 +2054,12 @@ s_chtml20_start_img_tag(void* pdoc, Node* node)
  * @param node   [i]   The IMG tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_end_img_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml20_end_img_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -2077,13 +2077,13 @@ s_chtml20_end_img_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The SELECT tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_start_select_tag(void* pdoc, Node* child)
+static char *
+s_chtml20_start_select_tag(void *pdoc, Node *child)
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
-  Attr*         attr;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
+  Attr *attr;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -2097,8 +2097,8 @@ s_chtml20_start_select_tag(void* pdoc, Node* child)
        attr;
        attr = qs_get_next_attr(doc,attr)) {
 
-    char* nm;
-    char* val;
+    char *nm;
+    char *val;
 
     nm  = qs_get_attr_name(doc,attr);
     val = qs_get_attr_value(doc,attr);
@@ -2164,12 +2164,12 @@ s_chtml20_start_select_tag(void* pdoc, Node* child)
  * @param node   [i]   The SELECT tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_end_select_tag(void* pdoc, Node* UNUSED(child))
+static char *
+s_chtml20_end_select_tag(void *pdoc, Node *UNUSED(child))
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -2188,28 +2188,28 @@ s_chtml20_end_select_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The OPTION tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_start_option_tag(void* pdoc, Node* child)
+static char *
+s_chtml20_start_option_tag(void *pdoc, Node *child)
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
-  Attr*         attr;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
+  Attr *attr;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
   r       = doc->r;
 
-  char* selected   = NULL;
-  char* value      = NULL;
+  char *selected   = NULL;
+  char *value      = NULL;
 
   W20_L("<option");
   for (attr = qs_get_attr(doc,child);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
 
-    char* nm;
-    char* val;
+    char *nm;
+    char *val;
 
     nm  = qs_get_attr_name(doc,attr);
     val = qs_get_attr_value(doc,attr);
@@ -2265,12 +2265,12 @@ s_chtml20_start_option_tag(void* pdoc, Node* child)
  * @param node   [i]   The OPTION tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_end_option_tag(void* pdoc, Node* UNUSED(child))
+static char *
+s_chtml20_end_option_tag(void *pdoc, Node *UNUSED(child))
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -2290,13 +2290,13 @@ s_chtml20_end_option_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The DIV tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_start_div_tag(void* pdoc, Node* child)
+static char *
+s_chtml20_start_div_tag(void *pdoc, Node *child)
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
-  Attr*         attr;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
+  Attr *attr;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -2310,8 +2310,8 @@ s_chtml20_start_div_tag(void* pdoc, Node* child)
        attr;
        attr = qs_get_next_attr(doc,attr)) {
 
-    char* nm;
-    char* val;
+    char *nm;
+    char *val;
 
     nm  = qs_get_attr_name(doc,attr);
     val = qs_get_attr_value(doc,attr);
@@ -2343,12 +2343,12 @@ s_chtml20_start_div_tag(void* pdoc, Node* child)
  * @param node   [i]   The DIV tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_end_div_tag(void* pdoc, Node* UNUSED(child))
+static char *
+s_chtml20_end_div_tag(void *pdoc, Node *UNUSED(child))
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -2367,12 +2367,12 @@ s_chtml20_end_div_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The H1 tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_start_h1_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_chtml20_start_h1_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -2391,12 +2391,12 @@ s_chtml20_start_h1_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The H1 tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_end_h1_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml20_end_h1_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -2415,12 +2415,12 @@ s_chtml20_end_h1_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The H2 tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_start_h2_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_chtml20_start_h2_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -2439,12 +2439,12 @@ s_chtml20_start_h2_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The H2 tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_end_h2_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml20_end_h2_tag(void *pdoc, Node *UNUSED(child)) 
 { 
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -2463,12 +2463,12 @@ s_chtml20_end_h2_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The H3 tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_start_h3_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_chtml20_start_h3_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -2487,12 +2487,12 @@ s_chtml20_start_h3_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The H3 tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_end_h3_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml20_end_h3_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -2511,12 +2511,12 @@ s_chtml20_end_h3_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The H4 tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_start_h4_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_chtml20_start_h4_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -2535,12 +2535,12 @@ s_chtml20_start_h4_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The H4 tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_end_h4_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml20_end_h4_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -2559,8 +2559,8 @@ s_chtml20_end_h4_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The H5 tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_start_h5_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_chtml20_start_h5_tag(void *pdoc, Node *UNUSED(node)) 
 {
   chtml20_t*    chtml20;
   Doc*          doc;
@@ -2583,12 +2583,12 @@ s_chtml20_start_h5_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The H5 tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_end_h5_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml20_end_h5_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -2607,12 +2607,12 @@ s_chtml20_end_h5_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The H6 tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_start_h6_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_chtml20_start_h6_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -2631,12 +2631,12 @@ s_chtml20_start_h6_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The H6 tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_end_h6_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml20_end_h6_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -2655,12 +2655,12 @@ s_chtml20_end_h6_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The PRE tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_start_pre_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_chtml20_start_pre_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -2680,12 +2680,12 @@ s_chtml20_start_pre_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The PRE tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_end_pre_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml20_end_pre_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -2706,12 +2706,12 @@ s_chtml20_end_pre_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The P tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_start_p_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_chtml20_start_p_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -2730,12 +2730,12 @@ s_chtml20_start_p_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The P tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_end_p_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml20_end_p_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -2746,13 +2746,13 @@ s_chtml20_end_p_tag(void* pdoc, Node* UNUSED(child))
 }
 
 
-static char* 
-s_chtml20_chxjif_tag(void* pdoc, Node* node)
+static char *
+s_chtml20_chxjif_tag(void *pdoc, Node *node)
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  Node*         child;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  Node *child;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -2778,13 +2778,13 @@ s_chtml20_chxjif_tag(void* pdoc, Node* node)
  * @param node   [i]   The TEXTAREA tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_start_textarea_tag(void* pdoc, Node* node) 
+static char *
+s_chtml20_start_textarea_tag(void *pdoc, Node *node) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
-  Attr*         attr;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
+  Attr *attr;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -2796,8 +2796,8 @@ s_chtml20_start_textarea_tag(void* pdoc, Node* node)
        attr;
        attr = qs_get_next_attr(doc,attr)) {
 
-    char* name;
-    char* value;
+    char *name;
+    char *value;
 
     name  = qs_get_attr_name(doc,attr);
     value = qs_get_attr_value(doc,attr);
@@ -2847,12 +2847,12 @@ s_chtml20_start_textarea_tag(void* pdoc, Node* node)
  * @param node   [i]   The TEXTAREA tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml20_end_textarea_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml20_end_textarea_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -2865,16 +2865,16 @@ s_chtml20_end_textarea_tag(void* pdoc, Node* UNUSED(child))
 }
 
 
-static char*
-s_chtml20_text_tag(void* pdoc, Node* child)
+static char *
+s_chtml20_text_tag(void *pdoc, Node *child)
 {       
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
-  char*         textval;
-  char*         tmp;
-  char*         tdst;
-  char          one_byte[2];
+  chtml20_t *chtml20;
+  Doc *doc;
+  request_rec *r;
+  char *textval;
+  char *tmp;
+  char *tdst;
+  char one_byte[2];
   int           ii;
   int           tdst_len;
 
