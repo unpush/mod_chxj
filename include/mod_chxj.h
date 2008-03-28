@@ -371,6 +371,7 @@ typedef struct {
   device_table        *spec;
 
   apr_bucket_brigade *bb;
+  apr_pool_t *pool;
 
   char* buffer;
 } mod_chxj_ctx;

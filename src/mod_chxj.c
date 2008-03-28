@@ -941,29 +941,31 @@ chxj_input_filter(ap_filter_t*        f,
                  apr_read_type_e      block,
                  apr_off_t            readbytes)
 {
-  request_rec*        r;
+  request_rec         *r;
   apr_status_t        rv;
-  conn_rec*           c;
-  apr_bucket*         b;
+  conn_rec            *c;
+  apr_bucket          *b;
   /*--------------------------------------------------------------------------*/
   /* It is the brigade area for output                                        */
   /*--------------------------------------------------------------------------*/
-  apr_bucket_brigade* ibb;            
+  apr_bucket_brigade  *ibb;            
   /*--------------------------------------------------------------------------*/
   /* It is the brigade area for input                                         */
   /*--------------------------------------------------------------------------*/
-  apr_bucket_brigade* obb;
+  apr_bucket_brigade  *obb;
   apr_size_t          len;
-  apr_bucket*         tmp_heap;
-  apr_bucket*         eos;
-  const char*         data;
-  char*               data_bucket;
-  char*               data_brigade;
-  char*               content_type;
-  device_table*       spec ;
-  char*               user_agent;
-  mod_chxj_config*    dconf;
-  chxjconvrule_entry* entryp;
+  apr_bucket          *tmp_heap;
+  apr_bucket          *eos;
+  const char          *data;
+  char                *data_bucket;
+  char                *data_brigade;
+  char                *content_type;
+  device_table        *spec = NULL;
+  char                *user_agent = NULL;
+  mod_chxj_config     *dconf;
+  chxjconvrule_entry  *entryp = NULL;
+  mod_chxj_ctx        *ctx = (mod_chxj_ctx *)f->ctx;
+  int                 eos_flag = 0;
 
   r = f->r;
   c = r->connection;
@@ -978,7 +980,7 @@ chxj_input_filter(ap_filter_t*        f,
 
   content_type = (char*)apr_table_get(r->headers_in, "Content-Type");
   if (content_type 
-  && strncasecmp("multipart/form-data", content_type, 19) == 0) {
+      && strncasecmp("multipart/form-data", content_type, 19) == 0) {
 
     DBG(r, "detect multipart/form-data");
     ap_remove_input_filter(f);
@@ -987,8 +989,14 @@ chxj_input_filter(ap_filter_t*        f,
   }
 
   dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  user_agent = (char*)apr_table_get(r->headers_in, "User-Agent");
 
-  entryp = chxj_apply_convrule(r, dconf->convrules);
+  if (ctx && ctx->entryp) entryp = ctx->entryp;
+  else                    entryp = chxj_apply_convrule(r, dconf->convrules);
+
+  if (ctx && ctx->spec) spec = ctx->spec;
+  else                  spec = chxj_specified_device(r, user_agent);
+
   if (!entryp || !(entryp->action & CONVRULE_ENGINE_ON_BIT)) {
     DBG(r,"EngineOff");
 
@@ -996,8 +1004,6 @@ chxj_input_filter(ap_filter_t*        f,
     return ap_get_brigade(f->next, bb, mode, block, readbytes);
   }
 
-  user_agent = (char*)apr_table_get(r->headers_in, "User-Agent");
-  spec = chxj_specified_device(r, user_agent);
 
   switch(spec->html_spec_type) {
   case CHXJ_SPEC_Chtml_1_0:
@@ -1021,10 +1027,20 @@ chxj_input_filter(ap_filter_t*        f,
     DBG(r, "ap_get_brigade() failed");
     return rv;
   }
+  if (!ctx) {
+    ctx = apr_palloc(r->pool, sizeof(*ctx));
+    memset(ctx, 0, sizeof(*ctx));
+    if ((rv = apr_pool_create(&ctx->pool, r->pool)) != APR_SUCCESS) {
+      ERR(r, "failed: new pool create. rv:[%d]", rv);
+      return rv;
+    }
+    ctx->entryp = entryp;
+    ctx->spec = spec;
+    ctx->buffer = apr_palloc(ctx->pool, 1);
+    ctx->buffer[0] = 0;
+    f->ctx = ctx;
+  }
 
-#if 0
-  APR_BRIGADE_FOREACH(b, ibb) {
-#endif
   for (b =  APR_BRIGADE_FIRST(ibb); 
        b != APR_BRIGADE_SENTINEL(ibb);
        b =  APR_BUCKET_NEXT(b)) {
@@ -1036,50 +1052,60 @@ chxj_input_filter(ap_filter_t*        f,
     }
 
     if (data != NULL) {
-      data_bucket = apr_palloc(r->pool, len+1);
+      ctx->len += len;
+      data_bucket = apr_palloc(ctx->pool, len+1);
       memset((void*)data_bucket, 0, len+1);
       memcpy(data_bucket, data, len);
       DBG(r, "(in)POSTDATA:[%s]", data_bucket);
-  
-      data_brigade = apr_pstrcat(r->pool, data_brigade, data_bucket, NULL);
+      ctx->buffer = apr_pstrcat(ctx->pool, ctx->buffer, data_bucket, NULL);
     }
-
     if (APR_BUCKET_IS_EOS(b)) {
+      DBG(r, "eos");
+      eos_flag = 1;
       break;
     }
   }
   apr_brigade_cleanup(ibb);
 
-
-  len = strlen(data_brigade);
-  if (len == 0) {
+  if (ctx->len == 0) {
     DBG(r,"data_brigade length is 0");
     DBG(r,"end of chxj_input_filter()");
     ap_remove_input_filter(f);
     return ap_get_brigade(f->next, bb, mode, block, readbytes);
   }
 
-  data_brigade = chxj_input_convert(
-    r, 
-    (const char**)&data_brigade, 
-    (apr_size_t*)&len,
-    entryp
-    );
-
-  if (len > 0) {
-    DBG(r, "(in:exchange)POSTDATA:[%s]", data_brigade);
-
-    obb = apr_brigade_create(r->pool, c->bucket_alloc);
-
-    tmp_heap = apr_bucket_heap_create(data_brigade, 
-                                      len, 
-                                      NULL, 
-                                      f->c->bucket_alloc);
-    eos      = apr_bucket_eos_create(f->c->bucket_alloc);
-
-    APR_BRIGADE_INSERT_TAIL(obb, tmp_heap);
-    APR_BRIGADE_INSERT_TAIL(obb, eos);
-    APR_BRIGADE_CONCAT(bb, obb);
+  if (eos_flag) {
+    len = ctx->len;
+    data_brigade = chxj_input_convert(
+      r, 
+      (const char**)&ctx->buffer, 
+      (apr_size_t*)&len,
+      entryp
+      );
+  
+    if (len > 0) {
+      DBG(r, "(in:exchange)POSTDATA:[%s]", data_brigade);
+  
+      obb = apr_brigade_create(r->pool, c->bucket_alloc);
+  
+      tmp_heap = apr_bucket_heap_create(data_brigade, 
+                                        len, 
+                                        NULL, 
+                                        f->c->bucket_alloc);
+      eos = apr_bucket_eos_create(f->c->bucket_alloc);
+  
+      APR_BRIGADE_INSERT_TAIL(obb, tmp_heap);
+      APR_BRIGADE_INSERT_TAIL(obb, eos);
+      APR_BRIGADE_CONCAT(bb, obb);
+    }
+    else {
+      obb = apr_brigade_create(r->pool, c->bucket_alloc);
+      eos = apr_bucket_eos_create(f->c->bucket_alloc);
+      APR_BRIGADE_INSERT_TAIL(obb, eos);
+      APR_BRIGADE_CONCAT(bb, obb);
+    }
+    apr_pool_destroy(ctx->pool);
+    f->ctx = NULL;
   }
 
   DBG(r, "end of chxj_input_filter()");
