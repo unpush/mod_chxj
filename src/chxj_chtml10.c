@@ -21,8 +21,12 @@
 #include "chxj_qr_code.h"
 #include "chxj_cookie.h"
 #include "chxj_encoding.h"
+#include "chxj_buffered_write.h"
 
 #define GET_CHTML10(X) ((chtml10_t*)(X))
+#define W10_L(X)          do { chtml10->out = BUFFERED_WRITE_LITERAL(chtml10->out, &doc->buf, (X)); } while(0)
+#define W10_V(X)          do { chtml10->out = (X) ? BUFFERED_WRITE_VALUE(chtml10->out, &doc->buf, (X))  \
+                                                  : BUFFERED_WRITE_LITERAL(chtml10->out, &doc->buf, ""); } while(0)
 
 static char* s_chtml10_start_html_tag     (void* pdoc, Node* node);
 static char* s_chtml10_end_html_tag       (void* pdoc, Node* node);
@@ -344,9 +348,11 @@ chxj_exchange_chtml10(
   char*     ss;
   chtml10_t chtml10;
   Doc       doc;
+  apr_time_t t;
 
   dst = NULL;
 
+  t = apr_time_now();
   DBG(r, "start chxj_exchange_chtml10() cookie_id=[%s]", (cookie) ? cookie->cookie_id : "");
 
   /*--------------------------------------------------------------------------*/
@@ -385,17 +391,20 @@ chxj_exchange_chtml10(
 
   qs_parse_string(&doc,ss, strlen(ss));
 
+  chxj_buffered_write_init(r->pool, &doc.buf);
   /*--------------------------------------------------------------------------*/
   /* It converts it from CHTML to CHTML.                                      */
   /*--------------------------------------------------------------------------*/
   chxj_node_exchange(spec,r,(void*)&chtml10, &doc, qs_get_root(&doc), 0);
-  dst = chtml10.out;
-
+  chtml10.out = chxj_buffered_write_flush(chtml10.out, &doc.buf);
+  dst = apr_pstrdup(r->pool, chtml10.out);
+  chxj_buffered_write_terminate(&doc.buf);
 
   qs_all_free(&doc,QX_LOGMARK);
 
-  if (!dst)
+  if (!dst) {
     return apr_pstrdup(r->pool,ss);
+  }
 
   if (strlen(dst) == 0) {
     dst = apr_psprintf(r->pool, "\n");
@@ -406,7 +415,7 @@ chxj_exchange_chtml10(
   chxj_dump_out("[dst] CHTML -> CHTML1.0", dst, *dstlen);
 #endif
 
-  DBG(r, "end   chxj_exchange_chtml10() cookie_id=[%s]", (cookie) ? cookie->cookie_id : "");
+  DBG(r, "end   chxj_exchange_chtml10() cookie_id=[%s] time=[%lld]", (cookie) ? cookie->cookie_id : "", apr_time_now() - t);
 
   return dst;
 }
@@ -520,7 +529,7 @@ s_chtml10_start_html_tag(void* pdoc, Node* UNUSED(node))
   /*--------------------------------------------------------------------------*/
   /* start HTML tag                                                           */
   /*--------------------------------------------------------------------------*/
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<html>\n", NULL);
+  W10_L("<html>\n");
 
   return chtml10->out;
 }
@@ -546,7 +555,7 @@ s_chtml10_end_html_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "</html>\n", NULL);
+  W10_L("</html>\n");
 
   return chtml10->out;
 }
@@ -611,7 +620,7 @@ s_chtml10_start_head_tag(void* pdoc, Node* UNUSED(node))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<head>\r\n", NULL);
+  W10_L("<head>\r\n");
 
   return chtml10->out;
 }
@@ -636,7 +645,7 @@ s_chtml10_end_head_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "</head>\r\n", NULL);
+  W10_L("</head>\r\n");
 
   return chtml10->out;
 }
@@ -661,7 +670,7 @@ s_chtml10_start_ol_tag(void* pdoc, Node* UNUSED(node))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<ol>\r\n", NULL);
+  W10_L("<ol>\r\n");
 
   return chtml10->out;
 }
@@ -686,7 +695,7 @@ s_chtml10_end_ol_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "</ol>\r\n", NULL);
+  W10_L("</ol>\r\n");
 
   return chtml10->out;
 }
@@ -711,7 +720,7 @@ s_chtml10_start_ul_tag(void* pdoc, Node* UNUSED(node))
   doc        = chtml10->doc;
   r          = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<ul>\r\n", NULL);
+  W10_L("<ul>\r\n");
 
   return chtml10->out;
 }
@@ -736,7 +745,7 @@ s_chtml10_end_ul_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "</ul>\r\n", NULL);
+  W10_L("</ul>\r\n");
 
   return chtml10->out;
 }
@@ -761,7 +770,7 @@ s_chtml10_start_li_tag(void* pdoc, Node* UNUSED(node))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<li>\r\n", NULL);
+  W10_L("<li>\r\n");
 
   return chtml10->out;
 }
@@ -786,7 +795,7 @@ s_chtml10_end_li_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "</li>\r\n", NULL);
+  W10_L("</li>\r\n");
 
   return chtml10->out;
 }
@@ -811,7 +820,7 @@ s_chtml10_start_h1_tag(void* pdoc, Node* UNUSED(node))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<h1>\r\n", NULL);
+  W10_L("<h1>\r\n");
 
   return chtml10->out;
 }
@@ -836,7 +845,7 @@ s_chtml10_end_h1_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "</h1>\r\n", NULL);
+  W10_L("</h1>\r\n");
 
   return chtml10->out;
 }
@@ -861,7 +870,7 @@ s_chtml10_start_h2_tag(void* pdoc, Node* UNUSED(node))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<h2>\r\n", NULL);
+  W10_L("<h2>\r\n");
 
   return chtml10->out;
 }
@@ -886,7 +895,7 @@ s_chtml10_end_h2_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "</h2>\r\n", NULL);
+  W10_L("</h2>\r\n");
 
   return chtml10->out;
 }
@@ -911,7 +920,7 @@ s_chtml10_start_h3_tag(void* pdoc, Node* UNUSED(node))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<h3>\r\n", NULL);
+  W10_L("<h3>\r\n");
 
   return chtml10->out;
 }
@@ -936,7 +945,7 @@ s_chtml10_end_h3_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "</h3>\r\n", NULL);
+  W10_L("</h3>\r\n");
 
   return chtml10->out;
 }
@@ -961,7 +970,7 @@ s_chtml10_start_h4_tag(void* pdoc, Node* UNUSED(node))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<h4>\r\n", NULL);
+  W10_L("<h4>\r\n");
 
   return chtml10->out;
 }
@@ -986,7 +995,7 @@ s_chtml10_end_h4_tag(void* pdoc, Node* UNUSED(child))
   doc      = chtml10->doc;
   r        = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "</h4>\r\n", NULL);
+  W10_L("</h4>\r\n");
 
   return chtml10->out;
 }
@@ -1011,7 +1020,7 @@ s_chtml10_start_h5_tag(void* pdoc, Node* UNUSED(node))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<h5>\r\n", NULL);
+  W10_L("<h5>\r\n");
 
   return chtml10->out;
 }
@@ -1036,7 +1045,7 @@ s_chtml10_end_h5_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "</h5>\r\n", NULL);
+  W10_L("</h5>\r\n");
 
   return chtml10->out;
 }
@@ -1061,7 +1070,7 @@ s_chtml10_start_h6_tag(void* pdoc, Node* UNUSED(node))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<h6>\r\n", NULL);
+  W10_L("<h6>\r\n");
 
   return chtml10->out;
 }
@@ -1086,7 +1095,7 @@ s_chtml10_end_h6_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "</h6>\r\n", NULL);
+  W10_L("</h6>\r\n");
 
   return chtml10->out;
 }
@@ -1111,7 +1120,7 @@ s_chtml10_start_title_tag(void* pdoc, Node* UNUSED(node))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<title>", NULL);
+  W10_L("<title>");
 
   return chtml10->out;
 }
@@ -1136,7 +1145,7 @@ s_chtml10_end_title_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "</title>\r\n", NULL);
+  W10_L("</title>\r\n");
 
   return chtml10->out;
 }
@@ -1162,8 +1171,7 @@ s_chtml10_start_base_tag(void* pdoc, Node* node)
   doc     = chtml10->doc;
   r       = doc->r;
   
-
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<base", NULL);
+  W10_L("<base");
 
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -1177,17 +1185,14 @@ s_chtml10_start_base_tag(void* pdoc, Node* node)
     name  = qs_get_attr_name(doc,attr);
     value = qs_get_attr_value(doc,attr);
 
-    if ((*name == 'h' || *name == 'H') && strcasecmp(name, "href") == 0) {
-      chtml10->out = apr_pstrcat(r->pool, 
-                      chtml10->out, 
-                      " href=\"", 
-                      value, 
-                      "\"", 
-                      NULL);
+    if (STRCASEEQ('h','H',"href", name)) {
+      W10_L(" href=\"");
+      W10_V(value);
+      W10_L("\"");
     }
   }
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, " >\r\n", NULL);
+  W10_L(">\r\n");
 
   return chtml10->out;
 }
@@ -1230,7 +1235,8 @@ s_chtml10_start_body_tag(void* pdoc, Node* node)
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<body", NULL);
+
+  W10_L("<body");
 
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -1299,7 +1305,7 @@ s_chtml10_start_body_tag(void* pdoc, Node* node)
     }
   }
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, ">\r\n", NULL);
+  W10_L(">\r\n");
 
   return chtml10->out;
 }
@@ -1324,7 +1330,7 @@ s_chtml10_end_body_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "</body>\r\n", NULL);
+  W10_L("</body>\r\n");
 
   return chtml10->out;
 }
@@ -1338,19 +1344,19 @@ s_chtml10_end_body_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The A tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml10_start_a_tag(void* pdoc, Node* node) 
+static char *
+s_chtml10_start_a_tag(void *pdoc, Node *node) 
 {
-  chtml10_t*    chtml10;
-  Doc*          doc;
-  request_rec*  r;
-  Attr*         attr;
+  chtml10_t     *chtml10;
+  Doc           *doc;
+  request_rec   *r;
+  Attr          *attr;
 
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<a", NULL);
+  W10_L("<a");
 
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -1359,8 +1365,8 @@ s_chtml10_start_a_tag(void* pdoc, Node* node)
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
 
-    char* name;
-    char* value;
+    char *name;
+    char *value;
 
     name  = qs_get_attr_name(doc,attr);
     value = qs_get_attr_value(doc,attr);
@@ -1372,12 +1378,9 @@ s_chtml10_start_a_tag(void* pdoc, Node* node)
         /*--------------------------------------------------------------------*/
         /* CHTML1.0                                                           */
         /*--------------------------------------------------------------------*/
-        chtml10->out = apr_pstrcat(r->pool, 
-                        chtml10->out, 
-                        " name=\"", 
-                        value, 
-                        "\"", 
-                        NULL);
+        W10_L(" name=\"");
+        W10_V(value);
+        W10_L("\"");
       }
       break;
 
@@ -1389,13 +1392,9 @@ s_chtml10_start_a_tag(void* pdoc, Node* node)
         /*--------------------------------------------------------------------*/
         value = chxj_encoding_parameter(r, value);
         value = chxj_add_cookie_parameter(r, value, chtml10->cookie);
-        
-        chtml10->out = apr_pstrcat(r->pool, 
-                        chtml10->out, 
-                        " href=\"", 
-                        value, 
-                        "\"", 
-                        NULL);
+        W10_L(" href=\"");
+        W10_V(value);
+        W10_L("\"");
       }
       break;
 
@@ -1405,12 +1404,9 @@ s_chtml10_start_a_tag(void* pdoc, Node* node)
         /*--------------------------------------------------------------------*/
         /* CHTML1.0                                                           */
         /*--------------------------------------------------------------------*/
-        chtml10->out = apr_pstrcat(r->pool, 
-                        chtml10->out, 
-                        " accesskey=\"", 
-                        value, 
-                        "\"", 
-                        NULL);
+        W10_L(" accesskey=\"");
+        W10_V(value);
+        W10_L("\"");
       }
       break;
 
@@ -1507,8 +1503,7 @@ s_chtml10_start_a_tag(void* pdoc, Node* node)
     }
   }
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, ">", NULL);
-
+  W10_L(">");
   return chtml10->out;
 }
 
@@ -1521,19 +1516,18 @@ s_chtml10_start_a_tag(void* pdoc, Node* node)
  * @param node   [i]   The A tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml10_end_a_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml10_end_a_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml10_t*   chtml10;
-  Doc*         doc;
-  request_rec* r;
+  chtml10_t    *chtml10;
+  Doc          *doc;
+  request_rec  *r;
 
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "</a>", NULL);
-
+  W10_L("</a>");
   return chtml10->out;
 }
 
@@ -1546,19 +1540,18 @@ s_chtml10_end_a_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The BR tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml10_start_br_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_chtml10_start_br_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  chtml10_t*   chtml10;
-  Doc*         doc;
-  request_rec* r;
+  chtml10_t    *chtml10;
+  Doc          *doc;
+  request_rec  *r;
 
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<br>\r\n", NULL);
-
+  W10_L("<br>\r\n");
   return chtml10->out;
 }
 
@@ -1571,10 +1564,10 @@ s_chtml10_start_br_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The BR tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml10_end_br_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml10_end_br_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml10_t* chtml10 = GET_CHTML10(pdoc);
+  chtml10_t *chtml10 = GET_CHTML10(pdoc);
 
   return chtml10->out;
 }
@@ -1588,10 +1581,10 @@ s_chtml10_end_br_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The TR tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml10_start_tr_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_chtml10_start_tr_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  chtml10_t* chtml10 = GET_CHTML10(pdoc);
+  chtml10_t *chtml10 = GET_CHTML10(pdoc);
 
   return chtml10->out;
 }
@@ -1605,18 +1598,18 @@ s_chtml10_start_tr_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The TR tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml10_end_tr_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml10_end_tr_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml10_t*   chtml10;
-  Doc*         doc;
-  request_rec* r;
+  chtml10_t    *chtml10;
+  Doc          *doc;
+  request_rec  *r;
 
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<br>\r\n", NULL);
+  W10_L("<br>\r\n");
 
   return chtml10->out;
 }
@@ -1630,10 +1623,10 @@ s_chtml10_end_tr_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The FONT tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml10_start_font_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_chtml10_start_font_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  chtml10_t* chtml10 = GET_CHTML10(pdoc);
+  chtml10_t *chtml10 = GET_CHTML10(pdoc);
 
   /* Ignore */
 
@@ -1649,10 +1642,10 @@ s_chtml10_start_font_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The FONT tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml10_end_font_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml10_end_font_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml10_t* chtml10 = GET_CHTML10(pdoc);
+  chtml10_t *chtml10 = GET_CHTML10(pdoc);
 
   /* ignore */
 
@@ -1668,19 +1661,19 @@ s_chtml10_end_font_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The FORM tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml10_start_form_tag(void* pdoc, Node* node) 
+static char *
+s_chtml10_start_form_tag(void *pdoc, Node *node) 
 {
-  chtml10_t*   chtml10;
-  Doc*         doc;
-  request_rec* r;
-  Attr*        attr;
+  chtml10_t    *chtml10;
+  Doc          *doc;
+  request_rec  *r;
+  Attr         *attr;
 
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<form", NULL);
+  W10_L("<form");
 
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -1688,8 +1681,8 @@ s_chtml10_start_form_tag(void* pdoc, Node* node)
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-    char* name;
-    char* value;
+    char *name;
+    char *value;
 
     name  = qs_get_attr_name(doc,attr);
     value = qs_get_attr_value(doc,attr);
@@ -1704,12 +1697,9 @@ s_chtml10_start_form_tag(void* pdoc, Node* node)
         value = chxj_encoding_parameter(r, value);
         value = chxj_add_cookie_parameter(r, value, chtml10->cookie);
   
-        chtml10->out = apr_pstrcat(r->pool, 
-                        chtml10->out, 
-                        " action=\"",
-                        value,
-                        "\"", 
-                        NULL);
+        W10_L(" action=\"");
+        W10_V(value);
+        W10_L("\"");
       }
       break;
 
@@ -1719,12 +1709,9 @@ s_chtml10_start_form_tag(void* pdoc, Node* node)
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
-        chtml10->out = apr_pstrcat(r->pool, 
-                        chtml10->out, 
-                        " method=\"",
-                        value,
-                        "\"", 
-                        NULL);
+        W10_L(" method=\"");
+        W10_V(value);
+        W10_L("\"");
       }
       break;
 
@@ -1743,7 +1730,7 @@ s_chtml10_start_form_tag(void* pdoc, Node* node)
     }
   }
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, ">", NULL);
+  W10_L(">");
 
   return chtml10->out;
 }
@@ -1768,7 +1755,7 @@ s_chtml10_end_form_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "</form>", NULL);
+  W10_L("</form>");
 
   return chtml10->out;
 }
@@ -1810,7 +1797,7 @@ s_chtml10_start_input_tag(void* pdoc, Node* node)
   checked     = NULL;
   accesskey   = NULL;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<input", NULL);
+  W10_L("<input");
 
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -1825,44 +1812,35 @@ s_chtml10_start_input_tag(void* pdoc, Node* node)
   accesskey  = qs_get_accesskey_attr(doc, node, r);
   size       = qs_get_size_attr(doc, node, r);
 
-  if (type)
-    chtml10->out = apr_pstrcat(r->pool,
-                    chtml10->out, 
-                    " type=\"", 
-                    type, 
-                    "\" ", 
-                    NULL);
+  if (type) {
+    W10_L(" type=\"");
+    W10_V(type);
+    W10_L("\"");
+  }
 
-  if (size) 
-    chtml10->out = apr_pstrcat(r->pool, 
-                    chtml10->out, 
-                    " size=\"", 
-                    size, 
-                    "\" ", 
-                    NULL);
+  if (size) {
+    W10_L(" size=\"");
+    W10_V(size);
+    W10_L("\"");
+  }
 
-  if (name)
-    chtml10->out = apr_pstrcat(r->pool, 
-                    chtml10->out, 
-                    " name=\"", 
-                    name, 
-                    "\" ", 
-                    NULL);
+  if (name) {
+    W10_L(" name=\"");
+    W10_V(name);
+    W10_L("\"");
+  }
 
-  if (value)
-    chtml10->out = apr_pstrcat(r->pool, 
-                    chtml10->out, 
-                    " value=\"", 
-                    value, 
-                    "\" ", 
-                    NULL);
+  if (value) {
+    W10_L(" value=\"");
+    W10_V(value);
+    W10_L("\" ");
+  }
 
-  if (accesskey)
-    chtml10->out = apr_pstrcat(r->pool, 
-                    chtml10->out, 
-                    " accesskey=\"", 
-                    accesskey, "\" ", 
-                    NULL);
+  if (accesskey) {
+    W10_L(" accesskey=\"");
+    W10_V(accesskey);
+    W10_L("\" ");
+  }
 
   if (istyle) {
     /*------------------------------------------------------------------------*/
@@ -1873,20 +1851,17 @@ s_chtml10_start_input_tag(void* pdoc, Node* node)
   /*--------------------------------------------------------------------------*/
   /* The figure is default for the password.                                  */
   /*--------------------------------------------------------------------------*/
-  if (max_length)
-    chtml10->out = apr_pstrcat(r->pool, 
-                      chtml10->out, 
-                      " maxlength=\"", 
-                      max_length, 
-                      "\"", 
-                      NULL);
+  if (max_length) {
+    W10_L(" maxlength=\"");
+    W10_V(max_length);
+    W10_L("\"");
+  }
 
-  if (checked)
-    chtml10->out = apr_pstrcat(r->pool, 
-                    chtml10->out, " checked ", NULL);
+  if (checked) {
+    W10_L(" checked ");
+  }
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, " >", NULL);
-
+  W10_L(" >");
   return chtml10->out;
 }
 
@@ -1927,7 +1902,7 @@ s_chtml10_start_center_tag(void* pdoc, Node* UNUSED(node))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<center>", NULL);
+  W10_L("<center>");
 
   return chtml10->out;
 }
@@ -1952,7 +1927,7 @@ s_chtml10_end_center_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "</center>", NULL);
+  W10_L("</center>");
 
   return chtml10->out;
 }
@@ -1978,7 +1953,7 @@ s_chtml10_start_hr_tag(void* pdoc, Node* node)
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<hr ", NULL);
+  W10_L("<hr ");
  
   for (attr = qs_get_attr(doc,node);
        attr; 
@@ -1997,9 +1972,9 @@ s_chtml10_start_hr_tag(void* pdoc, Node* node)
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
-        chtml10->out = apr_pstrcat(r->pool,
-                          chtml10->out, 
-                          " align=\"", value, "\" ", NULL);
+        W10_L(" align=\"");
+        W10_V(value);
+        W10_L("\" ");
       }
       break;
 
@@ -2009,9 +1984,9 @@ s_chtml10_start_hr_tag(void* pdoc, Node* node)
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
-        chtml10->out = apr_pstrcat(r->pool,
-                          chtml10->out, 
-                          " size=\"", value, "\" ", NULL);
+        W10_L(" size=\"");
+        W10_V(value);
+        W10_L("\" ");
       }
       break;
 
@@ -2021,9 +1996,9 @@ s_chtml10_start_hr_tag(void* pdoc, Node* node)
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
-        chtml10->out = apr_pstrcat(r->pool,
-                          chtml10->out, 
-                          " width=\"", value, "\" ", NULL);
+        W10_L(" width=\"");
+        W10_V(value);
+        W10_L("\" ");
       }
       break;
 
@@ -2033,9 +2008,7 @@ s_chtml10_start_hr_tag(void* pdoc, Node* node)
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
-        chtml10->out = apr_pstrcat(r->pool,
-                          chtml10->out, 
-                          " noshade ", NULL);
+        W10_L(" noshade ");
       }
       break;
 
@@ -2054,8 +2027,8 @@ s_chtml10_start_hr_tag(void* pdoc, Node* node)
     }
   }
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, " >", NULL);
 
+  W10_L(" >");
   return chtml10->out;
 }
 
@@ -2105,9 +2078,7 @@ s_chtml10_start_img_tag(void* pdoc, Node* node)
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<img", NULL);
- 
-
+  W10_L("<img");
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
   /*--------------------------------------------------------------------------*/
@@ -2138,8 +2109,9 @@ s_chtml10_start_img_tag(void* pdoc, Node* node)
                                (strchr(value, '?')) ? '&' : '?',
                                CHXJ_COOKIE_NOUPDATE_PARAM);
         }
-        chtml10->out = apr_pstrcat(r->pool, 
-                        chtml10->out, " src=\"",value,"\"", NULL);
+        W10_L(" src=\"");
+        W10_V(value);
+        W10_L("\"");
 #else
         value = chxj_img_conv(r, spec, value);
         value = chxj_encoding_parameter(r, value);
@@ -2151,11 +2123,9 @@ s_chtml10_start_img_tag(void* pdoc, Node* node)
                                (strchr(value, '?')) ? '&' : '?',
                                CHXJ_COOKIE_NOUPDATE_PARAM);
         }
-        chtml10->out = apr_pstrcat(r->pool, 
-                        chtml10->out, " src=\"", 
-                        value, 
-                        NULL);
-        chtml10->out = apr_pstrcat(r->pool, chtml10->out, "\"", NULL);
+        W10_L(" src=\"");
+        W10_V(value);
+        W10_L("\"");
 #endif
       }
       break;
@@ -2169,16 +2139,18 @@ s_chtml10_start_img_tag(void* pdoc, Node* node)
         /*--------------------------------------------------------------------*/
         /* CHTML 4.0                                                          */
         /*--------------------------------------------------------------------*/
-        chtml10->out = apr_pstrcat(r->pool, 
-                        chtml10->out, " align=\"",value,"\"", NULL);
+        W10_L(" align=\"");
+        W10_V(value);
+        W10_L("\"");
       }
       else
       if (strcasecmp(name, "alt"   ) == 0) {
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
-        chtml10->out = apr_pstrcat(r->pool, 
-                        chtml10->out, " alt=\"",value,"\"", NULL);
+        W10_L(" alt=\"");
+        W10_V(value);
+        W10_L("\"");
       }
       break;
 
@@ -2188,8 +2160,9 @@ s_chtml10_start_img_tag(void* pdoc, Node* node)
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
-        chtml10->out = apr_pstrcat(r->pool, 
-                        chtml10->out, " width=\"",value,"\"", NULL);
+        W10_L(" width=\"");
+        W10_V(value);
+        W10_L("\"");
       }
       break;
 
@@ -2199,16 +2172,18 @@ s_chtml10_start_img_tag(void* pdoc, Node* node)
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
-        chtml10->out = apr_pstrcat(r->pool, 
-                        chtml10->out, " height=\"",value,"\"", NULL);
+        W10_L(" height=\"");
+        W10_V(value);
+        W10_L("\"");
       }
       else
       if (strcasecmp(name, "hspace") == 0) {
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
-        chtml10->out = apr_pstrcat(r->pool, 
-                        chtml10->out, " hspace=\"",value,"\"", NULL);
+        W10_L(" hspace=\"");
+        W10_V(value);
+        W10_L("\"");
       }
       break;
 
@@ -2218,8 +2193,9 @@ s_chtml10_start_img_tag(void* pdoc, Node* node)
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
-        chtml10->out = apr_pstrcat(r->pool, 
-                        chtml10->out, " vspace=\"",value,"\"", NULL);
+        W10_L(" vspace=\"");
+        W10_V(value);
+        W10_L("\"");
       }
       break;
 
@@ -2228,8 +2204,7 @@ s_chtml10_start_img_tag(void* pdoc, Node* node)
     }
   }
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, ">", NULL);
-
+  W10_L(">");
   return chtml10->out;
 }
 
@@ -2242,10 +2217,10 @@ s_chtml10_start_img_tag(void* pdoc, Node* node)
  * @param node   [i]   The IMG tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml10_end_img_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml10_end_img_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml10_t* chtml10;
+  chtml10_t *chtml10;
 
   chtml10 = GET_CHTML10(pdoc);
 
@@ -2261,16 +2236,16 @@ s_chtml10_end_img_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The SELECT tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml10_start_select_tag(void* pdoc, Node* child)
+static char *
+s_chtml10_start_select_tag(void *pdoc, Node *child)
 {
-  chtml10_t*   chtml10;
-  Doc*         doc;
-  request_rec* r;
-  Attr*        attr;
+  chtml10_t    *chtml10;
+  Doc          *doc;
+  request_rec  *r;
+  Attr         *attr;
 
-  char*        size;
-  char*        name;
+  char         *size;
+  char         *name;
 
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
@@ -2279,12 +2254,12 @@ s_chtml10_start_select_tag(void* pdoc, Node* child)
   size    = NULL;
   name    = NULL;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<select", NULL);
+  W10_L("<select");
   for (attr = qs_get_attr(doc,child);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-    char* nm;
-    char* val;
+    char *nm;
+    char *val;
 
     nm  = qs_get_attr_name (doc,attr);
     val = qs_get_attr_value(doc,attr);
@@ -2296,7 +2271,7 @@ s_chtml10_start_select_tag(void* pdoc, Node* child)
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0 version 2.0                                              */
         /*--------------------------------------------------------------------*/
-        size = apr_pstrdup(r->pool, val);
+        size = apr_pstrdup(doc->buf.pool, val);
       }
       break;
 
@@ -2306,7 +2281,7 @@ s_chtml10_start_select_tag(void* pdoc, Node* child)
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0 version 2.0                                              */
         /*--------------------------------------------------------------------*/
-        name = apr_pstrdup(r->pool, val);
+        name = apr_pstrdup(doc->buf.pool, val);
       }
       break;
 
@@ -2325,24 +2300,19 @@ s_chtml10_start_select_tag(void* pdoc, Node* child)
     }
   }
 
-  if (size)
-    chtml10->out = apr_pstrcat(r->pool, 
-                               chtml10->out, 
-                               " size=\"",
-                               size,
-                               "\"", 
-                               NULL);
+  if (size) {
+    W10_L(" size=\"");
+    W10_V(size);
+    W10_L("\"");
+  }
 
-  if (name) 
-    chtml10->out = apr_pstrcat(r->pool, 
-                               chtml10->out, 
-                               " name=\"",
-                               name,
-                               "\"", 
-                               NULL);
+  if (name) {
+    W10_L(" name=\"");
+    W10_V(name);
+    W10_L("\"");
+  }
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, ">\n", NULL);
-
+  W10_L(">\r\n");
   return chtml10->out;
 }
 
@@ -2355,19 +2325,18 @@ s_chtml10_start_select_tag(void* pdoc, Node* child)
  * @param node   [i]   The SELECT tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml10_end_select_tag(void* pdoc, Node* UNUSED(child))
+static char *
+s_chtml10_end_select_tag(void *pdoc, Node *UNUSED(child))
 {
-  chtml10_t*   chtml10;
-  Doc*         doc;
-  request_rec* r;
+  chtml10_t *chtml10;
+  Doc *doc;
+  request_rec *r;
 
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "</select>\n", NULL);
-
+  W10_L("</select>\r\n");
   return chtml10->out;
 }
 
@@ -2380,16 +2349,16 @@ s_chtml10_end_select_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The OPTION tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml10_start_option_tag(void* pdoc, Node* child)
+static char *
+s_chtml10_start_option_tag(void *pdoc, Node *child)
 {
-  chtml10_t*   chtml10;
-  Doc*         doc;
-  request_rec* r;
-  Attr*        attr;
+  chtml10_t *chtml10;
+  Doc *doc;
+  request_rec *r;
+  Attr *attr;
 
-  char*        selected;
-  char*        value;
+  char *selected;
+  char *value;
 
   chtml10   = GET_CHTML10(pdoc);
   doc       = chtml10->doc;
@@ -2398,12 +2367,13 @@ s_chtml10_start_option_tag(void* pdoc, Node* child)
   selected  = NULL;
   value     = NULL;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<option", NULL);
+  W10_L("<option");
+
   for (attr = qs_get_attr(doc,child);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-    char* nm;
-    char* val;
+    char *nm;
+    char *val;
 
     nm  = qs_get_attr_name (doc,attr);
     val = qs_get_attr_value(doc,attr);
@@ -2415,7 +2385,7 @@ s_chtml10_start_option_tag(void* pdoc, Node* child)
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0 version 2.0                                              */
         /*--------------------------------------------------------------------*/
-        selected = apr_pstrdup(r->pool, val);
+        selected = apr_pstrdup(doc->buf.pool, val);
       }
       break;
 
@@ -2425,7 +2395,7 @@ s_chtml10_start_option_tag(void* pdoc, Node* child)
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0 version 2.0                                              */
         /*--------------------------------------------------------------------*/
-        value = apr_pstrdup(r->pool, val);
+        value = apr_pstrdup(doc->buf.pool, val);
       }
       break;
 
@@ -2434,27 +2404,20 @@ s_chtml10_start_option_tag(void* pdoc, Node* child)
     }
   }
 
-  if (value)
-    chtml10->out = apr_pstrcat(r->pool, 
-                               chtml10->out, 
-                               " value=\"",
-                               value,
-                               "\"", 
-                               NULL);
-  else
-    chtml10->out = apr_pstrcat(r->pool, 
-                               chtml10->out, 
-                               " value=\"\"", 
-                               NULL);
+  if (value) {
+    W10_L(" value=\"");
+    W10_V(value);
+    W10_L("\"");
+  }
+  else {
+    W10_L(" value=\"\"");
+  }
 
-  if (selected)
-    chtml10->out = apr_pstrcat(r->pool, 
-                               chtml10->out, 
-                               " selected ", 
-                               NULL);
+  if (selected) {
+    W10_L(" selected ");
+  }
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, ">", NULL);
-
+  W10_L(">");
   return chtml10->out;
 }
 
@@ -2467,10 +2430,10 @@ s_chtml10_start_option_tag(void* pdoc, Node* child)
  * @param node   [i]   The OPTION tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml10_end_option_tag(void* pdoc, Node* UNUSED(child))
+static char *
+s_chtml10_end_option_tag(void *pdoc, Node *UNUSED(child))
 {
-  chtml10_t* chtml10;
+  chtml10_t *chtml10;
  
   chtml10 = GET_CHTML10(pdoc);
 
@@ -2488,15 +2451,15 @@ s_chtml10_end_option_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The DIV tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml10_start_div_tag(void* pdoc, Node* child)
+static char *
+s_chtml10_start_div_tag(void *pdoc, Node *child)
 {
-  chtml10_t*   chtml10;
-  Doc*         doc;
-  request_rec* r;
-  Attr*        attr;
+  chtml10_t *chtml10;
+  Doc *doc;
+  request_rec *r;
+  Attr *attr;
 
-  char*        align;
+  char *align;
 
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
@@ -2504,31 +2467,33 @@ s_chtml10_start_div_tag(void* pdoc, Node* child)
 
   align   = NULL;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<div", NULL);
+  W10_L("<div");
+
   for (attr = qs_get_attr(doc,child);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
 
-    char* nm;
-    char* val;
+    char *nm;
+    char *val;
 
     nm  = qs_get_attr_name(doc,attr);
     val = qs_get_attr_value(doc,attr);
 
-    if ((*nm == 'a' || *nm == 'A') && strcasecmp(nm, "align") == 0) {
+    if (STRCASEEQ('a','A',"align", nm)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0 (W3C version 3.2)                                          */
       /*----------------------------------------------------------------------*/
-      align = apr_pstrdup(r->pool, val);
+      align = apr_pstrdup(doc->buf.pool, val);
     }
   }
 
-  if (align)
-    chtml10->out = apr_pstrcat(r->pool, 
-                    chtml10->out, " align=\"", align, "\"", NULL);
+  if (align) {
+    W10_L(" align=\"");
+    W10_V(align);
+    W10_L("\"");
+  }
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, ">", NULL);
-
+  W10_L(">");
   return chtml10->out;
 }
 
@@ -2541,19 +2506,18 @@ s_chtml10_start_div_tag(void* pdoc, Node* child)
  * @param node   [i]   The DIV tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml10_end_div_tag(void* pdoc, Node* UNUSED(child))
+static char *
+s_chtml10_end_div_tag(void *pdoc, Node *UNUSED(child))
 {
-  chtml10_t*   chtml10;
-  Doc*         doc;
-  request_rec* r;
+  chtml10_t *chtml10;
+  Doc *doc;
+  request_rec *r;
 
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "</div>\n", NULL);
-
+  W10_L("</div>\r\n");
   return chtml10->out;
 }
 
@@ -2566,13 +2530,13 @@ s_chtml10_end_div_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The CHXJ:IF tag node is specified.
  * @return The conversion result is returned.
  */
-static char* 
-s_chtml10_chxjif_tag(void* pdoc, Node* node)
+static char *
+s_chtml10_chxjif_tag(void *pdoc, Node *node)
 {
-  chtml10_t*   chtml10;
-  Doc*         doc;
-  Node*        child;
-  request_rec* r;
+  chtml10_t *chtml10;
+  Doc *doc;
+  Node *child;
+  request_rec *r;
 
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
@@ -2581,7 +2545,7 @@ s_chtml10_chxjif_tag(void* pdoc, Node* node)
   for (child = qs_get_child_node(doc, node);
        child;
        child = qs_get_next_node(doc, child)) {
-    chtml10->out = apr_pstrcat(r->pool, chtml10->out, child->otext, NULL);
+    W10_V(child->otext);
     s_chtml10_chxjif_tag(chtml10, child);
   }
 
@@ -2597,20 +2561,19 @@ s_chtml10_chxjif_tag(void* pdoc, Node* node)
  * @param node   [i]   The PRE tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml10_start_pre_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_chtml10_start_pre_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  Doc*          doc;
-  request_rec*  r;
-  chtml10_t*    chtml10;
+  Doc *doc;
+  request_rec *r;
+  chtml10_t *chtml10;
 
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
   r       = doc->r;
 
   chtml10->pre_flag++;
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<pre>", NULL);
-
+  W10_L("<pre>");
   return chtml10->out;
 }
 
@@ -2623,18 +2586,18 @@ s_chtml10_start_pre_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The PRE tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml10_end_pre_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml10_end_pre_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml10_t*    chtml10;
-  Doc*          doc;
-  request_rec*  r;
+  chtml10_t *chtml10;
+  Doc *doc;
+  request_rec *r;
 
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "</pre>", NULL);
+  W10_L("</pre>");
   chtml10->pre_flag--;
 
   return chtml10->out;
@@ -2649,19 +2612,18 @@ s_chtml10_end_pre_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The P tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml10_start_p_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_chtml10_start_p_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  Doc*          doc;
-  request_rec*  r;
-  chtml10_t*    chtml10;
+  Doc *doc;
+  request_rec *r;
+  chtml10_t *chtml10;
 
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<p>", NULL);
-
+  W10_L("<p>");
   return chtml10->out;
 }
 
@@ -2674,19 +2636,18 @@ s_chtml10_start_p_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The P tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml10_end_p_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml10_end_p_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  Doc*          doc;
-  request_rec*  r;
-  chtml10_t*    chtml10;
+  Doc *doc;
+  request_rec *r;
+  chtml10_t *chtml10;
 
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "</p>", NULL);
-
+  W10_L("</p>");
   return chtml10->out;
 }
 
@@ -2699,13 +2660,13 @@ s_chtml10_end_p_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The TEXTAREA tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml10_start_textarea_tag(void* pdoc, Node* node) 
+static char *
+s_chtml10_start_textarea_tag(void *pdoc, Node *node) 
 {
-  Doc*          doc;
-  request_rec*  r;
-  chtml10_t*    chtml10;
-  Attr*         attr;
+  Doc *doc;
+  request_rec *r;
+  chtml10_t *chtml10;
+  Attr *attr;
 
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
@@ -2713,14 +2674,15 @@ s_chtml10_start_textarea_tag(void* pdoc, Node* node)
 
 
   chtml10->textarea_flag++;
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "<textarea ", NULL);
+
+  W10_L("<textarea ");
 
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
 
-    char* name;
-    char* value;
+    char *name;
+    char *value;
 
     name  = qs_get_attr_name (doc,attr);
     value = qs_get_attr_value(doc,attr);
@@ -2729,36 +2691,27 @@ s_chtml10_start_textarea_tag(void* pdoc, Node* node)
     case 'n':
     case 'N':
       if (strcasecmp(name, "name") == 0) {
-        chtml10->out = apr_pstrcat(r->pool, 
-                                   chtml10->out, 
-                                   " name=\"",
-                                   value,
-                                   "\"", 
-                                   NULL);
+        W10_L(" name=\"");
+        W10_V(value);
+        W10_L("\"");
       }
       break;
 
     case 'r':
     case 'R':
       if (strcasecmp(name, "rows") == 0) {
-        chtml10->out = apr_pstrcat(r->pool, 
-                                   chtml10->out, 
-                                   " rows=\"",
-                                     value,
-                                     "\"",
-                                     NULL);
+        W10_L(" rows=\"");
+        W10_V(value);
+        W10_L("\"");
       }
       break;
 
     case 'c':
     case 'C':
       if (strcasecmp(name, "cols") == 0) {
-        chtml10->out = apr_pstrcat(r->pool, 
-                                   chtml10->out, 
-                                   " cols=\"",
-                                   value,
-                                   "\"", 
-                                   NULL);
+        W10_L(" cols=\"");
+        W10_V(value);
+        W10_L("\"");
       }
       break;
     
@@ -2767,8 +2720,7 @@ s_chtml10_start_textarea_tag(void* pdoc, Node* node)
     }
   }
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, ">\r\n", NULL);
-
+  W10_L(">\r\n");
   return chtml10->out;
 }
 
@@ -2781,36 +2733,36 @@ s_chtml10_start_textarea_tag(void* pdoc, Node* node)
  * @param node   [i]   The TEXTAREA tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml10_end_textarea_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml10_end_textarea_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  Doc*          doc;
-  request_rec*  r;
-  chtml10_t*    chtml10;
+  Doc *doc;
+  request_rec *r;
+  chtml10_t *chtml10;
 
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
   r       = doc->r;
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, "</textarea>\r\n", NULL);
+  W10_L("</textarea>\r\n");
   chtml10->textarea_flag--;
 
   return chtml10->out;
 }
 
 
-static char*
-s_chtml10_text(void* pdoc, Node* child)
+static char *
+s_chtml10_text(void *pdoc, Node *child)
 {
-  char*        textval;
-  char*        tmp;
-  char*        tdst;
-  char         one_byte[2];
-  int          ii;
-  int          tdst_len;
-  chtml10_t*   chtml10;
-  Doc*         doc;
-  request_rec* r;
+  char *textval;
+  char *tmp;
+  char *tdst;
+  char one_byte[2];
+  int ii;
+  int tdst_len;
+  chtml10_t *chtml10;
+  Doc *doc;
+  request_rec *r;
 
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
@@ -2864,8 +2816,7 @@ s_chtml10_text(void* pdoc, Node* child)
     }
   }
 
-  chtml10->out = apr_pstrcat(r->pool, chtml10->out, tdst, NULL);
-
+  W10_V(tdst);
   return chtml10->out;
 }
 /*
