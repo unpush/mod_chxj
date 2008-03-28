@@ -25,6 +25,9 @@
 #define EMOJI_EZWEB2IMODE_COUNT    (646)
 #define EMOJI_SOFTBANK2IMODE_COUNT (485)
 
+
+#define EMOJI_BUFFER_SIZE          (8192)
+
 #define IS_SOFTBANK_WEBCODE(X)          \
    ((X) && *(X) &&                      \
     strlen((X)) >= 3 &&                 \

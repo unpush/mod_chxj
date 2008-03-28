@@ -15,7 +15,9 @@
  * limitations under the License.
  */
 #include <ctype.h>
-#include "apr.h"
+#include <apr.h>
+#include <apr_pools.h>
+
 #include "mod_chxj.h"
 #include "chxj_apply_convrule.h"
 #include "chxj_emoji.h"
@@ -63,27 +65,27 @@ static char *au_meta_emoji_to_utf8_emoji(      request_rec*, emoji_t **, device_
 static char *docomo_meta_emoji_to_sjis_emoji(  request_rec*, emoji_t **, device_table *,const char *);
 static char *softbank_meta_emoji_to_sjis_emoji(request_rec*, emoji_t **, device_table *,const char *);
 static char *au_meta_emoji_to_sjis_emoji(      request_rec*, emoji_t **, device_table *,const char *);
-static char *meta_emoji_to_emoji(request_rec *,emoji_t **,device_table *,const char *,char *(*callback)(request_rec *,emoji_t *, device_table *));
+static char *meta_emoji_to_emoji(request_rec *,emoji_t **,device_table *,const char *,char *(*callback)(request_rec *,apr_pool_t *,emoji_t *, device_table *));
 
 static char *docomo_postdata_meta_emoji_to_sjis_emoji(request_rec  *, emoji_t **, device_table *, const char   *);
 static char *docomo_postdata_meta_emoji_to_euc_emoji(request_rec  *, emoji_t **, device_table *, const char   *);
 static char *docomo_postdata_meta_emoji_to_utf8_emoji(request_rec  *, emoji_t **, device_table *, const char   *);
 
-static char *callback_meta_emoji_imode_utf8_emoji(request_rec *, emoji_t *, device_table *);
-static char *callback_meta_emoji_imode_sjis_emoji(request_rec *, emoji_t *, device_table *);
-static char *callback_meta_emoji_au_utf8_emoji(request_rec *,emoji_t *, device_table *);
-static char *callback_meta_emoji_au_sjis_emoji(request_rec *, emoji_t *, device_table *);
-static char *callback_meta_emoji_softbank_utf8_emoji(request_rec *,emoji_t *, device_table *);
-static char *callback_meta_emoji_softbank_sjis_emoji(request_rec *, emoji_t *, device_table *);
+static char *callback_meta_emoji_imode_utf8_emoji(request_rec *,apr_pool_t*,emoji_t *, device_table *);
+static char *callback_meta_emoji_imode_sjis_emoji(request_rec *,apr_pool_t*,emoji_t *, device_table *);
+static char *callback_meta_emoji_au_utf8_emoji(request_rec *,apr_pool_t*,emoji_t *, device_table *);
+static char *callback_meta_emoji_au_sjis_emoji(request_rec *,apr_pool_t*,emoji_t *, device_table *);
+static char *callback_meta_emoji_softbank_utf8_emoji(request_rec *,apr_pool_t*,emoji_t *, device_table *);
+static char *callback_meta_emoji_softbank_sjis_emoji(request_rec *,apr_pool_t*,emoji_t *, device_table *);
 static char *au_meta_emoji_to_sjis_hdml_emoji(request_rec  *r, emoji_t **, device_table *, const char *);
-static char *callback_meta_emoji_au_sjis_hdml_emoji(request_rec  *r, emoji_t *emoji, device_table *spec);
+static char *callback_meta_emoji_au_sjis_hdml_emoji(request_rec  *r,apr_pool_t*,emoji_t *emoji, device_table *spec);
 
 /*============================================================================*/
 /* for POSTDATA                                                               */
 /*============================================================================*/
-static char *callback_postdata_meta_emoji_imode_utf8_emoji(request_rec *, emoji_t *, device_table *UNUSED(spec));
-static char *callback_postdata_meta_emoji_imode_sjis_emoji(request_rec *, emoji_t *, device_table *UNUSED(spec));
-static char *callback_postdata_meta_emoji_imode_euc_emoji(request_rec *, emoji_t *, device_table *UNUSED(spec));
+static char *callback_postdata_meta_emoji_imode_utf8_emoji(request_rec *, apr_pool_t*,emoji_t *, device_table *UNUSED(spec));
+static char *callback_postdata_meta_emoji_imode_sjis_emoji(request_rec *, apr_pool_t*,emoji_t *, device_table *UNUSED(spec));
+static char *callback_postdata_meta_emoji_imode_euc_emoji(request_rec *, apr_pool_t*,emoji_t *, device_table *UNUSED(spec));
 
 static int cmp_qsort_no_index(const void *a, const void *b);
 static int cmp_qsort_eucjp_index(const void *a, const void *b);
@@ -317,6 +319,42 @@ cmp_qsort_softbank2imode_utf8(const void *a, const void *b)
 }
 
 
+struct emoji_buffer {
+  char *buffer;
+  int  use_len;
+};
+static char * buffered_flush(apr_pool_t *pool, char *outbuf, struct emoji_buffer *buf);
+
+static char *
+buffered_out(apr_pool_t *pool, char *outbuf, struct emoji_buffer *buf, const char *s, apr_size_t len)
+{
+  if (buf->use_len + len < EMOJI_BUFFER_SIZE - 1) {
+    memcpy(&buf->buffer[buf->use_len], s, len);
+    buf->use_len += len;
+  }
+  else {
+    outbuf = buffered_flush(pool, outbuf, buf);
+    outbuf = buffered_out(pool, outbuf, buf, s, len);
+  }
+  return outbuf;
+}
+
+
+static char *
+buffered_flush(apr_pool_t *pool, char *outbuf, struct emoji_buffer *buf)
+{
+  char *tmp;
+  if (buf->use_len == 0) {
+    return outbuf;
+  }
+  buf->buffer[buf->use_len] = 0;
+  tmp = apr_pstrcat(pool, outbuf, buf->buffer, NULL);
+  memset(buf->buffer, 0, EMOJI_BUFFER_SIZE);
+  buf->use_len = 0;
+  return tmp;
+}
+
+
 char *
 chxj_emoji_to_meta_emoji(
   request_rec         *r,
@@ -326,9 +364,20 @@ chxj_emoji_to_meta_emoji(
 {
   apr_size_t ilen = *iolen;
   char *outbuf;
+  char *result;
   apr_size_t i;
   int enc;
+  struct emoji_buffer ebuffer; 
+  apr_pool_t *np;
+  apr_status_t rv;
+
+  if ((rv = apr_pool_create(&np, r->pool)) != APR_SUCCESS) {
+    ERR(r, "failed: new pool create. rv:[%d]", rv);
+    return NULL;
+  }
+
 dbg_r = r;
+  DBG(r, "start chxj_emoji_to_meta_emoji()");
   /* 
    * note: server side encoding : default is ``NONE'' 
    */
@@ -343,11 +392,19 @@ dbg_r = r;
     enc = UTF8;
   }
 
+  memset(&ebuffer, 0, sizeof(struct emoji_buffer));
+  ebuffer.buffer = apr_palloc(np, EMOJI_BUFFER_SIZE);
+  if (ebuffer.buffer == NULL) {
+    ERR(r, "out of memory");
+    apr_pool_destroy(np);
+    return NULL;
+  }
+
   /* 
    * Now because the character-code was decided 
    * seeing one character.
    */
-  outbuf = apr_palloc(r->pool, 1);
+  outbuf = apr_palloc(np, 1);
   outbuf[0] = 0;
 
   for (i = 0; i < ilen; i++) {
@@ -362,16 +419,11 @@ dbg_r = r;
         case EUCJP:
           tmp = is_emoji_as_eucjp_refstring(r, &src[i], &nextpos);
           if (tmp) {
-            char *meta_emoji = apr_psprintf(r->pool, 
+            char *meta_emoji = apr_psprintf(np, 
                                             "%s%d;",
                                             META_EMOJI_PREFIX,
                                             tmp->no);
-            outbuf = apr_pstrcat(r->pool, 
-                                 outbuf, 
-                                 apr_psprintf(r->pool, 
-                                             "%s", 
-                                             meta_emoji), 
-                                 NULL);
+            outbuf = buffered_out(np, outbuf, &ebuffer, meta_emoji, strlen(meta_emoji));
             i += nextpos;
             continue;
           }
@@ -379,31 +431,21 @@ dbg_r = r;
         case UTF8:
           tmp = is_emoji_as_unicode_refstring(r, &src[i], &nextpos);
           if (tmp) {
-            char *meta_emoji = apr_psprintf(r->pool,
+            char *meta_emoji = apr_psprintf(np,
                                             "%s%d;",
                                             META_EMOJI_PREFIX,
                                             tmp->no);
-            outbuf = apr_pstrcat(r->pool, 
-                                 outbuf, 
-                                 apr_psprintf(r->pool, 
-                                              "%s", 
-                                              meta_emoji), 
-                                 NULL);
+            outbuf = buffered_out(np, outbuf, &ebuffer, meta_emoji, strlen(meta_emoji));
             i += nextpos;
             continue;
           }
           tmp = is_emoji_as_utf8_refstring(r, &src[i], &nextpos);
           if (tmp) {
-            char *meta_emoji = apr_psprintf(r->pool,
+            char *meta_emoji = apr_psprintf(np,
                                             "%s%d;",
                                             META_EMOJI_PREFIX,
                                             tmp->no);
-            outbuf = apr_pstrcat(r->pool, 
-                                 outbuf, 
-                                 apr_psprintf(r->pool, 
-                                              "%s", 
-                                              meta_emoji), 
-                                 NULL);
+            outbuf = buffered_out(np, outbuf, &ebuffer, meta_emoji, strlen(meta_emoji));
             i += nextpos;
             continue;
           }
@@ -413,28 +455,18 @@ dbg_r = r;
         default:
           tmp = is_emoji_as_sjis_refstring(r, &src[i], &nextpos);
           if (tmp) {
-            char *meta_emoji = apr_psprintf(r->pool, 
+            char *meta_emoji = apr_psprintf(np, 
                                             "%s%d;", 
                                             META_EMOJI_PREFIX,
                                             tmp->no);
-            outbuf = apr_pstrcat(r->pool, 
-                                 outbuf, 
-                                 apr_psprintf(r->pool, 
-                                              "%s", 
-                                              meta_emoji), 
-                                 NULL);
+            outbuf = buffered_out(np, outbuf, &ebuffer, meta_emoji, strlen(meta_emoji));
             i += nextpos;
             continue;
           }
           break;
         }
       }
-      outbuf = apr_pstrcat(r->pool, 
-                           outbuf,
-                           apr_psprintf(r->pool, 
-                                        "%c",
-                                        src[i]), 
-                           NULL);
+      outbuf = buffered_out(np, outbuf, &ebuffer, &src[i], 1);
     }
     else {
       /* multibyte charactor */
@@ -447,17 +479,12 @@ dbg_r = r;
           /* 3byte charactor */
           tmp = is_emoji_as_eucjp_bin(r, &src[i]);
           if (tmp) {
-            char *meta_emoji = apr_psprintf(r->pool, 
+            char *meta_emoji = apr_psprintf(np, 
                                             "%s%d;", 
                                             META_EMOJI_PREFIX,
                                             tmp->no);
             DBG(r, "FOUND EMOJI :[%s]", meta_emoji);
-            outbuf = apr_pstrcat(r->pool, 
-                                 outbuf, 
-                                 apr_psprintf(r->pool, 
-                                              "%s", 
-                                              meta_emoji), 
-                                 NULL);
+            outbuf = buffered_out(np, outbuf, &ebuffer, meta_emoji, strlen(meta_emoji));
             i += 2;
             continue;
           }
@@ -491,17 +518,12 @@ dbg_r = r;
           DBG(r, "UTF-8 3byte charactor");
           tmp = is_emoji_as_utf8_bin(r, &src[i]);
           if (tmp) {
-            char *meta_emoji = apr_psprintf(r->pool, 
+            char *meta_emoji = apr_psprintf(np, 
                                             "%s%d;", 
                                             META_EMOJI_PREFIX,
                                             tmp->no);
             DBG(r, "FOUND EMOJI :[%s]", meta_emoji);
-            outbuf = apr_pstrcat(r->pool, 
-                                 outbuf, 
-                                 apr_psprintf(r->pool, 
-                                              "%s", 
-                                              meta_emoji), 
-                                 NULL);
+            outbuf = buffered_out(np, outbuf, &ebuffer, meta_emoji, strlen(meta_emoji));
             i+=2;
             continue;
           }
@@ -536,17 +558,12 @@ dbg_r = r;
         if ((0xff & src[i]) == 0xf8 || (0xff & src[i]) == 0xf9) {
           tmp = is_emoji_as_sjis_bin(r, &src[i]);
           if (tmp) {
-            char *meta_emoji = apr_psprintf(r->pool, 
+            char *meta_emoji = apr_psprintf(np, 
                                             "%s%d;", 
                                             META_EMOJI_PREFIX,
                                             tmp->no);
             DBG(r, "FOUND EMOJI :[%s]", meta_emoji);
-            outbuf = apr_pstrcat(r->pool, 
-                                 outbuf, 
-                                 apr_psprintf(r->pool, 
-                                              "%s", 
-                                              meta_emoji), 
-                                 NULL);
+            outbuf = buffered_out(np, outbuf, &ebuffer, meta_emoji, strlen(meta_emoji));
             i++;
             continue;
           }
@@ -572,12 +589,19 @@ dbg_r = r;
         }
         break;
       }
-      outbuf = apr_pstrcat(r->pool, outbuf, mb, NULL);
+      outbuf = buffered_out(np, outbuf, &ebuffer, mb, strlen(mb));
     }
   }
+  outbuf = buffered_flush(np, outbuf, &ebuffer);
   *iolen = strlen(outbuf);
-  DBG(r, "convert EMOJI to META EMOJI.  [%s]", outbuf);
-  return outbuf;
+  result = apr_palloc(r->pool, *iolen + 1);
+  memcpy(result, outbuf, *iolen);
+  result[*iolen] = 0;
+  apr_pool_destroy(np);
+  DBG(r, "convert EMOJI to META EMOJI.  outbuf:[%s]", result);
+  DBG(r, "convert EMOJI to META EMOJI.  len:[%d]", *iolen);
+  DBG(r, "end chxj_emoji_to_meta_emoji()");
+  return result;
 }
 
 
@@ -1232,15 +1256,33 @@ meta_emoji_to_emoji(
   emoji_t      **emoji_table,
   device_table *spec,
   const char   *src,
-  char         *(*callback)(request_rec *,emoji_t *, device_table *))
+  char         *(*callback)(request_rec *,apr_pool_t*,emoji_t *, device_table *))
 {
   int i;
   int len = strlen(src);
   char *outbuf = apr_palloc(r->pool, 1);
+  char *result;
   outbuf[0] = 0;
   int enc = SJIS;
+  struct emoji_buffer ebuf;
+  apr_pool_t *np;
+  apr_status_t rv;
+
 
   DBG(r, "=> meta_emoji_to_emoji()");
+  if ((rv = apr_pool_create(&np, r->pool)) != APR_SUCCESS) {
+    ERR(r, "failed: new pool create. rv:[%d]", rv);
+    return NULL;
+  }
+  memset(&ebuf, 0, sizeof(ebuf));
+  ebuf.buffer = apr_palloc(np, EMOJI_BUFFER_SIZE);
+  if (ebuf.buffer == NULL) {
+    ERR(r, "failed: out of memory.");
+    apr_pool_destroy(np);
+    return NULL;
+  }
+  memset(ebuf.buffer, 0, EMOJI_BUFFER_SIZE);
+
   if (spec) {
     if (IS_SJIS_STRING(GET_SPEC_CHARSET(spec))) {
       enc = SJIS;
@@ -1271,7 +1313,7 @@ meta_emoji_to_emoji(
       tmp[0] = src[i+0];
       tmp[1] = src[i+1];
       tmp[2] = 0;
-      outbuf = apr_pstrcat(r->pool, outbuf, tmp, NULL);
+      outbuf = buffered_out(np, outbuf, &ebuf, tmp, 2);
       i++;
       continue;
     }
@@ -1283,7 +1325,7 @@ meta_emoji_to_emoji(
         tmp[1] = src[i+1];
         tmp[2] = 0;
         DBG(r, "DETECT UTF8 2BYTE CHARACTOR=[%s]", tmp);
-        outbuf = apr_pstrcat(r->pool, outbuf, tmp, NULL);
+        outbuf = buffered_out(np, outbuf, &ebuf, tmp, 2);
         i++;
         continue;
       }
@@ -1295,7 +1337,7 @@ meta_emoji_to_emoji(
         tmp[2] = src[i+2];
         tmp[3] = 0;
         DBG(r, "DETECT UTF8 3BYTE CHARACTOR=[%s]", tmp);
-        outbuf = apr_pstrcat(r->pool, outbuf, tmp, NULL);
+        outbuf = buffered_out(np, outbuf, &ebuf, tmp, 3);
         i+=2;
         continue;
       }
@@ -1308,13 +1350,7 @@ meta_emoji_to_emoji(
         tmp[3] = src[i+3];
         tmp[4] = 0;
         DBG(r, "DETECT UTF8 4BYTE CHARACTOR=[%.*s]", 4, tmp);
-        outbuf = apr_pstrcat(r->pool, 
-                             outbuf, 
-                             apr_psprintf(r->pool,
-                                          "%.*s",
-                                          4,
-                                          tmp),
-                             NULL);
+        outbuf = buffered_out(np, outbuf, &ebuf, tmp, 4);
         i+=3;
         continue;
       }
@@ -1324,7 +1360,7 @@ meta_emoji_to_emoji(
         tmp[0] = src[i+0];
         tmp[1] = 0;
         DBG(r, "DETECT UTF8 OTHER CHARACTOR=[%s]", tmp);
-        outbuf = apr_pstrcat(r->pool, outbuf, tmp, NULL);
+        outbuf = buffered_out(np, outbuf, &ebuf, tmp, 1);
         continue;
       }
     }
@@ -1336,7 +1372,7 @@ meta_emoji_to_emoji(
         int err;
         int emoji_len = (npos - &src[i]) + 1;
         int no_len;
-        strno = apr_psprintf(r->pool, 
+        strno = apr_psprintf(np, 
                              "%.*s",
                              emoji_len - META_EMOJI_PREFIX_LEN - 1, 
                              &src[i + META_EMOJI_PREFIX_LEN]);
@@ -1356,36 +1392,36 @@ meta_emoji_to_emoji(
         }
         DBG(r, "Emoji Number:[%s]", strno);
         if (! err) {
-          DBG(r, "Found EMOJI src:[%.*s] --> to:[%s]", emoji_len, &src[i], callback(r, emoji_table[atoi(strno) - 1], spec));
-          outbuf = apr_pstrcat(r->pool,
-                               outbuf,
-                               callback(r, emoji_table[atoi(strno) - 1], spec),
-                               NULL);
+          char *cret;
+          DBG(r, "Found EMOJI src:[%.*s] --> to:[%s]", emoji_len, &src[i], callback(r,np,emoji_table[atoi(strno) - 1], spec));
+          cret = callback(r,np,emoji_table[atoi(strno) - 1], spec);
+          outbuf = buffered_out(np, outbuf, &ebuf, cret, strlen(cret));
           DBG(r, "Found EMOJI substitute result:[%s]", outbuf);
         }
         i += (emoji_len - 1);
         continue;
       }
     }
-    outbuf = apr_pstrcat(r->pool, 
-                         outbuf,
-                         apr_psprintf(r->pool, 
-                                      "%c",
-                                      src[i]), 
-                         NULL);
+    outbuf = buffered_out(np, outbuf, &ebuf, &src[i], 1);
   }
-  return outbuf;
+  outbuf = buffered_flush(np, outbuf, &ebuf);
+  result = apr_palloc(r->pool, strlen(outbuf)+1);
+  strcpy(result, outbuf);
+  apr_pool_destroy(np);
+
+  return result;
 }
 
 
 static char *
 callback_meta_emoji_imode_utf8_emoji(
   request_rec *r,
+  apr_pool_t *pool,
   emoji_t *emoji,
   device_table *UNUSED(spec))
 {
   DBG(r, "use imode utf8");
-  return apr_psprintf(r->pool,
+  return apr_psprintf(pool,
                       "&#x%s;",
                       emoji->imode.unicode.hex_string);
 }
@@ -1394,11 +1430,12 @@ callback_meta_emoji_imode_utf8_emoji(
 static char *
 callback_postdata_meta_emoji_imode_utf8_emoji(
   request_rec *r,
+  apr_pool_t *pool,
   emoji_t *emoji,
   device_table *UNUSED(spec))
 {
   DBG(r, "use imode utf8");
-  return apr_psprintf(r->pool,
+  return apr_psprintf(pool,
                       "%.3s",
                       emoji->imode.utf8.hex);
 }
@@ -1407,11 +1444,12 @@ callback_postdata_meta_emoji_imode_utf8_emoji(
 static char *
 callback_postdata_meta_emoji_imode_sjis_emoji(
   request_rec *r,
+  apr_pool_t *pool,
   emoji_t *emoji,
   device_table *UNUSED(spec))
 {
   DBG(r, "use imode sjis");
-  return apr_psprintf(r->pool,
+  return apr_psprintf(pool,
                       "%.2s",
                       emoji->imode.sjis.hex);
 }
@@ -1420,11 +1458,12 @@ callback_postdata_meta_emoji_imode_sjis_emoji(
 static char *
 callback_postdata_meta_emoji_imode_euc_emoji(
   request_rec *r,
+  apr_pool_t *pool,
   emoji_t *emoji,
   device_table *UNUSED(spec))
 {
   DBG(r, "use imode euc");
-  return apr_psprintf(r->pool,
+  return apr_psprintf(pool,
                       "%.*s",
                       3,
                       emoji->imode.euc.hex);
@@ -1434,18 +1473,19 @@ callback_postdata_meta_emoji_imode_euc_emoji(
 static char *
 callback_meta_emoji_softbank_utf8_emoji(
   request_rec *r,
+  apr_pool_t *pool,
   emoji_t *emoji,
   device_table *UNUSED(spec))
 {
   apr_size_t len;
   DBG(r, "use SoftBank utf8");
   if (!chxj_chk_numeric(emoji->softbank.no)) {
-    return apr_psprintf(r->pool,
+    return apr_psprintf(pool,
                         "&#x%s;",
                         emoji->softbank.unicode.hex_string);
   }
   len = strlen(emoji->softbank.no);
-  return apr_psprintf(r->pool,
+  return apr_psprintf(pool,
                       "%s",
                       chxj_convert_encoding(r, 
                                             MOD_CHXJ_INTERNAL_ENCODING,
@@ -1458,6 +1498,7 @@ callback_meta_emoji_softbank_utf8_emoji(
 static char *
 callback_meta_emoji_au_utf8_emoji(
   request_rec *r,
+  apr_pool_t *pool,
   emoji_t *emoji,
   device_table *spec)
 {
@@ -1469,13 +1510,13 @@ callback_meta_emoji_au_utf8_emoji(
     case 'A':
     case 'a':
       if (!chxj_chk_numeric(emoji->ezweb.typeA.no)) {
-        return apr_psprintf(r->pool,
+        return apr_psprintf(pool,
                             "%.*s",
                             3,
                             emoji->ezweb.typeA.utf8.hex);
       }
       dmy_len = strlen(emoji->ezweb.typeA.no);
-      return apr_psprintf(r->pool,
+      return apr_psprintf(pool,
                           "%s",
                           chxj_convert_encoding(r,
                                                 MOD_CHXJ_INTERNAL_ENCODING,
@@ -1485,13 +1526,13 @@ callback_meta_emoji_au_utf8_emoji(
     case 'B':
     case 'b':
       if (!chxj_chk_numeric(emoji->ezweb.typeB.no)) {
-        return apr_psprintf(r->pool,
+        return apr_psprintf(pool,
                             "%.*s",
                             3,
                             emoji->ezweb.typeB.utf8.hex);
       }
       dmy_len = strlen(emoji->ezweb.typeB.no);
-      return apr_psprintf(r->pool,
+      return apr_psprintf(pool,
                           "%s",
                           chxj_convert_encoding(r,
                                                 MOD_CHXJ_INTERNAL_ENCODING,
@@ -1501,13 +1542,13 @@ callback_meta_emoji_au_utf8_emoji(
     case 'C':
     case 'c':
       if (!chxj_chk_numeric(emoji->ezweb.typeC.no)) {
-        return apr_psprintf(r->pool,
+        return apr_psprintf(pool,
                             "%.*s",
                             3,
                             emoji->ezweb.typeC.utf8.hex);
       }
       dmy_len = strlen(emoji->ezweb.typeC.no);
-      return apr_psprintf(r->pool,
+      return apr_psprintf(pool,
                           "%s",
                           chxj_convert_encoding(r,
                                                 MOD_CHXJ_INTERNAL_ENCODING,
@@ -1517,13 +1558,13 @@ callback_meta_emoji_au_utf8_emoji(
     case 'D':
     case 'd':
       if (!chxj_chk_numeric(emoji->ezweb.typeD.no)) {
-        return apr_psprintf(r->pool,
+        return apr_psprintf(pool,
                             "%.*s",
                             3,
                             emoji->ezweb.typeD.utf8.hex);
       }
       dmy_len = strlen(emoji->ezweb.typeD.no);
-      return apr_psprintf(r->pool,
+      return apr_psprintf(pool,
                           "%s",
                           chxj_convert_encoding(r,
                                                 MOD_CHXJ_INTERNAL_ENCODING,
@@ -1535,7 +1576,7 @@ callback_meta_emoji_au_utf8_emoji(
     }
   }
   ERR(r, "Invalid KDDI spec(emoji_type) [%s]", emoji_type);
-  return apr_psprintf(r->pool,
+  return apr_psprintf(pool,
                       "&#x%s;",
                       emoji->ezweb.typeD.unicode.hex_string);
 }
@@ -1544,27 +1585,29 @@ callback_meta_emoji_au_utf8_emoji(
 static char *
 callback_meta_emoji_imode_sjis_emoji(
   request_rec *r,
+  apr_pool_t *pool,
   emoji_t *emoji,
   device_table *UNUSED(spec))
 {
   DBG(r, "use imode SJIS");
-  return apr_psprintf(r->pool, "%.*s", 2, emoji->imode.sjis.hex);
+  return apr_psprintf(pool, "%.*s", 2, emoji->imode.sjis.hex);
 }
 
 
 static char *
 callback_meta_emoji_softbank_sjis_emoji(
   request_rec *r,
+  apr_pool_t *pool,
   emoji_t *emoji,
   device_table *UNUSED(spec))
 {
   DBG(r, "use SoftBank SJIS");
   char *tmp;
   if (strlen(emoji->softbank.no) && chxj_chk_numeric(emoji->softbank.no)) {
-    tmp = apr_pstrdup(r->pool, emoji->softbank.no);
+    tmp = apr_pstrdup(pool, emoji->softbank.no);
   }
   else {
-    tmp = apr_palloc(r->pool, 6);
+    tmp = apr_palloc(pool, 6);
     tmp[0] = 0x1b;
     tmp[1] = 0x24;
     tmp[2] = emoji->softbank.sjis.hex[0];
@@ -1580,6 +1623,7 @@ callback_meta_emoji_softbank_sjis_emoji(
 static char *
 callback_meta_emoji_au_sjis_emoji(
   request_rec  *r,
+  apr_pool_t *pool,
   emoji_t      *emoji,
   device_table *spec)
 {
@@ -1591,12 +1635,12 @@ callback_meta_emoji_au_sjis_emoji(
     case 'A':
     case 'a':
       if (!chxj_chk_numeric(emoji->ezweb.typeA.no)) {
-        return apr_psprintf(r->pool,
+        return apr_psprintf(pool,
                             "%.2s",
                             emoji->ezweb.typeA.sjis.hex);
       }
       dmy_len = strlen(emoji->ezweb.typeA.no);
-      return apr_psprintf(r->pool,
+      return apr_psprintf(pool,
                           "%s",
                           chxj_convert_encoding(r,
                                                 MOD_CHXJ_INTERNAL_ENCODING,
@@ -1606,12 +1650,12 @@ callback_meta_emoji_au_sjis_emoji(
     case 'B':
     case 'b':
       if (!chxj_chk_numeric(emoji->ezweb.typeB.no)) {
-        return apr_psprintf(r->pool,
+        return apr_psprintf(pool,
                             "%.2s",
                             emoji->ezweb.typeB.sjis.hex);
       }
       dmy_len = strlen(emoji->ezweb.typeB.no);
-      return apr_psprintf(r->pool,
+      return apr_psprintf(pool,
                           "%s",
                           chxj_convert_encoding(r,
                                                 MOD_CHXJ_INTERNAL_ENCODING,
@@ -1621,12 +1665,12 @@ callback_meta_emoji_au_sjis_emoji(
     case 'C':
     case 'c':
       if (!chxj_chk_numeric(emoji->ezweb.typeC.no)) {
-        return apr_psprintf(r->pool,
+        return apr_psprintf(pool,
                             "%.2s",
                             emoji->ezweb.typeC.sjis.hex);
       }
       dmy_len = strlen(emoji->ezweb.typeC.no);
-      return apr_psprintf(r->pool,
+      return apr_psprintf(pool,
                           "%s",
                           chxj_convert_encoding(r,
                                                 MOD_CHXJ_INTERNAL_ENCODING,
@@ -1636,12 +1680,12 @@ callback_meta_emoji_au_sjis_emoji(
     case 'D':
     case 'd':
       if (!chxj_chk_numeric(emoji->ezweb.typeD.no)) {
-        return apr_psprintf(r->pool,
+        return apr_psprintf(pool,
                             "%.2s",
                             emoji->ezweb.typeD.sjis.hex);
       }
       dmy_len = strlen(emoji->ezweb.typeD.no);
-      return apr_psprintf(r->pool,
+      return apr_psprintf(pool,
                           "%s",
                           chxj_convert_encoding(r,
                                                 MOD_CHXJ_INTERNAL_ENCODING,
@@ -1653,7 +1697,7 @@ callback_meta_emoji_au_sjis_emoji(
     }
   }
   ERR(r, "Invalid KDDI spec(emoji_type) [%s]", emoji_type);
-  return apr_psprintf(r->pool,
+  return apr_psprintf(pool,
                       "%.2s",
                       emoji->ezweb.typeD.sjis.hex);
 }
@@ -1662,6 +1706,7 @@ callback_meta_emoji_au_sjis_emoji(
 static char *
 callback_meta_emoji_au_sjis_hdml_emoji(
   request_rec  *r,
+  apr_pool_t *pool,
   emoji_t      *emoji,
   device_table *spec)
 {
@@ -1672,41 +1717,41 @@ callback_meta_emoji_au_sjis_hdml_emoji(
     case 'A':
     case 'a':
       if (!chxj_chk_numeric(emoji->ezweb.typeA.no)) {
-        return apr_psprintf(r->pool,
+        return apr_psprintf(pool,
                             "<IMG ICON=%s>",
                             emoji->ezweb.typeA.no);
       }
-      return apr_psprintf(r->pool,
+      return apr_psprintf(pool,
                           "%s",
                           emoji->ezweb.typeA.no);
     case 'B':
     case 'b':
       if (!chxj_chk_numeric(emoji->ezweb.typeB.no)) {
-        return apr_psprintf(r->pool,
+        return apr_psprintf(pool,
                             "<IMG ICON=%s>",
                             emoji->ezweb.typeB.no);
       }
-      return apr_psprintf(r->pool,
+      return apr_psprintf(pool,
                           "%s",
                           emoji->ezweb.typeB.no);
     case 'C':
     case 'c':
       if (!chxj_chk_numeric(emoji->ezweb.typeC.no)) {
-        return apr_psprintf(r->pool,
+        return apr_psprintf(pool,
                             "<IMG ICON=%s>",
                             emoji->ezweb.typeC.no);
       }
-      return apr_psprintf(r->pool,
+      return apr_psprintf(pool,
                           "%s",
                           emoji->ezweb.typeC.no);
     case 'D':
     case 'd':
       if (!chxj_chk_numeric(emoji->ezweb.typeD.no)) {
-        return apr_psprintf(r->pool,
+        return apr_psprintf(pool,
                             "<IMG IDON=%s>",
                             emoji->ezweb.typeD.no);
       }
-      return apr_psprintf(r->pool,
+      return apr_psprintf(pool,
                           "%s",
                           emoji->ezweb.typeD.no);
     default:
@@ -1714,7 +1759,7 @@ callback_meta_emoji_au_sjis_hdml_emoji(
     }
   }
   ERR(r, "Invalid KDDI spec(emoji_type) [%s]", emoji_type);
-  return apr_psprintf(r->pool,
+  return apr_psprintf(pool,
                       "%.*s",
                       2,
                       emoji->ezweb.typeD.sjis.hex);

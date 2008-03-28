@@ -738,15 +738,15 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
   apr_status_t        rv;
   apr_bucket          *b;
   const char          *data;
-  char                *user_agent;
+  char                *user_agent = NULL;
   char                *contentLength;
   apr_size_t          len;
-  mod_chxj_ctx        *ctx;
+  mod_chxj_ctx        *ctx       = (mod_chxj_ctx *)f->ctx;
   cookie_t            *cookie;
   char                *location_header;
   mod_chxj_config     *dconf;
-  chxjconvrule_entry  *entryp;
-  device_table        *spec;
+  chxjconvrule_entry  *entryp = NULL;
+  device_table        *spec   = NULL;
 
 
 
@@ -786,9 +786,11 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
   }
 
   dconf      = ap_get_module_config(r->per_dir_config, &chxj_module);
-  entryp     = chxj_apply_convrule(r, dconf->convrules);
   user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
-  spec       = chxj_specified_device(r, user_agent);
+  if (ctx && ctx->entryp) entryp = ctx->entryp;
+  else                    entryp = chxj_apply_convrule(r, dconf->convrules);
+  if (ctx && ctx->spec)   spec   = ctx->spec;
+  else                    spec   = chxj_specified_device(r, user_agent);
 
   for (b = APR_BRIGADE_FIRST(bb);
        b != APR_BRIGADE_SENTINEL(bb); 
@@ -1011,6 +1013,8 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
           ctx->buffer = '\0';
         }
         ctx->len = len;
+        ctx->entryp = entryp;
+        ctx->spec   = spec;
         f->ctx = (void*)ctx;
       }
       else {
@@ -1119,6 +1123,7 @@ chxj_input_filter(ap_filter_t         *f,
   DBG(r, "READBYTES:[%qd]", readbytes);
   if (! ctx) {
     f->ctx = ctx = apr_palloc(r->pool, sizeof(*ctx));
+    memset(ctx, 0, sizeof(*ctx));
     ctx->len = 0;
     if (orig_content_length && strlen(orig_content_length) && ! chxj_chk_numeric(orig_content_length)) {
       ctx->len = (apr_size_t)chxj_atoi(orig_content_length);
@@ -1136,7 +1141,8 @@ chxj_input_filter(ap_filter_t         *f,
 
   dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
 
-  entryp = chxj_apply_convrule(r, dconf->convrules);
+  if (ctx->entryp) entryp = ctx->entryp;
+  else             ctx->entryp = entryp = chxj_apply_convrule(r, dconf->convrules);
   if (!entryp || !(entryp->action & CONVRULE_ENGINE_ON_BIT)) {
     DBG(r,"EngineOff");
     ctx->len = 0;
@@ -1146,7 +1152,8 @@ chxj_input_filter(ap_filter_t         *f,
   }
 
   user_agent = (char*)apr_table_get(r->headers_in, "User-Agent");
-  spec = chxj_specified_device(r, user_agent);
+  if (ctx->spec) spec = ctx->spec;
+  else           ctx->spec = spec = chxj_specified_device(r, user_agent);
 
   switch(GET_HTML_SPEC_TYPE(spec)) {
   case CHXJ_SPEC_Chtml_1_0:
