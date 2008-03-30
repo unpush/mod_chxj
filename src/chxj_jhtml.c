@@ -21,7 +21,12 @@
 #include "chxj_qr_code.h"
 #include "chxj_encoding.h"
 
+#define BUFFERED 1
+
 #define GET_JHTML(X) ((jhtml_t*)(X))
+#define WJ_L(X)          do { jhtml->out = BUFFERED_WRITE_LITERAL(jhtml->out, &doc->buf, (X)); } while(0)
+#define WJ_V(X)          do { jhtml->out = (X) ? BUFFERED_WRITE_VALUE(jhtml->out, &doc->buf, (X))  \
+                                               : BUFFERED_WRITE_LITERAL(jhtml->out, &doc->buf, ""); } while(0)
 
 static char* s_jhtml_start_html_tag     (void* pdoc, Node* node);
 static char* s_jhtml_end_html_tag       (void* pdoc, Node* node);
@@ -378,11 +383,15 @@ chxj_exchange_jhtml(
 
   qs_parse_string(&doc,ss,strlen(ss));
 
+  chxj_buffered_write_init(r->pool, &doc.buf);
   /*--------------------------------------------------------------------------*/
   /* It converts it from CHTML to JHTML.                                      */
   /*--------------------------------------------------------------------------*/
   chxj_node_exchange(spec,r,(void*)&jhtml, &doc, qs_get_root(&doc), 0);
-  dst = jhtml.out;
+  jhtml.out = chxj_buffered_write_flush(jhtml.out, &doc.buf);
+  dst = apr_pstrdup(r->pool, jhtml.out);
+  chxj_buffered_write_terminate(&doc.buf);
+
 
   qs_all_free(&doc,QX_LOGMARK);
 
@@ -519,7 +528,11 @@ s_jhtml_start_html_tag(void* pdoc, Node* UNUSED(node))
   /*--------------------------------------------------------------------------*/
   /* start HTML tag                                                           */
   /*--------------------------------------------------------------------------*/
+#if BUFFERED
+  WJ_L("<html>\n");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<html>\n", NULL);
+#endif
 
   DBG(r, "end s_jhtml_start_html_tag()");
 
@@ -540,9 +553,12 @@ s_jhtml_end_html_tag(void* pdoc, Node* UNUSED(child))
 {
   jhtml_t*      jhtml = GET_JHTML(pdoc);
   Doc*          doc = jhtml->doc;
-  request_rec*  r   = doc->r;
 
+#if BUFFERED
+  WJ_L("</html>\n");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</html>\n", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -572,7 +588,11 @@ s_jhtml_start_meta_tag(void* pdoc, Node* node)
   refresh_flag      = 0;
   content_type_flag = 0;
 
+#if BUFFERED
+  WJ_L("<meta");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<meta", NULL);
+#endif
 
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -594,19 +614,24 @@ s_jhtml_start_meta_tag(void* pdoc, Node* node)
         /*----------------------------------------------------------------------*/
         /* CHTML 2.0                                                            */
         /*----------------------------------------------------------------------*/
+#if BUFFERED
+        WJ_L(" http-equiv=\"");
+        WJ_V(value);
+        WJ_L("\"");
+#else
         jhtml->out = apr_pstrcat(r->pool, 
                         jhtml->out, 
                         " http-equiv=\"", 
                         value,
                         "\"",
                         NULL);
-        if ((*value == 'c' || *value == 'C') 
-        && strcasecmp(value, "content-type") == 0) {
+#endif
+        if (STRCASEEQ('c','C',"content-type",value)) {
           content_type_flag = 1;
         }
-        if ((*value == 'r' || *value == 'R')
-        && strcasecmp(value, "refresh") == 0)
+        if (STRCASEEQ('r','R',"refresh",value)) {
           refresh_flag = 1;
+        }
       }
       break;
 
@@ -617,6 +642,13 @@ s_jhtml_start_meta_tag(void* pdoc, Node* node)
         /* CHTML 2.0                                                            */
         /*----------------------------------------------------------------------*/
         if (content_type_flag)  {
+#if BUFFERED
+          WJ_L(" ");
+          WJ_V(name);
+          WJ_L("=\"");
+          WJ_L("text/html; charset=Windows-31J");
+          WJ_L("\"");
+#else
           jhtml->out = apr_pstrcat(r->pool,
                                   jhtml->out,
                                   " ",
@@ -625,6 +657,7 @@ s_jhtml_start_meta_tag(void* pdoc, Node* node)
                                   "text/html; charset=Windows-31J",
                                   "\"",
                                   NULL);
+#endif
         }
         else
         if (refresh_flag) {
@@ -641,6 +674,15 @@ s_jhtml_start_meta_tag(void* pdoc, Node* node)
             url++;
             url = chxj_encoding_parameter(r, url);
             url = chxj_add_cookie_parameter(r, url, jhtml->cookie);
+#if BUFFERED
+            WJ_L(" ");
+            WJ_V(name);
+            WJ_L("=\"");
+            WJ_V(sec);
+            WJ_L(";");
+            WJ_V(url);
+            WJ_L("\"");
+#else
             jhtml->out = apr_pstrcat(r->pool,
                                      jhtml->out,
                                      " ",
@@ -651,9 +693,17 @@ s_jhtml_start_meta_tag(void* pdoc, Node* node)
                                      url,
                                      "\"",
                                      NULL);
+#endif
           }
         }
-        else
+        else {
+#if BUFFERED
+          WJ_L(" ");
+          WJ_V(name);
+          WJ_L("=\"");
+          WJ_V(value);
+          WJ_L("\"");
+#else
           jhtml->out = apr_pstrcat(r->pool,
                                    jhtml->out,
                                    " ",
@@ -662,6 +712,8 @@ s_jhtml_start_meta_tag(void* pdoc, Node* node)
                                    value,
                                    "\"",
                                    NULL);
+#endif
+        }
       }
       break;
     
@@ -670,7 +722,11 @@ s_jhtml_start_meta_tag(void* pdoc, Node* node)
     }
   }
 
+#if BUFFERED
+  WJ_L(">");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, ">", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -714,7 +770,11 @@ s_jhtml_start_head_tag(void* pdoc, Node* UNUSED(node))
   doc   = jhtml->doc;
   r     = doc->r;
 
+#if BUFFERED
+  WJ_L("<head>\r\n");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<head>\r\n", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -739,7 +799,11 @@ s_jhtml_end_head_tag(void* pdoc, Node* UNUSED(child))
   doc   = jhtml->doc;
   r     = doc->r;
 
+#if BUFFERED
+  WJ_L("</head>\r\n");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</head>\r\n", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -764,7 +828,11 @@ s_jhtml_start_title_tag(void* pdoc, Node* UNUSED(node))
   doc   = jhtml->doc;
   r     = doc->r;
 
+#if BUFFERED
+  WJ_L("<title>");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<title>", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -789,7 +857,11 @@ s_jhtml_end_title_tag(void* pdoc, Node* UNUSED(child))
   doc   = jhtml->doc;
   r     = doc->r;
 
+#if BUFFERED
+  WJ_L("</title>\r\n");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</title>\r\n", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -815,7 +887,11 @@ s_jhtml_start_base_tag(void* pdoc, Node* node)
   doc   = jhtml->doc;
   r     = doc->r;
 
+#if BUFFERED
+  WJ_L("<base");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<base", NULL);
+#endif
 
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -830,17 +906,27 @@ s_jhtml_start_base_tag(void* pdoc, Node* node)
     name  = qs_get_attr_name(doc,attr);
     value = qs_get_attr_value(doc,attr);
 
-    if ((*name == 'h' || *name == 'H') && strcasecmp(name, "href") == 0) {
+    if (STRCASEEQ('h','H',"href",name)) {
+#if BUFFERED
+      WJ_L(" href=\"");
+      WJ_V(value);
+      WJ_L("\"");
+#else
       jhtml->out = apr_pstrcat(r->pool, 
                                jhtml->out, 
                                " href=\"", 
                                value, 
                                "\"", 
                                NULL);
+#endif
     }
   }
 
+#if BUFFERED
+  WJ_L(" >\r\n");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, " >\r\n", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -885,7 +971,11 @@ s_jhtml_start_body_tag(void* pdoc, Node* node)
   doc   = jhtml->doc;
   r     = doc->r;
 
+#if BUFFERED
+  WJ_L("<body");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<body", NULL);
+#endif
 
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -900,50 +990,64 @@ s_jhtml_start_body_tag(void* pdoc, Node* node)
     name   = qs_get_attr_name(doc,attr);
     value  = qs_get_attr_value(doc,attr);
 
-    if ((*name == 'b' || *name == 'B') && strcasecmp(name, "bgcolor") == 0) {
+    if (STRCASEEQ('b','B',"bgcolor",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 2.0                                                            */
       /*----------------------------------------------------------------------*/
+#if BUFFERED
+      WJ_L(" bgcolor=\"");
+      WJ_V(value);
+      WJ_L("\"");
+#else
       jhtml->out = apr_pstrcat(r->pool, 
                                jhtml->out, 
                                " bgcolor=\"", 
                                value, 
                                "\"", 
                                NULL);
+#endif
     }
-    else
-    if ((*name == 't' || *name == 'T') && strcasecmp(name, "text") == 0) {
+    else if (STRCASEEQ('t','T',"text",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 2.0                                                            */
       /*----------------------------------------------------------------------*/
+#if BUFFERED
+      WJ_L(" text=\"");
+      WJ_V(value);
+      WJ_L("\"");
+#else
       jhtml->out = apr_pstrcat(r->pool, 
                                jhtml->out, 
                                " text=\"", 
                                value, 
                                "\"", 
                                NULL);
+#endif
     }
-    else
-    if ((*name == 'l' || *name == 'L') && strcasecmp(name, "link") == 0) {
+    else if (STRCASEEQ('l','L',"link",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 2.0                                                            */
       /*----------------------------------------------------------------------*/
+#if BUFFERED
+      WJ_L(" link=\"");
+      WJ_V(value);
+      WJ_L("\"");
+#else
       jhtml->out = apr_pstrcat(r->pool, 
                               jhtml->out, 
                               " link=\"", 
                               value, 
                               "\"", 
                               NULL);
+#endif
     }
-    else
-    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "alink") == 0) {
+    else if (STRCASEEQ('a','A',"alink",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 4.0                                                            */
       /*----------------------------------------------------------------------*/
       /* ignore */
     }
-    else
-    if ((*name == 'v' || *name == 'V') && strcasecmp(name, "vlink") == 0) {
+    else if (STRCASEEQ('v','V',"vlink",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 4.0                                                            */
       /*----------------------------------------------------------------------*/
@@ -951,7 +1055,11 @@ s_jhtml_start_body_tag(void* pdoc, Node* node)
     }
   }
 
+#if BUFFERED
+  WJ_L(">\r\n");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, ">\r\n", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -976,7 +1084,11 @@ s_jhtml_end_body_tag(void* pdoc, Node* UNUSED(child))
   doc   = jhtml->doc;
   r     = doc->r;
 
+#if BUFFERED
+  WJ_L("</body>\r\n");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</body>\r\n", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -1002,7 +1114,11 @@ s_jhtml_start_a_tag(void* pdoc, Node* node)
   doc   = jhtml->doc;
   r     = doc->r;
 
+#if BUFFERED
+  WJ_L("<a");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<a", NULL);
+#endif
 
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -1017,117 +1133,133 @@ s_jhtml_start_a_tag(void* pdoc, Node* node)
     name  = qs_get_attr_name(doc,attr);
     value = qs_get_attr_value(doc,attr);
 
-    if ((*name == 'n' || *name == 'N') && strcasecmp(name, "name") == 0) {
+    if (STRCASEEQ('n','N',"name",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML1.0                                                             */
       /*----------------------------------------------------------------------*/
+#if BUFFERED
+      WJ_L(" name=\"");
+      WJ_V(value);
+      WJ_L("\"");
+#else
       jhtml->out = apr_pstrcat(r->pool, 
                                jhtml->out, 
                                " name=\"", 
                                value, 
                                "\"", 
                                NULL);
+#endif
     }
-    else
-    if ((*name == 'h' || *name == 'H') && strcasecmp(name, "href") == 0) {
+    else if (STRCASEEQ('h','H',"href",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML1.0                                                             */
       /*----------------------------------------------------------------------*/
       value = chxj_encoding_parameter(r, value);
       value = chxj_add_cookie_parameter(r, value, jhtml->cookie);
+#if BUFFERED
+      WJ_L(" href=\"");
+      WJ_V(value);
+      WJ_L("\"");
+#else
       jhtml->out = apr_pstrcat(r->pool, 
                                jhtml->out, 
                                " href=\"", 
                                value, 
                                "\"", 
                                NULL);
+#endif
     }
-    else
-    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "accesskey") == 0) {
+    else if (STRCASEEQ('a','A',"accesskey",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML1.0                                                             */
       /*----------------------------------------------------------------------*/
+#if BUFFERED
+      WJ_L(" accesskey=\"");
+      WJ_V(value);
+      WJ_L("\"");
+#else
       jhtml->out = apr_pstrcat(r->pool, 
                                jhtml->out, 
                                " accesskey=\"", 
                                value, 
                                "\"", 
                                NULL);
+#endif
     }
-    else
-    if ((*name == 'c' || *name == 'C') && strcasecmp(name, "cti") == 0) {
+    else if (STRCASEEQ('c','C',"cti",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 2.0                                                            */
       /*----------------------------------------------------------------------*/
+#if BUFFERED
+      WJ_L(" cti=\"");
+      WJ_V(value);
+      WJ_L("\"");
+#else
       jhtml->out = apr_pstrcat(r->pool, 
                                jhtml->out, 
                                " cti=\"", 
                                value, 
                                "\"", 
                                NULL);
+#endif
     }
-    else
-    if ((*name == 'i' || *name == 'I') && strcasecmp(name, "ijam") == 0) {
+    else if (STRCASEEQ('i','I',"ijam",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 3.0                                                            */
       /*----------------------------------------------------------------------*/
       /* ignore */
     }
-    else
-    if ((*name == 'u' || *name == 'U') && strcasecmp(name, "utn") == 0) {
+    else if (STRCASEEQ('u','U',"utn",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 3.0                                                            */
       /* It is special only for CHTML.                                        */
       /*----------------------------------------------------------------------*/
+#if BUFFERED
+      WJ_L(" utn ");
+#else
       jhtml->out = apr_pstrcat(r->pool, 
                                jhtml->out, 
                                " utn ", 
                                NULL);
+#endif
     }
-    else
-    if ((*name == 't' || *name == 'T') && strcasecmp(name, "telbook") == 0) {
+    else if (STRCASEEQ('t','T',"telbook",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 3.0                                                            */
       /*----------------------------------------------------------------------*/
       /* not support */
     }
-    else
-    if ((*name == 'k' || *name == 'K') && strcasecmp(name, "kana") == 0) {
+    else if (STRCASEEQ('k','K',"kana",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 3.0                                                            */
       /*----------------------------------------------------------------------*/
       /* not support */
     }
-    else
-    if ((*name == 'e' || *name == 'E') && strcasecmp(name, "email") == 0) {
+    else if (STRCASEEQ('e','E',"email",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 3.0                                                            */
       /*----------------------------------------------------------------------*/
       /* not support */
     }
-    else
-    if ((*name == 'i' || *name == 'I') && strcasecmp(name, "ista") == 0) {
+    else if (STRCASEEQ('i','I',"ista",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 4.0                                                            */
       /*----------------------------------------------------------------------*/
       /* ignore */
     }
-    else
-    if ((*name == 'i' || *name == 'I') && strcasecmp(name, "ilet") == 0) {
+    else if (STRCASEEQ('i','I',"ilet",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 5.0                                                            */
       /*----------------------------------------------------------------------*/
       /* ignore */
     }
-    else
-    if ((*name == 'i' || *name == 'I') && strcasecmp(name, "iswf") == 0) {
+    else if (STRCASEEQ('i','I',"iswf",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 5.0                                                            */
       /*----------------------------------------------------------------------*/
       /* ignore */
     }
-    else
-    if ((*name == 'i' || *name == 'I') && strcasecmp(name, "irst") == 0) {
+    else if (STRCASEEQ('i','I',"irst",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 5.0                                                            */
       /*----------------------------------------------------------------------*/
@@ -1135,7 +1267,11 @@ s_jhtml_start_a_tag(void* pdoc, Node* node)
     }
   }
 
+#if BUFFERED
+  WJ_L(">");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, ">", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -1160,7 +1296,11 @@ s_jhtml_end_a_tag(void* pdoc, Node* UNUSED(child))
   doc   = jhtml->doc;
   r     = doc->r;
 
+#if BUFFERED
+  WJ_L("</a>");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</a>", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -1185,7 +1325,11 @@ s_jhtml_start_br_tag(void* pdoc, Node* UNUSED(node))
   doc   = jhtml->doc;
   r     = doc->r;
 
+#if BUFFERED
+  WJ_L("<br>\r\n");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<br>\r\n", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -1229,7 +1373,11 @@ s_jhtml_start_tr_tag(void* pdoc, Node* UNUSED(node))
   doc   = jhtml->doc;
   r     = doc->r;
 
+#if BUFFERED
+  WJ_L("<br>\r\n");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<br>\r\n", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -1274,7 +1422,11 @@ s_jhtml_start_font_tag(void* pdoc, Node* node)
   doc   = jhtml->doc;
   r     = doc->r;
 
+#if BUFFERED
+  WJ_L("<font");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<font", NULL);
+#endif
 
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -1289,16 +1441,21 @@ s_jhtml_start_font_tag(void* pdoc, Node* node)
     name  = qs_get_attr_name(doc,attr);
     value = qs_get_attr_value(doc,attr);
 
-    if ((*name == 'c' || *name == 'C') && strcasecmp(name, "color") == 0) {
+    if (STRCASEEQ('c','C',"color",name)) {
+#if BUFFERED
+      WJ_L(" color=\"");
+      WJ_V(value);
+      WJ_L("\"");
+#else
       jhtml->out = apr_pstrcat(r->pool, 
                                jhtml->out, 
                                " color=\"", 
                                value, 
                                "\"", 
                                NULL);
+#endif
     }
-    else
-    if ((*name == 's' || *name == 'S') && strcasecmp(name, "size") == 0) {
+    else if (STRCASEEQ('s','S',"size",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 5.0                                                            */
       /*----------------------------------------------------------------------*/
@@ -1306,7 +1463,11 @@ s_jhtml_start_font_tag(void* pdoc, Node* node)
     }
   }
 
+#if BUFFERED
+  WJ_L(">");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, ">", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -1325,11 +1486,17 @@ s_jhtml_end_font_tag(void* pdoc, Node* UNUSED(child))
 {
   jhtml_t*     jhtml;
   request_rec* r;
+  Doc          *doc;
 
   jhtml = GET_JHTML(pdoc);
+  doc   = jhtml->doc;
   r     = jhtml->doc->r;
 
+#if BUFFERED
+  WJ_L("</font>");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</font>", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -1355,7 +1522,11 @@ s_jhtml_start_form_tag(void* pdoc, Node* node)
   doc   = jhtml->doc;
   r     = doc->r;
 
+#if BUFFERED
+  WJ_L("<form");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<form", NULL);
+#endif
 
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -1370,49 +1541,75 @@ s_jhtml_start_form_tag(void* pdoc, Node* node)
     name  = qs_get_attr_name(doc,attr);
     value = qs_get_attr_value(doc,attr);
 
-    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "action") == 0) {
+    if (STRCASEEQ('a','A',"action",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
+#if BUFFERED
+      WJ_L(" action=\"");
+      WJ_V(value);
+      WJ_L("\"");
+#else
       jhtml->out = apr_pstrcat(r->pool, 
                                jhtml->out, 
                                " action=\"",
                                value,
                                "\"", 
                                NULL);
+#endif
     }
-    else
-    if ((*name == 'm' || *name == 'M') && strcasecmp(name, "method") == 0) {
+    else if (STRCASEEQ('m','M',"method",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
+#if BUFFERED
+      WJ_L(" method=\"");
+      WJ_V(value);
+      WJ_L("\"");
+#else
       jhtml->out = apr_pstrcat(r->pool, 
                                jhtml->out, 
                                " method=\"",
                                value,
                                "\"", 
                                NULL);
+#endif
     }
-    else
-    if ((*name == 'u' || *name == 'U') && strcasecmp(name, "utn") == 0) {
+    else if (STRCASEEQ('u','U',"utn",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 3.0                                                            */
       /* It is special only for CHTML.                                        */
       /*----------------------------------------------------------------------*/
+#if BUFFERED
+      WJ_L(" utn ");
+#else
       jhtml->out = apr_pstrcat(r->pool, 
                       jhtml->out, 
                       " utn ", 
                       NULL);
+#endif
     }
   }
 
+#if BUFFERED
+  WJ_L(">");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, ">", NULL);
+#endif
 
   if (jhtml->cookie && jhtml->cookie->cookie_id) {
+#if BUFFERED
+    char *vv = apr_psprintf(doc->buf.pool, "%s<input type='hidden' name='%s' value='%s'>",
+                            jhtml->out, 
+                            CHXJ_COOKIE_PARAM,
+                            jhtml->cookie->cookie_id);
+    WJ_V(vv);
+#else
     jhtml->out = apr_psprintf(r->pool, "%s<input type='hidden' name='%s' value='%s'>",
                              jhtml->out, 
                              CHXJ_COOKIE_PARAM,
                              jhtml->cookie->cookie_id);
+#endif
   }
 
   return jhtml->out;
@@ -1432,9 +1629,12 @@ s_jhtml_end_form_tag(void* pdoc, Node* UNUSED(child))
 {
   jhtml_t*     jhtml = GET_JHTML(pdoc);
   Doc*         doc   = jhtml->doc;
-  request_rec* r     = doc->r;
 
+#if BUFFERED
+  WJ_L("</form>");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</form>", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -1475,7 +1675,11 @@ s_jhtml_start_input_tag(void* pdoc, Node* node)
   checked     = NULL;
   accesskey   = NULL;
 
+#if BUFFERED
+  WJ_L("<input");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<input", NULL);
+#endif
 
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -1491,95 +1695,156 @@ s_jhtml_start_input_tag(void* pdoc, Node* node)
   size       = qs_get_size_attr(doc, node, r);
 
   if (type) {
+#if BUFFERED
+    WJ_L(" type=\"");
+    WJ_V(type);
+    WJ_L("\" ");
+#else
     jhtml->out = apr_pstrcat(r->pool,
                     jhtml->out, 
                     " type=\"", 
                     type, 
                     "\" ", 
                     NULL);
+#endif
   }
   if (size) {
+#if BUFFERED
+    WJ_L(" size=\"");
+    WJ_V(size);
+    WJ_L("\" ");
+#else
     jhtml->out = apr_pstrcat(r->pool, 
                     jhtml->out, 
                     " size=\"", 
                     size, 
                     "\" ", 
                     NULL);
+#endif
   }
   if (name) {
+#if BUFFERED
+    WJ_L(" name=\"");
+    WJ_V(name);
+    WJ_L("\" ");
+#else
     jhtml->out = apr_pstrcat(r->pool, 
                     jhtml->out, 
                     " name=\"", 
                     name, 
                     "\" ", 
                     NULL);
+#endif
   }
   if (value) {
+#if BUFFERED
+    WJ_L(" value=\"");
+    WJ_V(value);
+    WJ_L("\" ");
+#else
     jhtml->out = apr_pstrcat(r->pool, 
                     jhtml->out, 
                     " value=\"", 
                     value, 
                     "\" ", 
                     NULL);
+#endif
   }
   if (accesskey) {
+#if BUFFERED
+    WJ_L(" accesskey=\"");
+    WJ_V(accesskey);
+    WJ_L("\" ");
+#else
     jhtml->out = apr_pstrcat(r->pool, 
                     jhtml->out, 
                     " accesskey=\"", 
                     accesskey, "\" ", 
                     NULL);
+#endif
   }
   if (istyle) {
     /*------------------------------------------------------------------------*/
     /* CHTML 2.0                                                              */
     /*------------------------------------------------------------------------*/
-    if (type && (*type == 'p' || *type == 'P') && strcasecmp(type, "password") == 0
-    && ! jhtml->entryp->pc_flag ) {
+    if (STRCASEEQ('p','P',"password", type) && ! jhtml->entryp->pc_flag ) {
+#if BUFFERED
+      WJ_L(" mode=\"");
+      WJ_L("numeric");
+      WJ_L("\" ");
+#else
       jhtml->out = apr_pstrcat(r->pool, 
                                jhtml->out, 
                                " mode=\"", 
                                "numeric", 
                                "\" ", 
                                NULL);
+#endif
     }
     else {
+#if BUFFERED
+      char *vv = chxj_istyle_to_mode(r,istyle);
+      WJ_L(" mode=\"");
+      WJ_V(vv);
+      WJ_L("\" ");
+#else
       jhtml->out = apr_pstrcat(r->pool, 
                                jhtml->out, 
                                " mode=\"", 
                                chxj_istyle_to_mode(r,istyle), 
                                "\" ", 
                                NULL);
+#endif
     }
   }
-  else
-  if (istyle == NULL && type != NULL && strcasecmp(type, "password") == 0) {
+  else if (istyle == NULL && type != NULL && STRCASEEQ('p','P',"password",type)) {
+#if BUFFERED
+    WJ_L(" mode=\"");
+    WJ_L("numeric");
+    WJ_L("\" ");
+#else
     jhtml->out = apr_pstrcat(r->pool, 
                              jhtml->out, 
                              " mode=\"", 
                              "numeric", 
                              "\" ", 
                              NULL);
+#endif
   }
   /*--------------------------------------------------------------------------*/
   /* The figure is default for the password.                                  */
   /*--------------------------------------------------------------------------*/
   if (max_length) {
+#if BUFFERED
+    WJ_L(" maxlength=\"");
+    WJ_V(max_length);
+    WJ_L("\"");
+#else
     jhtml->out = apr_pstrcat(r->pool, 
                              jhtml->out, 
                              " maxlength=\"", 
                              max_length, 
                              "\"", 
                              NULL);
+#endif
   }
 
   if (checked) {
+#if BUFFERED
+    WJ_L(" checked ");
+#else
     jhtml->out = apr_pstrcat(r->pool, 
                              jhtml->out,
                              " checked ",
                              NULL);
+#endif
   }
 
+#if BUFFERED
+  WJ_L(" >");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, " >", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -1615,9 +1880,12 @@ s_jhtml_start_center_tag(void* pdoc, Node* UNUSED(node))
 {
   jhtml_t*      jhtml = GET_JHTML(pdoc);
   Doc*          doc   = jhtml->doc;
-  request_rec*  r     = doc->r;
 
+#if BUFFERED
+  WJ_L("<center>");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<center>", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -1642,7 +1910,11 @@ s_jhtml_end_center_tag(void* pdoc, Node* UNUSED(child))
   doc   = jhtml->doc;
   r     = doc->r;
 
+#if BUFFERED
+  WJ_L("</center>");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</center>", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -1667,7 +1939,11 @@ s_jhtml_start_li_tag(void* pdoc, Node* UNUSED(node))
   doc   = jhtml->doc;
   r     = doc->r;
 
+#if BUFFERED
+  WJ_L("<li>");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<li>", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -1692,7 +1968,11 @@ s_jhtml_end_li_tag(void* pdoc, Node* UNUSED(child))
   doc   = jhtml->doc;
   r     = doc->r;
 
+#if BUFFERED
+  WJ_L("</li>");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</li>", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -1717,7 +1997,11 @@ s_jhtml_start_ol_tag(void* pdoc, Node* UNUSED(node))
   doc   = jhtml->doc;
   r     = doc->r;
 
+#if BUFFERED
+  WJ_L("<ol>");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<ol>", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -1742,7 +2026,11 @@ s_jhtml_end_ol_tag(void* pdoc, Node* UNUSED(child))
   doc   = jhtml->doc;
   r     = doc->r;
 
+#if BUFFERED
+  WJ_L("</ol>");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</ol>", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -1767,7 +2055,11 @@ s_jhtml_start_p_tag(void* pdoc, Node* UNUSED(node))
   doc   = jhtml->doc;
   r     = doc->r;
 
+#if BUFFERED
+  WJ_L("<p>");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<p>", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -1786,9 +2078,12 @@ s_jhtml_end_p_tag(void* pdoc, Node* UNUSED(child))
 {
   jhtml_t*      jhtml = GET_JHTML(pdoc);
   Doc*          doc   = jhtml->doc;
-  request_rec*  r     = doc->r;
 
+#if BUFFERED
+  WJ_L("</p>");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</p>", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -1807,10 +2102,13 @@ s_jhtml_start_pre_tag(void* pdoc, Node* UNUSED(node))
 {
   jhtml_t*      jhtml = GET_JHTML(pdoc);
   Doc*          doc   = jhtml->doc;
-  request_rec*  r     = doc->r;
 
   jhtml->pre_flag++;
+#if BUFFERED
+  WJ_L("<pre>");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<pre>", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -1829,9 +2127,12 @@ s_jhtml_end_pre_tag(void* pdoc, Node* UNUSED(child))
 {
   jhtml_t*      jhtml = GET_JHTML(pdoc);
   Doc*          doc   = jhtml->doc;
-  request_rec*  r     = doc->r;
 
+#if BUFFERED
+  WJ_L("</pre>");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</pre>", NULL);
+#endif
   jhtml->pre_flag--;
 
   return jhtml->out;
@@ -1851,9 +2152,12 @@ s_jhtml_start_ul_tag(void* pdoc, Node* UNUSED(node))
 {
   jhtml_t*      jhtml = GET_JHTML(pdoc);
   Doc*          doc   = jhtml->doc;
-  request_rec*  r     = doc->r;
 
+#if BUFFERED
+  WJ_L("<ul>");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<ul>", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -1872,9 +2176,12 @@ s_jhtml_end_ul_tag(void* pdoc, Node* UNUSED(child))
 {
   jhtml_t*      jhtml = GET_JHTML(pdoc);
   Doc*          doc   = jhtml->doc;
-  request_rec*  r     = doc->r;
 
+#if BUFFERED
+  WJ_L("</ul>");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</ul>", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -1893,60 +2200,86 @@ s_jhtml_start_hr_tag(void* pdoc, Node* node)
 {
   jhtml_t*     jhtml = GET_JHTML(pdoc);
   Doc*         doc   = jhtml->doc;
-  request_rec* r     = doc->r;
   Attr*        attr;
 
+#if BUFFERED
+  WJ_L("<hr ");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<hr ", NULL);
+#endif
  
   for (attr = qs_get_attr(doc,node);
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
     char* name = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
-    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "align") == 0) {
+    if (STRCASEEQ('a','A',"align",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
+#if BUFFERED
+      WJ_L(" align=\"");
+      WJ_V(value);
+      WJ_L("\" ");
+#else
       jhtml->out = apr_pstrcat(r->pool,
                         jhtml->out, 
                         " align=\"", value, "\" ", NULL);
+#endif
     }
-    else
-    if ((*name == 's' || *name == 'S') && strcasecmp(name, "size") == 0) {
+    else if (STRCASEEQ('s','S',"size",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
+#if BUFFERED
+      WJ_L(" size=\"");
+      WJ_V(value);
+      WJ_L("\" ");
+#else
       jhtml->out = apr_pstrcat(r->pool,
                         jhtml->out, 
                         " size=\"", value, "\" ", NULL);
+#endif
     }
-    else
-    if ((*name == 'w' || *name == 'W') && strcasecmp(name, "width") == 0) {
+    else if (STRCASEEQ('w','W',"width",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
+#if BUFFERED
+      WJ_L(" width=\"");
+      WJ_V(value);
+      WJ_L("\" ");
+#else
       jhtml->out = apr_pstrcat(r->pool,
                         jhtml->out, 
                         " width=\"", value, "\" ", NULL);
+#endif
     }
-    else
-    if ((*name == 'n' || *name == 'N') && strcasecmp(name, "noshade") == 0) {
+    else if (STRCASEEQ('n','N',"noshade",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
+#if BUFFERED
+      WJ_L(" noshade ");
+#else
       jhtml->out = apr_pstrcat(r->pool,
                         jhtml->out, 
                         " noshade ", NULL);
+#endif
     }
-    else
-    if ((*name == 'c' || *name == 'C') && strcasecmp(name, "color") == 0) {
+    else if (STRCASEEQ('c','C',"color",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 4.0                                                            */
       /*----------------------------------------------------------------------*/
       /* ignore */
     }
   }
+
+#if BUFFERED
+  WJ_L(" >");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, " >", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -1988,9 +2321,12 @@ s_jhtml_start_img_tag(void* pdoc, Node* node)
   device_table* spec = jhtml->spec;
 #endif
 
+#if BUFFERED
+  WJ_L("<img");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<img", NULL);
+#endif
  
-
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
   /*--------------------------------------------------------------------------*/
@@ -2000,7 +2336,7 @@ s_jhtml_start_img_tag(void* pdoc, Node* node)
     char* name  = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
 
-    if ((*name == 's' || *name == 'S') && strcasecmp(name, "src") == 0) {
+    if (STRCASEEQ('s','S',"src",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
@@ -2014,8 +2350,15 @@ s_jhtml_start_img_tag(void* pdoc, Node* node)
                              (strchr(value, '?')) ? '&' : '?',
                              CHXJ_COOKIE_NOUPDATE_PARAM);
       }
+#if BUFFERED
+      WJ_L(" src=\"");
+      WJ_V(value);
+      WJ_L("\"");
+#else
       jhtml->out = apr_pstrcat(r->pool, 
                       jhtml->out, " src=\"",value,"\"", NULL);
+#endif
+
 #else
       value = chxj_img_conv(r, spec, value);
       value = chxj_encoding_parameter(r, value);
@@ -2027,61 +2370,97 @@ s_jhtml_start_img_tag(void* pdoc, Node* node)
                              (strchr(value, '?')) ? '&' : '?',
                              CHXJ_COOKIE_NOUPDATE_PARAM);
       }
+#if BUFFERED
+      WJ_L(" src=\"");
+      WJ_V(value);
+      WJ_L("\"");
+#else
       jhtml->out = apr_pstrcat(r->pool, 
                       jhtml->out, " src=\"", value, NULL);
       jhtml->out = apr_pstrcat(r->pool, jhtml->out, "\"", NULL);
 #endif
+
+#endif
     }
-    else
-    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "align" ) == 0) {
+    else if (STRCASEEQ('a','A',"align",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
+#if BUFFERED
+      WJ_L(" align=\"");
+      WJ_V(value);
+      WJ_L("\"");
+#else
       jhtml->out = apr_pstrcat(r->pool, 
                       jhtml->out, " align=\"",value,"\"", NULL);
+#endif
     }
-    else
-    if ((*name == 'w' || *name == 'W') && strcasecmp(name, "width" ) == 0) {
+    else if (STRCASEEQ('w','W',"width",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
+#if BUFFERED
+      WJ_L(" width=\"");
+      WJ_V(value);
+      WJ_L("\"");
+#else
       jhtml->out = apr_pstrcat(r->pool, 
                       jhtml->out, " width=\"",value,"\"", NULL);
+#endif
     }
-    else
-    if ((*name == 'h' || *name == 'H') && strcasecmp(name, "height") == 0) {
+    else if (STRCASEEQ('h','H',"height",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
+#if BUFFERED
+      WJ_L(" height=\"");
+      WJ_V(value);
+      WJ_L("\"");
+#else
       jhtml->out = apr_pstrcat(r->pool, 
                       jhtml->out, " height=\"",value,"\"", NULL);
+#endif
     }
-    else
-    if ((*name == 'h' || *name == 'H') && strcasecmp(name, "hspace") == 0) {
+    else if (STRCASEEQ('h','H',"hspace",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
+#if BUFFERED
+      WJ_L(" hspace=\"");
+      WJ_V(value);
+      WJ_L("\"");
+#else
       jhtml->out = apr_pstrcat(r->pool, 
                       jhtml->out, " hspace=\"",value,"\"", NULL);
+#endif
     }
-    else
-    if ((*name == 'v' || *name == 'V') && strcasecmp(name, "vspace") == 0) {
+    else if (STRCASEEQ('v','V',"vspace",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
+#if BUFFERED
+      WJ_L(" vspace=\"");
+      WJ_V(value);
+      WJ_L("\"");
+#else
       jhtml->out = apr_pstrcat(r->pool, 
                       jhtml->out, " vspace=\"",value,"\"", NULL);
+#endif
     }
-    else
-    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "alt"   ) == 0) {
+    else if (STRCASEEQ('a','A',"alt",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
+#if BUFFERED
+      WJ_L(" alt=\"");
+      WJ_V(value);
+      WJ_L("\"");
+#else
       jhtml->out = apr_pstrcat(r->pool, 
                       jhtml->out, " alt=\"",value,"\"", NULL);
+#endif
     }
-    else
-    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "align" ) == 0) {
+    else if (STRCASEEQ('a','A',"align",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 4.0                                                            */
       /*----------------------------------------------------------------------*/
@@ -2089,7 +2468,11 @@ s_jhtml_start_img_tag(void* pdoc, Node* node)
     }
   }
 
+#if BUFFERED
+  WJ_L(">");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, ">", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -2125,34 +2508,36 @@ s_jhtml_start_select_tag(void* pdoc, Node* child)
 {
   jhtml_t*     jhtml = GET_JHTML(pdoc);
   Doc*         doc   = jhtml->doc;
-  request_rec* r     = doc->r;
   Attr*        attr;
 
   char* size      = NULL;
   char* name      = NULL;
 
+#if BUFFERED
+  WJ_L("<select");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<select", NULL);
+#endif
+
   for (attr = qs_get_attr(doc,child);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
     char* nm  = qs_get_attr_name(doc,attr);
     char* val = qs_get_attr_value(doc,attr);
 
-    if ((*nm == 's' || *nm == 'S') && strcasecmp(nm, "size") == 0) {
+    if (STRCASEEQ('s','S',"size",nm)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0 version 2.0                                                */
       /*----------------------------------------------------------------------*/
-      size = apr_pstrdup(r->pool, val);
+      size = apr_pstrdup(doc->buf.pool, val);
     }
-    else
-    if ((*nm == 'n' || *nm == 'N') && strcasecmp(nm, "name") == 0) {
+    else if (STRCASEEQ('n','N',"name",nm)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0 version 2.0                                                */
       /*----------------------------------------------------------------------*/
-      name = apr_pstrdup(r->pool, val);
+      name = apr_pstrdup(doc->buf.pool, val);
     }
-    else
-    if ((*nm == 'm' || *nm == 'M') && strcasecmp(nm, "multiple") == 0) {
+    else if (STRCASEEQ('m','M',"multiple",nm)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0 version 2.0                                                */
       /*----------------------------------------------------------------------*/
@@ -2160,13 +2545,31 @@ s_jhtml_start_select_tag(void* pdoc, Node* child)
     }
   }
 
-  if (size)
+  if (size) {
+#if BUFFERED
+    WJ_L(" size=\"");
+    WJ_V(size);
+    WJ_L("\"");
+#else
     jhtml->out = apr_pstrcat(r->pool, jhtml->out, " size=\"",size,"\"", NULL);
+#endif
+  }
 
-  if (name)
+  if (name) {
+#if BUFFERED
+    WJ_L(" name=\"");
+    WJ_V(name);
+    WJ_L("\"");
+#else
     jhtml->out = apr_pstrcat(r->pool, jhtml->out, " name=\"",name,"\"", NULL);
+#endif
+  }
 
+#if BUFFERED
+  WJ_L(">\n");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, ">\n", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -2184,9 +2587,12 @@ s_jhtml_end_select_tag(void* pdoc, Node* UNUSED(child))
 {
   jhtml_t*     jhtml = GET_JHTML(pdoc);
   Doc*         doc   = jhtml->doc;
-  request_rec* r     = doc->r;
 
+#if BUFFERED
+  WJ_L("</select>\n");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</select>\n", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -2204,43 +2610,67 @@ s_jhtml_start_option_tag(void* pdoc, Node* child)
 {
   jhtml_t*     jhtml = GET_JHTML(pdoc);
   Doc*         doc   = jhtml->doc;
-  request_rec* r     = doc->r;
   Attr*        attr;
 
   char* selected   = NULL;
   char* value      = NULL;
 
+#if BUFFERED
+  WJ_L("<option");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<option", NULL);
+#endif
+
   for (attr = qs_get_attr(doc,child);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
     char* nm  = qs_get_attr_name(doc,attr);
     char* val = qs_get_attr_value(doc,attr);
 
-    if ((*nm == 's' || *nm == 'S') && strcasecmp(nm, "selected") == 0) {
+    if (STRCASEEQ('s','S',"selected",nm)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0 version 2.0                                                */
       /*----------------------------------------------------------------------*/
-      selected = apr_pstrdup(r->pool, val);
+      selected = apr_pstrdup(doc->buf.pool, val);
     }
-    else
-    if ((*nm == 'v' || *nm == 'V') && strcasecmp(nm, "value") == 0) {
+    else if (STRCASEEQ('v','V',"value",nm)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0 version 2.0                                                */
       /*----------------------------------------------------------------------*/
-      value = apr_pstrdup(r->pool, val);
+      value = apr_pstrdup(doc->buf.pool, val);
     }
   }
 
-  if (value) 
+  if (value) {
+#if BUFFERED
+    WJ_L(" value=\"");
+    WJ_V(value);
+    WJ_L("\"");
+#else
     jhtml->out = apr_pstrcat(r->pool, jhtml->out, " value=\"",value,"\"", NULL);
-  else
+#endif
+  }
+  else {
+#if BUFFERED
+    WJ_L(" value=\"\"");
+#else
     jhtml->out = apr_pstrcat(r->pool, jhtml->out, " value=\"\"", NULL);
+#endif
+  }
 
-  if (selected)
+  if (selected) {
+#if BUFFERED
+    WJ_L(" selected ");
+#else
     jhtml->out = apr_pstrcat(r->pool, jhtml->out, " selected ", NULL);
+#endif
+  }
 
+#if BUFFERED
+  WJ_L(">");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, ">", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -2291,7 +2721,11 @@ s_jhtml_start_div_tag(void* pdoc, Node* child)
 
   align = NULL;
 
+#if BUFFERED
+  WJ_L("<div");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<div", NULL);
+#endif
   for (attr = qs_get_attr(doc,child);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
@@ -2302,19 +2736,30 @@ s_jhtml_start_div_tag(void* pdoc, Node* child)
     nm  = qs_get_attr_name(doc,attr);
     val = qs_get_attr_value(doc,attr);
 
-    if ((*nm == 'a' || *nm == 'A') && strcasecmp(nm, "align") == 0) {
+    if (STRCASEEQ('a','A',"align",nm)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0 (W3C version 3.2)                                          */
       /*----------------------------------------------------------------------*/
-      align = apr_pstrdup(r->pool, val);
+      align = apr_pstrdup(doc->buf.pool, val);
     }
   }
 
-  if (align)
+  if (align) {
+#if BUFFERED
+    WJ_L(" align=\"");
+    WJ_V(align);
+    WJ_L("\"");
+#else
     jhtml->out = apr_pstrcat(r->pool, 
                     jhtml->out, " align=\"", align, "\"", NULL);
+#endif
+  }
 
+#if BUFFERED
+  WJ_L(">");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, ">", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -2339,7 +2784,11 @@ s_jhtml_end_div_tag(void* pdoc, Node* UNUSED(child))
   doc   = jhtml->doc;
   r     = doc->r;
 
+#if BUFFERED
+  WJ_L("</div>\n");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</div>\n", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -2384,7 +2833,11 @@ s_jhtml_chxjif_tag(void* pdoc, Node* node)
   for (child = qs_get_child_node(doc, node);
        child;
        child = qs_get_next_node(doc, child)) {
+#if BUFFERED
+    WJ_V(child->otext);
+#else
     jhtml->out = apr_pstrcat(r->pool, jhtml->out, child->otext, NULL);
+#endif
     s_jhtml_chxjif_tag(jhtml, child);
   }
   return NULL;
@@ -2412,7 +2865,11 @@ s_jhtml_start_textarea_tag(void* pdoc, Node* node)
   r     = doc->r;
 
   jhtml->textarea_flag++;
+#if BUFFERED
+  WJ_L("<textarea ");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<textarea ", NULL);
+#endif
 
   for (attr = qs_get_attr(doc,node);
        attr;
@@ -2424,20 +2881,40 @@ s_jhtml_start_textarea_tag(void* pdoc, Node* node)
     name  = qs_get_attr_name(doc,attr);
     value = qs_get_attr_value(doc,attr);
 
-    if ((*name == 'n' || *name == 'N') && strcasecmp(name, "name") == 0) {
+    if (STRCASEEQ('n','N',"name",name)) {
+#if BUFFERED
+      WJ_L(" name=\"");
+      WJ_V(value);
+      WJ_L("\"");
+#else
       jhtml->out = apr_pstrcat(r->pool, jhtml->out, " name=\"",value,"\"", NULL);
+#endif
     }
-    else 
-    if ((*name == 'r' || *name == 'R') && strcasecmp(name, "rows") == 0) {
+    else if (STRCASEEQ('r','R',"rows",name)) {
+#if BUFFERED
+      WJ_L(" rows=\"");
+      WJ_V(value);
+      WJ_L("\"");
+#else
       jhtml->out = apr_pstrcat(r->pool, jhtml->out, " rows=\"",value,"\"", NULL);
+#endif
     }
-    else 
-    if ((*name == 'c' || *name == 'C') && strcasecmp(name, "cols") == 0) {
+    else if (STRCASEEQ('c','C',"cols",name)) {
+#if BUFFERED
+      WJ_L(" cols=\"");
+      WJ_V(value);
+      WJ_L("\"");
+#else
       jhtml->out = apr_pstrcat(r->pool, jhtml->out, " cols=\"",value,"\"", NULL);
+#endif
     }
   }
 
+#if BUFFERED
+  WJ_L(">\r\n");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, ">\r\n", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -2462,7 +2939,11 @@ s_jhtml_end_textarea_tag(void* pdoc, Node* UNUSED(child))
   doc   = jhtml->doc;
   r     = doc->r;
 
+#if BUFFERED
+  WJ_L("</textarea>\r\n");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</textarea>\r\n", NULL);
+#endif
   jhtml->textarea_flag--;
 
   return jhtml->out;
@@ -2488,7 +2969,11 @@ s_jhtml_start_b_tag(void* pdoc, Node* UNUSED(node))
   doc   = jhtml->doc;
   r     = doc->r;
 
+#if BUFFERED
+  WJ_L("<b>");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "<b>", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -2507,9 +2992,12 @@ s_jhtml_end_b_tag(void* pdoc, Node* UNUSED(child))
 {
   jhtml_t*      jhtml = GET_JHTML(pdoc);
   Doc*          doc   = jhtml->doc;
-  request_rec*  r     = doc->r;
 
+#if BUFFERED
+  WJ_L("</b>\r\n");
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, "</b>\r\n", NULL);
+#endif
 
   return jhtml->out;
 }
@@ -2576,7 +3064,11 @@ s_jhtml_text_tag(void* pdoc, Node* child)
       }
     }
   }
+#if BUFFERED
+  WJ_V(tdst);
+#else
   jhtml->out = apr_pstrcat(r->pool, jhtml->out, tdst, NULL);
+#endif
 
   return jhtml->out;
 }
