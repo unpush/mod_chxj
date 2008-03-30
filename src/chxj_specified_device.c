@@ -92,7 +92,7 @@ chxj_specified_device(request_rec* r, const char* user_agent)
       continue;
     }
 
-    DBG(r, "pattern is [%s]", dtl->pattern);
+    /* DBG(r, "pattern is [%s]", dtl->pattern); */
     if (! dtl->regexp) {
       DBG(r,"compile failed.");
       return returnType;

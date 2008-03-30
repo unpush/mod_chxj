@@ -199,6 +199,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len, device_table *s
   mod_chxj_config     *dconf; 
   chxjconvrule_entry  *entryp;
 
+  DBG(r,"start of chxj_exchange() input:[%.*s]", *len, *src);
   dst  = apr_pstrcat(r->pool, (char*)*src, NULL);
 
   dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
@@ -219,13 +220,13 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len, device_table *s
     user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
 
   DBG(r,"User-Agent:[%s]", user_agent);
-  DBG(r, "start chxj_exchange()");
   DBG(r,"content type is %s", r->content_type);
 
 
-  if (*(char*)r->content_type == 't' 
-  && strncmp(r->content_type, "text/html",   9) != 0) {
-    DBG(r,"content type is %s", r->content_type);
+  if (! STRNCASEEQ('t','T', "text/html", r->content_type, sizeof("text/html"))
+  &&  ! STRNCASEEQ('a','A', "application/xhtml+xml", r->content_type, sizeof("application/xhtml+xml"))) {
+    DBG(r,"no convert. content type is %s", r->content_type);
+    DBG(r,"end of chxj_exchange()");
     return (char*)*src;
   }
 
@@ -287,7 +288,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len, device_table *s
   }
   dst[*len] = 0;
 
-  DBG(r, "end chxj_exchange()");
+  DBG(r, "end of chxj_exchange()");
 
   return dst;
 }
@@ -642,6 +643,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
   if (r->content_type) {
     if (! STRNCASEEQ('t','T',"text/html",r->content_type, sizeof("text/html")-1)
     &&  ! STRNCASEEQ('t','T',"text/xml", r->content_type, sizeof("text/xml")-1)
+    &&  ! STRNCASEEQ('a','A',"application/xhtml+xml", r->content_type, sizeof("application/xhtml+xml")-1)
     &&  ! (STRNCASEEQ('i','I',"image/",  r->content_type, sizeof("image/") -1)
           && ( STRCASEEQ('j','J',"jpeg",            &r->content_type[6])         /* JPEG */
             || STRCASEEQ('j','J',"jp2",             &r->content_type[6])         /* JPEG2000 */
@@ -675,6 +677,51 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
        b != APR_BRIGADE_SENTINEL(bb); 
        b = APR_BUCKET_NEXT(b)) {
 
+    if (apr_bucket_read(b, &data, &len, APR_BLOCK_READ) == APR_SUCCESS) {
+      DBG(r, "read data[%.*s]",(int)len, data);
+
+      if (f->ctx == NULL) {
+        /*--------------------------------------------------------------------*/
+        /* Start                                                              */
+        /*--------------------------------------------------------------------*/
+        DBG(r, "new context");
+        ctx = (mod_chxj_ctx*)apr_palloc(r->pool, sizeof(mod_chxj_ctx));
+        if (len > 0) {
+          ctx->buffer = apr_palloc(r->pool, len);
+          memcpy(ctx->buffer, data, len);
+        }
+        else {
+          ctx->buffer = apr_palloc(r->pool, 1);
+          ctx->buffer = '\0';
+        }
+        ctx->len = len;
+        f->ctx = (void*)ctx;
+        ctx->entryp = entryp;
+        ctx->spec   = spec;
+      }
+      else {
+        /*--------------------------------------------------------------------*/
+        /* append data                                                        */
+        /*--------------------------------------------------------------------*/
+        char* tmp;
+        DBG(r, "append data start");
+        ctx = (mod_chxj_ctx*)f->ctx;
+
+        if (len > 0) {
+          tmp = apr_palloc(r->pool, ctx->len);
+          memcpy(tmp, ctx->buffer, ctx->len);
+
+          ctx->buffer = apr_palloc(r->pool, ctx->len + len);
+
+          memcpy(ctx->buffer, tmp, ctx->len);
+          memcpy(&ctx->buffer[ctx->len], data, len);
+
+          ctx->len += len;
+        }
+        DBG(r, "append data end");
+      }
+    }
+
     if (APR_BUCKET_IS_EOS(b)) {
 
       DBG(r, "eos");
@@ -689,8 +736,8 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
 
         if (spec->html_spec_type != CHXJ_SPEC_UNKNOWN 
             && r->content_type 
-            && *(char*)r->content_type == 't' 
-            && strncmp(r->content_type, "text/html",   9) == 0) {
+            && (STRNCASEEQ('a','A',"application/xhtml+xml", r->content_type, sizeof("application/xhtml+xml"))
+            ||  STRNCASEEQ('t','T',"text/html", r->content_type, sizeof("text/html")))) {
 
           if (ctx->len) {
             char* tmp;
@@ -869,51 +916,6 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
         rv = pass_data_to_filter(f, (const char*)"", (apr_size_t)0);
 
         return rv;
-      }
-    }
-    else
-    if (apr_bucket_read(b, &data, &len, APR_BLOCK_READ) == APR_SUCCESS) {
-      DBG(r, "read data[%.*s]",(int)len, data);
-
-      if (f->ctx == NULL) {
-        /*--------------------------------------------------------------------*/
-        /* Start                                                              */
-        /*--------------------------------------------------------------------*/
-        DBG(r, "new context");
-        ctx = (mod_chxj_ctx*)apr_palloc(r->pool, sizeof(mod_chxj_ctx));
-        if (len > 0) {
-          ctx->buffer = apr_palloc(r->pool, len);
-          memcpy(ctx->buffer, data, len);
-        }
-        else {
-          ctx->buffer = apr_palloc(r->pool, 1);
-          ctx->buffer = '\0';
-        }
-        ctx->len = len;
-        f->ctx = (void*)ctx;
-        ctx->entryp = entryp;
-        ctx->spec   = spec;
-      }
-      else {
-        /*--------------------------------------------------------------------*/
-        /* append data                                                        */
-        /*--------------------------------------------------------------------*/
-        char* tmp;
-        DBG(r, "append data start");
-        ctx = (mod_chxj_ctx*)f->ctx;
-
-        if (len > 0) {
-          tmp = apr_palloc(r->pool, ctx->len);
-          memcpy(tmp, ctx->buffer, ctx->len);
-
-          ctx->buffer = apr_palloc(r->pool, ctx->len + len);
-
-          memcpy(ctx->buffer, tmp, ctx->len);
-          memcpy(&ctx->buffer[ctx->len], data, len);
-
-          ctx->len += len;
-        }
-        DBG(r, "append data end");
       }
     }
   }
