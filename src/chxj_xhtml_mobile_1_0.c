@@ -23,8 +23,6 @@
 #include "chxj_qr_code.h"
 #include "chxj_buffered_write.h"
 
-#define BUFFERED 1
-
 #define GET_XHTML(X) ((xhtml_t*)(X))
 #define WX_L(X)          do { xhtml->out = BUFFERED_WRITE_LITERAL(xhtml->out, &doc->buf, (X)); } while(0)
 #define WX_V(X)          do { xhtml->out = (X) ? BUFFERED_WRITE_VALUE(xhtml->out, &doc->buf, (X))  \
@@ -593,40 +591,18 @@ s_xhtml_1_0_start_html_tag(void* pdoc, Node* node)
   /*--------------------------------------------------------------------------*/
   /* Add XML Declare                                                          */
   /*--------------------------------------------------------------------------*/
-#if BUFFERED
   WX_L("<?xml version=\"1.0\" encoding=\"Windows-31J\"?>\r\n");
-#else
-  xhtml->out = apr_pstrcat(r->pool, 
-    xhtml->out, 
-    "<?xml version=\"1.0\" encoding=\"Windows-31J\"?>\r\n", 
-    NULL);
-#endif
 
   /*--------------------------------------------------------------------------*/
   /* Add DocType                                                              */
   /*--------------------------------------------------------------------------*/
-#if BUFFERED
   WX_L("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML Basic 1.0//EN\"\r\n");
   WX_L(" \"http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd\">\r\n");
-#else
-  xhtml->out = apr_pstrcat(r->pool, 
-          xhtml->out, 
-          "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML Basic 1.0//EN\"\r\n",NULL);
-  xhtml->out = apr_pstrcat(r->pool, 
-          xhtml->out, 
-          " \"http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd\">\r\n",NULL);
-#endif
 
   /*--------------------------------------------------------------------------*/
   /* start HTML tag                                                           */
   /*--------------------------------------------------------------------------*/
-#if BUFFERED
   WX_L("<html xmlns=\"http://www.w3.org/1999/xhtml\"");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<html", NULL);
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, 
-          " xmlns=\"http://www.w3.org/1999/xhtml\"", NULL);
-#endif
 
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -637,36 +613,16 @@ s_xhtml_1_0_start_html_tag(void* pdoc, Node* node)
     char* name  = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('l','L',"lang", name)) {
-#if BUFFERED
       WX_L(" xml:lang=\"");
       WX_V(value);
       WX_L("\"");
-#else
-      xhtml->out = apr_pstrcat(r->pool, 
-                      xhtml->out, 
-                      " xml:lang=\"", 
-                      value, 
-                      "\"", 
-                      NULL);
-#endif
     }
     else if (STRCASEEQ('v','V',"version", name)) {
-#if BUFFERED
       WX_L(" version=\"-//OPENWAVE//DTD XHTML Mobile 1.0//EN\"");
-#else
-      xhtml->out = apr_pstrcat(r->pool, 
-                      xhtml->out, 
-                      " version=\"-//OPENWAVE//DTD XHTML Mobile 1.0//EN\"", 
-                      NULL);
-#endif
     }
   }
 
-#if BUFFERED
   WX_L(">\r\n");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, ">\r\n", NULL);
-#endif
   return xhtml->out;
 }
 
@@ -685,11 +641,7 @@ s_xhtml_1_0_end_html_tag(void* pdoc, Node* UNUSED(child))
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("</html>\r\n");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</html>\r\n", NULL);
-#endif
 
   return xhtml->out;
 }
@@ -711,11 +663,7 @@ s_xhtml_1_0_start_meta_tag(void* pdoc, Node* node)
   Doc*          doc   = xhtml->doc;
   int           content_type_flag = 0;
 
-#if BUFFERED
   WX_L("<meta");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<meta", NULL);
-#endif
 
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -726,93 +674,41 @@ s_xhtml_1_0_start_meta_tag(void* pdoc, Node* node)
     char* name  = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('n','N',"name", name)) {
-#if BUFFERED
       WX_L(" ");
       WX_V(name);
       WX_L("=\"");
       WX_V(value);
       WX_L("\"");
-#else
-      xhtml->out = apr_pstrcat(r->pool,
-                      xhtml->out,
-                      " ", 
-                      name, 
-                      "=\"", 
-                      value, 
-                      "\"", 
-                      NULL);
-#endif
     }
     else if (STRCASEEQ('h','H',"http-equiv", name)) {
-#if BUFFERED
       WX_L(" ");
       WX_V(name);
       WX_L("=\"");
       WX_V(value);
       WX_L("\"");
-#else
-      xhtml->out = apr_pstrcat(r->pool,
-                      xhtml->out,
-                      " ", 
-                      name,
-                      "=\"",
-                      value,
-                      "\"", 
-                      NULL);
-#endif
       if (STRCASEEQ('c','C', "content-type", value)) {
         content_type_flag = 1;
       }
     }
     else if (STRCASEEQ('c','C',"content", name)) {
       if (content_type_flag) {
-#if BUFFERED
         WX_L(" ");
         WX_V(name);
         WX_L("=\"");
         WX_L("text/html; charset=Windows-31J");
         WX_L("\"");
-#else
-        xhtml->out = apr_pstrcat(r->pool,
-                        xhtml->out, 
-                        " ", 
-                        name, 
-                        "=\"", 
-                        "text/html; charset=Windows-31J", 
-                        "\"", 
-                        NULL);
-#endif
       }
       else {
-#if BUFFERED
         WX_L(" ");
         WX_V(name);
         WX_L("=\"");
         WX_V(value);
         WX_L("\"");
-#else
-        xhtml->out = apr_pstrcat(r->pool,
-                        xhtml->out, 
-                        " ", 
-                        name, 
-                        "=\"", 
-                        value, 
-                        "\"", 
-                        NULL);
-#endif
       }
     }
   }
 
-#if BUFFERED
   WX_L(" />\r\n");
-#else
-  xhtml->out = apr_pstrcat(r->pool, 
-                  xhtml->out, 
-                  " />\r\n", 
-                  NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -847,12 +743,7 @@ s_xhtml_1_0_start_head_tag(void* pdoc, Node* UNUSED(node))
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("<head>\r\n");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<head>\r\n", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -871,12 +762,7 @@ s_xhtml_1_0_end_head_tag(void* pdoc, Node* UNUSED(child))
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("</head>\r\n");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</head>\r\n", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -895,12 +781,7 @@ s_xhtml_1_0_start_title_tag(void* pdoc, Node* UNUSED(node))
   xhtml_t*     xhtml = GET_XHTML(pdoc);
   Doc*         doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("<title>");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<title>", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -919,11 +800,7 @@ s_xhtml_1_0_end_title_tag(void* pdoc, Node* UNUSED(child))
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("</title>\r\n");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</title>\r\n", NULL);
-#endif
 
   return xhtml->out;
 }
@@ -944,11 +821,7 @@ s_xhtml_1_0_start_base_tag(void* pdoc, Node* node)
   Attr*         attr;
   Doc*          doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("<base");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<base", NULL);
-#endif
 
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -959,27 +832,13 @@ s_xhtml_1_0_start_base_tag(void* pdoc, Node* node)
     char* name = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('h','H',"href",name)) {
-#if BUFFERED
       WX_L(" href=\"");
       WX_V(value);
       WX_L("\"");
-#else
-      xhtml->out = apr_pstrcat(r->pool, 
-                      xhtml->out, 
-                      " href=\"", 
-                      value, 
-                      "\"", 
-                      NULL);
-#endif
       break;
     }
   }
-#if BUFFERED
   WX_L(" />\r\n");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, " />\r\n", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -1016,12 +875,7 @@ s_xhtml_1_0_start_body_tag(void* pdoc, Node* node)
   Doc*         doc   = xhtml->doc;
   Attr*        attr;
 
-#if BUFFERED
   WX_L("<body");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<body", NULL);
-#endif
-
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
   /*--------------------------------------------------------------------------*/
@@ -1031,46 +885,19 @@ s_xhtml_1_0_start_body_tag(void* pdoc, Node* node)
     char* name  = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('b','B',"bgcolor", name)) {
-#if BUFFERED
       WX_L(" bgcolor=\"");
       WX_V(value);
       WX_L("\"");
-#else
-      xhtml->out = apr_pstrcat(r->pool, 
-                      xhtml->out, 
-                      " bgcolor=\"", 
-                      value, 
-                      "\"", 
-                      NULL);
-#endif
     }
     else if (STRCASEEQ('t','T',"text",name)) {
-#if BUFFERED
       WX_L(" text=\"");
       WX_V(value);
       WX_L("\"");
-#else
-      xhtml->out = apr_pstrcat(r->pool, 
-                      xhtml->out, 
-                      " text=\"", 
-                      value, 
-                      "\"", 
-                      NULL);
-#endif
     }
     else if (STRCASEEQ('l','L',"link", name)) {
-#if BUFFERED
       WX_L(" link=\"");
       WX_V(value);
       WX_L("\"");
-#else
-      xhtml->out = apr_pstrcat(r->pool, 
-                      xhtml->out, 
-                      " link=\"", 
-                      value, 
-                      "\"", 
-                      NULL);
-#endif
     }
     else if (STRCASEEQ('a','A',"alink", name)) {
       /* ignore */
@@ -1079,11 +906,7 @@ s_xhtml_1_0_start_body_tag(void* pdoc, Node* node)
       /* ignore */
     }
   }
-#if BUFFERED
   WX_L(">\r\n");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, ">\r\n", NULL);
-#endif
 
   return xhtml->out;
 }
@@ -1103,12 +926,7 @@ s_xhtml_1_0_end_body_tag(void* pdoc, Node* UNUSED(child))
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("</body>\r\n");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</body>\r\n", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -1129,12 +947,7 @@ s_xhtml_1_0_start_a_tag(void* pdoc, Node* node)
   request_rec*  r     = doc->r;
   Attr*         attr;
 
-#if BUFFERED
   WX_L("<a");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<a", NULL);
-#endif
-
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
   /*--------------------------------------------------------------------------*/
@@ -1145,47 +958,20 @@ s_xhtml_1_0_start_a_tag(void* pdoc, Node* node)
     char* value = qs_get_attr_value(doc,attr);
 
     if (STRCASEEQ('n','N',"name",name)) {
-#if BUFFERED
       WX_L(" id=\"");
       WX_V(value);
       WX_L("\"");
-#else
-      xhtml->out = apr_pstrcat(r->pool, 
-                      xhtml->out, 
-                      " id=\"", 
-                      value, 
-                      "\"", 
-                      NULL);
-#endif
     }
     else if (STRCASEEQ('h','H',"href", name)) {
       value = chxj_encoding_parameter(r, value);
-#if BUFFERED
       WX_L(" href=\"");
       WX_V(value);
       WX_L("\"");
-#else
-      xhtml->out = apr_pstrcat(r->pool, 
-                      xhtml->out, 
-                      " href=\"", 
-                      value, 
-                      "\"", 
-                      NULL);
-#endif
     }
     else if (STRCASEEQ('a','A',"accesskey", name)) {
-#if BUFFERED
       WX_L(" accesskey=\"");
       WX_V(value);
       WX_L("\"");
-#else
-      xhtml->out = apr_pstrcat(r->pool, 
-                      xhtml->out, 
-                      " accesskey=\"", 
-                      value, 
-                      "\"", 
-                      NULL);
-#endif
     }
     else if (STRCASEEQ('c','C',"cti",name)) {
       /* ignore */
@@ -1218,12 +1004,7 @@ s_xhtml_1_0_start_a_tag(void* pdoc, Node* node)
       /* ignore */
     }
   }
-#if BUFFERED
   WX_L(">");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, ">", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -1242,12 +1023,7 @@ s_xhtml_1_0_end_a_tag(void* pdoc, Node* UNUSED(child))
   xhtml_t*     xhtml = GET_XHTML(pdoc);
   Doc*         doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("</a>");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</a>", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -1266,12 +1042,7 @@ s_xhtml_1_0_start_br_tag(void* pdoc, Node* UNUSED(node))
   xhtml_t*     xhtml = GET_XHTML(pdoc);
   Doc*         doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("<br />\r\n");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<br />\r\n", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -1307,12 +1078,7 @@ s_xhtml_1_0_start_tr_tag(void* pdoc, Node* UNUSED(node))
   xhtml_t*     xhtml = GET_XHTML(pdoc);
   Doc*         doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("<br />\r\n");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<br />\r\n", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -1349,42 +1115,24 @@ s_xhtml_1_0_start_font_tag(void* pdoc, Node* node)
   Doc*         doc   = xhtml->doc;
   Attr*        attr;
 
-#if BUFFERED
   WX_L("<font");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<font", NULL);
-#endif
-
   /* Get Attributes */
   for (attr = qs_get_attr(doc,node);
        attr; attr = qs_get_next_attr(doc,attr)) {
     char* name = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('c','C',"color",name)) {
-#if BUFFERED
       WX_L(" color=\"");
       WX_V(value);
       WX_L("\"");
-#else
-      xhtml->out = apr_pstrcat(r->pool, xhtml->out, " color=\"",value,"\"", NULL);
-#endif
     }
     else if (STRCASEEQ('s','S',"size",name)) {
-#if BUFFERED
       WX_L(" size=\"");
       WX_V(value);
       WX_L("\"");
-#else
-      xhtml->out = apr_pstrcat(r->pool, xhtml->out, " size=\"",value,"\"", NULL);
-#endif
     }
   }
-#if BUFFERED
   WX_L(">");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, ">", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -1403,12 +1151,7 @@ s_xhtml_1_0_end_font_tag(void* pdoc, Node* UNUSED(child))
   xhtml_t*     xhtml = GET_XHTML(pdoc);
   Doc*         doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("</font>");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</font>", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -1429,12 +1172,7 @@ s_xhtml_1_0_start_form_tag(void* pdoc, Node* node)
   request_rec* r     = doc->r;
   Attr*        attr;
 
-#if BUFFERED
   WX_L("<form");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<form", NULL);
-#endif
-
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
   /*--------------------------------------------------------------------------*/
@@ -1445,43 +1183,20 @@ s_xhtml_1_0_start_form_tag(void* pdoc, Node* node)
     char* value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('a','A',"action",name)) {
       value = chxj_encoding_parameter(r, value);
-#if BUFFERED
       WX_L(" action=\"");
       WX_V(value);
       WX_L("\"");
-#else
-      xhtml->out = apr_pstrcat(r->pool, 
-                      xhtml->out, 
-                      " action=\"",
-                      value,
-                      "\"", 
-                      NULL);
-#endif
     }
     else if (STRCASEEQ('m','M',"method",name)) {
-#if BUFFERED
       WX_L(" method=\"");
       WX_V(value);
       WX_L("\"");
-#else
-      xhtml->out = apr_pstrcat(r->pool, 
-                      xhtml->out, 
-                      " method=\"",
-                      value,
-                      "\"", 
-                      NULL);
-#endif
     }
     else if (STRCASEEQ('u','U',"utn",name)) {
       /* ignore */
     }
   }
-#if BUFFERED
   WX_L(">");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, ">", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -1499,12 +1214,7 @@ s_xhtml_1_0_end_form_tag(void* pdoc, Node* UNUSED(child))
   xhtml_t*     xhtml = GET_XHTML(pdoc);
   Doc*         doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("</form>");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</form>", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -1532,12 +1242,7 @@ s_xhtml_1_0_start_input_tag(void* pdoc, Node* node)
   char*         checked     = NULL;
   char*         accesskey   = NULL;
 
-#if BUFFERED
   WX_L("<input");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<input", NULL);
-#endif
-
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
   /*--------------------------------------------------------------------------*/
@@ -1552,73 +1257,29 @@ s_xhtml_1_0_start_input_tag(void* pdoc, Node* node)
   size       = qs_get_size_attr(doc, node, r);
 
   if (type) {
-#if BUFFERED
     WX_L(" type=\"");
     WX_V(type);
     WX_L("\" ");
-#else
-    xhtml->out = apr_pstrcat(r->pool,
-                    xhtml->out, 
-                    " type=\"", 
-                    type, 
-                    "\" ", 
-                    NULL);
-#endif
   }
   if (size) {
-#if BUFFERED
     WX_L(" size=\"");
     WX_V(size);
     WX_L("\" ");
-#else
-    xhtml->out = apr_pstrcat(r->pool, 
-                    xhtml->out, 
-                    " size=\"", 
-                    size, 
-                    "\" ", 
-                    NULL);
-#endif
   }
   if (name) {
-#if BUFFERED
     WX_L(" name=\"");
     WX_V(name);
     WX_L("\" ");
-#else
-    xhtml->out = apr_pstrcat(r->pool, 
-                    xhtml->out, 
-                    " name=\"", 
-                    name, 
-                    "\" ", 
-                    NULL);
-#endif
   }
   if (value) {
-#if BUFFERED
     WX_L(" value=\"");
     WX_V(value);
     WX_L("\" ");
-#else
-    xhtml->out = apr_pstrcat(r->pool, 
-                    xhtml->out, 
-                    " value=\"", 
-                    value, 
-                    "\" ", 
-                    NULL);
-#endif
   }
   if (accesskey) {
-#if BUFFERED
     WX_L(" accesskey=\"");
     WX_V(accesskey);
     WX_L("\" ");
-#else
-    xhtml->out = apr_pstrcat(r->pool, 
-                    xhtml->out, 
-                    " accesskey=\"", 
-                    accesskey, "\" ", 
-                    NULL);
-#endif
   }
   if (istyle) {
     char* fmt = qs_conv_istyle_to_format(r,istyle);
@@ -1631,35 +1292,16 @@ s_xhtml_1_0_start_input_tag(void* pdoc, Node* node)
         }
       }
 
-#if BUFFERED
       {
         char *vv = apr_psprintf(r->pool, " FORMAT=\"%d%s\"", atoi(max_length), fmt);
         WX_V(vv);
       }
-#else
-      xhtml->out = apr_pstrcat(r->pool, 
-                      xhtml->out, 
-                      apr_psprintf(r->pool, " FORMAT=\"%d%s\"", 
-                      atoi(max_length), 
-                      fmt), 
-                      NULL);
-#endif
     }
     else {
-#if BUFFERED
       WX_L(" FORMAT=\"");
       WX_L("*");
       WX_V(fmt);
       WX_L("\"");
-#else
-      xhtml->out = apr_pstrcat(r->pool, 
-                      xhtml->out, 
-                      " FORMAT=\"", 
-                      "*", 
-                      fmt, 
-                      "\"", 
-                      NULL);
-#endif
     }
   }
   /*--------------------------------------------------------------------------*/
@@ -1670,45 +1312,18 @@ s_xhtml_1_0_start_input_tag(void* pdoc, Node* node)
       && strcasecmp(type, "password") == 0
       && ! xhtml->entryp->pc_flag) {
     if (max_length) {
-#if BUFFERED
       WX_L(" FORMAT=\"");
       WX_V(max_length);
       WX_L("N\"");
-#else
-      xhtml->out = apr_pstrcat(r->pool, 
-                      xhtml->out, 
-                      " FORMAT=\"", 
-                      max_length, 
-                      "N", 
-                      "\"", 
-                      NULL);
-#endif
     }
     else {
-#if BUFFERED
       WX_L(" FORMAT=\"*N\"");
-#else
-      xhtml->out = apr_pstrcat(r->pool, 
-                      xhtml->out, 
-                      " FORMAT=\"", "*", "N", "\"", NULL);
-#endif
     }
   }
   if (checked) {
-#if BUFFERED
     WX_L(" checked=\"checked\"");
-#else
-    xhtml->out = apr_pstrcat(r->pool, 
-                    xhtml->out, " checked=\"checked\"", NULL);
-#endif
   }
-
-#if BUFFERED
   WX_L(" />");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, " />", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -1744,12 +1359,7 @@ s_xhtml_1_0_start_center_tag(void* pdoc, Node* UNUSED(node))
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("<center>");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<center>", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -1768,12 +1378,7 @@ s_xhtml_1_0_end_center_tag(void* pdoc, Node* UNUSED(child))
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("</center>");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</center>", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -1792,12 +1397,7 @@ s_xhtml_1_0_start_hr_tag(void* pdoc, Node* UNUSED(node))
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("<hr />");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<hr />", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -1834,12 +1434,7 @@ s_xhtml_1_0_start_pre_tag(void* pdoc, Node* UNUSED(node))
   Doc*          doc   = xhtml->doc;
 
   xhtml->pre_flag++;
-#if BUFFERED
   WX_L("<pre>");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<pre>", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -1858,11 +1453,7 @@ s_xhtml_1_0_end_pre_tag(void* pdoc, Node* UNUSED(child))
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("</pre>");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</pre>", NULL);
-#endif
   xhtml->pre_flag--;
 
   return xhtml->out;
@@ -1883,12 +1474,7 @@ s_xhtml_1_0_start_p_tag(void* pdoc, Node* UNUSED(node))
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("<p>");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<p>", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -1907,12 +1493,7 @@ s_xhtml_1_0_end_p_tag(void* pdoc, Node* UNUSED(child))
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("</p>");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</p>", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -1931,12 +1512,7 @@ s_xhtml_1_0_start_ul_tag(void* pdoc, Node* UNUSED(node))
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("<ul>");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<ul>", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -1955,12 +1531,7 @@ s_xhtml_1_0_end_ul_tag(void* pdoc, Node* UNUSED(child))
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("</ul>");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</ul>", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -1979,12 +1550,7 @@ s_xhtml_1_0_start_h1_tag(void* pdoc, Node* UNUSED(node))
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("<h1>");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<h1>", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -2003,12 +1569,7 @@ s_xhtml_1_0_end_h1_tag(void* pdoc, Node* UNUSED(child))
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("</h1>");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</h1>", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -2027,12 +1588,7 @@ s_xhtml_1_0_start_h2_tag(void* pdoc, Node* UNUSED(node))
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc = xhtml->doc;
 
-#if BUFFERED
   WX_L("<h2>");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<h2>", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -2051,12 +1607,7 @@ s_xhtml_1_0_end_h2_tag(void* pdoc, Node* UNUSED(child))
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("</h2>");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</h2>", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -2075,12 +1626,7 @@ s_xhtml_1_0_start_h3_tag(void* pdoc, Node* UNUSED(node))
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("<h3>");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<h3>", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -2099,12 +1645,7 @@ s_xhtml_1_0_end_h3_tag(void* pdoc, Node* UNUSED(child))
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("</h3>");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</h3>", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -2123,12 +1664,7 @@ s_xhtml_1_0_start_h4_tag(void* pdoc, Node* UNUSED(node))
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("<h4>");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<h4>", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -2147,12 +1683,7 @@ s_xhtml_1_0_end_h4_tag(void* pdoc, Node* UNUSED(child))
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("</h4>");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</h4>", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -2171,12 +1702,7 @@ s_xhtml_1_0_start_h5_tag(void* pdoc, Node* UNUSED(node))
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("<h5>");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<h5>", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -2194,12 +1720,7 @@ s_xhtml_1_0_end_h5_tag(void* pdoc, Node* UNUSED(child))
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("</h5>");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</h5>", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -2218,12 +1739,7 @@ s_xhtml_1_0_start_h6_tag(void* pdoc, Node* UNUSED(node))
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("<h6>");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<h6>", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -2242,12 +1758,7 @@ s_xhtml_1_0_end_h6_tag(void* pdoc, Node* UNUSED(child))
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("</h6>");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</h6>", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -2266,12 +1777,7 @@ s_xhtml_1_0_start_ol_tag(void* pdoc, Node* UNUSED(node))
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("<ol>");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<ol>", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -2290,12 +1796,7 @@ s_xhtml_1_0_end_ol_tag(void* pdoc, Node* UNUSED(child))
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("</ol>");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</ol>", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -2314,12 +1815,7 @@ s_xhtml_1_0_start_li_tag(void* pdoc, Node* UNUSED(node))
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("<li>");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<li>", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -2338,12 +1834,7 @@ s_xhtml_1_0_end_li_tag(void* pdoc, Node* UNUSED(child))
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("</li>");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</li>", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -2367,12 +1858,7 @@ s_xhtml_1_0_start_img_tag(void* pdoc, Node* node)
   device_table  *spec = xhtml->spec;
 #endif
 
-#if BUFFERED
   WX_L("<img");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<img", NULL);
-#endif
-
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
   /*--------------------------------------------------------------------------*/
@@ -2386,108 +1872,61 @@ s_xhtml_1_0_start_img_tag(void* pdoc, Node* node)
       value = chxj_encoding_parameter(r, value);
 #ifdef IMG_NOT_CONVERT_FILENAME
 
-#if BUFFERED
       WX_L(" src=\"");
       WX_V(value);
       WX_L("\"");
-#else
-      xhtml->out = apr_pstrcat(r->pool, 
-                      xhtml->out, " src=\"",value,"\"", NULL);
-#endif
 
 #else
 
-#if BUFFERED
       WX_L(" src=\"");
       {
         char *vv = chxj_img_conv(r,spec,value);
         WX_V(vv);
       }
       WX_L("\"");
-#else
-      xhtml->out = apr_pstrcat(r->pool, xhtml->out,
-                      " src=\"", chxj_img_conv(r,spec,value) , NULL);
-      xhtml->out = apr_pstrcat(r->pool, xhtml->out, "\"", NULL);
-#endif
 
 #endif
     }
     else 
     if (*name == 'a' || *name == 'A') {
       if (strcasecmp(name, "align" ) == 0) {
-#if BUFFERED
         WX_L(" align=\"");
         WX_V(value);
         WX_L("\"");
-#else
-        xhtml->out = apr_pstrcat(r->pool, 
-                        xhtml->out, " align=\"",value,"\"", NULL);
-#endif
       }
       else
       if (strcasecmp(name, "alt"   ) == 0) {
-#if BUFFERED
         WX_L(" alt=\"");
         WX_V(value);
         WX_L("\"");
-#else
-        xhtml->out = apr_pstrcat(r->pool, 
-                        xhtml->out, " alt=\"",value,"\"", NULL);
-#endif
       }
     }
     else if (STRCASEEQ('w','W',"width",name)) {
-#if BUFFERED
       WX_L(" width=\"");
       WX_V(value);
       WX_L("\"");
-#else
-      xhtml->out = apr_pstrcat(r->pool, 
-                      xhtml->out, " width=\"",value,"\"", NULL);
-#endif
     }
     else 
     if (*name == 'h' || *name == 'H') {
       if (strcasecmp(name, "height") == 0) {
-#if BUFFERED
         WX_L(" height=\"");
         WX_V(value);
         WX_L("\"");
-#else
-        xhtml->out = apr_pstrcat(r->pool, 
-                        xhtml->out, " height=\"",value,"\"", NULL);
-#endif
       }
       else
       if (strcasecmp(name, "hspace") == 0) {
-#if BUFFERED
         WX_L(" hspace=\"");
         WX_V(value);
         WX_L("\"");
-#else
-        xhtml->out = apr_pstrcat(r->pool, 
-                        xhtml->out, " hspace=\"",value,"\"", NULL);
-#endif
       }
     }
     else if (STRCASEEQ('v','V',"vspace",name)) {
-#if BUFFERED
       WX_L(" vspace=\"");
       WX_V(value);
       WX_L("\"");
-#else
-      xhtml->out = apr_pstrcat(r->pool, 
-                      xhtml->out, " vspace=\"",value,"\"", NULL);
-#endif
     }
   }
-
-#if BUFFERED
   WX_L(">");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, ">", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -2527,11 +1966,7 @@ s_xhtml_1_0_start_select_tag(void* pdoc, Node* child)
   char* size      = NULL;
   char* name      = NULL;
 
-#if BUFFERED
   WX_L("<select");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<select", NULL);
-#endif
   for (attr = qs_get_attr(doc,child);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
@@ -2553,31 +1988,17 @@ s_xhtml_1_0_start_select_tag(void* pdoc, Node* child)
   }
 
   if (size) {
-#if BUFFERED
     WX_L(" size=\"");
     WX_V(size);
     WX_L("\"");
-#else
-    xhtml->out = apr_pstrcat(r->pool, xhtml->out, " size=\"",size,"\"", NULL);
-#endif
   }
 
   if (name) {
-#if BUFFERED
     WX_L(" name=\"");
     WX_V(name);
     WX_L("\"");
-#else
-    xhtml->out = apr_pstrcat(r->pool, xhtml->out, " name=\"",name,"\"", NULL);
-#endif
   }
-
-#if BUFFERED
   WX_L(">\n");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, ">\n", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -2596,12 +2017,7 @@ s_xhtml_1_0_end_select_tag(void* pdoc, Node* UNUSED(child))
   xhtml_t*     xhtml = GET_XHTML(pdoc);
   Doc*         doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("</select>\n");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</select>\n", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -2624,11 +2040,7 @@ s_xhtml_1_0_start_option_tag(void* pdoc, Node* child)
   char* selected   = NULL;
   char* value      = NULL;
 
-#if BUFFERED
   WX_L("<option");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<option", NULL);
-#endif
   for (attr = qs_get_attr(doc,child);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
@@ -2646,36 +2058,17 @@ s_xhtml_1_0_start_option_tag(void* pdoc, Node* child)
   }
 
   if (value) {
-#if BUFFERED
     WX_L(" value=\"");
     WX_V(value);
     WX_L("\"");
-#else
-    xhtml->out = apr_pstrcat(r->pool, xhtml->out, " value=\"",value,"\"", NULL);
-#endif
   }
   else {
-#if BUFFERED
     WX_L(" value=\"\"");
-#else
-    xhtml->out = apr_pstrcat(r->pool, xhtml->out, " value=\"\"", NULL);
-#endif
   }
-
   if (selected) {
-#if BUFFERED
     WX_L(" selected=\"selected\"");
-#else
-    xhtml->out = apr_pstrcat(r->pool, xhtml->out, " selected=\"selected\"", NULL);
-#endif
   }
-
-#if BUFFERED
   WX_L(">");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, ">", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -2694,12 +2087,7 @@ s_xhtml_1_0_end_option_tag(void* pdoc, Node* UNUSED(child))
   xhtml_t*     xhtml = GET_XHTML(pdoc);
   Doc*         doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("</option>\n");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</option>\n", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -2721,11 +2109,7 @@ s_xhtml_1_0_start_div_tag(void* pdoc, Node* child)
 
   char* align   = NULL;
 
-#if BUFFERED
   WX_L("<div");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<div", NULL);
-#endif
   for (attr = qs_get_attr(doc,child);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
@@ -2739,22 +2123,12 @@ s_xhtml_1_0_start_div_tag(void* pdoc, Node* child)
   }
 
   if (align) {
-#if BUFFERED
     WX_L(" align=\"");
     WX_V(align);
     WX_L("\"");
-#else
-    xhtml->out = apr_pstrcat(r->pool, 
-                    xhtml->out, " align=\"", align, "\"", NULL);
-#endif
   }
 
-#if BUFFERED
   WX_L(">");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, ">", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -2773,12 +2147,7 @@ s_xhtml_1_0_end_div_tag(void* pdoc, Node* UNUSED(child))
   xhtml_t*     xhtml = GET_XHTML(pdoc);
   Doc*         doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("</div>\n");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</div>\n", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -2797,12 +2166,7 @@ s_xhtml_1_0_start_b_tag(void* pdoc, Node* UNUSED(child))
   xhtml_t*     xhtml = GET_XHTML(pdoc);
   Doc*         doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("<div style=\"font-weight:bold\">");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<div style=\"font-weight:bold\">", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -2821,12 +2185,7 @@ s_xhtml_1_0_end_b_tag(void* pdoc, Node* UNUSED(child))
   xhtml_t*     xhtml = GET_XHTML(pdoc);
   Doc*         doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("</div>\n");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</div>\n", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -2848,11 +2207,7 @@ s_xhtml_1_0_chxjif_tag(void* pdoc, Node* node)
   for (child = qs_get_child_node(doc, node);
        child;
        child = qs_get_next_node(doc, child)) {
-#if BUFFERED
     WX_V(child->otext);
-#else
-    xhtml->out = apr_pstrcat(r->pool, xhtml->out, child->otext, NULL);
-#endif
     s_xhtml_1_0_chxjif_tag(xhtml, child);
   }
 
@@ -2876,12 +2231,7 @@ s_xhtml_1_0_start_textarea_tag(void* pdoc, Node* node)
   Attr*         attr;
 
   xhtml->textarea_flag++;
-#if BUFFERED
   WX_L("<textarea ");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "<textarea ", NULL);
-#endif
-
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
@@ -2890,40 +2240,22 @@ s_xhtml_1_0_start_textarea_tag(void* pdoc, Node* node)
     char* value = qs_get_attr_value(doc,attr);
 
     if (STRCASEEQ('n','N',"name",name)) {
-#if BUFFERED
       WX_L(" name=\"");
       WX_V(value);
       WX_L("\"");
-#else
-      xhtml->out = apr_pstrcat(r->pool, xhtml->out, " name=\"",value,"\"", NULL);
-#endif
     }
     else if (STRCASEEQ('r','R',"rows",name)) {
-#if BUFFERED
       WX_L(" rows=\"");
       WX_V(value);
       WX_L("\"");
-#else
-      xhtml->out = apr_pstrcat(r->pool, xhtml->out, " rows=\"",value,"\"", NULL);
-#endif
     }
     else if (STRCASEEQ('c','C',"cols",name)) {
-#if BUFFERED
       WX_L(" cols=\"");
       WX_V(value);
       WX_L("\"");
-#else
-      xhtml->out = apr_pstrcat(r->pool, xhtml->out, " cols=\"",value,"\"", NULL);
-#endif
     }
   }
-
-#if BUFFERED
   WX_L(">\r\n");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, ">\r\n", NULL);
-#endif
-
   return xhtml->out;
 }
 
@@ -2942,11 +2274,7 @@ s_xhtml_1_0_end_textarea_tag(void* pdoc, Node* UNUSED(child))
   xhtml_t*      xhtml = GET_XHTML(pdoc);
   Doc*          doc   = xhtml->doc;
 
-#if BUFFERED
   WX_L("</textarea>\r\n");
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, "</textarea>\r\n", NULL);
-#endif
   xhtml->textarea_flag--;
 
   return xhtml->out;
@@ -3006,12 +2334,7 @@ s_xhtml_1_0_text_tag(void* pdoc, Node* child)
       tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
     }
   }
-#if BUFFERED
   WX_V(tdst);
-#else
-  xhtml->out = apr_pstrcat(r->pool, xhtml->out, tdst, NULL);
-#endif
-
   return xhtml->out;
 }
 /*
