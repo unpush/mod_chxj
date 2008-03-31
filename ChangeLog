@@ -6,6 +6,7 @@ libapache2-mod-chxj (0.10.0-1) unstable; urgency=low
     - Add cookie expires validator.
     - Add cookie secure validator.
     - Add content-type ``application/xhtml+xml''
+    - use Buffering.
   * Fixed bug.
     - Parsing is abnormal of the comment tag.
     - Parsing is abnormal of the script tag.
