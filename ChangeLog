@@ -1,12 +1,13 @@
 libapache2-mod-chxj (0.10.0-1) unstable; urgency=low
 
   * Added Features.
-    - Add cookie path validator.
-    - Add cookie domain validator.
-    - Add cookie expires validator.
-    - Add cookie secure validator.
-    - Add content-type ``application/xhtml+xml''
+    - Added cookie path validator.
+    - Added cookie domain validator.
+    - Added cookie expires validator.
+    - Added cookie secure validator.
+    - Added content-type ``application/xhtml+xml''
     - use Buffering.
+    - Added Cookie Lazy ID mode.
   * Fixed bug.
     - Parsing is abnormal of the comment tag.
     - Parsing is abnormal of the script tag.
