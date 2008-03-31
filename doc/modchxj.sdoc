@@ -817,7 +817,7 @@ ChxjConvRule "^/chxj.+$" "EngineOn" "EUC-JP"
        <td align="left"> </td>
     </tr>
     <tr>
-       <td>&lt;SELECT&lt;</td>
+       <td>&lt;SELECT&gt;</td>
        <td align="center">name</td>
        <td align="center">¡û</td>
        <td align="center">¡û</td>
