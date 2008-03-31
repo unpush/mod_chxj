@@ -199,7 +199,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len, device_table *s
   mod_chxj_config     *dconf; 
   chxjconvrule_entry  *entryp;
 
-  DBG(r,"start of chxj_exchange() input:[%.*s]", *len, *src);
+  DBG(r,"start of chxj_exchange() input:[%.*s]", (int)*len, *src);
   dst  = apr_pstrcat(r->pool, (char*)*src, NULL);
 
   dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
@@ -747,7 +747,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
             memset(tmp, 0, ctx->len + 1);
             memcpy(tmp, ctx->buffer, ctx->len);
 
-#if 1
+#if 0
             DBG(r, "input data=[%s] len=[%d]", tmp, ctx->len);
 #endif
 
@@ -757,7 +757,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
                                         spec,
                                         user_agent);
 
-#if 1
+#if 0
             DBG(r, "output data=[%.*s]", ctx->len,ctx->buffer);
 #endif
           }
