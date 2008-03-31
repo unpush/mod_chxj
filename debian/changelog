@@ -1,8 +1,22 @@
+libapache2-mod-chxj (0.10.0-1) unstable; urgency=low
+
+  * Added Features. 
+    - Add cookie path validator.
+    - Add cookie domain validator.
+    - Add cookie expires validator.
+    - Add cookie secure validator.
+    - Add content-type ``application/xhtml+xml''
+  * Fixed bug.
+    - Parsing is abnormal of the comment tag.
+    - Parsing is abnormal of the script tag.
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Mon, 31 Mar 2008 17:58:05 +0900
+
 libapache2-mod-chxj (0.9.0-1) unstable; urgency=low
 
   * Added Features
     - Cookie can have been recorded in MySQL. 
-	- Cookie can have been recorded in memcached. 
+    - Cookie can have been recorded in memcached. 
   * Fixed Bug
     - When mpeg is downloaded, it memory a large amount of consumes it.
 
