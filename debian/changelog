@@ -8,6 +8,7 @@ libapache2-mod-chxj (0.10.0-1) unstable; urgency=low
     - Add content-type ``application/xhtml+xml''
     - use Buffering.
     - Added Cookie Lazy ID mode.
+    - Cookie simulator(delete experimental)
   * Fixed bug.
     - Parsing is abnormal of the comment tag.
     - Parsing is abnormal of the script tag.
