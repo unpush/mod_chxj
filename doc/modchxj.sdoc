@@ -1148,6 +1148,8 @@ httpd.confд╦░╩▓╝д╬╡н╜╥дЄ─╔▓├д╖д▐д╣бг
 <subsection title="One-Time ID">
 Cookieе╖е▀ехеьб╝е╚д╟д╧бвaе┐е░бвimgе┐е░бвformе┐е░д╬URL╔Їд╦One-Time IDдЄ╦фдс╣■дрд│д╚д╟╝┬╕╜д╖д▐д╣бг
 д╜д╬д┐дсбвецб╝е╢дме╓ещеже╢д╬╠сдые▄е┐еє┼∙д╟╠сд├д┐╛ь╣чд╧CookieдЄ╝ш╞└д╟днд╩дпд╩дъд▐д╣бг
+One-Time IDдЄ╗╚═╤д╣ды╔м═╫дм╠╡дд╛ь╣чбвд▐д┐д╧One-Time IDдЄ╗╚═╤д╖д┐дпд╩дд╛ь╣чд╦д╧бв
+CookieLazyModeдЄ╗╚═╤д╣дыд│д╚д╟╦ш▓є╞▒░ьIDдЄ╚п╣╘д╡д╗дыд│д╚дмд╟днд▐д╣бг
 </subsection>
 <subsection title="Cookieд╬╩▌┬╕╛ь╜ъ">
 Cookieд╬╞т═╞д╧е╡б╝е╨┬жд╦╩▌┬╕д╡дьд▐д╣бг
@@ -1253,6 +1255,15 @@ ChxjCookieTimeoutе╟егеьепе╞еге╓д╟╩▌╗¤┤№┤╓дЄ╗╪─ъд╣дыд│д╚дмд╟днд▐д╣бг╗╪─ъд╖д╩длд├д
     &lt;/Location&gt;
   </program>
   ╛х╡нд╬╬уд╧бв10╔├д╟е┐едеревеже╚(е╡б╝е╨длдщ║я╜№)д╣дыдшджд╦╗╪─ъд╖д╞ддд▐д╣бг
+</subsection>
+<subsection title="CookieLazyMode">
+ChxjCookieLazyModeе╟егеьепе╞еге╓д╟"true"дЄ╗╪─ъд╣дыд╚One-Time IDдЄ╗╚═╤д╖д╩дддшджд╦д╣дыд│д╚дмд╟днд▐д╣бг
+Cookie═╤д╬IDд╧╦ш▓є╞▒░ьд╬IDдм│фдъ┐╢дщдьд▐д╣бг
+░╩▓╝д╦CookieLazyModeд╬╬удЄ╡нд╖д▐д╣бг
+<program title="ChxjCookieLazyModeд╬╬у">
+  ChxjCookieLazyMode true
+</program>
+true░╩│░дЄ╗╪─ъд╣дыд╚─╠╛яд╬One-Time IDетб╝е╔д╦д╩дъд▐д╣бг
 </subsection>
 </section>
 

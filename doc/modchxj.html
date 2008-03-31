@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Script-Type" content="text/javascript">
 <meta name="generator" content="SmartDoc 1.1">
 <meta name="author" content="Atsushi Konno" lang="ja">
-<meta name="date" content="Last modified: Mon Mar 31 20:13:56 JST 2008" lang="ja">
+<meta name="date" content="Last modified: Mon Mar 31 20:19:27 JST 2008" lang="ja">
 <title>mod_chxj</title>
 <style type="text/css">
 <!--
@@ -692,7 +692,7 @@ function setOHPHandler() {
 
 <h1 class="title">mod_chxj<br><span class="subtitle"></span></h1>
 
-<div class="date">Last modified: Mon Mar 31 20:13:56 JST 2008</div>
+<div class="date">Last modified: Mon Mar 31 20:19:27 JST 2008</div>
 <div class="author">Atsushi Konno</div>
 <h2>目次</h2>
 
@@ -762,10 +762,11 @@ function setOHPHandler() {
 <li> <a href="#doc1_1506" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">One-Time ID</a>
 <li> <a href="#doc1_1509" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">Cookieの保存場所</a>
 <li> <a href="#doc1_1624" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">Cookieの保持期間</a>
+<li> <a href="#doc1_1630" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">CookieLazyMode</a>
 </ul>
-<li> <a href="#doc1_1631" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">Refererシミュレート機能(EXPERIMENTAL)</a>
+<li> <a href="#doc1_1637" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">Refererシミュレート機能(EXPERIMENTAL)</a>
 <ul>
-<li> <a href="#doc1_1633" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">Refererシミュレート機能(EXPERIMENTAL)</a>
+<li> <a href="#doc1_1639" onmouseover="hilightSelflink(this)" onmouseout="normal(this)">Refererシミュレート機能(EXPERIMENTAL)</a>
 </ul>
 </ul>
 </div>
@@ -2003,7 +2004,7 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 
 <h3 id="doc1_1506">One-Time ID</h3>
 
-<p class="first_ja">Cookieシミュレートでは、aタグ、imgタグ、formタグのURL部にOne-Time IDを埋め込むことで実現します。そのため、ユーザがブラウザの戻るボタン等で戻った場合はCookieを取得できなくなります。</p>
+<p class="first_ja">Cookieシミュレートでは、aタグ、imgタグ、formタグのURL部にOne-Time IDを埋め込むことで実現します。そのため、ユーザがブラウザの戻るボタン等で戻った場合はCookieを取得できなくなります。One-Time IDを使用する必要が無い場合、またはOne-Time IDを使用したくない場合には、CookieLazyModeを使用することで毎回同一IDを発行させることができます。</p>
 
 <h3 id="doc1_1509">Cookieの保存場所</h3>
 
@@ -2131,10 +2132,21 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 
 <p>上記の例は、10秒でタイムアウト(サーバから削除)するように指定しています。</p>
 
-<h2 id="doc1_1631">Refererシミュレート機能(EXPERIMENTAL)</h2>
+<h3 id="doc1_1630">CookieLazyMode</h3>
+
+<p class="first_ja">ChxjCookieLazyModeディレクティブで&quot;true&quot;を指定するとOne-Time IDを使用しないようにすることができます。Cookie用のIDは毎回同一のIDが割り振られます。以下にCookieLazyModeの例を記します。</p>
+
+<div id="doc1_1632" class="caption">ChxjCookieLazyModeの例</div>
+<pre class="program" style="margin-top:0">
+  ChxjCookieLazyMode true
+</pre>
+
+<p>true以外を指定すると通常のOne-Time IDモードになります。</p>
+
+<h2 id="doc1_1637">Refererシミュレート機能(EXPERIMENTAL)</h2>
 
 
-<h3 id="doc1_1633">Refererシミュレート機能(EXPERIMENTAL)</h3>
+<h3 id="doc1_1639">Refererシミュレート機能(EXPERIMENTAL)</h3>
 
 <p class="first_ja">DoCoMo端末などのRefererに対応していない機種のためにRefererシミュレート機能を提供します。本機能は、Cookieシミュレート機能を有効にすると、自動で有効になります(将来的には変更予定)。</p>
 </body>
