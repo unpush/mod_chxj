@@ -6,7 +6,8 @@ TARGET=modchxj.html
 all: $(TARGET)
 
 .sdoc.html:
-	sdoc -toc:true  $<
+	sed "s/@@DATE@@/`LANG=C date`/" $< > /tmp/modchxj.sdoctmp
+	sdoc -toc:true  /tmp/modchxj.sdoctmp
 
 clean:
 	rm -f $(TARGET)
