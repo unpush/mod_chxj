@@ -99,10 +99,10 @@
 typedef struct Attr Attr;
 
 struct Attr {
-  struct Attr* next;
-  struct Node* parent;
-  char *name;
-  char *value;
+  struct Attr *next;
+  struct Node *parent;
+  char        *name;
+  char        *value;
 };
 
 /**
@@ -111,24 +111,24 @@ struct Attr {
 typedef struct Node Node;
 
 struct Node {
-  struct Node*   next;
-  struct Node*   parent;
-  struct Node*   child;
-  struct Node*   child_tail;
-  struct Attr*   attr;
-  struct Attr*   attr_tail;
-  char*          name;
-  char*          value;
+  struct Node    *next;
+  struct Node    *parent;
+  struct Node    *child;
+  struct Node    *child_tail;
+  struct Attr    *attr;
+  struct Attr    *attr_tail;
+  char           *name;
+  char           *value;
   int            size;
-  char*          otext;
+  char           *otext;
   int            line;
 };
 
 typedef struct pointer_table_t {
   unsigned int            address;
   unsigned long           size;
-  struct pointer_table_t* next;
-  struct pointer_table_t* prev;
+  struct pointer_table_t  *next;
+  struct pointer_table_t  *prev;
 } Pointer_Table;
 
 
@@ -138,71 +138,72 @@ typedef enum chxj_parse_mode_t {
 } ParseMode_t;
 
 typedef struct _doc {
-  Node*         now_parent_node;
-  Node*         root_node;
+  Node          *now_parent_node;
+  Node          *root_node;
 
   int           do_init_flag;
   unsigned long alloc_size;
 
-  Pointer_Table* pointer_table;
-  Pointer_Table* free_list_head;
-  Pointer_Table* free_list_tail;
-  Pointer_Table* allocated_list_head;
-  Pointer_Table* allocated_list_tail;
+  Pointer_Table *pointer_table;
+  Pointer_Table *free_list_head;
+  Pointer_Table *free_list_tail;
+  Pointer_Table *allocated_list_head;
+  Pointer_Table *allocated_list_tail;
 
   ParseMode_t    parse_mode;
 
-  apr_allocator_t* allocator;
-  apr_pool_t*      pool;
+  apr_allocator_t *allocator;
+  apr_pool_t      *pool;
 
   buf_object buf;
 #ifndef __NON_MOD_CHXJ__
-  request_rec* r;
+  request_rec *r;
 #endif
 } Doc;
 
 /*
  * Prototype Declare
  */
-extern Node* qs_init_root_node(
-  Doc* doc);
+extern Node *qs_init_root_node(
+  Doc *doc);
 
 extern void qs_add_child_node(
-  Doc* doc, 
-  Node*);
+  Doc *doc, 
+  Node *);
 
 extern void qs_free_node(
-  Doc* doc,
-  Node*);
+  Doc *doc,
+  Node *);
 
-extern Node* qs_get_root(
-  Doc* doc) ;
+extern Node *qs_get_root(
+  Doc *doc);
 
-extern Node* qs_parse_string(
-  Doc*        doc, 
-  const char* ss, 
+extern Node *qs_parse_string(
+  Doc         *doc, 
+  const char  *ss, 
   int         len);
 
-extern char* qs_get_node_value(
-  Doc*  doc,
-  Node* node);
+extern char *qs_get_node_value(
+  Doc         *doc,
+  Node        *node);
 
-extern char* qs_get_node_name(
-  Doc*  doc, 
-  Node* node);
+extern char *qs_get_node_name(
+  Doc         *doc, 
+  Node        *node);
 
-extern int qs_get_node_size(Doc* doc, Node* node) ;
+extern int qs_get_node_size(Doc *doc, Node *node) ;
 extern Node *qs_get_child_node(Doc *doc, Node *node) ;
 extern Node *qs_get_next_node(Doc *doc, Node *node) ;
 
 extern void qs_dump_node_to_file(
-  FILE *fp, 
-  Doc *doc, 
-  Node *node, 
-  int indent);
+  FILE  *fp, 
+  Doc   *doc, 
+  Node  *node, 
+  int   indent);
 
-Attr* qs_get_attr(Doc* doc, Node* node) ;
-Attr* qs_get_next_attr(Doc* doc, Attr* attr) ;
-char* qs_get_attr_name(Doc* doc, Attr* attr) ;
-char* qs_get_attr_value(Doc* doc, Attr* attr) ;
+Attr *qs_get_attr(Doc *doc, Node *node);
+Attr *qs_get_next_attr(Doc *doc, Attr *attr);
+char *qs_get_attr_name(Doc *doc, Attr *attr);
+char *qs_get_attr_value(Doc *doc, Attr *attr);
+
 #endif

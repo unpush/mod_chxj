@@ -19,14 +19,14 @@
 
 #include "qs_parse_string.h"
 
-extern Attr* qs_parse_attr(
-  Doc*          doc,
-  const char*   s,
+extern Attr *qs_parse_attr(
+  Doc           *doc,
+  const char    *s,
   int           len,
-  int*          newpos);
+  int           *newpos);
 
-extern Attr* qs_new_attr(
-  Doc*          doc);
+extern Attr *qs_new_attr(
+  Doc           *doc);
 
 #endif
 /*
