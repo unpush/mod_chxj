@@ -705,6 +705,7 @@ cmp_as_eucjp_bin(
   return src_value - target_value;
 }
 
+
 static int
 cmp_as_utf8_bin(
   const char *src,
