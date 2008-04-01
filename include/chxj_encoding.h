@@ -24,19 +24,19 @@
 /*----------------------------------------------------------------------------*/
 /* Prototype                                                                  */
 /*----------------------------------------------------------------------------*/
-extern char* chxj_encoding(
-  request_rec*       r, 
-  const char*        src, 
-  apr_size_t*        len);
+extern char *chxj_encoding(
+  request_rec *r, 
+  const char  *src, 
+  apr_size_t  *len);
 
-extern char* chxj_rencoding(
-  request_rec*       r, 
-  const char*        src, 
-  apr_size_t*        len);
+extern char *chxj_rencoding(
+  request_rec *r, 
+  const char  *src, 
+  apr_size_t  *len);
 
-extern char* chxj_encoding_parameter(
-  request_rec*       r, 
-  const char*        value);
+extern char *chxj_encoding_parameter(
+  request_rec *r, 
+  const char *value);
 
 extern char *
 chxj_encoding_by_spec(

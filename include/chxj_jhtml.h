@@ -28,28 +28,28 @@
 typedef struct jhtml_t jhtml_t;
 
 struct jhtml_t {
-    Doc*                doc;
-    char*               out;
-    int                 out_len;
-    int                 pre_flag;
-    int                 textarea_flag;
+    Doc *doc;
+    char *out;
+    int  out_len;
+    int  pre_flag;
+    int  textarea_flag;
 
-    device_table*       spec;
-    mod_chxj_config*    conf;
-    chxjconvrule_entry* entryp;
-    cookie_t*               cookie;
+    device_table *spec;
+    mod_chxj_config *conf;
+    chxjconvrule_entry *entryp;
+    cookie_t *cookie;
 };
 
 /*----------------------------------------------------------------------------*/
 /* Prototype                                                                  */
 /*----------------------------------------------------------------------------*/
-extern char* chxj_convert_jhtml(
-  request_rec*              r,
-  device_table*             spec,
-  const char*               src,
-  apr_size_t                srclen,
-  apr_size_t*               dstlen,
-  chxjconvrule_entry*       entryp,
-  cookie_t*                 cookie);
+extern char *chxj_convert_jhtml(
+  request_rec        *r,
+  device_table       *spec,
+  const char         *src,
+  apr_size_t         srclen,
+  apr_size_t         *dstlen,
+  chxjconvrule_entry *entryp,
+  cookie_t           *cookie);
 
 #endif

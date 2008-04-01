@@ -21,8 +21,14 @@
 #include "chxj_qr_code.h"
 #include "chxj_cookie.h"
 #include "chxj_encoding.h"
+#include "chxj_buffered_write.h"
+
+#define BUFFERED 1
 
 #define GET_CHTML10(X) ((chtml10_t *)(X))
+#define W_L(X)          do { chtml10->out = BUFFERED_WRITE_LITERAL(chtml10->out, &doc->buf, (X)); } while(0)
+#define W_V(X)          do { chtml10->out = (X) ? BUFFERED_WRITE_VALUE(chtml10->out, &doc->buf, (X))  \
+                                                : BUFFERED_WRITE_LITERAL(chtml10->out, &doc->buf, ""); } while(0)
 
 static char *s_chtml10_start_html_tag     (void *pdoc, Node *node);
 static char *s_chtml10_end_html_tag       (void *pdoc, Node *node);
