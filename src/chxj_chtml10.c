@@ -370,7 +370,8 @@ chxj_convert_chtml10(
   *dstlen = srclen;
   dst = chxj_qr_code_blob_handler(r, src, (size_t*)dstlen);
   if (dst) {
-    DBG(r,"i found qrcode xml");
+    DBG(r, "i found qrcode xml");
+    DBG(r, "end chxj_convert_chtml10()");
     return dst;
   }
   DBG(r,"not found qrcode xml");
@@ -405,17 +406,29 @@ chxj_convert_chtml10(
 
   qs_parse_string(&doc,ss, strlen(ss));
 
+  if (! chxj_buffered_write_init(r->pool, &doc.buf)) {
+    ERR(r, "failed: chxj_buffered_write_init()");
+    DBG(r, "end chxj_convert_chtml10()");
+    return apr_pstrdup(r->pool, ss);
+  }
+
   /*--------------------------------------------------------------------------*/
   /* It converts it from CHTML to CHTML.                                      */
   /*--------------------------------------------------------------------------*/
   chxj_node_convert(spec,r,(void *)&chtml10, &doc, qs_get_root(&doc), 0);
-  dst = chtml10.out;
 
+  /*--------------------------------------------------------------------------*/
+  /* flush buffer AND terminate.                                              */
+  /*--------------------------------------------------------------------------*/
+  chtml10.out = chxj_buffered_write_flush(chtml10.out, &doc.buf);
+  dst = apr_pstrdup(r->pool, chtml10.out);
+  chxj_buffered_write_terminate(&doc.buf);
 
   qs_all_free(&doc,QX_LOGMARK);
-
-  if (!dst)
+  if (!dst) {
+    DBG(r, "end chxj_convert_chtml10()");
     return apr_pstrdup(r->pool,ss);
+  }
 
   if (strlen(dst) == 0) {
     dst = apr_psprintf(r->pool, "\n");

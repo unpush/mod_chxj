@@ -155,6 +155,7 @@ typedef struct _doc {
   apr_allocator_t* allocator;
   apr_pool_t*      pool;
 
+  buf_object buf;
 #ifndef __NON_MOD_CHXJ__
   request_rec* r;
 #endif
