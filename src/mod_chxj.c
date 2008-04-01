@@ -223,8 +223,8 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len, device_table *s
   DBG(r,"content type is %s", r->content_type);
 
 
-  if (! STRNCASEEQ('t','T', "text/html", r->content_type, sizeof("text/html"))
-  &&  ! STRNCASEEQ('a','A', "application/xhtml+xml", r->content_type, sizeof("application/xhtml+xml"))) {
+  if (! STRNCASEEQ('t','T', "text/html", r->content_type, sizeof("text/html")-1)
+  &&  ! STRNCASEEQ('a','A', "application/xhtml+xml", r->content_type, sizeof("application/xhtml+xml")-1)) {
     DBG(r,"no convert. content type is %s", r->content_type);
     DBG(r,"end of chxj_exchange()");
     return (char*)*src;
@@ -736,8 +736,9 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
 
         if (spec->html_spec_type != CHXJ_SPEC_UNKNOWN 
             && r->content_type 
-            && (STRNCASEEQ('a','A',"application/xhtml+xml", r->content_type, sizeof("application/xhtml+xml"))
-            ||  STRNCASEEQ('t','T',"text/html", r->content_type, sizeof("text/html")))) {
+            && (STRNCASEEQ('a','A',"application/xhtml+xml", r->content_type, sizeof("application/xhtml+xml")-1)
+            ||  STRNCASEEQ('t','T',"text/html", r->content_type, sizeof("text/html")-1))) {
+          DBG(r, "detect exchange target:[%s]", r->content_type);
 
           if (ctx->len) {
             char* tmp;
