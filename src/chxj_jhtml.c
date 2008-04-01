@@ -20,6 +20,7 @@
 #include "chxj_img_conv.h"
 #include "chxj_qr_code.h"
 #include "chxj_encoding.h"
+#include "chxj_url_encode.h"
 
 
 #define GET_JHTML(X) ((jhtml_t*)(X))
@@ -1326,7 +1327,7 @@ s_jhtml_start_form_tag(void* pdoc, Node* node)
     char *vv = apr_psprintf(doc->buf.pool, "%s<input type='hidden' name='%s' value='%s'>",
                             jhtml->out, 
                             CHXJ_COOKIE_PARAM,
-                            jhtml->cookie->cookie_id);
+                            chxj_url_decode(r, jhtml->cookie->cookie_id));
     WJ_V(vv);
   }
 

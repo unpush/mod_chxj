@@ -1,7 +1,14 @@
+libapache2-mod-chxj (0.10.2-1) unstable; urgency=low
+
+  * Fixed bug. 
+    - cookie ID is not added when redirect.(reported by bayside)
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Tue,  1 Apr 2008 23:47:26 +0900
+
 libapache2-mod-chxj (0.10.1-1) unstable; urgency=low
 
   * Fixed bug.
-    - forgot to do -1 in the string length specification part though sizeof was used with STRNCASECMP. 
+    - forgot to do -1 in the string length specification part though sizeof was used with STRNCASEEQ. 
 
  -- Atsushi Konno <konn@users.sourceforge.jp>  Tue,  1 Apr 2008 19:08:27 +0900
 
