@@ -137,6 +137,8 @@ typedef enum chxj_parse_mode_t {
   PARSE_MODE_NO_PARSE,
 } ParseMode_t;
 
+#include "chxj_buffered_write.h"
+
 typedef struct _doc {
   Node          *now_parent_node;
   Node          *root_node;

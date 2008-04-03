@@ -241,6 +241,7 @@ chxj_convert_html(request_rec *r, const char** src, apr_size_t* len, device_tabl
   mod_chxj_config     *dconf; 
   chxjconvrule_entry  *entryp;
 
+  DBG(r,"start chxj_convert_html()");
   dst = apr_pstrdup(r->pool, (char*)*src);
 
   dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
@@ -265,9 +266,10 @@ chxj_convert_html(request_rec *r, const char** src, apr_size_t* len, device_tabl
   DBG(r,"content type is %s", r->content_type);
 
 
-  if (*(char*)r->content_type == 't' 
-  && strncmp(r->content_type, "text/html",   9) != 0) {
+  if (  !STRNCASEEQ('t','T',"text/html", r->content_type, sizeof("text/html") - 1)
+      &&  !STRNCASEEQ('a','A',"application/xhtml+xml", r->content_type, sizeof("application/xhtml+xml") - 1)) {
     DBG(r,"content type is %s", r->content_type);
+    DBG(r,"end chxj_convert_html()");
     return (char*)*src;
   }
 
@@ -299,7 +301,7 @@ chxj_convert_html(request_rec *r, const char** src, apr_size_t* len, device_tabl
 
   if (!r->header_only) {
     char *tmp = NULL;
-    if (strncasecmp(r->content_type, "text/", 5) == 0) {
+    if (STRNCASEEQ('t','T',"text/",r->content_type, sizeof("text/")-1) || STRNCASEEQ('a','A',"application/xhtml+xml", r->content_type, sizeof("application/xhtml+xml")-1)) {
       /* convert Emoji code to META Emoji */
       tmp = chxj_emoji_to_meta_emoji(r,
                                      entryp->encoding,
@@ -330,7 +332,7 @@ chxj_convert_html(request_rec *r, const char** src, apr_size_t* len, device_tabl
                                                                 len, 
                                                                 entryp, 
                                                                 cookie);
-      if (strncasecmp(r->content_type, "text/", 5) == 0) {
+      if (STRNCASEEQ('t','T',"text/",r->content_type, sizeof("text/")-1) || STRNCASEEQ('a','A',"application/xhtml+xml", r->content_type, sizeof("application/xhtml+xml")-1)) {
         /* convert SJIS to device charactor code */
         if (! IS_SJIS_STRING(GET_SPEC_CHARSET(spec))) {
           dst = chxj_encoding_by_spec(r, 
@@ -764,6 +766,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
   if (r->content_type) {
     if (! STRNCASEEQ('t','T',"text/html",r->content_type, sizeof("text/html")-1)
     &&  ! STRNCASEEQ('t','T',"text/xml", r->content_type, sizeof("text/xml")-1)
+    &&  ! STRNCASEEQ('a','A',"application/xhtml+xml", r->content_type, sizeof("application/xhtml+xml")-1)
     &&  ! (STRNCASEEQ('i','I',"image/",  r->content_type, sizeof("image/") -1)
           && ( STRCASEEQ('j','J',"jpeg",            &r->content_type[6])         /* JPEG */
             || STRCASEEQ('j','J',"jp2",             &r->content_type[6])         /* JPEG2000 */
@@ -810,9 +813,8 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
 
         if (spec->html_spec_type != CHXJ_SPEC_UNKNOWN
             && r->content_type
-            && *(char*)r->content_type == 't'
-            && strncmp(r->content_type, "text/html",   9) == 0) {
-
+            && (STRNCASEEQ('t','T',"text/html", r->content_type,sizeof("text/html")-1) 
+            ||  STRNCASEEQ('a','A',"application/xhtml+xml",r->content_type,sizeof("application/xhtml+xml")-1))) {
           if (ctx->len) {
             char* tmp;
 
@@ -846,9 +848,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
 
           }
         }
-        if (r->content_type
-            && *(char*)r->content_type == 't'
-            && strncmp(r->content_type, "text/xml",   8) == 0) {
+        if (r->content_type && STRNCASEEQ('t','T',"text/xml",r->content_type, sizeof("text/xml")-1)) {
           DBG(r, "text/XML");
 
           Doc       doc;
@@ -897,8 +897,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
 
         if (spec->html_spec_type != CHXJ_SPEC_UNKNOWN
             && r->content_type
-            && ( *r->content_type == 'i' || *r->content_type == 'I')
-            && strncasecmp("image/", r->content_type, 6) == 0
+            && STRNCASEEQ('i','I',"image/",r->content_type,sizeof("image/")-1)
             && ( STRCASEEQ('j','J',"jpeg",            &r->content_type[6])         /* JPEG */
               || STRCASEEQ('j','J',"jp2",             &r->content_type[6])         /* JPEG2000 */
               || STRCASEEQ('j','J',"jpeg2000",        &r->content_type[6])         /* JPEG2000 */
