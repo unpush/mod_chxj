@@ -23,7 +23,12 @@
 #include "chxj_qr_code.h"
 #include "chxj_encoding.h"
 
+#define BUFFERED 1
+
 #define GET_CHTML20(X) ((chtml20_t*)(X))
+#define W_L(X)  do { chtml20->out = BUFFERED_WRITE_LITERAL(chtml20->out, &doc->buf, (X)); } while(0)
+#define W_V(X)  do { chtml20->out = (X) ? BUFFERED_WRITE_VALUE(chtml20->out, &doc->buf, (X))  \
+                                        : BUFFERED_WRITE_LITERAL(chtml20->out, &doc->buf, ""); } while(0)
 
 static char *s_chtml20_start_html_tag    (void *pdoc, Node *node);
 static char *s_chtml20_end_html_tag      (void *pdoc, Node *node);
@@ -405,19 +410,32 @@ chxj_convert_chtml20(
 
   qs_parse_string(&doc,ss, strlen(ss));
 
+  if (! chxj_buffered_write_init(r->pool, &doc.buf)) {
+    ERR(r, "failed: chxj_buffered_write_init()");
+    DBG(r, "end chxj_convert_chtml20()");
+    return apr_pstrdup(r->pool, ss);
+  }
+
   /*--------------------------------------------------------------------------*/
   /* It converts it from CHTML to CHTML.                                      */
   /*--------------------------------------------------------------------------*/
   chxj_node_convert(spec,r,(void*)&chtml20, &doc, qs_get_root(&doc), 0);
-  dst = chtml20.out;
+  /*--------------------------------------------------------------------------*/
+  /* flush buffer AND terminate.                                              */
+  /*--------------------------------------------------------------------------*/
+  chtml20.out = chxj_buffered_write_flush(chtml20.out, &doc.buf);
+  dst = apr_pstrdup(r->pool, chtml20.out);
+  chxj_buffered_write_terminate(&doc.buf);
 
   qs_all_free(&doc,QX_LOGMARK);
 
-  if (dst == NULL) 
+  if (dst == NULL) {
     return apr_pstrdup(r->pool,ss);
+  }
 
-  if (strlen(dst) == 0)
+  if (strlen(dst) == 0) {
     dst = apr_psprintf(r->pool, "\n");
+  }
 
   *dstlen = strlen(dst);
 
@@ -476,7 +494,11 @@ s_chtml20_start_html_tag(void *pdoc, Node *UNUSED(node))
   /*--------------------------------------------------------------------------*/
   /* start HTML tag                                                           */
   /*--------------------------------------------------------------------------*/
+#if BUFFERED
+  W_L("<html>\n");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<html>\n", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -501,7 +523,11 @@ s_chtml20_end_html_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("</html>\n");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</html>\n", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -532,7 +558,11 @@ s_chtml20_start_meta_tag(void *pdoc, Node *node)
   content_type_flag = 0;
   refresh_flag      = 0;
 
+#if BUFFERED
+  W_L("<meta");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<meta", NULL);
+#endif
 
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -554,17 +584,25 @@ s_chtml20_start_meta_tag(void *pdoc, Node *node)
         /*----------------------------------------------------------------------*/
         /* CHTML 2.0                                                            */
         /*----------------------------------------------------------------------*/
+#if BUFFERED
+        W_L(" http-equiv=\"");
+        W_V(value);
+        W_L("\"");
+#else
         chtml20->out = apr_pstrcat(r->pool, 
                         chtml20->out, 
                         " http-equiv=\"", 
                         value,
                         "\"",
                         NULL);
+#endif
   
-        if (STRCASEEQ('c','C',"content-type",value))
+        if (STRCASEEQ('c','C',"content-type",value)) {
           content_type_flag = 1;
-        if (STRCASEEQ('r','R',"refresh", value))
+        }
+        if (STRCASEEQ('r','R',"refresh", value)) {
           refresh_flag = 1;
+        }
       }
       break;
 
@@ -573,6 +611,13 @@ s_chtml20_start_meta_tag(void *pdoc, Node *node)
       if (strcasecmp(name, "content") == 0) {
         if (content_type_flag) {
           if (IS_SJIS_STRING(GET_SPEC_CHARSET(chtml20->spec))) {
+#if BUFFERED
+            W_L(" ");
+            W_V(name);
+            W_L("=\"");
+            W_L("text/html; charset=Windows-31J");
+            W_L("\"");
+#else
             chtml20->out = apr_pstrcat(r->pool,
                                        chtml20->out,
                                        " ",
@@ -581,8 +626,15 @@ s_chtml20_start_meta_tag(void *pdoc, Node *node)
                                        "text/html; charset=Windows-31J",
                                        "\"",
                                        NULL);
+#endif
           }
           else {
+#if BUFFERED
+            W_L(" ");
+            W_V(name);
+            W_L("=\"");
+            W_L("text/html; charset=UTF-8");
+#else
             chtml20->out = apr_pstrcat(r->pool,
                                        chtml20->out,
                                        " ",
@@ -591,6 +643,7 @@ s_chtml20_start_meta_tag(void *pdoc, Node *node)
                                        "text/html; charset=UTF-8",
                                        "\"",
                                        NULL);
+#endif
           }
         }
         else if (refresh_flag) {
@@ -605,6 +658,15 @@ s_chtml20_start_meta_tag(void *pdoc, Node *node)
             url++;
             url = chxj_encoding_parameter(r, url);
             url = chxj_add_cookie_parameter(r, url, chtml20->cookie);
+#if BUFFERED
+            W_L(" ");
+            W_V(name);
+            W_L("=\"");
+            W_V(sec);
+            W_L(";");
+            W_V(url);
+            W_L("\"");
+#else
             chtml20->out = apr_pstrcat(r->pool,
                             chtml20->out,
                             " ",
@@ -615,9 +677,16 @@ s_chtml20_start_meta_tag(void *pdoc, Node *node)
                             url,
                             "\"",
                             NULL);
+#endif
           }
         }
         else {
+#if BUFFERED
+          W_L(" ");
+          W_V(name);
+          W_L("=\"");
+          W_V(value);
+#else
           chtml20->out = apr_pstrcat(r->pool,
                           chtml20->out,
                           " ",
@@ -626,6 +695,7 @@ s_chtml20_start_meta_tag(void *pdoc, Node *node)
                           value,
                           "\"",
                           NULL);
+#endif
         }
       }
       break;
@@ -635,7 +705,11 @@ s_chtml20_start_meta_tag(void *pdoc, Node *node)
     }
   }
 
+#if BUFFERED
+  W_L(">");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, ">", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -679,7 +753,11 @@ s_chtml20_start_head_tag(void *pdoc, Node *UNUSED(node))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("<head>\r\n");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<head>\r\n", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -704,7 +782,11 @@ s_chtml20_end_head_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("</head>\r\n");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</head>\r\n", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -729,7 +811,11 @@ s_chtml20_start_title_tag(void *pdoc, Node *UNUSED(node))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("<title>");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<title>", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -754,7 +840,11 @@ s_chtml20_end_title_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("</title>\r\n");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</title>\r\n", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -780,7 +870,11 @@ s_chtml20_start_base_tag(void *pdoc, Node *node)
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("<base");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<base", NULL);
+#endif
 
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -795,18 +889,27 @@ s_chtml20_start_base_tag(void *pdoc, Node *node)
     name  = qs_get_attr_name(doc,attr);
     value = qs_get_attr_value(doc,attr);
 
-    if ((*name == 'h' || *name == 'H') 
-    && strcasecmp(name, "href") == 0) {
+    if (STRCASEEQ('h','H',"href",name)) {
+#if BUFFERED
+      W_L(" href=\"");
+      W_V(value);
+      W_L("\"");
+#else
       chtml20->out = apr_pstrcat(r->pool, 
                       chtml20->out, 
                       " href=\"", 
                       value, 
                       "\"", 
                       NULL);
+#endif
     }
   }
 
+#if BUFFERED
+  W_L(" >\r\n");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, " >\r\n", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -855,7 +958,11 @@ s_chtml20_start_body_tag(void *pdoc, Node *node)
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("<body");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<body", NULL);
+#endif
 
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -876,12 +983,18 @@ s_chtml20_start_body_tag(void *pdoc, Node *node)
         /*----------------------------------------------------------------------*/
         /* CHTML 2.0                                                            */
         /*----------------------------------------------------------------------*/
+#if BUFFERED
+        W_L(" bgcolor=\"");
+        W_V(value);
+        W_L("\"");
+#else
         chtml20->out = apr_pstrcat(r->pool, 
                         chtml20->out, 
                         " bgcolor=\"", 
                         value, 
                         "\"", 
                         NULL);
+#endif
       }
       break;
 
@@ -891,12 +1004,18 @@ s_chtml20_start_body_tag(void *pdoc, Node *node)
         /*----------------------------------------------------------------------*/
         /* CHTML 2.0                                                            */
         /*----------------------------------------------------------------------*/
+#if BUFFERED
+        W_L(" text=\"");
+        W_V(value);
+        W_L("\"");
+#else
         chtml20->out = apr_pstrcat(r->pool, 
                         chtml20->out, 
                         " text=\"", 
                         value, 
                         "\"", 
                         NULL);
+#endif
       }
       break;
 
@@ -906,12 +1025,18 @@ s_chtml20_start_body_tag(void *pdoc, Node *node)
         /*----------------------------------------------------------------------*/
         /* CHTML 2.0                                                            */
         /*----------------------------------------------------------------------*/
+#if BUFFERED
+        W_L(" link=\"");
+        W_V(value);
+        W_L("\"");
+#else
         chtml20->out = apr_pstrcat(r->pool, 
                         chtml20->out, 
                         " link=\"", 
                         value, 
                         "\"", 
                         NULL);
+#endif
       }
       break;
 
@@ -940,7 +1065,11 @@ s_chtml20_start_body_tag(void *pdoc, Node *node)
     }
   }
 
+#if BUFFERED
+  W_L(">\r\n");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, ">\r\n", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -965,7 +1094,11 @@ s_chtml20_end_body_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("</body>\r\n");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</body>\r\n", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -991,7 +1124,11 @@ s_chtml20_start_a_tag(void *pdoc, Node *node)
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("<a");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<a", NULL);
+#endif
 
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -1013,12 +1150,18 @@ s_chtml20_start_a_tag(void *pdoc, Node *node)
         /*--------------------------------------------------------------------*/
         /* CHTML1.0                                                           */
         /*--------------------------------------------------------------------*/
+#if BUFFERED
+        W_L(" name=\"");
+        W_V(value);
+        W_L("\"");
+#else
         chtml20->out = apr_pstrcat(r->pool, 
                         chtml20->out, 
                         " name=\"", 
                         value, 
                         "\"", 
                         NULL);
+#endif
       }
       break;
 
@@ -1030,13 +1173,18 @@ s_chtml20_start_a_tag(void *pdoc, Node *node)
         /*--------------------------------------------------------------------*/
         value = chxj_encoding_parameter(r, value);
         value = chxj_add_cookie_parameter(r, value, chtml20->cookie);
-
+#if BUFFERED
+        W_L(" href=\"");
+        W_V(value);
+        W_L("\"");
+#else
         chtml20->out = apr_pstrcat(r->pool, 
                         chtml20->out, 
                         " href=\"", 
                         value, 
                         "\"", 
                         NULL);
+#endif
       }
       break;
 
@@ -1046,12 +1194,18 @@ s_chtml20_start_a_tag(void *pdoc, Node *node)
         /*--------------------------------------------------------------------*/
         /* CHTML1.0                                                           */
         /*--------------------------------------------------------------------*/
+#if BUFFERED
+        W_L(" accesskey=\"");
+        W_V(value);
+        W_L("\"");
+#else
         chtml20->out = apr_pstrcat(r->pool, 
                         chtml20->out, 
                         " accesskey=\"", 
                         value, 
                         "\"", 
                         NULL);
+#endif
       }
       break;
 
@@ -1061,12 +1215,18 @@ s_chtml20_start_a_tag(void *pdoc, Node *node)
         /*--------------------------------------------------------------------*/
         /* CHTML 2.0                                                          */
         /*--------------------------------------------------------------------*/
+#if BUFFERED
+        W_L(" cti=\"");
+        W_V(value);
+        W_L("\"");
+#else
         chtml20->out = apr_pstrcat(r->pool, 
                         chtml20->out, 
                         " cti=\"", 
                         value, 
                         "\"", 
                         NULL);
+#endif
       }
       break;
 
@@ -1153,7 +1313,11 @@ s_chtml20_start_a_tag(void *pdoc, Node *node)
     }
   }
 
+#if BUFFERED
+  W_L(">");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, ">", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -1178,7 +1342,11 @@ s_chtml20_end_a_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("</a>");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</a>", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -1203,7 +1371,11 @@ s_chtml20_start_br_tag(void *pdoc, Node *UNUSED(node))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("<br>\r\n");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<br>\r\n", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -1274,7 +1446,11 @@ s_chtml20_end_tr_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("<br>\r\n");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<br>\r\n", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -1301,8 +1477,11 @@ s_chtml20_start_font_tag(void *pdoc, Node *node)
   r       = doc->r;
 
 
+#if BUFFERED
+  W_L("<font");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<font", NULL);
-
+#endif
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
   /*--------------------------------------------------------------------------*/
@@ -1320,12 +1499,18 @@ s_chtml20_start_font_tag(void *pdoc, Node *node)
     case 'c':
     case 'C':
       if (strcasecmp(name, "color") == 0) {
+#if BUFFERED
+        W_L(" color=\"");
+        W_V(value);
+        W_L("\"");
+#else
         chtml20->out = apr_pstrcat(r->pool, 
                         chtml20->out, 
                         " color=\"", 
                         value, 
                         "\"", 
                         NULL);
+#endif
       }
       break;
 
@@ -1344,7 +1529,11 @@ s_chtml20_start_font_tag(void *pdoc, Node *node)
     }
   }
 
+#if BUFFERED
+  W_L(">");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, ">", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -1369,7 +1558,11 @@ s_chtml20_end_font_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("</font>");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</font>", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -1396,7 +1589,11 @@ s_chtml20_start_form_tag(void *pdoc, Node *node)
   r       = doc->r;
 
 
+#if BUFFERED
+  W_L("<form");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<form", NULL);
+#endif
 
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -1421,12 +1618,18 @@ s_chtml20_start_form_tag(void *pdoc, Node *node)
         value = chxj_encoding_parameter(r, value);
         value = chxj_add_cookie_parameter(r, value, chtml20->cookie);
 
+#if BUFFERED
+        W_L(" action=\"");
+        W_V(value);
+        W_L("\"");
+#else
         chtml20->out = apr_pstrcat(r->pool, 
                         chtml20->out, 
                         " action=\"",
                         value,
                         "\"", 
                         NULL);
+#endif
       }
       break;
 
@@ -1436,12 +1639,18 @@ s_chtml20_start_form_tag(void *pdoc, Node *node)
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
+#if BUFFERED
+        W_L(" method=\"");
+        W_V(value);
+        W_L("\"");
+#else
         chtml20->out = apr_pstrcat(r->pool, 
                         chtml20->out, 
                         " method=\"",
                         value,
                         "\"", 
                         NULL);
+#endif
       }
       break;
 
@@ -1460,7 +1669,11 @@ s_chtml20_start_form_tag(void *pdoc, Node *node)
     }
   }
 
+#if BUFFERED
+  W_L(">");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, ">", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -1485,7 +1698,11 @@ s_chtml20_end_form_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("</form>");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</form>", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -1518,8 +1735,11 @@ s_chtml20_start_input_tag(void *pdoc, Node *node)
   doc     = chtml20->doc;
   r       = doc->r;
 
-
+#if BUFFERED
+  W_L("<input");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<input", NULL);
+#endif
 
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -1534,54 +1754,96 @@ s_chtml20_start_input_tag(void *pdoc, Node *node)
   accesskey  = qs_get_accesskey_attr(doc, node, r);
   size       = qs_get_size_attr(doc, node, r);
 
-  if (type)
+  if (type) {
+#if BUFFERED
+    W_L(" type=\"");
+    W_V(type);
+    W_L("\" ");
+#else
     chtml20->out = apr_pstrcat(r->pool,
                     chtml20->out, 
                     " type=\"", 
                     type, 
                     "\" ", 
                     NULL);
+#endif
+  }
 
-  if (size) 
+  if (size) {
+#if BUFFERED
+    W_L(" size=\"");
+    W_V(size);
+    W_L("\" ");
+#else
     chtml20->out = apr_pstrcat(r->pool, 
                     chtml20->out, 
                     " size=\"", 
                     size, 
                     "\" ", 
                     NULL);
+#endif
+  }
 
-  if (name)
+  if (name) {
+#if BUFFERED
+    W_L(" name=\"");
+    W_V(name);
+    W_L("\" ");
+#else
     chtml20->out = apr_pstrcat(r->pool, 
                     chtml20->out, 
                     " name=\"", 
                     name, 
                     "\" ", 
                     NULL);
+#endif
+  }
 
-  if (value)
+  if (value) {
+#if BUFFERED
+    W_L(" value=\"");
+    W_V(value);
+    W_L("\" ");
+#else
     chtml20->out = apr_pstrcat(r->pool, 
                     chtml20->out, 
                     " value=\"", 
                     value, 
                     "\" ", 
                     NULL);
+#endif
+  }
 
-  if (accesskey)
+  if (accesskey) {
+#if BUFFERED
+    W_L(" accesskey=\"");
+    W_V(accesskey);
+    W_L("\" ");
+#else
     chtml20->out = apr_pstrcat(r->pool, 
                     chtml20->out, 
                     " accesskey=\"", 
                     accesskey, "\" ", 
                     NULL);
+#endif
+  }
 
-  if (istyle)
+  if (istyle) {
     /*------------------------------------------------------------------------*/
     /* CHTML 2.0                                                              */
     /*------------------------------------------------------------------------*/
+#if BUFFERED
+    W_L(" istyle=\"");
+    W_V(istyle);
+    W_L("\" ");
+#else
     chtml20->out = apr_pstrcat(r->pool, 
                       chtml20->out, 
                       " istyle=\"", 
                       istyle, "\" ", 
                       NULL);
+#endif
+  }
 
   /*--------------------------------------------------------------------------*/
   /* The figure is default for the password.                                  */
@@ -1589,29 +1851,54 @@ s_chtml20_start_input_tag(void *pdoc, Node *node)
   if (max_length) {
     if (chxj_chk_numeric(max_length) != 0)
       max_length = apr_psprintf(r->pool, "0");
-    if (istyle != NULL && strcasecmp(istyle, "1") == 0)
+    if (istyle != NULL && istyle[0] == '1') {
+#if BUFFERED
+      char *vv = apr_psprintf(doc->buf.pool, 
+                              " maxlength=\"%d\"",
+                              chxj_atoi(max_length)*2);
+      W_V(vv);
+#else
       chtml20->out = apr_pstrcat(r->pool, 
                       chtml20->out, 
                       apr_psprintf(r->pool, 
                                    " maxlength=\"%d\"",
                                    chxj_atoi(max_length)*2), 
                                    NULL);
-    else
+#endif
+    }
+    else {
+#if BUFFERED
+      char *vv = apr_psprintf(doc->buf.pool, 
+                              " maxlength=\"%d\"",
+                              chxj_atoi(max_length));
+      W_V(vv);
+#else
       chtml20->out = apr_pstrcat(r->pool, 
                                  chtml20->out, 
                                  apr_psprintf(r->pool, 
                                               " maxlength=\"%d\"",
                                               chxj_atoi(max_length)),
                                               NULL);
+#endif
+    }
   }
 
-  if (checked)
+  if (checked) {
+#if BUFFERED
+    W_L(" checked ");
+#else
     chtml20->out = apr_pstrcat(r->pool, 
                                chtml20->out,
                                " checked ",
                                NULL);
+#endif
+  }
 
+#if BUFFERED
+  W_L(" >");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, " >", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -1659,7 +1946,11 @@ s_chtml20_start_center_tag(void *pdoc, Node *UNUSED(node))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("<center>");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<center>", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -1684,7 +1975,11 @@ s_chtml20_end_center_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("</center>");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</center>", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -1709,7 +2004,11 @@ s_chtml20_start_ul_tag(void *pdoc, Node *UNUSED(node))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("<ul>");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<ul>", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -1734,7 +2033,11 @@ s_chtml20_end_ul_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("</ul>");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</ul>", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -1759,7 +2062,11 @@ s_chtml20_start_ol_tag(void *pdoc, Node *UNUSED(node))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("<ol>");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<ol>", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -1784,7 +2091,11 @@ s_chtml20_end_ol_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("</ol>");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</ol>", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -1809,7 +2120,11 @@ s_chtml20_start_li_tag(void *pdoc, Node *UNUSED(node))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("<li>");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<li>", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -1834,7 +2149,11 @@ s_chtml20_end_li_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("</li>");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</li>", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -1861,8 +2180,11 @@ s_chtml20_start_hr_tag(void *pdoc, Node *node)
   r       = doc->r;
 
 
+#if BUFFERED
+  W_L("<hr ");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<hr ", NULL);
- 
+#endif
   for (attr = qs_get_attr(doc,node);
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
@@ -1880,12 +2202,18 @@ s_chtml20_start_hr_tag(void *pdoc, Node *node)
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
+#if BUFFERED
+        W_L(" align=\"");
+        W_V(value);
+        W_L("\" ");
+#else
         chtml20->out = apr_pstrcat(r->pool,
                                    chtml20->out, 
                                    " align=\"", 
                                    value, 
                                    "\" ", 
                                    NULL);
+#endif
       }
       break;
 
@@ -1895,12 +2223,18 @@ s_chtml20_start_hr_tag(void *pdoc, Node *node)
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
+#if BUFFERED
+        W_L(" size=\"");
+        W_V(value);
+        W_L("\" ");
+#else
         chtml20->out = apr_pstrcat(r->pool,
                                    chtml20->out, 
                                    " size=\"", 
                                    value, 
                                    "\" ", 
                                    NULL);
+#endif
       }
       break;
 
@@ -1910,12 +2244,18 @@ s_chtml20_start_hr_tag(void *pdoc, Node *node)
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
+#if BUFFERED
+        W_L(" width=\"");
+        W_V(value);
+        W_L("\" ");
+#else
         chtml20->out = apr_pstrcat(r->pool,
                                    chtml20->out, 
                                    " width=\"", 
                                    value, 
                                    "\" ", 
                                    NULL);
+#endif
       }
       break;
 
@@ -1925,10 +2265,14 @@ s_chtml20_start_hr_tag(void *pdoc, Node *node)
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
+#if BUFFERED
+        W_L(" noshade ");
+#else
         chtml20->out = apr_pstrcat(r->pool,
                                    chtml20->out, 
                                    " noshade ", 
                                    NULL);
+#endif
       }
       break;
 
@@ -1946,9 +2290,11 @@ s_chtml20_start_hr_tag(void *pdoc, Node *node)
       break;
     }
   }
-
+#if BUFFERED
+  W_L(" >");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, " >", NULL);
-
+#endif
   return chtml20->out;
 }
 
@@ -2003,9 +2349,11 @@ s_chtml20_start_img_tag(void *pdoc, Node *node)
   spec = chtml20->spec;
 #endif
 
+#if BUFFERED
+  W_L("<img");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<img", NULL);
- 
-
+#endif
   /*-------------------------------------------------------------------------*/
   /* Get Attributes                                                          */
   /*-------------------------------------------------------------------------*/
@@ -2036,12 +2384,18 @@ s_chtml20_start_img_tag(void *pdoc, Node *node)
                                (strchr(value, '?')) ? '&' : '?',
                                CHXJ_COOKIE_NOUPDATE_PARAM);
         }
+#if BUFFERED
+        W_L(" src=\"");
+        W_V(value);
+        W_L("\"");
+#else
         chtml20->out = apr_pstrcat(r->pool, 
                                    chtml20->out,
                                    " src=\"",
                                    value,
                                    "\"", 
                                    NULL);
+#endif
 #else
         value = chxj_img_conv(r, spec, value);
         value = chxj_encoding_parameter(r, value);
@@ -2053,16 +2407,20 @@ s_chtml20_start_img_tag(void *pdoc, Node *node)
                                (strchr(value, '?')) ? '&' : '?',
                                CHXJ_COOKIE_NOUPDATE_PARAM);
         }
-
+#if BUFFERED
+        W_L(" src=\"");
+        W_V(value);
+        W_L("\"");
+#else
         chtml20->out = apr_pstrcat(r->pool, 
                                    chtml20->out, " src=\"", 
                                    value, 
                                    NULL);
-
         chtml20->out = apr_pstrcat(r->pool, 
                                    chtml20->out,
                                    "\"",
                                    NULL);
+#endif
 #endif
       }
       break;
@@ -2073,24 +2431,36 @@ s_chtml20_start_img_tag(void *pdoc, Node *node)
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
+#if BUFFERED
+        W_L(" align=\"");
+        W_V(value);
+        W_L("\"");
+#else
         chtml20->out = apr_pstrcat(r->pool, 
                                    chtml20->out, 
                                    " align=\"",
                                    value,
                                    "\"", 
                                    NULL);
+#endif
       }
       else
       if (strcasecmp(name, "alt"   ) == 0) {
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
+#if BUFFERED
+        W_L(" alt=\"");
+        W_V(value);
+        W_L("\"");
+#else
         chtml20->out = apr_pstrcat(r->pool, 
                                    chtml20->out, 
                                    " alt=\"",
                                    value,
                                    "\"", 
                                    NULL);
+#endif
       }
       else
       if (strcasecmp(name, "align" ) == 0) {
@@ -2107,12 +2477,18 @@ s_chtml20_start_img_tag(void *pdoc, Node *node)
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
+#if BUFFERED
+        W_L(" width=\"");
+        W_V(value);
+        W_L("\"");
+#else
         chtml20->out = apr_pstrcat(r->pool, 
                                    chtml20->out, 
                                    " width=\"",
                                    value,
                                    "\"", 
                                    NULL);
+#endif
       }
       break;
 
@@ -2122,24 +2498,36 @@ s_chtml20_start_img_tag(void *pdoc, Node *node)
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
+#if BUFFERED
+        W_L(" height=\"");
+        W_V(value);
+        W_L("\"");
+#else
         chtml20->out = apr_pstrcat(r->pool, 
                                    chtml20->out, 
                                    " height=\"",
                                    value,
                                    "\"", 
                                    NULL);
+#endif
       }
       else
       if (strcasecmp(name, "hspace") == 0) {
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
+#if BUFFERED
+        W_L(" hspace=\"");
+        W_V(value);
+        W_L("\"");
+#else
         chtml20->out = apr_pstrcat(r->pool, 
                                    chtml20->out, 
                                    " hspace=\"",
                                    value,
                                    "\"", 
                                    NULL);
+#endif
       }
       break;
 
@@ -2149,12 +2537,18 @@ s_chtml20_start_img_tag(void *pdoc, Node *node)
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
+#if BUFFERED
+        W_L(" vspace=\"");
+        W_V(value);
+        W_L("\"");
+#else
         chtml20->out = apr_pstrcat(r->pool, 
                                    chtml20->out, 
                                    " vspace=\"",
                                    value,
                                    "\"", 
                                    NULL);
+#endif
       }
       break;
 
@@ -2162,8 +2556,11 @@ s_chtml20_start_img_tag(void *pdoc, Node *node)
       break;
     }
   }
-
+#if BUFFERED
+  W_L(">");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, ">", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -2215,8 +2612,11 @@ s_chtml20_start_select_tag(void *pdoc, Node *child)
   char *size      = NULL;
   char *name      = NULL;
 
+#if BUFFERED
+  W_L("<select");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<select", NULL);
-
+#endif
   for (attr = qs_get_attr(doc,child);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
@@ -2263,27 +2663,43 @@ s_chtml20_start_select_tag(void *pdoc, Node *child)
     }
   }
 
-  if (size)
+  if (size) {
+#if BUFFERED
+    W_L(" size=\"");
+    W_V(size);
+    W_L("\"");
+#else
     chtml20->out = apr_pstrcat(r->pool, 
                                chtml20->out, 
                                " size=\"",
                                size,
                                "\"", 
                                NULL);
+#endif
+  }
 
-  if (name)
+  if (name) {
+#if BUFFERED
+    W_L(" name=\"");
+    W_V(name);
+    W_L("\"");
+#else
     chtml20->out = apr_pstrcat(r->pool, 
                                chtml20->out, 
                                " name=\"",
                                name,
                                "\"", 
                                NULL);
-
+#endif
+  }
+#if BUFFERED
+  W_L(">\n");
+#else
   chtml20->out = apr_pstrcat(r->pool, 
                              chtml20->out, 
                              ">\n", 
                              NULL);
-
+#endif
   return chtml20->out;
 }
 
@@ -2307,7 +2723,11 @@ s_chtml20_end_select_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("</select>\n");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</select>\n", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -2333,11 +2753,14 @@ s_chtml20_start_option_tag(void *pdoc, Node *child)
   doc     = chtml20->doc;
   r       = doc->r;
 
-  char* selected   = NULL;
-  char* value      = NULL;
+  char *selected   = NULL;
+  char *value      = NULL;
 
+#if BUFFERED
+  W_L("<option");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<option", NULL);
-
+#endif
   for (attr = qs_get_attr(doc,child);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
@@ -2374,29 +2797,50 @@ s_chtml20_start_option_tag(void *pdoc, Node *child)
     }
   }
 
-  if (value)
+  if (value) {
+#if BUFFERED
+    W_L(" value=\"");
+    W_V(value);
+    W_L("\"");
+#else
     chtml20->out = apr_pstrcat(r->pool, 
                                chtml20->out, 
                                " value=\"",
                                value,
                                "\"", 
                                NULL);
-  else
+#endif
+  }
+  else {
+#if BUFFERED
+    W_L(" value=\"\"");
+#else
     chtml20->out = apr_pstrcat(r->pool, 
                                chtml20->out, 
                                " value=\"\"", 
                                NULL);
+#endif
+  }
 
-  if (selected)
+  if (selected) {
+#if BUFFERED
+    W_L(" selected ");
+#else
     chtml20->out = apr_pstrcat(r->pool, 
                                chtml20->out, 
                                " selected ", 
                                NULL);
+#endif
+  }
 
+#if BUFFERED
+  W_L(">");
+#else
   chtml20->out = apr_pstrcat(r->pool, 
                              chtml20->out, 
                              ">", 
                              NULL);
+#endif
 
   return chtml20->out;
 }
@@ -2448,10 +2892,13 @@ s_chtml20_start_div_tag(void *pdoc, Node *child)
   r       = doc->r;
 
 
-  char* align   = NULL;
+  char *align   = NULL;
 
+#if BUFFERED
+  W_L("<div");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<div", NULL);
-
+#endif
   for (attr = qs_get_attr(doc,child);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
@@ -2462,7 +2909,7 @@ s_chtml20_start_div_tag(void *pdoc, Node *child)
     nm  = qs_get_attr_name(doc,attr);
     val = qs_get_attr_value(doc,attr);
 
-    if ((*nm == 'a'||*nm == 'A') && strcasecmp(nm, "align") == 0) {
+    if (STRCASEEQ('a','A',"align", nm)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0 (W3C version 3.2)                                          */
       /*----------------------------------------------------------------------*/
@@ -2470,19 +2917,28 @@ s_chtml20_start_div_tag(void *pdoc, Node *child)
     }
   }
 
-  if (align)
+  if (align) {
+#if BUFFERED
+    W_L(" align=\"");
+    W_V(align);
+    W_L("\"");
+#else
     chtml20->out = apr_pstrcat(r->pool, 
                                chtml20->out, 
                                " align=\"", 
                                align, 
                                "\"", 
                                NULL);
-
+#endif
+  }
+#if BUFFERED
+  W_L(">");
+#else
   chtml20->out = apr_pstrcat(r->pool, 
                              chtml20->out, 
                              ">", 
                              NULL);
-
+#endif
   return chtml20->out;
 }
 
@@ -2506,7 +2962,11 @@ s_chtml20_end_div_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("</div>\n");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</div>\n", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -2531,7 +2991,11 @@ s_chtml20_start_h1_tag(void *pdoc, Node *UNUSED(node))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("<h1>\r\n");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<h1>\r\n", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -2556,7 +3020,11 @@ s_chtml20_end_h1_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("</h1>\r\n");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</h1>\r\n", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -2581,7 +3049,11 @@ s_chtml20_start_h2_tag(void *pdoc, Node *UNUSED(node))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("<h2>\r\n");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<h2>\r\n", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -2606,7 +3078,11 @@ s_chtml20_end_h2_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("</h2>\r\n");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</h2>\r\n", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -2631,7 +3107,11 @@ s_chtml20_start_h3_tag(void *pdoc, Node *UNUSED(node))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("<h3>\r\n");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<h3>\r\n", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -2656,7 +3136,11 @@ s_chtml20_end_h3_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("</h3>\r\n");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</h3>\r\n", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -2681,7 +3165,11 @@ s_chtml20_start_h4_tag(void *pdoc, Node *UNUSED(node))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("<h4>\r\n");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<h4>\r\n", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -2706,7 +3194,11 @@ s_chtml20_end_h4_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("</h4>\r\n");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</h4>\r\n", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -2731,7 +3223,11 @@ s_chtml20_start_h5_tag(void *pdoc, Node *UNUSED(node))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("<h5>\r\n");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<h5>\r\n", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -2756,7 +3252,11 @@ s_chtml20_end_h5_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("</h5>\r\n");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</h5>\r\n", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -2781,7 +3281,11 @@ s_chtml20_start_h6_tag(void *pdoc, Node *UNUSED(node))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("<h6>\r\n");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<h6>\r\n", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -2806,7 +3310,11 @@ s_chtml20_end_h6_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("</h6>\r\n");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</h6>\r\n", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -2832,7 +3340,11 @@ s_chtml20_start_pre_tag(void *pdoc, Node *UNUSED(node))
   r       = doc->r;
 
   chtml20->pre_flag++;
+#if BUFFERED
+  W_L("<pre>");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<pre>", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -2857,7 +3369,11 @@ s_chtml20_end_pre_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("</pre>");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</pre>", NULL);
+#endif
   chtml20->pre_flag--;
 
   return chtml20->out;
@@ -2883,7 +3399,11 @@ s_chtml20_start_p_tag(void *pdoc, Node *UNUSED(node))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("<p>");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<p>", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -2908,7 +3428,11 @@ s_chtml20_end_p_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("</p>");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</p>", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -2929,9 +3453,11 @@ s_chtml20_chxjif_tag(void *pdoc, Node *node)
   for (child = qs_get_child_node(doc, node);
        child;
        child = qs_get_next_node(doc, child)) {
-
+#if BUFFERED
+    W_V(child->otext);
+#else
     chtml20->out = apr_pstrcat(r->pool, chtml20->out, child->otext, NULL);
-
+#endif
     s_chtml20_chxjif_tag(pdoc, child);
   }
 
@@ -2960,7 +3486,11 @@ s_chtml20_start_textarea_tag(void *pdoc, Node *node)
   r       = doc->r;
 
   chtml20->textarea_flag++;
+#if BUFFERED
+  W_L("<textarea ");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<textarea ", NULL);
+#endif
 
   for (attr = qs_get_attr(doc,node);
        attr;
@@ -2976,36 +3506,54 @@ s_chtml20_start_textarea_tag(void *pdoc, Node *node)
     case 'n':
     case 'N':
       if (strcasecmp(name, "name") == 0) {
+#if BUFFERED
+        W_L(" name=\"");
+        W_V(value);
+        W_L("\"");
+#else
         chtml20->out = apr_pstrcat(r->pool, 
                                    chtml20->out, 
                                    " name=\"",
                                    value,
                                    "\"", 
                                    NULL);
+#endif
       }
       break;
 
     case 'r':
     case 'R':
       if (strcasecmp(name, "rows") == 0) {
+#if BUFFERED
+        W_L(" rows=\"");
+        W_V(value);
+        W_L("\"");
+#else
         chtml20->out = apr_pstrcat(r->pool, 
                                    chtml20->out, 
                                    " rows=\"",
                                    value,
                                    "\"", 
                                    NULL);
+#endif
       }
       break;
 
     case 'c':
     case 'C':
       if (strcasecmp(name, "cols") == 0) {
+#if BUFFERED
+        W_L(" cols=\"");
+        W_V(value);
+        W_L("\"");
+#else
         chtml20->out = apr_pstrcat(r->pool, 
                                    chtml20->out, 
                                    " cols=\"",
                                    value,
                                    "\"", 
                                    NULL);
+#endif
       }
       break;
 
@@ -3013,9 +3561,11 @@ s_chtml20_start_textarea_tag(void *pdoc, Node *node)
       break;
     }
   }
-
+#if BUFFERED
+  W_L(">\r\n");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, ">\r\n", NULL);
-
+#endif
   return chtml20->out;
 }
 
@@ -3039,8 +3589,12 @@ s_chtml20_end_textarea_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
-
+#if BUFFERED
+  W_L("</textarea>\r\n");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</textarea>\r\n", NULL);
+#endif
+
   chtml20->textarea_flag--;
 
   return chtml20->out;
@@ -3100,7 +3654,11 @@ s_chtml20_text_tag(void *pdoc, Node *child)
       tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
     }
   }
+#if BUFFERED
+  W_V(tdst);
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, tdst, NULL);
+#endif
 
   return chtml20->out;
 }
@@ -3125,7 +3683,11 @@ s_chtml20_start_dl_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("<dl>");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<dl>", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -3150,7 +3712,11 @@ s_chtml20_end_dl_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("</dl>\n");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</dl>\n", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -3175,7 +3741,11 @@ s_chtml20_start_dt_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("<dt>");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<dt>", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -3200,10 +3770,15 @@ s_chtml20_end_dt_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("\n");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "\n", NULL);
+#endif
 
   return chtml20->out;
 }
+
 
 /**
  * It is a handler who processes the DD tag.
@@ -3224,7 +3799,11 @@ s_chtml20_start_dd_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("<dd>");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<dd>", NULL);
+#endif
 
   return chtml20->out;
 }
@@ -3249,11 +3828,14 @@ s_chtml20_end_dd_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
+#if BUFFERED
+  W_L("\n");
+#else
   chtml20->out = apr_pstrcat(r->pool, chtml20->out, "\n", NULL);
+#endif
 
   return chtml20->out;
 }
-
 /*
  * vim:ts=2 et
  */
