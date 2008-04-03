@@ -22,8 +22,13 @@
 #include "chxj_img_conv.h"
 #include "chxj_qr_code.h"
 #include "chxj_encoding.h"
+#include "chxj_buffered_write.h"
 
+#define BUFFERED 1
 #define GET_CHTML30(X) ((chtml30_t *)(X))
+#define W_L(X)          do { chtml30->out = BUFFERED_WRITE_LITERAL(chtml30->out, &doc->buf, (X)); } while(0)
+#define W_V(X)          do { chtml30->out = (X) ? BUFFERED_WRITE_VALUE(chtml30->out, &doc->buf, (X))  \
+                                                : BUFFERED_WRITE_LITERAL(chtml30->out, &doc->buf, ""); } while(0)
 
 static char *s_chtml30_start_html_tag     (void *pdoc, Node *node);
 static char *s_chtml30_end_html_tag       (void *pdoc, Node *node);

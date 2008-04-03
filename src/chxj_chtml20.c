@@ -22,8 +22,7 @@
 #include "chxj_img_conv.h"
 #include "chxj_qr_code.h"
 #include "chxj_encoding.h"
-
-#define BUFFERED 1
+#include "chxj_buffered_write.h"
 
 #define GET_CHTML20(X) ((chtml20_t*)(X))
 #define W_L(X)  do { chtml20->out = BUFFERED_WRITE_LITERAL(chtml20->out, &doc->buf, (X)); } while(0)
@@ -494,11 +493,7 @@ s_chtml20_start_html_tag(void *pdoc, Node *UNUSED(node))
   /*--------------------------------------------------------------------------*/
   /* start HTML tag                                                           */
   /*--------------------------------------------------------------------------*/
-#if BUFFERED
   W_L("<html>\n");
-#else
-  chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<html>\n", NULL);
-#endif
 
   return chtml20->out;
 }
@@ -523,12 +518,7 @@ s_chtml20_end_html_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
-#if BUFFERED
   W_L("</html>\n");
-#else
-  chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</html>\n", NULL);
-#endif
-
   return chtml20->out;
 }
 
@@ -558,12 +548,7 @@ s_chtml20_start_meta_tag(void *pdoc, Node *node)
   content_type_flag = 0;
   refresh_flag      = 0;
 
-#if BUFFERED
   W_L("<meta");
-#else
-  chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<meta", NULL);
-#endif
-
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
   /*--------------------------------------------------------------------------*/
@@ -584,19 +569,9 @@ s_chtml20_start_meta_tag(void *pdoc, Node *node)
         /*----------------------------------------------------------------------*/
         /* CHTML 2.0                                                            */
         /*----------------------------------------------------------------------*/
-#if BUFFERED
         W_L(" http-equiv=\"");
         W_V(value);
         W_L("\"");
-#else
-        chtml20->out = apr_pstrcat(r->pool, 
-                        chtml20->out, 
-                        " http-equiv=\"", 
-                        value,
-                        "\"",
-                        NULL);
-#endif
-  
         if (STRCASEEQ('c','C',"content-type",value)) {
           content_type_flag = 1;
         }
@@ -611,39 +586,17 @@ s_chtml20_start_meta_tag(void *pdoc, Node *node)
       if (strcasecmp(name, "content") == 0) {
         if (content_type_flag) {
           if (IS_SJIS_STRING(GET_SPEC_CHARSET(chtml20->spec))) {
-#if BUFFERED
             W_L(" ");
             W_V(name);
             W_L("=\"");
             W_L("text/html; charset=Windows-31J");
             W_L("\"");
-#else
-            chtml20->out = apr_pstrcat(r->pool,
-                                       chtml20->out,
-                                       " ",
-                                       name,
-                                       "=\"",
-                                       "text/html; charset=Windows-31J",
-                                       "\"",
-                                       NULL);
-#endif
           }
           else {
-#if BUFFERED
             W_L(" ");
             W_V(name);
             W_L("=\"");
             W_L("text/html; charset=UTF-8");
-#else
-            chtml20->out = apr_pstrcat(r->pool,
-                                       chtml20->out,
-                                       " ",
-                                       name,
-                                       "=\"",
-                                       "text/html; charset=UTF-8",
-                                       "\"",
-                                       NULL);
-#endif
           }
         }
         else if (refresh_flag) {
@@ -658,7 +611,6 @@ s_chtml20_start_meta_tag(void *pdoc, Node *node)
             url++;
             url = chxj_encoding_parameter(r, url);
             url = chxj_add_cookie_parameter(r, url, chtml20->cookie);
-#if BUFFERED
             W_L(" ");
             W_V(name);
             W_L("=\"");
@@ -666,36 +618,13 @@ s_chtml20_start_meta_tag(void *pdoc, Node *node)
             W_L(";");
             W_V(url);
             W_L("\"");
-#else
-            chtml20->out = apr_pstrcat(r->pool,
-                            chtml20->out,
-                            " ",
-                            name,
-                            "=\"",
-                            sec,
-                            ";",
-                            url,
-                            "\"",
-                            NULL);
-#endif
           }
         }
         else {
-#if BUFFERED
           W_L(" ");
           W_V(name);
           W_L("=\"");
           W_V(value);
-#else
-          chtml20->out = apr_pstrcat(r->pool,
-                          chtml20->out,
-                          " ",
-                          name,
-                          "=\"",
-                          value,
-                          "\"",
-                          NULL);
-#endif
         }
       }
       break;
@@ -704,13 +633,7 @@ s_chtml20_start_meta_tag(void *pdoc, Node *node)
       break;
     }
   }
-
-#if BUFFERED
   W_L(">");
-#else
-  chtml20->out = apr_pstrcat(r->pool, chtml20->out, ">", NULL);
-#endif
-
   return chtml20->out;
 }
 
@@ -753,12 +676,7 @@ s_chtml20_start_head_tag(void *pdoc, Node *UNUSED(node))
   doc     = chtml20->doc;
   r       = doc->r;
 
-#if BUFFERED
   W_L("<head>\r\n");
-#else
-  chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<head>\r\n", NULL);
-#endif
-
   return chtml20->out;
 }
 
@@ -782,12 +700,7 @@ s_chtml20_end_head_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
-#if BUFFERED
   W_L("</head>\r\n");
-#else
-  chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</head>\r\n", NULL);
-#endif
-
   return chtml20->out;
 }
 
@@ -811,12 +724,7 @@ s_chtml20_start_title_tag(void *pdoc, Node *UNUSED(node))
   doc     = chtml20->doc;
   r       = doc->r;
 
-#if BUFFERED
   W_L("<title>");
-#else
-  chtml20->out = apr_pstrcat(r->pool, chtml20->out, "<title>", NULL);
-#endif
-
   return chtml20->out;
 }
 
@@ -840,12 +748,7 @@ s_chtml20_end_title_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
-#if BUFFERED
   W_L("</title>\r\n");
-#else
-  chtml20->out = apr_pstrcat(r->pool, chtml20->out, "</title>\r\n", NULL);
-#endif
-
   return chtml20->out;
 }
 
