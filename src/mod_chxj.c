@@ -233,7 +233,7 @@ chxj_headers_fixup(request_rec *r)
  * @param len [i/o] It is length of former HTML character string. 
  */
 static char *
-chxj_convert_html(request_rec *r, const char** src, apr_size_t* len, device_table *spec, const char *ua)
+chxj_convert_html(request_rec *r, const char** src, apr_size_t* len, device_table *spec, const char *ua, cookie_t **cookiep)
 {
   char                *user_agent;
   char                *dst;
@@ -357,6 +357,9 @@ chxj_convert_html(request_rec *r, const char** src, apr_size_t* len, device_tabl
     *len = 1;
   }
   dst[*len] = 0;
+  if (cookie) {
+    *cookiep = cookie;
+  }
 
   DBG(r, "end chxj_convert_html()");
 
@@ -744,7 +747,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
   char                *contentLength;
   apr_size_t          len;
   mod_chxj_ctx        *ctx       = (mod_chxj_ctx *)f->ctx;
-  cookie_t            *cookie;
+  cookie_t            *cookie = NULL;
   char                *location_header;
   mod_chxj_config     *dconf;
   chxjconvrule_entry  *entryp = NULL;
@@ -831,7 +834,8 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
                                         (const char**)&tmp, 
                                         (apr_size_t*)&ctx->len,
                                         spec,
-                                        user_agent);
+                                        user_agent,
+                                        &cookie);
 
 #if 1
             DBG(r, "output data=[%.*s]", ctx->len,ctx->buffer);
@@ -844,7 +848,8 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
                                         (const char**)&ctx->buffer, 
                                         (apr_size_t*)&ctx->len,
                                         spec,
-                                        user_agent);
+                                        user_agent,
+                                        &cookie);
 
           }
         }
@@ -931,6 +936,18 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
             DBG(r, "output data=[%.*s]", ctx->len,ctx->buffer);
 #endif
           }
+        }
+        /*
+         * Location Header Check to add cookie parameter.
+         */
+        location_header = (char *)apr_table_get(r->headers_out, "Location");
+        if (location_header && cookie) {
+          DBG(r, "Location Header=[%s]", location_header);
+          location_header = chxj_add_cookie_parameter(r,
+                                                      location_header,
+                                                      cookie);
+          apr_table_setn(r->headers_out, "Location", location_header);
+          DBG(r, "Location Header=[%s]", location_header);
         }
 
         contentLength = apr_psprintf(r->pool, "%d", (int)ctx->len);
