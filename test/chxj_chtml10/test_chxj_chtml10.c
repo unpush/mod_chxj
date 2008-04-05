@@ -145,6 +145,17 @@ void test_chtml10_h3_tag_008();
 void test_chtml10_h3_tag_009(); 
 void test_chtml10_h3_tag_010(); 
 
+void test_chtml10_h4_tag_001(); 
+void test_chtml10_h4_tag_002(); 
+void test_chtml10_h4_tag_003(); 
+void test_chtml10_h4_tag_004(); 
+void test_chtml10_h4_tag_005(); 
+void test_chtml10_h4_tag_006(); 
+void test_chtml10_h4_tag_007(); 
+void test_chtml10_h4_tag_008(); 
+void test_chtml10_h4_tag_009(); 
+void test_chtml10_h4_tag_010(); 
+
 int
 main()
 {
@@ -246,6 +257,15 @@ main()
   CU_add_test(chtml10_suite, "test <h3> with align attribute(right).",            test_chtml10_h3_tag_008); 
   CU_add_test(chtml10_suite, "test <h3> with align attribute(center).",           test_chtml10_h3_tag_009); 
   CU_add_test(chtml10_suite, "test <h3> with align attribute(unkown).",           test_chtml10_h3_tag_010); 
+  CU_add_test(chtml10_suite, "test <h4> with value.",                             test_chtml10_h4_tag_002); 
+  CU_add_test(chtml10_suite, "test <h4> with value(japanese).",                   test_chtml10_h4_tag_003); 
+  CU_add_test(chtml10_suite, "test <h4> with value(japanese-hankaku).",           test_chtml10_h4_tag_004); 
+  CU_add_test(chtml10_suite, "test <h4> with align attribute(non).",              test_chtml10_h4_tag_005); 
+  CU_add_test(chtml10_suite, "test <h4> with align attribute(void).",             test_chtml10_h4_tag_006); 
+  CU_add_test(chtml10_suite, "test <h4> with align attribute(left).",             test_chtml10_h4_tag_007); 
+  CU_add_test(chtml10_suite, "test <h4> with align attribute(right).",            test_chtml10_h4_tag_008); 
+  CU_add_test(chtml10_suite, "test <h4> with align attribute(center).",           test_chtml10_h4_tag_009); 
+  CU_add_test(chtml10_suite, "test <h4> with align attribute(unkown).",           test_chtml10_h4_tag_010); 
   CU_basic_run_tests();
   CU_cleanup_registry();
 
@@ -2951,6 +2971,286 @@ void test_chtml10_h3_tag_010()
 {
 #define  TEST_STRING "<html><head></head><body><h3 align=\"unkown\"></h3></body></html>"
 #define  RESULT_STRING "<html><head></head><body><h3></h3></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_h4_tag_001() 
+{
+#define  TEST_STRING "<html><head></head><body><h4></h4></body></html>"
+#define  RESULT_STRING "<html><head></head><body><h4></h4></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_h4_tag_002() 
+{
+#define  TEST_STRING "<html><head></head><body><h4>abc</h4></body></html>"
+#define  RESULT_STRING "<html><head></head><body><h4>abc</h4></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_h4_tag_003() 
+{
+#define  TEST_STRING "<html><head></head><body><h4>亀さん</h4></body></html>"
+#define  RESULT_STRING "<html><head></head><body><h4>亀さん</h4></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_h4_tag_004() 
+{
+#define  TEST_STRING "<html><head></head><body><h4>ﾊﾝｶｸ</h4></body></html>"
+#define  RESULT_STRING "<html><head></head><body><h4>ﾊﾝｶｸ</h4></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_h4_tag_005() 
+{
+#define  TEST_STRING "<html><head></head><body><h4 align></h4></body></html>"
+#define  RESULT_STRING "<html><head></head><body><h4></h4></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_h4_tag_006() 
+{
+#define  TEST_STRING "<html><head></head><body><h4 align=\"\"></h4></body></html>"
+#define  RESULT_STRING "<html><head></head><body><h4></h4></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_h4_tag_007() 
+{
+#define  TEST_STRING "<html><head></head><body><h4 align=\"left\"></h4></body></html>"
+#define  RESULT_STRING "<html><head></head><body><h4 align=\"left\"></h4></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_h4_tag_008() 
+{
+#define  TEST_STRING "<html><head></head><body><h4 align=\"right\"></h4></body></html>"
+#define  RESULT_STRING "<html><head></head><body><h4 align=\"right\"></h4></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_h4_tag_009() 
+{
+#define  TEST_STRING "<html><head></head><body><h4 align=\"center\"></h4></body></html>"
+#define  RESULT_STRING "<html><head></head><body><h4 align=\"center\"></h4></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_h4_tag_010() 
+{
+#define  TEST_STRING "<html><head></head><body><h4 align=\"unkown\"></h4></body></html>"
+#define  RESULT_STRING "<html><head></head><body><h4></h4></body></html>"
   char  *ret;
   char  *tmp;
   device_table spec;
