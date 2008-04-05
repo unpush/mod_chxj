@@ -842,7 +842,7 @@ s_chtml10_start_h1_tag(void* pdoc, Node* UNUSED(node))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("<h1>\r\n");
+  W10_L("<h1>");
 
   return chtml10->out;
 }
@@ -867,7 +867,7 @@ s_chtml10_end_h1_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("</h1>\r\n");
+  W10_L("</h1>");
 
   return chtml10->out;
 }
