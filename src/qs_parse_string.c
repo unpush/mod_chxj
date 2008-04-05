@@ -52,14 +52,14 @@ static void qs_free_node_stack(Doc *doc, NodeStack stack);
 static void s_error_check(Doc *doc, Node *node, NodeStack node_stack, NodeStack err_stack);
 
 
-Node*
-qs_parse_string(Doc* doc, const char* src, int srclen) 
+Node *
+qs_parse_string(Doc *doc, const char *src, int srclen) 
 {
   int     ii;
   int     nl_cnt = 0;
   char    encoding[256];
-  char*   osrc;
-  char*   ibuf;
+  char    *osrc;
+  char    *ibuf;
   size_t  olen;
   size_t  ilen;
   int     script_flag = 0;
@@ -73,6 +73,9 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
   memset(encoding, 0, 256);
 
   doc->now_parent_node = qs_init_root_node(doc);
+  if (! src || srclen <= 0) {
+    return doc->root_node;
+  }
   if (doc->r != NULL) {
     node_stack = apr_palloc(doc->r->pool, sizeof(struct node_stack));
     memset(node_stack, 0, sizeof(struct node_stack));
