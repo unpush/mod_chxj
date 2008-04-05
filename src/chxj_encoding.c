@@ -22,8 +22,8 @@
 #include <iconv.h>
 
 
-char*
-chxj_encoding(request_rec *r, const char* src, apr_size_t* len)
+char *
+chxj_encoding(request_rec *r, const char *src, apr_size_t *len)
 {
   char*               obuf;
   char*               ibuf;
@@ -100,7 +100,7 @@ chxj_encoding(request_rec *r, const char* src, apr_size_t* len)
       break;
     }
   }
-  *len = olen;
+  *len = strlen(spos);
   iconv_close(cd);
 
   DBG(r,"end   chxj_encoding() len=[%d] obuf=[%.*s]", (int)*len, (int)*len, spos);
@@ -189,7 +189,7 @@ chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
     }
   }
 
-  *len = olen;
+  *len = strlen(spos);
   iconv_close(cd);
 
   DBG(r,"end   chxj_rencoding() len=[%d] obuf=[%.*s]", (int)*len, (int)*len, spos);

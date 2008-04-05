@@ -529,7 +529,7 @@ s_chtml10_start_html_tag(void* pdoc, Node* UNUSED(node))
   /*--------------------------------------------------------------------------*/
   /* start HTML tag                                                           */
   /*--------------------------------------------------------------------------*/
-  W10_L("<html>\n");
+  W10_L("<html>");
 
   return chtml10->out;
 }
@@ -555,7 +555,7 @@ s_chtml10_end_html_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("</html>\n");
+  W10_L("</html>");
 
   return chtml10->out;
 }
@@ -620,7 +620,7 @@ s_chtml10_start_head_tag(void* pdoc, Node* UNUSED(node))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("<head>\r\n");
+  W10_L("<head>");
 
   return chtml10->out;
 }
@@ -645,7 +645,7 @@ s_chtml10_end_head_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("</head>\r\n");
+  W10_L("</head>");
 
   return chtml10->out;
 }
@@ -1305,7 +1305,7 @@ s_chtml10_start_body_tag(void* pdoc, Node* node)
     }
   }
 
-  W10_L(">\r\n");
+  W10_L(">");
 
   return chtml10->out;
 }
@@ -1330,7 +1330,7 @@ s_chtml10_end_body_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("</body>\r\n");
+  W10_L("</body>");
 
   return chtml10->out;
 }

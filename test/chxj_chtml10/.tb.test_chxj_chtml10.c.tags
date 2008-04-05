@@ -4,23 +4,48 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.6	//
-APR_INIT	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	91;"	macro	line:91
-APR_TERM	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	101;"	macro	line:101
+APR_INIT	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	117;"	macro	line:117
+APR_TERM	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	127;"	macro	line:127
 CHXJ_TEST	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	5;"	macro	line:5
-COOKIE_INIT	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	106;"	macro	line:106
-SPEC_INIT	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	111;"	macro	line:111
-TEST_STRING	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	133;"	macro	line:133
-TEST_STRING	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	151;"	macro	line:151
-TEST_STRING	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	155;"	macro	line:155
-TEST_STRING	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	173;"	macro	line:173
-chxj_apply_convrule	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^chxj_apply_convrule(request_rec* r, apr_array_header_t* convrules)$/;"	function	line:85
-chxj_qr_code_blob_handler	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^char *chxj_qr_code_blob_handler(request_rec* r, const char* indata, size_t* len)$/;"	function	line:58
-main	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^main()$/;"	function	line:117
-test_chtml10_001	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^void test_chtml10_001() $/;"	function	line:131
-test_chtml10_002	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^void test_chtml10_002() $/;"	function	line:153
-test_get_module_config	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^void * test_get_module_config(const ap_conf_vector_t *cv, const module *m)$/;"	function	line:79
-test_log_error	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^void test_log_error(const char *file, int line, int level, apr_status_t status, const request_rec *r, const char *fmt, ...)$/;"	function	line:48
-test_log_rerror	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^void test_log_rerror(const char *file, int line, int level, apr_status_t status, const request_rec *r, const char *fmt, ...)$/;"	function	line:39
-test_os_escape_path	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^char *test_os_escape_path(apr_pool_t *p, const char *path, int partial)$/;"	function	line:63
-test_run_http_scheme	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^const char *test_run_http_scheme(request_rec *r)$/;"	function	line:73
-test_set_content_type	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^void test_set_content_type(request_rec *r, const char *ct)$/;"	function	line:68
+COOKIE_INIT	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	132;"	macro	line:132
+RESULT_STRING	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	192;"	macro	line:192
+RESULT_STRING	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	212;"	macro	line:212
+RESULT_STRING	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	217;"	macro	line:217
+RESULT_STRING	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	237;"	macro	line:237
+RESULT_STRING	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	242;"	macro	line:242
+RESULT_STRING	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	262;"	macro	line:262
+RESULT_STRING	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	267;"	macro	line:267
+RESULT_STRING	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	287;"	macro	line:287
+RESULT_STRING	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	292;"	macro	line:292
+RESULT_STRING	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	312;"	macro	line:312
+SPEC_INIT	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	137;"	macro	line:137
+TEST_STRING	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	146;"	macro	line:146
+TEST_STRING	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	164;"	macro	line:164
+TEST_STRING	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	168;"	macro	line:168
+TEST_STRING	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	186;"	macro	line:186
+TEST_STRING	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	191;"	macro	line:191
+TEST_STRING	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	211;"	macro	line:211
+TEST_STRING	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	216;"	macro	line:216
+TEST_STRING	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	236;"	macro	line:236
+TEST_STRING	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	241;"	macro	line:241
+TEST_STRING	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	261;"	macro	line:261
+TEST_STRING	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	266;"	macro	line:266
+TEST_STRING	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	286;"	macro	line:286
+TEST_STRING	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	291;"	macro	line:291
+TEST_STRING	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	311;"	macro	line:311
+chxj_apply_convrule	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^chxj_apply_convrule(request_rec* r, apr_array_header_t* convrules)$/;"	function	line:109
+chxj_qr_code_blob_handler	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^char *chxj_qr_code_blob_handler(request_rec* r, const char* indata, size_t* len)$/;"	function	line:80
+main	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^main()$/;"	function	line:44
+test_chtml10_001	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^void test_chtml10_001() $/;"	function	line:144
+test_chtml10_002	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^void test_chtml10_002() $/;"	function	line:166
+test_chtml10_a_tag_name_attribute_001	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^void test_chtml10_a_tag_name_attribute_001() $/;"	function	line:214
+test_chtml10_a_tag_name_attribute_002	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^void test_chtml10_a_tag_name_attribute_002() $/;"	function	line:239
+test_chtml10_a_tag_name_attribute_003	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^void test_chtml10_a_tag_name_attribute_003() $/;"	function	line:264
+test_chtml10_a_tag_name_attribute_004	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^void test_chtml10_a_tag_name_attribute_004() $/;"	function	line:289
+test_chtml10_comment_tag_001	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^void test_chtml10_comment_tag_001() $/;"	function	line:189
+test_get_module_config	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^void * test_get_module_config(const ap_conf_vector_t *cv, const module *m)$/;"	function	line:101
+test_log_error	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^void test_log_error(const char *file, int line, int level, apr_status_t status, const request_rec *r, const char *fmt, ...)$/;"	function	line:70
+test_log_rerror	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^void test_log_rerror(const char *file, int line, int level, apr_status_t status, const request_rec *r, const char *fmt, ...)$/;"	function	line:61
+test_os_escape_path	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^char *test_os_escape_path(apr_pool_t *p, const char *path, int partial)$/;"	function	line:85
+test_run_http_scheme	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^const char *test_run_http_scheme(request_rec *r)$/;"	function	line:95
+test_set_content_type	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^void test_set_content_type(request_rec *r, const char *ct)$/;"	function	line:90

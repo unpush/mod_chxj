@@ -196,13 +196,13 @@ struct emoji_t {
 typedef struct chxjconvrule_entry chxjconvrule_entry;
 
 struct chxjconvrule_entry {
-  char*        pattern;
-  ap_regex_t*  regexp;
+  char         *pattern;
+  ap_regex_t   *regexp;
   int          flags;
   int          action;
-  char*        encoding;
+  char         *encoding;
   int          pc_flag;
-  char*        user_agent;
+  char         *user_agent;
 };
 
 typedef struct tag_handler tag_handler;

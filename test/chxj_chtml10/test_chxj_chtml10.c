@@ -35,6 +35,30 @@
 
 void test_chtml10_001();
 void test_chtml10_002();
+void test_chtml10_comment_tag_001();
+void test_chtml10_a_tag_name_attribute_001(); 
+void test_chtml10_a_tag_name_attribute_002();
+void test_chtml10_a_tag_name_attribute_003();
+void test_chtml10_a_tag_name_attribute_004();
+
+int
+main()
+{
+  CU_pSuite chtml10_suite;
+  CU_initialize_registry();
+  chtml10_suite = CU_add_suite("test chxj_exchange_chtml10()", NULL, NULL);
+  CU_add_test(chtml10_suite, "test void src1",             test_chtml10_001);
+  CU_add_test(chtml10_suite, "test void src2",             test_chtml10_002);
+  CU_add_test(chtml10_suite, "test comment tag1",          test_chtml10_comment_tag_001);
+  CU_add_test(chtml10_suite, "test a tag name attr1",      test_chtml10_a_tag_name_attribute_001); 
+  CU_add_test(chtml10_suite, "test a tag name attr2",      test_chtml10_a_tag_name_attribute_002); 
+  CU_add_test(chtml10_suite, "test a tag name attr3 with japanese.", test_chtml10_a_tag_name_attribute_003); 
+  CU_add_test(chtml10_suite, "test a tag name attr4 with japanese.", test_chtml10_a_tag_name_attribute_004); 
+  CU_basic_run_tests();
+  CU_cleanup_registry();
+
+  return(0);
+}
 
 void test_log_rerror(const char *file, int line, int level, apr_status_t status, const request_rec *r, const char *fmt, ...)
 {
@@ -78,14 +102,18 @@ const char *test_run_http_scheme(request_rec *r)
 
 void * test_get_module_config(const ap_conf_vector_t *cv, const module *m)
 {
-  return NULL;
+  static mod_chxj_config cfg;
+  memset(&cfg, 0, sizeof(mod_chxj_config));
+  return &cfg;
 }
 
 chxjconvrule_entry *
 chxj_apply_convrule(request_rec* r, apr_array_header_t* convrules)
 {
-  chxjconvrule_entry entries;
-  return NULL;
+  static chxjconvrule_entry entries;
+  memset(&entries, 0, sizeof(chxjconvrule_entry));
+  entries.encoding = apr_pstrdup(r->pool, "UTF8");
+  return &entries;
 }
 
 #define APR_INIT \
@@ -113,19 +141,6 @@ chxj_apply_convrule(request_rec* r, apr_array_header_t* convrules)
     X.html_spec_type = CHXJ_SPEC_Chtml_1_0; \
   } while (0)
 
-int
-main()
-{
-  CU_pSuite chtml10_suite;
-  CU_initialize_registry();
-  chtml10_suite = CU_add_suite("test chxj_exchange_chtml10()", NULL, NULL);
-  CU_add_test(chtml10_suite, "test void src1",             test_chtml10_001);
-  CU_add_test(chtml10_suite, "test void src2",             test_chtml10_002);
-  CU_basic_run_tests();
-  CU_cleanup_registry();
-
-  return(0);
-}
 
 
 void test_chtml10_001() 
@@ -171,5 +186,137 @@ void test_chtml10_002()
 
   APR_TERM;
 #undef TEST_STRING
+}
+
+void test_chtml10_comment_tag_001() 
+{
+#define  TEST_STRING "<html><!--</html><body>--><head></head><body></body></html>"
+#define  RESULT_STRING "<html><head></head><body></body></html>"
+  char  *ret;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+
+  ret = chxj_exchange_chtml10(&r, &spec, TEST_STRING, sizeof(TEST_STRING)-1, &destlen, &entry, &cookie);
+fprintf(stderr, "%s",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_a_tag_name_attribute_001() 
+{
+#define  TEST_STRING "<html><head></head><body><a name=\"abc\">abc</a></body></html>"
+#define  RESULT_STRING "<html><head></head><body><a name=\"abc\">abc</a></body></html>"
+  char  *ret;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+
+  ret = chxj_exchange_chtml10(&r, &spec, TEST_STRING, sizeof(TEST_STRING)-1, &destlen, &entry, &cookie);
+fprintf(stderr, "%s",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_a_tag_name_attribute_002() 
+{
+#define  TEST_STRING "<html><head></head><body><a name=\"\">abc</a></body></html>"
+#define  RESULT_STRING "<html><head></head><body><a name=\"\">abc</a></body></html>"
+  char  *ret;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+
+  ret = chxj_exchange_chtml10(&r, &spec, TEST_STRING, sizeof(TEST_STRING)-1, &destlen, &entry, &cookie);
+fprintf(stderr, "%s",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_a_tag_name_attribute_003() 
+{
+#define  TEST_STRING "<html><head></head><body><a name=\"あああ\">abc</a></body></html>"
+#define  RESULT_STRING "<html><head></head><body><a name=\"あああ\">abc</a></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+
+  destlen = sizeof(TEST_STRING)-1;
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_a_tag_name_attribute_004() 
+{
+#define  TEST_STRING "<html><head></head><body><a name=\"ｱｱｱ\">abc</a></body></html>"
+#define  RESULT_STRING "<html><head></head><body><a name=\"ｱｱｱ\">abc</a></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
 }
 
