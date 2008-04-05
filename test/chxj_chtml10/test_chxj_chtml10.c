@@ -167,6 +167,17 @@ void test_chtml10_h5_tag_008();
 void test_chtml10_h5_tag_009(); 
 void test_chtml10_h5_tag_010(); 
 
+void test_chtml10_h6_tag_001(); 
+void test_chtml10_h6_tag_002(); 
+void test_chtml10_h6_tag_003(); 
+void test_chtml10_h6_tag_004(); 
+void test_chtml10_h6_tag_005(); 
+void test_chtml10_h6_tag_006(); 
+void test_chtml10_h6_tag_007(); 
+void test_chtml10_h6_tag_008(); 
+void test_chtml10_h6_tag_009(); 
+void test_chtml10_h6_tag_010(); 
+
 int
 main()
 {
@@ -288,6 +299,16 @@ main()
   CU_add_test(chtml10_suite, "test <h5> with align attribute(right).",            test_chtml10_h5_tag_008); 
   CU_add_test(chtml10_suite, "test <h5> with align attribute(center).",           test_chtml10_h5_tag_009); 
   CU_add_test(chtml10_suite, "test <h5> with align attribute(unkown).",           test_chtml10_h5_tag_010); 
+  CU_add_test(chtml10_suite, "test <h6>.",                                        test_chtml10_h6_tag_001); 
+  CU_add_test(chtml10_suite, "test <h6> with value.",                             test_chtml10_h6_tag_002); 
+  CU_add_test(chtml10_suite, "test <h6> with value(japanese).",                   test_chtml10_h6_tag_003); 
+  CU_add_test(chtml10_suite, "test <h6> with value(japanese-hankaku).",           test_chtml10_h6_tag_004); 
+  CU_add_test(chtml10_suite, "test <h6> with align attribute(non).",              test_chtml10_h6_tag_005); 
+  CU_add_test(chtml10_suite, "test <h6> with align attribute(void).",             test_chtml10_h6_tag_006); 
+  CU_add_test(chtml10_suite, "test <h6> with align attribute(left).",             test_chtml10_h6_tag_007); 
+  CU_add_test(chtml10_suite, "test <h6> with align attribute(right).",            test_chtml10_h6_tag_008); 
+  CU_add_test(chtml10_suite, "test <h6> with align attribute(center).",           test_chtml10_h6_tag_009); 
+  CU_add_test(chtml10_suite, "test <h6> with align attribute(unkown).",           test_chtml10_h6_tag_010); 
   CU_basic_run_tests();
   CU_cleanup_registry();
 
