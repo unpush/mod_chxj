@@ -96,6 +96,8 @@ static char* s_chtml10_start_dl_tag       (void* pdoc, Node* node);
 static char* s_chtml10_end_dl_tag         (void* pdoc, Node* node);
 static char* s_chtml10_start_dt_tag       (void* pdoc, Node* node);
 static char* s_chtml10_end_dt_tag         (void* pdoc, Node* node);
+static char* s_chtml10_start_dd_tag       (void* pdoc, Node* node);
+static char* s_chtml10_end_dd_tag         (void* pdoc, Node* node);
 
 static void  s_init_chtml10(chtml10_t* chtml, Doc* doc, request_rec* r, device_table* spec);
 
@@ -343,6 +345,11 @@ tag_handler chtml10_handler[] = {
   {
     s_chtml10_start_dl_tag,
     s_chtml10_end_dl_tag,
+  },
+  /* tagDD */
+  {
+    s_chtml10_start_dd_tag,
+    s_chtml10_end_dd_tag,
   },
 };
 
@@ -3011,6 +3018,43 @@ s_chtml10_start_dt_tag(void *pdoc, Node *UNUSED(child))
  */
 static char *
 s_chtml10_end_dt_tag(void *pdoc, Node *UNUSED(child))
+{
+  chtml10_t *chtml10;
+  chtml10 = GET_CHTML10(pdoc);
+  return chtml10->out;
+}
+
+
+/**
+ * It is a handder who processes the DD tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DD tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml10_start_dd_tag(void *pdoc, Node *UNUSED(child))
+{
+  chtml10_t *chtml10;
+  Doc *doc;
+  chtml10 = GET_CHTML10(pdoc);
+  doc     = chtml10->doc;
+  W10_L("<dd>");
+  return chtml10->out;
+}
+
+
+/**
+ * It is a handder who processes the DD tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DD tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml10_end_dd_tag(void *pdoc, Node *UNUSED(child))
 {
   chtml10_t *chtml10;
   chtml10 = GET_CHTML10(pdoc);
