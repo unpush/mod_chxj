@@ -2971,7 +2971,10 @@ static char *
 s_chtml10_end_dl_tag(void *pdoc, Node *UNUSED(child))
 {
   chtml10_t *chtml10;
+  Doc *doc;
   chtml10 = GET_CHTML10(pdoc);
+  doc     = chtml10->doc;
+  W10_L("</dl>");
   return chtml10->out;
 }
 /*
