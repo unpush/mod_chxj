@@ -58,6 +58,13 @@ void test_chtml10_blockquote_tag_001();
 void test_chtml10_blockquote_tag_002(); 
 void test_chtml10_blockquote_tag_003(); 
 void test_chtml10_blockquote_tag_004(); 
+void test_chtml10_body_tag_001(); 
+void test_chtml10_body_tag_002(); 
+void test_chtml10_body_tag_003(); 
+void test_chtml10_body_tag_004(); 
+void test_chtml10_body_tag_005(); 
+void test_chtml10_body_tag_006(); 
+void test_chtml10_body_tag_007(); 
 
 int
 main()
@@ -79,17 +86,24 @@ main()
   CU_add_test(chtml10_suite, "test a tag href attr5 with void maker.",      test_chtml10_a_tag_href_attribute_005); 
   CU_add_test(chtml10_suite, "test a tag href attr6 with no cookie.",      test_chtml10_a_tag_href_attribute_006); 
   CU_add_test(chtml10_suite, "test a tag accesskey attribute.",             test_chtml10_a_tag_accesskey_attribute_001); 
-  CU_add_test(chtml10_suite, "test a tag accesskey attribute with void char.", test_chtml10_a_tag_accesskey_attribute_002); 
-  CU_add_test(chtml10_suite, "test a tag accesskey attribute with no value", test_chtml10_a_tag_accesskey_attribute_003); 
-  CU_add_test(chtml10_suite, "test base tag no attribute.",                  test_chtml10_base_tag_001); 
-  CU_add_test(chtml10_suite, "test base tag href attribute with no value.",  test_chtml10_base_tag_href_attribute_001); 
-  CU_add_test(chtml10_suite, "test base tag href attribute with void value.",  test_chtml10_base_tag_href_attribute_002); 
-  CU_add_test(chtml10_suite, "test base tag href attribute with normal value.",  test_chtml10_base_tag_href_attribute_003); 
-  CU_add_test(chtml10_suite, "test base tag href attribute with normal value.",  test_chtml10_base_tag_href_attribute_004); 
-  CU_add_test(chtml10_suite, "test blockquote tag with void value.",             test_chtml10_blockquote_tag_001); 
-  CU_add_test(chtml10_suite, "test blockquote tag with value.",             test_chtml10_blockquote_tag_002); 
-  CU_add_test(chtml10_suite, "test blockquote tag with japanese value.",             test_chtml10_blockquote_tag_003); 
-  CU_add_test(chtml10_suite, "test blockquote tag with hankaku kana value.",             test_chtml10_blockquote_tag_004); 
+  CU_add_test(chtml10_suite, "test a tag accesskey attribute with void char.",    test_chtml10_a_tag_accesskey_attribute_002); 
+  CU_add_test(chtml10_suite, "test a tag accesskey attribute with no value",      test_chtml10_a_tag_accesskey_attribute_003); 
+  CU_add_test(chtml10_suite, "test base tag no attribute.",                       test_chtml10_base_tag_001); 
+  CU_add_test(chtml10_suite, "test base tag href attribute with no value.",       test_chtml10_base_tag_href_attribute_001); 
+  CU_add_test(chtml10_suite, "test base tag href attribute with void value.",     test_chtml10_base_tag_href_attribute_002); 
+  CU_add_test(chtml10_suite, "test base tag href attribute with normal value.",   test_chtml10_base_tag_href_attribute_003); 
+  CU_add_test(chtml10_suite, "test base tag href attribute with normal value.",   test_chtml10_base_tag_href_attribute_004); 
+  CU_add_test(chtml10_suite, "test <blockquote> with void value.",                test_chtml10_blockquote_tag_001); 
+  CU_add_test(chtml10_suite, "test <blockquote> with value.",                     test_chtml10_blockquote_tag_002); 
+  CU_add_test(chtml10_suite, "test <blockquote> with japanese value.",            test_chtml10_blockquote_tag_003); 
+  CU_add_test(chtml10_suite, "test <blockquote> with hankaku kana value.",        test_chtml10_blockquote_tag_004); 
+  CU_add_test(chtml10_suite, "test <body> .",                                     test_chtml10_body_tag_001); 
+  CU_add_test(chtml10_suite, "test <body> with bgcolor attribute.",               test_chtml10_body_tag_002); 
+  CU_add_test(chtml10_suite, "test <body> with text attribute.",                  test_chtml10_body_tag_003); 
+  CU_add_test(chtml10_suite, "test <body> with link attribute.",                  test_chtml10_body_tag_004); 
+  CU_add_test(chtml10_suite, "test <body> with vlink attribute.",                 test_chtml10_body_tag_005); 
+  CU_add_test(chtml10_suite, "test <body> with alink attribute.",                 test_chtml10_body_tag_006); 
+  CU_add_test(chtml10_suite, "test <body> with unknown attribute.",               test_chtml10_body_tag_007); 
   CU_basic_run_tests();
   CU_cleanup_registry();
 
@@ -835,6 +849,202 @@ void test_chtml10_blockquote_tag_004()
 {
 #define  TEST_STRING "<html><head></head><body><blockquote>ﾊﾝｶｸ</blockquote></body></html>"
 #define  RESULT_STRING "<html><head></head><body><blockquote>ﾊﾝｶｸ</blockquote></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_body_tag_001() 
+{
+#define  TEST_STRING "<html><head></head><body></body></html>"
+#define  RESULT_STRING "<html><head></head><body></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_body_tag_002() 
+{
+#define  TEST_STRING "<html><head></head><body bgcolor=\"#FF0000\"></body></html>"
+#define  RESULT_STRING "<html><head></head><body></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_body_tag_003() 
+{
+#define  TEST_STRING "<html><head></head><body text=\"#FF0000\"></body></html>"
+#define  RESULT_STRING "<html><head></head><body></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_body_tag_004() 
+{
+#define  TEST_STRING "<html><head></head><body link=\"#FF0000\"></body></html>"
+#define  RESULT_STRING "<html><head></head><body></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_body_tag_005() 
+{
+#define  TEST_STRING "<html><head></head><body vlink=\"#FF0000\"></body></html>"
+#define  RESULT_STRING "<html><head></head><body></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_body_tag_006() 
+{
+#define  TEST_STRING "<html><head></head><body alink=\"#FF0000\"></body></html>"
+#define  RESULT_STRING "<html><head></head><body></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_body_tag_007() 
+{
+#define  TEST_STRING "<html><head></head><body boyoyon=\"#FF0000\"></body></html>"
+#define  RESULT_STRING "<html><head></head><body></body></html>"
   char  *ret;
   char  *tmp;
   device_table spec;
