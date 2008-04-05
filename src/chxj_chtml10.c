@@ -1548,17 +1548,40 @@ s_chtml10_end_a_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml10_start_br_tag(void *pdoc, Node *UNUSED(node)) 
+s_chtml10_start_br_tag(void *pdoc, Node *node) 
 {
   chtml10_t    *chtml10;
   Doc          *doc;
   request_rec  *r;
+  Attr         *attr = NULL;
 
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("<br>\r\n");
+  W10_L("<br");
+
+  /*--------------------------------------------------------------------------*/
+  /* Get Attributes                                                           */
+  /*--------------------------------------------------------------------------*/
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char *name;
+    char *value;
+
+    name  = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
+
+    if (STRCASEEQ('c','C',"clear",name)) {
+      if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('a','A',"all",value))) {
+        W10_L(" clear=\"");
+        W10_V(value);
+        W10_L("\"");
+      }
+    }
+  }
+  W10_L(">");
   return chtml10->out;
 }
 
