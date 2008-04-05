@@ -90,6 +90,8 @@ static char* s_chtml10_start_div_tag      (void* pdoc, Node* node);
 static char* s_chtml10_end_div_tag        (void* pdoc, Node* node);
 static char* s_chtml10_start_blockquote_tag      (void* pdoc, Node* node);
 static char* s_chtml10_end_blockquote_tag        (void* pdoc, Node* node);
+static char* s_chtml10_start_dir_tag      (void* pdoc, Node* node);
+static char* s_chtml10_end_dir_tag        (void* pdoc, Node* node);
 
 static void  s_init_chtml10(chtml10_t* chtml, Doc* doc, request_rec* r, device_table* spec);
 
@@ -327,6 +329,11 @@ tag_handler chtml10_handler[] = {
   {
     s_chtml10_start_blockquote_tag,
     s_chtml10_end_blockquote_tag,
+  },
+  /* tagDIR */
+  {
+    s_chtml10_start_dir_tag,
+    s_chtml10_end_dir_tag,
   },
 };
 
@@ -2872,11 +2879,11 @@ s_chtml10_start_blockquote_tag(void *pdoc, Node *UNUSED(child))
 
 
 /**
- * It is a handler who processes the DIV tag.
+ * It is a handler who processes the BLOCKQUOTE tag.
  *
  * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
- * @param node   [i]   The DIV tag node is specified.
+ * @param node   [i]   The BLOCKQUOTE tag node is specified.
  * @return The conversion result is returned.
  */
 static char *
@@ -2888,6 +2895,47 @@ s_chtml10_end_blockquote_tag(void *pdoc, Node *UNUSED(child))
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
   W10_L("</blockquote>");
+  return chtml10->out;
+}
+
+
+/**
+ * It is a handler who processes the DIR tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DIR tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml10_start_dir_tag(void *pdoc, Node *UNUSED(child))
+{
+  chtml10_t *chtml10;
+  Doc *doc;
+  chtml10 = GET_CHTML10(pdoc);
+  doc     = chtml10->doc;
+  W10_L("<dir>");
+  return chtml10->out;
+}
+
+
+/**
+ * It is a handler who processes the DIV tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DIV tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml10_end_dir_tag(void *pdoc, Node *UNUSED(child))
+{
+  chtml10_t *chtml10;
+  Doc *doc;
+
+  chtml10 = GET_CHTML10(pdoc);
+  doc     = chtml10->doc;
+  W10_L("</dir>");
   return chtml10->out;
 }
 /*

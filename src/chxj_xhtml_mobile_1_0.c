@@ -328,6 +328,11 @@ tag_handler xhtml_handler[] = {
     NULL,
     NULL,
   },
+  /* tagDIR */
+  {
+    NULL,
+    NULL,
+  },
 };
  
 /**

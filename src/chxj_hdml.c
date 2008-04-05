@@ -324,6 +324,11 @@ tag_handler hdml_handler[] = {
     NULL,
     NULL,
   },
+  /* tagDIR */
+  {
+    NULL,
+    NULL,
+  },
 };
 
 /**

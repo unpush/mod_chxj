@@ -329,6 +329,11 @@ tag_handler chtml20_handler[] = {
     NULL,
     NULL,
   },
+  /* tagDIR */
+  {
+    NULL,
+    NULL,
+  },
 };
 
 /**

@@ -320,6 +320,11 @@ tag_handler jhtml_handler[] = {
     NULL,
     NULL,
   },
+  /* tagDIR */
+  {
+    NULL,
+    NULL,
+  },
 };
 
 
