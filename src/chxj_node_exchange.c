@@ -616,6 +616,18 @@ chxj_node_exchange(
         if (handlers[tagDL].end_tag_handler)
           handlers[tagDL].end_tag_handler(pdoc, child);
       }
+      /*----------------------------------------------------------------------*/
+      /* <DT>                                                                 */
+      /*----------------------------------------------------------------------*/
+      else if (strcasecmp(name, "dt") == 0) {
+        if (handlers[tagDT].start_tag_handler) 
+          handlers[tagDT].start_tag_handler(pdoc, child);
+
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+
+        if (handlers[tagDT].end_tag_handler)
+          handlers[tagDT].end_tag_handler(pdoc, child);
+      }
       break;
 
     case 'c':

@@ -94,6 +94,8 @@ static char* s_chtml10_start_dir_tag      (void* pdoc, Node* node);
 static char* s_chtml10_end_dir_tag        (void* pdoc, Node* node);
 static char* s_chtml10_start_dl_tag       (void* pdoc, Node* node);
 static char* s_chtml10_end_dl_tag         (void* pdoc, Node* node);
+static char* s_chtml10_start_dt_tag       (void* pdoc, Node* node);
+static char* s_chtml10_end_dt_tag         (void* pdoc, Node* node);
 
 static void  s_init_chtml10(chtml10_t* chtml, Doc* doc, request_rec* r, device_table* spec);
 
@@ -314,8 +316,8 @@ tag_handler chtml10_handler[] = {
   },
   /* tagDT */
   {
-    NULL,
-    NULL,
+    s_chtml10_start_dt_tag,
+    s_chtml10_end_dt_tag,
   },
   /* tagLEGEND */
   {
@@ -2919,11 +2921,11 @@ s_chtml10_start_dir_tag(void *pdoc, Node *UNUSED(child))
 
 
 /**
- * It is a handler who processes the DIV tag.
+ * It is a handler who processes the DIR tag.
  *
  * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
- * @param node   [i]   The DIV tag node is specified.
+ * @param node   [i]   The DIR tag node is specified.
  * @return The conversion result is returned.
  */
 static char *
@@ -2960,11 +2962,11 @@ s_chtml10_start_dl_tag(void *pdoc, Node *UNUSED(child))
 
 
 /**
- * It is a handler who processes the DIV tag.
+ * It is a handler who processes the DL tag.
  *
  * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
- * @param node   [i]   The DIV tag node is specified.
+ * @param node   [i]   The DL tag node is specified.
  * @return The conversion result is returned.
  */
 static char *
@@ -2975,6 +2977,43 @@ s_chtml10_end_dl_tag(void *pdoc, Node *UNUSED(child))
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
   W10_L("</dl>");
+  return chtml10->out;
+}
+
+
+/**
+ * It is a handter who processes the DT tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DT tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml10_start_dt_tag(void *pdoc, Node *UNUSED(child))
+{
+  chtml10_t *chtml10;
+  Doc *doc;
+  chtml10 = GET_CHTML10(pdoc);
+  doc     = chtml10->doc;
+  W10_L("<dt>");
+  return chtml10->out;
+}
+
+
+/**
+ * It is a handter who processes the DT tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DT tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml10_end_dt_tag(void *pdoc, Node *UNUSED(child))
+{
+  chtml10_t *chtml10;
+  chtml10 = GET_CHTML10(pdoc);
   return chtml10->out;
 }
 /*
