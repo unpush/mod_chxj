@@ -832,17 +832,35 @@ s_chtml10_end_li_tag(void* pdoc, Node* UNUSED(child))
  * @return The conversion result is returned.
  */
 static char*
-s_chtml10_start_h1_tag(void* pdoc, Node* UNUSED(node)) 
+s_chtml10_start_h1_tag(void* pdoc, Node* node) 
 {
   Doc*          doc;
   request_rec*  r;
+  Attr*         attr;
   chtml10_t*    chtml10;
 
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("<h1>");
+  W10_L("<h1");
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char* name;
+    char* value;
+    name  = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('a','A',"align", name)) {
+      if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('c','C',"center",value))) {
+        W10_L(" align=\"");
+        W10_V(value);
+        W10_L("\"");
+        break;
+      }
+    }
+  }
+  W10_L(">");
 
   return chtml10->out;
 }
@@ -892,7 +910,7 @@ s_chtml10_start_h2_tag(void* pdoc, Node* UNUSED(node))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("<h2>\r\n");
+  W10_L("<h2>");
 
   return chtml10->out;
 }
@@ -917,7 +935,7 @@ s_chtml10_end_h2_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("</h2>\r\n");
+  W10_L("</h2>");
 
   return chtml10->out;
 }
@@ -942,7 +960,7 @@ s_chtml10_start_h3_tag(void* pdoc, Node* UNUSED(node))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("<h3>\r\n");
+  W10_L("<h3>");
 
   return chtml10->out;
 }
@@ -967,7 +985,7 @@ s_chtml10_end_h3_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("</h3>\r\n");
+  W10_L("</h3>");
 
   return chtml10->out;
 }
