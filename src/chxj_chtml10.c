@@ -967,18 +967,36 @@ s_chtml10_end_h2_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The H3 tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml10_start_h3_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_chtml10_start_h3_tag(void *pdoc, Node *node) 
 {
-  Doc*          doc;
-  request_rec*  r;
-  chtml10_t*    chtml10;
+  Doc           *doc;
+  Attr          *attr;
+  request_rec   *r;
+  chtml10_t     *chtml10;
 
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("<h3>");
+  W10_L("<h3");
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char* name;
+    char* value;
+    name  = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('a','A',"align", name)) {
+      if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('c','C',"center",value))) {
+        W10_L(" align=\"");
+        W10_V(value);
+        W10_L("\"");
+        break;
+      }
+    }
+  }
+  W10_L(">");
 
   return chtml10->out;
 }
