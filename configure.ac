@@ -285,7 +285,7 @@ if test "x$use_pcre_flag" = "xyes" ; then
   fi
   CFLAGS="${CFLAGS} `${PCRE_CONFIG} --cflags`"
 else
-  AC_DEFINE([HAVE_AP_REGEX_H], [], [Define to 1 if you have the <ap_regex.h> header file.])
+  AC_DEFINE([HAVE_AP_REGEX_H], [1], [Define to 1 if you have the <ap_regex.h> header file.])
 fi
 
 # Checks for typedefs, structures, and compiler characteristics.

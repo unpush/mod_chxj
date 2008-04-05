@@ -367,7 +367,7 @@ chxj_exchange_hdml(
 
   hdml.entryp = entryp;
 
-  ap_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
+  chxj_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
   /*--------------------------------------------------------------------------*/
   /* DEBUG                                                                    */
   /*--------------------------------------------------------------------------*/
@@ -477,7 +477,7 @@ s_init_hdml(hdml_t* hdml, Doc* doc, request_rec* r, device_table* spec)
   hdml->doc      = doc;
   hdml->card     = qs_alloc_zero_byte_string(r);
   hdml->spec     = spec;
-  hdml->conf     = ap_get_module_config(r->per_dir_config, &chxj_module);
+  hdml->conf     = chxj_get_module_config(r->per_dir_config, &chxj_module);
   hdml->doc->parse_mode = PARSE_MODE_CHTML;
 
   for (ii=0; ii<MAX_FORM_COUNT; ii++) {
@@ -1549,7 +1549,7 @@ s_hdml_do_input_text_tag(hdml_t* hdml, Node* tag)
                                        "%s%02d=%s", 
                                        s_get_form_no(r, hdml),
                                        hdml->var_cnt[hdml->pure_form_cnt],
-                                       ap_escape_uri(r->pool,val)));
+                                       chxj_escape_uri(r->pool,val)));
   else 
     s_output_to_init_vars(hdml, 
                           apr_psprintf(r->pool, 
@@ -1650,7 +1650,7 @@ s_hdml_do_input_password_tag(hdml_t* hdml, Node* tag)
                     apr_psprintf(r->pool, "%s%02d=%s", 
                         s_get_form_no(r, hdml),
                         hdml->var_cnt[hdml->pure_form_cnt], 
-                        ap_escape_uri(r->pool,val)));
+                        chxj_escape_uri(r->pool,val)));
   else 
     s_output_to_init_vars(hdml, 
                     apr_psprintf(r->pool, "%s%02d=", 
@@ -1692,7 +1692,7 @@ s_hdml_do_input_submit_tag(hdml_t* hdml, Node* tag)
     s_output_to_hdml_out(hdml, 
                     apr_psprintf(r->pool, "VARS=\"%s=%s\" ", 
                             nm, 
-                            ap_escape_uri(r->pool,val)));
+                            chxj_escape_uri(r->pool,val)));
     if (strstr(hdml->postdata[hdml->pure_form_cnt], nm) == NULL) {
       s_output_to_postdata(hdml, 
                       apr_psprintf(r->pool,"%s%s=$%s", 
@@ -1730,7 +1730,7 @@ s_hdml_do_input_hidden_tag(hdml_t* hdml, Node* tag)
                     apr_psprintf(r->pool, 
                             "%s=%s", 
                             nm, 
-                            ap_escape_uri(r->pool, val)));
+                            chxj_escape_uri(r->pool, val)));
   }
 }
 
@@ -1971,7 +1971,7 @@ s_hdml_do_input_checkbox_tag(hdml_t* hdml, Node* tag)
                             hdml->var_cnt[hdml->pure_form_cnt] + 0,
                             s_get_form_no(r, hdml),
                             hdml->var_cnt[hdml->pure_form_cnt] + 1,
-                            ap_escape_uri(r->pool,val),
+                            chxj_escape_uri(r->pool,val),
                             s_get_form_no(r, hdml),
                             hdml->var_cnt[hdml->pure_form_cnt] + 2
                             ));

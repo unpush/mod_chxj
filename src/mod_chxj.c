@@ -138,7 +138,7 @@ chxj_headers_fixup(request_rec *r)
   device_table*       spec;
 
   DBG(r, "start chxj_headers_fixup()");
-  dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  dconf = chxj_get_module_config(r->per_dir_config, &chxj_module);
 
   user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
   spec = chxj_specified_device(r, user_agent);
@@ -202,7 +202,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len, device_table *s
   DBG(r,"start of chxj_exchange() input:[%.*s]", (int)*len, *src);
   dst  = apr_pstrcat(r->pool, (char*)*src, NULL);
 
-  dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  dconf = chxj_get_module_config(r->per_dir_config, &chxj_module);
 
 
   entryp = chxj_apply_convrule(r, dconf->convrules);
@@ -668,7 +668,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
     return APR_SUCCESS;
   }
 
-  dconf      = ap_get_module_config(r->per_dir_config, &chxj_module);
+  dconf      = chxj_get_module_config(r->per_dir_config, &chxj_module);
   user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
   if (ctx && ctx->entryp) entryp = ctx->entryp;
   else                    entryp = chxj_apply_convrule(r, dconf->convrules);
@@ -1005,7 +1005,7 @@ chxj_input_filter(ap_filter_t*        f,
     return ap_get_brigade(f->next, bb, mode, block, readbytes);
   }
 
-  dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  dconf = chxj_get_module_config(r->per_dir_config, &chxj_module);
   user_agent = (char*)apr_table_get(r->headers_in, "User-Agent");
 
   if (ctx && ctx->entryp) entryp = ctx->entryp;
@@ -1267,7 +1267,7 @@ chxj_insert_filter(request_rec *r)
   chxjconvrule_entry* entryp;
 DBG(r, "start chxj_insert_filter()");
 
-  dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  dconf = chxj_get_module_config(r->per_dir_config, &chxj_module);
 
   user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
   spec = chxj_specified_device(r, user_agent);

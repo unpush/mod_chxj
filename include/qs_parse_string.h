@@ -17,8 +17,7 @@
 #ifndef __QS_PARSE_STRING_H__
 #define __QS_PARSE_STRING_H__
 
-#include <httpd.h>
-
+#include "chxj_apache.h"
 #include "chxj_buffered_write.h"
 
 /*

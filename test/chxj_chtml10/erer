@@ -1,0 +1,1461 @@
+# 1 "/usr/include/apache2/http_protocol.h"
+# 1 "<built-in>"
+# 1 "<command line>"
+# 1 "/usr/include/apache2/http_protocol.h"
+# 29 "/usr/include/apache2/http_protocol.h"
+# 1 "/usr/include/apache2/httpd.h" 1
+# 43 "/usr/include/apache2/httpd.h"
+# 1 "/usr/include/apache2/ap_config.h" 1
+# 232 "/usr/include/apache2/ap_config.h"
+# 1 "/usr/include/apache2/os.h" 1
+# 32 "/usr/include/apache2/os.h"
+# 1 "/usr/include/apache2/ap_config.h" 1
+# 33 "/usr/include/apache2/os.h" 2
+# 233 "/usr/include/apache2/ap_config.h" 2
+
+# 1 "/usr/include/apache2/ap_config_auto.h" 1
+# 235 "/usr/include/apache2/ap_config.h" 2
+# 1 "/usr/include/apache2/ap_config_layout.h" 1
+# 236 "/usr/include/apache2/ap_config.h" 2
+# 44 "/usr/include/apache2/httpd.h" 2
+# 1 "/usr/include/apache2/ap_mmn.h" 1
+# 45 "/usr/include/apache2/httpd.h" 2
+
+# 1 "/usr/include/apache2/ap_release.h" 1
+# 47 "/usr/include/apache2/httpd.h" 2
+# 59 "/usr/include/apache2/httpd.h"
+# 1 "/usr/include/apache2/ap_regex.h" 1
+# 77 "/usr/include/apache2/ap_regex.h"
+enum {
+  AP_REG_ASSERT = 1,
+  AP_REG_ESPACE,
+  AP_REG_INVARG,
+  AP_REG_NOMATCH
+};
+
+
+typedef struct {
+    void *re_pcre;
+    apr_size_t re_nsub;
+    apr_size_t re_erroffset;
+} ap_regex_t;
+
+
+typedef struct {
+    int rm_so;
+    int rm_eo;
+} ap_regmatch_t;
+# 106 "/usr/include/apache2/ap_regex.h"
+int ap_regcomp(ap_regex_t *preg, const char *regex, int cflags);
+# 117 "/usr/include/apache2/ap_regex.h"
+int ap_regexec(const ap_regex_t *preg, const char *string,
+                           apr_size_t nmatch, ap_regmatch_t *pmatch, int eflags);
+# 127 "/usr/include/apache2/ap_regex.h"
+apr_size_t ap_regerror(int errcode, const ap_regex_t *preg,
+                                   char *errbuf, apr_size_t errbuf_size);
+
+
+
+
+void ap_regfree(ap_regex_t *preg);
+# 60 "/usr/include/apache2/httpd.h" 2
+# 407 "/usr/include/apache2/httpd.h"
+typedef struct {
+    int major;
+    int minor;
+    int patch;
+    const char *add_string;
+} ap_version_t;
+
+
+
+
+
+
+
+void ap_get_server_revision(ap_version_t *version);
+
+
+
+
+
+const char * ap_get_server_version(void);
+
+
+
+
+
+
+void ap_add_version_component(apr_pool_t *pconf, const char *component);
+
+
+
+
+
+const char * ap_get_server_built(void);
+# 590 "/usr/include/apache2/httpd.h"
+typedef struct ap_method_list_t ap_method_list_t;
+# 599 "/usr/include/apache2/httpd.h"
+struct ap_method_list_t {
+
+    apr_int64_t method_mask;
+
+    apr_array_header_t *method_list;
+};
+# 689 "/usr/include/apache2/httpd.h"
+struct htaccess_result {
+
+    const char *dir;
+
+    int override;
+
+    int override_opts;
+
+    struct ap_conf_vector_t *htaccess;
+
+    const struct htaccess_result *next;
+};
+# 711 "/usr/include/apache2/httpd.h"
+typedef struct process_rec process_rec;
+
+typedef struct server_rec server_rec;
+
+typedef struct conn_rec conn_rec;
+
+typedef struct request_rec request_rec;
+
+typedef struct conn_state_t conn_state_t;
+# 728 "/usr/include/apache2/httpd.h"
+struct process_rec {
+
+    apr_pool_t *pool;
+
+    apr_pool_t *pconf;
+
+    int argc;
+
+    const char * const *argv;
+
+    const char *short_name;
+};
+
+
+
+
+struct request_rec {
+
+    apr_pool_t *pool;
+
+    conn_rec *connection;
+
+    server_rec *server;
+
+
+    request_rec *next;
+
+    request_rec *prev;
+
+
+
+    request_rec *main;
+
+
+
+
+
+    char *the_request;
+
+    int assbackwards;
+
+
+
+
+    int proxyreq;
+
+    int header_only;
+
+    char *protocol;
+
+    int proto_num;
+
+    const char *hostname;
+
+
+    apr_time_t request_time;
+
+
+    const char *status_line;
+
+    int status;
+
+
+
+
+
+
+    const char *method;
+
+    int method_number;
+# 819 "/usr/include/apache2/httpd.h"
+    apr_int64_t allowed;
+
+    apr_array_header_t *allowed_xmethods;
+
+    ap_method_list_t *allowed_methods;
+
+
+    apr_off_t sent_bodyct;
+
+    apr_off_t bytes_sent;
+
+    apr_time_t mtime;
+
+
+
+
+    int chunked;
+
+    const char *range;
+
+    apr_off_t clength;
+
+
+    apr_off_t remaining;
+
+    apr_off_t read_length;
+
+
+
+    int read_body;
+
+    int read_chunked;
+
+    unsigned expecting_100;
+# 867 "/usr/include/apache2/httpd.h"
+    apr_table_t *headers_in;
+
+    apr_table_t *headers_out;
+
+
+    apr_table_t *err_headers_out;
+
+    apr_table_t *subprocess_env;
+
+    apr_table_t *notes;
+
+
+
+
+
+
+    const char *content_type;
+
+    const char *handler;
+
+
+    const char *content_encoding;
+
+    apr_array_header_t *content_languages;
+
+
+    char *vlist_validator;
+
+
+    char *user;
+
+    char *ap_auth_type;
+
+
+    int no_cache;
+
+    int no_local_copy;
+
+
+
+
+
+
+    char *unparsed_uri;
+
+    char *uri;
+
+    char *filename;
+
+
+    char *canonical_filename;
+
+    char *path_info;
+
+    char *args;
+
+    apr_finfo_t finfo;
+
+    apr_uri_t parsed_uri;
+# 935 "/usr/include/apache2/httpd.h"
+    int used_path_info;
+
+
+
+
+
+
+
+    struct ap_conf_vector_t *per_dir_config;
+
+    struct ap_conf_vector_t *request_config;
+
+
+
+
+
+
+
+    const struct htaccess_result *htaccess;
+
+
+    struct ap_filter_t *output_filters;
+
+    struct ap_filter_t *input_filters;
+
+
+
+    struct ap_filter_t *proto_output_filters;
+
+
+    struct ap_filter_t *proto_input_filters;
+
+
+    int eos_sent;
+
+
+
+
+
+
+};
+# 997 "/usr/include/apache2/httpd.h"
+typedef enum {
+    AP_CONN_UNKNOWN,
+    AP_CONN_CLOSE,
+    AP_CONN_KEEPALIVE
+} ap_conn_keepalive_e;
+
+
+
+
+struct conn_rec {
+
+    apr_pool_t *pool;
+
+    server_rec *base_server;
+
+    void *vhost_lookup_data;
+
+
+
+    apr_sockaddr_t *local_addr;
+
+    apr_sockaddr_t *remote_addr;
+
+
+    char *remote_ip;
+
+
+
+    char *remote_host;
+
+
+    char *remote_logname;
+
+
+    unsigned aborted:1;
+
+
+
+    ap_conn_keepalive_e keepalive;
+
+
+
+    signed int double_reverse:2;
+
+
+    int keepalives;
+
+    char *local_ip;
+
+
+    char *local_host;
+
+
+    long id;
+
+
+    struct ap_conf_vector_t *conn_config;
+
+
+    apr_table_t *notes;
+
+    struct ap_filter_t *input_filters;
+
+    struct ap_filter_t *output_filters;
+
+    void *sbh;
+
+    struct apr_bucket_alloc_t *bucket_alloc;
+
+    conn_state_t *cs;
+
+    int data_in_input_filters;
+};
+
+
+
+
+typedef enum {
+    CONN_STATE_CHECK_REQUEST_LINE_READABLE,
+    CONN_STATE_READ_REQUEST_LINE,
+    CONN_STATE_LINGER
+} conn_state_e;
+
+
+
+
+struct conn_state_t {
+
+    APR_RING_ENTRY(conn_state_t) timeout_list;
+
+    apr_time_t expiration_time;
+
+    conn_state_e state;
+
+    conn_rec *c;
+
+    apr_pool_t *p;
+
+    apr_bucket_alloc_t *bucket_alloc;
+
+    apr_pollfd_t pfd;
+};
+# 1113 "/usr/include/apache2/httpd.h"
+typedef struct server_addr_rec server_addr_rec;
+struct server_addr_rec {
+
+    server_addr_rec *next;
+
+    apr_sockaddr_t *host_addr;
+
+    apr_port_t host_port;
+
+    char *virthost;
+};
+
+
+
+
+struct server_rec {
+
+    process_rec *process;
+
+    server_rec *next;
+
+
+    const char *defn_name;
+
+    unsigned defn_line_number;
+
+
+
+
+    char *server_admin;
+
+    char *server_hostname;
+
+    apr_port_t port;
+
+
+
+
+    char *error_fname;
+
+    apr_file_t *error_log;
+
+    int loglevel;
+
+
+
+
+    int is_virtual;
+
+
+    struct ap_conf_vector_t *module_config;
+
+    struct ap_conf_vector_t *lookup_defaults;
+
+
+
+
+    server_addr_rec *addrs;
+
+    apr_interval_time_t timeout;
+
+    apr_interval_time_t keep_alive_timeout;
+
+    int keep_alive_max;
+
+    int keep_alive;
+
+
+    const char *path;
+
+    int pathlen;
+
+
+    apr_array_header_t *names;
+
+    apr_array_header_t *wild_names;
+
+
+    int limit_req_line;
+
+    int limit_req_fieldsize;
+
+    int limit_req_fields;
+
+
+    const char *server_scheme;
+};
+
+typedef struct core_output_filter_ctx {
+    apr_bucket_brigade *b;
+
+
+
+    apr_pool_t *deferred_write_pool;
+} core_output_filter_ctx_t;
+
+typedef struct core_filter_ctx {
+    apr_bucket_brigade *b;
+    apr_bucket_brigade *tmpbb;
+} core_ctx_t;
+
+typedef struct core_net_rec {
+
+    apr_socket_t *client_socket;
+
+
+    conn_rec *c;
+
+    core_output_filter_ctx_t *out_ctx;
+    core_ctx_t *in_ctx;
+} core_net_rec;
+# 1232 "/usr/include/apache2/httpd.h"
+char * ap_field_noparam(apr_pool_t *p, const char *intype);
+# 1242 "/usr/include/apache2/httpd.h"
+char * ap_ht_time(apr_pool_t *p, apr_time_t t, const char *fmt, int gmt);
+# 1255 "/usr/include/apache2/httpd.h"
+char * ap_getword(apr_pool_t *p, const char **line, char stop);
+# 1265 "/usr/include/apache2/httpd.h"
+char * ap_getword_nc(apr_pool_t *p, char **line, char stop);
+# 1274 "/usr/include/apache2/httpd.h"
+char * ap_getword_white(apr_pool_t *p, const char **line);
+# 1284 "/usr/include/apache2/httpd.h"
+char * ap_getword_white_nc(apr_pool_t *p, char **line);
+# 1294 "/usr/include/apache2/httpd.h"
+char * ap_getword_nulls(apr_pool_t *p, const char **line,
+        char stop);
+# 1306 "/usr/include/apache2/httpd.h"
+char * ap_getword_nulls_nc(apr_pool_t *p, char **line, char stop);
+
+
+
+
+
+
+
+char * ap_getword_conf(apr_pool_t *p, const char **line);
+# 1323 "/usr/include/apache2/httpd.h"
+char * ap_getword_conf_nc(apr_pool_t *p, char **line);
+# 1334 "/usr/include/apache2/httpd.h"
+const char * ap_resolve_env(apr_pool_t *p, const char * word);
+# 1345 "/usr/include/apache2/httpd.h"
+const char * ap_size_list_item(const char **field, int *len);
+# 1357 "/usr/include/apache2/httpd.h"
+char * ap_get_list_item(apr_pool_t *p, const char **field);
+# 1367 "/usr/include/apache2/httpd.h"
+int ap_find_list_item(apr_pool_t *p, const char *line, const char *tok);
+# 1379 "/usr/include/apache2/httpd.h"
+char * ap_get_token(apr_pool_t *p, const char **accept_line, int accept_white);
+# 1388 "/usr/include/apache2/httpd.h"
+int ap_find_token(apr_pool_t *p, const char *line, const char *tok);
+# 1397 "/usr/include/apache2/httpd.h"
+int ap_find_last_token(apr_pool_t *p, const char *line, const char *tok);
+
+
+
+
+
+
+int ap_is_url(const char *u);
+
+
+
+
+
+
+int ap_unescape_url(char *url);
+
+
+
+
+
+
+int ap_unescape_url_keep2f(char *url);
+
+
+
+
+
+void ap_no2slash(char *name);
+
+
+
+
+
+
+void ap_getparents(char *name);
+
+
+
+
+
+
+
+char * ap_escape_path_segment(apr_pool_t *p, const char *s);
+# 1449 "/usr/include/apache2/httpd.h"
+char * ap_os_escape_path(apr_pool_t *p, const char *path, int partial);
+# 1460 "/usr/include/apache2/httpd.h"
+char * ap_escape_html(apr_pool_t *p, const char *s);
+
+
+
+
+
+
+
+char * ap_escape_logitem(apr_pool_t *p, const char *str);
+# 1477 "/usr/include/apache2/httpd.h"
+apr_size_t ap_escape_errorlog_item(char *dest, const char *source,
+                                               apr_size_t buflen);
+# 1488 "/usr/include/apache2/httpd.h"
+char * ap_construct_server(apr_pool_t *p, const char *hostname,
+        apr_port_t port, const request_rec *r);
+
+
+
+
+
+
+
+char * ap_escape_shell_cmd(apr_pool_t *p, const char *s);
+
+
+
+
+
+
+int ap_count_dirs(const char *path);
+# 1517 "/usr/include/apache2/httpd.h"
+char * ap_make_dirstr_prefix(char *d, const char *s, int n);
+# 1526 "/usr/include/apache2/httpd.h"
+char * ap_make_dirstr_parent(apr_pool_t *p, const char *s);
+# 1540 "/usr/include/apache2/httpd.h"
+char * ap_make_full_path(apr_pool_t *a, const char *dir, const char *f);
+# 1550 "/usr/include/apache2/httpd.h"
+int ap_os_is_path_absolute(apr_pool_t *p, const char *dir);
+# 1559 "/usr/include/apache2/httpd.h"
+int ap_is_matchexp(const char *str);
+
+
+
+
+
+
+
+int ap_strcmp_match(const char *str, const char *expected);
+# 1576 "/usr/include/apache2/httpd.h"
+int ap_strcasecmp_match(const char *str, const char *expected);
+# 1585 "/usr/include/apache2/httpd.h"
+char * ap_strcasestr(const char *s1, const char *s2);
+
+
+
+
+
+
+
+const char * ap_stripprefix(const char *bigstring,
+                                        const char *prefix);
+
+
+
+
+
+
+
+char * ap_pbase64decode(apr_pool_t *p, const char *bufcoded);
+
+
+
+
+
+
+
+char * ap_pbase64encode(apr_pool_t *p, char *string);
+# 1624 "/usr/include/apache2/httpd.h"
+ap_regex_t * ap_pregcomp(apr_pool_t *p, const char *pattern,
+                                     int cflags);
+
+
+
+
+
+
+void ap_pregfree(apr_pool_t *p, ap_regex_t *reg);
+# 1645 "/usr/include/apache2/httpd.h"
+char * ap_pregsub(apr_pool_t *p, const char *input, const char *source,
+                              size_t nmatch, ap_regmatch_t pmatch[]);
+
+
+
+
+
+
+void ap_content_type_tolower(char *s);
+
+
+
+
+
+void ap_str_tolower(char *s);
+# 1668 "/usr/include/apache2/httpd.h"
+int ap_ind(const char *str, char c);
+# 1677 "/usr/include/apache2/httpd.h"
+int ap_rind(const char *str, char c);
+
+
+
+
+
+
+
+char * ap_escape_quotes(apr_pool_t *p, const char *instring);
+# 1697 "/usr/include/apache2/httpd.h"
+char * ap_append_pid(apr_pool_t *p, const char *string,
+                                 const char *delim);
+# 1707 "/usr/include/apache2/httpd.h"
+int ap_is_rdirectory(apr_pool_t *p, const char *name);
+
+
+
+
+
+
+
+int ap_is_directory(apr_pool_t *p, const char *name);
+# 1726 "/usr/include/apache2/httpd.h"
+char *ap_get_local_host(apr_pool_t *p);
+
+
+
+
+
+
+
+void ap_log_assert(const char *szExp, const char *szFile, int nLine)
+       __attribute__((noreturn));
+# 1790 "/usr/include/apache2/httpd.h"
+const char * ap_psignature(const char *prefix, request_rec *r);
+# 1805 "/usr/include/apache2/httpd.h"
+# 1 "/usr/include/string.h" 1 3 4
+# 26 "/usr/include/string.h" 3 4
+# 1 "/usr/include/features.h" 1 3 4
+# 308 "/usr/include/features.h" 3 4
+# 1 "/usr/include/sys/cdefs.h" 1 3 4
+# 309 "/usr/include/features.h" 2 3 4
+# 331 "/usr/include/features.h" 3 4
+# 1 "/usr/include/gnu/stubs.h" 1 3 4
+# 332 "/usr/include/features.h" 2 3 4
+# 27 "/usr/include/string.h" 2 3 4
+
+
+
+
+
+
+# 1 "/usr/lib/gcc/i486-linux-gnu/4.1.2/include/stddef.h" 1 3 4
+# 214 "/usr/lib/gcc/i486-linux-gnu/4.1.2/include/stddef.h" 3 4
+typedef unsigned int size_t;
+# 34 "/usr/include/string.h" 2 3 4
+
+
+
+
+extern void *memcpy (void *__restrict __dest,
+       __const void *__restrict __src, size_t __n)
+     __attribute__ ((__nothrow__)) __attribute__ ((__nonnull__ (1, 2)));
+
+
+extern void *memmove (void *__dest, __const void *__src, size_t __n)
+     __attribute__ ((__nothrow__)) __attribute__ ((__nonnull__ (1, 2)));
+
+
+
+
+
+
+extern void *memccpy (void *__restrict __dest, __const void *__restrict __src,
+        int __c, size_t __n)
+     __attribute__ ((__nothrow__)) __attribute__ ((__nonnull__ (1, 2)));
+
+
+
+
+
+extern void *memset (void *__s, int __c, size_t __n) __attribute__ ((__nothrow__)) __attribute__ ((__nonnull__ (1)));
+
+
+extern int memcmp (__const void *__s1, __const void *__s2, size_t __n)
+     __attribute__ ((__nothrow__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
+
+
+extern void *memchr (__const void *__s, int __c, size_t __n)
+      __attribute__ ((__nothrow__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
+
+# 82 "/usr/include/string.h" 3 4
+
+
+extern char *strcpy (char *__restrict __dest, __const char *__restrict __src)
+     __attribute__ ((__nothrow__)) __attribute__ ((__nonnull__ (1, 2)));
+
+extern char *strncpy (char *__restrict __dest,
+        __const char *__restrict __src, size_t __n)
+     __attribute__ ((__nothrow__)) __attribute__ ((__nonnull__ (1, 2)));
+
+
+extern char *strcat (char *__restrict __dest, __const char *__restrict __src)
+     __attribute__ ((__nothrow__)) __attribute__ ((__nonnull__ (1, 2)));
+
+extern char *strncat (char *__restrict __dest, __const char *__restrict __src,
+        size_t __n) __attribute__ ((__nothrow__)) __attribute__ ((__nonnull__ (1, 2)));
+
+
+extern int strcmp (__const char *__s1, __const char *__s2)
+     __attribute__ ((__nothrow__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
+
+extern int strncmp (__const char *__s1, __const char *__s2, size_t __n)
+     __attribute__ ((__nothrow__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
+
+
+extern int strcoll (__const char *__s1, __const char *__s2)
+     __attribute__ ((__nothrow__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
+
+extern size_t strxfrm (char *__restrict __dest,
+         __const char *__restrict __src, size_t __n)
+     __attribute__ ((__nothrow__)) __attribute__ ((__nonnull__ (2)));
+
+# 130 "/usr/include/string.h" 3 4
+extern char *strdup (__const char *__s)
+     __attribute__ ((__nothrow__)) __attribute__ ((__malloc__)) __attribute__ ((__nonnull__ (1)));
+# 165 "/usr/include/string.h" 3 4
+
+
+extern char *strchr (__const char *__s, int __c)
+     __attribute__ ((__nothrow__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
+
+extern char *strrchr (__const char *__s, int __c)
+     __attribute__ ((__nothrow__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
+
+# 181 "/usr/include/string.h" 3 4
+
+
+
+extern size_t strcspn (__const char *__s, __const char *__reject)
+     __attribute__ ((__nothrow__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
+
+
+extern size_t strspn (__const char *__s, __const char *__accept)
+     __attribute__ ((__nothrow__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
+
+extern char *strpbrk (__const char *__s, __const char *__accept)
+     __attribute__ ((__nothrow__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
+
+extern char *strstr (__const char *__haystack, __const char *__needle)
+     __attribute__ ((__nothrow__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
+
+
+
+extern char *strtok (char *__restrict __s, __const char *__restrict __delim)
+     __attribute__ ((__nothrow__)) __attribute__ ((__nonnull__ (2)));
+
+
+
+
+extern char *__strtok_r (char *__restrict __s,
+    __const char *__restrict __delim,
+    char **__restrict __save_ptr)
+     __attribute__ ((__nothrow__)) __attribute__ ((__nonnull__ (2, 3)));
+
+extern char *strtok_r (char *__restrict __s, __const char *__restrict __delim,
+         char **__restrict __save_ptr)
+     __attribute__ ((__nothrow__)) __attribute__ ((__nonnull__ (2, 3)));
+# 240 "/usr/include/string.h" 3 4
+
+
+extern size_t strlen (__const char *__s)
+     __attribute__ ((__nothrow__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
+
+# 254 "/usr/include/string.h" 3 4
+
+
+extern char *strerror (int __errnum) __attribute__ ((__nothrow__));
+
+# 281 "/usr/include/string.h" 3 4
+extern char *strerror_r (int __errnum, char *__buf, size_t __buflen)
+     __attribute__ ((__nothrow__)) __attribute__ ((__nonnull__ (2)));
+
+
+
+
+
+extern void __bzero (void *__s, size_t __n) __attribute__ ((__nothrow__)) __attribute__ ((__nonnull__ (1)));
+
+
+
+extern void bcopy (__const void *__src, void *__dest, size_t __n)
+     __attribute__ ((__nothrow__)) __attribute__ ((__nonnull__ (1, 2)));
+
+
+extern void bzero (void *__s, size_t __n) __attribute__ ((__nothrow__)) __attribute__ ((__nonnull__ (1)));
+
+
+extern int bcmp (__const void *__s1, __const void *__s2, size_t __n)
+     __attribute__ ((__nothrow__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
+
+
+extern char *index (__const char *__s, int __c)
+     __attribute__ ((__nothrow__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
+
+
+extern char *rindex (__const char *__s, int __c)
+     __attribute__ ((__nothrow__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
+
+
+
+extern int ffs (int __i) __attribute__ ((__nothrow__)) __attribute__ ((__const__));
+# 325 "/usr/include/string.h" 3 4
+extern int strcasecmp (__const char *__s1, __const char *__s2)
+     __attribute__ ((__nothrow__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
+
+
+extern int strncasecmp (__const char *__s1, __const char *__s2, size_t __n)
+     __attribute__ ((__nothrow__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
+# 348 "/usr/include/string.h" 3 4
+extern char *strsep (char **__restrict __stringp,
+       __const char *__restrict __delim)
+     __attribute__ ((__nothrow__)) __attribute__ ((__nonnull__ (1, 2)));
+# 426 "/usr/include/string.h" 3 4
+
+# 1806 "/usr/include/apache2/httpd.h" 2
+
+char * ap_strchr(char *s, int c);
+const char * ap_strchr_c(const char *s, int c);
+char * ap_strrchr(char *s, int c);
+const char * ap_strrchr_c(const char *s, int c);
+char * ap_strstr(char *s, const char *c);
+const char * ap_strstr_c(const char *s, const char *c);
+# 30 "/usr/include/apache2/http_protocol.h" 2
+
+
+
+
+# 1 "/usr/include/apache2/util_filter.h" 1
+# 50 "/usr/include/apache2/util_filter.h"
+typedef enum {
+
+    AP_MODE_READBYTES,
+
+
+
+
+    AP_MODE_GETLINE,
+
+    AP_MODE_EATCRLF,
+
+
+    AP_MODE_SPECULATIVE,
+
+
+
+
+    AP_MODE_EXHAUSTIVE,
+
+
+
+    AP_MODE_INIT
+} ap_input_mode_t;
+# 101 "/usr/include/apache2/util_filter.h"
+typedef struct ap_filter_t ap_filter_t;
+# 136 "/usr/include/apache2/util_filter.h"
+typedef apr_status_t (*ap_out_filter_func)(ap_filter_t *f,
+                                           apr_bucket_brigade *b);
+typedef apr_status_t (*ap_in_filter_func)(ap_filter_t *f,
+                                          apr_bucket_brigade *b,
+                                          ap_input_mode_t mode,
+                                          apr_read_type_e block,
+                                          apr_off_t readbytes);
+typedef int (*ap_init_filter_func)(ap_filter_t *f);
+
+typedef union ap_filter_func {
+    ap_out_filter_func out_func;
+    ap_in_filter_func in_func;
+} ap_filter_func;
+# 160 "/usr/include/apache2/util_filter.h"
+typedef enum {
+
+
+    AP_FTYPE_RESOURCE = 10,
+
+
+
+    AP_FTYPE_CONTENT_SET = 20,
+
+
+    AP_FTYPE_PROTOCOL = 30,
+
+    AP_FTYPE_TRANSCODE = 40,
+# 182 "/usr/include/apache2/util_filter.h"
+    AP_FTYPE_CONNECTION = 50,
+
+
+    AP_FTYPE_NETWORK = 60
+} ap_filter_type;
+# 201 "/usr/include/apache2/util_filter.h"
+typedef struct ap_filter_rec_t ap_filter_rec_t;
+typedef struct ap_filter_provider_t ap_filter_provider_t;
+# 217 "/usr/include/apache2/util_filter.h"
+struct ap_filter_rec_t {
+
+    const char *name;
+
+
+    ap_filter_func filter_func;
+
+
+
+
+
+
+    ap_init_filter_func filter_init_func;
+
+
+
+
+
+
+    ap_filter_type ftype;
+
+
+    struct ap_filter_rec_t *next;
+
+
+    ap_filter_provider_t *providers;
+
+
+    int debug;
+
+
+    unsigned int proto_flags;
+};
+# 258 "/usr/include/apache2/util_filter.h"
+struct ap_filter_t {
+
+
+
+    ap_filter_rec_t *frec;
+
+
+    void *ctx;
+
+
+    ap_filter_t *next;
+
+
+
+
+
+    request_rec *r;
+
+
+
+
+    conn_rec *c;
+};
+# 295 "/usr/include/apache2/util_filter.h"
+apr_status_t ap_get_brigade(ap_filter_t *filter,
+                                        apr_bucket_brigade *bucket,
+                                        ap_input_mode_t mode,
+                                        apr_read_type_e block,
+                                        apr_off_t readbytes);
+# 309 "/usr/include/apache2/util_filter.h"
+apr_status_t ap_pass_brigade(ap_filter_t *filter,
+                                         apr_bucket_brigade *bucket);
+# 326 "/usr/include/apache2/util_filter.h"
+ap_filter_rec_t * ap_register_input_filter(const char *name,
+                                          ap_in_filter_func filter_func,
+                                          ap_init_filter_func filter_init,
+                                          ap_filter_type ftype);
+# 347 "/usr/include/apache2/util_filter.h"
+ap_filter_rec_t * ap_register_output_filter(const char *name,
+                                            ap_out_filter_func filter_func,
+                                            ap_init_filter_func filter_init,
+                                            ap_filter_type ftype);
+# 372 "/usr/include/apache2/util_filter.h"
+ap_filter_rec_t * ap_register_output_filter_protocol(
+                                            const char *name,
+                                            ap_out_filter_func filter_func,
+                                            ap_init_filter_func filter_init,
+                                            ap_filter_type ftype,
+                                            unsigned int proto_flags);
+# 397 "/usr/include/apache2/util_filter.h"
+ap_filter_t * ap_add_input_filter(const char *name, void *ctx,
+                                              request_rec *r, conn_rec *c);
+# 409 "/usr/include/apache2/util_filter.h"
+ap_filter_t * ap_add_input_filter_handle(ap_filter_rec_t *f,
+                                                     void *ctx,
+                                                     request_rec *r,
+                                                     conn_rec *c);
+
+
+
+
+
+
+ap_filter_rec_t * ap_get_input_filter_handle(const char *name);
+# 429 "/usr/include/apache2/util_filter.h"
+ap_filter_t * ap_add_output_filter(const char *name, void *ctx,
+                                               request_rec *r, conn_rec *c);
+# 440 "/usr/include/apache2/util_filter.h"
+ap_filter_t * ap_add_output_filter_handle(ap_filter_rec_t *f,
+                                                      void *ctx,
+                                                      request_rec *r,
+                                                      conn_rec *c);
+
+
+
+
+
+
+ap_filter_rec_t * ap_get_output_filter_handle(const char *name);
+
+
+
+
+
+
+
+void ap_remove_input_filter(ap_filter_t *f);
+
+
+
+
+
+
+
+void ap_remove_output_filter(ap_filter_t *f);
+# 491 "/usr/include/apache2/util_filter.h"
+apr_status_t ap_save_brigade(ap_filter_t *f,
+                                         apr_bucket_brigade **save_to,
+                                         apr_bucket_brigade **b, apr_pool_t *p);
+# 503 "/usr/include/apache2/util_filter.h"
+apr_status_t ap_filter_flush(apr_bucket_brigade *bb,
+                                                void *ctx);
+
+
+
+
+
+
+apr_status_t ap_fflush(ap_filter_t *f, apr_bucket_brigade *bb);
+# 547 "/usr/include/apache2/util_filter.h"
+apr_status_t ap_fputstrs(ap_filter_t *f,
+                                            apr_bucket_brigade *bb,
+                                            ...);
+# 558 "/usr/include/apache2/util_filter.h"
+apr_status_t ap_fprintf(ap_filter_t *f,
+                                           apr_bucket_brigade *bb,
+                                           const char *fmt,
+                                           ...)
+        __attribute__((format(printf,3,4)));
+
+
+
+
+
+
+
+void ap_filter_protocol(ap_filter_t* f, unsigned int proto_flags);
+# 35 "/usr/include/apache2/http_protocol.h" 2
+# 45 "/usr/include/apache2/http_protocol.h"
+APR_DECLARE_EXTERNAL_HOOK(ap,AP,void,insert_error_filter,(request_rec *r))
+
+
+
+
+ extern ap_filter_rec_t *ap_old_write_func;
+# 62 "/usr/include/apache2/http_protocol.h"
+request_rec *ap_read_request(conn_rec *c);
+
+
+
+
+
+void ap_get_mime_headers(request_rec *r);
+
+
+
+
+
+
+
+void ap_get_mime_headers_core(request_rec *r,
+                                          apr_bucket_brigade *bb);
+# 86 "/usr/include/apache2/http_protocol.h"
+void ap_finalize_request_protocol(request_rec *r);
+# 97 "/usr/include/apache2/http_protocol.h"
+void ap_send_error_response(request_rec *r, int recursive_error);
+# 111 "/usr/include/apache2/http_protocol.h"
+void ap_set_content_length(request_rec *r, apr_off_t length);
+
+
+
+
+
+
+int ap_set_keepalive(request_rec *r);
+# 127 "/usr/include/apache2/http_protocol.h"
+apr_time_t ap_rationalize_mtime(request_rec *r, apr_time_t mtime);
+# 140 "/usr/include/apache2/http_protocol.h"
+const char * ap_make_content_type(request_rec *r,
+                                              const char *type);
+# 159 "/usr/include/apache2/http_protocol.h"
+char * ap_make_etag(request_rec *r, int force_weak);
+
+
+
+
+
+void ap_set_etag(request_rec *r);
+
+
+
+
+
+void ap_set_last_modified(request_rec *r);
+# 181 "/usr/include/apache2/http_protocol.h"
+int ap_meets_conditions(request_rec *r);
+# 203 "/usr/include/apache2/http_protocol.h"
+apr_status_t ap_send_fd(apr_file_t *fd, request_rec *r, apr_off_t offset,
+                                   apr_size_t length, apr_size_t *nbytes);
+# 228 "/usr/include/apache2/http_protocol.h"
+int ap_method_register(apr_pool_t *p, const char *methname);
+
+
+
+
+
+
+void ap_method_registry_init(apr_pool_t *p);
+# 253 "/usr/include/apache2/http_protocol.h"
+ap_method_list_t * ap_make_method_list(apr_pool_t *p, int nelts);
+# 262 "/usr/include/apache2/http_protocol.h"
+void ap_copy_method_list(ap_method_list_t *dest,
+         ap_method_list_t *src);
+# 273 "/usr/include/apache2/http_protocol.h"
+int ap_method_in_list(ap_method_list_t *l, const char *method);
+# 283 "/usr/include/apache2/http_protocol.h"
+void ap_method_list_add(ap_method_list_t *l, const char *method);
+# 292 "/usr/include/apache2/http_protocol.h"
+void ap_method_list_remove(ap_method_list_t *l,
+           const char *method);
+
+
+
+
+
+
+
+void ap_clear_method_list(ap_method_list_t *l);
+# 310 "/usr/include/apache2/http_protocol.h"
+void ap_set_content_type(request_rec *r, const char *ct);
+# 322 "/usr/include/apache2/http_protocol.h"
+int ap_rputc(int c, request_rec *r);
+
+
+
+
+
+
+
+int ap_rputs(const char *str, request_rec *r);
+# 339 "/usr/include/apache2/http_protocol.h"
+int ap_rwrite(const void *buf, int nbyte, request_rec *r);
+
+
+
+
+
+
+
+int ap_rvputs(request_rec *r,...);
+# 356 "/usr/include/apache2/http_protocol.h"
+int ap_vrprintf(request_rec *r, const char *fmt, va_list vlist);
+# 365 "/usr/include/apache2/http_protocol.h"
+int ap_rprintf(request_rec *r, const char *fmt,...)
+    __attribute__((format(printf,2,3)));
+
+
+
+
+
+
+int ap_rflush(request_rec *r);
+
+
+
+
+
+
+
+int ap_index_of_response(int status);
+# 390 "/usr/include/apache2/http_protocol.h"
+const char * ap_get_status_line(int status);
+# 405 "/usr/include/apache2/http_protocol.h"
+int ap_setup_client_block(request_rec *r, int read_policy);
+# 415 "/usr/include/apache2/http_protocol.h"
+int ap_should_client_block(request_rec *r);
+# 426 "/usr/include/apache2/http_protocol.h"
+long ap_get_client_block(request_rec *r, char *buffer, apr_size_t bufsiz);
+# 438 "/usr/include/apache2/http_protocol.h"
+int ap_discard_request_body(request_rec *r);
+
+
+
+
+
+
+
+void ap_note_auth_failure(request_rec *r);
+
+
+
+
+
+
+
+void ap_note_basic_auth_failure(request_rec *r);
+
+
+
+
+
+
+
+void ap_note_digest_auth_failure(request_rec *r);
+# 476 "/usr/include/apache2/http_protocol.h"
+int ap_get_basic_auth_pw(request_rec *r, const char **pw);
+# 487 "/usr/include/apache2/http_protocol.h"
+void ap_parse_uri(request_rec *r, const char *uri);
+# 499 "/usr/include/apache2/http_protocol.h"
+int ap_getline(char *s, int n, request_rec *r, int fold);
+# 534 "/usr/include/apache2/http_protocol.h"
+apr_status_t ap_rgetline_core(char **s, apr_size_t n,
+                                          apr_size_t *read,
+                                          request_rec *r, int fold,
+                                          apr_bucket_brigade *bb);
+
+
+
+
+
+
+
+int ap_method_number_of(const char *method);
+# 554 "/usr/include/apache2/http_protocol.h"
+const char * ap_method_name_of(apr_pool_t *p, int methnum);
+# 569 "/usr/include/apache2/http_protocol.h"
+APR_DECLARE_EXTERNAL_HOOK(ap,AP,int,post_read_request,(request_rec *r))
+
+
+
+
+
+
+
+APR_DECLARE_EXTERNAL_HOOK(ap,AP,int,log_transaction,(request_rec *r))
+
+
+
+
+
+
+
+APR_DECLARE_EXTERNAL_HOOK(ap,AP,const char *,http_scheme,(const request_rec *r))
+
+
+
+
+
+
+APR_DECLARE_EXTERNAL_HOOK(ap,AP,apr_port_t,default_port,(const request_rec *r))
+
+
+typedef struct ap_bucket_error ap_bucket_error;
+# 606 "/usr/include/apache2/http_protocol.h"
+struct ap_bucket_error {
+
+    apr_bucket_refcount refcount;
+
+    int status;
+
+    const char *data;
+};
+
+
+ extern const apr_bucket_type_t ap_bucket_type_error;
+# 633 "/usr/include/apache2/http_protocol.h"
+apr_bucket * ap_bucket_error_make(apr_bucket *b, int error,
+                const char *buf, apr_pool_t *p);
+# 644 "/usr/include/apache2/http_protocol.h"
+apr_bucket * ap_bucket_error_create(int error, const char *buf,
+                                                apr_pool_t *p,
+                                                apr_bucket_alloc_t *list);
+
+apr_status_t ap_byterange_filter(ap_filter_t *f, apr_bucket_brigade *b);
+apr_status_t ap_http_header_filter(ap_filter_t *f, apr_bucket_brigade *b);
+apr_status_t ap_content_length_filter(ap_filter_t *,
+                                                              apr_bucket_brigade *);
+apr_status_t ap_old_write_filter(ap_filter_t *f, apr_bucket_brigade *b);
+
+
+
+
+
+
+void ap_set_sub_req_protocol(request_rec *rnew, const request_rec *r);
+
+
+
+
+
+
+void ap_finalize_sub_req_protocol(request_rec *sub_r);

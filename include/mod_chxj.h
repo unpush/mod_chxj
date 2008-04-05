@@ -34,12 +34,8 @@
 
 #include <string.h>
 
-#include "httpd.h"
-#include "http_config.h"
-#include "http_protocol.h"
-#include "http_request.h"
-#include "http_log.h"
-#include "ap_config.h"
+#include "chxj_apache.h"
+
 #include "apr_strings.h"
 #include "apr_buckets.h"
 #include "apr_lib.h"
@@ -47,7 +43,6 @@
 #include "apr_dso.h"
 #include "apr_general.h"
 #include "apr_pools.h"
-#include "util_filter.h"
 
 #if defined(AP_NEED_SET_MUTEX_PERMS)
 #  include "unixd.h"
@@ -71,17 +66,7 @@
 #include "qs_parse_string.h"
 #include "qs_parse_tag.h"
 
-#ifndef __CONFIG_H__
-#define __CONFIG_H__
-
-#undef PACKAGE_NAME
-#undef PACKAGE_STRING
-#undef PACKAGE_TARNAME
-#undef PACKAGE_VERSION
-
-#include "config.h"
-#endif
-#ifdef HAVE_AP_REGEX_H
+#if defined(HAVE_AP_REGEX_H) && HAVE_AP_REGEX_H == 1
 #  include "ap_regex.h"
 #else
 #  include "pcreposix.h"
@@ -390,11 +375,11 @@ module AP_MODULE_DECLARE_DATA chxj_module;
 #define CHXJ_IMG_OFF    (0)
 
 
-#define DBG(X,args...)  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(request_rec*)(X),##args)
-#define SDBG(X,Y)  ap_log_error(APLOG_MARK,APLOG_DEBUG,0,(X),(Y))
-#define ERR(X,args...)  ap_log_rerror(APLOG_MARK,APLOG_ERR,0,(X), ##args)
-#define SERR(X,Y)  ap_log_error(APLOG_MARK,APLOG_ERR,0,(X),(Y))
-#define WRN(rec,format,args...)  ap_log_rerror(APLOG_MARK,APLOG_WARNING,0,(rec),(format), ##args)
+#define DBG(X,args...)  chxj_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(request_rec*)(X),##args)
+#define SDBG(X,Y)       chxj_log_error(APLOG_MARK,APLOG_DEBUG,0,(X),(Y))
+#define ERR(X,args...)  chxj_log_rerror(APLOG_MARK,APLOG_ERR,0,(X), ##args)
+#define SERR(X,Y)       chxj_log_error(APLOG_MARK,APLOG_ERR,0,(X),(Y))
+#define WRN(rec,format,args...)  chxj_log_rerror(APLOG_MARK,APLOG_WARNING,0,(rec),(format), ##args)
 
 extern tag_handlers chxj_tag_handlers[];
 extern tag_handler  chtml10_handler[];

@@ -116,7 +116,7 @@ chxj_cookie_db_lock(request_rec *r)
   apr_status_t     rv;
   mod_chxj_config  *dconf;
 
-  dconf = (mod_chxj_config*)ap_get_module_config(r->per_dir_config, &chxj_module);
+  dconf = (mod_chxj_config*)chxj_get_module_config(r->per_dir_config, &chxj_module);
 
   rv = apr_file_open(&file,
                      chxj_cookie_db_lock_name_create(r, dconf->cookie_db_dir),
@@ -242,7 +242,7 @@ chxj_cookie_expire_db_lock(request_rec *r)
   apr_status_t     rv;
   mod_chxj_config  *dconf;
 
-  dconf = (mod_chxj_config *)ap_get_module_config(r->per_dir_config, &chxj_module);
+  dconf = (mod_chxj_config *)chxj_get_module_config(r->per_dir_config, &chxj_module);
 
   rv = apr_file_open(&file, 
                      chxj_cookie_expire_db_lock_name_create(r, dconf->cookie_db_dir),

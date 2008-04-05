@@ -373,7 +373,7 @@ chxj_exchange_chtml10(
   chtml10.entryp    = entryp;
   chtml10.cookie    = cookie;
 
-  ap_set_content_type(r, "text/html; charset=Windows-31J");
+  chxj_set_content_type(r, "text/html; charset=Windows-31J");
 
   /*--------------------------------------------------------------------------*/
   /* The character string of the input is analyzed.                           */
@@ -445,7 +445,7 @@ s_init_chtml10(
   chtml10->doc  = doc;
   chtml10->spec = spec;
   chtml10->out  = qs_alloc_zero_byte_string(r);
-  chtml10->conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  chtml10->conf = chxj_get_module_config(r->per_dir_config, &chxj_module);
   chtml10->doc->parse_mode = PARSE_MODE_CHTML;
 }
 

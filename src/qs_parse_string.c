@@ -17,8 +17,8 @@
 #include <stdio.h>
 #include <strings.h>
 #include <stdlib.h>
-#include "httpd.h"
-#include "http_log.h"
+
+#include "chxj_apache.h"
 #include "qs_parse_string.h"
 #include "qs_parse_tag.h"
 #include "qs_log.h"

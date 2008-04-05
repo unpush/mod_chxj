@@ -119,7 +119,7 @@ chxj_save_cookie(request_rec* r)
   has_cookie = 0;
   has_refer = 0;
 
-  dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  dconf = chxj_get_module_config(r->per_dir_config, &chxj_module);
   entryp = chxj_apply_convrule(r, dconf->convrules);
   if (! entryp) {
     DBG(r, "end chxj_save_cookie() no pattern");
@@ -168,11 +168,7 @@ chxj_save_cookie(request_rec* r)
     apr_uri_parse(r->pool,r->uri, &parsed_uri);
     refer_string = apr_psprintf(r->pool, 
                                 "%s://%s%s", 
-#if AP_SERVER_MAJORVERSION_NUMBER == 2 && AP_SERVER_MINORVERSION_NUMBER == 2
-                                ap_run_http_scheme(r),
-#else
-                                ap_run_http_method(r),
-#endif
+                                chxj_run_http_scheme(r),
                                 r->hostname,
                                 apr_uri_unparse(r->pool,
                                                 &parsed_uri,
@@ -306,7 +302,7 @@ chxj_update_cookie(request_rec* r, cookie_t* old_cookie)
   cookie->cookie_id = NULL;
 
 
-  dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  dconf = chxj_get_module_config(r->per_dir_config, &chxj_module);
   entryp = chxj_apply_convrule(r, dconf->convrules);
   if (! entryp) {
     DBG(r, "end chxj_update_cookie() no pattern");
@@ -423,7 +419,7 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
   cookie->cookie_headers = NULL;
   cookie->cookie_id = apr_pstrdup(r->pool, cookie_id);
 
-  dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  dconf = chxj_get_module_config(r->per_dir_config, &chxj_module);
   entryp = chxj_apply_convrule(r, dconf->convrules);
   if (! entryp) {
     DBG(r, "end chxj_load_cookie() no pattern");
@@ -710,11 +706,7 @@ valid_secure(request_rec *r, const char *value)
 {
   const char *scheme;
   DBG(r, "start valid_secure() value:[%s]", value);
-#if AP_SERVER_MAJORVERSION_NUMBER == 2 && AP_SERVER_MINORVERSION_NUMBER == 2
-  scheme = ap_run_http_scheme(r);
-#else
-  scheme = ap_run_http_method(r);
-#endif
+  scheme = chxj_apache_run_http_scheme(r);
   if (strcasecmp("https", scheme)) {
     DBG(r, "end valid_secure() value:[%s] (non secure)", value);
     return CHXJ_FALSE;
@@ -822,7 +814,7 @@ chxj_delete_cookie(request_rec *r, const char *cookie_id)
   mod_chxj_config *dconf;
 
   DBG(r, "start chxj_delete_cookie()");
-  dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  dconf = chxj_get_module_config(r->per_dir_config, &chxj_module);
 
 #if defined(USE_MYSQL_COOKIE)
   if (IS_COOKIE_STORE_MYSQL(dconf->cookie_store_type)) {
@@ -876,7 +868,7 @@ chxj_save_cookie_expire(request_rec* r, cookie_t* cookie)
     return;
   }
 
-  dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  dconf = chxj_get_module_config(r->per_dir_config, &chxj_module);
   if (!dconf) {
     DBG(r, "dconf is NULL");
     return;
@@ -925,7 +917,7 @@ chxj_delete_cookie_expire(request_rec* r, char* cookie_id)
 
   DBG(r, "start chxj_delete_cookie_expire()");
 
-  dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  dconf = chxj_get_module_config(r->per_dir_config, &chxj_module);
 
 #if defined(USE_MYSQL_COOKIE)
   if (IS_COOKIE_STORE_MYSQL(dconf->cookie_store_type)) {
@@ -966,7 +958,7 @@ chxj_cookie_expire_gc(request_rec* r)
 
   DBG(r, "start chxj_cookie_expire_gc()");
 
-  dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  dconf = chxj_get_module_config(r->per_dir_config, &chxj_module);
 #if defined(USE_MYSQL_COOKIE)
   if (IS_COOKIE_STORE_MYSQL(dconf->cookie_store_type)) {
     if (! chxj_cookie_expire_gc_mysql(r, dconf)) {

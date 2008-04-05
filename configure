@@ -20951,7 +20951,7 @@ echo "$as_me: error: pcre-config and pcre-1-config not found." >&2;}
 else
 
 cat >>confdefs.h <<\_ACEOF
-#define HAVE_AP_REGEX_H
+#define HAVE_AP_REGEX_H 1
 _ACEOF
 
 fi

@@ -249,7 +249,7 @@ chxj_img_conv_format_handler(request_rec* r)
   }
 
   qsp = s_get_query_string_param(r);
-  conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  conf = chxj_get_module_config(r->per_dir_config, &chxj_module);
   if (conf == NULL) {
     DBG(r, "end chxj_img_conv_format_handler() conf is null");
     return DECLINED;
@@ -323,7 +323,7 @@ chxj_exchange_image(request_rec *r, const char** src, apr_size_t* len)
 
 
   qsp = s_get_query_string_param(r);
-  conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  conf = chxj_get_module_config(r->per_dir_config, &chxj_module);
   if (conf == NULL) {
     DBG(r, "end chxj_exchange_image()");
     return NULL;
@@ -1278,7 +1278,7 @@ s_fixup_depth(MagickWand* magick_wand, request_rec* r, device_table* spec)
 static MagickWand*
 s_add_copyright(MagickWand* magick_wand, request_rec* r, device_table* spec)
 {
-  mod_chxj_config* conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  mod_chxj_config* conf = chxj_get_module_config(r->per_dir_config, &chxj_module);
 
   if (spec->html_spec_type == CHXJ_SPEC_UNKNOWN) {
     DBG(r, "Pass add_copiright proc");
@@ -1497,40 +1497,40 @@ s_send_cache_file(device_table* spec, query_string_param_t* query_string, reques
     name[strlen(name)-4] = 0;
     if (strcasecmp(r->content_type, "image/jpeg") == 0) {
 
-      ap_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
+      chxj_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
       ap_rprintf(r, HDML_FIRST_PAGE, r->uri, name, ".jpg", (long)st.size, "devjaww", name);
     }
     else
     if (strcasecmp(r->content_type, "image/bmp") == 0) {
-      ap_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
+      chxj_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
       ap_rprintf(r, HDML_FIRST_PAGE, r->uri, name, ".bmp", (long)st.size, "devabm", name);
     }
     else
     if (strcasecmp(r->content_type, "image/png") == 0) {
-      ap_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
+      chxj_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
       ap_rprintf(r, HDML_FIRST_PAGE, r->uri, name, ".png", (long)st.size, "dev8aww", name);
     }
     else
     if (strcasecmp(r->content_type, "image/gif") == 0) {
-      ap_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
+      chxj_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
       ap_rprintf(r, HDML_FIRST_PAGE, r->uri, name, ".gif", (long)st.size, "devgi0z", name);
     }
   }
   else
   if (query_string->mode == IMG_CONV_MODE_WALLPAPER && query_string->name != NULL) {
     if (query_string->count == -1 && query_string->offset == -1) {
-      ap_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
+      chxj_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
       ap_rprintf(r, HDML_SUCCESS_PAGE);
       ap_rflush(r);
     }
     else
     if (query_string->count == -2 && query_string->offset == -1) {
-      ap_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
+      chxj_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
       ap_rprintf(r, HDML_FAIL_PAGE);
       ap_rflush(r);
     }
     else { 
-      ap_set_content_type(r, "application/x-up-download");
+      chxj_set_content_type(r, "application/x-up-download");
       contentLength = apr_psprintf(r->pool, "%ld", query_string->count);
       apr_table_setn(r->headers_out, "Content-Length", (const char*)contentLength);
   
@@ -1626,32 +1626,32 @@ s_header_only_cache_file(device_table* spec, query_string_param_t* query_string,
     name[strlen(name)-4] = 0;
     if (strcasecmp(r->content_type, "image/jpeg") == 0) {
 
-      ap_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
+      chxj_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
     }
     else
     if (strcasecmp(r->content_type, "image/bmp") == 0) {
-      ap_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
+      chxj_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
     }
     else
     if (strcasecmp(r->content_type, "image/png") == 0) {
-      ap_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
+      chxj_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
     }
     else
     if (strcasecmp(r->content_type, "image/gif") == 0) {
-      ap_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
+      chxj_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
     }
   }
   else
   if (query_string->mode == IMG_CONV_MODE_WALLPAPER && query_string->name != NULL) {
     if (query_string->count == -1 && query_string->offset == -1) {
-      ap_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
+      chxj_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
     }
     else
     if (query_string->count == -2 && query_string->offset == -1) {
-      ap_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
+      chxj_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
     }
     else { 
-      ap_set_content_type(r, "application/x-up-download");
+      chxj_set_content_type(r, "application/x-up-download");
       contentLength = apr_psprintf(r->pool, "%ld", query_string->count);
       apr_table_setn(r->headers_out, "Content-Length", (const char*)contentLength);
   
@@ -1797,7 +1797,7 @@ chxj_trans_name(request_rec *r)
 
   DBG(r, "start chxj_trans_name()");
 
-  conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  conf = chxj_get_module_config(r->per_dir_config, &chxj_module);
 
   if (conf == NULL) {
     DBG(r, "end chxj_trans_name() conf is null[%s]", r->uri);

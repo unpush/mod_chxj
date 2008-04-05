@@ -364,7 +364,7 @@ chxj_exchange_jhtml(
   jhtml.entryp = entryp;
   jhtml.cookie = cookie;
 
-  ap_set_content_type(r, "text/html; charset=Windows-31J");
+  chxj_set_content_type(r, "text/html; charset=Windows-31J");
 
   /*--------------------------------------------------------------------------*/
   /* The character string of the input is analyzed.                           */
@@ -431,7 +431,7 @@ s_init_jhtml(jhtml_t* jhtml, Doc* doc, request_rec* r, device_table* spec)
   jhtml->doc  = doc;
   jhtml->spec = spec;
   jhtml->out  = qs_alloc_zero_byte_string(r);
-  jhtml->conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  jhtml->conf = chxj_get_module_config(r->per_dir_config, &chxj_module);
   jhtml->doc->parse_mode = PARSE_MODE_CHTML;
 }
 

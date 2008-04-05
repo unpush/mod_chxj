@@ -370,7 +370,7 @@ chxj_exchange_xhtml_mobile_1_0(
 
   xhtml.entryp = entryp;
 
-  ap_set_content_type(r, "text/html; charset=Windows-31J");
+  chxj_set_content_type(r, "text/html; charset=Windows-31J");
 
   /*--------------------------------------------------------------------------*/
   /* The character string of the input is analyzed.                           */
@@ -435,7 +435,7 @@ s_init_xhtml(xhtml_t* xhtml, Doc* doc, request_rec* r, device_table* spec)
   xhtml->doc  = doc;
   xhtml->spec = spec;
   xhtml->out  = qs_alloc_zero_byte_string(r);
-  xhtml->conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  xhtml->conf = chxj_get_module_config(r->per_dir_config, &chxj_module);
   xhtml->doc->parse_mode = PARSE_MODE_CHTML;
 }
 

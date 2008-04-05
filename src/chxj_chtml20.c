@@ -371,7 +371,7 @@ chxj_exchange_chtml20(
   chtml20.entryp = entryp;
   chtml20.cookie = cookie;
 
-  ap_set_content_type(r, "text/html; charset=Windows-31J");
+  chxj_set_content_type(r, "text/html; charset=Windows-31J");
 
   /*--------------------------------------------------------------------------*/
   /* The character string of the input is analyzed.                           */
@@ -437,7 +437,7 @@ s_init_chtml20(chtml20_t *chtml20, Doc *doc, request_rec *r, device_table *spec)
   chtml20->doc  = doc;
   chtml20->spec = spec;
   chtml20->out  = qs_alloc_zero_byte_string(r);
-  chtml20->conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  chtml20->conf = chxj_get_module_config(r->per_dir_config, &chxj_module);
 
   chtml20->doc->parse_mode = PARSE_MODE_CHTML;
 }
