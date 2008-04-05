@@ -1167,7 +1167,7 @@ s_chtml10_end_title_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("</title>\r\n");
+  W10_L("</title>");
 
   return chtml10->out;
 }

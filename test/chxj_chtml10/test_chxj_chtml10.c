@@ -109,6 +109,9 @@ void test_chtml10_form_tag_007();
 void test_chtml10_form_tag_008(); 
 void test_chtml10_form_tag_009(); 
 
+void test_chtml10_head_tag_001(); 
+void test_chtml10_head_tag_002(); 
+
 int
 main()
 {
@@ -178,6 +181,8 @@ main()
   CU_add_test(chtml10_suite, "test <form action> with null cookie.",              test_chtml10_form_tag_007); 
   CU_add_test(chtml10_suite, "test <form action> with other site .",              test_chtml10_form_tag_008); 
   CU_add_test(chtml10_suite, "test <form action method>.",                        test_chtml10_form_tag_009); 
+  CU_add_test(chtml10_suite, "test <head>.",                                      test_chtml10_head_tag_001); 
+  CU_add_test(chtml10_suite, "test <head> with value.",                           test_chtml10_head_tag_002); 
   CU_basic_run_tests();
   CU_cleanup_registry();
 
@@ -1987,6 +1992,62 @@ void test_chtml10_form_tag_009()
 {
 #define  TEST_STRING "<html><head></head><body><form method=\"post\" action=\"hogehoge\"></form></body></html>"
 #define  RESULT_STRING "<html><head></head><body><form method=\"post\" action=\"hogehoge?_chxj_cc=test_cookie_id\"></form></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_head_tag_001() 
+{
+#define  TEST_STRING "<html><head></head><body></body></html>"
+#define  RESULT_STRING "<html><head></head><body></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_head_tag_002() 
+{
+#define  TEST_STRING "<html><head><title>あああ</title></head><body></body></html>"
+#define  RESULT_STRING "<html><head><title>あああ</title></head><body></body></html>"
   char  *ret;
   char  *tmp;
   device_table spec;
