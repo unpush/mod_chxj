@@ -45,6 +45,7 @@ void test_chtml10_a_tag_href_attribute_002();
 void test_chtml10_a_tag_href_attribute_003();
 void test_chtml10_a_tag_href_attribute_004();
 void test_chtml10_a_tag_href_attribute_005();
+void test_chtml10_a_tag_href_attribute_006(); 
 void test_chtml10_a_tag_accesskey_attribute_001();
 void test_chtml10_a_tag_accesskey_attribute_002();
 void test_chtml10_a_tag_accesskey_attribute_003();
@@ -75,7 +76,8 @@ main()
   CU_add_test(chtml10_suite, "test a tag href attr2 with other site link.", test_chtml10_a_tag_href_attribute_002); 
   CU_add_test(chtml10_suite, "test a tag href attr3 with local link.",      test_chtml10_a_tag_href_attribute_003); 
   CU_add_test(chtml10_suite, "test a tag href attr4 with maker.",           test_chtml10_a_tag_href_attribute_004); 
-  CU_add_test(chtml10_suite, "test a tag href attr4 with void maker.",      test_chtml10_a_tag_href_attribute_005); 
+  CU_add_test(chtml10_suite, "test a tag href attr5 with void maker.",      test_chtml10_a_tag_href_attribute_005); 
+  CU_add_test(chtml10_suite, "test a tag href attr6 with no cookie.",      test_chtml10_a_tag_href_attribute_006); 
   CU_add_test(chtml10_suite, "test a tag accesskey attribute.",             test_chtml10_a_tag_accesskey_attribute_001); 
   CU_add_test(chtml10_suite, "test a tag accesskey attribute with void char.", test_chtml10_a_tag_accesskey_attribute_002); 
   CU_add_test(chtml10_suite, "test a tag accesskey attribute with no value", test_chtml10_a_tag_accesskey_attribute_003); 
@@ -484,6 +486,34 @@ void test_chtml10_a_tag_href_attribute_005()
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_a_tag_href_attribute_006() 
+{
+#define  TEST_STRING "<html><head></head><body><a href=\"a.html\">abc</a></body></html>"
+#define  RESULT_STRING "<html><head></head><body><a href=\"a.html\">abc</a></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, NULL);
   ret = chxj_rencoding(&r, ret, &destlen);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
