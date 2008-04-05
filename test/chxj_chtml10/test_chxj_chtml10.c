@@ -1322,8 +1322,8 @@ void test_chtml10_center_tag_001()
 }
 void test_chtml10_dir_tag_001() 
 {
-#define  TEST_STRING "<html><head></head><body><dir><li>あああ</li><li>いいい</li></dir></body></html>"
-#define  RESULT_STRING "<html><head></head><body><dir><li>あああ</li><li>いいい</li></dir></body></html>"
+#define  TEST_STRING "<html><head></head><body><dir><li>あああ<li>いいい</dir></body></html>"
+#define  RESULT_STRING "<html><head></head><body><dir><li>あああ<li>いいい</dir></body></html>"
   char  *ret;
   char  *tmp;
   device_table spec;

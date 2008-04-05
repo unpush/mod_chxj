@@ -604,6 +604,18 @@ chxj_node_exchange(
         if (handlers[tagDIR].end_tag_handler)
           handlers[tagDIR].end_tag_handler(pdoc, child);
       }
+      /*----------------------------------------------------------------------*/
+      /* <DL>                                                                 */
+      /*----------------------------------------------------------------------*/
+      else if (strcasecmp(name, "dl") == 0) {
+        if (handlers[tagDL].start_tag_handler) 
+          handlers[tagDL].start_tag_handler(pdoc, child);
+
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+
+        if (handlers[tagDL].end_tag_handler)
+          handlers[tagDL].end_tag_handler(pdoc, child);
+      }
       break;
 
     case 'c':
