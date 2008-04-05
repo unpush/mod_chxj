@@ -784,7 +784,7 @@ s_chtml10_start_li_tag(void* pdoc, Node* UNUSED(node))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("<li>\r\n");
+  W10_L("<li>");
 
   return chtml10->out;
 }
@@ -809,7 +809,7 @@ s_chtml10_end_li_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("</li>\r\n");
+  W10_L("</li>");
 
   return chtml10->out;
 }
