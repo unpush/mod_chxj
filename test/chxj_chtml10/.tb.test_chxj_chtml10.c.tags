@@ -10,14 +10,14 @@ CHXJ_TEST	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10
 COOKIE_INIT	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	106;"	macro	line:106
 SPEC_INIT	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	111;"	macro	line:111
 TEST_STRING	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	133;"	macro	line:133
-TEST_STRING	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	150;"	macro	line:150
-TEST_STRING	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	154;"	macro	line:154
-TEST_STRING	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	171;"	macro	line:171
+TEST_STRING	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	151;"	macro	line:151
+TEST_STRING	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	155;"	macro	line:155
+TEST_STRING	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	173;"	macro	line:173
 chxj_apply_convrule	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^chxj_apply_convrule(request_rec* r, apr_array_header_t* convrules)$/;"	function	line:85
 chxj_qr_code_blob_handler	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^char *chxj_qr_code_blob_handler(request_rec* r, const char* indata, size_t* len)$/;"	function	line:58
 main	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^main()$/;"	function	line:117
 test_chtml10_001	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^void test_chtml10_001() $/;"	function	line:131
-test_chtml10_002	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^void test_chtml10_002() $/;"	function	line:152
+test_chtml10_002	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^void test_chtml10_002() $/;"	function	line:153
 test_get_module_config	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^void * test_get_module_config(const ap_conf_vector_t *cv, const module *m)$/;"	function	line:79
 test_log_error	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^void test_log_error(const char *file, int line, int level, apr_status_t status, const request_rec *r, const char *fmt, ...)$/;"	function	line:48
 test_log_rerror	/home/konno/work/mod_chxj/mod_chxj/test/chxj_chtml10/test_chxj_chtml10.c	/^void test_log_rerror(const char *file, int line, int level, apr_status_t status, const request_rec *r, const char *fmt, ...)$/;"	function	line:39
