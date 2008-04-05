@@ -265,6 +265,7 @@ typedef enum {
   tagDT,
   tagLEGEND,
   tagLABEL,
+  tagBLOCKQUOTE,
 } tag_type;
 
 typedef struct mod_chxj_config mod_chxj_config;

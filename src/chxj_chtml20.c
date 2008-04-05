@@ -324,6 +324,11 @@ tag_handler chtml20_handler[] = {
     NULL,
     NULL,
   },
+  /* tagBLOCKQUOTE */
+  {
+    NULL,
+    NULL,
+  },
 };
 
 /**

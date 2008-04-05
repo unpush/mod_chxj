@@ -412,8 +412,7 @@ chxj_node_exchange(
       /*----------------------------------------------------------------------*/
       /* <BR>                                                                 */
       /*----------------------------------------------------------------------*/
-      else
-      if (strcasecmp(name, "br") == 0) {
+      else if (strcasecmp(name, "br") == 0) {
         if (handlers[tagBR].start_tag_handler) 
           handlers[tagBR].start_tag_handler(pdoc, child);
 
@@ -421,6 +420,18 @@ chxj_node_exchange(
 
         if (handlers[tagBR].end_tag_handler)
           handlers[tagBR].end_tag_handler(pdoc, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <BLOCKQUOTE>                                                         */
+      /*----------------------------------------------------------------------*/
+      else if (strcasecmp(name, "blockquote") == 0) {
+        if (handlers[tagBLOCKQUOTE].start_tag_handler) 
+          handlers[tagBLOCKQUOTE].start_tag_handler(pdoc, child);
+
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+
+        if (handlers[tagBLOCKQUOTE].end_tag_handler)
+          handlers[tagBLOCKQUOTE].end_tag_handler(pdoc, child);
       }
       break;
 

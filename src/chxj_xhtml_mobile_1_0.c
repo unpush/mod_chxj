@@ -323,6 +323,11 @@ tag_handler xhtml_handler[] = {
     NULL,
     NULL,
   },
+  /* tagBLOCKQUOTE */
+  {
+    NULL,
+    NULL,
+  },
 };
  
 /**

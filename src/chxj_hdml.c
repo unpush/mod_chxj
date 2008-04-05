@@ -319,6 +319,11 @@ tag_handler hdml_handler[] = {
     NULL,
     NULL,
   },
+  /* tagBLOCKQUOTE */
+  {
+    NULL,
+    NULL,
+  },
 };
 
 /**
