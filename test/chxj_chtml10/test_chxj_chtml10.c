@@ -224,6 +224,10 @@ void test_chtml10_img_tag_021();
 void test_chtml10_img_tag_022(); 
 void test_chtml10_img_tag_023(); 
 void test_chtml10_img_tag_024(); 
+void test_chtml10_img_tag_025(); 
+void test_chtml10_img_tag_026(); 
+void test_chtml10_img_tag_027(); 
+void test_chtml10_img_tag_028(); 
 
 
 int
@@ -400,6 +404,11 @@ main()
   CU_add_test(chtml10_suite, "test <img height> with alphabetic value." ,         test_chtml10_img_tag_022); 
   CU_add_test(chtml10_suite, "test <img height> with numeric value." ,            test_chtml10_img_tag_023); 
   CU_add_test(chtml10_suite, "test <img height> with percentage value." ,         test_chtml10_img_tag_024); 
+
+  CU_add_test(chtml10_suite, "test <img hspace> with no value." ,                 test_chtml10_img_tag_025); 
+  CU_add_test(chtml10_suite, "test <img hspace> with void value." ,               test_chtml10_img_tag_026); 
+  CU_add_test(chtml10_suite, "test <img hspace> with alphabetic value." ,         test_chtml10_img_tag_027); 
+  CU_add_test(chtml10_suite, "test <img hspace> with numeric value." ,            test_chtml10_img_tag_028); 
   CU_basic_run_tests();
   CU_cleanup_registry();
 
@@ -5149,6 +5158,118 @@ void test_chtml10_img_tag_024()
 {
 #define  TEST_STRING "<html><head></head><body><img height=\"10%\"></body></html>"
 #define  RESULT_STRING "<html><head></head><body><img height=\"10%\"></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_img_tag_025() 
+{
+#define  TEST_STRING "<html><head></head><body><img hspace></body></html>"
+#define  RESULT_STRING "<html><head></head><body><img></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_img_tag_026() 
+{
+#define  TEST_STRING "<html><head></head><body><img hspace=\"\"></body></html>"
+#define  RESULT_STRING "<html><head></head><body><img></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_img_tag_027() 
+{
+#define  TEST_STRING "<html><head></head><body><img hspace=\"abc\"></body></html>"
+#define  RESULT_STRING "<html><head></head><body><img hspace=\"abc\"></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_img_tag_028() 
+{
+#define  TEST_STRING "<html><head></head><body><img hspace=\"10\"></body></html>"
+#define  RESULT_STRING "<html><head></head><body><img hspace=\"10\"></body></html>"
   char  *ret;
   char  *tmp;
   device_table spec;
