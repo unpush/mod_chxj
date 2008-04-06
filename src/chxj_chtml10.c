@@ -2106,7 +2106,7 @@ s_chtml10_start_hr_tag(void* pdoc, Node* node)
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("<hr ");
+  W10_L("<hr");
  
   for (attr = qs_get_attr(doc,node);
        attr; 
@@ -2125,9 +2125,11 @@ s_chtml10_start_hr_tag(void* pdoc, Node* node)
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
-        W10_L(" align=\"");
-        W10_V(value);
-        W10_L("\" ");
+        if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('c','C',"center",value))) {
+          W10_L(" align=\"");
+          W10_V(value);
+          W10_L("\"");
+        }
       }
       break;
 
@@ -2137,9 +2139,11 @@ s_chtml10_start_hr_tag(void* pdoc, Node* node)
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
-        W10_L(" size=\"");
-        W10_V(value);
-        W10_L("\" ");
+        if (value && value[0] != '\0') {
+          W10_L(" size=\"");
+          W10_V(value);
+          W10_L("\"");
+        }
       }
       break;
 
@@ -2149,9 +2153,11 @@ s_chtml10_start_hr_tag(void* pdoc, Node* node)
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
-        W10_L(" width=\"");
-        W10_V(value);
-        W10_L("\" ");
+        if (value && value[0] != '\0') {
+          W10_L(" width=\"");
+          W10_V(value);
+          W10_L("\"");
+        }
       }
       break;
 
@@ -2161,7 +2167,7 @@ s_chtml10_start_hr_tag(void* pdoc, Node* node)
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
-        W10_L(" noshade ");
+        W10_L(" noshade");
       }
       break;
 
@@ -2179,9 +2185,7 @@ s_chtml10_start_hr_tag(void* pdoc, Node* node)
       break;
     }
   }
-
-
-  W10_L(" >");
+  W10_L(">");
   return chtml10->out;
 }
 
