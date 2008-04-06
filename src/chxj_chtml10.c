@@ -1987,9 +1987,12 @@ s_chtml10_start_input_tag(void* pdoc, Node* node)
   }
 
   if (name) {
-    W10_L(" name=\"");
-    W10_V(name);
-    W10_L("\"");
+    name = qs_trim_string(doc->buf.pool,name);
+    if (name && *name != 0) {
+      W10_L(" name=\"");
+      W10_V(name);
+      W10_L("\"");
+    }
   }
 
   if (value) {
