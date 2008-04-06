@@ -1980,7 +1980,7 @@ s_chtml10_start_input_tag(void* pdoc, Node* node)
     }
   }
 
-  if (size) {
+  if (size && *size != 0) {
     W10_L(" size=\"");
     W10_V(size);
     W10_L("\"");
