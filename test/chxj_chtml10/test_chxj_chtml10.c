@@ -263,6 +263,10 @@ void test_chtml10_input_tag_022();
 void test_chtml10_input_tag_023(); 
 void test_chtml10_input_tag_024(); 
 void test_chtml10_input_tag_025(); 
+void test_chtml10_input_tag_026(); 
+void test_chtml10_input_tag_027(); 
+void test_chtml10_input_tag_028(); 
+void test_chtml10_input_tag_029(); 
 
 
 int
@@ -478,6 +482,10 @@ main()
   CU_add_test(chtml10_suite, "test <input size> with void value." ,               test_chtml10_input_tag_023); 
   CU_add_test(chtml10_suite, "test <input size> with alphabetic value." ,         test_chtml10_input_tag_024); 
   CU_add_test(chtml10_suite, "test <input size> with numeric value." ,            test_chtml10_input_tag_025); 
+  CU_add_test(chtml10_suite, "test <input maxlength>." ,                          test_chtml10_input_tag_026); 
+  CU_add_test(chtml10_suite, "test <input maxlength> with void value." ,          test_chtml10_input_tag_027); 
+  CU_add_test(chtml10_suite, "test <input maxlength> with alphabetic value." ,    test_chtml10_input_tag_028); 
+  CU_add_test(chtml10_suite, "test <input maxlength> with numeric value." ,       test_chtml10_input_tag_029); 
 
   CU_basic_run_tests();
   CU_cleanup_registry();
@@ -6292,6 +6300,118 @@ void test_chtml10_input_tag_025()
 {
 #define  TEST_STRING "<html><head></head><body><input size=\"1\"></body></html>"
 #define  RESULT_STRING "<html><head></head><body><input size=\"1\"></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_input_tag_026() 
+{
+#define  TEST_STRING "<html><head></head><body><input maxlength></body></html>"
+#define  RESULT_STRING "<html><head></head><body><input></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_input_tag_027() 
+{
+#define  TEST_STRING "<html><head></head><body><input maxlength=\"\"></body></html>"
+#define  RESULT_STRING "<html><head></head><body><input></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_input_tag_028() 
+{
+#define  TEST_STRING "<html><head></head><body><input maxlength=\"a\"></body></html>"
+#define  RESULT_STRING "<html><head></head><body><input maxlength=\"a\"></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_input_tag_029() 
+{
+#define  TEST_STRING "<html><head></head><body><input maxlength=\"1\"></body></html>"
+#define  RESULT_STRING "<html><head></head><body><input maxlength=\"1\"></body></html>"
   char  *ret;
   char  *tmp;
   device_table spec;

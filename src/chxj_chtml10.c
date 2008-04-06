@@ -1998,7 +1998,7 @@ s_chtml10_start_input_tag(void* pdoc, Node* node)
     W10_L("\"");
   }
 
-  if (accesskey) {
+  if (accesskey && *accesskey != 0) {
     W10_L(" accesskey=\"");
     W10_V(accesskey);
     W10_L("\"");
@@ -2013,7 +2013,7 @@ s_chtml10_start_input_tag(void* pdoc, Node* node)
   /*--------------------------------------------------------------------------*/
   /* The figure is default for the password.                                  */
   /*--------------------------------------------------------------------------*/
-  if (max_length) {
+  if (max_length && *max_length != 0) {
     W10_L(" maxlength=\"");
     W10_V(max_length);
     W10_L("\"");
