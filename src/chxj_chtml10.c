@@ -2020,7 +2020,7 @@ s_chtml10_start_input_tag(void* pdoc, Node* node)
   }
 
   if (checked) {
-    W10_L(" checked ");
+    W10_L(" checked");
   }
 
   W10_L(">");
