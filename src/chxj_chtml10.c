@@ -2260,7 +2260,7 @@ s_chtml10_start_img_tag(void* pdoc, Node* node)
         value = chxj_encoding_parameter(r, value);
         value = chxj_add_cookie_parameter(r, value, chtml10->cookie);
         if (value) {
-          value = apr_psprintf(r->pool, 
+          value = apr_psprintf(doc->buf.pool, 
                                "%s%c%s=true", 
                                value, 
                                (strchr(value, '?')) ? '&' : '?',
@@ -2274,7 +2274,7 @@ s_chtml10_start_img_tag(void* pdoc, Node* node)
         value = chxj_encoding_parameter(r, value);
         value = chxj_add_cookie_parameter(r, value, chtml10->cookie);
         if (value) {
-          value = apr_psprintf(r->pool,
+          value = apr_psprintf(doc->buf.pool,
                                "%s%c%s=true",
                                value,
                                (strchr(value, '?')) ? '&' : '?',
@@ -2296,12 +2296,17 @@ s_chtml10_start_img_tag(void* pdoc, Node* node)
         /*--------------------------------------------------------------------*/
         /* CHTML 4.0                                                          */
         /*--------------------------------------------------------------------*/
-        W10_L(" align=\"");
-        W10_V(value);
-        W10_L("\"");
+        if (value && (STRCASEEQ('t','T',"top",   value) || 
+                      STRCASEEQ('m','M',"middle",value) || 
+                      STRCASEEQ('b','B',"bottom",value) || 
+                      STRCASEEQ('l','L',"left",  value) ||
+                      STRCASEEQ('r','R',"right", value))) {
+          W10_L(" align=\"");
+          W10_V(value);
+          W10_L("\"");
+        }
       }
-      else
-      if (strcasecmp(name, "alt"   ) == 0) {
+      else if (strcasecmp(name, "alt"   ) == 0) {
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
