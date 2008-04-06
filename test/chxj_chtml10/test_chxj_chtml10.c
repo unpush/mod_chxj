@@ -254,6 +254,11 @@ void test_chtml10_input_tag_013();
 void test_chtml10_input_tag_014(); 
 void test_chtml10_input_tag_015(); 
 void test_chtml10_input_tag_016(); 
+void test_chtml10_input_tag_017(); 
+void test_chtml10_input_tag_018(); 
+void test_chtml10_input_tag_019(); 
+void test_chtml10_input_tag_020(); 
+void test_chtml10_input_tag_021(); 
 
 
 int
@@ -460,6 +465,11 @@ main()
   CU_add_test(chtml10_suite, "test <input name> with alphabetic value." ,         test_chtml10_input_tag_014); 
   CU_add_test(chtml10_suite, "test <input name> with japanese value." ,           test_chtml10_input_tag_015); 
   CU_add_test(chtml10_suite, "test <input name> with japanese-hankaku value." ,   test_chtml10_input_tag_016); 
+  CU_add_test(chtml10_suite, "test <input value>." ,                              test_chtml10_input_tag_017); 
+  CU_add_test(chtml10_suite, "test <input value> with void value." ,              test_chtml10_input_tag_018); 
+  CU_add_test(chtml10_suite, "test <input value> with alphabetic value." ,        test_chtml10_input_tag_019); 
+  CU_add_test(chtml10_suite, "test <input value> with japanese value." ,          test_chtml10_input_tag_020); 
+  CU_add_test(chtml10_suite, "test <input value> with japanese-hankaku value." ,  test_chtml10_input_tag_021); 
 
   CU_basic_run_tests();
   CU_cleanup_registry();
@@ -6022,6 +6032,146 @@ void test_chtml10_input_tag_016()
 {
 #define  TEST_STRING "<html><head></head><body><input name=\"ﾊﾝｶｸ\"></body></html>"
 #define  RESULT_STRING "<html><head></head><body><input name=\"ﾊﾝｶｸ\"></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_input_tag_017() 
+{
+#define  TEST_STRING "<html><head></head><body><input value></body></html>"
+#define  RESULT_STRING "<html><head></head><body><input></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_input_tag_018() 
+{
+#define  TEST_STRING "<html><head></head><body><input value=\"\"></body></html>"
+#define  RESULT_STRING "<html><head></head><body><input></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_input_tag_019() 
+{
+#define  TEST_STRING "<html><head></head><body><input value=\"a\"></body></html>"
+#define  RESULT_STRING "<html><head></head><body><input value=\"a\"></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_input_tag_020() 
+{
+#define  TEST_STRING "<html><head></head><body><input value=\"亀\"></body></html>"
+#define  RESULT_STRING "<html><head></head><body><input value=\"亀\"></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_input_tag_021() 
+{
+#define  TEST_STRING "<html><head></head><body><input value=\"ﾊﾝｶｸ\"></body></html>"
+#define  RESULT_STRING "<html><head></head><body><input value=\"ﾊﾝｶｸ\"></body></html>"
   char  *ret;
   char  *tmp;
   device_table spec;

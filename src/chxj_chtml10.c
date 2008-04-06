@@ -1986,25 +1986,22 @@ s_chtml10_start_input_tag(void* pdoc, Node* node)
     W10_L("\"");
   }
 
-  if (name) {
-    name = qs_trim_string(doc->buf.pool,name);
-    if (name && *name != 0) {
-      W10_L(" name=\"");
-      W10_V(name);
-      W10_L("\"");
-    }
+  if (name && *name != 0) {
+    W10_L(" name=\"");
+    W10_V(name);
+    W10_L("\"");
   }
 
-  if (value) {
+  if (value && *value != 0) {
     W10_L(" value=\"");
     W10_V(value);
-    W10_L("\" ");
+    W10_L("\"");
   }
 
   if (accesskey) {
     W10_L(" accesskey=\"");
     W10_V(accesskey);
-    W10_L("\" ");
+    W10_L("\"");
   }
 
   if (istyle) {
