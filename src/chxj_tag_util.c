@@ -154,14 +154,14 @@ qs_alloc_zero_byte_string(request_rec* r)
 /**
  * A consecutive head and the last WHITESPACE are removed.
  *
- * @param r    [i]   To use POOL, the pointer to request_rec is specified.
+ * @param p    [i]   To use POOL
  * @param s    [i]   The character string that should be removed is specified.
  * @return The character string that has been removed is returned.
  */
 char*
-qs_trim_string(request_rec* r, char* s)
+qs_trim_string(apr_pool_t *p, char* s)
 {
-  char* ss = apr_pstrdup(r->pool, s);
+  char* ss = apr_pstrdup(p, s);
   int len = strlen(s);
   int ii;
 

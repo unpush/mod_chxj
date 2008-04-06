@@ -2750,7 +2750,7 @@ s_chtml30_text_tag(void* pdoc, Node* child)
   r       = doc->r;
   
   textval = qs_get_node_value(doc,child);
-  textval = qs_trim_string(chtml30->doc->r, textval);
+  textval = qs_trim_string(doc->buf.pool, textval);
   if (strlen(textval) == 0)
     return chtml30->out;
   

@@ -553,7 +553,7 @@ check_valid_cookie_attribute(request_rec *r, const char *value)
   for (;;) {
     pair = apr_strtok(NULL, ";", &pstat);
     if (! pair) break;
-    pair = qs_trim_string(r, pair);
+    pair = qs_trim_string(r->pool, pair);
     if (STRNCASEEQ('d','D',"domain", pair, sizeof("domain")-1)) {
       domain_pair = apr_pstrdup(r->pool, pair);
     }
@@ -612,9 +612,9 @@ valid_domain(request_rec *r, const char *value)
     return CHXJ_TRUE;
 
   name = apr_strtok(p,"=", &pstat);
-  name = qs_trim_string(r, name);
+  name = qs_trim_string(r->pool, name);
   val = apr_strtok(NULL, "=", &pstat);
-  val = qs_trim_string(r, val);
+  val = qs_trim_string(r->pool, val);
   len = strlen(host);
   if (len) {
     if (chxj_strcasenrcmp(r->pool, host, val, strlen(val))) {
@@ -662,8 +662,8 @@ valid_path(request_rec *r, const char *value)
   DBG(r, "uri=[%s]", uri);
   name = apr_strtok(p, "=", &pstat);
   val = apr_strtok(NULL, "=", &pstat);
-  name = qs_trim_string(r, name);
-  val = qs_trim_string(r, val);
+  name = qs_trim_string(r->pool, name);
+  val = qs_trim_string(r->pool, val);
   DBG(r, "name=[%s] val=[%s]", name, val);
   
   DBG(r, "val:[%s] vs uri:[%s]", val, uri);

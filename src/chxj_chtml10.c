@@ -1966,9 +1966,18 @@ s_chtml10_start_input_tag(void* pdoc, Node* node)
   size       = qs_get_size_attr(doc, node, r);
 
   if (type) {
-    W10_L(" type=\"");
-    W10_V(type);
-    W10_L("\"");
+    type = qs_trim_string(doc->buf.pool, type);
+    if (type && (STRCASEEQ('t','T',"text",    type) ||
+                 STRCASEEQ('p','P',"password",type) ||
+                 STRCASEEQ('c','C',"checkbox",type) ||
+                 STRCASEEQ('r','R',"radio",   type) ||
+                 STRCASEEQ('h','H',"hidden",  type) ||
+                 STRCASEEQ('s','S',"submit",  type) ||
+                 STRCASEEQ('r','R',"reset",   type))) {
+      W10_L(" type=\"");
+      W10_V(type);
+      W10_L("\"");
+    }
   }
 
   if (size) {
@@ -2014,7 +2023,7 @@ s_chtml10_start_input_tag(void* pdoc, Node* node)
     W10_L(" checked ");
   }
 
-  W10_L(" >");
+  W10_L(">");
   return chtml10->out;
 }
 
@@ -2943,7 +2952,7 @@ s_chtml10_text(void *pdoc, Node *child)
   r       = doc->r;
   
   textval = qs_get_node_value(doc,child);
-  textval = qs_trim_string(r, textval);
+  textval = qs_trim_string(doc->buf.pool, textval);
 
   if (strlen(textval) == 0)
     return chtml10->out;

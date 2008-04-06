@@ -2513,8 +2513,8 @@ s_hdml_start_option_tag(void* pdoc, Node* node)
                             "<CE TASK=RETURN VALUE=\"%s\" "
                             "RETVALS=\"$V;%s\">%s</CE>\n", 
                             val, 
-                            qs_trim_string(r,txtval), 
-                            qs_trim_string(r,txtval)));
+                            qs_trim_string(r->pool,txtval), 
+                            qs_trim_string(r->pool,txtval)));
   }
  
   hdml->hdml_br_flag = 0;
@@ -2867,7 +2867,7 @@ s_output_to_postdata(hdml_t* hdml, char* s)
   hdml->postdata[hdml->pure_form_cnt] =
           apr_pstrcat(r->pool, 
                           hdml->postdata[hdml->pure_form_cnt],
-                          qs_trim_string(r, s),
+                          qs_trim_string(r->pool, s),
                           NULL);
 
   DBG(r, "POSTDATA:[%s]", hdml->postdata[hdml->pure_form_cnt] );
@@ -2926,7 +2926,7 @@ s_output_to_init_vars(hdml_t* hdml, char* s)
   if (strlen(hdml->init_vars))
     hdml->init_vars = apr_pstrcat(r->pool, hdml->init_vars, "&", NULL);
 
-  hdml->init_vars = apr_pstrcat(r->pool, hdml->init_vars, qs_trim_string(r,s), NULL);
+  hdml->init_vars = apr_pstrcat(r->pool, hdml->init_vars, qs_trim_string(r->pool,s), NULL);
 
   DBG(r, "INIT_VARS:[%s]", hdml->init_vars);
 }
@@ -2970,7 +2970,7 @@ s_hdml_text_tag(void* pdoc, Node* child)
   r    = doc->r;
   
   textval = qs_get_node_value(doc,child);
-  textval = qs_trim_string(r, textval);
+  textval = qs_trim_string(r->pool, textval);
   if (strlen(textval) == 0)
     return hdml->out;
   
