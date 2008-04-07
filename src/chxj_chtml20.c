@@ -349,6 +349,11 @@ tag_handler chtml20_handler[] = {
     NULL,
     NULL,
   },
+  /* tagPLAINTEXT */
+  {
+    NULL,
+    NULL,
+  },
 };
 
 /**

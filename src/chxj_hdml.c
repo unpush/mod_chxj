@@ -344,6 +344,11 @@ tag_handler hdml_handler[] = {
     NULL,
     NULL,
   },
+  /* tagPLAINTEXT */
+  {
+    NULL,
+    NULL,
+  },
 };
 
 /**

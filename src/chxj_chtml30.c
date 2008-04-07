@@ -347,6 +347,11 @@ tag_handler chtml30_handler[] = {
     NULL,
     NULL,
   },
+  /* tagPLAINTEXT */
+  {
+    NULL,
+    NULL,
+  },
 };
 
 

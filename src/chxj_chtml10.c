@@ -98,8 +98,11 @@ static char* s_chtml10_start_dt_tag       (void* pdoc, Node* node);
 static char* s_chtml10_end_dt_tag         (void* pdoc, Node* node);
 static char* s_chtml10_start_dd_tag       (void* pdoc, Node* node);
 static char* s_chtml10_end_dd_tag         (void* pdoc, Node* node);
-static char* s_chtml10_start_menu_tag     (void *pdoc, Node *node);
-static char* s_chtml10_end_menu_tag       (void *pdoc, Node *node);
+static char *s_chtml10_start_menu_tag     (void *pdoc, Node *node);
+static char *s_chtml10_end_menu_tag       (void *pdoc, Node *node);
+static char *s_chtml10_start_plaintext_tag(void *pdoc, Node *node);
+static char *s_chtml10_start_plaintext_tag_inner(void *pdoc, Node *node);
+static char *s_chtml10_end_plaintext_tag  (void *pdoc, Node *node);
 
 static void  s_init_chtml10(chtml10_t* chtml, Doc* doc, request_rec* r, device_table* spec);
 
@@ -357,6 +360,11 @@ tag_handler chtml10_handler[] = {
   {
     s_chtml10_start_menu_tag,
     s_chtml10_end_menu_tag,
+  },
+  /* tagPLAINTEXT */
+  {
+    s_chtml10_start_plaintext_tag,
+    s_chtml10_end_plaintext_tag,
   },
 };
 
@@ -3262,6 +3270,63 @@ s_chtml10_end_menu_tag(void *pdoc, Node *UNUSED(child))
   chtml10_t *chtml10 = GET_CHTML10(pdoc);
   Doc *doc = chtml10->doc;
   W10_L("</menu>");
+  return chtml10->out;
+}
+
+
+/**
+ * It is a hanplaintexter who processes the PLAINTEXT tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The PLAINTEXT tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml10_start_plaintext_tag(void *pdoc, Node *node)
+{
+  chtml10_t *chtml10;
+  Doc *doc;
+
+  chtml10 = GET_CHTML10(pdoc);
+  doc     = chtml10->doc;
+  W10_L("<plaintext>");
+  s_chtml10_start_plaintext_tag_inner(pdoc,node);
+  return chtml10->out;
+}
+
+static char *
+s_chtml10_start_plaintext_tag_inner(void *pdoc, Node *node)
+{
+  chtml10_t *chtml10;
+  Doc *doc;
+  Node *child;
+  chtml10 = GET_CHTML10(pdoc);
+  doc     = chtml10->doc;
+  for (child = qs_get_child_node(doc, node);
+       child;
+       child = qs_get_next_node(doc, child)) {
+    W10_V(child->otext);
+    s_chtml10_start_plaintext_tag_inner(pdoc, child);
+  }
+  return chtml10->out;
+}
+
+
+/**
+ * It is a hanplaintexter who processes the PLAINTEXT tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The PLAINTEXT tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml10_end_plaintext_tag(void *pdoc, Node *UNUSED(child))
+{
+  chtml10_t *chtml10 = GET_CHTML10(pdoc);
+  Doc *doc = chtml10->doc;
+  W10_L("</plaintext>");
   return chtml10->out;
 }
 /*

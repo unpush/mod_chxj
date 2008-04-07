@@ -233,11 +233,10 @@ chxj_node_exchange(
         if (handlers[tagP].end_tag_handler)
           handlers[tagP].end_tag_handler(pdoc, child);
       }
-      else
       /*----------------------------------------------------------------------*/
       /* <PRE>                                                                */
       /*----------------------------------------------------------------------*/
-      if (strcasecmp(name, "pre") == 0) {
+      else if (strcasecmp(name, "pre") == 0) {
         if (handlers[tagPRE].start_tag_handler) 
           handlers[tagPRE].start_tag_handler(pdoc, child);
 
@@ -245,6 +244,15 @@ chxj_node_exchange(
 
         if (handlers[tagPRE].end_tag_handler)
           handlers[tagPRE].end_tag_handler(pdoc, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <PLAINTEXT>                                                          */
+      /*----------------------------------------------------------------------*/
+      else if (strcasecmp(name, "plaintext") == 0) {
+        if (handlers[tagPLAINTEXT].start_tag_handler) 
+          handlers[tagPLAINTEXT].start_tag_handler(pdoc, child);
+        if (handlers[tagPLAINTEXT].end_tag_handler)
+          handlers[tagPLAINTEXT].end_tag_handler(pdoc, child);
       }
       break;
 

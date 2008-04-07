@@ -217,11 +217,11 @@ qs_parse_string(Doc *doc, const char *src, int srclen)
         }
         else
         if (doc->parse_mode == PARSE_MODE_NO_PARSE) {
-          if ((node->name[1] == 'c' || node->name[1] == 'C')
-              &&  strcasecmp(&node->name[1], "chxj:if") == 0) {
+          if (STRCASEEQ('c','C',"chxj:if",&node->name[1]) || STRCASEEQ('p','P',"plaintext",&node->name[1])) {
             if (doc->now_parent_node->parent != NULL) {
               doc->now_parent_node = doc->now_parent_node->parent;
               doc->parse_mode = PARSE_MODE_CHTML;
+              s_error_check(doc, node, node_stack, err_stack);
             }
           }
         }
@@ -235,7 +235,7 @@ qs_parse_string(Doc *doc, const char *src, int srclen)
         continue;
       }
       qs_add_child_node(doc,node);
-      if (has_child(node->name)) {
+      if ((has_child(node->name) && doc->parse_mode != PARSE_MODE_NO_PARSE) || STRCASEEQ('p','P',"plaintext",node->name)) {
         qs_push_node(doc, node, node_stack);
       }
 
@@ -244,26 +244,25 @@ qs_parse_string(Doc *doc, const char *src, int srclen)
           continue;
       }
 
-      if (doc->parse_mode == PARSE_MODE_CHTML 
-          && (*node->name == 'c' || *node->name == 'C') 
-          &&  strcasecmp(node->name, "chxj:if") == 0) {
+      if (doc->parse_mode == PARSE_MODE_CHTML && STRCASEEQ('c','C',"chxj:if", node->name)) {
         Attr* parse_attr;
-
         doc->parse_mode = PARSE_MODE_NO_PARSE;
         doc->now_parent_node = node;
         for(parse_attr = node->attr;
             parse_attr; 
             parse_attr = parse_attr->next) {
-          if ((*parse_attr->name == 'p' || *parse_attr->name == 'P') 
-          &&   strcasecmp(parse_attr->name, "parse") == 0) {
-            if ((*parse_attr->value == 't' || *parse_attr->value == 'T')
-            &&   strcasecmp(parse_attr->value, "true") == 0) {
+          if (STRCASEEQ('p','P',"parse",parse_attr->name)) {
+            if (STRCASEEQ('t','T',"true",parse_attr->value)) {
               doc->parse_mode = PARSE_MODE_CHTML;
             }
           }
         }
-
       }
+      else if (doc->parse_mode == PARSE_MODE_CHTML && STRCASEEQ('p','P',"plaintext",node->name)) {
+        doc->parse_mode = PARSE_MODE_NO_PARSE;
+        doc->now_parent_node = node;
+      }
+
       if (doc->parse_mode == PARSE_MODE_CHTML && has_child(node->name)) {
         doc->now_parent_node = node;
       }

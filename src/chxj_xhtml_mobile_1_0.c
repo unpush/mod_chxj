@@ -348,6 +348,11 @@ tag_handler xhtml_handler[] = {
     NULL,
     NULL,
   },
+  /* tagPLAINTEXT */
+  {
+    NULL,
+    NULL,
+  },
 };
  
 /**
