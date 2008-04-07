@@ -272,6 +272,11 @@ void test_chtml10_input_tag_031();
 void test_chtml10_input_tag_032(); 
 void test_chtml10_input_tag_033(); 
 
+void test_chtml10_li_tag_001(); 
+void test_chtml10_li_tag_002(); 
+void test_chtml10_li_tag_003(); 
+void test_chtml10_li_tag_004(); 
+
 
 int
 main()
@@ -494,6 +499,11 @@ main()
   CU_add_test(chtml10_suite, "test <input accesskey>." ,                          test_chtml10_input_tag_031); 
   CU_add_test(chtml10_suite, "test <input accesskey> with void value." ,          test_chtml10_input_tag_032); 
   CU_add_test(chtml10_suite, "test <input accesskey> with value." ,               test_chtml10_input_tag_033); 
+
+  CU_add_test(chtml10_suite, "test <li>." ,                                       test_chtml10_li_tag_001); 
+  CU_add_test(chtml10_suite, "test <li> with alphabetic value." ,                 test_chtml10_li_tag_002); 
+  CU_add_test(chtml10_suite, "test <li> with japanese value." ,                   test_chtml10_li_tag_003); 
+  CU_add_test(chtml10_suite, "test <li> with japanese-hankaku value." ,           test_chtml10_li_tag_004); 
 
   CU_basic_run_tests();
   CU_cleanup_registry();
@@ -6532,6 +6542,118 @@ void test_chtml10_input_tag_033()
 {
 #define  TEST_STRING "<html><head></head><body><input accesskey=\"1\"></body></html>"
 #define  RESULT_STRING "<html><head></head><body><input accesskey=\"1\"></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_li_tag_001() 
+{
+#define  TEST_STRING "<li></li>"
+#define  RESULT_STRING "<li>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_li_tag_002() 
+{
+#define  TEST_STRING "<li>abc</li>"
+#define  RESULT_STRING "<li>abc"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_li_tag_003() 
+{
+#define  TEST_STRING "<li>あいうえお</li>"
+#define  RESULT_STRING "<li>あいうえお"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_li_tag_004() 
+{
+#define  TEST_STRING "<li>ﾊﾝｶｸ</li>"
+#define  RESULT_STRING "<li>ﾊﾝｶｸ"
   char  *ret;
   char  *tmp;
   device_table spec;
