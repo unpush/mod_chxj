@@ -2592,17 +2592,14 @@ s_chtml10_start_option_tag(void *pdoc, Node *child)
     }
   }
 
-  if (value) {
+  if (value && *value != 0) {
     W10_L(" value=\"");
     W10_V(value);
     W10_L("\"");
   }
-  else {
-    W10_L(" value=\"\"");
-  }
 
   if (selected) {
-    W10_L(" selected ");
+    W10_L(" selected");
   }
 
   W10_L(">");
