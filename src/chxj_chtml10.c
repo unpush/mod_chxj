@@ -98,6 +98,8 @@ static char* s_chtml10_start_dt_tag       (void* pdoc, Node* node);
 static char* s_chtml10_end_dt_tag         (void* pdoc, Node* node);
 static char* s_chtml10_start_dd_tag       (void* pdoc, Node* node);
 static char* s_chtml10_end_dd_tag         (void* pdoc, Node* node);
+static char* s_chtml10_start_menu_tag     (void *pdoc, Node *node);
+static char* s_chtml10_end_menu_tag       (void *pdoc, Node *node);
 
 static void  s_init_chtml10(chtml10_t* chtml, Doc* doc, request_rec* r, device_table* spec);
 
@@ -350,6 +352,11 @@ tag_handler chtml10_handler[] = {
   {
     s_chtml10_start_dd_tag,
     s_chtml10_end_dd_tag,
+  },
+  /* tagMENU */
+  {
+    s_chtml10_start_menu_tag,
+    s_chtml10_end_menu_tag,
   },
 };
 
@@ -3196,6 +3203,44 @@ s_chtml10_end_dd_tag(void *pdoc, Node *UNUSED(child))
 {
   chtml10_t *chtml10;
   chtml10 = GET_CHTML10(pdoc);
+  return chtml10->out;
+}
+
+
+/**
+ * It is a hanmenuer who processes the MENU tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The MENU tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml10_start_menu_tag(void *pdoc, Node *UNUSED(child))
+{
+  chtml10_t *chtml10;
+  Doc *doc;
+  chtml10 = GET_CHTML10(pdoc);
+  doc     = chtml10->doc;
+  W10_L("<menu>");
+  return chtml10->out;
+}
+
+
+/**
+ * It is a hanmenuer who processes the MENU tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The MENU tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml10_end_menu_tag(void *pdoc, Node *UNUSED(child))
+{
+  chtml10_t *chtml10 = GET_CHTML10(pdoc);
+  Doc *doc = chtml10->doc;
+  W10_L("</menu>");
   return chtml10->out;
 }
 /*

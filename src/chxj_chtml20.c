@@ -344,6 +344,11 @@ tag_handler chtml20_handler[] = {
     NULL,
     NULL,
   },
+  /* tagMENU */
+  {
+    NULL,
+    NULL,
+  },
 };
 
 /**

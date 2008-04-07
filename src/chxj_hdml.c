@@ -339,6 +339,11 @@ tag_handler hdml_handler[] = {
     NULL,
     NULL,
   },
+  /* tagMENU */
+  {
+    NULL,
+    NULL,
+  },
 };
 
 /**

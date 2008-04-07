@@ -342,6 +342,11 @@ tag_handler chtml30_handler[] = {
     NULL,
     NULL,
   },
+  /* tagMENU */
+  {
+    NULL,
+    NULL,
+  },
 };
 
 

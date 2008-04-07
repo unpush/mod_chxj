@@ -367,6 +367,18 @@ chxj_node_exchange(
         if (handlers[tagMETA].end_tag_handler)
           handlers[tagMETA].end_tag_handler(pdoc, child);
       }
+      /*----------------------------------------------------------------------*/
+      /* <MENU>                                                               */
+      /*----------------------------------------------------------------------*/
+      else if (strcasecmp(name, "menu") == 0) {
+        if (handlers[tagMENU].start_tag_handler) 
+          handlers[tagMENU].start_tag_handler(pdoc, child);
+
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+
+        if (handlers[tagMENU].end_tag_handler)
+          handlers[tagMENU].end_tag_handler(pdoc, child);
+      }
       break;
 
     case 'b':
