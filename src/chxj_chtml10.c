@@ -707,7 +707,7 @@ s_chtml10_start_ol_tag(void* pdoc, Node* UNUSED(node))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("<ol>\r\n");
+  W10_L("<ol>");
 
   return chtml10->out;
 }
@@ -732,7 +732,7 @@ s_chtml10_end_ol_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("</ol>\r\n");
+  W10_L("</ol>");
 
   return chtml10->out;
 }
