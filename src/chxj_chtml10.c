@@ -2496,19 +2496,19 @@ s_chtml10_start_select_tag(void *pdoc, Node *child)
     }
   }
 
-  if (size) {
+  if (size && *size != 0) {
     W10_L(" size=\"");
     W10_V(size);
     W10_L("\"");
   }
 
-  if (name) {
+  if (name && *name != 0) {
     W10_L(" name=\"");
     W10_V(name);
     W10_L("\"");
   }
 
-  W10_L(">\r\n");
+  W10_L(">");
   return chtml10->out;
 }
 
@@ -2532,7 +2532,7 @@ s_chtml10_end_select_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("</select>\r\n");
+  W10_L("</select>");
   return chtml10->out;
 }
 
