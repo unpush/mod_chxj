@@ -188,8 +188,8 @@ qs_parse_string(Doc *doc, const char *src, int srclen)
   for (ii=0; ii<srclen; ii++) {
     if (src[ii] == '\n') nl_cnt++;
     if (doc->parse_mode != PARSE_MODE_NO_PARSE 
-        && is_white_space(src[ii])) {
-
+        && is_white_space(src[ii])
+        && (doc->now_parent_node == NULL || !STRCASEEQ('p','P',"pre",doc->now_parent_node->name))) {
       continue;
     }
     if ((unsigned char)'<' == src[ii]) {
@@ -273,6 +273,7 @@ qs_parse_string(Doc *doc, const char *src, int srclen)
     else {
       /* TEXT */
       int endpoint = s_cut_text(&src[ii], srclen - ii, script_flag);
+fprintf(stderr, "%s:%d endpoint=[%d]\n", __FILE__,__LINE__,endpoint);
       Node* node = qs_new_tag(doc);
       node->value = (char*)apr_palloc(doc->pool,endpoint+1);
       node->name  = (char*)apr_palloc(doc->pool,4+1);

@@ -313,6 +313,9 @@ void test_chtml10_plaintext_tag_001();
 void test_chtml10_plaintext_tag_002(); 
 void test_chtml10_plaintext_tag_003(); 
 void test_chtml10_plaintext_tag_004(); 
+
+void test_chtml10_pre_tag_001(); 
+void test_chtml10_pre_tag_002(); 
 /* pend */
 
 int
@@ -578,6 +581,9 @@ main()
   CU_add_test(chtml10_suite, "test <plaintext> 2." ,                              test_chtml10_plaintext_tag_002); 
   CU_add_test(chtml10_suite, "test <plaintext> 3. value is not closed." ,         test_chtml10_plaintext_tag_003); 
   CU_add_test(chtml10_suite, "test <plaintext> 3. value is not closed and hankaku." , test_chtml10_plaintext_tag_004); 
+
+  CU_add_test(chtml10_suite, "test <pre> 1." ,                                    test_chtml10_pre_tag_001); 
+  CU_add_test(chtml10_suite, "test <pre> 2." ,                                    test_chtml10_pre_tag_002); 
   /* aend */
 
   CU_basic_run_tests();
@@ -7540,7 +7546,7 @@ void test_chtml10_p_tag_008()
 void test_chtml10_plaintext_tag_001() 
 {
 #define  TEST_STRING "<plaintext>あああ</plaintext>"
-#define  RESULT_STRING "<plaintext>あああ</plaintext>"
+#define  RESULT_STRING "<plaintext>あああ"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7568,7 +7574,7 @@ void test_chtml10_plaintext_tag_001()
 void test_chtml10_plaintext_tag_002() 
 {
 #define  TEST_STRING "<plaintext><h1>あああ</h1><h1>いいい</h1></plaintext>"
-#define  RESULT_STRING "<plaintext><h1>あああ</h1><h1>いいい</h1></plaintext>"
+#define  RESULT_STRING "<plaintext><h1>あああ</h1><h1>いいい</h1>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7596,7 +7602,7 @@ void test_chtml10_plaintext_tag_002()
 void test_chtml10_plaintext_tag_003() 
 {
 #define  TEST_STRING "<plaintext><h1>あああ<h1>いいい</h1></plaintext>"
-#define  RESULT_STRING "<plaintext><h1>あああ<h1>いいい</h1></plaintext>"
+#define  RESULT_STRING "<plaintext><h1>あああ<h1>いいい</h1>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7624,7 +7630,63 @@ void test_chtml10_plaintext_tag_003()
 void test_chtml10_plaintext_tag_004() 
 {
 #define  TEST_STRING "<plaintext><h1>ﾊﾝｶｸ<h1>ﾊﾝｶｸ</plaintext>"
-#define  RESULT_STRING "<plaintext><h1>ﾊﾝｶｸ<h1>ﾊﾝｶｸ</plaintext>"
+#define  RESULT_STRING "<plaintext><h1>ﾊﾝｶｸ<h1>ﾊﾝｶｸ"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_pre_tag_001() 
+{
+#define  TEST_STRING "<pre></pre>"
+#define  RESULT_STRING "<pre></pre>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_pre_tag_002() 
+{
+#define  TEST_STRING "<pre>\n</pre>"
+#define  RESULT_STRING "<pre>\n</pre>"
   char  *ret;
   char  *tmp;
   device_table spec;

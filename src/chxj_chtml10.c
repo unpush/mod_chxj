@@ -2757,7 +2757,7 @@ s_chtml10_chxjif_tag(void *pdoc, Node *node)
  * @return The conversion result is returned.
  */
 static char *
-s_chtml10_start_pre_tag(void *pdoc, Node *UNUSED(node)) 
+s_chtml10_start_pre_tag(void *pdoc, Node *node) 
 {
   Doc *doc;
   request_rec *r;
@@ -2986,12 +2986,15 @@ s_chtml10_text(void *pdoc, Node *child)
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
   r       = doc->r;
-  
-  textval = qs_get_node_value(doc,child);
-  textval = qs_trim_string(doc->buf.pool, textval);
 
-  if (strlen(textval) == 0)
+  textval = qs_get_node_value(doc,child);
+#if 0
+  textval = qs_trim_string(doc->buf.pool, textval);
+#endif
+
+  if (strlen(textval) == 0) {
     return chtml10->out;
+  }
   
   tmp = apr_palloc(r->pool, qs_get_node_size(doc,child)+1);
   memset(tmp, 0, qs_get_node_size(doc,child)+1);
@@ -3001,7 +3004,7 @@ s_chtml10_text(void *pdoc, Node *child)
   tdst_len = 0;
   
   for (ii=0; ii<qs_get_node_size(doc,child); ii++) {
-    char* out;
+    char *out;
     int   rtn;
 
     rtn = s_chtml10_search_emoji(chtml10, &textval[ii], &out);
@@ -3325,8 +3328,6 @@ static char *
 s_chtml10_end_plaintext_tag(void *pdoc, Node *UNUSED(child))
 {
   chtml10_t *chtml10 = GET_CHTML10(pdoc);
-  Doc *doc = chtml10->doc;
-  W10_L("</plaintext>");
   return chtml10->out;
 }
 /*
