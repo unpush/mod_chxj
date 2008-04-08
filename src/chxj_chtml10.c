@@ -765,7 +765,7 @@ s_chtml10_start_ul_tag(void* pdoc, Node* UNUSED(node))
   doc        = chtml10->doc;
   r          = doc->r;
 
-  W10_L("<ul>\r\n");
+  W10_L("<ul>");
 
   return chtml10->out;
 }
@@ -790,7 +790,7 @@ s_chtml10_end_ul_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("</ul>\r\n");
+  W10_L("</ul>");
 
   return chtml10->out;
 }
