@@ -273,7 +273,6 @@ qs_parse_string(Doc *doc, const char *src, int srclen)
     else {
       /* TEXT */
       int endpoint = s_cut_text(&src[ii], srclen - ii, script_flag);
-fprintf(stderr, "%s:%d endpoint=[%d]\n", __FILE__,__LINE__,endpoint);
       Node* node = qs_new_tag(doc);
       node->value = (char*)apr_palloc(doc->pool,endpoint+1);
       node->name  = (char*)apr_palloc(doc->pool,4+1);
