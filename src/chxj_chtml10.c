@@ -2894,7 +2894,7 @@ s_chtml10_start_textarea_tag(void *pdoc, Node *node)
 
   chtml10->textarea_flag++;
 
-  W10_L("<textarea ");
+  W10_L("<textarea");
 
   for (attr = qs_get_attr(doc,node);
        attr;
@@ -2907,9 +2907,18 @@ s_chtml10_start_textarea_tag(void *pdoc, Node *node)
     value = qs_get_attr_value(doc,attr);
 
     switch(*name) {
+    case 'a':
+    case 'A':
+      if (strcasecmp(name, "accesskey") == 0 && value && *value != 0) {
+        W10_L(" accesskey=\"");
+        W10_V(value);
+        W10_L("\"");
+      }
+      break;
+
     case 'n':
     case 'N':
-      if (strcasecmp(name, "name") == 0) {
+      if (strcasecmp(name, "name") == 0 && value && *value != 0) {
         W10_L(" name=\"");
         W10_V(value);
         W10_L("\"");
@@ -2918,7 +2927,7 @@ s_chtml10_start_textarea_tag(void *pdoc, Node *node)
 
     case 'r':
     case 'R':
-      if (strcasecmp(name, "rows") == 0) {
+      if (strcasecmp(name, "rows") == 0 && value && *value != 0) {
         W10_L(" rows=\"");
         W10_V(value);
         W10_L("\"");
@@ -2927,7 +2936,7 @@ s_chtml10_start_textarea_tag(void *pdoc, Node *node)
 
     case 'c':
     case 'C':
-      if (strcasecmp(name, "cols") == 0) {
+      if (strcasecmp(name, "cols") == 0 && value && *value != 0) {
         W10_L(" cols=\"");
         W10_V(value);
         W10_L("\"");
@@ -2939,7 +2948,7 @@ s_chtml10_start_textarea_tag(void *pdoc, Node *node)
     }
   }
 
-  W10_L(">\r\n");
+  W10_L(">");
   return chtml10->out;
 }
 
@@ -2963,7 +2972,7 @@ s_chtml10_end_textarea_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("</textarea>\r\n");
+  W10_L("</textarea>");
   chtml10->textarea_flag--;
 
   return chtml10->out;
