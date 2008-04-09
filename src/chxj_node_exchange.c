@@ -453,6 +453,18 @@ chxj_node_exchange(
         if (handlers[tagBLOCKQUOTE].end_tag_handler)
           handlers[tagBLOCKQUOTE].end_tag_handler(pdoc, child);
       }
+      /*----------------------------------------------------------------------*/
+      /* <BLINK>                                                              */
+      /*----------------------------------------------------------------------*/
+      else if (strcasecmp(name, "blink") == 0) {
+        if (handlers[tagBLINK].start_tag_handler) 
+          handlers[tagBLINK].start_tag_handler(pdoc, child);
+
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+
+        if (handlers[tagBLINK].end_tag_handler)
+          handlers[tagBLINK].end_tag_handler(pdoc, child);
+      }
       break;
 
     case 'a':
