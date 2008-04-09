@@ -276,6 +276,8 @@ void test_chtml10_li_tag_001();
 void test_chtml10_li_tag_002(); 
 void test_chtml10_li_tag_003(); 
 void test_chtml10_li_tag_004(); 
+void test_chtml10_li_tag_005(); 
+void test_chtml10_li_tag_006(); 
 
 void test_chtml10_menu_tag_001(); 
 void test_chtml10_menu_tag_002(); 
@@ -530,6 +532,7 @@ main()
   CU_add_test(chtml10_suite, "test <hr color>.",                                  test_chtml10_hr_tag_018); 
 
   CU_add_test(chtml10_suite, "test <html>.",                                      test_chtml10_html_tag_001); 
+
   CU_add_test(chtml10_suite, "test <img>." ,                                      test_chtml10_img_tag_001); 
   CU_add_test(chtml10_suite, "test <img src> with no value." ,                    test_chtml10_img_tag_002); 
   CU_add_test(chtml10_suite, "test <img src> with void value." ,                  test_chtml10_img_tag_003); 
@@ -606,6 +609,8 @@ main()
   CU_add_test(chtml10_suite, "test <li> with alphabetic value." ,                 test_chtml10_li_tag_002); 
   CU_add_test(chtml10_suite, "test <li> with japanese value." ,                   test_chtml10_li_tag_003); 
   CU_add_test(chtml10_suite, "test <li> with japanese-hankaku value." ,           test_chtml10_li_tag_004); 
+  CU_add_test(chtml10_suite, "test <li> type attribute."              ,           test_chtml10_li_tag_005); 
+  CU_add_test(chtml10_suite, "test <li> value attribute."              ,          test_chtml10_li_tag_006); 
 
   CU_add_test(chtml10_suite, "test <menu>." ,                                     test_chtml10_menu_tag_001); 
   CU_add_test(chtml10_suite, "test <menu> 2." ,                                   test_chtml10_menu_tag_002); 
@@ -6842,6 +6847,62 @@ void test_chtml10_li_tag_003()
 void test_chtml10_li_tag_004() 
 {
 #define  TEST_STRING "<li>ﾊﾝｶｸ</li>"
+#define  RESULT_STRING "<li>ﾊﾝｶｸ"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_li_tag_005() 
+{
+#define  TEST_STRING "<li type=\"1\">ﾊﾝｶｸ</li>"
+#define  RESULT_STRING "<li>ﾊﾝｶｸ"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_li_tag_006() 
+{
+#define  TEST_STRING "<li value=\"1\">ﾊﾝｶｸ</li>"
 #define  RESULT_STRING "<li>ﾊﾝｶｸ"
   char  *ret;
   char  *tmp;
