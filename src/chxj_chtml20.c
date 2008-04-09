@@ -840,7 +840,7 @@ s_chtml20_start_base_tag(void *pdoc, Node *node)
       W20_L("\"");
     }
   }
-  W20_L(" >\r\n");
+  W20_L(">");
   return chtml20->out;
 }
 
