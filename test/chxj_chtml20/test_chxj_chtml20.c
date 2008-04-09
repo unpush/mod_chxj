@@ -205,6 +205,46 @@ void test_chtml20_hr_tag_015();
 void test_chtml20_hr_tag_016();
 void test_chtml20_hr_tag_017();
 void test_chtml20_hr_tag_018();
+
+void test_chtml20_html_tag_001();
+
+void test_chtml20_img_tag_001();
+void test_chtml20_img_tag_002();
+void test_chtml20_img_tag_003();
+void test_chtml20_img_tag_004();
+void test_chtml20_img_tag_005();
+void test_chtml20_img_tag_006();
+void test_chtml20_img_tag_007();
+void test_chtml20_img_tag_008();
+void test_chtml20_img_tag_009();
+void test_chtml20_img_tag_010();
+void test_chtml20_img_tag_011();
+void test_chtml20_img_tag_012();
+void test_chtml20_img_tag_013();
+void test_chtml20_img_tag_014();
+void test_chtml20_img_tag_015();
+void test_chtml20_img_tag_016();
+void test_chtml20_img_tag_017();
+void test_chtml20_img_tag_018();
+void test_chtml20_img_tag_019();
+void test_chtml20_img_tag_020();
+void test_chtml20_img_tag_021();
+void test_chtml20_img_tag_022();
+void test_chtml20_img_tag_023();
+void test_chtml20_img_tag_024();
+void test_chtml20_img_tag_025();
+void test_chtml20_img_tag_026();
+void test_chtml20_img_tag_027();
+void test_chtml20_img_tag_028();
+void test_chtml20_img_tag_029();
+void test_chtml20_img_tag_030();
+void test_chtml20_img_tag_031();
+void test_chtml20_img_tag_032();
+void test_chtml20_img_tag_033();
+void test_chtml20_img_tag_034();
+void test_chtml20_img_tag_035();
+void test_chtml20_img_tag_036();
+void test_chtml20_img_tag_037();
 /* pend */
 
 int
@@ -379,6 +419,8 @@ main()
   CU_add_test(chtml20_suite, "test <hr width> with numeric value.",               test_chtml20_hr_tag_016);
   CU_add_test(chtml20_suite, "test <hr noshade>.",                                test_chtml20_hr_tag_017);
   CU_add_test(chtml20_suite, "test <hr color>.",                                  test_chtml20_hr_tag_018);
+
+  CU_add_test(chtml20_suite, "test <html>.",                                      test_chtml20_html_tag_001);
   /* aend */
 
   CU_basic_run_tests();
@@ -4699,6 +4741,37 @@ void test_chtml20_hr_tag_018()
 {
 #define  TEST_STRING "<html><head></head><body><hr width=\"10\" color=\"#ff0000\"></body></html>"
 #define  RESULT_STRING "<html><head></head><body><hr width=\"10\"></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml20(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+/*============================================================================*/
+/* <HTML>                                                                     */
+/*============================================================================*/
+void test_chtml20_html_tag_001()
+{
+#define  TEST_STRING "<html><head></head><body></body></html>"
+#define  RESULT_STRING "<html><head></head><body></body></html>"
   char  *ret;
   char  *tmp;
   device_table spec;
