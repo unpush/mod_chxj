@@ -421,6 +421,7 @@ main()
   CU_add_test(chtml10_suite, "test <dir> with no <li>.",                          test_chtml10_dir_tag_002); 
 
   CU_add_test(chtml10_suite, "test <dl>.",                                        test_chtml10_dl_tag_001); 
+
   CU_add_test(chtml10_suite, "test <dt>.",                                        test_chtml10_dt_tag_001); 
   CU_add_test(chtml10_suite, "test <dt> with void value.",                        test_chtml10_dt_tag_002); 
   CU_add_test(chtml10_suite, "test <dd>.",                                        test_chtml10_dd_tag_001); 
