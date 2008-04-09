@@ -104,6 +104,8 @@ static char *s_chtml20_end_menu_tag      (void *pdoc, Node *node);
 static char *s_chtml20_start_plaintext_tag       (void *pdoc, Node *node);
 static char *s_chtml20_start_plaintext_tag_inner (void *pdoc, Node *node);
 static char *s_chtml20_end_plaintext_tag         (void *pdoc, Node *node);
+static char *s_chtml20_start_blink_tag   (void *pdoc, Node *node);
+static char *s_chtml20_end_blink_tag     (void *pdoc, Node *node);
 
 static void  s_init_chtml20(chtml20_t *chtml, Doc *doc, request_rec *r, device_table *spec);
 
@@ -368,6 +370,11 @@ tag_handler chtml20_handler[] = {
   {
     s_chtml20_start_plaintext_tag,
     s_chtml20_end_plaintext_tag,
+  },
+  /* tagBLINK */
+  {
+    s_chtml20_start_blink_tag,
+    s_chtml20_end_blink_tag,
   },
 };
 
@@ -3470,6 +3477,41 @@ static char *
 s_chtml20_end_plaintext_tag(void *pdoc, Node *UNUSED(child))
 {
   chtml20_t *chtml20 = GET_CHTML20(pdoc);
+  return chtml20->out;
+}
+
+/**
+ * It is a hanblinker who processes the BLINK tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The BLINK tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml20_start_blink_tag(void *pdoc, Node *UNUSED(child))
+{
+  chtml20_t *chtml20 = GET_CHTML20(pdoc);
+  Doc *doc = chtml20->doc;
+  W_L("<blink>");
+  return chtml20->out;
+}
+
+
+/**
+ * It is a hanblinker who processes the BLINK tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The BLINK tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml20_end_blink_tag(void *pdoc, Node *UNUSED(child))
+{
+  chtml20_t *chtml20 = GET_CHTML20(pdoc);
+  Doc *doc = chtml20->doc;
+  W_L("</blink>");
   return chtml20->out;
 }
 /*

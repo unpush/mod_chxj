@@ -345,6 +345,11 @@ tag_handler jhtml_handler[] = {
     NULL,
     NULL,
   },
+  /* tagBLINK */
+  {
+    NULL,
+    NULL,
+  },
 };
 
 

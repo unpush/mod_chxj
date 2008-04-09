@@ -366,6 +366,11 @@ tag_handler chtml10_handler[] = {
     s_chtml10_start_plaintext_tag,
     s_chtml10_end_plaintext_tag,
   },
+  /* tagBLINK */
+  {
+    NULL,
+    NULL,
+  },
 };
 
 

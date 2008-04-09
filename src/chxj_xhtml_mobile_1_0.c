@@ -353,6 +353,11 @@ tag_handler xhtml_handler[] = {
     NULL,
     NULL,
   },
+  /* tagBLINK */
+  {
+    NULL,
+    NULL,
+  },
 };
  
 /**

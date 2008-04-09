@@ -349,6 +349,11 @@ tag_handler hdml_handler[] = {
     NULL,
     NULL,
   },
+  /* tagBLINK */
+  {
+    NULL,
+    NULL,
+  },
 };
 
 /**
