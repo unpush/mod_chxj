@@ -3033,21 +3033,25 @@ s_chtml20_start_textarea_tag(void *pdoc, Node *node)
   r       = doc->r;
 
   chtml20->textarea_flag++;
-  W_L("<textarea ");
+  W_L("<textarea");
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-
-    char *name;
-    char *value;
-
-    name  = qs_get_attr_name(doc,attr);
-    value = qs_get_attr_value(doc,attr);
-
+    char *name = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
     switch(*name) {
+    case 'a':
+    case 'A':
+      if (strcasecmp(name, "accesskey") == 0 && value && *value != 0) {
+        W_L(" accesskey=\"");
+        W_V(value);
+        W_L("\"");
+      }
+      break;
+
     case 'n':
     case 'N':
-      if (strcasecmp(name, "name") == 0) {
+      if (strcasecmp(name, "name") == 0 && value && *value != 0) {
         W_L(" name=\"");
         W_V(value);
         W_L("\"");
@@ -3056,7 +3060,7 @@ s_chtml20_start_textarea_tag(void *pdoc, Node *node)
 
     case 'r':
     case 'R':
-      if (strcasecmp(name, "rows") == 0) {
+      if (strcasecmp(name, "rows") == 0 && value && *value != 0) {
         W_L(" rows=\"");
         W_V(value);
         W_L("\"");
@@ -3065,8 +3069,17 @@ s_chtml20_start_textarea_tag(void *pdoc, Node *node)
 
     case 'c':
     case 'C':
-      if (strcasecmp(name, "cols") == 0) {
+      if (strcasecmp(name, "cols") == 0 && value && *value != 0) {
         W_L(" cols=\"");
+        W_V(value);
+        W_L("\"");
+      }
+      break;
+
+    case 'i':
+    case 'I':
+      if (strcasecmp(name, "istyle") == 0 && value && (*value == '1' || *value == '2' || *value == '3' || *value == '4')) {
+        W_L(" istyle=\"");
         W_V(value);
         W_L("\"");
       }
@@ -3076,7 +3089,7 @@ s_chtml20_start_textarea_tag(void *pdoc, Node *node)
       break;
     }
   }
-  W_L(">\r\n");
+  W_L(">");
   return chtml20->out;
 }
 
@@ -3100,7 +3113,7 @@ s_chtml20_end_textarea_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
-  W_L("</textarea>\r\n");
+  W_L("</textarea>");
   chtml20->textarea_flag--;
 
   return chtml20->out;
