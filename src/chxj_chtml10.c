@@ -2997,10 +2997,6 @@ s_chtml10_text(void *pdoc, Node *child)
   r       = doc->r;
 
   textval = qs_get_node_value(doc,child);
-#if 0
-  textval = qs_trim_string(doc->buf.pool, textval);
-#endif
-
   if (strlen(textval) == 0) {
     return chtml10->out;
   }
