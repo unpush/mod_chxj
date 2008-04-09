@@ -1819,7 +1819,7 @@ s_chtml20_start_li_tag(void *pdoc, Node *node)
        attr = qs_get_next_attr(doc,attr)) {
     char *name = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
-    if (STRCASEEQ('t','T',"type",name) && value && *value) {
+    if (STRCASEEQ('t','T',"type",name) && value && (*value == '1' || *value == 'a' || *value == 'A')) {
       W_L(" type=\"");
       W_V(value);
       W_L("\"");
