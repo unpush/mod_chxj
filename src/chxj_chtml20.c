@@ -2205,20 +2205,16 @@ s_chtml20_start_select_tag(void *pdoc, Node *child)
   doc     = chtml20->doc;
   r       = doc->r;
 
-  char* size      = NULL;
-  char* name      = NULL;
+  char *size      = NULL;
+  char *name      = NULL;
+  char *multiple  = NULL;
 
   W_L("<select");
   for (attr = qs_get_attr(doc,child);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-
-    char *nm;
-    char *val;
-
-    nm  = qs_get_attr_name(doc,attr);
-    val = qs_get_attr_value(doc,attr);
-
+    char *nm = qs_get_attr_name(doc,attr);
+    char *val = qs_get_attr_value(doc,attr);
     switch(*nm) {
     case 's':
     case 'S':
@@ -2246,7 +2242,7 @@ s_chtml20_start_select_tag(void *pdoc, Node *child)
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0 version 2.0                                              */
         /*--------------------------------------------------------------------*/
-        /* not support */
+        multiple = apr_pstrdup(doc->buf.pool, val);
       }
       break;
 
@@ -2254,20 +2250,20 @@ s_chtml20_start_select_tag(void *pdoc, Node *child)
       break;
     }
   }
-
   if (size) {
     W_L(" size=\"");
     W_V(size);
     W_L("\"");
   }
-
   if (name) {
     W_L(" name=\"");
     W_V(name);
     W_L("\"");
   }
-
-  W_L(">\r\n");
+  if (multiple) {
+    W_L(" multiple");
+  }
+  W_L(">");
   return chtml20->out;
 }
 
@@ -2291,7 +2287,7 @@ s_chtml20_end_select_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
-  W_L("</select>\r\n");
+  W_L("</select>");
   return chtml20->out;
 }
 
