@@ -332,6 +332,14 @@ void test_chtml20_ol_tag_015();
 void test_chtml20_ol_tag_016();
 void test_chtml20_ol_tag_017();
 void test_chtml20_ol_tag_018();
+
+void test_chtml20_option_tag_001();
+void test_chtml20_option_tag_002();
+void test_chtml20_option_tag_003();
+void test_chtml20_option_tag_004();
+void test_chtml20_option_tag_005();
+void test_chtml20_option_tag_006();
+void test_chtml20_option_tag_007();
 /* pend */
 
 int
@@ -633,6 +641,14 @@ main()
   CU_add_test(chtml20_suite, "test <ol> 16." ,                                    test_chtml20_ol_tag_016);
   CU_add_test(chtml20_suite, "test <ol> 17." ,                                    test_chtml20_ol_tag_017);
   CU_add_test(chtml20_suite, "test <ol> 18." ,                                    test_chtml20_ol_tag_018);
+
+  CU_add_test(chtml20_suite, "test <option>." ,                                   test_chtml20_option_tag_001);
+  CU_add_test(chtml20_suite, "test <option value> with no value." ,               test_chtml20_option_tag_002);
+  CU_add_test(chtml20_suite, "test <option value> with void value." ,             test_chtml20_option_tag_003);
+  CU_add_test(chtml20_suite, "test <option value> with alphabetic value." ,       test_chtml20_option_tag_004);
+  CU_add_test(chtml20_suite, "test <option value> with japanese value." ,         test_chtml20_option_tag_005);
+  CU_add_test(chtml20_suite, "test <option value> with japanese-kana value." ,    test_chtml20_option_tag_006);
+  CU_add_test(chtml20_suite, "test <option selected>." ,                          test_chtml20_option_tag_007);
   /* aend */
 
   CU_basic_run_tests();
@@ -8359,6 +8375,205 @@ void test_chtml20_ol_tag_018()
 {
 #define  TEST_STRING "<ol start=\"a\"></ol>"
 #define  RESULT_STRING "<ol start=\"a\"></ol>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml20(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+/*============================================================================*/
+/* <OPTION>                                                                   */
+/*============================================================================*/
+void test_chtml20_option_tag_001() 
+{
+#define  TEST_STRING "<option></option>"
+#define  RESULT_STRING "<option>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml20(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml20_option_tag_002() 
+{
+#define  TEST_STRING "<option value></option>"
+#define  RESULT_STRING "<option>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml20(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml20_option_tag_003() 
+{
+#define  TEST_STRING "<option value=\"\"></option>"
+#define  RESULT_STRING "<option>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml20(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml20_option_tag_004() 
+{
+#define  TEST_STRING "<option value=\"a\"></option>"
+#define  RESULT_STRING "<option value=\"a\">"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml20(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml20_option_tag_005() 
+{
+#define  TEST_STRING "<option value=\"亀\"></option>"
+#define  RESULT_STRING "<option value=\"亀\">"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml20(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml20_option_tag_006() 
+{
+#define  TEST_STRING "<option value=\"ﾊﾝｶｸ\"></option>"
+#define  RESULT_STRING "<option value=\"ﾊﾝｶｸ\">"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml20(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml20_option_tag_007() 
+{
+#define  TEST_STRING "<option selected></option>"
+#define  RESULT_STRING "<option selected>"
   char  *ret;
   char  *tmp;
   device_table spec;
