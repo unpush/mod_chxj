@@ -93,6 +93,8 @@ static char *s_chtml20_start_blockquote_tag(void *pdoc, Node *node);
 static char *s_chtml20_end_blockquote_tag  (void *pdoc, Node *node);
 static char *s_chtml20_start_dir_tag     (void *pdoc, Node *node);
 static char *s_chtml20_end_dir_tag       (void *pdoc, Node *node);
+static char *s_chtml20_start_dl_tag      (void *pdoc, Node *node);
+static char *s_chtml20_end_dl_tag        (void *pdoc, Node *node);
 
 static void  s_init_chtml20(chtml20_t *chtml, Doc *doc, request_rec *r, device_table *spec);
 
@@ -340,8 +342,8 @@ tag_handler chtml20_handler[] = {
   },
   /* tagDL */
   {
-    NULL,
-    NULL,
+    s_chtml20_start_dl_tag,
+    s_chtml20_end_dl_tag,
   },
   /* tagDD */
   {
@@ -371,10 +373,10 @@ tag_handler chtml20_handler[] = {
  */
 char *
 chxj_exchange_chtml20(
-  request_rec         *r,
+  request_rec *r,
   device_table *spec,
   const char *src,
-  apr_size_t          srclen,
+  apr_size_t srclen,
   apr_size_t *dstlen,
   chxjconvrule_entry *entryp,
   cookie_t *cookie
@@ -3056,6 +3058,46 @@ s_chtml20_end_dir_tag(void *pdoc, Node *UNUSED(child))
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
   W20_L("</dir>");
+  return chtml20->out;
+}
+
+
+/**
+ * It is a handler who processes the DL tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DL tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml20_start_dl_tag(void *pdoc, Node *UNUSED(child))
+{
+  chtml20_t *chtml20;
+  Doc *doc;
+  chtml20 = GET_CHTML20(pdoc);
+  doc     = chtml20->doc;
+  W20_L("<dl>");
+  return chtml20->out;
+}
+
+
+/**
+ * It is a handler who processes the DL tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DL tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml20_end_dl_tag(void *pdoc, Node *UNUSED(child))
+{
+  chtml20_t *chtml20;
+  Doc *doc;
+  chtml20 = GET_CHTML20(pdoc);
+  doc     = chtml20->doc;
+  W20_L("</dl>");
   return chtml20->out;
 }
 /*
