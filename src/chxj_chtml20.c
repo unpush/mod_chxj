@@ -101,6 +101,9 @@ static char *s_chtml20_start_dd_tag      (void *pdoc, Node *node);
 static char *s_chtml20_end_dd_tag        (void *pdoc, Node *node);
 static char *s_chtml20_start_menu_tag    (void *pdoc, Node *node);
 static char *s_chtml20_end_menu_tag      (void *pdoc, Node *node);
+static char *s_chtml20_start_plaintext_tag       (void *pdoc, Node *node);
+static char *s_chtml20_start_plaintext_tag_inner (void *pdoc, Node *node);
+static char *s_chtml20_end_plaintext_tag         (void *pdoc, Node *node);
 
 static void  s_init_chtml20(chtml20_t *chtml, Doc *doc, request_rec *r, device_table *spec);
 
@@ -363,8 +366,8 @@ tag_handler chtml20_handler[] = {
   },
   /* tagPLAINTEXT */
   {
-    NULL,
-    NULL,
+    s_chtml20_start_plaintext_tag,
+    s_chtml20_end_plaintext_tag,
   },
 };
 
@@ -3406,6 +3409,60 @@ s_chtml20_end_menu_tag(void *pdoc, Node *UNUSED(child))
   return chtml20->out;
 }
 
+
+/**
+ * It is a hanplaintexter who processes the PLAINTEXT tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The PLAINTEXT tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml20_start_plaintext_tag(void *pdoc, Node *node)
+{
+  chtml20_t *chtml20;
+  Doc *doc;
+
+  chtml20 = GET_CHTML20(pdoc);
+  doc     = chtml20->doc;
+  W_L("<plaintext>");
+  s_chtml20_start_plaintext_tag_inner(pdoc,node);
+  return chtml20->out;
+}
+
+static char *
+s_chtml20_start_plaintext_tag_inner(void *pdoc, Node *node)
+{
+  chtml20_t *chtml20;
+  Doc *doc;
+  Node *child;
+  chtml20 = GET_CHTML20(pdoc);
+  doc     = chtml20->doc;
+  for (child = qs_get_child_node(doc, node);
+       child;
+       child = qs_get_next_node(doc, child)) {
+    W_V(child->otext);
+    s_chtml20_start_plaintext_tag_inner(pdoc, child);
+  }
+  return chtml20->out;
+}
+
+
+/**
+ * It is a hanplaintexter who processes the PLAINTEXT tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The PLAINTEXT tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml20_end_plaintext_tag(void *pdoc, Node *UNUSED(child))
+{
+  chtml20_t *chtml20 = GET_CHTML20(pdoc);
+  return chtml20->out;
+}
 /*
  * vim:ts=2 et
  */
