@@ -57,6 +57,11 @@ void test_chtml20_base_tag_href_attribute_001();
 void test_chtml20_base_tag_href_attribute_002();
 void test_chtml20_base_tag_href_attribute_003();
 void test_chtml20_base_tag_href_attribute_004();
+
+void test_chtml20_blockquote_tag_001();
+void test_chtml20_blockquote_tag_002();
+void test_chtml20_blockquote_tag_003();
+void test_chtml20_blockquote_tag_004();
 /* pend */
 
 int
@@ -88,6 +93,11 @@ main()
   CU_add_test(chtml20_suite, "test base tag href attribute with void value.",     test_chtml20_base_tag_href_attribute_002);
   CU_add_test(chtml20_suite, "test base tag href attribute with normal value.",   test_chtml20_base_tag_href_attribute_003);
   CU_add_test(chtml20_suite, "test base tag href attribute with normal value.",   test_chtml20_base_tag_href_attribute_004);
+
+  CU_add_test(chtml20_suite, "test <blockquote> with void value.",                test_chtml20_blockquote_tag_001);
+  CU_add_test(chtml20_suite, "test <blockquote> with value.",                     test_chtml20_blockquote_tag_002);
+  CU_add_test(chtml20_suite, "test <blockquote> with japanese value.",            test_chtml20_blockquote_tag_003);
+  CU_add_test(chtml20_suite, "test <blockquote> with hankaku kana value.",        test_chtml20_blockquote_tag_004);
   /* aend */
 
   CU_basic_run_tests();
@@ -729,6 +739,121 @@ void test_chtml20_base_tag_href_attribute_004()
 {
 #define  TEST_STRING "<html><head><base href=\".\"></head><body></body></html>"
 #define  RESULT_STRING "<html><head><base href=\".\"></head><body></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml20(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+/*============================================================================*/
+/* <BLOCKQUOTE>                                                               */
+/*============================================================================*/
+void test_chtml20_blockquote_tag_001() 
+{
+#define  TEST_STRING "<html><head></head><body><blockquote></blockquote></body></html>"
+#define  RESULT_STRING "<html><head></head><body><blockquote></blockquote></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml20(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml20_blockquote_tag_002() 
+{
+#define  TEST_STRING "<html><head></head><body><blockquote>abc</blockquote></body></html>"
+#define  RESULT_STRING "<html><head></head><body><blockquote>abc</blockquote></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml20(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml20_blockquote_tag_003() 
+{
+#define  TEST_STRING "<html><head></head><body><blockquote>亀さん</blockquote></body></html>"
+#define  RESULT_STRING "<html><head></head><body><blockquote>亀さん</blockquote></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml20(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml20_blockquote_tag_004() 
+{
+#define  TEST_STRING "<html><head></head><body><blockquote>ﾊﾝｶｸ</blockquote></body></html>"
+#define  RESULT_STRING "<html><head></head><body><blockquote>ﾊﾝｶｸ</blockquote></body></html>"
   char  *ret;
   char  *tmp;
   device_table spec;

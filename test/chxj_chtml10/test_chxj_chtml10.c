@@ -373,6 +373,7 @@ main()
   CU_add_test(chtml10_suite, "test void src1",                                    test_chtml10_001);
   CU_add_test(chtml10_suite, "test void src2",                                    test_chtml10_002);
   CU_add_test(chtml10_suite, "test comment tag1",                                 test_chtml10_comment_tag_001);
+
   CU_add_test(chtml10_suite, "test a tag name attr1",                             test_chtml10_a_tag_name_attribute_001); 
   CU_add_test(chtml10_suite, "test a tag name attr2",                             test_chtml10_a_tag_name_attribute_002); 
   CU_add_test(chtml10_suite, "test a tag name attr3 with japanese.",              test_chtml10_a_tag_name_attribute_003); 
@@ -386,15 +387,18 @@ main()
   CU_add_test(chtml10_suite, "test a tag accesskey attribute.",                   test_chtml10_a_tag_accesskey_attribute_001); 
   CU_add_test(chtml10_suite, "test a tag accesskey attribute with void char.",    test_chtml10_a_tag_accesskey_attribute_002); 
   CU_add_test(chtml10_suite, "test a tag accesskey attribute with no value",      test_chtml10_a_tag_accesskey_attribute_003); 
+
   CU_add_test(chtml10_suite, "test base tag no attribute.",                       test_chtml10_base_tag_001); 
   CU_add_test(chtml10_suite, "test base tag href attribute with no value.",       test_chtml10_base_tag_href_attribute_001); 
   CU_add_test(chtml10_suite, "test base tag href attribute with void value.",     test_chtml10_base_tag_href_attribute_002); 
   CU_add_test(chtml10_suite, "test base tag href attribute with normal value.",   test_chtml10_base_tag_href_attribute_003); 
   CU_add_test(chtml10_suite, "test base tag href attribute with normal value.",   test_chtml10_base_tag_href_attribute_004); 
+
   CU_add_test(chtml10_suite, "test <blockquote> with void value.",                test_chtml10_blockquote_tag_001); 
   CU_add_test(chtml10_suite, "test <blockquote> with value.",                     test_chtml10_blockquote_tag_002); 
   CU_add_test(chtml10_suite, "test <blockquote> with japanese value.",            test_chtml10_blockquote_tag_003); 
   CU_add_test(chtml10_suite, "test <blockquote> with hankaku kana value.",        test_chtml10_blockquote_tag_004); 
+
   CU_add_test(chtml10_suite, "test <body> .",                                     test_chtml10_body_tag_001); 
   CU_add_test(chtml10_suite, "test <body> with bgcolor attribute.",               test_chtml10_body_tag_002); 
   CU_add_test(chtml10_suite, "test <body> with text attribute.",                  test_chtml10_body_tag_003); 
