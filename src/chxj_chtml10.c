@@ -371,6 +371,11 @@ tag_handler chtml10_handler[] = {
     NULL,
     NULL,
   },
+  /* tagMARQUEE */
+  {
+    NULL,
+    NULL,
+  },
 };
 
 

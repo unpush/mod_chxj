@@ -272,6 +272,7 @@ typedef enum {
   tagMENU,
   tagPLAINTEXT,
   tagBLINK,
+  tagMARQUEE,
 } tag_type;
 
 typedef struct mod_chxj_config mod_chxj_config;

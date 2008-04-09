@@ -106,6 +106,8 @@ static char *s_chtml20_start_plaintext_tag_inner (void *pdoc, Node *node);
 static char *s_chtml20_end_plaintext_tag         (void *pdoc, Node *node);
 static char *s_chtml20_start_blink_tag   (void *pdoc, Node *node);
 static char *s_chtml20_end_blink_tag     (void *pdoc, Node *node);
+static char *s_chtml20_start_marquee_tag   (void *pdoc, Node *node);
+static char *s_chtml20_end_marquee_tag     (void *pdoc, Node *node);
 
 static void  s_init_chtml20(chtml20_t *chtml, Doc *doc, request_rec *r, device_table *spec);
 
@@ -375,6 +377,11 @@ tag_handler chtml20_handler[] = {
   {
     s_chtml20_start_blink_tag,
     s_chtml20_end_blink_tag,
+  },
+  /* tagMAQUEE */
+  {
+    s_chtml20_start_marquee_tag,
+    s_chtml20_end_marquee_tag,
   },
 };
 
@@ -3512,6 +3519,74 @@ s_chtml20_end_blink_tag(void *pdoc, Node *UNUSED(child))
   chtml20_t *chtml20 = GET_CHTML20(pdoc);
   Doc *doc = chtml20->doc;
   W_L("</blink>");
+  return chtml20->out;
+}
+
+
+/**
+ * It is a hanmarqueeer who processes the MARQUEE tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The MARQUEE tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml20_start_marquee_tag(void *pdoc, Node *node)
+{
+  chtml20_t *chtml20 = GET_CHTML20(pdoc);
+  Doc *doc = chtml20->doc;
+  Attr *attr;
+  W_L("<marquee");
+  /*--------------------------------------------------------------------------*/
+  /* Get Attributes                                                           */
+  /*--------------------------------------------------------------------------*/
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char *name   = qs_get_attr_name(doc,attr);
+    char *value  = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('d','D',"direction", name)) {
+      if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value))) {
+        W_L(" direction=\"");
+        W_V(value);
+        W_L("\"");
+      }
+    }
+    else if (STRCASEEQ('b','B',"behavior",name)) {
+      if (value && (STRCASEEQ('s','S',"scroll",value) || STRCASEEQ('s','S',"slide",value) || STRCASEEQ('a','A',"alternate",value))) {
+        W_L(" behavior=\""); 
+        W_V(value);
+        W_L("\"");
+      }
+    }
+    else if (STRCASEEQ('l','L',"loop",name)) {
+      if (value && *value) {
+        W_L(" loop=\"");
+        W_V(value);
+        W_L("\"");
+      }
+    }
+  }
+  W_L(">");
+  return chtml20->out;
+}
+
+
+/**
+ * It is a hanmarqueeer who processes the MARQUEE tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The MARQUEE tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml20_end_marquee_tag(void *pdoc, Node *UNUSED(child))
+{
+  chtml20_t *chtml20 = GET_CHTML20(pdoc);
+  Doc *doc = chtml20->doc;
+  W_L("</marquee>");
   return chtml20->out;
 }
 /*

@@ -358,6 +358,11 @@ tag_handler xhtml_handler[] = {
     NULL,
     NULL,
   },
+  /* tagMARQUEE */
+  {
+    NULL,
+    NULL,
+  },
 };
  
 /**

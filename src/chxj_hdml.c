@@ -354,6 +354,11 @@ tag_handler hdml_handler[] = {
     NULL,
     NULL,
   },
+  /* tagMARQUEE */
+  {
+    NULL,
+    NULL,
+  },
 };
 
 /**
