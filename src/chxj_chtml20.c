@@ -2374,7 +2374,9 @@ s_chtml20_start_div_tag(void *pdoc, Node *child)
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0 (W3C version 3.2)                                          */
       /*----------------------------------------------------------------------*/
-      align = apr_pstrdup(doc->buf.pool, val);
+      if (val && (STRCASEEQ('l','L',"left",val) || STRCASEEQ('r','R',"right",val) || STRCASEEQ('c','C',"center",val))) {
+        align = apr_pstrdup(doc->buf.pool, val);
+      }
     }
   }
 
@@ -2408,7 +2410,7 @@ s_chtml20_end_div_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
-  W20_L("</div>\r\n");
+  W20_L("</div>");
   return chtml20->out;
 }
 

@@ -435,6 +435,7 @@ main()
   CU_add_test(chtml10_suite, "test <div> with align attribute(void).",            test_chtml10_div_tag_005); 
   CU_add_test(chtml10_suite, "test <div> with align attribute(unknown).",         test_chtml10_div_tag_006); 
   CU_add_test(chtml10_suite, "test <div> with style attribute.",                  test_chtml10_div_tag_007); 
+
   CU_add_test(chtml10_suite, "test <form>.",                                      test_chtml10_form_tag_001); 
   CU_add_test(chtml10_suite, "test <form method>.",                               test_chtml10_form_tag_002); 
   CU_add_test(chtml10_suite, "test <form method=\"post\">.",                      test_chtml10_form_tag_003); 
