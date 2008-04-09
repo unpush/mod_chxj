@@ -1549,51 +1549,63 @@ s_chtml20_start_input_tag(void *pdoc, Node *node)
   size       = qs_get_size_attr(doc, node, r);
 
   if (type) {
-    W_L(" type=\"");
-    W_V(type);
-    W_L("\" ");
+    type = qs_trim_string(doc->buf.pool, type);
+    if (type && (STRCASEEQ('t','T',"text",    type) ||
+                 STRCASEEQ('p','P',"password",type) ||
+                 STRCASEEQ('c','C',"checkbox",type) ||
+                 STRCASEEQ('r','R',"radio",   type) ||
+                 STRCASEEQ('h','H',"hidden",  type) ||
+                 STRCASEEQ('s','S',"submit",  type) ||
+                 STRCASEEQ('r','R',"reset",   type))) {
+      W_L(" type=\"");
+      W_V(type);
+      W_L("\"");
+    }
   }
 
-  if (size) {
+  if (size && *size) {
     W_L(" size=\"");
     W_V(size);
-    W_L("\" ");
+    W_L("\"");
   }
 
-  if (name) {
+  if (name && *name) {
     W_L(" name=\"");
     W_V(name);
-    W_L("\" ");
+    W_L("\"");
   }
 
-  if (value) {
+  if (value && *value) {
     W_L(" value=\"");
     W_V(value);
-    W_L("\" ");
+    W_L("\"");
   }
 
-  if (accesskey) {
+  if (accesskey && *accesskey) {
     W_L(" accesskey=\"");
     W_V(accesskey);
-    W_L("\" ");
+    W_L("\"");
   }
 
   if (istyle) {
     /*------------------------------------------------------------------------*/
     /* CHTML 2.0                                                              */
     /*------------------------------------------------------------------------*/
-    W_L(" istyle=\"");
-    W_V(istyle);
-    W_L("\" ");
+    if (*istyle == '1' || *istyle == '2' || *istyle == '3' || *istyle == '4') {
+      W_L(" istyle=\"");
+      W_V(istyle);
+      W_L("\"");
+    }
   }
 
   /*--------------------------------------------------------------------------*/
   /* The figure is default for the password.                                  */
   /*--------------------------------------------------------------------------*/
-  if (max_length) {
-    if (chxj_chk_numeric(max_length) != 0)
+  if (max_length && *max_length) {
+    if (chxj_chk_numeric(max_length) != 0) {
       max_length = apr_psprintf(doc->buf.pool, "0");
-    if (istyle != NULL && strcasecmp(istyle, "1") == 0) {
+    }
+    if (istyle && *istyle == '1') {
       char *vv = apr_psprintf(doc->buf.pool, " maxlength=\"%d\"", chxj_atoi(max_length) * 2);
       W_V(vv);
     }
@@ -1606,7 +1618,7 @@ s_chtml20_start_input_tag(void *pdoc, Node *node)
   if (checked) {
     W_L(" checked");
   }
-  W_L(" >");
+  W_L(">");
   return chtml20->out;
 }
 
