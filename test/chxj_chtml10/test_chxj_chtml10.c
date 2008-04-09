@@ -427,6 +427,7 @@ main()
 
   CU_add_test(chtml10_suite, "test <dd>.",                                        test_chtml10_dd_tag_001); 
   CU_add_test(chtml10_suite, "test <dd> with void value.",                        test_chtml10_dd_tag_002); 
+
   CU_add_test(chtml10_suite, "test <div>.",                                       test_chtml10_div_tag_001); 
   CU_add_test(chtml10_suite, "test <div> with align attribute(left).",            test_chtml10_div_tag_002); 
   CU_add_test(chtml10_suite, "test <div> with align attribute(right).",           test_chtml10_div_tag_003); 
