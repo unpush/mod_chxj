@@ -86,6 +86,8 @@ void test_chtml20_br_tag_004();
 void test_chtml20_br_tag_005();
 void test_chtml20_br_tag_006();
 void test_chtml20_br_tag_007();
+
+void test_chtml20_center_tag_001();
 /* pend */
 
 int
@@ -146,6 +148,8 @@ main()
   CU_add_test(chtml20_suite, "test <br> with clear attribute(void).",             test_chtml20_br_tag_005);
   CU_add_test(chtml20_suite, "test <br> with clear attribute(no value).",         test_chtml20_br_tag_006);
   CU_add_test(chtml20_suite, "test <br> with clear attribute(unknown value).",    test_chtml20_br_tag_007);
+
+  CU_add_test(chtml20_suite, "test <center>.",                                    test_chtml20_center_tag_001);
   /* aend */
 
   CU_basic_run_tests();
@@ -1524,6 +1528,34 @@ void test_chtml20_br_tag_007()
 {
 #define  TEST_STRING "<html><head></head><body><br clear=\"abc\"></body></html>"
 #define  RESULT_STRING "<html><head></head><body><br></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml20(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml20_center_tag_001()
+{
+#define  TEST_STRING "<html><head></head><body><center>あいうえお</center></body></html>"
+#define  RESULT_STRING "<html><head></head><body><center>あいうえお</center></body></html>"
   char  *ret;
   char  *tmp;
   device_table spec;

@@ -416,6 +416,7 @@ main()
   CU_add_test(chtml10_suite, "test <br> with clear attribute(unknown value).",    test_chtml10_br_tag_007); 
 
   CU_add_test(chtml10_suite, "test <center>.",                                    test_chtml10_center_tag_001); 
+
   CU_add_test(chtml10_suite, "test <dir>.",                                       test_chtml10_dir_tag_001); 
   CU_add_test(chtml10_suite, "test <dir> with no <li>.",                          test_chtml10_dir_tag_002); 
   CU_add_test(chtml10_suite, "test <dl>.",                                        test_chtml10_dl_tag_001); 
