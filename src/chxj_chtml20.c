@@ -1807,15 +1807,7 @@ s_chtml20_start_li_tag(void *pdoc, Node *UNUSED(node))
 static char *
 s_chtml20_end_li_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t *chtml20;
-  Doc *doc;
-  request_rec *r;
-
-  chtml20 = GET_CHTML20(pdoc);
-  doc     = chtml20->doc;
-  r       = doc->r;
-
-  W20_L("</li>");
+  chtml20_t *chtml20 = GET_CHTML20(pdoc);
   return chtml20->out;
 }
 
