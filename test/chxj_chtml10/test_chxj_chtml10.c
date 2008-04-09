@@ -448,6 +448,7 @@ main()
 
   CU_add_test(chtml10_suite, "test <head>.",                                      test_chtml10_head_tag_001); 
   CU_add_test(chtml10_suite, "test <head> with value.",                           test_chtml10_head_tag_002); 
+
   CU_add_test(chtml10_suite, "test <h1>.",                                        test_chtml10_h1_tag_001); 
   CU_add_test(chtml10_suite, "test <h1> with value.",                             test_chtml10_h1_tag_002); 
   CU_add_test(chtml10_suite, "test <h1> with value(japanese).",                   test_chtml10_h1_tag_003); 

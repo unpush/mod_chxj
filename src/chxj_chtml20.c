@@ -805,7 +805,7 @@ s_chtml20_end_title_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
-  W20_L("</title>\r\n");
+  W20_L("</title>");
   return chtml20->out;
 }
 
