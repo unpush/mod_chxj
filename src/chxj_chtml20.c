@@ -2030,12 +2030,17 @@ s_chtml20_start_img_tag(void *pdoc, Node *node)
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
-        W_L(" align=\"");
-        W_V(value);
-        W_L("\"");
+        if (value && (STRCASEEQ('t','T',"top",   value) ||
+                      STRCASEEQ('m','M',"middle",value) ||
+                      STRCASEEQ('b','B',"bottom",value) ||
+                      STRCASEEQ('l','L',"left",  value) ||
+                      STRCASEEQ('r','R',"right", value))) {
+          W_L(" align=\"");
+          W_V(value);
+          W_L("\"");
+        }
       }
-      else
-      if (strcasecmp(name, "alt"   ) == 0) {
+      else if (strcasecmp(name, "alt"   ) == 0 && value && *value) {
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
@@ -2043,18 +2048,11 @@ s_chtml20_start_img_tag(void *pdoc, Node *node)
         W_V(value);
         W_L("\"");
       }
-      else
-      if (strcasecmp(name, "align" ) == 0) {
-        /*--------------------------------------------------------------------*/
-        /* CHTML 4.0                                                          */
-        /*--------------------------------------------------------------------*/
-        /* ignore */
-      }
       break;
 
     case 'w':
     case 'W':
-      if (strcasecmp(name, "width" ) == 0) {
+      if (strcasecmp(name, "width" ) == 0 && value && *value) {
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
@@ -2066,7 +2064,7 @@ s_chtml20_start_img_tag(void *pdoc, Node *node)
 
     case 'h':
     case 'H':
-      if (strcasecmp(name, "height") == 0) {
+      if (strcasecmp(name, "height") == 0 && value && *value) {
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
@@ -2074,8 +2072,7 @@ s_chtml20_start_img_tag(void *pdoc, Node *node)
         W_V(value);
         W_L("\"");
       }
-      else
-      if (strcasecmp(name, "hspace") == 0) {
+      else if (strcasecmp(name, "hspace") == 0 && value && *value) {
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
@@ -2087,7 +2084,7 @@ s_chtml20_start_img_tag(void *pdoc, Node *node)
 
     case 'v':
     case 'V':
-      if (strcasecmp(name, "vspace") == 0) {
+      if (strcasecmp(name, "vspace") == 0 && value && *value) {
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
