@@ -99,6 +99,8 @@ static char *s_chtml20_start_dt_tag      (void *pdoc, Node *node);
 static char *s_chtml20_end_dt_tag        (void *pdoc, Node *node);
 static char *s_chtml20_start_dd_tag      (void *pdoc, Node *node);
 static char *s_chtml20_end_dd_tag        (void *pdoc, Node *node);
+static char *s_chtml20_start_menu_tag    (void *pdoc, Node *node);
+static char *s_chtml20_end_menu_tag      (void *pdoc, Node *node);
 
 static void  s_init_chtml20(chtml20_t *chtml, Doc *doc, request_rec *r, device_table *spec);
 
@@ -356,8 +358,8 @@ tag_handler chtml20_handler[] = {
   },
   /* tagMENU */
   {
-    NULL,
-    NULL,
+    s_chtml20_start_menu_tag,
+    s_chtml20_end_menu_tag,
   },
   /* tagPLAINTEXT */
   {
@@ -3324,6 +3326,45 @@ s_chtml20_end_dd_tag(void *pdoc, Node *UNUSED(child))
   chtml20 = GET_CHTML20(pdoc);
   return chtml20->out;
 }
+
+
+/**
+ * It is a hanmenuer who processes the MENU tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The MENU tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml20_start_menu_tag(void *pdoc, Node *UNUSED(child))
+{
+  chtml20_t *chtml20;
+  Doc *doc;
+  chtml20 = GET_CHTML20(pdoc);
+  doc     = chtml20->doc;
+  W_L("<menu>");
+  return chtml20->out;
+}
+
+
+/**
+ * It is a hanmenuer who processes the MENU tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The MENU tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml20_end_menu_tag(void *pdoc, Node *UNUSED(child))
+{
+  chtml20_t *chtml20 = GET_CHTML20(pdoc);
+  Doc *doc = chtml20->doc;
+  W_L("</menu>");
+  return chtml20->out;
+}
+
 /*
  * vim:ts=2 et
  */
