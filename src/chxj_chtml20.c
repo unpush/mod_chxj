@@ -2250,12 +2250,12 @@ s_chtml20_start_select_tag(void *pdoc, Node *child)
       break;
     }
   }
-  if (size) {
+  if (size && *size) {
     W_L(" size=\"");
     W_V(size);
     W_L("\"");
   }
-  if (name) {
+  if (name && *name) {
     W_L(" name=\"");
     W_V(name);
     W_L("\"");
