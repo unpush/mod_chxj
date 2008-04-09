@@ -509,6 +509,7 @@ main()
   CU_add_test(chtml10_suite, "test <h6> with align attribute(right).",            test_chtml10_h6_tag_008); 
   CU_add_test(chtml10_suite, "test <h6> with align attribute(center).",           test_chtml10_h6_tag_009); 
   CU_add_test(chtml10_suite, "test <h6> with align attribute(unkown).",           test_chtml10_h6_tag_010); 
+
   CU_add_test(chtml10_suite, "test <hr>.",                                        test_chtml10_hr_tag_001); 
   CU_add_test(chtml10_suite, "test <hr />.",                                      test_chtml10_hr_tag_002); 
   CU_add_test(chtml10_suite, "test <hr align> with no value.",                    test_chtml10_hr_tag_003); 
