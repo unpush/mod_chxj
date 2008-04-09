@@ -528,6 +528,7 @@ main()
   CU_add_test(chtml10_suite, "test <hr width> with numeric value.",               test_chtml10_hr_tag_016); 
   CU_add_test(chtml10_suite, "test <hr noshade>.",                                test_chtml10_hr_tag_017); 
   CU_add_test(chtml10_suite, "test <hr color>.",                                  test_chtml10_hr_tag_018); 
+
   CU_add_test(chtml10_suite, "test <html>.",                                      test_chtml10_html_tag_001); 
   CU_add_test(chtml10_suite, "test <img>." ,                                      test_chtml10_img_tag_001); 
   CU_add_test(chtml10_suite, "test <img src> with no value." ,                    test_chtml10_img_tag_002); 
