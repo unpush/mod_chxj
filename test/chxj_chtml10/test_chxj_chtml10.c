@@ -445,6 +445,7 @@ main()
   CU_add_test(chtml10_suite, "test <form action> with null cookie.",              test_chtml10_form_tag_007); 
   CU_add_test(chtml10_suite, "test <form action> with other site .",              test_chtml10_form_tag_008); 
   CU_add_test(chtml10_suite, "test <form action method>.",                        test_chtml10_form_tag_009); 
+
   CU_add_test(chtml10_suite, "test <head>.",                                      test_chtml10_head_tag_001); 
   CU_add_test(chtml10_suite, "test <head> with value.",                           test_chtml10_head_tag_002); 
   CU_add_test(chtml10_suite, "test <h1>.",                                        test_chtml10_h1_tag_001); 
