@@ -424,6 +424,7 @@ main()
 
   CU_add_test(chtml10_suite, "test <dt>.",                                        test_chtml10_dt_tag_001); 
   CU_add_test(chtml10_suite, "test <dt> with void value.",                        test_chtml10_dt_tag_002); 
+
   CU_add_test(chtml10_suite, "test <dd>.",                                        test_chtml10_dd_tag_001); 
   CU_add_test(chtml10_suite, "test <dd> with void value.",                        test_chtml10_dd_tag_002); 
   CU_add_test(chtml10_suite, "test <div>.",                                       test_chtml10_div_tag_001); 
