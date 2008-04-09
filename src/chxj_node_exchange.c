@@ -387,6 +387,18 @@ chxj_node_exchange(
         if (handlers[tagMENU].end_tag_handler)
           handlers[tagMENU].end_tag_handler(pdoc, child);
       }
+      /*----------------------------------------------------------------------*/
+      /* <MARQUEE>                                                            */
+      /*----------------------------------------------------------------------*/
+      else if (strcasecmp(name, "marquee") == 0) {
+        if (handlers[tagMARQUEE].start_tag_handler) 
+          handlers[tagMARQUEE].start_tag_handler(pdoc, child);
+
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+
+        if (handlers[tagMARQUEE].end_tag_handler)
+          handlers[tagMARQUEE].end_tag_handler(pdoc, child);
+      }
       break;
 
     case 'b':
