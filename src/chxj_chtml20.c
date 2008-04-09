@@ -906,7 +906,7 @@ s_chtml20_start_body_tag(void *pdoc, Node *node)
     switch(*name) {
     case 'b':
     case 'B':
-      if (strcasecmp(name, "bgcolor") == 0) {
+      if (strcasecmp(name, "bgcolor") == 0 && value && *value != 0) {
         /*----------------------------------------------------------------------*/
         /* CHTML 2.0                                                            */
         /*----------------------------------------------------------------------*/
@@ -918,7 +918,7 @@ s_chtml20_start_body_tag(void *pdoc, Node *node)
 
     case 't':
     case 'T':
-      if (strcasecmp(name, "text") == 0) {
+      if (strcasecmp(name, "text") == 0 && value && *value != 0) {
         /*----------------------------------------------------------------------*/
         /* CHTML 2.0                                                            */
         /*----------------------------------------------------------------------*/
@@ -930,7 +930,7 @@ s_chtml20_start_body_tag(void *pdoc, Node *node)
 
     case 'l':
     case 'L':
-      if (strcasecmp(name, "link") == 0) {
+      if (strcasecmp(name, "link") == 0 && value && *value != 0) {
         /*----------------------------------------------------------------------*/
         /* CHTML 2.0                                                            */
         /*----------------------------------------------------------------------*/

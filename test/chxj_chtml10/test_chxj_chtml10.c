@@ -406,6 +406,7 @@ main()
   CU_add_test(chtml10_suite, "test <body> with vlink attribute.",                 test_chtml10_body_tag_005); 
   CU_add_test(chtml10_suite, "test <body> with alink attribute.",                 test_chtml10_body_tag_006); 
   CU_add_test(chtml10_suite, "test <body> with unknown attribute.",               test_chtml10_body_tag_007); 
+
   CU_add_test(chtml10_suite, "test <br>.",                                        test_chtml10_br_tag_001); 
   CU_add_test(chtml10_suite, "test <br> with clear attribute(left).",             test_chtml10_br_tag_002); 
   CU_add_test(chtml10_suite, "test <br> with clear attribute(right).",            test_chtml10_br_tag_003); 
