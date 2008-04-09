@@ -1198,17 +1198,39 @@ s_chtml20_end_a_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml20_start_br_tag(void *pdoc, Node *UNUSED(node)) 
+s_chtml20_start_br_tag(void *pdoc, Node *node) 
 {
   chtml20_t *chtml20;
   Doc *doc;
   request_rec *r;
+  Attr *attr;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
   r       = doc->r;
 
-  W20_L("<br>\r\n");
+  W20_L("<br");
+  /*--------------------------------------------------------------------------*/
+  /* Get Attributes                                                           */
+  /*--------------------------------------------------------------------------*/
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char *name;
+    char *value;
+
+    name  = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
+
+    if (STRCASEEQ('c','C',"clear",name)) {
+      if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('a','A',"all",value))) {
+        W20_L(" clear=\"");
+        W20_V(value);
+        W20_L("\"");
+      }
+    }
+  }
+  W20_L(">");
   return chtml20->out;
 }
 
@@ -3001,6 +3023,8 @@ s_chtml20_end_blockquote_tag(void *pdoc, Node *UNUSED(child))
   W20_L("</blockquote>");
   return chtml20->out;
 }
+
+
 /*
  * vim:ts=2 et
  */
