@@ -403,6 +403,8 @@ void test_chtml20_textarea_tag_024();
 void test_chtml20_textarea_tag_025();
 void test_chtml20_textarea_tag_026();
 
+void test_chtml20_title_tag_001();
+void test_chtml20_title_tag_002();
 /* pend */
 
 int
@@ -775,6 +777,8 @@ main()
   CU_add_test(chtml20_suite, "test <textarea> 25." ,                              test_chtml20_textarea_tag_025);
   CU_add_test(chtml20_suite, "test <textarea> 26." ,                              test_chtml20_textarea_tag_026);
 
+  CU_add_test(chtml20_suite, "test <title> 1." ,                                  test_chtml20_title_tag_001);
+  CU_add_test(chtml20_suite, "test <title> 2." ,                                  test_chtml20_title_tag_002);
   /* aend */
 
   CU_basic_run_tests();
@@ -10311,6 +10315,65 @@ void test_chtml20_textarea_tag_026()
 {
 #define  TEST_STRING "<textarea istyle=\"a\"></textarea>"
 #define  RESULT_STRING "<textarea></textarea>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml20(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+/*============================================================================*/
+/* <TITLE>                                                                    */
+/*============================================================================*/
+void test_chtml20_title_tag_001()
+{
+#define  TEST_STRING "<title></title>"
+#define  RESULT_STRING "<title></title>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_chtml20(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml20_title_tag_002()
+{
+#define  TEST_STRING "<title>あああ</title>"
+#define  RESULT_STRING "<title>あああ</title>"
   char  *ret;
   char  *tmp;
   device_table spec;
