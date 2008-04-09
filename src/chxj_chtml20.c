@@ -550,7 +550,7 @@ s_chtml20_start_html_tag(void *pdoc, Node *UNUSED(node))
   /*--------------------------------------------------------------------------*/
   /* start HTML tag                                                           */
   /*--------------------------------------------------------------------------*/
-  W20_L("<html>\n");
+  W20_L("<html>");
   return chtml20->out;
 }
 
@@ -574,7 +574,7 @@ s_chtml20_end_html_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
-  W20_L("</html>\n");
+  W20_L("</html>");
   return chtml20->out;
 }
 
@@ -723,7 +723,7 @@ s_chtml20_start_head_tag(void *pdoc, Node *UNUSED(node))
   doc     = chtml20->doc;
   r       = doc->r;
 
-  W20_L("<head>\r\n");
+  W20_L("<head>");
   return chtml20->out;
 }
 
@@ -747,7 +747,7 @@ s_chtml20_end_head_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
-  W20_L("</head>\r\n");
+  W20_L("</head>");
   return chtml20->out;
 }
 
@@ -962,7 +962,7 @@ s_chtml20_start_body_tag(void *pdoc, Node *node)
       break;
     }
   }
-  W20_L(">\r\n");
+  W20_L(">");
   return chtml20->out;
 }
 
@@ -986,7 +986,7 @@ s_chtml20_end_body_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
-  W20_L("</body>\r\n");
+  W20_L("</body>");
   return chtml20->out;
 }
 
