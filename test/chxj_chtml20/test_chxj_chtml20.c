@@ -930,6 +930,7 @@ chxj_apply_convrule(request_rec* r, apr_array_header_t* convrules)
     apr_initialize(); \
     apr_pool_create(&p, NULL); \
     r.pool = p; \
+    r.hostname = apr_pstrdup(p, "localhost"); \
   } \
   while (0)
 
