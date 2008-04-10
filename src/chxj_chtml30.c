@@ -24,76 +24,80 @@
 #include "chxj_encoding.h"
 
 #define GET_CHTML30(X) ((chtml30_t*)(X))
-#define W30_L(X)          do { chtml30->out = BUFFERED_WRITE_LITERAL(chtml30->out, &doc->buf, (X)); } while(0)
-#define W30_V(X)          do { chtml30->out = (X) ? BUFFERED_WRITE_VALUE(chtml30->out, &doc->buf, (X))  \
+#undef W_L
+#undef W_V
+#define W_L(X)          do { chtml30->out = BUFFERED_WRITE_LITERAL(chtml30->out, &doc->buf, (X)); } while(0)
+#define W_V(X)          do { chtml30->out = (X) ? BUFFERED_WRITE_VALUE(chtml30->out, &doc->buf, (X))  \
                                                   : BUFFERED_WRITE_LITERAL(chtml30->out, &doc->buf, ""); } while(0)
 
-static char* s_chtml30_start_html_tag     (void* pdoc, Node* node);
-static char* s_chtml30_end_html_tag       (void* pdoc, Node* node);
-static char* s_chtml30_start_meta_tag     (void* pdoc, Node* node);
-static char* s_chtml30_end_meta_tag       (void* pdoc, Node* node);
-static char* s_chtml30_start_textarea_tag (void* pdoc, Node* node);
-static char* s_chtml30_end_textarea_tag   (void* pdoc, Node* node);
-static char* s_chtml30_start_p_tag        (void* pdoc, Node* node);
-static char* s_chtml30_end_p_tag          (void* pdoc, Node* node);
-static char* s_chtml30_start_pre_tag      (void* pdoc, Node* node);
-static char* s_chtml30_end_pre_tag        (void* pdoc, Node* node);
-static char* s_chtml30_start_h1_tag       (void* pdoc, Node* node);
-static char* s_chtml30_end_h1_tag         (void* pdoc, Node* node);
-static char* s_chtml30_start_h2_tag       (void* pdoc, Node* node);
-static char* s_chtml30_end_h2_tag         (void* pdoc, Node* node);
-static char* s_chtml30_start_h3_tag       (void* pdoc, Node* node);
-static char* s_chtml30_end_h3_tag         (void* pdoc, Node* node);
-static char* s_chtml30_start_h4_tag       (void* pdoc, Node* node);
-static char* s_chtml30_end_h4_tag         (void* pdoc, Node* node);
-static char* s_chtml30_start_h5_tag       (void* pdoc, Node* node);
-static char* s_chtml30_end_h5_tag         (void* pdoc, Node* node);
-static char* s_chtml30_start_h6_tag       (void* pdoc, Node* node);
-static char* s_chtml30_end_h6_tag         (void* pdoc, Node* node);
-static char* s_chtml30_start_ul_tag       (void* pdoc, Node* node);
-static char* s_chtml30_end_ul_tag         (void* pdoc, Node* node);
-static char* s_chtml30_start_ol_tag       (void* pdoc, Node* node);
-static char* s_chtml30_end_ol_tag         (void* pdoc, Node* node);
-static char* s_chtml30_start_li_tag       (void* pdoc, Node* node);
-static char* s_chtml30_end_li_tag         (void* pdoc, Node* node);
-static char* s_chtml30_start_head_tag     (void* pdoc, Node* node);
-static char* s_chtml30_end_head_tag       (void* pdoc, Node* node);
-static char* s_chtml30_start_title_tag    (void* pdoc, Node* node);
-static char* s_chtml30_end_title_tag      (void* pdoc, Node* node);
-static char* s_chtml30_start_base_tag     (void* pdoc, Node* node);
-static char* s_chtml30_end_base_tag       (void* pdoc, Node* node);
-static char* s_chtml30_start_body_tag     (void* pdoc, Node* node);
-static char* s_chtml30_end_body_tag       (void* pdoc, Node* node);
-static char* s_chtml30_start_a_tag        (void* pdoc, Node* node);
-static char* s_chtml30_end_a_tag          (void* pdoc, Node* node);
-static char* s_chtml30_start_br_tag       (void* pdoc, Node* node);
-static char* s_chtml30_end_br_tag         (void* pdoc, Node* node);
-static char* s_chtml30_start_tr_tag       (void* pdoc, Node* node);
-static char* s_chtml30_end_tr_tag         (void* pdoc, Node* node);
-static char* s_chtml30_start_font_tag     (void* pdoc, Node* node);
-static char* s_chtml30_end_font_tag       (void* pdoc, Node* node);
-static char* s_chtml30_start_form_tag     (void* pdoc, Node* node);
-static char* s_chtml30_end_form_tag       (void* pdoc, Node* node);
-static char* s_chtml30_start_input_tag    (void* pdoc, Node* node);
-static char* s_chtml30_end_input_tag      (void* pdoc, Node* node);
-static char* s_chtml30_start_center_tag   (void* pdoc, Node* node);
-static char* s_chtml30_end_center_tag     (void* pdoc, Node* node);
-static char* s_chtml30_start_hr_tag       (void* pdoc, Node* node);
-static char* s_chtml30_end_hr_tag         (void* pdoc, Node* node);
-static char* s_chtml30_start_img_tag      (void* pdoc, Node* node);
-static char* s_chtml30_end_img_tag        (void* pdoc, Node* node);
-static char* s_chtml30_start_select_tag   (void* pdoc, Node* node);
-static char* s_chtml30_end_select_tag     (void* pdoc, Node* node);
-static char* s_chtml30_start_option_tag   (void* pdoc, Node* node);
-static char* s_chtml30_end_option_tag     (void* pdoc, Node* node);
-static char* s_chtml30_start_div_tag      (void* pdoc, Node* node);
-static char* s_chtml30_end_div_tag        (void* pdoc, Node* node);
-static char* s_chtml30_chxjif_tag         (void* pdoc, Node* node); 
-static char* s_chtml30_text_tag           (void* pdoc, Node* node);
+static char *s_chtml30_start_html_tag     (void *pdoc, Node *node);
+static char *s_chtml30_end_html_tag       (void *pdoc, Node *node);
+static char *s_chtml30_start_meta_tag     (void *pdoc, Node *node);
+static char *s_chtml30_end_meta_tag       (void *pdoc, Node *node);
+static char *s_chtml30_start_textarea_tag (void *pdoc, Node *node);
+static char *s_chtml30_end_textarea_tag   (void *pdoc, Node *node);
+static char *s_chtml30_start_p_tag        (void *pdoc, Node *node);
+static char *s_chtml30_end_p_tag          (void *pdoc, Node *node);
+static char *s_chtml30_start_pre_tag      (void *pdoc, Node *node);
+static char *s_chtml30_end_pre_tag        (void *pdoc, Node *node);
+static char *s_chtml30_start_h1_tag       (void *pdoc, Node *node);
+static char *s_chtml30_end_h1_tag         (void *pdoc, Node *node);
+static char *s_chtml30_start_h2_tag       (void *pdoc, Node *node);
+static char *s_chtml30_end_h2_tag         (void *pdoc, Node *node);
+static char *s_chtml30_start_h3_tag       (void *pdoc, Node *node);
+static char *s_chtml30_end_h3_tag         (void *pdoc, Node *node);
+static char *s_chtml30_start_h4_tag       (void *pdoc, Node *node);
+static char *s_chtml30_end_h4_tag         (void *pdoc, Node *node);
+static char *s_chtml30_start_h5_tag       (void *pdoc, Node *node);
+static char *s_chtml30_end_h5_tag         (void *pdoc, Node *node);
+static char *s_chtml30_start_h6_tag       (void *pdoc, Node *node);
+static char *s_chtml30_end_h6_tag         (void *pdoc, Node *node);
+static char *s_chtml30_start_ul_tag       (void *pdoc, Node *node);
+static char *s_chtml30_end_ul_tag         (void *pdoc, Node *node);
+static char *s_chtml30_start_ol_tag       (void *pdoc, Node *node);
+static char *s_chtml30_end_ol_tag         (void *pdoc, Node *node);
+static char *s_chtml30_start_li_tag       (void *pdoc, Node *node);
+static char *s_chtml30_end_li_tag         (void *pdoc, Node *node);
+static char *s_chtml30_start_head_tag     (void *pdoc, Node *node);
+static char *s_chtml30_end_head_tag       (void *pdoc, Node *node);
+static char *s_chtml30_start_title_tag    (void *pdoc, Node *node);
+static char *s_chtml30_end_title_tag      (void *pdoc, Node *node);
+static char *s_chtml30_start_base_tag     (void *pdoc, Node *node);
+static char *s_chtml30_end_base_tag       (void *pdoc, Node *node);
+static char *s_chtml30_start_body_tag     (void *pdoc, Node *node);
+static char *s_chtml30_end_body_tag       (void *pdoc, Node *node);
+static char *s_chtml30_start_a_tag        (void *pdoc, Node *node);
+static char *s_chtml30_end_a_tag          (void *pdoc, Node *node);
+static char *s_chtml30_start_br_tag       (void *pdoc, Node *node);
+static char *s_chtml30_end_br_tag         (void *pdoc, Node *node);
+static char *s_chtml30_start_tr_tag       (void *pdoc, Node *node);
+static char *s_chtml30_end_tr_tag         (void *pdoc, Node *node);
+static char *s_chtml30_start_font_tag     (void *pdoc, Node *node);
+static char *s_chtml30_end_font_tag       (void *pdoc, Node *node);
+static char *s_chtml30_start_form_tag     (void *pdoc, Node *node);
+static char *s_chtml30_end_form_tag       (void *pdoc, Node *node);
+static char *s_chtml30_start_input_tag    (void *pdoc, Node *node);
+static char *s_chtml30_end_input_tag      (void *pdoc, Node *node);
+static char *s_chtml30_start_center_tag   (void *pdoc, Node *node);
+static char *s_chtml30_end_center_tag     (void *pdoc, Node *node);
+static char *s_chtml30_start_hr_tag       (void *pdoc, Node *node);
+static char *s_chtml30_end_hr_tag         (void *pdoc, Node *node);
+static char *s_chtml30_start_img_tag      (void *pdoc, Node *node);
+static char *s_chtml30_end_img_tag        (void *pdoc, Node *node);
+static char *s_chtml30_start_select_tag   (void *pdoc, Node *node);
+static char *s_chtml30_end_select_tag     (void *pdoc, Node *node);
+static char *s_chtml30_start_option_tag   (void *pdoc, Node *node);
+static char *s_chtml30_end_option_tag     (void *pdoc, Node *node);
+static char *s_chtml30_start_div_tag      (void *pdoc, Node *node);
+static char *s_chtml30_end_div_tag        (void *pdoc, Node *node);
+static char *s_chtml30_chxjif_tag         (void *pdoc, Node *node); 
+static char *s_chtml30_text_tag           (void *pdoc, Node *node);
+static char *s_chtml30_start_blockquote_tag(void *pdoc, Node *node);
+static char *s_chtml30_end_blockquote_tag  (void *pdoc, Node *node);
 
-static void  s_init_chtml30(chtml30_t* chtml, Doc* doc, request_rec* r, device_table* spec);
+static void  s_init_chtml30(chtml30_t *chtml, Doc *doc, request_rec *r, device_table *spec);
 
-static int   s_chtml30_search_emoji(chtml30_t* chtml, char* txt, char** rslt);
+static int   s_chtml30_search_emoji(chtml30_t *chtml, char *txt, char **rslt);
 
 
 tag_handler chtml30_handler[] = {
@@ -324,8 +328,8 @@ tag_handler chtml30_handler[] = {
   },
   /* tagBLOCKQUOTE */
   {
-    NULL,
-    NULL,
+    s_chtml30_start_blockquote_tag,
+    s_chtml30_end_blockquote_tag,
   },
   /* tagDIR */
   {
@@ -562,12 +566,7 @@ s_chtml30_start_html_tag(void* pdoc, Node* UNUSED(node))
   /*--------------------------------------------------------------------------*/
   /* start HTML tag                                                           */
   /*--------------------------------------------------------------------------*/
-#if 0
-  chtml30->out = apr_pstrcat(r->pool, chtml30->out, "<html>\n", NULL);
-#else
-  W30_L("<html>\n");
-#endif
-
+  W_L("<html>");
   return chtml30->out;
 }
 
@@ -591,12 +590,7 @@ s_chtml30_end_html_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml30->doc;
   r       = doc->r;
 
-#if 0
-  chtml30->out = apr_pstrcat(r->pool, chtml30->out, "</html>\n", NULL);
-#else
-  W30_L("</html>\n");
-#endif
-
+  W_L("</html>");
   return chtml30->out;
 }
 
@@ -626,7 +620,7 @@ s_chtml30_start_meta_tag(void* pdoc, Node* node)
   content_type_flag = 0;
   refresh_flag      = 0;
 
-  W30_L("<meta");
+  W_L("<meta");
 
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -648,9 +642,9 @@ s_chtml30_start_meta_tag(void* pdoc, Node* node)
         /*----------------------------------------------------------------------*/
         /* CHTML 2.0                                                            */
         /*----------------------------------------------------------------------*/
-        W30_L(" http-equiv=\"");
-        W30_V(value);
-        W30_L("\"");
+        W_L(" http-equiv=\"");
+        W_V(value);
+        W_L("\"");
         if (STRCASEEQ('c','C',"content-type", value))
           content_type_flag = 1;
   
@@ -663,9 +657,9 @@ s_chtml30_start_meta_tag(void* pdoc, Node* node)
     case 'C':
       if (strcasecmp(name, "content") == 0) {
         if (content_type_flag) {
-          W30_L(" ");
-          W30_V(name);
-          W30_L("=\"text/html; charset=Windows-31J\"");
+          W_L(" ");
+          W_V(name);
+          W_L("=\"text/html; charset=Windows-31J\"");
         }
         else
         if (refresh_flag) {
@@ -682,21 +676,21 @@ s_chtml30_start_meta_tag(void* pdoc, Node* node)
             url++;
             url = chxj_encoding_parameter(r, url);
             url = chxj_add_cookie_parameter(r, url, chtml30->cookie);
-            W30_L(" ");
-            W30_V(name);
-            W30_L("=\"");
-            W30_V(sec);
-            W30_L(";");
-            W30_V(url);
-            W30_L("\"");
+            W_L(" ");
+            W_V(name);
+            W_L("=\"");
+            W_V(sec);
+            W_L(";");
+            W_V(url);
+            W_L("\"");
           }
         }
         else {
-          W30_L(" ");
-          W30_V(name);
-          W30_L("=\"");
-          W30_V(value);
-          W30_L("\"");
+          W_L(" ");
+          W_V(name);
+          W_L("=\"");
+          W_V(value);
+          W_L("\"");
         }
       }
       break;
@@ -706,7 +700,7 @@ s_chtml30_start_meta_tag(void* pdoc, Node* node)
     }
   }
 
-  W30_L(">");
+  W_L(">");
 
   return chtml30->out;
 }
@@ -750,7 +744,7 @@ s_chtml30_start_head_tag(void* pdoc, Node* UNUSED(node))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("<head>\r\n");
+  W_L("<head>");
 
   return chtml30->out;
 }
@@ -764,8 +758,8 @@ s_chtml30_start_head_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The HEAD tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml30_end_head_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_chtml30_end_head_tag(void *pdoc, Node *UNUSED(node)) 
 {
   chtml30_t*    chtml30;
   Doc*          doc;
@@ -775,7 +769,7 @@ s_chtml30_end_head_tag(void* pdoc, Node* UNUSED(node))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("</head>\r\n");
+  W_L("</head>");
 
   return chtml30->out;
 }
@@ -800,7 +794,7 @@ s_chtml30_start_title_tag(void* pdoc, Node* UNUSED(node))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("<title>");
+  W_L("<title>");
 
   return chtml30->out;
 }
@@ -825,7 +819,7 @@ s_chtml30_end_title_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("</title>\r\n");
+  W_L("</title>\r\n");
 
   return chtml30->out;
 }
@@ -839,42 +833,34 @@ s_chtml30_end_title_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The BASE tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml30_start_base_tag(void* pdoc, Node* node) 
+static char *
+s_chtml30_start_base_tag(void *pdoc, Node *node) 
 {
-  Attr*         attr;
-  chtml30_t*    chtml30;
-  Doc*          doc;
-  request_rec*  r;
+  Attr *attr;
+  chtml30_t *chtml30;
+  Doc *doc;
+  request_rec *r;
 
   chtml30 = GET_CHTML30(pdoc);
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("<base");
-
+  W_L("<base");
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
   /*--------------------------------------------------------------------------*/
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-
-    char* name;
-    char* value;
-
-    name = qs_get_attr_name(doc,attr);
-    value = qs_get_attr_value(doc,attr);
-
+    char *name = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('h','H',"href", name)) {
-      W30_L(" href=\"");
-      W30_V(value);
-      W30_L("\"");
+      W_L(" href=\"");
+      W_V(value);
+      W_L("\"");
     }
   }
-
-  W30_L(" >\r\n");
-
+  W_L(">");
   return chtml30->out;
 }
 
@@ -906,21 +892,20 @@ s_chtml30_end_base_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The BODY tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml30_start_body_tag(void* pdoc, Node* node) 
+static char *
+s_chtml30_start_body_tag(void *pdoc, Node *node) 
 {
-  chtml30_t*    chtml30;
-  Doc*          doc;
-  request_rec*  r;
-  Attr*         attr;
+  chtml30_t *chtml30;
+  Doc *doc;
+  request_rec *r;
+  Attr *attr;
 
   chtml30 = GET_CHTML30(pdoc);
   doc     = chtml30->doc;
   r       = doc->r;
 
 
-  W30_L("<body");
-
+  W_L("<body");
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
   /*--------------------------------------------------------------------------*/
@@ -937,25 +922,25 @@ s_chtml30_start_body_tag(void* pdoc, Node* node)
       /*----------------------------------------------------------------------*/
       /* CHTML 2.0                                                            */
       /*----------------------------------------------------------------------*/
-      W30_L(" bgcolor=\"");
-      W30_V(value);
-      W30_L("\"");
+      W_L(" bgcolor=\"");
+      W_V(value);
+      W_L("\"");
     }
     else if (STRCASEEQ('t','T', "text", name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 2.0                                                            */
       /*----------------------------------------------------------------------*/
-      W30_L(" text=\"");
-      W30_V(value);
-      W30_L("\"");
+      W_L(" text=\"");
+      W_V(value);
+      W_L("\"");
     }
     else if (STRCASEEQ('l','L',"link", name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 2.0                                                            */
       /*----------------------------------------------------------------------*/
-      W30_L(" link=\"");
-      W30_V(value);
-      W30_L("\"");
+      W_L(" link=\"");
+      W_V(value);
+      W_L("\"");
     }
     else if (STRCASEEQ('a','A',"alink", name)) {
       /*----------------------------------------------------------------------*/
@@ -970,9 +955,7 @@ s_chtml30_start_body_tag(void* pdoc, Node* node)
       /* ignore */
     }
   }
-
-  W30_L(">\r\n");
-
+  W_L(">");
   return chtml30->out;
 }
 
@@ -985,18 +968,18 @@ s_chtml30_start_body_tag(void* pdoc, Node* node)
  * @param node   [i]   The BODY tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml30_end_body_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml30_end_body_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml30_t*    chtml30;
-  Doc*          doc;
-  request_rec*  r;
+  chtml30_t *chtml30;
+  Doc *doc;
+  request_rec *r;
 
   chtml30 = GET_CHTML30(pdoc);
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("</body>\r\n");
+  W_L("</body>");
 
   return chtml30->out;
 }
@@ -1022,7 +1005,7 @@ s_chtml30_start_a_tag(void* pdoc, Node* node)
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("<a");
+  W_L("<a");
 
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -1041,9 +1024,9 @@ s_chtml30_start_a_tag(void* pdoc, Node* node)
       /*----------------------------------------------------------------------*/
       /* CHTML1.0                                                             */
       /*----------------------------------------------------------------------*/
-      W30_L(" name=\"");
-      W30_V(value);
-      W30_L("\"");
+      W_L(" name=\"");
+      W_V(value);
+      W_L("\"");
     }
     else if (STRCASEEQ('h','H',"href", name)) {
       /*----------------------------------------------------------------------*/
@@ -1051,25 +1034,25 @@ s_chtml30_start_a_tag(void* pdoc, Node* node)
       /*----------------------------------------------------------------------*/
       value = chxj_encoding_parameter(r, value);
       value = chxj_add_cookie_parameter(r, value, chtml30->cookie);
-      W30_L(" href=\"");
-      W30_V(value);
-      W30_L("\"");
+      W_L(" href=\"");
+      W_V(value);
+      W_L("\"");
     }
     else if (STRCASEEQ('a','A',"accesskey", name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML1.0                                                             */
       /*----------------------------------------------------------------------*/
-      W30_L(" accesskey=\"");
-      W30_V(value);
-      W30_L("\"");
+      W_L(" accesskey=\"");
+      W_V(value);
+      W_L("\"");
     }
     else if (STRCASEEQ('c','C',"cti", name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 2.0                                                            */
       /*----------------------------------------------------------------------*/
-      W30_L(" cti=\"");
-      W30_V(value);
-      W30_L("\"");
+      W_L(" cti=\"");
+      W_V(value);
+      W_L("\"");
     }
     else if (STRCASEEQ('i','I',"ijam", name)) {
       /*----------------------------------------------------------------------*/
@@ -1082,7 +1065,7 @@ s_chtml30_start_a_tag(void* pdoc, Node* node)
       /* CHTML 3.0                                                            */
       /* It is special only for CHTML.                                        */
       /*----------------------------------------------------------------------*/
-      W30_L(" utn ");
+      W_L(" utn ");
     }
     else if (STRCASEEQ('t','T',"telbook", name)) {
       /*----------------------------------------------------------------------*/
@@ -1128,7 +1111,7 @@ s_chtml30_start_a_tag(void* pdoc, Node* node)
     }
   }
 
-  W30_L(">");
+  W_L(">");
 
   return chtml30->out;
 }
@@ -1153,7 +1136,7 @@ s_chtml30_end_a_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("</a>");
+  W_L("</a>");
 
   return chtml30->out;
 }
@@ -1178,7 +1161,7 @@ s_chtml30_start_br_tag(void* pdoc, Node* UNUSED(node))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("<br>\r\n");
+  W_L("<br>\r\n");
 
   return chtml30->out;
 }
@@ -1241,7 +1224,7 @@ s_chtml30_end_tr_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("<br>\r\n");
+  W_L("<br>\r\n");
 
   return chtml30->out;
 }
@@ -1267,7 +1250,7 @@ s_chtml30_start_font_tag(void* pdoc, Node* node)
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("<font");
+  W_L("<font");
 
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -1283,9 +1266,9 @@ s_chtml30_start_font_tag(void* pdoc, Node* node)
     value = qs_get_attr_value(doc,attr);
 
     if (STRCASEEQ('c','C',"color", name)) {
-      W30_L(" color=\"");
-      W30_V(value);
-      W30_L("\"");
+      W_L(" color=\"");
+      W_V(value);
+      W_L("\"");
     }
     else if (STRCASEEQ('s','S',"size", name)) {
       /*----------------------------------------------------------------------*/
@@ -1295,7 +1278,7 @@ s_chtml30_start_font_tag(void* pdoc, Node* node)
     }
   }
 
-  W30_L(">");
+  W_L(">");
 
   return chtml30->out;
 }
@@ -1320,7 +1303,7 @@ s_chtml30_end_font_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("</font>");
+  W_L("</font>");
 
   return chtml30->out;
 }
@@ -1346,7 +1329,7 @@ s_chtml30_start_form_tag(void* pdoc, Node* node)
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("<form");
+  W_L("<form");
 
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -1367,28 +1350,28 @@ s_chtml30_start_form_tag(void* pdoc, Node* node)
       /*----------------------------------------------------------------------*/
       value = chxj_encoding_parameter(r, value);
       value = chxj_add_cookie_parameter(r, value, chtml30->cookie);
-      W30_L(" action=\"");
-      W30_V(value);
-      W30_L("\"");
+      W_L(" action=\"");
+      W_V(value);
+      W_L("\"");
     }
     else if (STRCASEEQ('m','M',"method", name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
-      W30_L(" method=\"");
-      W30_V(value);
-      W30_L("\"");
+      W_L(" method=\"");
+      W_V(value);
+      W_L("\"");
     }
     else if (STRCASEEQ('u','U',"utn", name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 3.0                                                            */
       /* It is special only for CHTML.                                        */
       /*----------------------------------------------------------------------*/
-      W30_L(" utn ");
+      W_L(" utn ");
     }
   }
 
-  W30_L(">");
+  W_L(">");
 
   return chtml30->out;
 }
@@ -1413,7 +1396,7 @@ s_chtml30_end_form_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("</form>");
+  W_L("</form>");
 
   return chtml30->out;
 }
@@ -1447,7 +1430,7 @@ s_chtml30_start_input_tag(void* pdoc, Node* node)
   r         = doc->r;
 
 
-  W30_L("<input");
+  W_L("<input");
 
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -1463,42 +1446,42 @@ s_chtml30_start_input_tag(void* pdoc, Node* node)
   size       = qs_get_size_attr(doc, node, r);
 
   if (type) {
-    W30_L(" type=\"");
-    W30_V(type);
-    W30_L("\"");
+    W_L(" type=\"");
+    W_V(type);
+    W_L("\"");
   }
 
   if (size) {
-    W30_L(" size=\"");
-    W30_V(size);
-    W30_L("\" ");
+    W_L(" size=\"");
+    W_V(size);
+    W_L("\" ");
   }
 
   if (name) {
-    W30_L(" name=\"");
-    W30_V(name);
-    W30_L("\" ");
+    W_L(" name=\"");
+    W_V(name);
+    W_L("\" ");
   }
 
   if (value) {
-    W30_L(" value=\"");
-    W30_V(value);
-    W30_L("\" ");
+    W_L(" value=\"");
+    W_V(value);
+    W_L("\" ");
   }
 
   if (accesskey) {
-    W30_L(" accesskey=\"");
-    W30_V(accesskey);
-    W30_L("\" ");
+    W_L(" accesskey=\"");
+    W_V(accesskey);
+    W_L("\" ");
   }
 
   if (istyle != NULL) {
     /*------------------------------------------------------------------------*/
     /* CHTML 2.0                                                              */
     /*------------------------------------------------------------------------*/
-    W30_L(" istyle=\"");
-    W30_V(istyle);
-    W30_L("\" ");
+    W_L(" istyle=\"");
+    W_V(istyle);
+    W_L("\" ");
   }
 
   /*--------------------------------------------------------------------------*/
@@ -1510,19 +1493,19 @@ s_chtml30_start_input_tag(void* pdoc, Node* node)
 
     if (istyle != NULL && strcasecmp(istyle, "1") == 0) {
       char *vv = apr_psprintf(doc->buf.pool, " maxlength=\"%d\"", chxj_atoi(max_length) * 2);
-      W30_V(vv);
+      W_V(vv);
     }
     else  {
       char *vv = apr_psprintf(doc->buf.pool, " maxlength=\"%d\"", chxj_atoi(max_length));
-      W30_V(vv);
+      W_V(vv);
     }
   }
 
   if (checked) {
-    W30_L(" checked ");
+    W_L(" checked ");
   }
 
-  W30_L(" >");
+  W_L(" >");
 
   return chtml30->out;
 }
@@ -1566,7 +1549,7 @@ s_chtml30_start_center_tag(void* pdoc, Node* UNUSED(node))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("<center>");
+  W_L("<center>");
 
   return chtml30->out;
 }
@@ -1591,7 +1574,7 @@ s_chtml30_end_center_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("</center>");
+  W_L("</center>");
 
   return chtml30->out;
 }
@@ -1617,7 +1600,7 @@ s_chtml30_start_hr_tag(void* pdoc, Node* node)
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("<hr ");
+  W_L("<hr ");
  
   for (attr = qs_get_attr(doc,node);
        attr; 
@@ -1629,31 +1612,31 @@ s_chtml30_start_hr_tag(void* pdoc, Node* node)
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
-      W30_L(" align=\"");
-      W30_V(value);
-      W30_L("\" ");
+      W_L(" align=\"");
+      W_V(value);
+      W_L("\" ");
     }
     else if (STRCASEEQ('s','S',"size", name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
-      W30_L(" size=\"");
-      W30_V(value);
-      W30_L("\" ");
+      W_L(" size=\"");
+      W_V(value);
+      W_L("\" ");
     }
     else if (STRCASEEQ('w','W',"width", name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
-      W30_L(" width=\"");
-      W30_V(value);
-      W30_L("\" ");
+      W_L(" width=\"");
+      W_V(value);
+      W_L("\" ");
     }
     else if (STRCASEEQ('n','N',"noshade", name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
-      W30_L(" noshade ");
+      W_L(" noshade ");
     }
     else if (STRCASEEQ('c','C',"color", name)) {
       /*----------------------------------------------------------------------*/
@@ -1663,7 +1646,7 @@ s_chtml30_start_hr_tag(void* pdoc, Node* node)
     }
   }
 
-  W30_L(" >");
+  W_L(" >");
 
   return chtml30->out;
 }
@@ -1714,7 +1697,7 @@ s_chtml30_start_img_tag(void* pdoc, Node* node)
   spec    = chtml30->spec;
 #endif
 
-  W30_L("<img");
+  W_L("<img");
 
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -1738,9 +1721,9 @@ s_chtml30_start_img_tag(void* pdoc, Node* node)
                              value,
                              (strchr(value, '?')) ? '&' : '?',
                              CHXJ_COOKIE_NOUPDATE_PARAM);
-        W30_L(" src=\"");
-        W30_V(value);
-        W30_L("\"");
+        W_L(" src=\"");
+        W_V(value);
+        W_L("\"");
       }
 
 #else
@@ -1754,58 +1737,58 @@ s_chtml30_start_img_tag(void* pdoc, Node* node)
                              (strchr(value, '?')) ? '&' : '?',
                              CHXJ_COOKIE_NOUPDATE_PARAM);
       }
-      W30_L(" src=\"");
-      W30_V(value);
-      W30_L("\"");
+      W_L(" src=\"");
+      W_V(value);
+      W_L("\"");
 #endif
     }
     else if (STRCASEEQ('a','A',"align", name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
-      W30_L(" align=\"");
-      W30_V(value);
-      W30_L("\"");
+      W_L(" align=\"");
+      W_V(value);
+      W_L("\"");
     }
     else if (STRCASEEQ('w','W',"width", name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
-      W30_L(" width=\"");
-      W30_V(value);
-      W30_L("\"");
+      W_L(" width=\"");
+      W_V(value);
+      W_L("\"");
     }
     else if (STRCASEEQ('h','H', "height", name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
-      W30_L(" height=\"");
-      W30_V(value);
-      W30_L("\"");
+      W_L(" height=\"");
+      W_V(value);
+      W_L("\"");
     }
     else if (STRCASEEQ('h','H',"hspace", name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
-      W30_L(" hspace=\"");
-      W30_V(value);
-      W30_L("\"");
+      W_L(" hspace=\"");
+      W_V(value);
+      W_L("\"");
     }
     else if (STRCASEEQ('v','V',"vspace", name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
-      W30_L(" vspace=\"");
-      W30_V(value);
-      W30_L("\"");
+      W_L(" vspace=\"");
+      W_V(value);
+      W_L("\"");
     }
     else if (STRCASEEQ('a','A',"alt",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
-      W30_L(" alt=\"");
-      W30_V(value);
-      W30_L("\"");
+      W_L(" alt=\"");
+      W_V(value);
+      W_L("\"");
     }
     else if (STRCASEEQ('a','A',"align", name)) {
       /*----------------------------------------------------------------------*/
@@ -1815,7 +1798,7 @@ s_chtml30_start_img_tag(void* pdoc, Node* node)
     }
   }
 
-  W30_L(">");
+  W_L(">");
 
   return chtml30->out;
 }
@@ -1865,7 +1848,7 @@ s_chtml30_start_select_tag(void* pdoc, Node* child)
   size    = NULL;
   name    = NULL;
 
-  W30_L("<select");
+  W_L("<select");
 
   for (attr = qs_get_attr(doc,child);
        attr;
@@ -1894,18 +1877,18 @@ s_chtml30_start_select_tag(void* pdoc, Node* child)
   }
 
   if (size) {
-    W30_L(" size=\"");
-    W30_V(size);
-    W30_L("\"");
+    W_L(" size=\"");
+    W_V(size);
+    W_L("\"");
   }
 
   if (name) {
-    W30_L(" name=\"");
-    W30_V(name);
-    W30_L("\"");
+    W_L(" name=\"");
+    W_V(name);
+    W_L("\"");
   }
 
-  W30_L(">\n");
+  W_L(">\n");
 
   return chtml30->out;
 }
@@ -1930,7 +1913,7 @@ s_chtml30_end_select_tag(void* pdoc, Node* UNUSED(child))
   doc   = chtml30->doc;
   r     = doc->r;
 
-  W30_L("</select>\n");
+  W_L("</select>\n");
 
   return chtml30->out;
 }
@@ -1960,7 +1943,7 @@ s_chtml30_start_option_tag(void* pdoc, Node* child)
   selected   = NULL;
   value      = NULL;
 
-  W30_L("<option");
+  W_L("<option");
 
   for (attr = qs_get_attr(doc,child);
        attr;
@@ -1983,19 +1966,19 @@ s_chtml30_start_option_tag(void* pdoc, Node* child)
   }
 
   if (value) {
-    W30_L(" value=\"");
-    W30_V(value);
-    W30_L("\"");
+    W_L(" value=\"");
+    W_V(value);
+    W_L("\"");
   }
   else {
-    W30_L(" value=\"\"");
+    W_L(" value=\"\"");
   }
 
   if (selected) {
-    W30_L(" selected");
+    W_L(" selected");
   }
 
-  W30_L(">");
+  W_L(">");
 
   return chtml30->out;
 }
@@ -2044,7 +2027,7 @@ s_chtml30_start_div_tag(void *pdoc, Node *child)
   r       = doc->r;
   align   = NULL;
 
-  W30_L("<div");
+  W_L("<div");
 
   for (attr = qs_get_attr(doc,child);
        attr;
@@ -2061,12 +2044,12 @@ s_chtml30_start_div_tag(void *pdoc, Node *child)
   }
 
   if (align) {
-    W30_L(" align=\"");
-    W30_V(align);
-    W30_L("\"");
+    W_L(" align=\"");
+    W_V(align);
+    W_L("\"");
   }
 
-  W30_L(">");
+  W_L(">");
 
   return chtml30->out;
 }
@@ -2091,7 +2074,7 @@ s_chtml30_end_div_tag(void* pdoc, Node* UNUSED(node))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("</div>\n");
+  W_L("</div>\n");
 
   return chtml30->out;
 }
@@ -2116,7 +2099,7 @@ s_chtml30_start_ul_tag(void* pdoc, Node* UNUSED(node))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("<ul>");
+  W_L("<ul>");
 
   return chtml30->out;
 }
@@ -2141,7 +2124,7 @@ s_chtml30_end_ul_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("</ul>");
+  W_L("</ul>");
 
   return chtml30->out;
 }
@@ -2167,7 +2150,7 @@ s_chtml30_start_pre_tag(void *pdoc, Node *UNUSED(node))
   r       = doc->r;
 
   chtml30->pre_flag++;
-  W30_L("<pre>");
+  W_L("<pre>");
 
   return chtml30->out;
 }
@@ -2192,7 +2175,7 @@ s_chtml30_end_pre_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("</pre>");
+  W_L("</pre>");
   chtml30->pre_flag--;
 
   return chtml30->out;
@@ -2218,7 +2201,7 @@ s_chtml30_start_p_tag(void *pdoc, Node *UNUSED(node))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("<p>");
+  W_L("<p>");
 
   return chtml30->out;
 }
@@ -2243,7 +2226,7 @@ s_chtml30_end_p_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("</p>");
+  W_L("</p>");
 
   return chtml30->out;
 }
@@ -2268,7 +2251,7 @@ s_chtml30_start_ol_tag(void *pdoc, Node *UNUSED(node))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("<ol>");
+  W_L("<ol>");
 
   return chtml30->out;
 }
@@ -2293,7 +2276,7 @@ s_chtml30_end_ol_tag(void *pdoc, Node *UNUSED(node))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("</ol>");
+  W_L("</ol>");
 
   return chtml30->out;
 }
@@ -2318,7 +2301,7 @@ s_chtml30_start_li_tag(void* pdoc, Node* UNUSED(node))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("<li>");
+  W_L("<li>");
 
   return chtml30->out;
 }
@@ -2343,7 +2326,7 @@ s_chtml30_end_li_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("</li>");
+  W_L("</li>");
 
   return chtml30->out;
 }
@@ -2368,7 +2351,7 @@ s_chtml30_start_h1_tag(void *pdoc, Node *UNUSED(node))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("<h1>\r\n");
+  W_L("<h1>\r\n");
 
   return chtml30->out;
 }
@@ -2393,7 +2376,7 @@ s_chtml30_end_h1_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("</h1>\r\n");
+  W_L("</h1>\r\n");
 
   return chtml30->out;
 }
@@ -2418,7 +2401,7 @@ s_chtml30_start_h2_tag(void* pdoc, Node* UNUSED(node))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("<h2>\r\n");
+  W_L("<h2>\r\n");
 
   return chtml30->out;
 }
@@ -2443,7 +2426,7 @@ s_chtml30_end_h2_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("</h2>\r\n");
+  W_L("</h2>\r\n");
 
   return chtml30->out;
 }
@@ -2468,7 +2451,7 @@ s_chtml30_start_h3_tag(void* pdoc, Node* UNUSED(node))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("<h3>\r\n");
+  W_L("<h3>\r\n");
 
   return chtml30->out;
 }
@@ -2493,7 +2476,7 @@ s_chtml30_end_h3_tag(void* pdoc, Node* UNUSED(child))
   doc   = chtml30->doc;
   r     = doc->r;
 
-  W30_L("</h3>\r\n");
+  W_L("</h3>\r\n");
 
   return chtml30->out;
 }
@@ -2518,7 +2501,7 @@ s_chtml30_start_h4_tag(void* pdoc, Node* UNUSED(node))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("<h4>\r\n");
+  W_L("<h4>\r\n");
 
   return chtml30->out;
 }
@@ -2543,7 +2526,7 @@ s_chtml30_end_h4_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("</h4>\r\n");
+  W_L("</h4>\r\n");
 
   return chtml30->out;
 }
@@ -2568,7 +2551,7 @@ s_chtml30_start_h5_tag(void* pdoc, Node* UNUSED(node))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("<h5>\r\n");
+  W_L("<h5>\r\n");
 
   return chtml30->out;
 }
@@ -2593,7 +2576,7 @@ s_chtml30_end_h5_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("</h5>\r\n");
+  W_L("</h5>\r\n");
 
   return chtml30->out;
 }
@@ -2618,7 +2601,7 @@ s_chtml30_start_h6_tag(void* pdoc, Node* UNUSED(node))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("<h6>\r\n");
+  W_L("<h6>\r\n");
 
   return chtml30->out;
 }
@@ -2643,7 +2626,7 @@ s_chtml30_end_h6_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("</h6>\r\n");
+  W_L("</h6>\r\n");
 
   return chtml30->out;
 }
@@ -2671,7 +2654,7 @@ s_chtml30_start_textarea_tag(void* pdoc, Node* node)
 
   chtml30->textarea_flag++;
 
-  W30_L("<textarea ");
+  W_L("<textarea ");
 
   for (attr = qs_get_attr(doc,node);
        attr;
@@ -2681,23 +2664,23 @@ s_chtml30_start_textarea_tag(void* pdoc, Node* node)
     char* value = qs_get_attr_value(doc,attr);
 
     if (STRCASEEQ('n','N',"name", name)) {
-      W30_L(" name=\"");
-      W30_V(value);
-      W30_L("\"");
+      W_L(" name=\"");
+      W_V(value);
+      W_L("\"");
     }
     else if (STRCASEEQ('r','R',"rows", name)) {
-      W30_L(" rows=\"");
-      W30_V(value);
-      W30_L("\"");
+      W_L(" rows=\"");
+      W_V(value);
+      W_L("\"");
     }
     else if (STRCASEEQ('c','C',"cols", name)) {
-      W30_L(" cols=\"");
-      W30_V(value);
-      W30_L("\"");
+      W_L(" cols=\"");
+      W_V(value);
+      W_L("\"");
     }
   }
 
-  W30_L(">\r\n");
+  W_L(">\r\n");
 
   return chtml30->out;
 }
@@ -2722,7 +2705,7 @@ s_chtml30_end_textarea_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W30_L("</textarea>\r\n");
+  W_L("</textarea>\r\n");
   chtml30->textarea_flag--;
 
   return chtml30->out;
@@ -2744,7 +2727,7 @@ s_chtml30_chxjif_tag(void* pdoc, Node* node)
   for (child = qs_get_child_node(doc, node);
        child;
        child = qs_get_next_node(doc, child)) {
-    W30_V(child->otext);
+    W_V(child->otext);
     s_chtml30_chxjif_tag(chtml30, child);
   }
 
@@ -2810,8 +2793,49 @@ s_chtml30_text_tag(void* pdoc, Node* child)
       tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
     }
   }
-  W30_V(tdst);
+  W_V(tdst);
 
+  return chtml30->out;
+}
+
+
+/**
+ * It is a handler who processes the BLOCKQUOTE tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The BLOCKQUOTE tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml30_start_blockquote_tag(void *pdoc, Node *UNUSED(child))
+{
+  chtml30_t *chtml30;
+  Doc *doc;
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  W_L("<blockquote>");
+  return chtml30->out;
+}
+
+
+/**
+ * It is a handler who processes the BLOCKQUOTE tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The BLOCKQUOTE tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml30_end_blockquote_tag(void *pdoc, Node *UNUSED(child))
+{
+  chtml30_t *chtml30;
+  Doc *doc;
+
+  chtml30 = GET_CHTML30(pdoc);
+  doc     = chtml30->doc;
+  W_L("</blockquote>");
   return chtml30->out;
 }
 
