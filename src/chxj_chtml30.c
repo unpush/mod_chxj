@@ -94,6 +94,8 @@ static char *s_chtml30_chxjif_tag         (void *pdoc, Node *node);
 static char *s_chtml30_text_tag           (void *pdoc, Node *node);
 static char *s_chtml30_start_blockquote_tag(void *pdoc, Node *node);
 static char *s_chtml30_end_blockquote_tag  (void *pdoc, Node *node);
+static char *s_chtml30_start_dir_tag(void *pdoc, Node *node);
+static char *s_chtml30_end_dir_tag  (void *pdoc, Node *node);
 
 static void  s_init_chtml30(chtml30_t *chtml, Doc *doc, request_rec *r, device_table *spec);
 
@@ -333,8 +335,8 @@ tag_handler chtml30_handler[] = {
   },
   /* tagDIR */
   {
-    NULL,
-    NULL,
+    s_chtml30_start_dir_tag,
+    s_chtml30_end_dir_tag,
   },
   /* tagDL */
   {
@@ -912,13 +914,9 @@ s_chtml30_start_body_tag(void *pdoc, Node *node)
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-    char* name;
-    char* value;
-
-    name   = qs_get_attr_name(doc,attr);
-    value  = qs_get_attr_value(doc,attr);
-
-    if (STRCASEEQ('b','B', "bgcolor", name)) {
+    char *name   = qs_get_attr_name(doc,attr);
+    char *value  = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('b','B', "bgcolor", name) && value && *value) {
       /*----------------------------------------------------------------------*/
       /* CHTML 2.0                                                            */
       /*----------------------------------------------------------------------*/
@@ -926,7 +924,7 @@ s_chtml30_start_body_tag(void *pdoc, Node *node)
       W_V(value);
       W_L("\"");
     }
-    else if (STRCASEEQ('t','T', "text", name)) {
+    else if (STRCASEEQ('t','T', "text", name) && value && *value) {
       /*----------------------------------------------------------------------*/
       /* CHTML 2.0                                                            */
       /*----------------------------------------------------------------------*/
@@ -934,7 +932,7 @@ s_chtml30_start_body_tag(void *pdoc, Node *node)
       W_V(value);
       W_L("\"");
     }
-    else if (STRCASEEQ('l','L',"link", name)) {
+    else if (STRCASEEQ('l','L',"link", name) && value && *value) {
       /*----------------------------------------------------------------------*/
       /* CHTML 2.0                                                            */
       /*----------------------------------------------------------------------*/
@@ -1150,19 +1148,39 @@ s_chtml30_end_a_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The BR tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml30_start_br_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_chtml30_start_br_tag(void *pdoc, Node *node)
 {
-  chtml30_t*    chtml30;
-  Doc*          doc;
-  request_rec*  r;
+  chtml30_t *chtml30;
+  Doc *doc;
+  request_rec *r;
+  Attr *attr;
 
   chtml30 = GET_CHTML30(pdoc);
   doc     = chtml30->doc;
   r       = doc->r;
+  W_L("<br");
+  /*--------------------------------------------------------------------------*/
+  /* Get Attributes                                                           */
+  /*--------------------------------------------------------------------------*/
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char *name;
+    char *value;
 
-  W_L("<br>\r\n");
+    name  = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
 
+    if (STRCASEEQ('c','C',"clear",name)) {
+      if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('a','A',"all",value))) {
+        W_L(" clear=\"");
+        W_V(value);
+        W_L("\"");
+      }
+    }
+  }
+  W_L(">");
   return chtml30->out;
 }
 
@@ -1175,13 +1193,10 @@ s_chtml30_start_br_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The BR tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml30_end_br_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml30_end_br_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml30_t*    chtml30;
-
-  chtml30 = GET_CHTML30(pdoc);
-
+  chtml30_t *chtml30 = GET_CHTML30(pdoc);
   return chtml30->out;
 }
 
@@ -2836,6 +2851,42 @@ s_chtml30_end_blockquote_tag(void *pdoc, Node *UNUSED(child))
   chtml30 = GET_CHTML30(pdoc);
   doc     = chtml30->doc;
   W_L("</blockquote>");
+  return chtml30->out;
+}
+
+
+/**
+ * It is a handler who processes the DIR tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DIR tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml30_start_dir_tag(void *pdoc, Node *UNUSED(child))
+{
+  chtml30_t *chtml30 = GET_CHTML30(pdoc);
+  Doc *doc = chtml30->doc;
+  W_L("<dir>");
+  return chtml30->out;
+}
+
+
+/**
+ * It is a handler who processes the DIR tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DIR tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml30_end_dir_tag(void *pdoc, Node *UNUSED(child))
+{
+  chtml30_t *chtml30 = GET_CHTML30(pdoc);
+  Doc *doc = chtml30->doc;
+  W_L("</dir>");
   return chtml30->out;
 }
 
