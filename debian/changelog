@@ -1,3 +1,11 @@
+libapache2-mod-chxj (0.10.3-1) unstable; urgency=low
+
+  * Fixed bug.
+      - Cookie ID is not given, except when Content-type is text/html and
+        application/xhtml+xml.  (Reported by bayside. Thanks!)
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Thu, 10 Apr 2008 23:30:52 +0900
+
 libapache2-mod-chxj (0.10.2-1) unstable; urgency=low
 
   * Fixed bug. 

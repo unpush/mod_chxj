@@ -123,6 +123,7 @@ converter_t convert_routine[] = {
 };
 
 static int chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp);
+static void s_add_cookie_id_if_has_location_header(request_rec *r, cookie_t *cookie);
 
 /**
  * Only when User-Agent is specified, the User-Agent header is camouflaged. 
@@ -626,7 +627,6 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
   apr_size_t          len;
   mod_chxj_ctx*       ctx = (mod_chxj_ctx *)f->ctx;
   cookie_t*           cookie = NULL;
-  char*               location_header;
   mod_chxj_config*    dconf;
   chxjconvrule_entry  *entryp = NULL;
   device_table        *spec = NULL;
@@ -636,6 +636,13 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
   DBG(f->r, "start of chxj_output_filter()");
   r  = f->r;
   rv = APR_SUCCESS;
+
+  dconf      = ap_get_module_config(r->per_dir_config, &chxj_module);
+  user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
+  if (ctx && ctx->entryp) entryp = ctx->entryp;
+  else                    entryp = chxj_apply_convrule(r, dconf->convrules);
+  if (ctx && ctx->spec)   spec   = ctx->spec;
+  else                    spec   = chxj_specified_device(r, user_agent);
 
   if (!f->ctx) {
     if ((f->r->proto_num >= 1001) 
@@ -658,6 +665,22 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
             || STRCASEEQ('g','G',"gif",             &r->content_type[6])))) {     /* GIF */
       
       DBG(r, "not convert content-type:[%s]", r->content_type);
+      if (entryp->action & CONVRULE_COOKIE_ON_BIT) {
+        DBG(r, "entryp->action == COOKIE_ON_BIT");
+        switch(spec->html_spec_type) {
+        case CHXJ_SPEC_Chtml_1_0:
+        case CHXJ_SPEC_Chtml_2_0:
+        case CHXJ_SPEC_Chtml_3_0:
+        case CHXJ_SPEC_Chtml_4_0:
+        case CHXJ_SPEC_Chtml_5_0:
+        case CHXJ_SPEC_Jhtml:
+          cookie = chxj_save_cookie(r);
+          s_add_cookie_id_if_has_location_header(r, cookie);
+          break;
+        default:
+          break;
+        }
+      }
       ap_pass_brigade(f->next, bb);
       return APR_SUCCESS;
     }
@@ -667,13 +690,6 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
     ap_pass_brigade(f->next, bb);
     return APR_SUCCESS;
   }
-
-  dconf      = chxj_get_module_config(r->per_dir_config, &chxj_module);
-  user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
-  if (ctx && ctx->entryp) entryp = ctx->entryp;
-  else                    entryp = chxj_apply_convrule(r, dconf->convrules);
-  if (ctx && ctx->spec)   spec   = ctx->spec;
-  else                    spec   = chxj_specified_device(r, user_agent);
 
 
   for (b = APR_BRIGADE_FIRST(bb);
@@ -869,15 +885,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
         
         if (ctx->len > 0) {
           DBG(r, "call pass_data_to_filter()");
-          location_header = (char*)apr_table_get(r->headers_out, "Location");
-          if (cookie && location_header) {
-            DBG(r, "Location Header=[%s]", location_header);
-            location_header = chxj_add_cookie_parameter(r,
-                                                        location_header,
-                                                        cookie);
-            apr_table_setn(r->headers_out, "Location", location_header);
-            DBG(r, "Location Header=[%s]", location_header);
-          }
+          s_add_cookie_id_if_has_location_header(r, cookie);
           rv = pass_data_to_filter(f, 
                                    (const char*)ctx->buffer, 
                                    (apr_size_t)ctx->len);
@@ -894,9 +902,6 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
          */
         if (entryp->action & CONVRULE_COOKIE_ON_BIT) {
           DBG(r, "entryp->action == COOKIE_ON_BIT");
-          char* user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
-          device_table* spec = chxj_specified_device(r, user_agent);
-
           switch(spec->html_spec_type) {
           case CHXJ_SPEC_Chtml_1_0:
           case CHXJ_SPEC_Chtml_2_0:
@@ -904,32 +909,20 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
           case CHXJ_SPEC_Chtml_4_0:
           case CHXJ_SPEC_Chtml_5_0:
           case CHXJ_SPEC_Jhtml:
-
             cookie = chxj_save_cookie(r);
-  
             /*
              * Location Header Check to add cookie parameter.
              */
-            location_header = (char*)apr_table_get(r->headers_out, "Location");
-            if (cookie && location_header) {
-              DBG(r, "Location Header=[%s]", location_header);
-              location_header = chxj_add_cookie_parameter(r,
-                                                          location_header,
-                                                          cookie);
-              apr_table_setn(r->headers_out, "Location", location_header);
-              DBG(r, "Location Header=[%s]", location_header);
-            }
+            s_add_cookie_id_if_has_location_header(r, cookie);
             break;
 
           default:
             break;
           }
         }
-
         apr_table_setn(r->headers_out, "Content-Length", "0");
         DBG(r, "call pass_data_to_filter()");
         rv = pass_data_to_filter(f, (const char*)"", (apr_size_t)0);
-
         return rv;
       }
     }
@@ -941,6 +934,22 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
   return APR_SUCCESS;
 }
 
+/**
+ * Add Cookie_id if it has location header.
+ */
+static void
+s_add_cookie_id_if_has_location_header(request_rec *r, cookie_t *cookie)
+{
+  char *location_header = (char*)apr_table_get(r->headers_out, "Location");
+  if (cookie && location_header) {
+    DBG(r, "Location Header=[%s]", location_header);
+    location_header = chxj_add_cookie_parameter(r,
+                                                location_header,
+                                                cookie);
+    apr_table_setn(r->headers_out, "Location", location_header);
+    DBG(r, "Location Header=[%s]", location_header);
+  }
+}
 
 /**
  * It is the main loop of the input filter. 
