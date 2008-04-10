@@ -371,6 +371,7 @@ void test_chtml10_blink_tag_001();
 void test_chtml10_blink_tag_002(); 
 void test_chtml10_blink_tag_003(); 
 void test_chtml10_blink_tag_004(); 
+
 /* pend */
 
 int
@@ -711,6 +712,7 @@ main()
   CU_add_test(chtml10_suite, "test <blink> 2." ,                                  test_chtml10_blink_tag_002); 
   CU_add_test(chtml10_suite, "test <blink> 3." ,                                  test_chtml10_blink_tag_003); 
   CU_add_test(chtml10_suite, "test <blink> 4." ,                                  test_chtml10_blink_tag_004); 
+
   /* aend */
 
   CU_basic_run_tests();

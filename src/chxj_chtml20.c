@@ -640,17 +640,12 @@ s_chtml20_start_meta_tag(void *pdoc, Node *node)
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-
-    char *name;
-    char *value;
-
-    name   = qs_get_attr_name(doc,attr);
-    value  = qs_get_attr_value(doc,attr);
-
+    char *name = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
     switch(*name) {
     case 'h':
     case 'H':
-      if (strcasecmp(name, "http-equiv") == 0) {
+      if (strcasecmp(name, "http-equiv") == 0 && value && *value) {
         /*----------------------------------------------------------------------*/
         /* CHTML 2.0                                                            */
         /*----------------------------------------------------------------------*/
@@ -668,7 +663,7 @@ s_chtml20_start_meta_tag(void *pdoc, Node *node)
 
     case 'c':
     case 'C':
-      if (strcasecmp(name, "content") == 0) {
+      if (strcasecmp(name, "content") == 0 && value && *value) {
         if (content_type_flag) {
           W_L(" ");
           W_V(name);
