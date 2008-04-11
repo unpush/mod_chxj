@@ -2671,7 +2671,7 @@ s_chtml30_start_textarea_tag(void* pdoc, Node* node)
 
   chtml30->textarea_flag++;
 
-  W_L("<textarea ");
+  W_L("<textarea");
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
@@ -2688,17 +2688,17 @@ s_chtml30_start_textarea_tag(void* pdoc, Node* node)
       W_V(value);
       W_L("\"");
     }
-    else if (STRCASEEQ('n','N',"name", name)) {
+    else if (STRCASEEQ('n','N',"name", name) && value && *value) {
       W_L(" name=\"");
       W_V(value);
       W_L("\"");
     }
-    else if (STRCASEEQ('r','R',"rows", name)) {
+    else if (STRCASEEQ('r','R',"rows", name) && value && *value) {
       W_L(" rows=\"");
       W_V(value);
       W_L("\"");
     }
-    else if (STRCASEEQ('c','C',"cols", name)) {
+    else if (STRCASEEQ('c','C',"cols", name) && value && *value) {
       W_L(" cols=\"");
       W_V(value);
       W_L("\"");
@@ -2778,9 +2778,9 @@ s_chtml30_text_tag(void* pdoc, Node* child)
   r       = doc->r;
   
   textval = qs_get_node_value(doc,child);
-  textval = qs_trim_string(doc->buf.pool, textval);
-  if (strlen(textval) == 0)
+  if (strlen(textval) == 0) {
     return chtml30->out;
+  }
   
   tmp = apr_palloc(r->pool, qs_get_node_size(doc,child)+1);
   memset(tmp, 0, qs_get_node_size(doc,child)+1);

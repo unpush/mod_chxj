@@ -792,6 +792,7 @@ main()
   CU_add_test(chtml30_suite, "test <select> 12." ,                                test_chtml30_select_tag_012);
   CU_add_test(chtml30_suite, "test <select> 13." ,                                test_chtml30_select_tag_013);
   CU_add_test(chtml30_suite, "test <select> 14." ,                                test_chtml30_select_tag_014);
+#endif
 
   CU_add_test(chtml30_suite, "test <textarea> 1." ,                               test_chtml30_textarea_tag_001);
   CU_add_test(chtml30_suite, "test <textarea> 2." ,                               test_chtml30_textarea_tag_002);
@@ -820,6 +821,7 @@ main()
   CU_add_test(chtml30_suite, "test <textarea> 25." ,                              test_chtml30_textarea_tag_025);
   CU_add_test(chtml30_suite, "test <textarea> 26." ,                              test_chtml30_textarea_tag_026);
 
+#if 0
   CU_add_test(chtml30_suite, "test <title> 1." ,                                  test_chtml30_title_tag_001);
   CU_add_test(chtml30_suite, "test <title> 2." ,                                  test_chtml30_title_tag_002);
 
@@ -830,12 +832,12 @@ main()
   CU_add_test(chtml30_suite, "test <ul> 5." ,                                     test_chtml30_ul_tag_005);
 
 #endif
+#if 0
   CU_add_test(chtml30_suite, "test <blink> 1." ,                                  test_chtml30_blink_tag_001);
   CU_add_test(chtml30_suite, "test <blink> 2." ,                                  test_chtml30_blink_tag_002);
   CU_add_test(chtml30_suite, "test <blink> 3." ,                                  test_chtml30_blink_tag_003);
   CU_add_test(chtml30_suite, "test <blink> 4." ,                                  test_chtml30_blink_tag_004);
 
-#if 0
   CU_add_test(chtml30_suite, "test <marquee> 1." ,                                test_chtml30_marquee_tag_001);
   CU_add_test(chtml30_suite, "test <marquee> 2." ,                                test_chtml30_marquee_tag_002);
   CU_add_test(chtml30_suite, "test <marquee> 3." ,                                test_chtml30_marquee_tag_003);
