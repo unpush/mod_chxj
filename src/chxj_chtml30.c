@@ -2759,16 +2759,16 @@ s_chtml30_chxjif_tag(void* pdoc, Node* node)
   return NULL;
 }
 
-static char*
-s_chtml30_text_tag(void* pdoc, Node* child)
+static char *
+s_chtml30_text_tag(void *pdoc, Node *child)
 {
-  chtml30_t*    chtml30;
-  Doc*          doc;
-  request_rec*  r;
+  chtml30_t *chtml30;
+  Doc *doc;
+  request_rec *r;
 
-  char*   textval;
-  char*   tmp;
-  char*   tdst;
+  char *textval;
+  char *tmp;
+  char *dst;
   char    one_byte[2];
   int     ii;
   int     tdst_len;
