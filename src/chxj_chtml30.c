@@ -100,6 +100,8 @@ static char *s_chtml30_start_dl_tag(void *pdoc, Node *node);
 static char *s_chtml30_end_dl_tag  (void *pdoc, Node *node);
 static char *s_chtml30_start_dt_tag(void *pdoc, Node *node);
 static char *s_chtml30_end_dt_tag  (void *pdoc, Node *node);
+static char *s_chtml30_start_dd_tag(void *pdoc, Node *node);
+static char *s_chtml30_end_dd_tag  (void *pdoc, Node *node);
 
 static void  s_init_chtml30(chtml30_t *chtml, Doc *doc, request_rec *r, device_table *spec);
 
@@ -349,8 +351,8 @@ tag_handler chtml30_handler[] = {
   },
   /* tagDD */
   {
-    NULL,
-    NULL,
+    s_chtml30_start_dd_tag,
+    s_chtml30_end_dd_tag,
   },
   /* tagMENU */
   {
@@ -2955,6 +2957,43 @@ s_chtml30_end_dt_tag(void *pdoc, Node *UNUSED(child))
 {
   chtml30_t *chtml30;
   chtml30 = GET_CHTML30(pdoc);
+  return chtml30->out;
+}
+
+
+/**
+ * It is a handder who processes the DD tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DD tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml30_start_dd_tag(void *pdoc, Node *UNUSED(child))
+{
+  chtml30_t *chtml30;
+  Doc *doc;
+  chtml30 = GET_CHTML20(pdoc);
+  doc     = chtml30->doc;
+  W_L("<dd>");
+  return chtml30->out;
+}
+
+
+/**
+ * It is a handder who processes the DD tag.
+ *
+ * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DD tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_chtml30_end_dd_tag(void *pdoc, Node *UNUSED(child))
+{
+  chtml30_t *chtml30;
+  chtml30 = GET_CHTML20(pdoc);
   return chtml30->out;
 }
 /*
