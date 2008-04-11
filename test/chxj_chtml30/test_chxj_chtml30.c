@@ -725,13 +725,14 @@ main()
   CU_add_test(chtml30_suite, "test <li> type attribute 8." ,                      test_chtml30_li_tag_012);
   CU_add_test(chtml30_suite, "test <li> type attribute 9." ,                      test_chtml30_li_tag_013);
 
+#endif
   CU_add_test(chtml30_suite, "test <menu>." ,                                     test_chtml30_menu_tag_001);
   CU_add_test(chtml30_suite, "test <menu> 2." ,                                   test_chtml30_menu_tag_002);
   CU_add_test(chtml30_suite, "test <menu> 3." ,                                   test_chtml30_menu_tag_003);
   CU_add_test(chtml30_suite, "test <menu> 4." ,                                   test_chtml30_menu_tag_004);
   CU_add_test(chtml30_suite, "test <menu> 5." ,                                   test_chtml30_menu_tag_005);
-#endif
 
+#if 0
   CU_add_test(chtml30_suite, "test <ol>." ,                                       test_chtml30_ol_tag_001);
   CU_add_test(chtml30_suite, "test <ol> 2." ,                                     test_chtml30_ol_tag_002);
   CU_add_test(chtml30_suite, "test <ol> 3." ,                                     test_chtml30_ol_tag_003);
@@ -751,7 +752,6 @@ main()
   CU_add_test(chtml30_suite, "test <ol> 17." ,                                    test_chtml30_ol_tag_017);
   CU_add_test(chtml30_suite, "test <ol> 18." ,                                    test_chtml30_ol_tag_018);
 
-#if 0
   CU_add_test(chtml30_suite, "test <option>." ,                                   test_chtml30_option_tag_001);
   CU_add_test(chtml30_suite, "test <option value> with no value." ,               test_chtml30_option_tag_002);
   CU_add_test(chtml30_suite, "test <option value> with void value." ,             test_chtml30_option_tag_003);
@@ -794,7 +794,6 @@ main()
   CU_add_test(chtml30_suite, "test <select> 12." ,                                test_chtml30_select_tag_012);
   CU_add_test(chtml30_suite, "test <select> 13." ,                                test_chtml30_select_tag_013);
   CU_add_test(chtml30_suite, "test <select> 14." ,                                test_chtml30_select_tag_014);
-#endif
 
   CU_add_test(chtml30_suite, "test <textarea> 1." ,                               test_chtml30_textarea_tag_001);
   CU_add_test(chtml30_suite, "test <textarea> 2." ,                               test_chtml30_textarea_tag_002);
@@ -823,7 +822,6 @@ main()
   CU_add_test(chtml30_suite, "test <textarea> 25." ,                              test_chtml30_textarea_tag_025);
   CU_add_test(chtml30_suite, "test <textarea> 26." ,                              test_chtml30_textarea_tag_026);
 
-#if 0
   CU_add_test(chtml30_suite, "test <title> 1." ,                                  test_chtml30_title_tag_001);
   CU_add_test(chtml30_suite, "test <title> 2." ,                                  test_chtml30_title_tag_002);
 
