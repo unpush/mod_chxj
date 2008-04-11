@@ -2972,10 +2972,8 @@ s_chtml30_end_dt_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml30_start_dd_tag(void *pdoc, Node *UNUSED(child))
 {
-  chtml30_t *chtml30;
-  Doc *doc;
-  chtml30 = GET_CHTML20(pdoc);
-  doc     = chtml30->doc;
+  chtml30_t *chtml30 = GET_CHTML30(pdoc);
+  Doc *doc = chtml30->doc;
   W_L("<dd>");
   return chtml30->out;
 }
@@ -2992,8 +2990,7 @@ s_chtml30_start_dd_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml30_end_dd_tag(void *pdoc, Node *UNUSED(child))
 {
-  chtml30_t *chtml30;
-  chtml30 = GET_CHTML20(pdoc);
+  chtml30_t *chtml30 = GET_CHTML30(pdoc);
   return chtml30->out;
 }
 /*
