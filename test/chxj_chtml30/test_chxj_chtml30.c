@@ -511,14 +511,14 @@ main()
 
   CU_add_test(chtml30_suite, "test <dir>.",                                       test_chtml30_dir_tag_001);
   CU_add_test(chtml30_suite, "test <dir> with no <li>.",                          test_chtml30_dir_tag_002);
-#endif
 
   CU_add_test(chtml30_suite, "test <dl>.",                                        test_chtml30_dl_tag_001);
-#if 0
+#endif
 
   CU_add_test(chtml30_suite, "test <dt>.",                                        test_chtml30_dt_tag_001);
   CU_add_test(chtml30_suite, "test <dt> with void value.",                        test_chtml30_dt_tag_002);
 
+#if 0
   CU_add_test(chtml30_suite, "test <dd>.",                                        test_chtml30_dd_tag_001);
   CU_add_test(chtml30_suite, "test <dd> with void value.",                        test_chtml30_dd_tag_002);
 
