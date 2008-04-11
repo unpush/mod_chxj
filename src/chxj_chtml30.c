@@ -2683,6 +2683,11 @@ s_chtml30_start_textarea_tag(void* pdoc, Node* node)
       W_V(value);
       W_L("\"");
     }
+    else if (STRCASEEQ('i','I',"istyle", name) && value && (*value == '1' || *value == '2' || *value == '3' || *value == '4')) {
+      W_L(" istyle=\"");
+      W_V(value);
+      W_L("\"");
+    }
     else if (STRCASEEQ('n','N',"name", name)) {
       W_L(" name=\"");
       W_V(value);
@@ -2700,7 +2705,7 @@ s_chtml30_start_textarea_tag(void* pdoc, Node* node)
     }
   }
 
-  W_L(">\r\n");
+  W_L(">");
 
   return chtml30->out;
 }
@@ -2725,7 +2730,7 @@ s_chtml30_end_textarea_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W_L("</textarea>\r\n");
+  W_L("</textarea>");
   chtml30->textarea_flag--;
 
   return chtml30->out;
