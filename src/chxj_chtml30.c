@@ -2289,17 +2289,38 @@ s_chtml30_end_p_tag(void* pdoc, Node* UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml30_start_ol_tag(void *pdoc, Node *UNUSED(node)) 
+s_chtml30_start_ol_tag(void *pdoc, Node *node)
 {
   chtml30_t     *chtml30;
   Doc           *doc;
   request_rec   *r;
+  Attr          *attr;
 
   chtml30 = GET_CHTML30(pdoc);
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W_L("<ol>");
+  W_L("<ol");
+  /*--------------------------------------------------------------------------*/
+  /* Get Attributes                                                           */
+  /*--------------------------------------------------------------------------*/
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char *name = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('t','T',"type",name) && value && (*value == '1' || *value == 'a' || *value == 'A')) {
+      W_L(" type=\"");
+      W_V(value);
+      W_L("\"");
+    }
+    else if (STRCASEEQ('s','S',"start",name) && value && *value) {
+      W_L(" start=\"");
+      W_V(value);
+      W_L("\"");
+    }
+  }
+  W_L(">");
 
   return chtml30->out;
 }

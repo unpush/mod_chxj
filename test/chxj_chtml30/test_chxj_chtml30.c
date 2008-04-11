@@ -730,6 +730,7 @@ main()
   CU_add_test(chtml30_suite, "test <menu> 3." ,                                   test_chtml30_menu_tag_003);
   CU_add_test(chtml30_suite, "test <menu> 4." ,                                   test_chtml30_menu_tag_004);
   CU_add_test(chtml30_suite, "test <menu> 5." ,                                   test_chtml30_menu_tag_005);
+#endif
 
   CU_add_test(chtml30_suite, "test <ol>." ,                                       test_chtml30_ol_tag_001);
   CU_add_test(chtml30_suite, "test <ol> 2." ,                                     test_chtml30_ol_tag_002);
@@ -750,6 +751,7 @@ main()
   CU_add_test(chtml30_suite, "test <ol> 17." ,                                    test_chtml30_ol_tag_017);
   CU_add_test(chtml30_suite, "test <ol> 18." ,                                    test_chtml30_ol_tag_018);
 
+#if 0
   CU_add_test(chtml30_suite, "test <option>." ,                                   test_chtml30_option_tag_001);
   CU_add_test(chtml30_suite, "test <option value> with no value." ,               test_chtml30_option_tag_002);
   CU_add_test(chtml30_suite, "test <option value> with void value." ,             test_chtml30_option_tag_003);
