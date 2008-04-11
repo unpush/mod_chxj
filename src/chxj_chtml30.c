@@ -2672,15 +2672,18 @@ s_chtml30_start_textarea_tag(void* pdoc, Node* node)
   chtml30->textarea_flag++;
 
   W_L("<textarea ");
-
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
 
     char* name  = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
-
-    if (STRCASEEQ('n','N',"name", name)) {
+    if (STRCASEEQ('a','A',"accesskey",name) && value && *value != 0) {
+      W_L(" accesskey=\"");
+      W_V(value);
+      W_L("\"");
+    }
+    else if (STRCASEEQ('n','N',"name", name)) {
       W_L(" name=\"");
       W_V(value);
       W_L("\"");

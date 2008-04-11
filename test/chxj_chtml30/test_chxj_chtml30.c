@@ -829,12 +829,13 @@ main()
   CU_add_test(chtml30_suite, "test <ul> 4." ,                                     test_chtml30_ul_tag_004);
   CU_add_test(chtml30_suite, "test <ul> 5." ,                                     test_chtml30_ul_tag_005);
 
+#endif
   CU_add_test(chtml30_suite, "test <blink> 1." ,                                  test_chtml30_blink_tag_001);
   CU_add_test(chtml30_suite, "test <blink> 2." ,                                  test_chtml30_blink_tag_002);
   CU_add_test(chtml30_suite, "test <blink> 3." ,                                  test_chtml30_blink_tag_003);
   CU_add_test(chtml30_suite, "test <blink> 4." ,                                  test_chtml30_blink_tag_004);
-#endif
 
+#if 0
   CU_add_test(chtml30_suite, "test <marquee> 1." ,                                test_chtml30_marquee_tag_001);
   CU_add_test(chtml30_suite, "test <marquee> 2." ,                                test_chtml30_marquee_tag_002);
   CU_add_test(chtml30_suite, "test <marquee> 3." ,                                test_chtml30_marquee_tag_003);
@@ -854,7 +855,6 @@ main()
   CU_add_test(chtml30_suite, "test <marquee> 17." ,                               test_chtml30_marquee_tag_017);
   CU_add_test(chtml30_suite, "test <marquee> 18." ,                               test_chtml30_marquee_tag_018);
 
-#if 0
   CU_add_test(chtml30_suite, "test <meta> 1." ,                                   test_chtml30_meta_tag_001);
   CU_add_test(chtml30_suite, "test <meta> 2." ,                                   test_chtml30_meta_tag_002);
   CU_add_test(chtml30_suite, "test <meta> 3." ,                                   test_chtml30_meta_tag_003);
