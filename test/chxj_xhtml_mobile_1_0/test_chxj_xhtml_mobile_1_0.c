@@ -460,8 +460,8 @@ main()
 
   CU_add_test(xhtml_suite, "test a tag name attr1",                             test_xhtml_a_tag_name_attribute_001);
   CU_add_test(xhtml_suite, "test a tag name attr2",                             test_xhtml_a_tag_name_attribute_002);
-#if 0
   CU_add_test(xhtml_suite, "test a tag name attr3 with japanese.",              test_xhtml_a_tag_name_attribute_003);
+#if 0
   CU_add_test(xhtml_suite, "test a tag name attr4 with japanese.",              test_xhtml_a_tag_name_attribute_004);
   CU_add_test(xhtml_suite, "test a tag href attr1 with void attribute.",        test_xhtml_a_tag_href_attribute_001);
   CU_add_test(xhtml_suite, "test a tag href attr2 with other site link.",       test_xhtml_a_tag_href_attribute_002);
@@ -1087,8 +1087,8 @@ void test_xhtml_a_tag_name_attribute_002()
 }
 void test_xhtml_a_tag_name_attribute_003() 
 {
-#define  TEST_STRING "<html><head></head><body><a name=\"あああ\">abc</a></body></html>"
-#define  RESULT_STRING "<html><head></head><body><a name=\"あああ\">abc</a></body></html>"
+#define  TEST_STRING "<a name=\"あああ\">abc</a>"
+#define  RESULT_STRING "<a id=\"あああ\">abc</a>"
   char  *ret;
   char  *tmp;
   device_table spec;
