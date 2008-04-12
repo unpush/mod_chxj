@@ -470,8 +470,8 @@ main()
   CU_add_test(xhtml_suite, "test a tag href attr6 with no cookie.",             test_xhtml_a_tag_href_attribute_006);
   CU_add_test(xhtml_suite, "test a tag accesskey attribute.",                   test_xhtml_a_tag_accesskey_attribute_001);
   CU_add_test(xhtml_suite, "test a tag accesskey attribute with void char.",    test_xhtml_a_tag_accesskey_attribute_002);
-#if 0
   CU_add_test(xhtml_suite, "test a tag accesskey attribute with no value",      test_xhtml_a_tag_accesskey_attribute_003);
+#if 0
 
   CU_add_test(xhtml_suite, "test base tag no attribute.",                       test_xhtml_base_tag_001);
   CU_add_test(xhtml_suite, "test base tag href attribute with no value.",       test_xhtml_base_tag_href_attribute_001);
@@ -1377,8 +1377,8 @@ void test_xhtml_a_tag_accesskey_attribute_002()
 }
 void test_xhtml_a_tag_accesskey_attribute_003() 
 {
-#define  TEST_STRING "<html><head></head><body><a accesskey>abc</a></body></html>"
-#define  RESULT_STRING "<html><head></head><body><a accesskey=\"\">abc</a></body></html>"
+#define  TEST_STRING "<a accesskey>abc</a>"
+#define  RESULT_STRING "<a accesskey=\"\">abc</a>"
   char  *ret;
   char  *tmp;
   device_table spec;
