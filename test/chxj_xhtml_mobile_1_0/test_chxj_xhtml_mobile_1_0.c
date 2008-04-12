@@ -479,8 +479,8 @@ main()
   CU_add_test(xhtml_suite, "test base tag href attribute with normal value.",   test_xhtml_base_tag_href_attribute_004);
 
   CU_add_test(xhtml_suite, "test <blockquote> with void value.",                test_xhtml_blockquote_tag_001);
-#if 0
   CU_add_test(xhtml_suite, "test <blockquote> with value.",                     test_xhtml_blockquote_tag_002);
+#if 0
   CU_add_test(xhtml_suite, "test <blockquote> with japanese value.",            test_xhtml_blockquote_tag_003);
   CU_add_test(xhtml_suite, "test <blockquote> with hankaku kana value.",        test_xhtml_blockquote_tag_004);
 
@@ -1543,6 +1543,7 @@ void test_xhtml_base_tag_href_attribute_004()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -1574,6 +1575,7 @@ void test_xhtml_blockquote_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -1584,8 +1586,8 @@ void test_xhtml_blockquote_tag_001()
 }
 void test_xhtml_blockquote_tag_002() 
 {
-#define  TEST_STRING "<html><head></head><body><blockquote>abc</blockquote></body></html>"
-#define  RESULT_STRING "<html><head></head><body><blockquote>abc</blockquote></body></html>"
+#define  TEST_STRING "<blockquote>abc</blockquote>"
+#define  RESULT_STRING "<blockquote>abc</blockquote>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1602,6 +1604,7 @@ void test_xhtml_blockquote_tag_002()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
