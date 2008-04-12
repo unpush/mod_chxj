@@ -1136,7 +1136,7 @@ void test_xhtml_a_tag_name_attribute_004()
 void test_xhtml_a_tag_href_attribute_001() 
 {
 #define  TEST_STRING "<html><head></head><body><a href=\"\">abc</a></body></html>"
-#define  RESULT_STRING "<html><head></head><body><a href=\"?_chxj_cc=test_cookie_id\">abc</a></body></html>"
+#define  RESULT_STRING "<html><head></head><body><a href=\"\">abc</a></body></html>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1192,7 +1192,7 @@ void test_xhtml_a_tag_href_attribute_002()
 void test_xhtml_a_tag_href_attribute_003() 
 {
 #define  TEST_STRING "<html><head></head><body><a href=\"a.html\">abc</a></body></html>"
-#define  RESULT_STRING "<html><head></head><body><a href=\"a.html?_chxj_cc=test_cookie_id\">abc</a></body></html>"
+#define  RESULT_STRING "<html><head></head><body><a href=\"a.html\">abc</a></body></html>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1220,7 +1220,7 @@ void test_xhtml_a_tag_href_attribute_003()
 void test_xhtml_a_tag_href_attribute_004() 
 {
 #define  TEST_STRING "<html><head></head><body><a href=\"a.html#abc\">abc</a></body></html>"
-#define  RESULT_STRING "<html><head></head><body><a href=\"a.html#abc?_chxj_cc=test_cookie_id\">abc</a></body></html>"
+#define  RESULT_STRING "<html><head></head><body><a href=\"a.html#abc\">abc</a></body></html>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1248,7 +1248,7 @@ void test_xhtml_a_tag_href_attribute_004()
 void test_xhtml_a_tag_href_attribute_005() 
 {
 #define  TEST_STRING "<html><head></head><body><a href=\"a.html#\">abc</a></body></html>"
-#define  RESULT_STRING "<html><head></head><body><a href=\"a.html#?_chxj_cc=test_cookie_id\">abc</a></body></html>"
+#define  RESULT_STRING "<html><head></head><body><a href=\"a.html#\">abc</a></body></html>"
   char  *ret;
   char  *tmp;
   device_table spec;

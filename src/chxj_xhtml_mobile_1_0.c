@@ -996,13 +996,12 @@ s_xhtml_1_0_start_a_tag(void *pdoc, Node *node)
        attr = qs_get_next_attr(doc,attr)) {
     char* name  = qs_get_attr_name(doc,attr);
     char* value = qs_get_attr_value(doc,attr);
-
-    if (STRCASEEQ('n','N',"name",name)) {
+    if (STRCASEEQ('n','N',"name",name) && value && *value) {
       WX_L(" id=\"");
       WX_V(value);
       WX_L("\"");
     }
-    else if (STRCASEEQ('h','H',"href", name)) {
+    else if (STRCASEEQ('h','H',"href", name) && value && *value) {
       value = chxj_encoding_parameter(r, value);
       WX_L(" href=\"");
       WX_V(value);
