@@ -461,8 +461,8 @@ main()
   CU_add_test(xhtml_suite, "test a tag name attr1",                             test_xhtml_a_tag_name_attribute_001);
   CU_add_test(xhtml_suite, "test a tag name attr2",                             test_xhtml_a_tag_name_attribute_002);
   CU_add_test(xhtml_suite, "test a tag name attr3 with japanese.",              test_xhtml_a_tag_name_attribute_003);
-#if 0
   CU_add_test(xhtml_suite, "test a tag name attr4 with japanese.",              test_xhtml_a_tag_name_attribute_004);
+#if 0
   CU_add_test(xhtml_suite, "test a tag href attr1 with void attribute.",        test_xhtml_a_tag_href_attribute_001);
   CU_add_test(xhtml_suite, "test a tag href attr2 with other site link.",       test_xhtml_a_tag_href_attribute_002);
   CU_add_test(xhtml_suite, "test a tag href attr3 with local link.",            test_xhtml_a_tag_href_attribute_003);
@@ -1116,8 +1116,8 @@ void test_xhtml_a_tag_name_attribute_003()
 }
 void test_xhtml_a_tag_name_attribute_004() 
 {
-#define  TEST_STRING "<html><head></head><body><a name=\"ｱｱｱ\">abc</a></body></html>"
-#define  RESULT_STRING "<html><head></head><body><a name=\"ｱｱｱ\">abc</a></body></html>"
+#define  TEST_STRING "<a name=\"ｱｱｱ\">abc</a>"
+#define  RESULT_STRING "<a id=\"ｱｱｱ\">abc</a>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1134,6 +1134,7 @@ void test_xhtml_a_tag_name_attribute_004()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
