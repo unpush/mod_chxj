@@ -495,11 +495,11 @@ s_init_xhtml(xhtml_t *xhtml, Doc *doc, request_rec *r, device_table *spec)
  * @return When corresponding EMOJI exists, it returns it excluding 0. 
  */
 static int
-s_xhtml_search_emoji(xhtml_t* xhtml, char* txt, char** rslt)
+s_xhtml_search_emoji(xhtml_t *xhtml, char *txt, char **rslt)
 {
-  emoji_t*      ee;
-  request_rec*  r;
-  device_table* spec;
+  emoji_t       *ee;
+  request_rec   *r;
+  device_table  *spec;
   int           len;
 
   spec = xhtml->spec;
@@ -507,8 +507,9 @@ s_xhtml_search_emoji(xhtml_t* xhtml, char* txt, char** rslt)
   len = strlen(txt);
   r = xhtml->doc->r;
 
-  if (spec == NULL)
+  if (spec == NULL) {
     DBG(r,"spec is NULL");
+  }
 
   for (ee = xhtml->conf->emoji;
        ee;
@@ -616,6 +617,7 @@ s_xhtml_search_emoji(xhtml_t* xhtml, char* txt, char** rslt)
   return 0;
 }
 
+
 /**
  * It is a handler who processes the HTML tag.
  *
@@ -624,29 +626,26 @@ s_xhtml_search_emoji(xhtml_t* xhtml, char* txt, char** rslt)
  * @param node   [i]   The HTML tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_start_html_tag(void* pdoc, Node* node) 
+static char *
+s_xhtml_1_0_start_html_tag(void *pdoc, Node *node) 
 {
-  xhtml_t*      xhtml = GET_XHTML(pdoc);
-  Attr*         attr;
-  Doc*          doc   = xhtml->doc;
+  xhtml_t       *xhtml = GET_XHTML(pdoc);
+  Attr          *attr;
+  Doc           *doc   = xhtml->doc;
 
   /*--------------------------------------------------------------------------*/
   /* Add XML Declare                                                          */
   /*--------------------------------------------------------------------------*/
   W_L("<?xml version=\"1.0\" encoding=\"Windows-31J\"?>\r\n");
-
   /*--------------------------------------------------------------------------*/
   /* Add DocType                                                              */
   /*--------------------------------------------------------------------------*/
   W_L("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML Basic 1.0//EN\"\r\n");
   W_L(" \"http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd\">\r\n");
-
   /*--------------------------------------------------------------------------*/
   /* start HTML tag                                                           */
   /*--------------------------------------------------------------------------*/
   W_L("<html xmlns=\"http://www.w3.org/1999/xhtml\"");
-
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
   /*--------------------------------------------------------------------------*/
@@ -664,7 +663,6 @@ s_xhtml_1_0_start_html_tag(void* pdoc, Node* node)
       W_L(" version=\"-//OPENWAVE//DTD XHTML Mobile 1.0//EN\"");
     }
   }
-
   W_L(">\r\n");
   return xhtml->out;
 }
@@ -678,14 +676,12 @@ s_xhtml_1_0_start_html_tag(void* pdoc, Node* node)
  * @param node   [i]   The HTML tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_end_html_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_xhtml_1_0_end_html_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  xhtml_t*      xhtml = GET_XHTML(pdoc);
-  Doc*          doc   = xhtml->doc;
-
+  xhtml_t       *xhtml = GET_XHTML(pdoc);
+  Doc           *doc   = xhtml->doc;
   W_L("</html>\r\n");
-
   return xhtml->out;
 }
 
