@@ -2426,17 +2426,35 @@ s_chtml30_end_li_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml30_start_h1_tag(void *pdoc, Node *UNUSED(node)) 
+s_chtml30_start_h1_tag(void *pdoc, Node *node)
 {
   chtml30_t     *chtml30;
   Doc           *doc;
   request_rec   *r;
+  Attr          *attr;
 
   chtml30 = GET_CHTML30(pdoc);
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W_L("<h1>\r\n");
+  W_L("<h1");
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char* name;
+    char* value;
+    name  = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('a','A',"align", name)) {
+      if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('c','C',"center",value))) {
+        W_L(" align=\"");
+        W_V(value);
+        W_L("\"");
+        break;
+      }
+    }
+  }
+  W_L(">");
 
   return chtml30->out;
 }
@@ -2461,7 +2479,7 @@ s_chtml30_end_h1_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W_L("</h1>\r\n");
+  W_L("</h1>");
 
   return chtml30->out;
 }
@@ -2475,19 +2493,36 @@ s_chtml30_end_h1_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The H2 tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml30_start_h2_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_chtml30_start_h2_tag(void *pdoc, Node *node)
 {
-  chtml30_t*    chtml30;
-  Doc*          doc;
-  request_rec*  r;
+  chtml30_t     *chtml30;
+  Doc           *doc;
+  request_rec   *r;
+  Attr          *attr;
 
   chtml30 = GET_CHTML30(pdoc);
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W_L("<h2>\r\n");
-
+  W_L("<h2");
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char* name;
+    char* value;
+    name  = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('a','A',"align", name)) {
+      if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('c','C',"center",value))) {
+        W_L(" align=\"");
+        W_V(value);
+        W_L("\"");
+        break;
+      }
+    }
+  }
+  W_L(">");
   return chtml30->out;
 }
 
@@ -2500,18 +2535,18 @@ s_chtml30_start_h2_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The H2 tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml30_end_h2_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml30_end_h2_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml30_t*    chtml30;
-  Doc*          doc;
-  request_rec*  r;
+  chtml30_t *chtml30;
+  Doc *doc;
+  request_rec *r;
 
   chtml30 = GET_CHTML30(pdoc);
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W_L("</h2>\r\n");
+  W_L("</h2>");
 
   return chtml30->out;
 }
@@ -2525,18 +2560,36 @@ s_chtml30_end_h2_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The H3 tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml30_start_h3_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_chtml30_start_h3_tag(void *pdoc, Node *node)
 {
-  chtml30_t*    chtml30;
-  Doc*          doc;
-  request_rec*  r;
+  chtml30_t *chtml30;
+  Doc *doc;
+  request_rec   *r;
+  Attr          *attr;
 
   chtml30 = GET_CHTML30(pdoc);
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W_L("<h3>\r\n");
+  W_L("<h3");
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char* name;
+    char* value;
+    name  = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('a','A',"align", name)) {
+      if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('c','C',"center",value))) {
+        W_L(" align=\"");
+        W_V(value);
+        W_L("\"");
+        break;
+      }
+    }
+  }
+  W_L(">");
 
   return chtml30->out;
 }
@@ -2550,18 +2603,18 @@ s_chtml30_start_h3_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The H3 tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml30_end_h3_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml30_end_h3_tag(void *pdoc, Node *UNUSED(child))
 {
-  chtml30_t*    chtml30;
-  Doc*          doc;
-  request_rec*  r;
+  chtml30_t *chtml30;
+  Doc *doc;
+  request_rec *r;
 
   chtml30 = GET_CHTML30(pdoc);
   doc   = chtml30->doc;
   r     = doc->r;
 
-  W_L("</h3>\r\n");
+  W_L("</h3>");
 
   return chtml30->out;
 }
@@ -2575,19 +2628,36 @@ s_chtml30_end_h3_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The H4 tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml30_start_h4_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_chtml30_start_h4_tag(void *pdoc, Node *node)
 {
-  chtml30_t*    chtml30;
-  Doc*          doc;
-  request_rec*  r;
+  chtml30_t *chtml30;
+  Doc *doc;
+  request_rec *r;
+  Attr *attr;
 
   chtml30 = GET_CHTML30(pdoc);
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W_L("<h4>\r\n");
-
+  W_L("<h4");
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char* name;
+    char* value;
+    name  = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('a','A',"align", name)) {
+      if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('c','C',"center",value))) {
+        W_L(" align=\"");
+        W_V(value);
+        W_L("\"");
+        break;
+      }
+    }
+  }
+  W_L(">");
   return chtml30->out;
 }
 
@@ -2600,18 +2670,18 @@ s_chtml30_start_h4_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The H4 tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml30_end_h4_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml30_end_h4_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml30_t*    chtml30;
-  Doc*          doc;
-  request_rec*  r;
+  chtml30_t *chtml30;
+  Doc *doc;
+  request_rec *r;
 
   chtml30 = GET_CHTML30(pdoc);
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W_L("</h4>\r\n");
+  W_L("</h4>");
 
   return chtml30->out;
 }
@@ -2625,19 +2695,36 @@ s_chtml30_end_h4_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The H5 tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml30_start_h5_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_chtml30_start_h5_tag(void *pdoc, Node *node)
 {
-  chtml30_t*    chtml30;
-  Doc*          doc;
-  request_rec*  r;
+  chtml30_t *chtml30;
+  Doc *doc;
+  request_rec *r;
+  Attr *attr;
 
   chtml30 = GET_CHTML30(pdoc);
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W_L("<h5>\r\n");
-
+  W_L("<h5");
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char *name;
+    char *value;
+    name  = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('a','A',"align", name)) {
+      if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('c','C',"center",value))) {
+        W_L(" align=\"");
+        W_V(value);
+        W_L("\"");
+        break;
+      }
+    }
+  }
+  W_L(">");
   return chtml30->out;
 }
 
@@ -2661,7 +2748,7 @@ s_chtml30_end_h5_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W_L("</h5>\r\n");
+  W_L("</h5>");
 
   return chtml30->out;
 }
@@ -2675,19 +2762,36 @@ s_chtml30_end_h5_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The H6 tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml30_start_h6_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_chtml30_start_h6_tag(void *pdoc, Node *node)
 {
-  chtml30_t*    chtml30;
-  Doc*          doc;
-  request_rec*  r;
+  chtml30_t *chtml30;
+  Doc *doc;
+  request_rec *r;
+  Attr *attr;
 
   chtml30 = GET_CHTML30(pdoc);
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W_L("<h6>\r\n");
-
+  W_L("<h6");
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char *name;
+    char *value;
+    name  = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('a','A',"align", name)) {
+      if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('c','C',"center",value))) {
+        W_L(" align=\"");
+        W_V(value);
+        W_L("\"");
+        break;
+      }
+    }
+  }
+  W_L(">");
   return chtml30->out;
 }
 
@@ -2711,7 +2815,7 @@ s_chtml30_end_h6_tag(void* pdoc, Node* UNUSED(child))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W_L("</h6>\r\n");
+  W_L("</h6>");
 
   return chtml30->out;
 }
