@@ -694,24 +694,23 @@ s_xhtml_1_0_end_html_tag(void *pdoc, Node *UNUSED(child))
  * @param node   [i]   The META tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_start_meta_tag(void* pdoc, Node* node) 
+static char *
+s_xhtml_1_0_start_meta_tag(void *pdoc, Node *node) 
 {
-  xhtml_t*      xhtml = GET_XHTML(pdoc);
-  Attr*         attr;
-  Doc*          doc   = xhtml->doc;
+  xhtml_t       *xhtml = GET_XHTML(pdoc);
+  Attr          *attr;
+  Doc           *doc   = xhtml->doc;
   int           content_type_flag = 0;
 
   W_L("<meta");
-
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
   /*--------------------------------------------------------------------------*/
   for (attr = qs_get_attr(doc,node);
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
-    char* name  = qs_get_attr_name(doc,attr);
-    char* value = qs_get_attr_value(doc,attr);
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('n','N',"name", name)) {
       W_L(" ");
       W_V(name);
@@ -746,10 +745,10 @@ s_xhtml_1_0_start_meta_tag(void* pdoc, Node* node)
       }
     }
   }
-
   W_L(" />\r\n");
   return xhtml->out;
 }
+
 
 /**
  * It is a handler who processes the META tag.
@@ -759,10 +758,10 @@ s_xhtml_1_0_start_meta_tag(void* pdoc, Node* node)
  * @param node   [i]   The META tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_end_meta_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_xhtml_1_0_end_meta_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  xhtml_t*  xhtml = GET_XHTML(pdoc);
+  xhtml_t *xhtml = GET_XHTML(pdoc);
 
   return xhtml->out;
 }
@@ -776,11 +775,11 @@ s_xhtml_1_0_end_meta_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The HEAD tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_start_head_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_xhtml_1_0_start_head_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  xhtml_t*      xhtml = GET_XHTML(pdoc);
-  Doc*          doc   = xhtml->doc;
+  xhtml_t       *xhtml = GET_XHTML(pdoc);
+  Doc           *doc   = xhtml->doc;
 
   W_L("<head>\r\n");
   return xhtml->out;
@@ -795,11 +794,11 @@ s_xhtml_1_0_start_head_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The HEAD tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_end_head_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_xhtml_1_0_end_head_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  xhtml_t*      xhtml = GET_XHTML(pdoc);
-  Doc*          doc   = xhtml->doc;
+  xhtml_t       *xhtml = GET_XHTML(pdoc);
+  Doc           *doc   = xhtml->doc;
 
   W_L("</head>\r\n");
   return xhtml->out;
@@ -814,11 +813,11 @@ s_xhtml_1_0_end_head_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The TITLE tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_start_title_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_xhtml_1_0_start_title_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  xhtml_t*     xhtml = GET_XHTML(pdoc);
-  Doc*         doc   = xhtml->doc;
+  xhtml_t      *xhtml = GET_XHTML(pdoc);
+  Doc          *doc   = xhtml->doc;
 
   W_L("<title>");
   return xhtml->out;
@@ -833,14 +832,13 @@ s_xhtml_1_0_start_title_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The TITLE tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_end_title_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_xhtml_1_0_end_title_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  xhtml_t*      xhtml = GET_XHTML(pdoc);
-  Doc*          doc   = xhtml->doc;
+  xhtml_t       *xhtml = GET_XHTML(pdoc);
+  Doc           *doc   = xhtml->doc;
 
   W_L("</title>\r\n");
-
   return xhtml->out;
 }
 
@@ -853,23 +851,22 @@ s_xhtml_1_0_end_title_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The BASE tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_start_base_tag(void* pdoc, Node* node) 
+static char *
+s_xhtml_1_0_start_base_tag(void *pdoc, Node *node) 
 {
-  xhtml_t*      xhtml = GET_XHTML(pdoc);
-  Attr*         attr;
-  Doc*          doc   = xhtml->doc;
+  xhtml_t       *xhtml = GET_XHTML(pdoc);
+  Attr          *attr;
+  Doc           *doc   = xhtml->doc;
 
   W_L("<base");
-
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
   /*--------------------------------------------------------------------------*/
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-    char* name = qs_get_attr_name(doc,attr);
-    char* value = qs_get_attr_value(doc,attr);
+    char *name = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('h','H',"href",name)) {
       W_L(" href=\"");
       W_V(value);
@@ -890,10 +887,10 @@ s_xhtml_1_0_start_base_tag(void* pdoc, Node* node)
  * @param node   [i]   The BASE tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_end_base_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_xhtml_1_0_end_base_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  xhtml_t* xhtml = GET_XHTML(pdoc);
+  xhtml_t *xhtml = GET_XHTML(pdoc);
 
   return xhtml->out;
 }
@@ -907,12 +904,12 @@ s_xhtml_1_0_end_base_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The BODY tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_start_body_tag(void* pdoc, Node* node) 
+static char *
+s_xhtml_1_0_start_body_tag(void *pdoc, Node *node) 
 {
-  xhtml_t*     xhtml = GET_XHTML(pdoc);
-  Doc*         doc   = xhtml->doc;
-  Attr*        attr;
+  xhtml_t      *xhtml = GET_XHTML(pdoc);
+  Doc          *doc   = xhtml->doc;
+  Attr         *attr;
 
   W_L("<body");
   /*--------------------------------------------------------------------------*/
@@ -921,8 +918,8 @@ s_xhtml_1_0_start_body_tag(void* pdoc, Node* node)
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-    char* name  = qs_get_attr_name(doc,attr);
-    char* value = qs_get_attr_value(doc,attr);
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('b','B',"bgcolor", name)) {
       W_L(" bgcolor=\"");
       W_V(value);
@@ -946,7 +943,6 @@ s_xhtml_1_0_start_body_tag(void* pdoc, Node* node)
     }
   }
   W_L(">\r\n");
-
   return xhtml->out;
 }
 
@@ -959,11 +955,11 @@ s_xhtml_1_0_start_body_tag(void* pdoc, Node* node)
  * @param node   [i]   The BODY tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_end_body_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_xhtml_1_0_end_body_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  xhtml_t*      xhtml = GET_XHTML(pdoc);
-  Doc*          doc   = xhtml->doc;
+  xhtml_t       *xhtml = GET_XHTML(pdoc);
+  Doc           *doc   = xhtml->doc;
 
   W_L("</body>\r\n");
   return xhtml->out;
