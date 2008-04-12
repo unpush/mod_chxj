@@ -458,9 +458,9 @@ main()
   CU_add_test(xhtml_suite, "test void src2",                                    test_xhtml_002);
   CU_add_test(xhtml_suite, "test comment tag1",                                 test_xhtml_comment_tag_001);
 
-#if 0
   CU_add_test(xhtml_suite, "test a tag name attr1",                             test_xhtml_a_tag_name_attribute_001);
   CU_add_test(xhtml_suite, "test a tag name attr2",                             test_xhtml_a_tag_name_attribute_002);
+#if 0
   CU_add_test(xhtml_suite, "test a tag name attr3 with japanese.",              test_xhtml_a_tag_name_attribute_003);
   CU_add_test(xhtml_suite, "test a tag name attr4 with japanese.",              test_xhtml_a_tag_name_attribute_004);
   CU_add_test(xhtml_suite, "test a tag href attr1 with void attribute.",        test_xhtml_a_tag_href_attribute_001);
@@ -998,13 +998,14 @@ void test_xhtml_002()
   APR_TERM;
 #undef TEST_STRING
 }
+#define  XHTML_HEADER "<?xml version=\"1.0\" encoding=\"Windows-31J\"?>\r\n" \
+                      "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML Basic 1.0//EN\"\r\n" \
+                      " \"http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd\">\r\n" 
 
 void test_xhtml_comment_tag_001() 
 {
 #define  TEST_STRING "<html><!--</html><body>--><head></head><body></body></html>"
-#define  RESULT_STRING "<?xml version=\"1.0\" encoding=\"Windows-31J\"?>\r\n" \
-                       "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML Basic 1.0//EN\"\r\n" \
-                       " \"http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd\">\r\n" \
+#define  RESULT_STRING XHTML_HEADER \
                        "<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n" \
                        "<head>\r\n" \
                        "</head>\r\n" \
@@ -1023,7 +1024,6 @@ void test_xhtml_comment_tag_001()
   SPEC_INIT(spec);
 
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, TEST_STRING, sizeof(TEST_STRING)-1, &destlen, &entry, &cookie);
-fprintf(stderr, "%s",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -1037,8 +1037,8 @@ fprintf(stderr, "%s",ret);
 /*============================================================================*/
 void test_xhtml_a_tag_name_attribute_001() 
 {
-#define  TEST_STRING "<html><head></head><body><a name=\"abc\">abc</a></body></html>"
-#define  RESULT_STRING "<html><head></head><body><a name=\"abc\">abc</a></body></html>"
+#define  TEST_STRING "<a name=\"abc\">abc</a>"
+#define  RESULT_STRING "<a id=\"abc\">abc</a>"
   char  *ret;
   device_table spec;
   chxjconvrule_entry entry;
@@ -1051,7 +1051,7 @@ void test_xhtml_a_tag_name_attribute_001()
   SPEC_INIT(spec);
 
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, TEST_STRING, sizeof(TEST_STRING)-1, &destlen, &entry, &cookie);
-fprintf(stderr, "%s",ret);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -1062,8 +1062,8 @@ fprintf(stderr, "%s",ret);
 }
 void test_xhtml_a_tag_name_attribute_002() 
 {
-#define  TEST_STRING "<html><head></head><body><a name=\"\">abc</a></body></html>"
-#define  RESULT_STRING "<html><head></head><body><a name=\"\">abc</a></body></html>"
+#define  TEST_STRING "<a name=\"\">abc</a>"
+#define  RESULT_STRING "<a>abc</a>"
   char  *ret;
   device_table spec;
   chxjconvrule_entry entry;
@@ -1076,7 +1076,7 @@ void test_xhtml_a_tag_name_attribute_002()
   SPEC_INIT(spec);
 
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, TEST_STRING, sizeof(TEST_STRING)-1, &destlen, &entry, &cookie);
-fprintf(stderr, "%s",ret);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -1105,6 +1105,7 @@ void test_xhtml_a_tag_name_attribute_003()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
