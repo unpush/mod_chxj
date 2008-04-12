@@ -30,75 +30,75 @@
 #define W_V(X)          do { xhtml->out = (X) ? BUFFERED_WRITE_VALUE(xhtml->out, &doc->buf, (X))  \
                                                : BUFFERED_WRITE_LITERAL(xhtml->out, &doc->buf, ""); } while(0)
 
-static char* s_xhtml_1_0_start_html_tag   (void* pdoc, Node* node);
-static char* s_xhtml_1_0_end_html_tag     (void* pdoc, Node* node);
-static char* s_xhtml_1_0_start_p_tag      (void* pdoc, Node* node);
-static char* s_xhtml_1_0_end_p_tag        (void* pdoc, Node* node);
-static char* s_xhtml_1_0_start_pre_tag    (void* pdoc, Node* node);
-static char* s_xhtml_1_0_end_pre_tag      (void* pdoc, Node* node);
-static char* s_xhtml_1_0_start_ul_tag     (void* pdoc, Node* node);
-static char* s_xhtml_1_0_end_ul_tag       (void* pdoc, Node* node);
-static char* s_xhtml_1_0_start_h1_tag     (void* pdoc, Node* node);
-static char* s_xhtml_1_0_end_h1_tag       (void* pdoc, Node* node);
-static char* s_xhtml_1_0_start_h2_tag     (void* pdoc, Node* node);
-static char* s_xhtml_1_0_end_h2_tag       (void* pdoc, Node* node);
-static char* s_xhtml_1_0_start_h3_tag     (void* pdoc, Node* node);
-static char* s_xhtml_1_0_end_h3_tag       (void* pdoc, Node* node);
-static char* s_xhtml_1_0_start_h4_tag     (void* pdoc, Node* node);
-static char* s_xhtml_1_0_end_h4_tag       (void* pdoc, Node* node);
-static char* s_xhtml_1_0_start_h5_tag     (void* pdoc, Node* node);
-static char* s_xhtml_1_0_end_h5_tag       (void* pdoc, Node* node);
-static char* s_xhtml_1_0_start_h6_tag     (void* pdoc, Node* node);
-static char* s_xhtml_1_0_end_h6_tag       (void* pdoc, Node* node);
-static char* s_xhtml_1_0_start_ol_tag     (void* pdoc, Node* node);
-static char* s_xhtml_1_0_end_ol_tag       (void* pdoc, Node* node);
-static char* s_xhtml_1_0_start_li_tag     (void* pdoc, Node* node);
-static char* s_xhtml_1_0_end_li_tag       (void* pdoc, Node* node);
-static char* s_xhtml_1_0_start_meta_tag   (void* pdoc, Node* node);
-static char* s_xhtml_1_0_end_meta_tag     (void* pdoc, Node* node);
-static char* s_xhtml_1_0_start_head_tag   (void* pdoc, Node* node);
-static char* s_xhtml_1_0_end_head_tag     (void* pdoc, Node* node);
-static char* s_xhtml_1_0_start_title_tag  (void* pdoc, Node* node);
-static char* s_xhtml_1_0_end_title_tag    (void* pdoc, Node* node);
-static char* s_xhtml_1_0_start_base_tag   (void* pdoc, Node* node);
-static char* s_xhtml_1_0_end_base_tag     (void* pdoc, Node* node);
-static char* s_xhtml_1_0_start_body_tag   (void* pdoc, Node* node);
-static char* s_xhtml_1_0_end_body_tag     (void* pdoc, Node* node);
-static char* s_xhtml_1_0_start_a_tag      (void* pdoc, Node* node);
-static char* s_xhtml_1_0_end_a_tag        (void* pdoc, Node* node);
-static char* s_xhtml_1_0_start_br_tag     (void* pdoc, Node* node);
-static char* s_xhtml_1_0_end_br_tag       (void* pdoc, Node* node);
-static char* s_xhtml_1_0_start_tr_tag     (void* pdoc, Node* node);
-static char* s_xhtml_1_0_end_tr_tag       (void* pdoc, Node* node);
-static char* s_xhtml_1_0_start_font_tag   (void* pdoc, Node* node);
-static char* s_xhtml_1_0_end_font_tag     (void* pdoc, Node* node);
-static char* s_xhtml_1_0_start_form_tag   (void* pdoc, Node* node);
-static char* s_xhtml_1_0_end_form_tag     (void* pdoc, Node* node);
-static char* s_xhtml_1_0_start_input_tag  (void* pdoc, Node* node);
-static char* s_xhtml_1_0_end_input_tag    (void* pdoc, Node* node);
-static char* s_xhtml_1_0_start_center_tag (void* pdoc, Node* node);
-static char* s_xhtml_1_0_end_center_tag   (void* pdoc, Node* node);
-static char* s_xhtml_1_0_start_hr_tag     (void* pdoc, Node* node);
-static char* s_xhtml_1_0_end_hr_tag       (void* pdoc, Node* node);
-static char* s_xhtml_1_0_start_img_tag    (void* pdoc, Node* node);
-static char* s_xhtml_1_0_end_img_tag      (void* pdoc, Node* node);
-static char* s_xhtml_1_0_start_select_tag (void* pdoc, Node* node);
-static char* s_xhtml_1_0_end_select_tag   (void* pdoc, Node* node);
-static char* s_xhtml_1_0_start_option_tag (void* pdoc, Node* node);
-static char* s_xhtml_1_0_end_option_tag   (void* pdoc, Node* node);
-static char* s_xhtml_1_0_start_div_tag    (void* pdoc, Node* node);
-static char* s_xhtml_1_0_end_div_tag      (void* pdoc, Node* node);
-static char* s_xhtml_1_0_start_textarea_tag(void* pdoc, Node* node);
-static char* s_xhtml_1_0_end_textarea_tag  (void* pdoc, Node* node);
-static char* s_xhtml_1_0_start_b_tag       (void* pdoc, Node* node);
-static char* s_xhtml_1_0_end_b_tag         (void* pdoc, Node* node);
-static char* s_xhtml_1_0_chxjif_tag       (void* pdoc, Node* node);
+static char *s_xhtml_1_0_start_html_tag   (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_html_tag     (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_p_tag      (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_p_tag        (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_pre_tag    (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_pre_tag      (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_ul_tag     (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_ul_tag       (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_h1_tag     (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_h1_tag       (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_h2_tag     (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_h2_tag       (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_h3_tag     (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_h3_tag       (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_h4_tag     (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_h4_tag       (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_h5_tag     (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_h5_tag       (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_h6_tag     (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_h6_tag       (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_ol_tag     (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_ol_tag       (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_li_tag     (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_li_tag       (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_meta_tag   (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_meta_tag     (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_head_tag   (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_head_tag     (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_title_tag  (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_title_tag    (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_base_tag   (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_base_tag     (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_body_tag   (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_body_tag     (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_a_tag      (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_a_tag        (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_br_tag     (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_br_tag       (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_tr_tag     (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_tr_tag       (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_font_tag   (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_font_tag     (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_form_tag   (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_form_tag     (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_input_tag  (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_input_tag    (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_center_tag (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_center_tag   (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_hr_tag     (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_hr_tag       (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_img_tag    (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_img_tag      (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_select_tag (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_select_tag   (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_option_tag (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_option_tag   (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_div_tag    (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_div_tag      (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_textarea_tag(void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_textarea_tag  (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_b_tag       (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_b_tag         (void *pdoc, Node *node);
+static char *s_xhtml_1_0_chxjif_tag       (void *pdoc, Node *node);
 static char *s_xhtml_1_0_start_blockquote_tag(void *pdoc, Node *node);
 static char *s_xhtml_1_0_end_blockquote_tag  (void *pdoc, Node *node);
 
-static void  s_init_xhtml(xhtml_t* xhtml, Doc* doc, request_rec* r, device_table* spec);
-static int   s_xhtml_search_emoji(xhtml_t* xhtml, char* txt, char** rslt);
-static char* s_xhtml_1_0_text_tag(void* pdoc, Node* child);
+static void  s_init_xhtml(xhtml_t *xhtml, Doc *doc, request_rec *r, device_table *spec);
+static int   s_xhtml_search_emoji(xhtml_t *xhtml, char *txt, char **rslt);
+static char *s_xhtml_1_0_text_tag(void *pdoc, Node *child);
 
 
 tag_handler xhtml_handler[] = {
@@ -378,34 +378,32 @@ tag_handler xhtml_handler[] = {
  * @param src   [i]   The character string before the converting is appointed.
  * @return The character string after the converting is returned.
  */
-char*
+char *
 chxj_exchange_xhtml_mobile_1_0(
-  request_rec*    r,
-  device_table*   spec,
-  const char*     src,
-  apr_size_t      srclen,
-  apr_size_t*     dstlen,
-  chxjconvrule_entry* entryp,
-  cookie_t*   UNUSED(cookie)
+  request_rec        *r,
+  device_table       *spec,
+  const char         *src,
+  apr_size_t         srclen,
+  apr_size_t         *dstlen,
+  chxjconvrule_entry *entryp,
+  cookie_t           *UNUSED(cookie)
 )
 {
-  char*     dst = NULL;
-  char*     ss;
+  char      *dst = NULL;
+  char      *ss;
   xhtml_t   xhtml;
   Doc       doc;
 
   DBG(r,"start chxj_exchange_xhtml_mobile_1_0()");
-
   /*--------------------------------------------------------------------------*/
   /* If qrcode xml                                                            */
   /*--------------------------------------------------------------------------*/
   *dstlen = srclen;
   dst = chxj_qr_code_blob_handler(r, src, (size_t*)dstlen);
   if (dst != NULL) {
-    DBG(r,"i found qrcode xml");
+    DBG(r,"end chxj_exchange_xhtml_mobile_1_0() (found qrcode.xml)");
     return dst;
   }
-  DBG(r,"not found qrcode xml");
 
   /*--------------------------------------------------------------------------*/
   /* The XHTML structure is initialized.                                      */
@@ -442,12 +440,13 @@ chxj_exchange_xhtml_mobile_1_0(
 
   qs_all_free(&doc,QX_LOGMARK);
 
-  if (! dst) 
+  if (! dst) {
     return apr_pstrdup(r->pool,ss);
+  }
 
-  if (! strlen(dst))
+  if (! *dst) {
     dst = apr_psprintf(r->pool, "\n");
-
+  }
   *dstlen = strlen(dst);
 
 #ifdef DUMP_LOG
@@ -455,9 +454,9 @@ chxj_exchange_xhtml_mobile_1_0(
 #endif
 
   DBG(r,"end chxj_exchange_xhtml_mobile_1_0()");
-
   return dst;
 }
+
 
 /**
  * The XHTML structure is initialized.
@@ -470,7 +469,7 @@ chxj_exchange_xhtml_mobile_1_0(
  * @param spec  [i]   The pointer to the device_table
  */
 static void
-s_init_xhtml(xhtml_t* xhtml, Doc* doc, request_rec* r, device_table* spec)
+s_init_xhtml(xhtml_t *xhtml, Doc *doc, request_rec *r, device_table *spec)
 {
   memset(doc,   0, sizeof(Doc));
   memset(xhtml, 0, sizeof(xhtml_t));
