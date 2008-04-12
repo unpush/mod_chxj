@@ -478,12 +478,12 @@ main()
   CU_add_test(xhtml_suite, "test base tag href attribute with normal value.",   test_xhtml_base_tag_href_attribute_003);
   CU_add_test(xhtml_suite, "test base tag href attribute with normal value.",   test_xhtml_base_tag_href_attribute_004);
 
-#if 0
   CU_add_test(xhtml_suite, "test <blockquote> with void value.",                test_xhtml_blockquote_tag_001);
   CU_add_test(xhtml_suite, "test <blockquote> with value.",                     test_xhtml_blockquote_tag_002);
   CU_add_test(xhtml_suite, "test <blockquote> with japanese value.",            test_xhtml_blockquote_tag_003);
   CU_add_test(xhtml_suite, "test <blockquote> with hankaku kana value.",        test_xhtml_blockquote_tag_004);
 
+#if 0
   CU_add_test(xhtml_suite, "test <body> .",                                     test_xhtml_body_tag_001);
   CU_add_test(xhtml_suite, "test <body> with bgcolor attribute 1.",             test_xhtml_body_tag_002);
   CU_add_test(xhtml_suite, "test <body> with bgcolor attribute 2.",             test_xhtml_body_tag_003);
