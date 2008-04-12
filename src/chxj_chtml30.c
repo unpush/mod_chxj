@@ -3284,7 +3284,7 @@ s_chtml30_end_blink_tag(void *pdoc, Node *UNUSED(child))
 
 
 /**
- * It is a hanmenuer who processes the MENU tag.
+ * It is a handler who processes the MENU tag.
  *
  * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.

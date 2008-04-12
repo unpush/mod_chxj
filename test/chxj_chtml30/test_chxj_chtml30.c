@@ -542,7 +542,6 @@ main()
 
   CU_add_test(chtml30_suite, "test <head>.",                                      test_chtml30_head_tag_001);
   CU_add_test(chtml30_suite, "test <head> with value.",                           test_chtml30_head_tag_002);
-#endif
 
   CU_add_test(chtml30_suite, "test <h1>.",                                        test_chtml30_h1_tag_001);
   CU_add_test(chtml30_suite, "test <h1> with value.",                             test_chtml30_h1_tag_002);
@@ -605,7 +604,6 @@ main()
   CU_add_test(chtml30_suite, "test <h6> with align attribute(center).",           test_chtml30_h6_tag_009);
   CU_add_test(chtml30_suite, "test <h6> with align attribute(unkown).",           test_chtml30_h6_tag_010);
 
-#if 0
   CU_add_test(chtml30_suite, "test <hr>.",                                        test_chtml30_hr_tag_001);
   CU_add_test(chtml30_suite, "test <hr />.",                                      test_chtml30_hr_tag_002);
   CU_add_test(chtml30_suite, "test <hr align> with no value.",                    test_chtml30_hr_tag_003);
@@ -726,6 +724,7 @@ main()
   CU_add_test(chtml30_suite, "test <li> type attribute 7." ,                      test_chtml30_li_tag_011);
   CU_add_test(chtml30_suite, "test <li> type attribute 8." ,                      test_chtml30_li_tag_012);
   CU_add_test(chtml30_suite, "test <li> type attribute 9." ,                      test_chtml30_li_tag_013);
+#endif
 
   CU_add_test(chtml30_suite, "test <menu>." ,                                     test_chtml30_menu_tag_001);
   CU_add_test(chtml30_suite, "test <menu> 2." ,                                   test_chtml30_menu_tag_002);
@@ -733,6 +732,7 @@ main()
   CU_add_test(chtml30_suite, "test <menu> 4." ,                                   test_chtml30_menu_tag_004);
   CU_add_test(chtml30_suite, "test <menu> 5." ,                                   test_chtml30_menu_tag_005);
 
+#if 0
   CU_add_test(chtml30_suite, "test <ol>." ,                                       test_chtml30_ol_tag_001);
   CU_add_test(chtml30_suite, "test <ol> 2." ,                                     test_chtml30_ol_tag_002);
   CU_add_test(chtml30_suite, "test <ol> 3." ,                                     test_chtml30_ol_tag_003);
