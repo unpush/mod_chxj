@@ -466,8 +466,8 @@ main()
   CU_add_test(xhtml_suite, "test a tag href attr2 with other site link.",       test_xhtml_a_tag_href_attribute_002);
   CU_add_test(xhtml_suite, "test a tag href attr3 with local link.",            test_xhtml_a_tag_href_attribute_003);
   CU_add_test(xhtml_suite, "test a tag href attr4 with maker.",                 test_xhtml_a_tag_href_attribute_004);
-#if 0
   CU_add_test(xhtml_suite, "test a tag href attr5 with void maker.",            test_xhtml_a_tag_href_attribute_005);
+#if 0
   CU_add_test(xhtml_suite, "test a tag href attr6 with no cookie.",             test_xhtml_a_tag_href_attribute_006);
   CU_add_test(xhtml_suite, "test a tag accesskey attribute.",                   test_xhtml_a_tag_accesskey_attribute_001);
   CU_add_test(xhtml_suite, "test a tag accesskey attribute with void char.",    test_xhtml_a_tag_accesskey_attribute_002);
@@ -1261,8 +1261,8 @@ void test_xhtml_a_tag_href_attribute_004()
 }
 void test_xhtml_a_tag_href_attribute_005() 
 {
-#define  TEST_STRING "<html><head></head><body><a href=\"a.html#\">abc</a></body></html>"
-#define  RESULT_STRING "<html><head></head><body><a href=\"a.html#\">abc</a></body></html>"
+#define  TEST_STRING "<a href=\"a.html#\">abc</a>"
+#define  RESULT_STRING "<a href=\"a.html#\">abc</a>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1279,6 +1279,7 @@ void test_xhtml_a_tag_href_attribute_005()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
