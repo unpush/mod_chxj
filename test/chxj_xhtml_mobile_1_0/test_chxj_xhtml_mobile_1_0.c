@@ -462,8 +462,8 @@ main()
   CU_add_test(xhtml_suite, "test a tag name attr2",                             test_xhtml_a_tag_name_attribute_002);
   CU_add_test(xhtml_suite, "test a tag name attr3 with japanese.",              test_xhtml_a_tag_name_attribute_003);
   CU_add_test(xhtml_suite, "test a tag name attr4 with japanese.",              test_xhtml_a_tag_name_attribute_004);
-#if 0
   CU_add_test(xhtml_suite, "test a tag href attr1 with void attribute.",        test_xhtml_a_tag_href_attribute_001);
+#if 0
   CU_add_test(xhtml_suite, "test a tag href attr2 with other site link.",       test_xhtml_a_tag_href_attribute_002);
   CU_add_test(xhtml_suite, "test a tag href attr3 with local link.",            test_xhtml_a_tag_href_attribute_003);
   CU_add_test(xhtml_suite, "test a tag href attr4 with maker.",                 test_xhtml_a_tag_href_attribute_004);
@@ -1145,8 +1145,8 @@ void test_xhtml_a_tag_name_attribute_004()
 }
 void test_xhtml_a_tag_href_attribute_001() 
 {
-#define  TEST_STRING "<html><head></head><body><a href=\"\">abc</a></body></html>"
-#define  RESULT_STRING "<html><head></head><body><a href=\"\">abc</a></body></html>"
+#define  TEST_STRING "<a href=\"\">abc</a>"
+#define  RESULT_STRING "<a>abc</a>"
   char  *ret;
   char  *tmp;
   device_table spec;
