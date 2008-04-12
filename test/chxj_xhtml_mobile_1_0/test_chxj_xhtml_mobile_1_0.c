@@ -458,6 +458,7 @@ main()
   CU_add_test(xhtml_suite, "test void src2",                                    test_xhtml_002);
   CU_add_test(xhtml_suite, "test comment tag1",                                 test_xhtml_comment_tag_001);
 
+#if 0
   CU_add_test(xhtml_suite, "test a tag name attr1",                             test_xhtml_a_tag_name_attribute_001);
   CU_add_test(xhtml_suite, "test a tag name attr2",                             test_xhtml_a_tag_name_attribute_002);
   CU_add_test(xhtml_suite, "test a tag name attr3 with japanese.",              test_xhtml_a_tag_name_attribute_003);
@@ -483,7 +484,6 @@ main()
   CU_add_test(xhtml_suite, "test <blockquote> with japanese value.",            test_xhtml_blockquote_tag_003);
   CU_add_test(xhtml_suite, "test <blockquote> with hankaku kana value.",        test_xhtml_blockquote_tag_004);
 
-#if 0
   CU_add_test(xhtml_suite, "test <body> .",                                     test_xhtml_body_tag_001);
   CU_add_test(xhtml_suite, "test <body> with bgcolor attribute 1.",             test_xhtml_body_tag_002);
   CU_add_test(xhtml_suite, "test <body> with bgcolor attribute 2.",             test_xhtml_body_tag_003);
@@ -949,7 +949,7 @@ chxj_apply_convrule(request_rec* r, apr_array_header_t* convrules)
 
 #define SPEC_INIT(X) \
   do { \
-    X.html_spec_type = CHXJ_SPEC_Chtml_3_0; \
+    X.html_spec_type = CHXJ_SPEC_XHtml_Mobile_1_0; \
   } while (0)
 
 
@@ -1002,7 +1002,15 @@ void test_xhtml_002()
 void test_xhtml_comment_tag_001() 
 {
 #define  TEST_STRING "<html><!--</html><body>--><head></head><body></body></html>"
-#define  RESULT_STRING "<html><head></head><body></body></html>"
+#define  RESULT_STRING "<?xml version=\"1.0\" encoding=\"Windows-31J\"?>\r\n" \
+                       "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML Basic 1.0//EN\"\r\n" \
+                       " \"http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd\">\r\n" \
+                       "<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n" \
+                       "<head>\r\n" \
+                       "</head>\r\n" \
+                       "<body>\r\n" \
+                       "</body>\r\n" \
+                       "</html>\r\n"
   char  *ret;
   device_table spec;
   chxjconvrule_entry entry;
