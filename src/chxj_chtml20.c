@@ -1576,31 +1576,26 @@ s_chtml20_start_input_tag(void *pdoc, Node *node)
       W_L("\"");
     }
   }
-
   if (size && *size) {
     W_L(" size=\"");
     W_V(size);
     W_L("\"");
   }
-
   if (name && *name) {
     W_L(" name=\"");
     W_V(name);
     W_L("\"");
   }
-
   if (value && *value) {
     W_L(" value=\"");
     W_V(value);
     W_L("\"");
   }
-
   if (accesskey && *accesskey) {
     W_L(" accesskey=\"");
     W_V(accesskey);
     W_L("\"");
   }
-
   if (istyle) {
     /*------------------------------------------------------------------------*/
     /* CHTML 2.0                                                              */
@@ -2047,13 +2042,8 @@ s_chtml20_start_img_tag(void *pdoc, Node *node)
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-
-    char *name;
-    char *value;
-
-    name  = qs_get_attr_name(doc,attr);
-    value = qs_get_attr_value(doc,attr);
-
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
     switch(*name) {
     case 's':
     case 'S':

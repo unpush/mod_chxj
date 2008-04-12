@@ -453,7 +453,7 @@ main()
   CU_pSuite chtml30_suite;
   CU_initialize_registry();
   chtml30_suite = CU_add_suite("test chxj_exchange_chtml30()", NULL, NULL);
-#if 0
+
   CU_add_test(chtml30_suite, "test void src1",                                    test_chtml30_001);
   CU_add_test(chtml30_suite, "test void src2",                                    test_chtml30_002);
   CU_add_test(chtml30_suite, "test comment tag1",                                 test_chtml30_comment_tag_001);
@@ -519,8 +519,6 @@ main()
 
   CU_add_test(chtml30_suite, "test <dd>.",                                        test_chtml30_dd_tag_001);
   CU_add_test(chtml30_suite, "test <dd> with void value.",                        test_chtml30_dd_tag_002);
-#endif
-#if 0
 
   CU_add_test(chtml30_suite, "test <div>.",                                       test_chtml30_div_tag_001);
   CU_add_test(chtml30_suite, "test <div> with align attribute(left).",            test_chtml30_div_tag_002);
@@ -724,7 +722,6 @@ main()
   CU_add_test(chtml30_suite, "test <li> type attribute 7." ,                      test_chtml30_li_tag_011);
   CU_add_test(chtml30_suite, "test <li> type attribute 8." ,                      test_chtml30_li_tag_012);
   CU_add_test(chtml30_suite, "test <li> type attribute 9." ,                      test_chtml30_li_tag_013);
-#endif
 
   CU_add_test(chtml30_suite, "test <menu>." ,                                     test_chtml30_menu_tag_001);
   CU_add_test(chtml30_suite, "test <menu> 2." ,                                   test_chtml30_menu_tag_002);
@@ -732,7 +729,6 @@ main()
   CU_add_test(chtml30_suite, "test <menu> 4." ,                                   test_chtml30_menu_tag_004);
   CU_add_test(chtml30_suite, "test <menu> 5." ,                                   test_chtml30_menu_tag_005);
 
-#if 0
   CU_add_test(chtml30_suite, "test <ol>." ,                                       test_chtml30_ol_tag_001);
   CU_add_test(chtml30_suite, "test <ol> 2." ,                                     test_chtml30_ol_tag_002);
   CU_add_test(chtml30_suite, "test <ol> 3." ,                                     test_chtml30_ol_tag_003);
@@ -831,8 +827,6 @@ main()
   CU_add_test(chtml30_suite, "test <ul> 4." ,                                     test_chtml30_ul_tag_004);
   CU_add_test(chtml30_suite, "test <ul> 5." ,                                     test_chtml30_ul_tag_005);
 
-#endif
-#if 0
   CU_add_test(chtml30_suite, "test <blink> 1." ,                                  test_chtml30_blink_tag_001);
   CU_add_test(chtml30_suite, "test <blink> 2." ,                                  test_chtml30_blink_tag_002);
   CU_add_test(chtml30_suite, "test <blink> 3." ,                                  test_chtml30_blink_tag_003);
@@ -866,7 +860,6 @@ main()
   CU_add_test(chtml30_suite, "test <meta> 7." ,                                   test_chtml30_meta_tag_007);
   CU_add_test(chtml30_suite, "test <meta> 8." ,                                   test_chtml30_meta_tag_008);
   CU_add_test(chtml30_suite, "test <meta> 9." ,                                   test_chtml30_meta_tag_009);
-#endif
   /* aend */
 
   CU_basic_run_tests();
