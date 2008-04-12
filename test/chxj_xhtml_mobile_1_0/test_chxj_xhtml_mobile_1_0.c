@@ -471,9 +471,9 @@ main()
   CU_add_test(xhtml_suite, "test a tag accesskey attribute.",                   test_xhtml_a_tag_accesskey_attribute_001);
   CU_add_test(xhtml_suite, "test a tag accesskey attribute with void char.",    test_xhtml_a_tag_accesskey_attribute_002);
   CU_add_test(xhtml_suite, "test a tag accesskey attribute with no value",      test_xhtml_a_tag_accesskey_attribute_003);
-#if 0
 
   CU_add_test(xhtml_suite, "test base tag no attribute.",                       test_xhtml_base_tag_001);
+#if 0
   CU_add_test(xhtml_suite, "test base tag href attribute with no value.",       test_xhtml_base_tag_href_attribute_001);
   CU_add_test(xhtml_suite, "test base tag href attribute with void value.",     test_xhtml_base_tag_href_attribute_002);
   CU_add_test(xhtml_suite, "test base tag href attribute with normal value.",   test_xhtml_base_tag_href_attribute_003);
@@ -1395,6 +1395,7 @@ void test_xhtml_a_tag_accesskey_attribute_003()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -1408,8 +1409,8 @@ void test_xhtml_a_tag_accesskey_attribute_003()
 /*============================================================================*/
 void test_xhtml_base_tag_001() 
 {
-#define  TEST_STRING "<html><head><base></head><body></body></html>"
-#define  RESULT_STRING "<html><head><base></head><body></body></html>"
+#define  TEST_STRING "<base>"
+#define  RESULT_STRING "<base />\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1426,6 +1427,7 @@ void test_xhtml_base_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
