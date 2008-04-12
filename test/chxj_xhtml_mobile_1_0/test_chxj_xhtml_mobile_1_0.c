@@ -458,7 +458,6 @@ main()
   CU_add_test(xhtml_suite, "test void src2",                                    test_xhtml_002);
   CU_add_test(xhtml_suite, "test comment tag1",                                 test_xhtml_comment_tag_001);
 
-#if 0
   CU_add_test(xhtml_suite, "test a tag name attr1",                             test_xhtml_a_tag_name_attribute_001);
   CU_add_test(xhtml_suite, "test a tag name attr2",                             test_xhtml_a_tag_name_attribute_002);
   CU_add_test(xhtml_suite, "test a tag name attr3 with japanese.",              test_xhtml_a_tag_name_attribute_003);
@@ -473,6 +472,7 @@ main()
   CU_add_test(xhtml_suite, "test a tag accesskey attribute with void char.",    test_xhtml_a_tag_accesskey_attribute_002);
   CU_add_test(xhtml_suite, "test a tag accesskey attribute with no value",      test_xhtml_a_tag_accesskey_attribute_003);
 
+#if 0
   CU_add_test(xhtml_suite, "test base tag no attribute.",                       test_xhtml_base_tag_001);
   CU_add_test(xhtml_suite, "test base tag href attribute with no value.",       test_xhtml_base_tag_href_attribute_001);
   CU_add_test(xhtml_suite, "test base tag href attribute with void value.",     test_xhtml_base_tag_href_attribute_002);

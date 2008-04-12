@@ -979,13 +979,13 @@ s_xhtml_1_0_end_body_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The A tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_start_a_tag(void* pdoc, Node* node) 
+static char *
+s_xhtml_1_0_start_a_tag(void *pdoc, Node *node) 
 {
-  xhtml_t*      xhtml = GET_XHTML(pdoc);
-  Doc*          doc   = xhtml->doc;
-  request_rec*  r     = doc->r;
-  Attr*         attr;
+  xhtml_t       *xhtml = GET_XHTML(pdoc);
+  Doc           *doc   = xhtml->doc;
+  request_rec   *r     = doc->r;
+  Attr          *attr;
 
   WX_L("<a");
   /*--------------------------------------------------------------------------*/
