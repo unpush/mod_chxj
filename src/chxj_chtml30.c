@@ -29,6 +29,7 @@
 #define W_L(X)          do { chtml30->out = BUFFERED_WRITE_LITERAL(chtml30->out, &doc->buf, (X)); } while(0)
 #define W_V(X)          do { chtml30->out = (X) ? BUFFERED_WRITE_VALUE(chtml30->out, &doc->buf, (X))  \
                                                   : BUFFERED_WRITE_LITERAL(chtml30->out, &doc->buf, ""); } while(0)
+extern tag_handler chtml20_handler[];
 
 static char *s_chtml30_start_html_tag     (void *pdoc, Node *node);
 static char *s_chtml30_end_html_tag       (void *pdoc, Node *node);
@@ -2361,18 +2362,39 @@ s_chtml30_end_ol_tag(void *pdoc, Node *UNUSED(node))
  * @param node   [i]   The LI tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml30_start_li_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_chtml30_start_li_tag(void *pdoc, Node *node) 
 {
-  chtml30_t*    chtml30;
-  Doc*          doc;
-  request_rec*  r;
+  chtml30_t *chtml30;
+  Doc *doc;
+  request_rec *r;
+  Attr *attr;
 
   chtml30 = GET_CHTML30(pdoc);
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W_L("<li>");
+  W_L("<li");
+  /*--------------------------------------------------------------------------*/
+  /* Get Attributes                                                           */
+  /*--------------------------------------------------------------------------*/
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char *name = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('t','T',"type",name) && value && (*value == '1' || *value == 'a' || *value == 'A')) {
+      W_L(" type=\"");
+      W_V(value);
+      W_L("\"");
+    }
+    else if (STRCASEEQ('v','V',"value", name) && value && *value) {
+      W_L(" value=\"");
+      W_V(value);
+      W_L("\"");
+    }
+  }
+  W_L(">");
 
   return chtml30->out;
 }

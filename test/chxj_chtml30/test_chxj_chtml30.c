@@ -710,6 +710,7 @@ main()
   CU_add_test(chtml30_suite, "test <input istyle> 12." ,                          test_chtml30_input_tag_045);
   CU_add_test(chtml30_suite, "test <input istyle> 13." ,                          test_chtml30_input_tag_046);
   CU_add_test(chtml30_suite, "test <input istyle> 14." ,                          test_chtml30_input_tag_047);
+#endif
 
   CU_add_test(chtml30_suite, "test <li>." ,                                       test_chtml30_li_tag_001);
   CU_add_test(chtml30_suite, "test <li> with alphabetic value." ,                 test_chtml30_li_tag_002);
@@ -724,15 +725,14 @@ main()
   CU_add_test(chtml30_suite, "test <li> type attribute 7." ,                      test_chtml30_li_tag_011);
   CU_add_test(chtml30_suite, "test <li> type attribute 8." ,                      test_chtml30_li_tag_012);
   CU_add_test(chtml30_suite, "test <li> type attribute 9." ,                      test_chtml30_li_tag_013);
+#if 0
 
-#endif
   CU_add_test(chtml30_suite, "test <menu>." ,                                     test_chtml30_menu_tag_001);
   CU_add_test(chtml30_suite, "test <menu> 2." ,                                   test_chtml30_menu_tag_002);
   CU_add_test(chtml30_suite, "test <menu> 3." ,                                   test_chtml30_menu_tag_003);
   CU_add_test(chtml30_suite, "test <menu> 4." ,                                   test_chtml30_menu_tag_004);
   CU_add_test(chtml30_suite, "test <menu> 5." ,                                   test_chtml30_menu_tag_005);
 
-#if 0
   CU_add_test(chtml30_suite, "test <ol>." ,                                       test_chtml30_ol_tag_001);
   CU_add_test(chtml30_suite, "test <ol> 2." ,                                     test_chtml30_ol_tag_002);
   CU_add_test(chtml30_suite, "test <ol> 3." ,                                     test_chtml30_ol_tag_003);
