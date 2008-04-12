@@ -1,7 +1,7 @@
 .SUFFIXES:
 .SUFFIXES: .c.o
 
-TARGET= test_chxj_chtml30
+TARGET= test_chxj_xhtml_mobile_1_0
 
 TOP_DIR=../..
 
