@@ -1657,11 +1657,11 @@ s_xhtml_1_0_end_h2_tag(void *pdoc, Node *UNUSED(child))
  * @param node   [i]   The H3 tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_start_h3_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_xhtml_1_0_start_h3_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  xhtml_t*      xhtml = GET_XHTML(pdoc);
-  Doc*          doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
 
   W_L("<h3>");
   return xhtml->out;
@@ -1676,11 +1676,11 @@ s_xhtml_1_0_start_h3_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The H3 tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_end_h3_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_xhtml_1_0_end_h3_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  xhtml_t*      xhtml = GET_XHTML(pdoc);
-  Doc*          doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
 
   W_L("</h3>");
   return xhtml->out;
@@ -1695,11 +1695,11 @@ s_xhtml_1_0_end_h3_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The H4 tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_start_h4_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_xhtml_1_0_start_h4_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  xhtml_t*      xhtml = GET_XHTML(pdoc);
-  Doc*          doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
 
   W_L("<h4>");
   return xhtml->out;
@@ -1714,11 +1714,11 @@ s_xhtml_1_0_start_h4_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The H4 tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_end_h4_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_xhtml_1_0_end_h4_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  xhtml_t*      xhtml = GET_XHTML(pdoc);
-  Doc*          doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
 
   W_L("</h4>");
   return xhtml->out;
@@ -1733,15 +1733,16 @@ s_xhtml_1_0_end_h4_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The H5 tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_start_h5_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_xhtml_1_0_start_h5_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  xhtml_t*      xhtml = GET_XHTML(pdoc);
-  Doc*          doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
 
   W_L("<h5>");
   return xhtml->out;
 }
+
 
 /**
  * It is a handler who processes the H5 tag.
@@ -1751,11 +1752,11 @@ s_xhtml_1_0_start_h5_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The H5 tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_end_h5_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_xhtml_1_0_end_h5_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  xhtml_t*      xhtml = GET_XHTML(pdoc);
-  Doc*          doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
 
   W_L("</h5>");
   return xhtml->out;
@@ -1770,11 +1771,11 @@ s_xhtml_1_0_end_h5_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The H6 tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_start_h6_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_xhtml_1_0_start_h6_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  xhtml_t*      xhtml = GET_XHTML(pdoc);
-  Doc*          doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
 
   W_L("<h6>");
   return xhtml->out;
@@ -1789,11 +1790,11 @@ s_xhtml_1_0_start_h6_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The H6 tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_end_h6_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_xhtml_1_0_end_h6_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  xhtml_t*      xhtml = GET_XHTML(pdoc);
-  Doc*          doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
 
   W_L("</h6>");
   return xhtml->out;
@@ -1808,11 +1809,11 @@ s_xhtml_1_0_end_h6_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The OL tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_start_ol_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_xhtml_1_0_start_ol_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  xhtml_t*      xhtml = GET_XHTML(pdoc);
-  Doc*          doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
 
   W_L("<ol>");
   return xhtml->out;
@@ -1827,11 +1828,11 @@ s_xhtml_1_0_start_ol_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The OL tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_end_ol_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_xhtml_1_0_end_ol_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  xhtml_t*      xhtml = GET_XHTML(pdoc);
-  Doc*          doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
 
   W_L("</ol>");
   return xhtml->out;
@@ -1846,11 +1847,11 @@ s_xhtml_1_0_end_ol_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The LI tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_start_li_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_xhtml_1_0_start_li_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  xhtml_t*      xhtml = GET_XHTML(pdoc);
-  Doc*          doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
 
   W_L("<li>");
   return xhtml->out;
@@ -1865,11 +1866,11 @@ s_xhtml_1_0_start_li_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The LI tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_end_li_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_xhtml_1_0_end_li_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  xhtml_t*      xhtml = GET_XHTML(pdoc);
-  Doc*          doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
 
   W_L("</li>");
   return xhtml->out;
@@ -1883,13 +1884,13 @@ s_xhtml_1_0_end_li_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The IMG tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_start_img_tag(void* pdoc, Node* node) 
+static char *
+s_xhtml_1_0_start_img_tag(void *pdoc, Node *node) 
 {
-  xhtml_t*      xhtml = GET_XHTML(pdoc);
-  Doc*          doc   = xhtml->doc;
-  request_rec*  r     = doc->r;
-  Attr*         attr;
+  xhtml_t       *xhtml = GET_XHTML(pdoc);
+  Doc           *doc   = xhtml->doc;
+  request_rec   *r     = doc->r;
+  Attr          *attr;
 
 #ifndef IMG_NOT_CONVERT_FILENAME
   device_table  *spec = xhtml->spec;
@@ -1902,8 +1903,8 @@ s_xhtml_1_0_start_img_tag(void* pdoc, Node* node)
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-    char* name  = qs_get_attr_name(doc,attr);
-    char* value = qs_get_attr_value(doc,attr);
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
 
     if (STRCASEEQ('s','S',"src",name)) {
       value = chxj_encoding_parameter(r, value);
@@ -1976,10 +1977,10 @@ s_xhtml_1_0_start_img_tag(void* pdoc, Node* node)
  * @param node   [i]   The IMG tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_end_img_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_xhtml_1_0_end_img_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  xhtml_t*  xhtml = GET_XHTML(pdoc);
+  xhtml_t *xhtml = GET_XHTML(pdoc);
 
   return xhtml->out;
 }
@@ -1993,23 +1994,22 @@ s_xhtml_1_0_end_img_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The SELECT tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_start_select_tag(void* pdoc, Node* child)
+static char *
+s_xhtml_1_0_start_select_tag(void *pdoc, Node *child)
 {
-  xhtml_t*     xhtml = GET_XHTML(pdoc);
-  Doc*         doc   = xhtml->doc;
-  Attr*        attr;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+  Attr    *attr;
 
-  char* size      = NULL;
-  char* name      = NULL;
+  char *size      = NULL;
+  char *name      = NULL;
 
   W_L("<select");
   for (attr = qs_get_attr(doc,child);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-    char* nm  = qs_get_attr_name(doc,attr);
-    char* val = qs_get_attr_value(doc,attr);
-
+    char *nm  = qs_get_attr_name(doc,attr);
+    char *val = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('s','S',"size",nm)) {
       /* CHTML version 2.0 */
       size = apr_pstrdup(doc->buf.pool, val);
@@ -2023,13 +2023,11 @@ s_xhtml_1_0_start_select_tag(void* pdoc, Node* child)
       /* Ignore */
     }
   }
-
   if (size) {
     W_L(" size=\"");
     W_V(size);
     W_L("\"");
   }
-
   if (name) {
     W_L(" name=\"");
     W_V(name);
@@ -2048,11 +2046,11 @@ s_xhtml_1_0_start_select_tag(void* pdoc, Node* child)
  * @param node   [i]   The SELECT tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_end_select_tag(void* pdoc, Node* UNUSED(child))
+static char *
+s_xhtml_1_0_end_select_tag(void *pdoc, Node *UNUSED(child))
 {
-  xhtml_t*     xhtml = GET_XHTML(pdoc);
-  Doc*         doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
 
   W_L("</select>\n");
   return xhtml->out;
@@ -2067,23 +2065,22 @@ s_xhtml_1_0_end_select_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The OPTION tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_start_option_tag(void* pdoc, Node* child)
+static char *
+s_xhtml_1_0_start_option_tag(void *pdoc, Node *child)
 {
-  xhtml_t*     xhtml = GET_XHTML(pdoc);
-  Doc*         doc   = xhtml->doc;
-  Attr*        attr;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+  Attr    *attr;
 
-  char* selected   = NULL;
-  char* value      = NULL;
+  char *selected   = NULL;
+  char *value      = NULL;
 
   W_L("<option");
   for (attr = qs_get_attr(doc,child);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-    char* nm  = qs_get_attr_name(doc,attr);
-    char* val = qs_get_attr_value(doc,attr);
-
+    char *nm  = qs_get_attr_name(doc,attr);
+    char *val = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('s','S',"selected",nm)) {
       /* CHTML version 2.0 */
       selected = apr_pstrdup(doc->buf.pool, val);
@@ -2093,7 +2090,6 @@ s_xhtml_1_0_start_option_tag(void* pdoc, Node* child)
       value = apr_pstrdup(doc->buf.pool, val);
     }
   }
-
   if (value) {
     W_L(" value=\"");
     W_V(value);
@@ -2118,11 +2114,11 @@ s_xhtml_1_0_start_option_tag(void* pdoc, Node* child)
  * @param node   [i]   The OPTION tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_end_option_tag(void* pdoc, Node* UNUSED(child))
+static char *
+s_xhtml_1_0_end_option_tag(void *pdoc, Node *UNUSED(child))
 {
-  xhtml_t*     xhtml = GET_XHTML(pdoc);
-  Doc*         doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
 
   W_L("</option>\n");
   return xhtml->out;
@@ -2137,34 +2133,31 @@ s_xhtml_1_0_end_option_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The DIV tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_start_div_tag(void* pdoc, Node* child)
+static char *
+s_xhtml_1_0_start_div_tag(void *pdoc, Node *child)
 {
-  xhtml_t*     xhtml = GET_XHTML(pdoc);
-  Doc*         doc   = xhtml->doc;
-  Attr*        attr;
-
-  char* align   = NULL;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+  Attr    *attr;
+  char    *align   = NULL;
 
   W_L("<div");
   for (attr = qs_get_attr(doc,child);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-    char* nm  = qs_get_attr_name(doc,attr);
-    char* val = qs_get_attr_value(doc,attr);
+    char *nm  = qs_get_attr_name(doc,attr);
+    char *val = qs_get_attr_value(doc,attr);
 
     if (STRCASEEQ('a','A',"align",nm)) {
       /* CHTML version 3.2 */
       align = apr_pstrdup(doc->buf.pool, val);
     }
   }
-
   if (align) {
     W_L(" align=\"");
     W_V(align);
     W_L("\"");
   }
-
   W_L(">");
   return xhtml->out;
 }
@@ -2178,11 +2171,11 @@ s_xhtml_1_0_start_div_tag(void* pdoc, Node* child)
  * @param node   [i]   The DIV tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_end_div_tag(void* pdoc, Node* UNUSED(child))
+static char *
+s_xhtml_1_0_end_div_tag(void *pdoc, Node *UNUSED(child))
 {
-  xhtml_t*     xhtml = GET_XHTML(pdoc);
-  Doc*         doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
 
   W_L("</div>\n");
   return xhtml->out;
@@ -2197,11 +2190,11 @@ s_xhtml_1_0_end_div_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The B tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_start_b_tag(void* pdoc, Node* UNUSED(child))
+static char *
+s_xhtml_1_0_start_b_tag(void *pdoc, Node *UNUSED(child))
 {
-  xhtml_t*     xhtml = GET_XHTML(pdoc);
-  Doc*         doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
 
   W_L("<div style=\"font-weight:bold\">");
   return xhtml->out;
@@ -2216,11 +2209,11 @@ s_xhtml_1_0_start_b_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The B tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_end_b_tag(void* pdoc, Node* UNUSED(child))
+static char *
+s_xhtml_1_0_end_b_tag(void *pdoc, Node *UNUSED(child))
 {
-  xhtml_t*     xhtml = GET_XHTML(pdoc);
-  Doc*         doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
 
   W_L("</div>\n");
   return xhtml->out;
@@ -2234,12 +2227,12 @@ s_xhtml_1_0_end_b_tag(void* pdoc, Node* UNUSED(child))
  *                     destination is specified.
  * @param node   [i]   The CHXJ:IF tag node is specified.
  */
-static char*
-s_xhtml_1_0_chxjif_tag(void* pdoc, Node* node)
+static char *
+s_xhtml_1_0_chxjif_tag(void *pdoc, Node *node)
 {
-  xhtml_t*     xhtml = GET_XHTML(pdoc);
-  Doc*         doc   = xhtml->doc;
-  Node*        child;
+  xhtml_t      *xhtml = GET_XHTML(pdoc);
+  Doc          *doc   = xhtml->doc;
+  Node         *child;
 
   for (child = qs_get_child_node(doc, node);
        child;
@@ -2260,22 +2253,20 @@ s_xhtml_1_0_chxjif_tag(void* pdoc, Node* node)
  * @param node   [i]   The TEXTAREA tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_start_textarea_tag(void* pdoc, Node* node) 
+static char *
+s_xhtml_1_0_start_textarea_tag(void *pdoc, Node *node) 
 {
-  xhtml_t*      xhtml = GET_XHTML(pdoc);
-  Doc*          doc   = xhtml->doc;
-  Attr*         attr;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+  Attr    *attr;
 
   xhtml->textarea_flag++;
   W_L("<textarea ");
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-
-    char* name  = qs_get_attr_name(doc,attr);
-    char* value = qs_get_attr_value(doc,attr);
-
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('n','N',"name",name)) {
       W_L(" name=\"");
       W_V(value);
@@ -2305,11 +2296,11 @@ s_xhtml_1_0_start_textarea_tag(void* pdoc, Node* node)
  * @param node   [i]   The TEXTAREA tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_xhtml_1_0_end_textarea_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_xhtml_1_0_end_textarea_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  xhtml_t*      xhtml = GET_XHTML(pdoc);
-  Doc*          doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
 
   W_L("</textarea>\r\n");
   xhtml->textarea_flag--;
@@ -2317,18 +2308,18 @@ s_xhtml_1_0_end_textarea_tag(void* pdoc, Node* UNUSED(child))
   return xhtml->out;
 }
 
-static char*
-s_xhtml_1_0_text_tag(void* pdoc, Node* child)
+static char *
+s_xhtml_1_0_text_tag(void *pdoc, Node *child)
 {
-  xhtml_t*     xhtml   = GET_XHTML(pdoc);
-  Doc*         doc     = xhtml->doc;
-  request_rec* r       = doc->r;
-  char*    textval;
-  char*    tmp;
-  char*    tdst;
-  char     one_byte[2];
-  int      ii;
-  int      tdst_len;
+  xhtml_t     *xhtml   = GET_XHTML(pdoc);
+  Doc         *doc     = xhtml->doc;
+  request_rec *r       = doc->r;
+  char        *textval;
+  char        *tmp;
+  char        *tdst;
+  char        one_byte[2];
+  int         ii;
+  int         tdst_len;
   
   textval = qs_get_node_value(doc,child);
   textval = qs_trim_string(doc->buf.pool, textval);
@@ -2343,7 +2334,7 @@ s_xhtml_1_0_text_tag(void* pdoc, Node* child)
   tdst_len = 0;
   
   for (ii=0; ii<qs_get_node_size(doc,child); ii++) {
-    char* out;
+    char *out;
     int rtn = s_xhtml_search_emoji(xhtml, &textval[ii], &out);
     if (rtn != 0) {
       DBG(r,"[%s][%d]", out, rtn);
