@@ -469,8 +469,8 @@ main()
   CU_add_test(xhtml_suite, "test a tag href attr5 with void maker.",            test_xhtml_a_tag_href_attribute_005);
   CU_add_test(xhtml_suite, "test a tag href attr6 with no cookie.",             test_xhtml_a_tag_href_attribute_006);
   CU_add_test(xhtml_suite, "test a tag accesskey attribute.",                   test_xhtml_a_tag_accesskey_attribute_001);
-#if 0
   CU_add_test(xhtml_suite, "test a tag accesskey attribute with void char.",    test_xhtml_a_tag_accesskey_attribute_002);
+#if 0
   CU_add_test(xhtml_suite, "test a tag accesskey attribute with no value",      test_xhtml_a_tag_accesskey_attribute_003);
 
   CU_add_test(xhtml_suite, "test base tag no attribute.",                       test_xhtml_base_tag_001);
@@ -1348,8 +1348,8 @@ void test_xhtml_a_tag_accesskey_attribute_001()
 }
 void test_xhtml_a_tag_accesskey_attribute_002() 
 {
-#define  TEST_STRING "<html><head></head><body><a accesskey=\"\">abc</a></body></html>"
-#define  RESULT_STRING "<html><head></head><body><a accesskey=\"\">abc</a></body></html>"
+#define  TEST_STRING "<a accesskey=\"\">abc</a>"
+#define  RESULT_STRING "<a accesskey=\"\">abc</a>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1366,6 +1366,7 @@ void test_xhtml_a_tag_accesskey_attribute_002()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
