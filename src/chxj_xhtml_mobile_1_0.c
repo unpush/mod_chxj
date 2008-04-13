@@ -2529,6 +2529,8 @@ static char *
 s_xhtml_1_0_end_dt_tag(void *pdoc, Node *UNUSED(child))
 {
   xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+  W_L("</dt>");
   return xhtml->out;
 }
 /*

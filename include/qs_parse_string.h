@@ -74,8 +74,6 @@
 #define has_child(c)       ((strcasecmp(c, "base"     ) != 0) \
                         &&  (strcasecmp(c, "meta"     ) != 0) \
                         &&  (strcasecmp(c, "br"       ) != 0) \
-                        &&  (strcasecmp(c, "dt"       ) != 0) \
-                        &&  (strcasecmp(c, "dd"       ) != 0) \
                         &&  (strcasecmp(c, "hr"       ) != 0) \
                         &&  (strcasecmp(c, "img"      ) != 0) \
                         &&  (strcasecmp(c, "input"    ) != 0) \

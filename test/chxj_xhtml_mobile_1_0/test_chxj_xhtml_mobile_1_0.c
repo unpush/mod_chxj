@@ -2440,14 +2440,13 @@ void test_xhtml_dl_tag_001()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 /*============================================================================*/
 /* <DT>                                                                       */
 /*============================================================================*/
 void test_xhtml_dt_tag_001()
 {
-#define  TEST_STRING "<html><head></head><body><dl><dt>あああ</dt><dt>いいい</dt></dl></body></html>"
-#define  RESULT_STRING "<html><head></head><body><dl><dt>あああ<dt>いいい</dl></body></html>"
+#define  TEST_STRING "<dl><dt>あああ</dt><dt>いいい</dt></dl>"
+#define  RESULT_STRING "<dl><dt>あああ</dt><dt>いいい</dt></dl>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2472,6 +2471,7 @@ void test_xhtml_dt_tag_001()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 void test_xhtml_dt_tag_002()
 {
 #define  TEST_STRING "<html><head></head><body><dl><dt></dt><dt></dt></dl></body></html>"
