@@ -510,8 +510,8 @@ main()
   CU_add_test(xhtml_suite, "test <center>.",                                    test_xhtml_center_tag_001);
 
   CU_add_test(xhtml_suite, "test <dir>.",                                       test_xhtml_dir_tag_001);
-#if 0
   CU_add_test(xhtml_suite, "test <dir> with no <li>.",                          test_xhtml_dir_tag_002);
+#if 0
 
   CU_add_test(xhtml_suite, "test <dl>.",                                        test_xhtml_dl_tag_001);
 
@@ -2379,11 +2379,10 @@ void test_xhtml_dir_tag_001()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 void test_xhtml_dir_tag_002()
 {
-#define  TEST_STRING "<html><head></head><body><dir></dir></body></html>"
-#define  RESULT_STRING "<html><head></head><body><dir></dir></body></html>"
+#define  TEST_STRING "<dir></dir>"
+#define  RESULT_STRING "<dir></dir>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2400,6 +2399,7 @@ void test_xhtml_dir_tag_002()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -2408,6 +2408,7 @@ void test_xhtml_dir_tag_002()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 /*============================================================================*/
 /* <DL>                                                                       */
 /*============================================================================*/
