@@ -492,8 +492,8 @@ main()
   CU_add_test(xhtml_suite, "test <body> with text attribute 3.",                test_xhtml_body_tag_007);
   CU_add_test(xhtml_suite, "test <body> with link attribute 1.",                test_xhtml_body_tag_008);
   CU_add_test(xhtml_suite, "test <body> with link attribute 2.",                test_xhtml_body_tag_009);
-#if 0
   CU_add_test(xhtml_suite, "test <body> with link attribute 3.",                test_xhtml_body_tag_010);
+#if 0
   CU_add_test(xhtml_suite, "test <body> with vlink attribute 1.",               test_xhtml_body_tag_011);
   CU_add_test(xhtml_suite, "test <body> with vlink attribute 2.",               test_xhtml_body_tag_012);
   CU_add_test(xhtml_suite, "test <body> with vlink attribute 3.",               test_xhtml_body_tag_013);
@@ -1926,6 +1926,7 @@ void test_xhtml_body_tag_009()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -1934,11 +1935,10 @@ void test_xhtml_body_tag_009()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 void test_xhtml_body_tag_010() 
 {
-#define  TEST_STRING "<html><head></head><body link=\"#ff0000\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body link=\"#ff0000\"></body></html>"
+#define  TEST_STRING "<body link=\"#ff0000\"></body>"
+#define  RESULT_STRING "<body link=\"#ff0000\">\r\n</body>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1955,6 +1955,7 @@ void test_xhtml_body_tag_010()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -1963,6 +1964,7 @@ void test_xhtml_body_tag_010()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 void test_xhtml_body_tag_011() 
 {
 #define  TEST_STRING "<html><head></head><body vlink></body></html>"
