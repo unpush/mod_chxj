@@ -514,7 +514,6 @@ main()
 
   CU_add_test(xhtml_suite, "test <dl>.",                                        test_xhtml_dl_tag_001);
 #if 0
-
   CU_add_test(xhtml_suite, "test <dt>.",                                        test_xhtml_dt_tag_001);
   CU_add_test(xhtml_suite, "test <dt> with void value.",                        test_xhtml_dt_tag_002);
 
@@ -2408,14 +2407,13 @@ void test_xhtml_dir_tag_002()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 /*============================================================================*/
 /* <DL>                                                                       */
 /*============================================================================*/
 void test_xhtml_dl_tag_001()
 {
-#define  TEST_STRING "<html><head></head><body><dl></dl></body></html>"
-#define  RESULT_STRING "<html><head></head><body><dl></dl></body></html>"
+#define  TEST_STRING "<dl></dl>"
+#define  RESULT_STRING "<dl></dl>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2440,6 +2438,7 @@ void test_xhtml_dl_tag_001()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 /*============================================================================*/
 /* <DT>                                                                       */
 /*============================================================================*/
