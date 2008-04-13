@@ -489,8 +489,8 @@ main()
   CU_add_test(xhtml_suite, "test <body> with bgcolor attribute 3.",             test_xhtml_body_tag_004);
   CU_add_test(xhtml_suite, "test <body> with text attribute 1.",                test_xhtml_body_tag_005);
   CU_add_test(xhtml_suite, "test <body> with text attribute 2.",                test_xhtml_body_tag_006);
-#if 0
   CU_add_test(xhtml_suite, "test <body> with text attribute 3.",                test_xhtml_body_tag_007);
+#if 0
   CU_add_test(xhtml_suite, "test <body> with link attribute 1.",                test_xhtml_body_tag_008);
   CU_add_test(xhtml_suite, "test <body> with link attribute 2.",                test_xhtml_body_tag_009);
   CU_add_test(xhtml_suite, "test <body> with link attribute 3.",                test_xhtml_body_tag_010);
@@ -1850,8 +1850,8 @@ void test_xhtml_body_tag_006()
 }
 void test_xhtml_body_tag_007() 
 {
-#define  TEST_STRING "<html><head></head><body text=\"#ff0000\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body text=\"#ff0000\"></body></html>"
+#define  TEST_STRING "<body text=\"#ff0000\"></body>"
+#define  RESULT_STRING "<body text=\"#ff0000\">\r\n</body>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
