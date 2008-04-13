@@ -498,9 +498,9 @@ main()
   CU_add_test(xhtml_suite, "test <body> with vlink attribute 3.",               test_xhtml_body_tag_013);
   CU_add_test(xhtml_suite, "test <body> with alink attribute.",                 test_xhtml_body_tag_014);
   CU_add_test(xhtml_suite, "test <body> with unknown attribute.",               test_xhtml_body_tag_015);
-#if 0
 
   CU_add_test(xhtml_suite, "test <br>.",                                        test_xhtml_br_tag_001);
+#if 0
   CU_add_test(xhtml_suite, "test <br> with clear attribute(left).",             test_xhtml_br_tag_002);
   CU_add_test(xhtml_suite, "test <br> with clear attribute(right).",            test_xhtml_br_tag_003);
   CU_add_test(xhtml_suite, "test <br> with clear attribute(all).",              test_xhtml_br_tag_004);
@@ -2100,6 +2100,7 @@ void test_xhtml_body_tag_015()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -2108,14 +2109,13 @@ void test_xhtml_body_tag_015()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 /*============================================================================*/
 /* <BR>                                                                       */
 /*============================================================================*/
 void test_xhtml_br_tag_001() 
 {
-#define  TEST_STRING "<html><head></head><body><br></body></html>"
-#define  RESULT_STRING "<html><head></head><body><br></body></html>"
+#define  TEST_STRING "<br>"
+#define  RESULT_STRING "<br />\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2132,6 +2132,7 @@ void test_xhtml_br_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -2140,6 +2141,7 @@ void test_xhtml_br_tag_001()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 void test_xhtml_br_tag_002() 
 {
 #define  TEST_STRING "<html><head></head><body><br clear=\"left\"></body></html>"
