@@ -497,8 +497,8 @@ main()
   CU_add_test(xhtml_suite, "test <body> with vlink attribute 2.",               test_xhtml_body_tag_012);
   CU_add_test(xhtml_suite, "test <body> with vlink attribute 3.",               test_xhtml_body_tag_013);
   CU_add_test(xhtml_suite, "test <body> with alink attribute.",                 test_xhtml_body_tag_014);
-#if 0
   CU_add_test(xhtml_suite, "test <body> with unknown attribute.",               test_xhtml_body_tag_015);
+#if 0
 
   CU_add_test(xhtml_suite, "test <br>.",                                        test_xhtml_br_tag_001);
   CU_add_test(xhtml_suite, "test <br> with clear attribute(left).",             test_xhtml_br_tag_002);
@@ -2080,11 +2080,10 @@ void test_xhtml_body_tag_014()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 void test_xhtml_body_tag_015() 
 {
-#define  TEST_STRING "<html><head></head><body boyoyon=\"#FF0000\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body></body></html>"
+#define  TEST_STRING "<body boyoyon=\"#FF0000\"></body>"
+#define  RESULT_STRING "<body>\r\n</body>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2109,6 +2108,7 @@ void test_xhtml_body_tag_015()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 /*============================================================================*/
 /* <BR>                                                                       */
 /*============================================================================*/
