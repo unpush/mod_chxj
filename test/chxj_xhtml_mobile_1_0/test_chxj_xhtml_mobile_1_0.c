@@ -495,8 +495,8 @@ main()
   CU_add_test(xhtml_suite, "test <body> with link attribute 3.",                test_xhtml_body_tag_010);
   CU_add_test(xhtml_suite, "test <body> with vlink attribute 1.",               test_xhtml_body_tag_011);
   CU_add_test(xhtml_suite, "test <body> with vlink attribute 2.",               test_xhtml_body_tag_012);
-#if 0
   CU_add_test(xhtml_suite, "test <body> with vlink attribute 3.",               test_xhtml_body_tag_013);
+#if 0
   CU_add_test(xhtml_suite, "test <body> with alink attribute.",                 test_xhtml_body_tag_014);
   CU_add_test(xhtml_suite, "test <body> with unknown attribute.",               test_xhtml_body_tag_015);
 
@@ -2022,11 +2022,10 @@ void test_xhtml_body_tag_012()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 void test_xhtml_body_tag_013() 
 {
-#define  TEST_STRING "<html><head></head><body vlink=\"#ff0000\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body></body></html>"
+#define  TEST_STRING "<body vlink=\"#ff0000\"></body>"
+#define  RESULT_STRING "<body>\r\n</body>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2043,6 +2042,7 @@ void test_xhtml_body_tag_013()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -2051,6 +2051,7 @@ void test_xhtml_body_tag_013()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 void test_xhtml_body_tag_014() 
 {
 #define  TEST_STRING "<html><head></head><body alink=\"#FF0000\"></body></html>"
