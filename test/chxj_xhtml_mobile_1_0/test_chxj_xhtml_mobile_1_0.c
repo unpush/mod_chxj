@@ -3273,7 +3273,7 @@ void test_xhtml_h1_tag_006()
 void test_xhtml_h1_tag_007() 
 {
 #define  TEST_STRING "<h1 align=\"left\"></h1>"
-#define  RESULT_STRING "<h1 align=\"left\"></h1>"
+#define  RESULT_STRING "<h1 style=\"text-align:left\"></h1>"
   char  *ret;
   char  *tmp;
   device_table spec;
