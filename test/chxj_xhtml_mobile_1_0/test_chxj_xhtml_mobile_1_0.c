@@ -526,8 +526,8 @@ main()
   CU_add_test(xhtml_suite, "test <div> with align attribute(center).",          test_xhtml_div_tag_004);
   CU_add_test(xhtml_suite, "test <div> with align attribute(void).",            test_xhtml_div_tag_005);
   CU_add_test(xhtml_suite, "test <div> with align attribute(unknown).",         test_xhtml_div_tag_006);
-#if 0
   CU_add_test(xhtml_suite, "test <div> with style attribute.",                  test_xhtml_div_tag_007);
+#if 0
 
   CU_add_test(xhtml_suite, "test <form>.",                                      test_xhtml_form_tag_001);
   CU_add_test(xhtml_suite, "test <form method>.",                               test_xhtml_form_tag_002);
@@ -2739,11 +2739,10 @@ void test_xhtml_div_tag_006()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 void test_xhtml_div_tag_007() 
 {
-#define  TEST_STRING "<html><head></head><body><div style=\"aaa\"></div></body></html>"
-#define  RESULT_STRING "<html><head></head><body><div></div></body></html>"
+#define  TEST_STRING "<div style=\"aaa\"></div>"
+#define  RESULT_STRING "<div></div>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2768,6 +2767,7 @@ void test_xhtml_div_tag_007()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 /*============================================================================*/
 /* FORM                                                                       */
 /*============================================================================*/
