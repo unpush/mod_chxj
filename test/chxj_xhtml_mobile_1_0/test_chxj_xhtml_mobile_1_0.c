@@ -1848,7 +1848,6 @@ void test_xhtml_body_tag_006()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 void test_xhtml_body_tag_007() 
 {
 #define  TEST_STRING "<html><head></head><body text=\"#ff0000\"></body></html>"
@@ -1877,6 +1876,7 @@ void test_xhtml_body_tag_007()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 void test_xhtml_body_tag_008() 
 {
 #define  TEST_STRING "<html><head></head><body link></body></html>"
