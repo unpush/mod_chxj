@@ -491,8 +491,8 @@ main()
   CU_add_test(xhtml_suite, "test <body> with text attribute 2.",                test_xhtml_body_tag_006);
   CU_add_test(xhtml_suite, "test <body> with text attribute 3.",                test_xhtml_body_tag_007);
   CU_add_test(xhtml_suite, "test <body> with link attribute 1.",                test_xhtml_body_tag_008);
-#if 0
   CU_add_test(xhtml_suite, "test <body> with link attribute 2.",                test_xhtml_body_tag_009);
+#if 0
   CU_add_test(xhtml_suite, "test <body> with link attribute 3.",                test_xhtml_body_tag_010);
   CU_add_test(xhtml_suite, "test <body> with vlink attribute 1.",               test_xhtml_body_tag_011);
   CU_add_test(xhtml_suite, "test <body> with vlink attribute 2.",               test_xhtml_body_tag_012);
@@ -1906,11 +1906,10 @@ void test_xhtml_body_tag_008()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 void test_xhtml_body_tag_009() 
 {
-#define  TEST_STRING "<html><head></head><body link=\"\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body></body></html>"
+#define  TEST_STRING "<body link=\"\"></body>"
+#define  RESULT_STRING "<body>\r\n</body>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1935,6 +1934,7 @@ void test_xhtml_body_tag_009()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 void test_xhtml_body_tag_010() 
 {
 #define  TEST_STRING "<html><head></head><body link=\"#ff0000\"></body></html>"
