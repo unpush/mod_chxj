@@ -2174,8 +2174,12 @@ s_xhtml_1_0_start_div_tag(void *pdoc, Node *child)
     char *nm  = qs_get_attr_name(doc,attr);
     char *val = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('a','A',"align",nm)) {
-      /* CHTML version 3.2 */
-      align = apr_pstrdup(doc->buf.pool, val);
+      /*=====================================================================*/
+      /* CHTML version 3.2                                                   */
+      /*=====================================================================*/
+      if (val && (STRCASEEQ('l','L',"left",val) || STRCASEEQ('r','R',"right",val) || STRCASEEQ('c','C',"center",val))) {
+        align = apr_pstrdup(doc->buf.pool, val);
+      }
     }
   }
   if (align) {
