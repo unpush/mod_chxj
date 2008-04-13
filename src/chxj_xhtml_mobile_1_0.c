@@ -86,8 +86,8 @@ static char *s_xhtml_1_0_start_select_tag (void *pdoc, Node *node);
 static char *s_xhtml_1_0_end_select_tag   (void *pdoc, Node *node);
 static char *s_xhtml_1_0_start_option_tag (void *pdoc, Node *node);
 static char *s_xhtml_1_0_end_option_tag   (void *pdoc, Node *node);
-static char *s_xhtml_1_0_start_div_tag    (void *pdoc, Node *node);
-static char *s_xhtml_1_0_end_div_tag      (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_div_tag       (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_div_tag         (void *pdoc, Node *node);
 static char *s_xhtml_1_0_start_textarea_tag  (void *pdoc, Node *node);
 static char *s_xhtml_1_0_end_textarea_tag    (void *pdoc, Node *node);
 static char *s_xhtml_1_0_start_b_tag         (void *pdoc, Node *node);
@@ -99,6 +99,8 @@ static char *s_xhtml_1_0_start_dir_tag       (void *pdoc, Node *node);
 static char *s_xhtml_1_0_end_dir_tag         (void *pdoc, Node *node);
 static char *s_xhtml_1_0_start_dl_tag        (void *pdoc, Node *node);
 static char *s_xhtml_1_0_end_dl_tag          (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_dt_tag        (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_dt_tag          (void *pdoc, Node *node);
 
 static void  s_init_xhtml(xhtml_t *xhtml, Doc *doc, request_rec *r, device_table *spec);
 static int   s_xhtml_search_emoji(xhtml_t *xhtml, char *txt, char **rslt);
@@ -318,8 +320,8 @@ tag_handler xhtml_handler[] = {
   },
   /* tagDT */
   {
-    NULL,
-    NULL,
+    s_xhtml_1_0_start_dt_tag,
+    s_xhtml_1_0_end_dt_tag,
   },
   /* tagLEGEND */
   {
@@ -2493,6 +2495,40 @@ s_xhtml_1_0_end_dl_tag(void *pdoc, Node *UNUSED(child))
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc *doc = xhtml->doc;
   W_L("</dl>");
+  return xhtml->out;
+}
+
+
+/**
+ * It is a handter who processes the DT tag.
+ *
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DT tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_xhtml_1_0_start_dt_tag(void *pdoc, Node *UNUSED(child))
+{
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+  W_L("<dt>");
+  return xhtml->out;
+}
+
+
+/**
+ * It is a handter who processes the DT tag.
+ *
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DT tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_xhtml_1_0_end_dt_tag(void *pdoc, Node *UNUSED(child))
+{
+  xhtml_t *xhtml = GET_XHTML(pdoc);
   return xhtml->out;
 }
 /*
