@@ -2352,8 +2352,8 @@ void test_xhtml_center_tag_001()
 /*============================================================================*/
 void test_xhtml_dir_tag_001()
 {
-#define  TEST_STRING "<dir><li>あああ<li>いいい</dir>"
-#define  RESULT_STRING "<dir><li>あああ<li>いいい</dir>"
+#define  TEST_STRING "<dir><li>あああ</li><li>いいい</li></dir>"
+#define  RESULT_STRING "<dir><li>あああ</li><li>いいい</li></dir>"
   char  *ret;
   char  *tmp;
   device_table spec;
