@@ -515,8 +515,8 @@ main()
   CU_add_test(xhtml_suite, "test <dl>.",                                        test_xhtml_dl_tag_001);
 
   CU_add_test(xhtml_suite, "test <dt>.",                                        test_xhtml_dt_tag_001);
-#if 0
   CU_add_test(xhtml_suite, "test <dt> with void value.",                        test_xhtml_dt_tag_002);
+#if 0
 
   CU_add_test(xhtml_suite, "test <dd>.",                                        test_xhtml_dd_tag_001);
   CU_add_test(xhtml_suite, "test <dd> with void value.",                        test_xhtml_dd_tag_002);
@@ -2463,6 +2463,7 @@ void test_xhtml_dt_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -2471,11 +2472,10 @@ void test_xhtml_dt_tag_001()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 void test_xhtml_dt_tag_002()
 {
-#define  TEST_STRING "<html><head></head><body><dl><dt></dt><dt></dt></dl></body></html>"
-#define  RESULT_STRING "<html><head></head><body><dl><dt><dt></dl></body></html>"
+#define  TEST_STRING "<dl><dt></dt><dt></dt></dl>"
+#define  RESULT_STRING "<dl><dt></dt><dt></dt></dl>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2492,6 +2492,7 @@ void test_xhtml_dt_tag_002()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -2500,6 +2501,7 @@ void test_xhtml_dt_tag_002()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 /*============================================================================*/
 /* <DD>                                                                       */
 /*============================================================================*/
