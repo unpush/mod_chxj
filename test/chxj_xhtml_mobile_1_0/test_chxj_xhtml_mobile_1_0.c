@@ -535,8 +535,8 @@ main()
   CU_add_test(xhtml_suite, "test <form method=\"abc\">.",                       test_xhtml_form_tag_005);
   CU_add_test(xhtml_suite, "test <form action>.",                               test_xhtml_form_tag_006);
   CU_add_test(xhtml_suite, "test <form action> with null cookie.",              test_xhtml_form_tag_007);
-#if 0
   CU_add_test(xhtml_suite, "test <form action> with other site .",              test_xhtml_form_tag_008);
+#if 0
   CU_add_test(xhtml_suite, "test <form action method>.",                        test_xhtml_form_tag_009);
 
   CU_add_test(xhtml_suite, "test <head>.",                                      test_xhtml_head_tag_001);
@@ -2974,11 +2974,10 @@ void test_xhtml_form_tag_007()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 void test_xhtml_form_tag_008() 
 {
-#define  TEST_STRING "<html><head></head><body><form action=\"http://www.google.co.jp/\"></form></body></html>"
-#define  RESULT_STRING "<html><head></head><body><form action=\"http://www.google.co.jp/\"></form></body></html>"
+#define  TEST_STRING "<form action=\"http://www.google.co.jp/\"></form>"
+#define  RESULT_STRING "<form action=\"http://www.google.co.jp/\"></form>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2995,6 +2994,7 @@ void test_xhtml_form_tag_008()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -3003,6 +3003,7 @@ void test_xhtml_form_tag_008()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 void test_xhtml_form_tag_009() 
 {
 #define  TEST_STRING "<html><head></head><body><form method=\"post\" action=\"hogehoge\"></form></body></html>"
