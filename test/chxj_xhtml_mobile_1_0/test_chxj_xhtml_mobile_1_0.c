@@ -481,8 +481,8 @@ main()
   CU_add_test(xhtml_suite, "test <blockquote> with void value.",                test_xhtml_blockquote_tag_001);
   CU_add_test(xhtml_suite, "test <blockquote> with value.",                     test_xhtml_blockquote_tag_002);
   CU_add_test(xhtml_suite, "test <blockquote> with japanese value.",            test_xhtml_blockquote_tag_003);
-#if 0
   CU_add_test(xhtml_suite, "test <blockquote> with hankaku kana value.",        test_xhtml_blockquote_tag_004);
+#if 0
 
   CU_add_test(xhtml_suite, "test <body> .",                                     test_xhtml_body_tag_001);
   CU_add_test(xhtml_suite, "test <body> with bgcolor attribute 1.",             test_xhtml_body_tag_002);
@@ -1644,8 +1644,8 @@ void test_xhtml_blockquote_tag_003()
 }
 void test_xhtml_blockquote_tag_004() 
 {
-#define  TEST_STRING "<html><head></head><body><blockquote>ﾊﾝｶｸ</blockquote></body></html>"
-#define  RESULT_STRING "<html><head></head><body><blockquote>ﾊﾝｶｸ</blockquote></body></html>"
+#define  TEST_STRING "<blockquote>ﾊﾝｶｸ</blockquote>"
+#define  RESULT_STRING "<blockquote>ﾊﾝｶｸ</blockquote>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1662,6 +1662,7 @@ void test_xhtml_blockquote_tag_004()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
