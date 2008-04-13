@@ -2173,7 +2173,6 @@ s_xhtml_1_0_start_div_tag(void *pdoc, Node *child)
        attr = qs_get_next_attr(doc,attr)) {
     char *nm  = qs_get_attr_name(doc,attr);
     char *val = qs_get_attr_value(doc,attr);
-
     if (STRCASEEQ('a','A',"align",nm)) {
       /* CHTML version 3.2 */
       align = apr_pstrdup(doc->buf.pool, val);
@@ -2202,8 +2201,7 @@ s_xhtml_1_0_end_div_tag(void *pdoc, Node *UNUSED(child))
 {
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc     *doc   = xhtml->doc;
-
-  W_L("</div>\n");
+  W_L("</div>\r\n");
   return xhtml->out;
 }
 

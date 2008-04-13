@@ -519,9 +519,9 @@ main()
 
   CU_add_test(xhtml_suite, "test <dd>.",                                        test_xhtml_dd_tag_001);
   CU_add_test(xhtml_suite, "test <dd> with void value.",                        test_xhtml_dd_tag_002);
-#if 0
 
   CU_add_test(xhtml_suite, "test <div>.",                                       test_xhtml_div_tag_001);
+#if 0
   CU_add_test(xhtml_suite, "test <div> with align attribute(left).",            test_xhtml_div_tag_002);
   CU_add_test(xhtml_suite, "test <div> with align attribute(right).",           test_xhtml_div_tag_003);
   CU_add_test(xhtml_suite, "test <div> with align attribute(center).",          test_xhtml_div_tag_004);
@@ -2562,14 +2562,13 @@ void test_xhtml_dd_tag_002()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 /*============================================================================*/
 /* <DIV>                                                                      */
 /*============================================================================*/
 void test_xhtml_div_tag_001() 
 {
-#define  TEST_STRING "<html><head></head><body><div></div></body></html>"
-#define  RESULT_STRING "<html><head></head><body><div></div></body></html>"
+#define  TEST_STRING "<div></div>"
+#define  RESULT_STRING "<div></div>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2586,6 +2585,7 @@ void test_xhtml_div_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -2594,6 +2594,7 @@ void test_xhtml_div_tag_001()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 void test_xhtml_div_tag_002() 
 {
 #define  TEST_STRING "<html><head></head><body><div align=\"left\"></div></body></html>"
