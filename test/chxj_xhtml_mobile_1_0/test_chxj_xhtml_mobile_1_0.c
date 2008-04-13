@@ -501,8 +501,8 @@ main()
 
   CU_add_test(xhtml_suite, "test <br>.",                                        test_xhtml_br_tag_001);
   CU_add_test(xhtml_suite, "test <br> with clear attribute(left).",             test_xhtml_br_tag_002);
-#if 0
   CU_add_test(xhtml_suite, "test <br> with clear attribute(right).",            test_xhtml_br_tag_003);
+#if 0
   CU_add_test(xhtml_suite, "test <br> with clear attribute(all).",              test_xhtml_br_tag_004);
   CU_add_test(xhtml_suite, "test <br> with clear attribute(void).",             test_xhtml_br_tag_005);
   CU_add_test(xhtml_suite, "test <br> with clear attribute(no value).",         test_xhtml_br_tag_006);
@@ -2161,6 +2161,7 @@ void test_xhtml_br_tag_002()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -2169,11 +2170,10 @@ void test_xhtml_br_tag_002()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 void test_xhtml_br_tag_003() 
 {
-#define  TEST_STRING "<html><head></head><body><br clear=\"right\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><br clear=\"right\"></body></html>"
+#define  TEST_STRING "<br clear=\"right\">"
+#define  RESULT_STRING "<br clear=\"right\" />\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2190,6 +2190,7 @@ void test_xhtml_br_tag_003()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -2198,6 +2199,7 @@ void test_xhtml_br_tag_003()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 void test_xhtml_br_tag_004() 
 {
 #define  TEST_STRING "<html><head></head><body><br clear=\"all\"></body></html>"
