@@ -506,10 +506,10 @@ main()
   CU_add_test(xhtml_suite, "test <br> with clear attribute(void).",             test_xhtml_br_tag_005);
   CU_add_test(xhtml_suite, "test <br> with clear attribute(no value).",         test_xhtml_br_tag_006);
   CU_add_test(xhtml_suite, "test <br> with clear attribute(unknown value).",    test_xhtml_br_tag_007);
-#if 0
 
   CU_add_test(xhtml_suite, "test <center>.",                                    test_xhtml_center_tag_001);
 
+#if 0
   CU_add_test(xhtml_suite, "test <dir>.",                                       test_xhtml_dir_tag_001);
   CU_add_test(xhtml_suite, "test <dir> with no <li>.",                          test_xhtml_dir_tag_002);
 
@@ -2306,6 +2306,7 @@ void test_xhtml_br_tag_007()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -2314,14 +2315,13 @@ void test_xhtml_br_tag_007()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 /*============================================================================*/
 /* <CENTER>                                                                   */
 /*============================================================================*/
 void test_xhtml_center_tag_001()
 {
-#define  TEST_STRING "<html><head></head><body><center>あいうえお</center></body></html>"
-#define  RESULT_STRING "<html><head></head><body><center>あいうえお</center></body></html>"
+#define  TEST_STRING "<center>あいうえお</center>"
+#define  RESULT_STRING "<center>あいうえお</center>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2338,6 +2338,7 @@ void test_xhtml_center_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -2346,6 +2347,7 @@ void test_xhtml_center_tag_001()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 /*============================================================================*/
 /* <DIR>                                                                      */
 /*============================================================================*/
