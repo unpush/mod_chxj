@@ -487,8 +487,8 @@ main()
   CU_add_test(xhtml_suite, "test <body> with bgcolor attribute 1.",             test_xhtml_body_tag_002);
   CU_add_test(xhtml_suite, "test <body> with bgcolor attribute 2.",             test_xhtml_body_tag_003);
   CU_add_test(xhtml_suite, "test <body> with bgcolor attribute 3.",             test_xhtml_body_tag_004);
-#if 0
   CU_add_test(xhtml_suite, "test <body> with text attribute 1.",                test_xhtml_body_tag_005);
+#if 0
   CU_add_test(xhtml_suite, "test <body> with text attribute 2.",                test_xhtml_body_tag_006);
   CU_add_test(xhtml_suite, "test <body> with text attribute 3.",                test_xhtml_body_tag_007);
   CU_add_test(xhtml_suite, "test <body> with link attribute 1.",                test_xhtml_body_tag_008);
@@ -1790,11 +1790,10 @@ void test_xhtml_body_tag_004()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 void test_xhtml_body_tag_005() 
 {
-#define  TEST_STRING "<html><head></head><body text></body></html>"
-#define  RESULT_STRING "<html><head></head><body></body></html>"
+#define  TEST_STRING "<body text></body>"
+#define  RESULT_STRING "<body>\r\n</body>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1819,6 +1818,7 @@ void test_xhtml_body_tag_005()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 void test_xhtml_body_tag_006() 
 {
 #define  TEST_STRING "<html><head></head><body text=\"\"></body></html>"
