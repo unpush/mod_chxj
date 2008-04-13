@@ -97,6 +97,8 @@ static char *s_xhtml_1_0_start_blockquote_tag(void *pdoc, Node *node);
 static char *s_xhtml_1_0_end_blockquote_tag  (void *pdoc, Node *node);
 static char *s_xhtml_1_0_start_dir_tag       (void *pdoc, Node *node);
 static char *s_xhtml_1_0_end_dir_tag         (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_dl_tag        (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_dl_tag          (void *pdoc, Node *node);
 
 static void  s_init_xhtml(xhtml_t *xhtml, Doc *doc, request_rec *r, device_table *spec);
 static int   s_xhtml_search_emoji(xhtml_t *xhtml, char *txt, char **rslt);
@@ -341,8 +343,8 @@ tag_handler xhtml_handler[] = {
   },
   /* tagDL */
   {
-    NULL,
-    NULL,
+    s_xhtml_1_0_start_dl_tag,
+    s_xhtml_1_0_end_dl_tag,
   },
   /* tagDD */
   {
@@ -2455,6 +2457,42 @@ s_xhtml_1_0_end_dir_tag(void *pdoc, Node *UNUSED(child))
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc     *doc = xhtml->doc;
   W_L("</dir>");
+  return xhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the DL tag.
+ *
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DL tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_xhtml_1_0_start_dl_tag(void *pdoc, Node *UNUSED(child))
+{
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc *doc = xhtml->doc;
+  W_L("<dl>");
+  return xhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the DL tag.
+ *
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DL tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_xhtml_1_0_end_dl_tag(void *pdoc, Node *UNUSED(child))
+{
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc *doc = xhtml->doc;
+  W_L("</dl>");
   return xhtml->out;
 }
 /*

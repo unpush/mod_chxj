@@ -511,9 +511,9 @@ main()
 
   CU_add_test(xhtml_suite, "test <dir>.",                                       test_xhtml_dir_tag_001);
   CU_add_test(xhtml_suite, "test <dir> with no <li>.",                          test_xhtml_dir_tag_002);
-#if 0
 
   CU_add_test(xhtml_suite, "test <dl>.",                                        test_xhtml_dl_tag_001);
+#if 0
 
   CU_add_test(xhtml_suite, "test <dt>.",                                        test_xhtml_dt_tag_001);
   CU_add_test(xhtml_suite, "test <dt> with void value.",                        test_xhtml_dt_tag_002);
