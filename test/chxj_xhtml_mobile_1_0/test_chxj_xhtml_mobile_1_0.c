@@ -500,8 +500,8 @@ main()
   CU_add_test(xhtml_suite, "test <body> with unknown attribute.",               test_xhtml_body_tag_015);
 
   CU_add_test(xhtml_suite, "test <br>.",                                        test_xhtml_br_tag_001);
-#if 0
   CU_add_test(xhtml_suite, "test <br> with clear attribute(left).",             test_xhtml_br_tag_002);
+#if 0
   CU_add_test(xhtml_suite, "test <br> with clear attribute(right).",            test_xhtml_br_tag_003);
   CU_add_test(xhtml_suite, "test <br> with clear attribute(all).",              test_xhtml_br_tag_004);
   CU_add_test(xhtml_suite, "test <br> with clear attribute(void).",             test_xhtml_br_tag_005);
@@ -2141,11 +2141,10 @@ void test_xhtml_br_tag_001()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 void test_xhtml_br_tag_002() 
 {
-#define  TEST_STRING "<html><head></head><body><br clear=\"left\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><br clear=\"left\"></body></html>"
+#define  TEST_STRING "<br clear=\"left\">"
+#define  RESULT_STRING "<br clear=\"left\" />\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2170,6 +2169,7 @@ void test_xhtml_br_tag_002()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 void test_xhtml_br_tag_003() 
 {
 #define  TEST_STRING "<html><head></head><body><br clear=\"right\"></body></html>"

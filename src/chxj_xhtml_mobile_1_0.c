@@ -1071,12 +1071,30 @@ s_xhtml_1_0_end_a_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_xhtml_1_0_start_br_tag(void *pdoc, Node *UNUSED(node)) 
+s_xhtml_1_0_start_br_tag(void *pdoc, Node *node) 
 {
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc     *doc   = xhtml->doc;
+  Attr    *attr;
 
-  W_L("<br />\r\n");
+  W_L("<br");
+  /*--------------------------------------------------------------------------*/
+  /* Get Attributes                                                           */
+  /*--------------------------------------------------------------------------*/
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('c','C',"clear",name)) {
+      if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('a','A',"all",value))) {
+        W_L(" clear=\"");
+        W_V(value);
+        W_L("\"");
+      }
+    }
+  }
+  W_L(" />\r\n");
   return xhtml->out;
 }
 
