@@ -543,8 +543,8 @@ main()
 
   CU_add_test(xhtml_suite, "test <h1>.",                                        test_xhtml_h1_tag_001);
   CU_add_test(xhtml_suite, "test <h1> with value.",                             test_xhtml_h1_tag_002);
-#if 0
   CU_add_test(xhtml_suite, "test <h1> with value(japanese).",                   test_xhtml_h1_tag_003);
+#if 0
   CU_add_test(xhtml_suite, "test <h1> with value(japanese-hankaku).",           test_xhtml_h1_tag_004);
   CU_add_test(xhtml_suite, "test <h1> with align attribute(non).",              test_xhtml_h1_tag_005);
   CU_add_test(xhtml_suite, "test <h1> with align attribute(void).",             test_xhtml_h1_tag_006);
@@ -3154,11 +3154,10 @@ void test_xhtml_h1_tag_002()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 void test_xhtml_h1_tag_003() 
 {
-#define  TEST_STRING "<html><head></head><body><h1>亀さん</h1></body></html>"
-#define  RESULT_STRING "<html><head></head><body><h1>亀さん</h1></body></html>"
+#define  TEST_STRING "<h1>亀さん</h1>"
+#define  RESULT_STRING "<h1>亀さん</h1>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -3184,6 +3183,7 @@ void test_xhtml_h1_tag_003()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 void test_xhtml_h1_tag_004() 
 {
 #define  TEST_STRING "<html><head></head><body><h1>ﾊﾝｶｸ</h1></body></html>"
