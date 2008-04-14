@@ -2665,9 +2665,9 @@ s_xhtml_1_0_text_tag(void *pdoc, Node *child)
   int         tdst_len;
   
   textval = qs_get_node_value(doc,child);
-  textval = qs_trim_string(doc->buf.pool, textval);
-  if (strlen(textval) == 0)
+  if (strlen(textval) == 0) {
     return xhtml->out;
+  }
   
   tmp = apr_palloc(r->pool, qs_get_node_size(doc,child)+1);
   memset(tmp, 0, qs_get_node_size(doc,child)+1);
