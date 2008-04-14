@@ -642,10 +642,13 @@ main()
   CU_add_test(xhtml_suite, "test <hr width> with numeric value.",               test_xhtml_hr_tag_016);
   CU_add_test(xhtml_suite, "test <hr noshade>.",                                test_xhtml_hr_tag_017);
   CU_add_test(xhtml_suite, "test <hr color>.",                                  test_xhtml_hr_tag_018);
-#if 0
 
+  /*=========================================================================*/
+  /* <html>                                                                  */
+  /*=========================================================================*/
   CU_add_test(xhtml_suite, "test <html>.",                                      test_xhtml_html_tag_001);
 
+#if 0
   CU_add_test(xhtml_suite, "test <img>." ,                                      test_xhtml_img_tag_001);
   CU_add_test(xhtml_suite, "test <img src> with no value." ,                    test_xhtml_img_tag_002);
   CU_add_test(xhtml_suite, "test <img src> with void value." ,                  test_xhtml_img_tag_003);
@@ -5382,14 +5385,15 @@ void test_xhtml_hr_tag_018()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 /*============================================================================*/
 /* <HTML>                                                                     */
 /*============================================================================*/
 void test_xhtml_html_tag_001()
 {
-#define  TEST_STRING "<html><head></head><body></body></html>"
-#define  RESULT_STRING "<html><head></head><body></body></html>"
+#define  TEST_STRING "<html></html>"
+#define  RESULT_STRING XHTML_HEADER \
+                       "<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n" \
+                       "</html>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -5414,6 +5418,7 @@ void test_xhtml_html_tag_001()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 /*============================================================================*/
 /* <IMG>                                                                      */
 /*============================================================================*/
