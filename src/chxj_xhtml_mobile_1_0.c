@@ -22,6 +22,7 @@
 #include "chxj_img_conv.h"
 #include "chxj_qr_code.h"
 #include "chxj_buffered_write.h"
+#include "chxj_str_util.h"
 
 #define GET_XHTML(X) ((xhtml_t*)(X))
 #undef W_L
@@ -1320,33 +1321,42 @@ s_xhtml_1_0_start_input_tag(void *pdoc, Node *node)
   size       = qs_get_size_attr(doc, node, r);
 
   if (type) {
-    W_L(" type=\"");
-    W_V(type);
-    W_L("\" ");
+    type = qs_trim_string(doc->buf.pool, type);
+    if (type && (STRCASEEQ('t','T',"text",    type) ||
+                 STRCASEEQ('p','P',"password",type) ||
+                 STRCASEEQ('c','C',"checkbox",type) ||
+                 STRCASEEQ('r','R',"radio",   type) ||
+                 STRCASEEQ('h','H',"hidden",  type) ||
+                 STRCASEEQ('s','S',"submit",  type) ||
+                 STRCASEEQ('r','R',"reset",   type))) {
+      W_L(" type=\"");
+      W_V(type);
+      W_L("\"");
+    }
   }
-  if (size) {
+  if (size && *size) {
     W_L(" size=\"");
     W_V(size);
-    W_L("\" ");
+    W_L("\"");
   }
-  if (name) {
+  if (name && *name) {
     W_L(" name=\"");
     W_V(name);
-    W_L("\" ");
+    W_L("\"");
   }
-  if (value) {
+  if (value && *value) {
     W_L(" value=\"");
     W_V(value);
-    W_L("\" ");
+    W_L("\"");
   }
-  if (accesskey) {
+  if (accesskey && *accesskey) {
     W_L(" accesskey=\"");
     W_V(accesskey);
-    W_L("\" ");
+    W_L("\"");
   }
-  if (istyle) {
-    char* fmt = qs_conv_istyle_to_format(r,istyle);
-    if (max_length) {
+  if (istyle && *istyle && (*istyle == '1' || *istyle == '2' || *istyle == '3' || *istyle == '4')) {
+    char *fmt = qs_conv_istyle_to_format(r,istyle);
+    if (max_length && *max_length) {
       int ii;
       for (ii=0; (unsigned int)ii<strlen(max_length); ii++) {
         if (max_length[ii] < '0' || max_length[ii] > '9') {
@@ -1355,7 +1365,7 @@ s_xhtml_1_0_start_input_tag(void *pdoc, Node *node)
         }
       }
 
-      {
+      if (strcmp(max_length, "0")) {
         char *vv = apr_psprintf(r->pool, " FORMAT=\"%d%s\"", atoi(max_length), fmt);
         W_V(vv);
       }
@@ -1367,13 +1377,21 @@ s_xhtml_1_0_start_input_tag(void *pdoc, Node *node)
       W_L("\"");
     }
   }
+  else {
+    if (max_length && *max_length) {
+      if (chxj_chk_numeric(max_length) != 0) {
+        max_length = apr_psprintf(r->pool, "0");
+      }
+      if (strcmp(max_length, "0")) {
+        char *vv = apr_psprintf(r->pool, " FORMAT=\"%dm\"", atoi(max_length));
+        W_V(vv);
+      }
+    }
+  }
   /*--------------------------------------------------------------------------*/
   /* The figure is default for the password.                                  */
   /*--------------------------------------------------------------------------*/
-  if (type && istyle == NULL 
-      && (*type == 'p' || *type == 'P') 
-      && strcasecmp(type, "password") == 0
-      && ! xhtml->entryp->pc_flag) {
+  if (type && (istyle == NULL || *istyle == 0) && STRCASEEQ('p','P',"password", type) && ! xhtml->entryp->pc_flag) {
     if (max_length) {
       W_L(" FORMAT=\"");
       W_V(max_length);
