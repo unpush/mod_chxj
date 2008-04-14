@@ -481,12 +481,12 @@ main()
   CU_add_test(hdml_suite, "test a tag href attr3 with local link.",            test_hdml_a_tag_href_attribute_003);
   CU_add_test(hdml_suite, "test a tag href attr4 with maker.",                 test_hdml_a_tag_href_attribute_004);
   CU_add_test(hdml_suite, "test a tag href attr5 with void maker.",            test_hdml_a_tag_href_attribute_005);
-#if 0
   CU_add_test(hdml_suite, "test a tag href attr6 with no cookie.",             test_hdml_a_tag_href_attribute_006);
   CU_add_test(hdml_suite, "test a tag accesskey attribute.",                   test_hdml_a_tag_accesskey_attribute_001);
   CU_add_test(hdml_suite, "test a tag accesskey attribute with void char.",    test_hdml_a_tag_accesskey_attribute_002);
   CU_add_test(hdml_suite, "test a tag accesskey attribute with no value",      test_hdml_a_tag_accesskey_attribute_003);
 
+#if 0
   /*=========================================================================*/
   /* <BASE>                                                                  */
   /*=========================================================================*/
@@ -1445,11 +1445,10 @@ void test_hdml_a_tag_href_attribute_005()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 void test_hdml_a_tag_href_attribute_006() 
 {
 #define  TEST_STRING "<a href=\"a.html\">abc</a>"
-#define  RESULT_STRING "<a href=\"a.html\">abc</a>"
+#define  RESULT_STRING "<A TASK=GO DEST=\"a.html\">abc</A>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1466,7 +1465,8 @@ void test_hdml_a_tag_href_attribute_006()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, NULL);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -1478,7 +1478,7 @@ void test_hdml_a_tag_href_attribute_006()
 void test_hdml_a_tag_accesskey_attribute_001() 
 {
 #define  TEST_STRING "<a accesskey=\"1\">abc</a>"
-#define  RESULT_STRING "<a accesskey=\"1\">abc</a>"
+#define  RESULT_STRING "<A ACCESSKEY=1>abc</A>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1495,7 +1495,8 @@ void test_hdml_a_tag_accesskey_attribute_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -1507,7 +1508,7 @@ void test_hdml_a_tag_accesskey_attribute_001()
 void test_hdml_a_tag_accesskey_attribute_002() 
 {
 #define  TEST_STRING "<a accesskey=\"\">abc</a>"
-#define  RESULT_STRING "<a accesskey=\"\">abc</a>"
+#define  RESULT_STRING "<A>abc</A>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1524,7 +1525,8 @@ void test_hdml_a_tag_accesskey_attribute_002()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -1536,7 +1538,7 @@ void test_hdml_a_tag_accesskey_attribute_002()
 void test_hdml_a_tag_accesskey_attribute_003() 
 {
 #define  TEST_STRING "<a accesskey>abc</a>"
-#define  RESULT_STRING "<a accesskey=\"\">abc</a>"
+#define  RESULT_STRING "<A>abc</A>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1562,6 +1564,7 @@ void test_hdml_a_tag_accesskey_attribute_003()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 /*============================================================================*/
 /* <BASE>                                                                     */
 /*============================================================================*/

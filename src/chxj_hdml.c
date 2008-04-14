@@ -1058,7 +1058,7 @@ s_hdml_start_a_tag(void* pdoc, Node* node)
       }
     }
     else
-    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "accesskey") == 0) {
+    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "accesskey") == 0 && value && *value) {
       if (strcasecmp(value, "0") != 0) {
         s_output_to_hdml_out(hdml, " ACCESSKEY="          );
         s_output_to_hdml_out(hdml, value                  );
