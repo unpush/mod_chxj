@@ -106,6 +106,9 @@ static char *s_xhtml_1_0_start_dd_tag        (void *pdoc, Node *node);
 static char *s_xhtml_1_0_end_dd_tag          (void *pdoc, Node *node);
 static char *s_xhtml_1_0_start_menu_tag      (void *pdoc, Node *node);
 static char *s_xhtml_1_0_end_menu_tag        (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_plaintext_tag       (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_plaintext_tag_inner (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_plaintext_tag         (void *pdoc, Node *node);
 
 static void  s_init_xhtml(xhtml_t *xhtml, Doc *doc, request_rec *r, device_table *spec);
 static int   s_xhtml_search_emoji(xhtml_t *xhtml, char *txt, char **rslt);
@@ -365,8 +368,8 @@ tag_handler xhtml_handler[] = {
   },
   /* tagPLAINTEXT */
   {
-    NULL,
-    NULL,
+    s_xhtml_1_0_start_plaintext_tag,
+    s_xhtml_1_0_end_plaintext_tag,
   },
   /* tagBLINK */
   {
@@ -2921,6 +2924,61 @@ s_xhtml_1_0_end_menu_tag(void *pdoc, Node *UNUSED(child))
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc *doc = xhtml->doc;
   W_L("</menu>");
+  return xhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the PLAINTEXT tag.
+ *
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The PLAINTEXT tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_xhtml_1_0_start_plaintext_tag(void *pdoc, Node *node)
+{
+  xhtml_t *xhtml;
+  Doc *doc;
+
+  xhtml = GET_XHTML(pdoc);
+  doc     = xhtml->doc;
+  W_L("<plaintext>");
+  s_xhtml_1_0_start_plaintext_tag_inner(pdoc,node);
+  return xhtml->out;
+}
+
+static char *
+s_xhtml_1_0_start_plaintext_tag_inner(void *pdoc, Node *node)
+{
+  xhtml_t *xhtml;
+  Doc *doc;
+  Node *child;
+  xhtml = GET_XHTML(pdoc);
+  doc     = xhtml->doc;
+  for (child = qs_get_child_node(doc, node);
+       child;
+       child = qs_get_next_node(doc, child)) {
+    W_V(child->otext);
+    s_xhtml_1_0_start_plaintext_tag_inner(pdoc, child);
+  }
+  return xhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the PLAINTEXT tag.
+ *
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The PLAINTEXT tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_xhtml_1_0_end_plaintext_tag(void *pdoc, Node *UNUSED(child))
+{
+  xhtml_t *xhtml = GET_XHTML(pdoc);
   return xhtml->out;
 }
 /*
