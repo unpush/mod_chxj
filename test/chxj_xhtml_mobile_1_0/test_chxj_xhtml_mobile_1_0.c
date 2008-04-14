@@ -762,14 +762,14 @@ main()
   CU_add_test(xhtml_suite, "test <li> type attribute 9." ,                      test_xhtml_li_tag_013);
 
   /*=========================================================================*/
-  /* <li>                                                                    */
+  /* <menu>                                                                  */
   /*=========================================================================*/
   CU_add_test(xhtml_suite, "test <menu>." ,                                     test_xhtml_menu_tag_001);
-#if 0
   CU_add_test(xhtml_suite, "test <menu> 2." ,                                   test_xhtml_menu_tag_002);
   CU_add_test(xhtml_suite, "test <menu> 3." ,                                   test_xhtml_menu_tag_003);
   CU_add_test(xhtml_suite, "test <menu> 4." ,                                   test_xhtml_menu_tag_004);
   CU_add_test(xhtml_suite, "test <menu> 5." ,                                   test_xhtml_menu_tag_005);
+#if 0
 
   CU_add_test(xhtml_suite, "test <ol>." ,                                       test_xhtml_ol_tag_001);
   CU_add_test(xhtml_suite, "test <ol> 2." ,                                     test_xhtml_ol_tag_002);
@@ -8347,11 +8347,10 @@ void test_xhtml_menu_tag_001()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 void test_xhtml_menu_tag_002() 
 {
 #define  TEST_STRING "<menu><li></li><li></li></menu>"
-#define  RESULT_STRING "<menu><li><li></menu>"
+#define  RESULT_STRING "<menu><li></li><li></li></menu>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8368,6 +8367,7 @@ void test_xhtml_menu_tag_002()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8379,7 +8379,7 @@ void test_xhtml_menu_tag_002()
 void test_xhtml_menu_tag_003() 
 {
 #define  TEST_STRING "<menu><li>abc</li><li>def</li></menu>"
-#define  RESULT_STRING "<menu><li>abc<li>def</menu>"
+#define  RESULT_STRING "<menu><li>abc</li><li>def</li></menu>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8396,6 +8396,7 @@ void test_xhtml_menu_tag_003()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8407,7 +8408,7 @@ void test_xhtml_menu_tag_003()
 void test_xhtml_menu_tag_004() 
 {
 #define  TEST_STRING "<menu><li>あああ</li><li>いいい</li></menu>"
-#define  RESULT_STRING "<menu><li>あああ<li>いいい</menu>"
+#define  RESULT_STRING "<menu><li>あああ</li><li>いいい</li></menu>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8424,6 +8425,7 @@ void test_xhtml_menu_tag_004()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8435,7 +8437,7 @@ void test_xhtml_menu_tag_004()
 void test_xhtml_menu_tag_005() 
 {
 #define  TEST_STRING "<menu><li>ﾊﾝｶｸ</li><li>ﾊﾝｶｸ</li></menu>"
-#define  RESULT_STRING "<menu><li>ﾊﾝｶｸ<li>ﾊﾝｶｸ</menu>"
+#define  RESULT_STRING "<menu><li>ﾊﾝｶｸ</li><li>ﾊﾝｶｸ</li></menu>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8452,6 +8454,7 @@ void test_xhtml_menu_tag_005()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8460,6 +8463,7 @@ void test_xhtml_menu_tag_005()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 /*============================================================================*/
 /* <OL>                                                                       */
 /*============================================================================*/
