@@ -2123,12 +2123,33 @@ s_xhtml_1_0_end_ol_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_xhtml_1_0_start_li_tag(void *pdoc, Node *UNUSED(node)) 
+s_xhtml_1_0_start_li_tag(void *pdoc, Node *node)
 {
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc     *doc   = xhtml->doc;
+  Attr    *attr;
 
-  W_L("<li>");
+  W_L("<li");
+  /*--------------------------------------------------------------------------*/
+  /* Get Attributes                                                           */
+  /*--------------------------------------------------------------------------*/
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char *name = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('t','T',"type",name) && value && (*value == '1' || *value == 'a' || *value == 'A')) {
+      W_L(" type=\"");
+      W_V(value);
+      W_L("\"");
+    }
+    else if (STRCASEEQ('v','V',"value", name) && value && *value) {
+      W_L(" value=\"");
+      W_V(value);
+      W_L("\"");
+    }
+  }
+  W_L(">");
   return xhtml->out;
 }
 
