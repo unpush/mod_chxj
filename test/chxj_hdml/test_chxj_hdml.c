@@ -549,13 +549,13 @@ main()
   CU_add_test(hdml_suite, "test <dir>.",                                       test_hdml_dir_tag_001);
   CU_add_test(hdml_suite, "test <dir> with no <li>.",                          test_hdml_dir_tag_002);
   CU_add_test(hdml_suite, "test <dir> with nested.",                           test_hdml_dir_tag_003);
-#if 0
 
   /*=========================================================================*/
   /* <DL>                                                                    */
   /*=========================================================================*/
   CU_add_test(hdml_suite, "test <dl>.",                                        test_hdml_dl_tag_001);
 
+#if 0
   /*=========================================================================*/
   /* <DT>                                                                    */
   /*=========================================================================*/
@@ -2767,14 +2767,13 @@ void test_hdml_dir_tag_003()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 /*============================================================================*/
 /* <DL>                                                                       */
 /*============================================================================*/
 void test_hdml_dl_tag_001()
 {
 #define  TEST_STRING "<dl></dl>"
-#define  RESULT_STRING "<dl></dl>"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2791,7 +2790,8 @@ void test_hdml_dl_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -2800,6 +2800,7 @@ void test_hdml_dl_tag_001()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 /*============================================================================*/
 /* <DT>                                                                       */
 /*============================================================================*/
