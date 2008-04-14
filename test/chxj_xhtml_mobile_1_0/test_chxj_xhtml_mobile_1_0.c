@@ -831,8 +831,10 @@ main()
   CU_add_test(xhtml_suite, "test <pre> 3." ,                                    test_xhtml_pre_tag_003);
   CU_add_test(xhtml_suite, "test <pre> 4." ,                                    test_xhtml_pre_tag_004);
   CU_add_test(xhtml_suite, "test <pre> 5." ,                                    test_xhtml_pre_tag_005);
-#if 0
 
+  /*=========================================================================*/
+  /* <select>                                                                */
+  /*=========================================================================*/
   CU_add_test(xhtml_suite, "test <select> 1." ,                                 test_xhtml_select_tag_001);
   CU_add_test(xhtml_suite, "test <select> 2." ,                                 test_xhtml_select_tag_002);
   CU_add_test(xhtml_suite, "test <select> 3." ,                                 test_xhtml_select_tag_003);
@@ -848,6 +850,7 @@ main()
   CU_add_test(xhtml_suite, "test <select> 13." ,                                test_xhtml_select_tag_013);
   CU_add_test(xhtml_suite, "test <select> 14." ,                                test_xhtml_select_tag_014);
 
+#if 0
   CU_add_test(xhtml_suite, "test <textarea> 1." ,                               test_xhtml_textarea_tag_001);
   CU_add_test(xhtml_suite, "test <textarea> 2." ,                               test_xhtml_textarea_tag_002);
   CU_add_test(xhtml_suite, "test <textarea> 3." ,                               test_xhtml_textarea_tag_003);
@@ -9711,14 +9714,13 @@ void test_xhtml_pre_tag_005()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 /*============================================================================*/
 /* <SELECT>                                                                   */
 /*============================================================================*/
 void test_xhtml_select_tag_001() 
 {
 #define  TEST_STRING "<select></select>"
-#define  RESULT_STRING "<select></select>"
+#define  RESULT_STRING "<select>\r\n</select>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9735,6 +9737,7 @@ void test_xhtml_select_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9746,7 +9749,7 @@ void test_xhtml_select_tag_001()
 void test_xhtml_select_tag_002() 
 {
 #define  TEST_STRING "<select>あああ</select>"
-#define  RESULT_STRING "<select>あああ</select>"
+#define  RESULT_STRING "<select>\r\nあああ</select>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9763,6 +9766,7 @@ void test_xhtml_select_tag_002()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9774,7 +9778,7 @@ void test_xhtml_select_tag_002()
 void test_xhtml_select_tag_003() 
 {
 #define  TEST_STRING "<select name></select>"
-#define  RESULT_STRING "<select></select>"
+#define  RESULT_STRING "<select>\r\n</select>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9791,6 +9795,7 @@ void test_xhtml_select_tag_003()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9802,7 +9807,7 @@ void test_xhtml_select_tag_003()
 void test_xhtml_select_tag_004() 
 {
 #define  TEST_STRING "<select name=\"\"></select>"
-#define  RESULT_STRING "<select></select>"
+#define  RESULT_STRING "<select>\r\n</select>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9819,6 +9824,7 @@ void test_xhtml_select_tag_004()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9830,7 +9836,7 @@ void test_xhtml_select_tag_004()
 void test_xhtml_select_tag_005() 
 {
 #define  TEST_STRING "<select name=\"abc\"></select>"
-#define  RESULT_STRING "<select name=\"abc\"></select>"
+#define  RESULT_STRING "<select name=\"abc\">\r\n</select>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9847,6 +9853,7 @@ void test_xhtml_select_tag_005()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9858,7 +9865,7 @@ void test_xhtml_select_tag_005()
 void test_xhtml_select_tag_006() 
 {
 #define  TEST_STRING "<select name=\"あああ\"></select>"
-#define  RESULT_STRING "<select name=\"あああ\"></select>"
+#define  RESULT_STRING "<select name=\"あああ\">\r\n</select>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9875,6 +9882,7 @@ void test_xhtml_select_tag_006()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9886,7 +9894,7 @@ void test_xhtml_select_tag_006()
 void test_xhtml_select_tag_007() 
 {
 #define  TEST_STRING "<select name=\"ﾊﾝｶｸ\"></select>"
-#define  RESULT_STRING "<select name=\"ﾊﾝｶｸ\"></select>"
+#define  RESULT_STRING "<select name=\"ﾊﾝｶｸ\">\r\n</select>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9903,6 +9911,7 @@ void test_xhtml_select_tag_007()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9914,7 +9923,7 @@ void test_xhtml_select_tag_007()
 void test_xhtml_select_tag_008() 
 {
 #define  TEST_STRING "<select size></select>"
-#define  RESULT_STRING "<select></select>"
+#define  RESULT_STRING "<select>\r\n</select>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9931,6 +9940,7 @@ void test_xhtml_select_tag_008()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9942,7 +9952,7 @@ void test_xhtml_select_tag_008()
 void test_xhtml_select_tag_009() 
 {
 #define  TEST_STRING "<select size=\"\"></select>"
-#define  RESULT_STRING "<select></select>"
+#define  RESULT_STRING "<select>\r\n</select>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9959,6 +9969,7 @@ void test_xhtml_select_tag_009()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9970,7 +9981,7 @@ void test_xhtml_select_tag_009()
 void test_xhtml_select_tag_010() 
 {
 #define  TEST_STRING "<select size=\"abc\"></select>"
-#define  RESULT_STRING "<select size=\"abc\"></select>"
+#define  RESULT_STRING "<select size=\"abc\">\r\n</select>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9987,6 +9998,7 @@ void test_xhtml_select_tag_010()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9998,7 +10010,7 @@ void test_xhtml_select_tag_010()
 void test_xhtml_select_tag_011() 
 {
 #define  TEST_STRING "<select size=\"11\"></select>"
-#define  RESULT_STRING "<select size=\"11\"></select>"
+#define  RESULT_STRING "<select size=\"11\">\r\n</select>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10015,6 +10027,7 @@ void test_xhtml_select_tag_011()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10026,7 +10039,7 @@ void test_xhtml_select_tag_011()
 void test_xhtml_select_tag_012() 
 {
 #define  TEST_STRING "<select multiple></select>"
-#define  RESULT_STRING "<select multiple></select>"
+#define  RESULT_STRING "<select multiple=\"true\">\r\n</select>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10043,6 +10056,7 @@ void test_xhtml_select_tag_012()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10054,7 +10068,7 @@ void test_xhtml_select_tag_012()
 void test_xhtml_select_tag_013() 
 {
 #define  TEST_STRING "<select multiple=\"\"></select>"
-#define  RESULT_STRING "<select multiple></select>"
+#define  RESULT_STRING "<select multiple=\"true\">\r\n</select>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10071,6 +10085,7 @@ void test_xhtml_select_tag_013()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10082,7 +10097,7 @@ void test_xhtml_select_tag_013()
 void test_xhtml_select_tag_014() 
 {
 #define  TEST_STRING "<select multiple=\"abc\"></select>"
-#define  RESULT_STRING "<select multiple></select>"
+#define  RESULT_STRING "<select multiple=\"true\">\r\n</select>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10099,6 +10114,7 @@ void test_xhtml_select_tag_014()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10107,6 +10123,7 @@ void test_xhtml_select_tag_014()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 /*============================================================================*/
 /* <TEXTAREA>                                                                 */
 /*============================================================================*/

@@ -2341,12 +2341,13 @@ s_xhtml_1_0_end_img_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_xhtml_1_0_start_select_tag(void *pdoc, Node *child)
 {
-  xhtml_t *xhtml = GET_XHTML(pdoc);
-  Doc     *doc   = xhtml->doc;
+  xhtml_t *xhtml    = GET_XHTML(pdoc);
+  Doc     *doc      = xhtml->doc;
+  char    *size     = NULL;
+  char    *name     = NULL;
+  char    *multiple = NULL;
   Attr    *attr;
 
-  char *size      = NULL;
-  char *name      = NULL;
 
   W_L("<select");
   for (attr = qs_get_attr(doc,child);
@@ -2355,29 +2356,39 @@ s_xhtml_1_0_start_select_tag(void *pdoc, Node *child)
     char *nm  = qs_get_attr_name(doc,attr);
     char *val = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('s','S',"size",nm)) {
-      /* CHTML version 2.0 */
+      /*----------------------------------------------------------------------*/
+      /* CHTML 1.0 version 2.0                                                */
+      /*----------------------------------------------------------------------*/
       size = apr_pstrdup(doc->buf.pool, val);
     }
     else if (STRCASEEQ('n','N',"name",nm)) {
-      /* CHTML version 2.0 */
+      /*----------------------------------------------------------------------*/
+      /* CHTML 1.0 version 2.0                                                */
+      /*----------------------------------------------------------------------*/
       name = apr_pstrdup(doc->buf.pool, val);
     }
     else if (STRCASEEQ('m','M',"multiple",nm)) {
-      /* CHTML version 2.0 */
-      /* Ignore */
+      /*----------------------------------------------------------------------*/
+      /* CHTML 1.0 version 2.0                                                */
+      /*----------------------------------------------------------------------*/
+      multiple = apr_pstrdup(doc->buf.pool, val);
     }
   }
-  if (size) {
+  if (size && *size) {
     W_L(" size=\"");
     W_V(size);
     W_L("\"");
   }
-  if (name) {
+  if (name && *name) {
     W_L(" name=\"");
     W_V(name);
     W_L("\"");
   }
-  W_L(">\n");
+  if (multiple) {
+    /* "true" is *NOT* W3C. it is specification of WAP2.0 for EZWEB */
+    W_L(" multiple=\"true\"");
+  }
+  W_L(">\r\n");
   return xhtml->out;
 }
 
@@ -2396,7 +2407,7 @@ s_xhtml_1_0_end_select_tag(void *pdoc, Node *UNUSED(child))
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc     *doc   = xhtml->doc;
 
-  W_L("</select>\n");
+  W_L("</select>\r\n");
   return xhtml->out;
 }
 
