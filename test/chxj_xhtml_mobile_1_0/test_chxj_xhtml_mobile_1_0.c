@@ -850,7 +850,9 @@ main()
   CU_add_test(xhtml_suite, "test <select> 13." ,                                test_xhtml_select_tag_013);
   CU_add_test(xhtml_suite, "test <select> 14." ,                                test_xhtml_select_tag_014);
 
-#if 0
+  /*=========================================================================*/
+  /* <textarea>                                                              */
+  /*=========================================================================*/
   CU_add_test(xhtml_suite, "test <textarea> 1." ,                               test_xhtml_textarea_tag_001);
   CU_add_test(xhtml_suite, "test <textarea> 2." ,                               test_xhtml_textarea_tag_002);
   CU_add_test(xhtml_suite, "test <textarea> 3." ,                               test_xhtml_textarea_tag_003);
@@ -877,6 +879,7 @@ main()
   CU_add_test(xhtml_suite, "test <textarea> 24." ,                              test_xhtml_textarea_tag_024);
   CU_add_test(xhtml_suite, "test <textarea> 25." ,                              test_xhtml_textarea_tag_025);
   CU_add_test(xhtml_suite, "test <textarea> 26." ,                              test_xhtml_textarea_tag_026);
+#if 0
 
   CU_add_test(xhtml_suite, "test <title> 1." ,                                  test_xhtml_title_tag_001);
   CU_add_test(xhtml_suite, "test <title> 2." ,                                  test_xhtml_title_tag_002);
@@ -10123,14 +10126,13 @@ void test_xhtml_select_tag_014()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 /*============================================================================*/
 /* <TEXTAREA>                                                                 */
 /*============================================================================*/
 void test_xhtml_textarea_tag_001() 
 {
 #define  TEST_STRING "<textarea>"
-#define  RESULT_STRING "<textarea></textarea>"
+#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10147,6 +10149,7 @@ void test_xhtml_textarea_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10158,7 +10161,7 @@ void test_xhtml_textarea_tag_001()
 void test_xhtml_textarea_tag_002() 
 {
 #define  TEST_STRING "<textarea></textarea>"
-#define  RESULT_STRING "<textarea></textarea>"
+#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10175,6 +10178,7 @@ void test_xhtml_textarea_tag_002()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10186,7 +10190,7 @@ void test_xhtml_textarea_tag_002()
 void test_xhtml_textarea_tag_003() 
 {
 #define  TEST_STRING "<textarea>あああ</textarea>"
-#define  RESULT_STRING "<textarea>あああ</textarea>"
+#define  RESULT_STRING "<textarea>\r\nあああ</textarea>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10203,6 +10207,7 @@ void test_xhtml_textarea_tag_003()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10214,7 +10219,7 @@ void test_xhtml_textarea_tag_003()
 void test_xhtml_textarea_tag_004() 
 {
 #define  TEST_STRING "<textarea>あああ\nいいい</textarea>"
-#define  RESULT_STRING "<textarea>あああ\nいいい</textarea>"
+#define  RESULT_STRING "<textarea>\r\nあああ\nいいい</textarea>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10231,6 +10236,7 @@ void test_xhtml_textarea_tag_004()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10242,7 +10248,7 @@ void test_xhtml_textarea_tag_004()
 void test_xhtml_textarea_tag_005() 
 {
 #define  TEST_STRING "<textarea>あああ\r\nいいい</textarea>"
-#define  RESULT_STRING "<textarea>あああ\r\nいいい</textarea>"
+#define  RESULT_STRING "<textarea>\r\nあああ\r\nいいい</textarea>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10259,6 +10265,7 @@ void test_xhtml_textarea_tag_005()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10270,7 +10277,7 @@ void test_xhtml_textarea_tag_005()
 void test_xhtml_textarea_tag_006() 
 {
 #define  TEST_STRING "<textarea>あああ\r\nいいい\n</textarea>"
-#define  RESULT_STRING "<textarea>あああ\r\nいいい\n</textarea>"
+#define  RESULT_STRING "<textarea>\r\nあああ\r\nいいい\n</textarea>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10287,6 +10294,7 @@ void test_xhtml_textarea_tag_006()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10298,7 +10306,7 @@ void test_xhtml_textarea_tag_006()
 void test_xhtml_textarea_tag_007() 
 {
 #define  TEST_STRING "<textarea>あああ\r\nいいい\r\n</textarea>"
-#define  RESULT_STRING "<textarea>あああ\r\nいいい\r\n</textarea>"
+#define  RESULT_STRING "<textarea>\r\nあああ\r\nいいい\r\n</textarea>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10315,6 +10323,7 @@ void test_xhtml_textarea_tag_007()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10326,7 +10335,7 @@ void test_xhtml_textarea_tag_007()
 void test_xhtml_textarea_tag_008() 
 {
 #define  TEST_STRING "<textarea name></textarea>"
-#define  RESULT_STRING "<textarea></textarea>"
+#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10343,6 +10352,7 @@ void test_xhtml_textarea_tag_008()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10354,7 +10364,7 @@ void test_xhtml_textarea_tag_008()
 void test_xhtml_textarea_tag_009() 
 {
 #define  TEST_STRING "<textarea name=\"\"></textarea>"
-#define  RESULT_STRING "<textarea></textarea>"
+#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10371,6 +10381,7 @@ void test_xhtml_textarea_tag_009()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10382,7 +10393,7 @@ void test_xhtml_textarea_tag_009()
 void test_xhtml_textarea_tag_010() 
 {
 #define  TEST_STRING "<textarea name=\"aaa\"></textarea>"
-#define  RESULT_STRING "<textarea name=\"aaa\"></textarea>"
+#define  RESULT_STRING "<textarea name=\"aaa\">\r\n</textarea>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10399,6 +10410,7 @@ void test_xhtml_textarea_tag_010()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10410,7 +10422,7 @@ void test_xhtml_textarea_tag_010()
 void test_xhtml_textarea_tag_011() 
 {
 #define  TEST_STRING "<textarea rows></textarea>"
-#define  RESULT_STRING "<textarea></textarea>"
+#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10427,6 +10439,7 @@ void test_xhtml_textarea_tag_011()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10438,7 +10451,7 @@ void test_xhtml_textarea_tag_011()
 void test_xhtml_textarea_tag_012() 
 {
 #define  TEST_STRING "<textarea rows=\"\"></textarea>"
-#define  RESULT_STRING "<textarea></textarea>"
+#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10455,6 +10468,7 @@ void test_xhtml_textarea_tag_012()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10466,7 +10480,7 @@ void test_xhtml_textarea_tag_012()
 void test_xhtml_textarea_tag_013() 
 {
 #define  TEST_STRING "<textarea rows=\"abc\"></textarea>"
-#define  RESULT_STRING "<textarea rows=\"abc\"></textarea>"
+#define  RESULT_STRING "<textarea rows=\"abc\">\r\n</textarea>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10483,6 +10497,7 @@ void test_xhtml_textarea_tag_013()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10494,7 +10509,7 @@ void test_xhtml_textarea_tag_013()
 void test_xhtml_textarea_tag_014() 
 {
 #define  TEST_STRING "<textarea cols></textarea>"
-#define  RESULT_STRING "<textarea></textarea>"
+#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10511,6 +10526,7 @@ void test_xhtml_textarea_tag_014()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10522,7 +10538,7 @@ void test_xhtml_textarea_tag_014()
 void test_xhtml_textarea_tag_015() 
 {
 #define  TEST_STRING "<textarea cols=\"\"></textarea>"
-#define  RESULT_STRING "<textarea></textarea>"
+#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10539,6 +10555,7 @@ void test_xhtml_textarea_tag_015()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10550,7 +10567,7 @@ void test_xhtml_textarea_tag_015()
 void test_xhtml_textarea_tag_016() 
 {
 #define  TEST_STRING "<textarea cols=\"123\"></textarea>"
-#define  RESULT_STRING "<textarea cols=\"123\"></textarea>"
+#define  RESULT_STRING "<textarea cols=\"123\">\r\n</textarea>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10567,6 +10584,7 @@ void test_xhtml_textarea_tag_016()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10578,7 +10596,7 @@ void test_xhtml_textarea_tag_016()
 void test_xhtml_textarea_tag_017() 
 {
 #define  TEST_STRING "<textarea accesskey></textarea>"
-#define  RESULT_STRING "<textarea></textarea>"
+#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10595,6 +10613,7 @@ void test_xhtml_textarea_tag_017()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10606,7 +10625,7 @@ void test_xhtml_textarea_tag_017()
 void test_xhtml_textarea_tag_018() 
 {
 #define  TEST_STRING "<textarea accesskey=\"\"></textarea>"
-#define  RESULT_STRING "<textarea></textarea>"
+#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10623,6 +10642,7 @@ void test_xhtml_textarea_tag_018()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10634,7 +10654,7 @@ void test_xhtml_textarea_tag_018()
 void test_xhtml_textarea_tag_019() 
 {
 #define  TEST_STRING "<textarea accesskey=\"10\"></textarea>"
-#define  RESULT_STRING "<textarea accesskey=\"10\"></textarea>"
+#define  RESULT_STRING "<textarea accesskey=\"10\">\r\n</textarea>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10651,6 +10671,7 @@ void test_xhtml_textarea_tag_019()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10662,7 +10683,7 @@ void test_xhtml_textarea_tag_019()
 void test_xhtml_textarea_tag_020() 
 {
 #define  TEST_STRING "<textarea istyle></textarea>"
-#define  RESULT_STRING "<textarea></textarea>"
+#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10679,6 +10700,7 @@ void test_xhtml_textarea_tag_020()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10690,7 +10712,7 @@ void test_xhtml_textarea_tag_020()
 void test_xhtml_textarea_tag_021() 
 {
 #define  TEST_STRING "<textarea istyle=\"\"></textarea>"
-#define  RESULT_STRING "<textarea></textarea>"
+#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10707,6 +10729,7 @@ void test_xhtml_textarea_tag_021()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10718,7 +10741,7 @@ void test_xhtml_textarea_tag_021()
 void test_xhtml_textarea_tag_022() 
 {
 #define  TEST_STRING "<textarea istyle=\"1\"></textarea>"
-#define  RESULT_STRING "<textarea istyle=\"1\"></textarea>"
+#define  RESULT_STRING "<textarea FORMAT=\"*M\">\r\n</textarea>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10735,6 +10758,7 @@ void test_xhtml_textarea_tag_022()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10746,7 +10770,7 @@ void test_xhtml_textarea_tag_022()
 void test_xhtml_textarea_tag_023() 
 {
 #define  TEST_STRING "<textarea istyle=\"2\"></textarea>"
-#define  RESULT_STRING "<textarea istyle=\"2\"></textarea>"
+#define  RESULT_STRING "<textarea FORMAT=\"*M\">\r\n</textarea>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10763,6 +10787,7 @@ void test_xhtml_textarea_tag_023()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10774,7 +10799,7 @@ void test_xhtml_textarea_tag_023()
 void test_xhtml_textarea_tag_024() 
 {
 #define  TEST_STRING "<textarea istyle=\"3\"></textarea>"
-#define  RESULT_STRING "<textarea istyle=\"3\"></textarea>"
+#define  RESULT_STRING "<textarea FORMAT=\"*m\">\r\n</textarea>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10791,6 +10816,7 @@ void test_xhtml_textarea_tag_024()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10802,7 +10828,7 @@ void test_xhtml_textarea_tag_024()
 void test_xhtml_textarea_tag_025() 
 {
 #define  TEST_STRING "<textarea istyle=\"4\"></textarea>"
-#define  RESULT_STRING "<textarea istyle=\"4\"></textarea>"
+#define  RESULT_STRING "<textarea FORMAT=\"*N\">\r\n</textarea>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10819,6 +10845,7 @@ void test_xhtml_textarea_tag_025()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10830,7 +10857,7 @@ void test_xhtml_textarea_tag_025()
 void test_xhtml_textarea_tag_026() 
 {
 #define  TEST_STRING "<textarea istyle=\"a\"></textarea>"
-#define  RESULT_STRING "<textarea></textarea>"
+#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10847,6 +10874,7 @@ void test_xhtml_textarea_tag_026()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10855,6 +10883,7 @@ void test_xhtml_textarea_tag_026()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 /*============================================================================*/
 /* <TITLE>                                                                    */
 /*============================================================================*/

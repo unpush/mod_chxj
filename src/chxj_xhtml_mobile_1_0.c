@@ -2615,24 +2615,35 @@ s_xhtml_1_0_start_textarea_tag(void *pdoc, Node *node)
   Attr    *attr;
 
   xhtml->textarea_flag++;
-  W_L("<textarea ");
+  W_L("<textarea");
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
-    if (STRCASEEQ('n','N',"name",name)) {
+    if (STRCASEEQ('n','N',"name",name) && value && *value) {
       W_L(" name=\"");
       W_V(value);
       W_L("\"");
     }
-    else if (STRCASEEQ('r','R',"rows",name)) {
+    else if (STRCASEEQ('r','R',"rows",name) && value && *value) {
       W_L(" rows=\"");
       W_V(value);
       W_L("\"");
     }
-    else if (STRCASEEQ('c','C',"cols",name)) {
+    else if (STRCASEEQ('c','C',"cols",name) && value && *value) {
       W_L(" cols=\"");
+      W_V(value);
+      W_L("\"");
+    }
+    else if (STRCASEEQ('i','I',"istyle", name) && value && (*value == '1' || *value == '2' || *value == '3' || *value == '4')) {
+      char *fmt = qs_conv_istyle_to_format(doc->r,value);
+      W_L(" FORMAT=\"*");
+      W_V(fmt);
+      W_L("\"");
+    }
+    else if (STRCASEEQ('a','A',"accesskey",name) && value && *value != 0) {
+      W_L(" accesskey=\"");
       W_V(value);
       W_L("\"");
     }
