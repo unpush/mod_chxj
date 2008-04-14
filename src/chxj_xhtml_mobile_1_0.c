@@ -1744,12 +1744,42 @@ s_xhtml_1_0_end_h2_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_xhtml_1_0_start_h3_tag(void *pdoc, Node *UNUSED(node)) 
+s_xhtml_1_0_start_h3_tag(void *pdoc, Node *node)
 {
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc     *doc   = xhtml->doc;
+  Attr    *attr;
 
-  W_L("<h3>");
+  W_L("<h3");
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char* name;
+    char* value;
+    name  = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('a','A',"align", name)) {
+      if (value) {
+        if (STRCASEEQ('l','L',"left",value)) {
+          W_L(" style=\"");
+          W_L("text-align:left");
+          W_L("\"");
+        }
+        else if (STRCASEEQ('r','R',"right",value)) {
+          W_L(" style=\"");
+          W_L("text-align:right");
+          W_L("\"");
+        }
+        else if (STRCASEEQ('c','C',"center",value)) {
+          W_L(" style=\"");
+          W_L("text-align:center");
+          W_L("\"");
+        }
+        break;
+      }
+    }
+  }
+  W_L(">");
   return xhtml->out;
 }
 

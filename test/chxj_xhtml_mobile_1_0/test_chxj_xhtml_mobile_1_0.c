@@ -565,6 +565,10 @@ main()
   CU_add_test(xhtml_suite, "test <h2> with align attribute(right).",            test_xhtml_h2_tag_008);
   CU_add_test(xhtml_suite, "test <h2> with align attribute(center).",           test_xhtml_h2_tag_009);
   CU_add_test(xhtml_suite, "test <h2> with align attribute(unkown).",           test_xhtml_h2_tag_010);
+
+  /*=========================================================================*/
+  /* <h3>                                                                    */
+  /*=========================================================================*/
 #if 0
   CU_add_test(xhtml_suite, "test <h3>.",                                        test_xhtml_h3_tag_001);
   CU_add_test(xhtml_suite, "test <h3> with value.",                             test_xhtml_h3_tag_002);
