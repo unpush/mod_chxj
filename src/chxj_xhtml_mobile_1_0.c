@@ -2183,45 +2183,44 @@ s_xhtml_1_0_start_img_tag(void *pdoc, Node *node)
 #endif
     }
     else 
-    if (*name == 'a' || *name == 'A') {
-      if (strcasecmp(name, "align" ) == 0) {
+    if (STRCASEEQ('a','A',"align",name)) {
+      if (value && (STRCASEEQ('t','T',"top",   value) ||
+                    STRCASEEQ('m','M',"middle",value) ||
+                    STRCASEEQ('b','B',"bottom",value) ||
+                    STRCASEEQ('l','L',"left",  value) ||
+                    STRCASEEQ('r','R',"right", value))) {
         W_L(" align=\"");
         W_V(value);
         W_L("\"");
       }
-      else
-      if (strcasecmp(name, "alt"   ) == 0) {
-        W_L(" alt=\"");
-        W_V(value);
-        W_L("\"");
-      }
     }
-    else if (STRCASEEQ('w','W',"width",name)) {
+    else if (STRCASEEQ('a','A',"alt",name) && value && *value) {
+      W_L(" alt=\"");
+      W_V(value);
+      W_L("\"");
+    }
+    else if (STRCASEEQ('w','W',"width",name) && value && *value) {
       W_L(" width=\"");
       W_V(value);
       W_L("\"");
     }
-    else 
-    if (*name == 'h' || *name == 'H') {
-      if (strcasecmp(name, "height") == 0) {
-        W_L(" height=\"");
-        W_V(value);
-        W_L("\"");
-      }
-      else
-      if (strcasecmp(name, "hspace") == 0) {
-        W_L(" hspace=\"");
-        W_V(value);
-        W_L("\"");
-      }
+    else if (STRCASEEQ('h','H',"height",name) && value && *value) {
+      W_L(" height=\"");
+      W_V(value);
+      W_L("\"");
     }
-    else if (STRCASEEQ('v','V',"vspace",name)) {
+    else if (STRCASEEQ('h','H',"hspace",name) && value && *value) {
+      W_L(" hspace=\"");
+      W_V(value);
+      W_L("\"");
+    }
+    else if (STRCASEEQ('v','V',"vspace",name) && value && *value) {
       W_L(" vspace=\"");
       W_V(value);
       W_L("\"");
     }
   }
-  W_L(">");
+  W_L(" />");
   return xhtml->out;
 }
 
