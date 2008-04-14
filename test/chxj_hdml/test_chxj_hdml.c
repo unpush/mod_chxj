@@ -62,6 +62,8 @@ void test_hdml_blockquote_tag_001();
 void test_hdml_blockquote_tag_002();
 void test_hdml_blockquote_tag_003();
 void test_hdml_blockquote_tag_004();
+void test_hdml_blockquote_tag_005();
+void test_hdml_blockquote_tag_006();
 
 void test_hdml_body_tag_001();
 void test_hdml_body_tag_002();
@@ -494,7 +496,6 @@ main()
   CU_add_test(hdml_suite, "test base tag href attribute with void value.",     test_hdml_base_tag_href_attribute_002);
   CU_add_test(hdml_suite, "test base tag href attribute with normal value.",   test_hdml_base_tag_href_attribute_003);
   CU_add_test(hdml_suite, "test base tag href attribute with normal value.",   test_hdml_base_tag_href_attribute_004);
-#if 0
 
   /*=========================================================================*/
   /* <BLOCKQUOTE>                                                            */
@@ -503,7 +504,10 @@ main()
   CU_add_test(hdml_suite, "test <blockquote> with value.",                     test_hdml_blockquote_tag_002);
   CU_add_test(hdml_suite, "test <blockquote> with japanese value.",            test_hdml_blockquote_tag_003);
   CU_add_test(hdml_suite, "test <blockquote> with hankaku kana value.",        test_hdml_blockquote_tag_004);
+  CU_add_test(hdml_suite, "test <blockquote> with multiline.",                 test_hdml_blockquote_tag_005);
+  CU_add_test(hdml_suite, "test <blockquote> with multiline 2.",               test_hdml_blockquote_tag_006);
 
+#if 0
   /*=========================================================================*/
   /* <BODY>                                                                  */
   /*=========================================================================*/
@@ -1717,14 +1721,13 @@ void test_hdml_base_tag_href_attribute_004()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 /*============================================================================*/
 /* <BLOCKQUOTE>                                                               */
 /*============================================================================*/
 void test_hdml_blockquote_tag_001() 
 {
 #define  TEST_STRING "<blockquote></blockquote>"
-#define  RESULT_STRING "<blockquote></blockquote>"
+#define  RESULT_STRING "\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1741,7 +1744,8 @@ void test_hdml_blockquote_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -1753,7 +1757,7 @@ void test_hdml_blockquote_tag_001()
 void test_hdml_blockquote_tag_002() 
 {
 #define  TEST_STRING "<blockquote>abc</blockquote>"
-#define  RESULT_STRING "<blockquote>abc</blockquote>"
+#define  RESULT_STRING "<WRAP>&nbsp;<TAB>abc\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1770,7 +1774,8 @@ void test_hdml_blockquote_tag_002()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -1782,7 +1787,7 @@ void test_hdml_blockquote_tag_002()
 void test_hdml_blockquote_tag_003() 
 {
 #define  TEST_STRING "<blockquote>亀さん</blockquote>"
-#define  RESULT_STRING "<blockquote>亀さん</blockquote>"
+#define  RESULT_STRING "<WRAP>&nbsp;<TAB>亀さん\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1799,7 +1804,8 @@ void test_hdml_blockquote_tag_003()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -1811,7 +1817,7 @@ void test_hdml_blockquote_tag_003()
 void test_hdml_blockquote_tag_004() 
 {
 #define  TEST_STRING "<blockquote>ﾊﾝｶｸ</blockquote>"
-#define  RESULT_STRING "<blockquote>ﾊﾝｶｸ</blockquote>"
+#define  RESULT_STRING "<WRAP>&nbsp;<TAB>ﾊﾝｶｸ\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1828,7 +1834,8 @@ void test_hdml_blockquote_tag_004()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -1837,6 +1844,67 @@ void test_hdml_blockquote_tag_004()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+void test_hdml_blockquote_tag_005() 
+{
+#define  TEST_STRING "<blockquote>ﾊﾝｶｸ\r\nあああ\r\n</blockquote>"
+#define  RESULT_STRING "<WRAP>&nbsp;<TAB>ﾊﾝｶｸ\r\n<WRAP>&nbsp;<TAB>あああ\r\n\r\n"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_hdml_blockquote_tag_006() 
+{
+#define  TEST_STRING "<blockquote>ﾊﾝｶｸ\nあああ\n</blockquote>"
+#define  RESULT_STRING "<WRAP>&nbsp;<TAB>ﾊﾝｶｸ\n<WRAP>&nbsp;<TAB>あああ\n\r\n"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+/* KONNO */
 /*============================================================================*/
 /* <BODY>                                                                     */
 /*============================================================================*/

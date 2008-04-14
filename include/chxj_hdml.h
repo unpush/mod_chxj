@@ -86,6 +86,7 @@ struct hdml_t {
   int     div_in_center;
   int     hdml_a_flag;
   int     hdml_br_flag;
+  int     hdml_blockquote_flag;
 
   int                 hdml_end_flag;
 

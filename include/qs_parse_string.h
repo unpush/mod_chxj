@@ -34,10 +34,8 @@
  * It is judged whether it is the first byte of Japanese Shift_JIS 
  * "ZENKAKU KANJI". 
  */
-#define is_sjis_kanji(c)  ((0x81 <= (unsigned char)(c&0xff) && \
-                           (unsigned char)(c&0xff) <= 0x9f)  \
-                          || (0xe0 <= (unsigned char)(c&0xff) && \
-                           (unsigned char)(c&0xff) <= 0xfc))
+#define is_sjis_kanji(c)    ((0x81 <= (unsigned char)(c&0xff) && (unsigned char)(c&0xff) <= 0x9f)  \
+                          || (0xe0 <= (unsigned char)(c&0xff) && (unsigned char)(c&0xff) <= 0xfc))
 /**
  * It is judged whether it is a byte of Japanese Shift_JIS "HANKAKU KANA". 
  */

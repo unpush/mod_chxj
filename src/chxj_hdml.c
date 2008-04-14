@@ -32,44 +32,46 @@
 static void  s_init_hdml            (hdml_t* hdml, Doc* doc, request_rec* r, device_table* spec);
 
 
-static char* s_hdml_start_html_tag    (void* pdoc,  Node* node);
-static char* s_hdml_end_html_tag      (void* pdoc,  Node* node);
-static char* s_hdml_start_meta_tag    (void* pdoc,  Node* node);
-static char* s_hdml_end_meta_tag      (void* pdoc,  Node* node);
-static char* s_hdml_start_li_tag      (void* pdoc,  Node* node);
-static char* s_hdml_end_li_tag        (void* pdoc,  Node* node);
-static char* s_hdml_start_head_tag    (void* pdoc,  Node* node);
-static char* s_hdml_end_head_tag      (void* pdoc,  Node* node);
-static char* s_hdml_start_title_tag   (void* pdoc,  Node* node);
-static char* s_hdml_end_title_tag     (void* pdoc,  Node* node);
-static char* s_hdml_start_base_tag    (void* pdoc,  Node* node);
-static char* s_hdml_end_base_tag      (void* pdoc,  Node* node);
-static char* s_hdml_start_body_tag    (void* pdoc,  Node* node);
-static char* s_hdml_end_body_tag      (void* pdoc,  Node* node);
-static char* s_hdml_start_a_tag       (void* pdoc,  Node* node);
-static char* s_hdml_end_a_tag         (void* pdoc,  Node* node);
-static char* s_hdml_start_br_tag      (void* pdoc,  Node* node);
-static char* s_hdml_end_br_tag        (void* pdoc,  Node* node);
-static char* s_hdml_start_tr_tag      (void* pdoc,  Node* node);
-static char* s_hdml_end_tr_tag        (void* pdoc,  Node* node);
-static char* s_hdml_start_font_tag    (void* pdoc,  Node* node);
-static char* s_hdml_end_font_tag      (void* pdoc,  Node* node);
-static char* s_hdml_start_form_tag    (void* pdoc,  Node* node);
-static char* s_hdml_end_form_tag      (void* pdoc,  Node* node);
-static char* s_hdml_start_input_tag   (void* pdoc,  Node* node);
-static char* s_hdml_end_input_tag     (void* pdoc,  Node* node);
-static char* s_hdml_start_select_tag  (void* pdoc,  Node* node);
-static char* s_hdml_end_select_tag    (void* pdoc,  Node* node);
-static char* s_hdml_start_option_tag  (void* pdoc,  Node* node);
-static char* s_hdml_end_option_tag    (void* pdoc,  Node* node);
-static char* s_hdml_start_center_tag  (void* pdoc,  Node* node);
-static char* s_hdml_end_center_tag    (void* pdoc,  Node* node);
-static char* s_hdml_start_hr_tag      (void* pdoc,  Node* node);
-static char* s_hdml_end_hr_tag        (void* pdoc,  Node* node);
-static char* s_hdml_start_img_tag     (void* pdoc,  Node* node);
-static char* s_hdml_end_img_tag       (void* pdoc,  Node* node);
-static char* s_hdml_start_div_tag     (void* pdoc,  Node* node);
-static char* s_hdml_end_div_tag       (void* pdoc,  Node* node);
+static char *s_hdml_start_html_tag    (void *pdoc,  Node *node);
+static char *s_hdml_end_html_tag      (void *pdoc,  Node *node);
+static char *s_hdml_start_meta_tag    (void *pdoc,  Node *node);
+static char *s_hdml_end_meta_tag      (void *pdoc,  Node *node);
+static char *s_hdml_start_li_tag      (void *pdoc,  Node *node);
+static char *s_hdml_end_li_tag        (void *pdoc,  Node *node);
+static char *s_hdml_start_head_tag    (void *pdoc,  Node *node);
+static char *s_hdml_end_head_tag      (void *pdoc,  Node *node);
+static char *s_hdml_start_title_tag   (void *pdoc,  Node *node);
+static char *s_hdml_end_title_tag     (void *pdoc,  Node *node);
+static char *s_hdml_start_base_tag    (void *pdoc,  Node *node);
+static char *s_hdml_end_base_tag      (void *pdoc,  Node *node);
+static char *s_hdml_start_body_tag    (void *pdoc,  Node *node);
+static char *s_hdml_end_body_tag      (void *pdoc,  Node *node);
+static char *s_hdml_start_a_tag       (void *pdoc,  Node *node);
+static char *s_hdml_end_a_tag         (void *pdoc,  Node *node);
+static char *s_hdml_start_br_tag      (void *pdoc,  Node *node);
+static char *s_hdml_end_br_tag        (void *pdoc,  Node *node);
+static char *s_hdml_start_tr_tag      (void *pdoc,  Node *node);
+static char *s_hdml_end_tr_tag        (void *pdoc,  Node *node);
+static char *s_hdml_start_font_tag    (void *pdoc,  Node *node);
+static char *s_hdml_end_font_tag      (void *pdoc,  Node *node);
+static char *s_hdml_start_form_tag    (void *pdoc,  Node *node);
+static char *s_hdml_end_form_tag      (void *pdoc,  Node *node);
+static char *s_hdml_start_input_tag   (void *pdoc,  Node *node);
+static char *s_hdml_end_input_tag     (void *pdoc,  Node *node);
+static char *s_hdml_start_select_tag  (void *pdoc,  Node *node);
+static char *s_hdml_end_select_tag    (void *pdoc,  Node *node);
+static char *s_hdml_start_option_tag  (void *pdoc,  Node *node);
+static char *s_hdml_end_option_tag    (void *pdoc,  Node *node);
+static char *s_hdml_start_center_tag  (void *pdoc,  Node *node);
+static char *s_hdml_end_center_tag    (void *pdoc,  Node *node);
+static char *s_hdml_start_hr_tag      (void *pdoc,  Node *node);
+static char *s_hdml_end_hr_tag        (void *pdoc,  Node *node);
+static char *s_hdml_start_img_tag     (void *pdoc,  Node *node);
+static char *s_hdml_end_img_tag       (void *pdoc,  Node *node);
+static char *s_hdml_start_div_tag     (void *pdoc,  Node *node);
+static char *s_hdml_end_div_tag       (void *pdoc,  Node *node);
+static char *s_hdml_start_blockquote_tag(void *pdoc, Node *node);
+static char *s_hdml_end_blockquote_tag  (void *pdoc, Node *node);
 
 static char* s_get_form_no          (request_rec* r, hdml_t* hdml);
 
@@ -321,8 +323,8 @@ tag_handler hdml_handler[] = {
   },
   /* tagBLOCKQUOTE */
   {
-    NULL,
-    NULL,
+    s_hdml_start_blockquote_tag,
+    s_hdml_end_blockquote_tag,
   },
   /* tagDIR */
   {
@@ -2980,9 +2982,10 @@ s_hdml_text_tag(void* pdoc, Node* child)
   char*   textval;
   char*   tmp;
   char*   tdst;
-  char    one_byte[2];
+  char    one_byte[3];
   int     ii;
   int     tdst_len = 0;
+  int     one_line_count = 0;
   request_rec* r;
 
   hdml = GET_HDML(pdoc);
@@ -2990,12 +2993,13 @@ s_hdml_text_tag(void* pdoc, Node* child)
   r    = doc->r;
   
   textval = qs_get_node_value(doc,child);
-  textval = qs_trim_string(r->pool, textval);
-  if (strlen(textval) == 0)
+  if (strlen(textval) == 0) {
     return hdml->out;
+  }
   
-  if (hdml->option_flag == 1) 
+  if (hdml->option_flag == 1) {
     return hdml->out;
+  }
   
   tmp = apr_palloc(r->pool, qs_get_node_size(doc,child)+1);
   memset(tmp, 0, qs_get_node_size(doc,child)+1);
@@ -3003,6 +3007,7 @@ s_hdml_text_tag(void* pdoc, Node* child)
   tdst[0] = '\0';
   one_byte[0] = '\0';
   one_byte[1] = '\0';
+  one_byte[2] = '\0';
   
   for (ii=0; ii<qs_get_node_size(doc,child); ii++) {
     char* out;
@@ -3010,6 +3015,30 @@ s_hdml_text_tag(void* pdoc, Node* child)
     if (rtn) {
       tdst = qs_out_apr_pstrcat(r, tdst, out, &tdst_len);
       ii += (rtn-1);
+      one_line_count+=(rtn-1);
+      continue;
+    }
+    if (hdml->hdml_blockquote_flag) {
+      if (one_line_count == 0) {
+        tdst = qs_out_apr_pstrcat(r, tdst, "<WRAP>&nbsp;<TAB>", &tdst_len);
+      }
+      if (is_sjis_kanji(textval[ii])) {
+        one_byte[0] = textval[ii+0];
+        one_byte[1] = textval[ii+1];
+        one_byte[2] = 0;
+        tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+        ii++;
+        one_line_count+=2;
+      }
+      else {
+        one_byte[0] = textval[ii+0];
+        one_byte[1] = 0;
+        tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+        one_line_count++;
+        if (one_byte[0] == '\n') {
+          one_line_count = 0;
+        }
+      }
       continue;
     }
     if (is_sjis_kanji(textval[ii])) {
@@ -3018,9 +3047,9 @@ s_hdml_text_tag(void* pdoc, Node* child)
       one_byte[0] = textval[ii+1];
       tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
       ii++;
+      one_line_count+=2;
     }
-    else 
-    if (textval[ii] != '\r' && textval[ii] != '\n') {
+    else if (textval[ii] != '\r' && textval[ii] != '\n') {
       one_byte[0] = textval[ii+0];
       tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
     }
@@ -3031,6 +3060,41 @@ s_hdml_text_tag(void* pdoc, Node* child)
   s_output_to_hdml_out(hdml, tdst);
   hdml->hdml_br_flag = 0;
 
+  return hdml->out;
+}
+
+
+/**
+ * It is a handler who processes the BLOCKQUOTE tag.
+ *
+ * @param pdoc  [i/o] The pointer to the HDML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The BLOCKQUOTE tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_hdml_start_blockquote_tag(void *pdoc, Node *UNUSED(child))
+{
+  hdml_t *hdml = GET_HDML(pdoc);
+  hdml->hdml_blockquote_flag++;
+  return hdml->out;
+}
+
+
+/**
+ * It is a handler who processes the BLOCKQUOTE tag.
+ *
+ * @param pdoc  [i/o] The pointer to the HDML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The BLOCKQUOTE tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_hdml_end_blockquote_tag(void *pdoc, Node *UNUSED(child))
+{
+  hdml_t *hdml = GET_HDML(pdoc);
+  hdml->hdml_blockquote_flag--;
+  s_output_to_hdml_out(hdml, "\r\n");
   return hdml->out;
 }
 
