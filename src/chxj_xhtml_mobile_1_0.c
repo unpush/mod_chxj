@@ -1194,12 +1194,12 @@ s_xhtml_1_0_start_font_tag(void *pdoc, Node *node)
        attr = qs_get_next_attr(doc,attr)) {
     char *name = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
-    if (STRCASEEQ('c','C',"color",name)) {
+    if (STRCASEEQ('c','C',"color",name) && value && *value) {
       W_L(" color=\"");
       W_V(value);
       W_L("\"");
     }
-    else if (STRCASEEQ('s','S',"size",name)) {
+    else if (STRCASEEQ('s','S',"size",name) && value && *value) {
       W_L(" size=\"");
       W_V(value);
       W_L("\"");
