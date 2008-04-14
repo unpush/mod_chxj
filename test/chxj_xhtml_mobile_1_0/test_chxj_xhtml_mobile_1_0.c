@@ -802,8 +802,10 @@ main()
   CU_add_test(xhtml_suite, "test <option value> with japanese value." ,         test_xhtml_option_tag_005);
   CU_add_test(xhtml_suite, "test <option value> with japanese-kana value." ,    test_xhtml_option_tag_006);
   CU_add_test(xhtml_suite, "test <option selected>." ,                          test_xhtml_option_tag_007);
-#if 0
 
+  /*=========================================================================*/
+  /* <p>                                                                     */
+  /*=========================================================================*/
   CU_add_test(xhtml_suite, "test <p> 1." ,                                      test_xhtml_p_tag_001);
   CU_add_test(xhtml_suite, "test <p> 2." ,                                      test_xhtml_p_tag_002);
   CU_add_test(xhtml_suite, "test <p> 3." ,                                      test_xhtml_p_tag_003);
@@ -813,6 +815,7 @@ main()
   CU_add_test(xhtml_suite, "test <p> 7." ,                                      test_xhtml_p_tag_007);
   CU_add_test(xhtml_suite, "test <p> 8." ,                                      test_xhtml_p_tag_008);
 
+#if 0
   CU_add_test(xhtml_suite, "test <plaintext> 1." ,                              test_xhtml_plaintext_tag_001);
   CU_add_test(xhtml_suite, "test <plaintext> 2." ,                              test_xhtml_plaintext_tag_002);
   CU_add_test(xhtml_suite, "test <plaintext> 3. value is not closed." ,         test_xhtml_plaintext_tag_003);
@@ -9200,7 +9203,6 @@ void test_xhtml_option_tag_007()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 /*============================================================================*/
 /* <P>                                                                        */
 /*============================================================================*/
@@ -9224,6 +9226,7 @@ void test_xhtml_p_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9252,6 +9255,7 @@ void test_xhtml_p_tag_002()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9280,6 +9284,7 @@ void test_xhtml_p_tag_003()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9308,6 +9313,7 @@ void test_xhtml_p_tag_004()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9336,6 +9342,7 @@ void test_xhtml_p_tag_005()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9364,6 +9371,7 @@ void test_xhtml_p_tag_006()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9392,6 +9400,7 @@ void test_xhtml_p_tag_007()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9420,6 +9429,7 @@ void test_xhtml_p_tag_008()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9428,6 +9438,7 @@ void test_xhtml_p_tag_008()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 /*============================================================================*/
 /* <PLAINTEXT>                                                                */
 /*============================================================================*/
