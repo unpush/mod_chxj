@@ -607,6 +607,7 @@ main()
   CU_add_test(xhtml_suite, "test <h5> with align attribute(right).",            test_xhtml_h5_tag_008);
   CU_add_test(xhtml_suite, "test <h5> with align attribute(center).",           test_xhtml_h5_tag_009);
   CU_add_test(xhtml_suite, "test <h5> with align attribute(unkown).",           test_xhtml_h5_tag_010);
+
   CU_add_test(xhtml_suite, "test <h6>.",                                        test_xhtml_h6_tag_001);
   CU_add_test(xhtml_suite, "test <h6> with value.",                             test_xhtml_h6_tag_002);
   CU_add_test(xhtml_suite, "test <h6> with value(japanese).",                   test_xhtml_h6_tag_003);
