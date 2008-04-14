@@ -109,6 +109,8 @@ static char *s_xhtml_1_0_end_menu_tag        (void *pdoc, Node *node);
 static char *s_xhtml_1_0_start_plaintext_tag       (void *pdoc, Node *node);
 static char *s_xhtml_1_0_start_plaintext_tag_inner (void *pdoc, Node *node);
 static char *s_xhtml_1_0_end_plaintext_tag         (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_blink_tag     (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_blink_tag       (void *pdoc, Node *node);
 
 static void  s_init_xhtml(xhtml_t *xhtml, Doc *doc, request_rec *r, device_table *spec);
 static int   s_xhtml_search_emoji(xhtml_t *xhtml, char *txt, char **rslt);
@@ -373,8 +375,8 @@ tag_handler xhtml_handler[] = {
   },
   /* tagBLINK */
   {
-    NULL,
-    NULL,
+    s_xhtml_1_0_start_blink_tag,
+    s_xhtml_1_0_end_blink_tag,
   },
   /* tagMARQUEE */
   {
@@ -2998,6 +3000,42 @@ s_xhtml_1_0_end_plaintext_tag(void *pdoc, Node *UNUSED(child))
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc     *doc     = xhtml->doc;
   W_L("</plaintext>");
+  return xhtml->out;
+}
+
+
+/**
+ * It is a hanblinker who processes the BLINK tag.
+ *
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The BLINK tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_xhtml_1_0_start_blink_tag(void *pdoc, Node *UNUSED(child))
+{
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc = xhtml->doc;
+  W_L("<blink>");
+  return xhtml->out;
+}
+
+
+/**
+ * It is a hanblinker who processes the BLINK tag.
+ *
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The BLINK tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_xhtml_1_0_end_blink_tag(void *pdoc, Node *UNUSED(child))
+{
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc = xhtml->doc;
+  W_L("</blink>");
   return xhtml->out;
 }
 /*

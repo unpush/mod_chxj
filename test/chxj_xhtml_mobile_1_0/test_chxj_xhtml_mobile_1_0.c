@@ -895,12 +895,15 @@ main()
   CU_add_test(xhtml_suite, "test <ul> 4." ,                                     test_xhtml_ul_tag_004);
   CU_add_test(xhtml_suite, "test <ul> 5." ,                                     test_xhtml_ul_tag_005);
 
-#if 0
+  /*=========================================================================*/
+  /* <blink>                                                                 */
+  /*=========================================================================*/
   CU_add_test(xhtml_suite, "test <blink> 1." ,                                  test_xhtml_blink_tag_001);
   CU_add_test(xhtml_suite, "test <blink> 2." ,                                  test_xhtml_blink_tag_002);
   CU_add_test(xhtml_suite, "test <blink> 3." ,                                  test_xhtml_blink_tag_003);
   CU_add_test(xhtml_suite, "test <blink> 4." ,                                  test_xhtml_blink_tag_004);
 
+#if 0
   CU_add_test(xhtml_suite, "test <marquee> 1." ,                                test_xhtml_marquee_tag_001);
   CU_add_test(xhtml_suite, "test <marquee> 2." ,                                test_xhtml_marquee_tag_002);
   CU_add_test(xhtml_suite, "test <marquee> 3." ,                                test_xhtml_marquee_tag_003);
@@ -11098,7 +11101,6 @@ void test_xhtml_ul_tag_005()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 /*============================================================================*/
 /* <BLINK>                                                                    */
 /*============================================================================*/
@@ -11122,6 +11124,7 @@ void test_xhtml_blink_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -11150,6 +11153,7 @@ void test_xhtml_blink_tag_002()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -11178,6 +11182,7 @@ void test_xhtml_blink_tag_003()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -11206,6 +11211,7 @@ void test_xhtml_blink_tag_004()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -11214,6 +11220,7 @@ void test_xhtml_blink_tag_004()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 /*============================================================================*/
 /* MARQUEE                                                                    */
 /*============================================================================*/
