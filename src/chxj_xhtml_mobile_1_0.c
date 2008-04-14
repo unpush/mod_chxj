@@ -1603,12 +1603,35 @@ s_xhtml_1_0_end_pre_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_xhtml_1_0_start_p_tag(void *pdoc, Node *UNUSED(node)) 
+s_xhtml_1_0_start_p_tag(void *pdoc, Node *node) 
 {
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc     *doc   = xhtml->doc;
+  Attr    *attr;
+  char    *align = NULL;
 
-  W_L("<p>");
+  W_L("<p");
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char *nm  = qs_get_attr_name(doc,attr);
+    char *val = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('a','A',"align", nm)) {
+      /*----------------------------------------------------------------------*/
+      /* CHTML 1.0 (W3C version 3.2)                                          */
+      /*----------------------------------------------------------------------*/
+      if (val && (STRCASEEQ('l','L',"left",val) || STRCASEEQ('r','R',"right",val) || STRCASEEQ('c','C',"center",val))) {
+        align = apr_pstrdup(doc->buf.pool, val);
+        break;
+      }
+    }
+  }
+  if (align) {
+    W_L(" align=\"");
+    W_V(align);
+    W_L("\"");
+  }
+  W_L(">");
   return xhtml->out;
 }
 
