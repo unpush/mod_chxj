@@ -1889,7 +1889,6 @@ s_chtml30_start_select_tag(void* pdoc, Node* child)
        attr = qs_get_next_attr(doc,attr)) {
     char* nm  = qs_get_attr_name(doc,attr);
     char* val = qs_get_attr_value(doc,attr);
-
     if (STRCASEEQ('s','S',"size", nm)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0 version 2.0                                                */
@@ -3108,7 +3107,7 @@ s_chtml30_end_dl_tag(void *pdoc, Node *UNUSED(child))
 
 
 /**
- * It is a handter who processes the DT tag.
+ * It is a handler who processes the DT tag.
  *
  * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
@@ -3128,7 +3127,7 @@ s_chtml30_start_dt_tag(void *pdoc, Node *UNUSED(child))
 
 
 /**
- * It is a handter who processes the DT tag.
+ * It is a handler who processes the DT tag.
  *
  * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
@@ -3145,7 +3144,7 @@ s_chtml30_end_dt_tag(void *pdoc, Node *UNUSED(child))
 
 
 /**
- * It is a handder who processes the DD tag.
+ * It is a handler who processes the DD tag.
  *
  * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
@@ -3163,7 +3162,7 @@ s_chtml30_start_dd_tag(void *pdoc, Node *UNUSED(child))
 
 
 /**
- * It is a handder who processes the DD tag.
+ * It is a handler who processes the DD tag.
  *
  * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
@@ -3179,7 +3178,7 @@ s_chtml30_end_dd_tag(void *pdoc, Node *UNUSED(child))
 
 
 /**
- * It is a hanmarqueeer who processes the MARQUEE tag.
+ * It is a handler who processes the MARQUEE tag.
  *
  * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
@@ -3229,7 +3228,7 @@ s_chtml30_start_marquee_tag(void *pdoc, Node *node)
 
 
 /**
- * It is a hanmarqueeer who processes the MARQUEE tag.
+ * It is a handler who processes the MARQUEE tag.
  *
  * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
