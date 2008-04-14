@@ -729,14 +729,14 @@ s_xhtml_1_0_start_meta_tag(void *pdoc, Node *node)
        attr = qs_get_next_attr(doc,attr)) {
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
-    if (STRCASEEQ('n','N',"name", name)) {
+    if (STRCASEEQ('n','N',"name", name) && value && *value) {
       W_L(" ");
       W_V(name);
       W_L("=\"");
       W_V(value);
       W_L("\"");
     }
-    else if (STRCASEEQ('h','H',"http-equiv", name)) {
+    else if (STRCASEEQ('h','H',"http-equiv", name) && value && *value) {
       W_L(" ");
       W_V(name);
       W_L("=\"");
@@ -746,7 +746,7 @@ s_xhtml_1_0_start_meta_tag(void *pdoc, Node *node)
         content_type_flag = 1;
       }
     }
-    else if (STRCASEEQ('c','C',"content", name)) {
+    else if (STRCASEEQ('c','C',"content", name) && value && *value) {
       if (content_type_flag) {
         W_L(" ");
         W_V(name);

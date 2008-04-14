@@ -925,7 +925,9 @@ main()
   CU_add_test(xhtml_suite, "test <marquee> 17." ,                               test_xhtml_marquee_tag_017);
   CU_add_test(xhtml_suite, "test <marquee> 18." ,                               test_xhtml_marquee_tag_018);
 
-#if 0
+  /*=========================================================================*/
+  /* <meta>                                                                  */
+  /*=========================================================================*/
   CU_add_test(xhtml_suite, "test <meta> 1." ,                                   test_xhtml_meta_tag_001);
   CU_add_test(xhtml_suite, "test <meta> 2." ,                                   test_xhtml_meta_tag_002);
   CU_add_test(xhtml_suite, "test <meta> 3." ,                                   test_xhtml_meta_tag_003);
@@ -935,7 +937,6 @@ main()
   CU_add_test(xhtml_suite, "test <meta> 7." ,                                   test_xhtml_meta_tag_007);
   CU_add_test(xhtml_suite, "test <meta> 8." ,                                   test_xhtml_meta_tag_008);
   CU_add_test(xhtml_suite, "test <meta> 9." ,                                   test_xhtml_meta_tag_009);
-#endif
   /* aend */
 
   CU_basic_run_tests();
@@ -11748,14 +11749,13 @@ void test_xhtml_marquee_tag_018()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 /*============================================================================*/
 /* <META>                                                                     */
 /*============================================================================*/
 void test_xhtml_meta_tag_001() 
 {
 #define  TEST_STRING "<meta>"
-#define  RESULT_STRING "<meta>"
+#define  RESULT_STRING "<meta />\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11772,6 +11772,7 @@ void test_xhtml_meta_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -11783,7 +11784,7 @@ void test_xhtml_meta_tag_001()
 void test_xhtml_meta_tag_002() 
 {
 #define  TEST_STRING "<meta http-equiv>"
-#define  RESULT_STRING "<meta>"
+#define  RESULT_STRING "<meta />\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11800,6 +11801,7 @@ void test_xhtml_meta_tag_002()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -11811,7 +11813,7 @@ void test_xhtml_meta_tag_002()
 void test_xhtml_meta_tag_003() 
 {
 #define  TEST_STRING "<meta http-equiv=\"\">"
-#define  RESULT_STRING "<meta>"
+#define  RESULT_STRING "<meta />\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11828,6 +11830,7 @@ void test_xhtml_meta_tag_003()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -11839,7 +11842,7 @@ void test_xhtml_meta_tag_003()
 void test_xhtml_meta_tag_004() 
 {
 #define  TEST_STRING "<meta http-equiv=\"content-type\">"
-#define  RESULT_STRING "<meta http-equiv=\"content-type\">"
+#define  RESULT_STRING "<meta http-equiv=\"content-type\" />\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11856,6 +11859,7 @@ void test_xhtml_meta_tag_004()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -11867,7 +11871,7 @@ void test_xhtml_meta_tag_004()
 void test_xhtml_meta_tag_005() 
 {
 #define  TEST_STRING "<meta http-equiv=\"abc\">"
-#define  RESULT_STRING "<meta http-equiv=\"abc\">"
+#define  RESULT_STRING "<meta http-equiv=\"abc\" />\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11884,6 +11888,7 @@ void test_xhtml_meta_tag_005()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -11895,7 +11900,7 @@ void test_xhtml_meta_tag_005()
 void test_xhtml_meta_tag_006() 
 {
 #define  TEST_STRING "<meta content>"
-#define  RESULT_STRING "<meta>"
+#define  RESULT_STRING "<meta />\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11912,6 +11917,7 @@ void test_xhtml_meta_tag_006()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -11923,7 +11929,7 @@ void test_xhtml_meta_tag_006()
 void test_xhtml_meta_tag_007() 
 {
 #define  TEST_STRING "<meta content=\"\">"
-#define  RESULT_STRING "<meta>"
+#define  RESULT_STRING "<meta />\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11940,6 +11946,7 @@ void test_xhtml_meta_tag_007()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -11951,7 +11958,7 @@ void test_xhtml_meta_tag_007()
 void test_xhtml_meta_tag_008() 
 {
 #define  TEST_STRING "<meta http-equiv=\"Content-Type\" content=\"text/html\">"
-#define  RESULT_STRING "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=Windows-31J\">"
+#define  RESULT_STRING "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=Windows-31J\" />\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11968,6 +11975,7 @@ void test_xhtml_meta_tag_008()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -11979,7 +11987,7 @@ void test_xhtml_meta_tag_008()
 void test_xhtml_meta_tag_009() 
 {
 #define  TEST_STRING "<meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml\">"
-#define  RESULT_STRING "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=Windows-31J\">"
+#define  RESULT_STRING "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=Windows-31J\" />\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11996,6 +12004,7 @@ void test_xhtml_meta_tag_009()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
