@@ -607,7 +607,9 @@ main()
   CU_add_test(xhtml_suite, "test <h5> with align attribute(center).",           test_xhtml_h5_tag_009);
   CU_add_test(xhtml_suite, "test <h5> with align attribute(unkown).",           test_xhtml_h5_tag_010);
 
-#if 0
+  /*=========================================================================*/
+  /* <h6>                                                                    */
+  /*=========================================================================*/
   CU_add_test(xhtml_suite, "test <h6>.",                                        test_xhtml_h6_tag_001);
   CU_add_test(xhtml_suite, "test <h6> with value.",                             test_xhtml_h6_tag_002);
   CU_add_test(xhtml_suite, "test <h6> with value(japanese).",                   test_xhtml_h6_tag_003);
@@ -619,6 +621,7 @@ main()
   CU_add_test(xhtml_suite, "test <h6> with align attribute(center).",           test_xhtml_h6_tag_009);
   CU_add_test(xhtml_suite, "test <h6> with align attribute(unkown).",           test_xhtml_h6_tag_010);
 
+#if 0
   CU_add_test(xhtml_suite, "test <hr>.",                                        test_xhtml_hr_tag_001);
   CU_add_test(xhtml_suite, "test <hr />.",                                      test_xhtml_hr_tag_002);
   CU_add_test(xhtml_suite, "test <hr align> with no value.",                    test_xhtml_hr_tag_003);
@@ -4562,11 +4565,10 @@ void test_xhtml_h5_tag_010()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 void test_xhtml_h6_tag_001() 
 {
-#define  TEST_STRING "<html><head></head><body><h6></h6></body></html>"
-#define  RESULT_STRING "<html><head></head><body><h6></h6></body></html>"
+#define  TEST_STRING "<h6></h6>"
+#define  RESULT_STRING "<h6></h6>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -4583,6 +4585,7 @@ void test_xhtml_h6_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -4593,8 +4596,8 @@ void test_xhtml_h6_tag_001()
 }
 void test_xhtml_h6_tag_002() 
 {
-#define  TEST_STRING "<html><head></head><body><h6>abc</h6></body></html>"
-#define  RESULT_STRING "<html><head></head><body><h6>abc</h6></body></html>"
+#define  TEST_STRING "<h6>abc</h6>"
+#define  RESULT_STRING "<h6>abc</h6>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -4611,6 +4614,7 @@ void test_xhtml_h6_tag_002()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -4621,8 +4625,8 @@ void test_xhtml_h6_tag_002()
 }
 void test_xhtml_h6_tag_003() 
 {
-#define  TEST_STRING "<html><head></head><body><h6>亀さん</h6></body></html>"
-#define  RESULT_STRING "<html><head></head><body><h6>亀さん</h6></body></html>"
+#define  TEST_STRING "<h6>亀さん</h6>"
+#define  RESULT_STRING "<h6>亀さん</h6>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -4639,6 +4643,7 @@ void test_xhtml_h6_tag_003()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -4649,8 +4654,8 @@ void test_xhtml_h6_tag_003()
 }
 void test_xhtml_h6_tag_004() 
 {
-#define  TEST_STRING "<html><head></head><body><h6>ﾊﾝｶｸ</h6></body></html>"
-#define  RESULT_STRING "<html><head></head><body><h6>ﾊﾝｶｸ</h6></body></html>"
+#define  TEST_STRING "<h6>ﾊﾝｶｸ</h6>"
+#define  RESULT_STRING "<h6>ﾊﾝｶｸ</h6>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -4667,6 +4672,7 @@ void test_xhtml_h6_tag_004()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -4677,8 +4683,8 @@ void test_xhtml_h6_tag_004()
 }
 void test_xhtml_h6_tag_005() 
 {
-#define  TEST_STRING "<html><head></head><body><h6 align></h6></body></html>"
-#define  RESULT_STRING "<html><head></head><body><h6></h6></body></html>"
+#define  TEST_STRING "<h6 align></h6>"
+#define  RESULT_STRING "<h6></h6>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -4695,6 +4701,7 @@ void test_xhtml_h6_tag_005()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -4705,8 +4712,8 @@ void test_xhtml_h6_tag_005()
 }
 void test_xhtml_h6_tag_006() 
 {
-#define  TEST_STRING "<html><head></head><body><h6 align=\"\"></h6></body></html>"
-#define  RESULT_STRING "<html><head></head><body><h6></h6></body></html>"
+#define  TEST_STRING "<h6 align=\"\"></h6>"
+#define  RESULT_STRING "<h6></h6>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -4723,6 +4730,7 @@ void test_xhtml_h6_tag_006()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -4733,8 +4741,8 @@ void test_xhtml_h6_tag_006()
 }
 void test_xhtml_h6_tag_007() 
 {
-#define  TEST_STRING "<html><head></head><body><h6 align=\"left\"></h6></body></html>"
-#define  RESULT_STRING "<html><head></head><body><h6 align=\"left\"></h6></body></html>"
+#define  TEST_STRING "<h6 align=\"left\"></h6>"
+#define  RESULT_STRING "<h6 style=\"text-align:left\"></h6>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -4751,6 +4759,7 @@ void test_xhtml_h6_tag_007()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -4761,8 +4770,8 @@ void test_xhtml_h6_tag_007()
 }
 void test_xhtml_h6_tag_008() 
 {
-#define  TEST_STRING "<html><head></head><body><h6 align=\"right\"></h6></body></html>"
-#define  RESULT_STRING "<html><head></head><body><h6 align=\"right\"></h6></body></html>"
+#define  TEST_STRING "<h6 align=\"right\"></h6>"
+#define  RESULT_STRING "<h6 style=\"text-align:right\"></h6>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -4779,6 +4788,7 @@ void test_xhtml_h6_tag_008()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -4789,8 +4799,8 @@ void test_xhtml_h6_tag_008()
 }
 void test_xhtml_h6_tag_009() 
 {
-#define  TEST_STRING "<html><head></head><body><h6 align=\"center\"></h6></body></html>"
-#define  RESULT_STRING "<html><head></head><body><h6 align=\"center\"></h6></body></html>"
+#define  TEST_STRING "<h6 align=\"center\"></h6>"
+#define  RESULT_STRING "<h6 style=\"text-align:center\"></h6>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -4807,6 +4817,7 @@ void test_xhtml_h6_tag_009()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -4817,8 +4828,8 @@ void test_xhtml_h6_tag_009()
 }
 void test_xhtml_h6_tag_010() 
 {
-#define  TEST_STRING "<html><head></head><body><h6 align=\"unkown\"></h6></body></html>"
-#define  RESULT_STRING "<html><head></head><body><h6></h6></body></html>"
+#define  TEST_STRING "<h6 align=\"unkown\"></h6>"
+#define  RESULT_STRING "<h6></h6>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -4835,6 +4846,7 @@ void test_xhtml_h6_tag_010()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -4843,6 +4855,7 @@ void test_xhtml_h6_tag_010()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 /*============================================================================*/
 /* <HR>                                                                       */
 /*============================================================================*/
