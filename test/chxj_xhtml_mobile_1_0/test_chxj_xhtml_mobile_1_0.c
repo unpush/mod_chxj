@@ -760,9 +760,12 @@ main()
   CU_add_test(xhtml_suite, "test <li> type attribute 7." ,                      test_xhtml_li_tag_011);
   CU_add_test(xhtml_suite, "test <li> type attribute 8." ,                      test_xhtml_li_tag_012);
   CU_add_test(xhtml_suite, "test <li> type attribute 9." ,                      test_xhtml_li_tag_013);
-#if 0
 
+  /*=========================================================================*/
+  /* <li>                                                                    */
+  /*=========================================================================*/
   CU_add_test(xhtml_suite, "test <menu>." ,                                     test_xhtml_menu_tag_001);
+#if 0
   CU_add_test(xhtml_suite, "test <menu> 2." ,                                   test_xhtml_menu_tag_002);
   CU_add_test(xhtml_suite, "test <menu> 3." ,                                   test_xhtml_menu_tag_003);
   CU_add_test(xhtml_suite, "test <menu> 4." ,                                   test_xhtml_menu_tag_004);
@@ -8313,7 +8316,6 @@ void test_xhtml_li_tag_013()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 /*============================================================================*/
 /* <MENU>                                                                     */
 /*============================================================================*/
@@ -8345,6 +8347,7 @@ void test_xhtml_menu_tag_001()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 void test_xhtml_menu_tag_002() 
 {
 #define  TEST_STRING "<menu><li></li><li></li></menu>"

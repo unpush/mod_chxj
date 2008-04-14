@@ -104,6 +104,8 @@ static char *s_xhtml_1_0_start_dt_tag        (void *pdoc, Node *node);
 static char *s_xhtml_1_0_end_dt_tag          (void *pdoc, Node *node);
 static char *s_xhtml_1_0_start_dd_tag        (void *pdoc, Node *node);
 static char *s_xhtml_1_0_end_dd_tag          (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_menu_tag      (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_menu_tag        (void *pdoc, Node *node);
 
 static void  s_init_xhtml(xhtml_t *xhtml, Doc *doc, request_rec *r, device_table *spec);
 static int   s_xhtml_search_emoji(xhtml_t *xhtml, char *txt, char **rslt);
@@ -358,8 +360,8 @@ tag_handler xhtml_handler[] = {
   },
   /* tagMENU */
   {
-    NULL,
-    NULL,
+    s_xhtml_1_0_start_menu_tag,
+    s_xhtml_1_0_end_menu_tag,
   },
   /* tagPLAINTEXT */
   {
@@ -2840,6 +2842,44 @@ s_xhtml_1_0_end_dd_tag(void *pdoc, Node *UNUSED(child))
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc     *doc   = xhtml->doc;
   W_L("</dd>");
+  return xhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the MENU tag.
+ *
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The MENU tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_xhtml_1_0_start_menu_tag(void *pdoc, Node *UNUSED(child))
+{
+  xhtml_t *xhtml;
+  Doc *doc;
+  xhtml = GET_XHTML(pdoc);
+  doc     = xhtml->doc;
+  W_L("<menu>");
+  return xhtml->out;
+}
+
+
+/**
+ * It is a hanmenuer who processes the MENU tag.
+ *
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The MENU tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_xhtml_1_0_end_menu_tag(void *pdoc, Node *UNUSED(child))
+{
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc *doc = xhtml->doc;
+  W_L("</menu>");
   return xhtml->out;
 }
 /*
