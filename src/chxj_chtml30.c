@@ -3303,7 +3303,7 @@ s_chtml30_start_menu_tag(void *pdoc, Node *UNUSED(child))
 
 
 /**
- * It is a hanmenuer who processes the MENU tag.
+ * It is a handler who processes the MENU tag.
  *
  * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
@@ -3321,7 +3321,7 @@ s_chtml30_end_menu_tag(void *pdoc, Node *UNUSED(child))
 
 
 /**
- * It is a hanplaintexter who processes the PLAINTEXT tag.
+ * It is a handler who processes the PLAINTEXT tag.
  *
  * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
@@ -3360,7 +3360,7 @@ s_chtml30_start_plaintext_tag_inner(void *pdoc, Node *node)
 
 
 /**
- * It is a hanplaintexter who processes the PLAINTEXT tag.
+ * It is a handler who processes the PLAINTEXT tag.
  *
  * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.

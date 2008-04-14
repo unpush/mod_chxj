@@ -2939,11 +2939,8 @@ s_xhtml_1_0_end_menu_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_xhtml_1_0_start_plaintext_tag(void *pdoc, Node *node)
 {
-  xhtml_t *xhtml;
-  Doc *doc;
-
-  xhtml = GET_XHTML(pdoc);
-  doc     = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc     = xhtml->doc;
   W_L("<plaintext>");
   s_xhtml_1_0_start_plaintext_tag_inner(pdoc,node);
   return xhtml->out;
@@ -2952,11 +2949,9 @@ s_xhtml_1_0_start_plaintext_tag(void *pdoc, Node *node)
 static char *
 s_xhtml_1_0_start_plaintext_tag_inner(void *pdoc, Node *node)
 {
-  xhtml_t *xhtml;
-  Doc *doc;
-  Node *child;
-  xhtml = GET_XHTML(pdoc);
-  doc     = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc     = xhtml->doc;
+  Node    *child;
   for (child = qs_get_child_node(doc, node);
        child;
        child = qs_get_next_node(doc, child)) {
@@ -2979,6 +2974,8 @@ static char *
 s_xhtml_1_0_end_plaintext_tag(void *pdoc, Node *UNUSED(child))
 {
   xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc     = xhtml->doc;
+  W_L("</plaintext>");
   return xhtml->out;
 }
 /*
