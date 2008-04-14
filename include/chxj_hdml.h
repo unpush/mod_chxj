@@ -89,6 +89,7 @@ struct hdml_t {
   int     hdml_blockquote_flag;
 
   int                 hdml_end_flag;
+  int     dir_level;
 
   device_table*       spec;
 

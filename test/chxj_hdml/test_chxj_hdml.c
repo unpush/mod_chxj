@@ -93,6 +93,7 @@ void test_hdml_center_tag_001();
 
 void test_hdml_dir_tag_001();
 void test_hdml_dir_tag_002();
+void test_hdml_dir_tag_003();
 
 void test_hdml_dl_tag_001();
 
@@ -542,12 +543,13 @@ main()
   /*=========================================================================*/
   CU_add_test(hdml_suite, "test <center>.",                                    test_hdml_center_tag_001);
 
-#if 0
   /*=========================================================================*/
   /* <DIR>                                                                   */
   /*=========================================================================*/
   CU_add_test(hdml_suite, "test <dir>.",                                       test_hdml_dir_tag_001);
   CU_add_test(hdml_suite, "test <dir> with no <li>.",                          test_hdml_dir_tag_002);
+  CU_add_test(hdml_suite, "test <dir> with nested.",                           test_hdml_dir_tag_003);
+#if 0
 
   /*=========================================================================*/
   /* <DL>                                                                    */
@@ -2666,14 +2668,16 @@ void test_hdml_center_tag_001()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 /*============================================================================*/
 /* <DIR>                                                                      */
 /*============================================================================*/
 void test_hdml_dir_tag_001()
 {
 #define  TEST_STRING "<dir><li>あああ</li><li>いいい</li></dir>"
-#define  RESULT_STRING "<dir><li>あああ</li><li>いいい</li></dir>"
+#define  RESULT_STRING \
+"<BR>\r\n" \
+"<WRAP>&nbsp;あああ<BR>\r\n" \
+"<WRAP>&nbsp;いいい<BR>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2690,7 +2694,8 @@ void test_hdml_dir_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -2702,7 +2707,7 @@ void test_hdml_dir_tag_001()
 void test_hdml_dir_tag_002()
 {
 #define  TEST_STRING "<dir></dir>"
-#define  RESULT_STRING "<dir></dir>"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2719,7 +2724,8 @@ void test_hdml_dir_tag_002()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -2728,6 +2734,40 @@ void test_hdml_dir_tag_002()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+void test_hdml_dir_tag_003()
+{
+#define  TEST_STRING "<dir><li>あああ</li><dir><li>いいい</li></dir></dir>"
+#define  RESULT_STRING \
+"<BR>\r\n" \
+"<WRAP>&nbsp;あああ<BR>\r\n" \
+"<WRAP>&nbsp;&nbsp;いいい<BR>\r\n"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+/* KONNO */
 /*============================================================================*/
 /* <DL>                                                                       */
 /*============================================================================*/

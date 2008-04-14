@@ -72,6 +72,8 @@ static char *s_hdml_start_div_tag     (void *pdoc,  Node *node);
 static char *s_hdml_end_div_tag       (void *pdoc,  Node *node);
 static char *s_hdml_start_blockquote_tag(void *pdoc, Node *node);
 static char *s_hdml_end_blockquote_tag  (void *pdoc, Node *node);
+static char *s_hdml_start_dir_tag       (void *pdoc, Node *node);
+static char *s_hdml_end_dir_tag         (void *pdoc, Node *node);
 
 static char* s_get_form_no          (request_rec* r, hdml_t* hdml);
 
@@ -328,8 +330,8 @@ tag_handler hdml_handler[] = {
   },
   /* tagDIR */
   {
-    NULL,
-    NULL,
+    s_hdml_start_dir_tag,
+    s_hdml_end_dir_tag,
   },
   /* tagDL */
   {
@@ -2207,12 +2209,11 @@ s_hdml_end_hr_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The LI tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_hdml_start_li_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_hdml_start_li_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  hdml_t* hdml;
-
-  hdml = GET_HDML(pdoc);
+  hdml_t *hdml = GET_HDML(pdoc);
+  int i;
 
   if (hdml->hdml_br_flag == 0) {
     s_output_to_hdml_out(hdml, "<BR>\r\n");
@@ -2222,9 +2223,11 @@ s_hdml_start_li_tag(void* pdoc, Node* UNUSED(node))
     if (hdml->div_in_center) 
       hdml->div_in_center--;
   }
-
+  s_output_to_hdml_out(hdml, "<WRAP>");
+  for (i=0; i<hdml->dir_level; i++) {
+    s_output_to_hdml_out(hdml, "&nbsp;");
+  } 
   hdml->hdml_br_flag = 1;
-
   return hdml->out;
 }
 
@@ -2237,13 +2240,10 @@ s_hdml_start_li_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The LI tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_hdml_end_li_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_hdml_end_li_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  hdml_t* hdml;
-
-  hdml = GET_HDML(pdoc);
-
+  hdml_t *hdml = GET_HDML(pdoc);
   if (hdml->hdml_br_flag == 0) {
     s_output_to_hdml_out(hdml, "<BR>\r\n");
     if (hdml->in_center)
@@ -2252,9 +2252,7 @@ s_hdml_end_li_tag(void* pdoc, Node* UNUSED(child))
     if (hdml->div_in_center) 
       hdml->div_in_center--;
   }
-
   hdml->hdml_br_flag = 1;
-
   return hdml->out;
 }
 
@@ -3095,6 +3093,40 @@ s_hdml_end_blockquote_tag(void *pdoc, Node *UNUSED(child))
   hdml_t *hdml = GET_HDML(pdoc);
   hdml->hdml_blockquote_flag--;
   s_output_to_hdml_out(hdml, "\r\n");
+  return hdml->out;
+}
+
+
+/**
+ * It is a handler who processes the DIR tag.
+ *
+ * @param pdoc  [i/o] The pointer to the HDML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DIR tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_hdml_start_dir_tag(void *pdoc, Node *UNUSED(child))
+{
+  hdml_t *hdml = GET_HDML(pdoc);
+  hdml->dir_level++;
+  return hdml->out;
+}
+
+
+/**
+ * It is a handler who processes the DIR tag.
+ *
+ * @param pdoc  [i/o] The pointer to the HDML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DIR tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_hdml_end_dir_tag(void *pdoc, Node *UNUSED(child))
+{
+  hdml_t *hdml = GET_HDML(pdoc);
+  hdml->dir_level--;
   return hdml->out;
 }
 
