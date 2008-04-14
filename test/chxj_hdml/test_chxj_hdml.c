@@ -486,7 +486,6 @@ main()
   CU_add_test(hdml_suite, "test a tag accesskey attribute with void char.",    test_hdml_a_tag_accesskey_attribute_002);
   CU_add_test(hdml_suite, "test a tag accesskey attribute with no value",      test_hdml_a_tag_accesskey_attribute_003);
 
-#if 0
   /*=========================================================================*/
   /* <BASE>                                                                  */
   /*=========================================================================*/
@@ -495,6 +494,7 @@ main()
   CU_add_test(hdml_suite, "test base tag href attribute with void value.",     test_hdml_base_tag_href_attribute_002);
   CU_add_test(hdml_suite, "test base tag href attribute with normal value.",   test_hdml_base_tag_href_attribute_003);
   CU_add_test(hdml_suite, "test base tag href attribute with normal value.",   test_hdml_base_tag_href_attribute_004);
+#if 0
 
   /*=========================================================================*/
   /* <BLOCKQUOTE>                                                            */
@@ -1564,14 +1564,13 @@ void test_hdml_a_tag_accesskey_attribute_003()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 /*============================================================================*/
 /* <BASE>                                                                     */
 /*============================================================================*/
 void test_hdml_base_tag_001() 
 {
 #define  TEST_STRING "<base>"
-#define  RESULT_STRING "<base />\r\n"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1588,7 +1587,8 @@ void test_hdml_base_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -1600,7 +1600,7 @@ void test_hdml_base_tag_001()
 void test_hdml_base_tag_href_attribute_001() 
 {
 #define  TEST_STRING "<base href>"
-#define  RESULT_STRING "<base href=\"\" />\r\n"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1617,7 +1617,8 @@ void test_hdml_base_tag_href_attribute_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -1629,7 +1630,7 @@ void test_hdml_base_tag_href_attribute_001()
 void test_hdml_base_tag_href_attribute_002() 
 {
 #define  TEST_STRING "<base href=\"\">"
-#define  RESULT_STRING "<base href=\"\" />\r\n"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1646,7 +1647,8 @@ void test_hdml_base_tag_href_attribute_002()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -1658,7 +1660,7 @@ void test_hdml_base_tag_href_attribute_002()
 void test_hdml_base_tag_href_attribute_003() 
 {
 #define  TEST_STRING "<base href=\"http://www.google.co.jp/\">"
-#define  RESULT_STRING "<base href=\"http://www.google.co.jp/\" />\r\n"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1675,7 +1677,8 @@ void test_hdml_base_tag_href_attribute_003()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -1687,7 +1690,7 @@ void test_hdml_base_tag_href_attribute_003()
 void test_hdml_base_tag_href_attribute_004() 
 {
 #define  TEST_STRING "<base href=\".\">"
-#define  RESULT_STRING "<base href=\".\" />r\n"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1704,7 +1707,8 @@ void test_hdml_base_tag_href_attribute_004()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -1713,6 +1717,7 @@ void test_hdml_base_tag_href_attribute_004()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 /*============================================================================*/
 /* <BLOCKQUOTE>                                                               */
 /*============================================================================*/
