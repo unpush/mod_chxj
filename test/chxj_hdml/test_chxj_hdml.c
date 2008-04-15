@@ -818,7 +818,6 @@ main()
   CU_add_test(hdml_suite, "test <li> type attribute 7." ,                      test_hdml_li_tag_011);
   CU_add_test(hdml_suite, "test <li> type attribute 8." ,                      test_hdml_li_tag_012);
   CU_add_test(hdml_suite, "test <li> type attribute 9." ,                      test_hdml_li_tag_013);
-#if 0
 
   /*=========================================================================*/
   /* <menu>                                                                  */
@@ -826,9 +825,8 @@ main()
   CU_add_test(hdml_suite, "test <menu>." ,                                     test_hdml_menu_tag_001);
   CU_add_test(hdml_suite, "test <menu> 2." ,                                   test_hdml_menu_tag_002);
   CU_add_test(hdml_suite, "test <menu> 3." ,                                   test_hdml_menu_tag_003);
-  CU_add_test(hdml_suite, "test <menu> 4." ,                                   test_hdml_menu_tag_004);
-  CU_add_test(hdml_suite, "test <menu> 5." ,                                   test_hdml_menu_tag_005);
 
+#if 0
   /*=========================================================================*/
   /* <ol>                                                                    */
   /*=========================================================================*/
@@ -9163,100 +9161,16 @@ void test_hdml_li_tag_013()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 /*============================================================================*/
 /* <MENU>                                                                     */
 /*============================================================================*/
-void test_hdml_menu_tag_001() 
-{
-#define  TEST_STRING "<menu></menu>"
-#define  RESULT_STRING "<menu></menu>"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_menu_tag_002() 
-{
-#define  TEST_STRING "<menu><li></li><li></li></menu>"
-#define  RESULT_STRING "<menu><li></li><li></li></menu>"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_menu_tag_003() 
-{
-#define  TEST_STRING "<menu><li>abc</li><li>def</li></menu>"
-#define  RESULT_STRING "<menu><li>abc</li><li>def</li></menu>"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_menu_tag_004() 
+void test_hdml_menu_tag_001()
 {
 #define  TEST_STRING "<menu><li>あああ</li><li>いいい</li></menu>"
-#define  RESULT_STRING "<menu><li>あああ</li><li>いいい</li></menu>"
+#define  RESULT_STRING \
+"<BR>\r\n" \
+"<WRAP>&nbsp;あああ<BR>\r\n" \
+"<WRAP>&nbsp;いいい<BR>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9273,7 +9187,8 @@ void test_hdml_menu_tag_004()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9282,10 +9197,10 @@ void test_hdml_menu_tag_004()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-void test_hdml_menu_tag_005() 
+void test_hdml_menu_tag_002()
 {
-#define  TEST_STRING "<menu><li>ﾊﾝｶｸ</li><li>ﾊﾝｶｸ</li></menu>"
-#define  RESULT_STRING "<menu><li>ﾊﾝｶｸ</li><li>ﾊﾝｶｸ</li></menu>"
+#define  TEST_STRING "<menu></menu>"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9302,7 +9217,41 @@ void test_hdml_menu_tag_005()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_hdml_menu_tag_003()
+{
+#define  TEST_STRING "<menu><li>あああ</li><menu><li>いいい</li></menu></menu>"
+#define  RESULT_STRING \
+"<BR>\r\n" \
+"<WRAP>&nbsp;あああ<BR>\r\n" \
+"<WRAP>&nbsp;&nbsp;いいい<BR>\r\n"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);

@@ -351,8 +351,8 @@ tag_handler hdml_handler[] = {
   },
   /* tagMENU */
   {
-    NULL,
-    NULL,
+    s_hdml_start_dir_tag,
+    s_hdml_end_dir_tag,
   },
   /* tagPLAINTEXT */
   {
