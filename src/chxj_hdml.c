@@ -78,8 +78,6 @@ static char *s_hdml_start_dt_tag        (void *pdoc, Node *node);
 static char *s_hdml_end_dt_tag          (void *pdoc, Node *node);
 static char *s_hdml_start_dd_tag      (void *pdoc, Node *node);
 static char *s_hdml_end_dd_tag        (void *pdoc, Node *node);
-static char *s_hdml_start_h1_tag      (void *pdoc, Node *node);
-static char *s_hdml_end_h1_tag        (void *pdoc, Node *node);
 
 static char* s_get_form_no          (request_rec* r, hdml_t* hdml);
 
@@ -146,33 +144,33 @@ tag_handler hdml_handler[] = {
   },
   /* tagH1 */
   {
-    s_hdml_start_h1_tag,
-    s_hdml_end_h1_tag,
+    s_hdml_start_div_tag,
+    s_hdml_end_div_tag,
   },
   /* tagH2 */
   {
-    NULL,
-    NULL,
+    s_hdml_start_div_tag,
+    s_hdml_end_div_tag,
   },
   /* tagH3 */
   {
-    NULL,
-    NULL,
+    s_hdml_start_div_tag,
+    s_hdml_end_div_tag,
   },
   /* tagH4 */
   {
-    NULL,
-    NULL,
+    s_hdml_start_div_tag,
+    s_hdml_end_div_tag,
   },
   /* tagH5 */
   {
-    NULL,
-    NULL,
+    s_hdml_start_div_tag,
+    s_hdml_end_div_tag,
   },
   /* tagH6 */
   {
-    NULL,
-    NULL,
+    s_hdml_start_div_tag,
+    s_hdml_end_div_tag,
   },
   /* tagHEAD */
   {
@@ -3203,90 +3201,6 @@ s_hdml_end_dd_tag(void *pdoc, Node *UNUSED(child))
 }
 
 
-/**
- * It is a handler who processes the H1 tag.
- *
- * @param pdoc  [i/o] The pointer to the HDML structure at the output
- *                     destination is specified.
- * @param node   [i]   The H1 tag node is specified.
- * @return The conversion result is returned.
- */
-static char *
-s_hdml_start_h1_tag(void *pdoc, Node *node)
-{
-  hdml_t *hdml;
-  Doc    *doc;
-  Attr   *attr;
-
-  hdml = GET_HDML(pdoc);
-  doc  = hdml->doc;
-
-  /*--------------------------------------------------------------------------*/
-  /* If the br tag is not output immediately before the div tag appears, the  */
-  /* br tag is output.                                                        */
-  /*--------------------------------------------------------------------------*/
-  if (hdml->hdml_br_flag == 0) {
-    hdml->hdml_br_flag = 1;
-    s_output_to_hdml_out(hdml, "<BR>\r\n");
-  }
-
-  /*--------------------------------------------------------------------------*/
-  /* The object tag node is scanned.                                          */
-  /*--------------------------------------------------------------------------*/
-  for (attr = qs_get_attr(doc,node); 
-       attr; 
-       attr = qs_get_next_attr(doc,attr)) {
-    char *name  = qs_get_attr_name(doc,attr);
-    char *value = qs_get_attr_value(doc,attr);
-    if (STRCASEEQ('a','A',"align",name)) {
-      if (STRCASEEQ('r','R',"right",value)) {
-        hdml->div_right_flag = 1;
-        s_output_to_hdml_out(hdml, "<RIGHT>");
-        hdml->hdml_br_flag = 0;
-        break;
-      }
-      else if (STRCASEEQ('c','C',"center",value)) {
-        hdml->div_center_flag = 1;
-        s_output_to_hdml_out(hdml, "<CENTER>");
-        hdml->hdml_br_flag = 0;
-        break;
-      }
-    }
-  }
-  hdml->hdml_br_flag = 0;
-  return hdml->out; 
-}
-
-
-/**
- * It is a handler who processes the H1 tag.
- *
- * @param pdoc  [i/o] The pointer to the HDML structure at the output
- *                     destination is specified.
- * @param node   [i]   The H1 tag node is specified.
- * @return The conversion result is returned.
- */
-static char *
-s_hdml_end_h1_tag(void *pdoc, Node *node)
-{
-  hdml_t       *hdml;
-  request_rec  *r;
-
-  hdml = GET_HDML(pdoc);
-  r    = hdml->doc->r;
-
-  if (hdml->div_right_flag == 1) {
-    s_output_to_hdml_out(hdml, apr_psprintf(r->pool, "<BR>\r\n"));
-    hdml->div_right_flag = 0;
-  }
-  if (hdml->div_center_flag == 1) {
-    s_output_to_hdml_out(hdml, apr_psprintf(r->pool, "<BR>\r\n"));
-    hdml->div_center_flag = 0;
-    hdml->div_in_center   = 0;
-  }
-
-  return hdml->out;
-}
 /*
  * vim:ts=2 et
  */
