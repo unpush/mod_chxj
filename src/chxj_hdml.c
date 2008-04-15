@@ -30,6 +30,7 @@
 #define GET_HDML(X) ((hdml_t*)(X))
 
 static void  s_init_hdml            (hdml_t* hdml, Doc* doc, request_rec* r, device_table* spec);
+static char *s_s_get_form_no(request_rec *r, hdml_t *hdml);
 
 
 static char *s_hdml_start_html_tag    (void *pdoc,  Node *node);
@@ -79,26 +80,27 @@ static char *s_hdml_end_dt_tag          (void *pdoc, Node *node);
 static char *s_hdml_start_dd_tag      (void *pdoc, Node *node);
 static char *s_hdml_end_dd_tag        (void *pdoc, Node *node);
 
-static char* s_get_form_no          (request_rec* r, hdml_t* hdml);
+static char *((*s_get_form_no)(request_rec* r, hdml_t* hdml)) = s_s_get_form_no;
 
 static void  s_hdml_count_radio_tag (hdml_t* hdml, Node* node) ;
 
-static void  s_hdml_do_input_text_tag    (hdml_t* hdml, Node* tag);
-static void  s_hdml_do_input_password_tag(hdml_t* hdml, Node* tag);
-static void  s_hdml_do_input_submit_tag  (hdml_t* hdml, Node* tag);
-static void  s_hdml_do_input_hidden_tag  (hdml_t* hdml, Node* tag);
-static void  s_hdml_do_input_radio_tag   (hdml_t* hdml, Node* tag);
-static void  s_hdml_do_input_checkbox_tag(hdml_t* hdml, Node* tag);
-static void  s_hdml_tag_output_upper_half(hdml_t* hdml, Node* node);
+static void  s_hdml_do_input_text_tag    (hdml_t *hdml, Node *tag);
+static void  s_hdml_do_input_password_tag(hdml_t *hdml, Node *tag);
+static void  s_hdml_do_input_submit_tag  (hdml_t *hdml, Node *tag);
+static void  s_hdml_do_input_reset_tag   (hdml_t *hdml, Node *tag);
+static void  s_hdml_do_input_hidden_tag  (hdml_t *hdml, Node *tag);
+static void  s_hdml_do_input_radio_tag   (hdml_t *hdml, Node *tag);
+static void  s_hdml_do_input_checkbox_tag(hdml_t *hdml, Node *tag);
+static void  s_hdml_tag_output_upper_half(hdml_t *hdml, Node* node);
 
-static hdml_t* s_output_to_hdml_out       (hdml_t* hdml, char* s);
-static hdml_t* s_output_to_hdml_card      (hdml_t* hdml, char* s);
-static void  s_output_to_postdata         (hdml_t* hdml, char* s);
-static void  s_output_to_init_vars        (hdml_t* hdml, char* s);
-static int   s_hdml_search_emoji          (hdml_t* hdml, char* txt, char** rslt);
+static hdml_t *s_output_to_hdml_out       (hdml_t *hdml, char *s);
+static hdml_t *s_output_to_hdml_card      (hdml_t *hdml, char *s);
+static void  s_output_to_postdata         (hdml_t *hdml, char *s);
+static void  s_output_to_init_vars        (hdml_t *hdml, char *s);
+static int   s_hdml_search_emoji          (hdml_t *hdml, char *txt, char **rslt);
 
-static char* s_hdml_chxjif_tag            (void* pdoc, Node* node);
-static char* s_hdml_text_tag              (void* pdoc, Node* node);
+static char *s_hdml_chxjif_tag            (void *pdoc, Node *node);
+static char *s_hdml_text_tag              (void *pdoc, Node *node);
 
 
 tag_handler hdml_handler[] = {
@@ -513,7 +515,7 @@ chxj_exchange_hdml(
  * @param spec [i]   The pointer to the device_table
  */
 static void 
-s_init_hdml(hdml_t* hdml, Doc* doc, request_rec* r, device_table* spec)
+s_init_hdml(hdml_t *hdml, Doc *doc, request_rec *r, device_table *spec)
 {
   int     ii;
   int     jj;
@@ -1421,47 +1423,48 @@ s_hdml_start_input_tag(void* pdoc, Node* node)
     name  = qs_get_attr_name(doc,attr);
     value = qs_get_attr_value(doc,attr);
 
-    if ((*name == 't'|| *name == 'T') && strcasecmp(name, "type") == 0) {
-      if ((*value == 't' || *value == 'T') && strcasecmp(value, "text") == 0) {
+    if (STRCASEEQ('t','T',"type",name)) {
+      if (STRCASEEQ('t','T',"text",value)) {
         /*--------------------------------------------------------------------*/
         /* "input type ='text'" tag is processed.                             */
         /*--------------------------------------------------------------------*/
         s_hdml_do_input_text_tag(hdml, node);
       }
-      else
-      if ((*value == 'p' || *value == 'P') && strcasecmp(value, "password") == 0) {
+      else if (STRCASEEQ('p','P',"password",value)) {
         /*--------------------------------------------------------------------*/
         /* "input type='password'" tag is processed.                          */
         /*--------------------------------------------------------------------*/
         s_hdml_do_input_password_tag(hdml, node);
       }
-      else
-      if ((*value == 's' || *value == 'S') && strcasecmp(value, "submit") == 0) {
+      else if (STRCASEEQ('s','S',"submit",value)) {
         /*--------------------------------------------------------------------*/
         /* "input type='submit'" tag is processed.                            */
         /*--------------------------------------------------------------------*/
         s_hdml_do_input_submit_tag(hdml, node);
       }
-      else 
-      if ((*value == 'h' || *value == 'H') && strcasecmp(value, "hidden") == 0) {
+      else if (STRCASEEQ('h','H',"hidden",value)) {
         /*--------------------------------------------------------------------*/
         /* "input type='hidden'" tag is processed.                            */
         /*--------------------------------------------------------------------*/
         s_hdml_do_input_hidden_tag(hdml, node);
       }
-      else
-      if ((*value == 'r' || *value == 'R') && strcasecmp(value, "radio") == 0) {
+      else if (STRCASEEQ('r','R',"radio",value)) {
         /*--------------------------------------------------------------------*/
         /* "input type='radio'" tag is processed.                             */
         /*--------------------------------------------------------------------*/
         s_hdml_do_input_radio_tag(hdml, node);
       }
-      else 
-      if ((*value == 'c' || *value == 'C') && strcasecmp(value, "checkbox") == 0) {
+      else if (STRCASEEQ('c','C',"checkbox",value)) {
         /*--------------------------------------------------------------------*/
         /* "input type='checkbox'" tag is processed.                          */
         /*--------------------------------------------------------------------*/
         s_hdml_do_input_checkbox_tag(hdml, node);
+      }
+      else if (STRCASEEQ('r','R',"reset",value)) {
+        /*--------------------------------------------------------------------*/
+        /* "input type='reset'" tag is processed.                            */
+        /*--------------------------------------------------------------------*/
+        s_hdml_do_input_reset_tag(hdml, node);
       }
     }
     else 
@@ -1748,9 +1751,45 @@ s_hdml_do_input_submit_tag(hdml_t* hdml, Node* tag)
     }
   }
   s_output_to_hdml_out(hdml, ">"         );
-  s_output_to_hdml_out(hdml, val);
+  if (val) {
+    s_output_to_hdml_out(hdml, val);
+  }
   s_output_to_hdml_out(hdml, "</A>\r\n"    );
 }
+
+
+/**
+ * The substitution processing of tag "input type = reset" is done. 
+ * 
+ * @param hdml [i/o] The pointer to the HDML structure at the output 
+ *                   destination is specified. 
+ * @param tag  [i]   The tag node of input type=submit is specified. 
+ */
+static void
+s_hdml_do_input_reset_tag(hdml_t *hdml, Node *tag)
+{
+  Doc           *doc = hdml->doc;
+  request_rec   *r   = doc->r;
+  char          *nm  = NULL;
+  char          *val = NULL;
+
+  s_hdml_tag_output_upper_half(hdml, tag);
+
+  s_output_to_hdml_out(hdml, 
+                  apr_psprintf(r->pool, 
+                          "<A TASK=GO LABEL=OK DEST=#D0>"));
+
+  /*--------------------------------------------------------------------------*/
+  /* get name and value attribute                                             */
+  /*--------------------------------------------------------------------------*/
+  nm  = qs_get_name_attr  (doc, tag, r);
+  val = qs_get_value_attr (doc, tag, r);
+  if (val) {
+    s_output_to_hdml_out(hdml, val);
+  }
+  s_output_to_hdml_out(hdml, "</A>\r\n"    );
+}
+
 
 /**
  * The substitution processing of tag "input type = hidden" is done. 
@@ -2662,8 +2701,8 @@ s_hdml_end_div_tag(void *pdoc,  Node *UNUSED(node))
  *                   length is stored is specified. 
  * @return The character string after it connects it is returned. 
  */
-char*
-qs_out_apr_pstrcat(request_rec* r, char* o, char* s, int* len)
+char *
+qs_out_apr_pstrcat(request_rec *r, char *o, char *s, int *len)
 {
   *len = (strlen(s) + *len);
   return apr_pstrcat(r->pool, o, s, NULL);
@@ -2678,10 +2717,10 @@ qs_out_apr_pstrcat(request_rec* r, char* o, char* s, int* len)
  *                   to generate it is specified.
  * @return The character string after it generates it is returned. 
  */
-static char*
-s_get_form_no(request_rec* r, hdml_t* hdml) 
+static char *
+s_s_get_form_no(request_rec *r, hdml_t *hdml) 
 {
-  char*          result;
+  char           *result;
   apr_time_exp_t tm;
   unsigned long  fc;
 
@@ -2832,8 +2871,8 @@ s_hdml_count_radio_tag(hdml_t* hdml, Node* node)
  * @param s    [i]   The character string that should be output is specified. 
  * @return The pointer to the HDML structure after it processes it is returned.
  */
-static hdml_t* 
-s_output_to_hdml_out(hdml_t* hdml, char* s)
+static hdml_t *
+s_output_to_hdml_out(hdml_t *hdml, char *s)
 {
   hdml->out = qs_out_apr_pstrcat(hdml->doc->r, hdml->out, s, &hdml->out_len);
 

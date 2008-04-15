@@ -458,6 +458,7 @@ void test_hdml_font_tag_004();
 void test_hdml_font_tag_005();
 void test_hdml_font_tag_006();
 /* pend */
+static char *test_get_form_no(request_rec *r, hdml_t *hdml);
 
 int
 main()
@@ -465,6 +466,8 @@ main()
   CU_pSuite hdml_suite;
   CU_initialize_registry();
   hdml_suite = CU_add_suite("test chxj_exchange_hdml()", NULL, NULL);
+  s_get_form_no = test_get_form_no;
+    
 
   /*=========================================================================*/
   /* COMMENT                                                                 */
@@ -747,7 +750,6 @@ main()
   CU_add_test(hdml_suite, "test <img alt> with alphabetic value." ,            test_hdml_img_tag_035);
   CU_add_test(hdml_suite, "test <img alt> with japanese value." ,              test_hdml_img_tag_036);
   CU_add_test(hdml_suite, "test <img alt> with japanese-hankaku value." ,      test_hdml_img_tag_037);
-#if 0
 
   /*=========================================================================*/
   /* <input>                                                                 */
@@ -757,7 +759,6 @@ main()
   CU_add_test(hdml_suite, "test <input type> with void value." ,               test_hdml_input_tag_003);
   CU_add_test(hdml_suite, "test <input type> with value(text)." ,              test_hdml_input_tag_004);
   CU_add_test(hdml_suite, "test <input type> with value(password)." ,          test_hdml_input_tag_005);
-  CU_add_test(hdml_suite, "test <input type> with value(password) 2." ,        test_hdml_input_tag_005_1);
   CU_add_test(hdml_suite, "test <input type> with value(checkbox)." ,          test_hdml_input_tag_006);
   CU_add_test(hdml_suite, "test <input type> with value(radio)." ,             test_hdml_input_tag_007);
   CU_add_test(hdml_suite, "test <input type> with value(hidden)." ,            test_hdml_input_tag_008);
@@ -790,7 +791,6 @@ main()
   CU_add_test(hdml_suite, "test <input istyle> 2." ,                           test_hdml_input_tag_035);
   CU_add_test(hdml_suite, "test <input istyle> 3." ,                           test_hdml_input_tag_036);
   CU_add_test(hdml_suite, "test <input istyle> 4." ,                           test_hdml_input_tag_037);
-  CU_add_test(hdml_suite, "test <input istyle> 4-1." ,                         test_hdml_input_tag_037_1);
   CU_add_test(hdml_suite, "test <input istyle> 5." ,                           test_hdml_input_tag_038);
   CU_add_test(hdml_suite, "test <input istyle> 6." ,                           test_hdml_input_tag_039);
   CU_add_test(hdml_suite, "test <input istyle> 7." ,                           test_hdml_input_tag_040);
@@ -801,6 +801,7 @@ main()
   CU_add_test(hdml_suite, "test <input istyle> 12." ,                          test_hdml_input_tag_045);
   CU_add_test(hdml_suite, "test <input istyle> 13." ,                          test_hdml_input_tag_046);
   CU_add_test(hdml_suite, "test <input istyle> 14." ,                          test_hdml_input_tag_047);
+#if 0
 
   /*=========================================================================*/
   /* <li>                                                                    */
@@ -1052,6 +1053,14 @@ const char *test_run_http_scheme(request_rec *r)
 {
   static char *s = "http";
   return s;
+}
+
+static int form_no_counter = 0;
+static char *
+test_get_form_no(request_rec *r, hdml_t *hdml)
+{
+  form_no_counter++;
+  return apr_psprintf(r->pool, "E%06d", form_no_counter);
 }
 
 void * test_get_module_config(const ap_conf_vector_t *cv, const module *m)
@@ -7149,14 +7158,28 @@ void test_hdml_img_tag_037()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 /*============================================================================*/
 /* <INPUT>                                                                    */
 /*============================================================================*/
 void test_hdml_input_tag_001() 
 {
-#define  TEST_STRING "<input>"
-#define  RESULT_STRING "<input />"
+#define  TEST_STRING "<html><body><form><input></form>"
+#define  RESULT_STRING \
+"<HDML VERSION=3.0 TTL=0 MARKABLE=TRUE>\r\n" \
+"<NODISPLAY NAME=D0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GOSUB DEST=#D1 NEXT=#D2 CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"<DISPLAY NAME=D2 TITLE=\"NO TITLE\">\r\n" \
+"<ACTION TYPE=ACCEPT TASK=NOOP LABEL=\" \">\r\n" \
+"\r\n" \
+"</DISPLAY>\r\n" \
+"<NODISPLAY NAME=F0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GO METHOD=POST DEST=\"\" POSTDATA=\"_chxj_dmy=\" CLEAR=TRUE >\r\n" \
+"</NODISPLAY>\r\n" \
+"<NODISPLAY NAME=D1>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=RETURN VARS=\"_chxj_dmy=\" CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"</HDML>\r\n" 
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7173,7 +7196,8 @@ void test_hdml_input_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -7184,8 +7208,23 @@ void test_hdml_input_tag_001()
 }
 void test_hdml_input_tag_002() 
 {
-#define  TEST_STRING "<input type>"
-#define  RESULT_STRING "<input />"
+#define  TEST_STRING "<html><body><form><input type></form>"
+#define  RESULT_STRING \
+"<HDML VERSION=3.0 TTL=0 MARKABLE=TRUE>\r\n" \
+"<NODISPLAY NAME=D0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GOSUB DEST=#D1 NEXT=#D2 CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"<DISPLAY NAME=D2 TITLE=\"NO TITLE\">\r\n" \
+"<ACTION TYPE=ACCEPT TASK=NOOP LABEL=\" \">\r\n" \
+"\r\n" \
+"</DISPLAY>\r\n" \
+"<NODISPLAY NAME=F0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GO METHOD=POST DEST=\"\" POSTDATA=\"_chxj_dmy=\" CLEAR=TRUE >\r\n" \
+"</NODISPLAY>\r\n" \
+"<NODISPLAY NAME=D1>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=RETURN VARS=\"_chxj_dmy=\" CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"</HDML>\r\n" 
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7202,7 +7241,8 @@ void test_hdml_input_tag_002()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -7213,8 +7253,23 @@ void test_hdml_input_tag_002()
 }
 void test_hdml_input_tag_003() 
 {
-#define  TEST_STRING "<input type=\"\">"
-#define  RESULT_STRING "<input />"
+#define  TEST_STRING "<html><body><form><input type=\"\"></form></body></html>"
+#define  RESULT_STRING \
+"<HDML VERSION=3.0 TTL=0 MARKABLE=TRUE>\r\n" \
+"<NODISPLAY NAME=D0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GOSUB DEST=#D1 NEXT=#D2 CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"<DISPLAY NAME=D2 TITLE=\"NO TITLE\">\r\n" \
+"<ACTION TYPE=ACCEPT TASK=NOOP LABEL=\" \">\r\n" \
+"\r\n" \
+"</DISPLAY>\r\n" \
+"<NODISPLAY NAME=F0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GO METHOD=POST DEST=\"\" POSTDATA=\"_chxj_dmy=\" CLEAR=TRUE >\r\n" \
+"</NODISPLAY>\r\n" \
+"<NODISPLAY NAME=D1>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=RETURN VARS=\"_chxj_dmy=\" CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"</HDML>\r\n" 
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7231,7 +7286,8 @@ void test_hdml_input_tag_003()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -7242,8 +7298,27 @@ void test_hdml_input_tag_003()
 }
 void test_hdml_input_tag_004() 
 {
-#define  TEST_STRING "<input type=\"text\">"
-#define  RESULT_STRING "<input type=\"text\" />"
+#define  TEST_STRING "<html><body><form><input type=\"text\"></form></body></html>"
+#define  RESULT_STRING \
+"<HDML VERSION=3.0 TTL=0 MARKABLE=TRUE>\r\n" \
+"<NODISPLAY NAME=D0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GOSUB DEST=#D1 NEXT=#D2 CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"<DISPLAY NAME=D2 TITLE=\"NO TITLE\">\r\n" \
+"<ACTION TYPE=ACCEPT TASK=NOOP LABEL=\" \">\r\n" \
+"<A TASK=GOSUB LABEL=入力 DEST=#D3 VARS=\"V=$E00000200\" RECEIVE=E00000100>[$E00000300]</A>\r\n" \
+"\r\n" \
+"</DISPLAY>\r\n" \
+"<ENTRY NAME=D3  KEY=V DEFAULT=$V  MARKABLE=FALSE>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=RETURN RETVALS=$V>\r\n" \
+"</ENTRY>\r\n" \
+"<NODISPLAY NAME=F0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GO METHOD=POST DEST=\"\" POSTDATA=\"=$E00000400&_chxj_dmy=\" CLEAR=TRUE >\r\n" \
+"</NODISPLAY>\r\n" \
+"<NODISPLAY NAME=D1>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=RETURN VARS=\"E00000500=\" CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"</HDML>\r\n" 
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7256,11 +7331,13 @@ void test_hdml_input_tag_004()
 
   SPEC_INIT(spec);
   destlen = sizeof(TEST_STRING)-1;
+  form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -7271,8 +7348,28 @@ void test_hdml_input_tag_004()
 }
 void test_hdml_input_tag_005() 
 {
-#define  TEST_STRING "<input type=\"password\">"
-#define  RESULT_STRING "<input type=\"password\" FORMAT=\"*N\" />"
+#define  TEST_STRING "<html><body><form><input type=\"password\"></form></body></html>"
+#define  RESULT_STRING \
+"<HDML VERSION=3.0 TTL=0 MARKABLE=TRUE>\r\n" \
+"<NODISPLAY NAME=D0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GOSUB DEST=#D1 NEXT=#D2 CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"<DISPLAY NAME=D2 TITLE=\"NO TITLE\">\r\n" \
+"<ACTION TYPE=ACCEPT TASK=NOOP LABEL=\" \">\r\n" \
+"<A TASK=GOSUB LABEL=\"入力\" DEST=#D3 VARS=\"V=$E00000100\" RECEIVE=E00000200>[$E00000300]</A>\r\n" \
+"\r\n" \
+"</DISPLAY>\r\n" \
+"<ENTRY NAME=D3  KEY=V DEFAULT=$V  FORMAT=*N NOECHO=TRUE  MARKABLE=FALSE>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=RETURN RETVALS=$V>\r\n" \
+"</ENTRY>\r\n" \
+"<NODISPLAY NAME=F0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GO METHOD=POST DEST=\"\" POSTDATA=\"=$E00000400&_chxj_dmy=\" CLEAR=TRUE >\r\n" \
+"</NODISPLAY>\r\n" \
+"<NODISPLAY NAME=D1>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=RETURN VARS=\"E00000500=\" CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"</HDML>\r\n" 
+
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7286,41 +7383,13 @@ void test_hdml_input_tag_005()
   SPEC_INIT(spec);
   entry.pc_flag = 0;
   destlen = sizeof(TEST_STRING)-1;
+  form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_input_tag_005_1() 
-{
-#define  TEST_STRING "<input type=\"password\">"
-#define  RESULT_STRING "<input type=\"password\" />"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  entry.pc_flag = 1;
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -7331,8 +7400,30 @@ void test_hdml_input_tag_005_1()
 }
 void test_hdml_input_tag_006() 
 {
-#define  TEST_STRING "<input type=\"checkbox\">"
-#define  RESULT_STRING "<input type=\"checkbox\" />"
+#define  TEST_STRING "<html><body><form><input type=\"checkbox\"></form></body></html>"
+#define  RESULT_STRING \
+"<HDML VERSION=3.0 TTL=0 MARKABLE=TRUE>\r\n" \
+"<NODISPLAY NAME=D0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GOSUB DEST=#D1 NEXT=#D2 CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"<DISPLAY NAME=D2 TITLE=\"NO TITLE\">\r\n" \
+"<ACTION TYPE=ACCEPT TASK=NOOP LABEL=\" \">\r\n" \
+"<A TASK=GOSUB LABEL=\"aｯｸ\" DEST=\"#$E00000500\" VARS=\"V=\" RECEIVE=\"E00000400;E00000301;E00000202\">$E00000102</A>\r\n" \
+"\r\n" \
+"</DISPLAY>\r\n" \
+"<NODISPLAY NAME=\"_chk\">\r\n" \
+"<ACTION TYPE=\"ACCEPT\" TASK=\"RETURN\" RETVALS=\"_uchk;$V;X\" >\r\n" \
+"</NODISPLAY>\r\n" \
+"<NODISPLAY NAME=\"_uchk\">\r\n" \
+"<ACTION TYPE=\"ACCEPT\" TASK=\"RETURN\" RETVALS=\"_chk;;_\" >\r\n" \
+"</NODISPLAY>\r\n" \
+"<NODISPLAY NAME=F0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GO METHOD=POST DEST=\"\" POSTDATA=\"_chxj_c_=$E00000901&_chxj_dmy=\" CLEAR=TRUE >\r\n" \
+"</NODISPLAY>\r\n" \
+"<NODISPLAY NAME=D1>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=RETURN VARS=\"E00000800=_chk&E00000701=&E00000602=_\" CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"</HDML>\r\n" 
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7345,11 +7436,13 @@ void test_hdml_input_tag_006()
 
   SPEC_INIT(spec);
   destlen = sizeof(TEST_STRING)-1;
+  form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -7360,8 +7453,24 @@ void test_hdml_input_tag_006()
 }
 void test_hdml_input_tag_007() 
 {
-#define  TEST_STRING "<input type=\"radio\">"
-#define  RESULT_STRING "<input type=\"radio\" />"
+#define  TEST_STRING "<html><body><form><input type=\"radio\"></form></body></html>"
+#define  RESULT_STRING \
+"<HDML VERSION=3.0 TTL=0 MARKABLE=TRUE>\r\n" \
+"<NODISPLAY NAME=D0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GOSUB DEST=#D1 NEXT=#D2 CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"<DISPLAY NAME=D2 TITLE=\"NO TITLE\">\r\n" \
+"<ACTION TYPE=ACCEPT TASK=NOOP LABEL=\" \">\r\n" \
+"\r\n" \
+"</DISPLAY>\r\n" \
+"<NODISPLAY NAME=F0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GO METHOD=POST DEST=\"\" POSTDATA=\"_chxj_dmy=\" CLEAR=TRUE >\r\n" \
+"</NODISPLAY>\r\n" \
+"<NODISPLAY NAME=D1>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=RETURN VARS=\"_chxj_dmy=\" CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"</HDML>\r\n" 
+
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7374,11 +7483,13 @@ void test_hdml_input_tag_007()
 
   SPEC_INIT(spec);
   destlen = sizeof(TEST_STRING)-1;
+  form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -7389,8 +7500,24 @@ void test_hdml_input_tag_007()
 }
 void test_hdml_input_tag_008() 
 {
-#define  TEST_STRING "<input type=\"hidden\">"
-#define  RESULT_STRING "<input type=\"hidden\" />"
+#define  TEST_STRING "<html><body><form><input type=\"hidden\"></form></body></html>"
+#define  RESULT_STRING \
+"<HDML VERSION=3.0 TTL=0 MARKABLE=TRUE>\r\n" \
+"<NODISPLAY NAME=D0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GOSUB DEST=#D1 NEXT=#D2 CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"<DISPLAY NAME=D2 TITLE=\"NO TITLE\">\r\n" \
+"<ACTION TYPE=ACCEPT TASK=NOOP LABEL=\" \">\r\n" \
+"\r\n" \
+"</DISPLAY>\r\n" \
+"<NODISPLAY NAME=F0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GO METHOD=POST DEST=\"\" POSTDATA=\"_chxj_dmy=\" CLEAR=TRUE >\r\n" \
+"</NODISPLAY>\r\n" \
+"<NODISPLAY NAME=D1>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=RETURN VARS=\"_chxj_dmy=\" CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"</HDML>\r\n" 
+
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7403,11 +7530,13 @@ void test_hdml_input_tag_008()
 
   SPEC_INIT(spec);
   destlen = sizeof(TEST_STRING)-1;
+  form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -7418,8 +7547,25 @@ void test_hdml_input_tag_008()
 }
 void test_hdml_input_tag_009() 
 {
-#define  TEST_STRING "<input type=\"submit\">"
-#define  RESULT_STRING "<input type=\"submit\" />"
+#define  TEST_STRING "<html><body><form><input type=\"submit\"></form></body></html>"
+#define  RESULT_STRING \
+"<HDML VERSION=3.0 TTL=0 MARKABLE=TRUE>\r\n" \
+"<NODISPLAY NAME=D0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GOSUB DEST=#D1 NEXT=#D2 CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"<DISPLAY NAME=D2 TITLE=\"NO TITLE\">\r\n" \
+"<ACTION TYPE=ACCEPT TASK=NOOP LABEL=\" \">\r\n" \
+"<A TASK=GO LABEL=OK DEST=#F0 ></A>\r\n" \
+"\r\n" \
+"</DISPLAY>\r\n" \
+"<NODISPLAY NAME=F0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GO METHOD=POST DEST=\"\" POSTDATA=\"_chxj_dmy=\" CLEAR=TRUE >\r\n" \
+"</NODISPLAY>\r\n" \
+"<NODISPLAY NAME=D1>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=RETURN VARS=\"_chxj_dmy=\" CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"</HDML>\r\n" \
+
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7432,11 +7578,13 @@ void test_hdml_input_tag_009()
 
   SPEC_INIT(spec);
   destlen = sizeof(TEST_STRING)-1;
+  form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -7447,8 +7595,24 @@ void test_hdml_input_tag_009()
 }
 void test_hdml_input_tag_010() 
 {
-#define  TEST_STRING "<input type=\"reset\">"
-#define  RESULT_STRING "<input type=\"reset\" />"
+#define  TEST_STRING "<html><body><form><input type=\"reset\"></body></form></html>"
+#define  RESULT_STRING \
+"<HDML VERSION=3.0 TTL=0 MARKABLE=TRUE>\r\n" \
+"<NODISPLAY NAME=D0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GOSUB DEST=#D1 NEXT=#D2 CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"<DISPLAY NAME=D2 TITLE=\"NO TITLE\">\r\n" \
+"<ACTION TYPE=ACCEPT TASK=NOOP LABEL=\" \">\r\n" \
+"<A TASK=GO LABEL=OK DEST=#D0></A>\r\n" \
+"\r\n" \
+"</DISPLAY>\r\n" \
+"<NODISPLAY NAME=F0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GO METHOD=POST DEST=\"\" POSTDATA=\"_chxj_dmy=\" CLEAR=TRUE >\r\n" \
+"</NODISPLAY>\r\n" \
+"<NODISPLAY NAME=D1>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=RETURN VARS=\"_chxj_dmy=\" CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"</HDML>\r\n" 
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7461,11 +7625,13 @@ void test_hdml_input_tag_010()
 
   SPEC_INIT(spec);
   destlen = sizeof(TEST_STRING)-1;
+  form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -7477,7 +7643,7 @@ void test_hdml_input_tag_010()
 void test_hdml_input_tag_011() 
 {
 #define  TEST_STRING "<input type=\"unknown\">"
-#define  RESULT_STRING "<input />"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7490,11 +7656,13 @@ void test_hdml_input_tag_011()
 
   SPEC_INIT(spec);
   destlen = sizeof(TEST_STRING)-1;
+  form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -7506,7 +7674,7 @@ void test_hdml_input_tag_011()
 void test_hdml_input_tag_012() 
 {
 #define  TEST_STRING "<input name>"
-#define  RESULT_STRING "<input />"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7519,11 +7687,13 @@ void test_hdml_input_tag_012()
 
   SPEC_INIT(spec);
   destlen = sizeof(TEST_STRING)-1;
+  form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -7535,7 +7705,7 @@ void test_hdml_input_tag_012()
 void test_hdml_input_tag_013() 
 {
 #define  TEST_STRING "<input name=\"\">"
-#define  RESULT_STRING "<input />"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7548,11 +7718,13 @@ void test_hdml_input_tag_013()
 
   SPEC_INIT(spec);
   destlen = sizeof(TEST_STRING)-1;
+  form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -7564,7 +7736,7 @@ void test_hdml_input_tag_013()
 void test_hdml_input_tag_014() 
 {
 #define  TEST_STRING "<input name=\"a\">"
-#define  RESULT_STRING "<input name=\"a\" />"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7577,11 +7749,13 @@ void test_hdml_input_tag_014()
 
   SPEC_INIT(spec);
   destlen = sizeof(TEST_STRING)-1;
+  form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -7593,7 +7767,7 @@ void test_hdml_input_tag_014()
 void test_hdml_input_tag_015() 
 {
 #define  TEST_STRING "<input name=\"亀\">"
-#define  RESULT_STRING "<input name=\"亀\" />"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7606,11 +7780,13 @@ void test_hdml_input_tag_015()
 
   SPEC_INIT(spec);
   destlen = sizeof(TEST_STRING)-1;
+  form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -7622,7 +7798,7 @@ void test_hdml_input_tag_015()
 void test_hdml_input_tag_016() 
 {
 #define  TEST_STRING "<input name=\"ﾊﾝｶｸ\">"
-#define  RESULT_STRING "<input name=\"ﾊﾝｶｸ\" />"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7635,11 +7811,13 @@ void test_hdml_input_tag_016()
 
   SPEC_INIT(spec);
   destlen = sizeof(TEST_STRING)-1;
+  form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -7651,7 +7829,7 @@ void test_hdml_input_tag_016()
 void test_hdml_input_tag_017() 
 {
 #define  TEST_STRING "<input value>"
-#define  RESULT_STRING "<input />"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7664,11 +7842,13 @@ void test_hdml_input_tag_017()
 
   SPEC_INIT(spec);
   destlen = sizeof(TEST_STRING)-1;
+  form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -7680,7 +7860,7 @@ void test_hdml_input_tag_017()
 void test_hdml_input_tag_018() 
 {
 #define  TEST_STRING "<input value=\"\">"
-#define  RESULT_STRING "<input />"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7693,11 +7873,13 @@ void test_hdml_input_tag_018()
 
   SPEC_INIT(spec);
   destlen = sizeof(TEST_STRING)-1;
+  form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -7708,8 +7890,8 @@ void test_hdml_input_tag_018()
 }
 void test_hdml_input_tag_019() 
 {
-#define  TEST_STRING "<input value=\"a\">"
-#define  RESULT_STRING "<input value=\"a\" />"
+#define  TEST_STRING "<input type=\"text\" value=\"a\">"
+#define  RESULT_STRING "<A TASK=GOSUB LABEL=入力 DEST=#D1 VARS=\"V=$E00000200\" RECEIVE=E00000100>[$E00000300]</A>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7722,11 +7904,13 @@ void test_hdml_input_tag_019()
 
   SPEC_INIT(spec);
   destlen = sizeof(TEST_STRING)-1;
+  form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -7737,8 +7921,10 @@ void test_hdml_input_tag_019()
 }
 void test_hdml_input_tag_020() 
 {
-#define  TEST_STRING "<input value=\"亀\">"
-#define  RESULT_STRING "<input value=\"亀\" />"
+#define  TEST_STRING "<input type='text' value=\"亀\">"
+#define  RESULT_STRING \
+"<A TASK=GOSUB LABEL=入力 DEST=#D1 VARS=\"V=$E00000200\" RECEIVE=E00000100>[$E00000300]</A>\r\n"
+
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7751,11 +7937,13 @@ void test_hdml_input_tag_020()
 
   SPEC_INIT(spec);
   destlen = sizeof(TEST_STRING)-1;
+  form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -7766,8 +7954,9 @@ void test_hdml_input_tag_020()
 }
 void test_hdml_input_tag_021() 
 {
-#define  TEST_STRING "<input value=\"ﾊﾝｶｸ\">"
-#define  RESULT_STRING "<input value=\"ﾊﾝｶｸ\" />"
+#define  TEST_STRING "<input type='text' value=\"ﾊﾝｶｸ\">"
+#define  RESULT_STRING \
+"<A TASK=GOSUB LABEL=入力 DEST=#D1 VARS=\"V=$E00000200\" RECEIVE=E00000100>[$E00000300]</A>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7780,11 +7969,13 @@ void test_hdml_input_tag_021()
 
   SPEC_INIT(spec);
   destlen = sizeof(TEST_STRING)-1;
+  form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -7796,7 +7987,7 @@ void test_hdml_input_tag_021()
 void test_hdml_input_tag_022() 
 {
 #define  TEST_STRING "<input size>"
-#define  RESULT_STRING "<input />"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7809,11 +8000,13 @@ void test_hdml_input_tag_022()
 
   SPEC_INIT(spec);
   destlen = sizeof(TEST_STRING)-1;
+  form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -7825,7 +8018,7 @@ void test_hdml_input_tag_022()
 void test_hdml_input_tag_023() 
 {
 #define  TEST_STRING "<input size=\"\">"
-#define  RESULT_STRING "<input />"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7838,11 +8031,13 @@ void test_hdml_input_tag_023()
 
   SPEC_INIT(spec);
   destlen = sizeof(TEST_STRING)-1;
+  form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -7854,7 +8049,7 @@ void test_hdml_input_tag_023()
 void test_hdml_input_tag_024() 
 {
 #define  TEST_STRING "<input size=\"a\">"
-#define  RESULT_STRING "<input size=\"a\" />"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7867,11 +8062,13 @@ void test_hdml_input_tag_024()
 
   SPEC_INIT(spec);
   destlen = sizeof(TEST_STRING)-1;
+  form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -7883,7 +8080,7 @@ void test_hdml_input_tag_024()
 void test_hdml_input_tag_025() 
 {
 #define  TEST_STRING "<input size=\"1\">"
-#define  RESULT_STRING "<input size=\"1\" />"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7896,11 +8093,13 @@ void test_hdml_input_tag_025()
 
   SPEC_INIT(spec);
   destlen = sizeof(TEST_STRING)-1;
+  form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -7912,7 +8111,7 @@ void test_hdml_input_tag_025()
 void test_hdml_input_tag_026() 
 {
 #define  TEST_STRING "<input maxlength>"
-#define  RESULT_STRING "<input />"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7925,11 +8124,13 @@ void test_hdml_input_tag_026()
 
   SPEC_INIT(spec);
   destlen = sizeof(TEST_STRING)-1;
+  form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -7941,7 +8142,7 @@ void test_hdml_input_tag_026()
 void test_hdml_input_tag_027() 
 {
 #define  TEST_STRING "<input maxlength=\"\">"
-#define  RESULT_STRING "<input />"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7954,11 +8155,13 @@ void test_hdml_input_tag_027()
 
   SPEC_INIT(spec);
   destlen = sizeof(TEST_STRING)-1;
+  form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -7970,7 +8173,7 @@ void test_hdml_input_tag_027()
 void test_hdml_input_tag_028() 
 {
 #define  TEST_STRING "<input maxlength=\"a\">"
-#define  RESULT_STRING "<input />"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7987,7 +8190,8 @@ void test_hdml_input_tag_028()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -7999,7 +8203,7 @@ void test_hdml_input_tag_028()
 void test_hdml_input_tag_029() 
 {
 #define  TEST_STRING "<input maxlength=\"1\">"
-#define  RESULT_STRING "<input FORMAT=\"1m\" />"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8016,7 +8220,8 @@ void test_hdml_input_tag_029()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8028,7 +8233,7 @@ void test_hdml_input_tag_029()
 void test_hdml_input_tag_030() 
 {
 #define  TEST_STRING "<input checked>"
-#define  RESULT_STRING "<input checked=\"checked\" />"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8045,7 +8250,8 @@ void test_hdml_input_tag_030()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8057,7 +8263,7 @@ void test_hdml_input_tag_030()
 void test_hdml_input_tag_031() 
 {
 #define  TEST_STRING "<input accesskey>"
-#define  RESULT_STRING "<input />"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8074,7 +8280,8 @@ void test_hdml_input_tag_031()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8086,7 +8293,7 @@ void test_hdml_input_tag_031()
 void test_hdml_input_tag_032() 
 {
 #define  TEST_STRING "<input accesskey=\"\">"
-#define  RESULT_STRING "<input />"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8103,7 +8310,8 @@ void test_hdml_input_tag_032()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8115,7 +8323,7 @@ void test_hdml_input_tag_032()
 void test_hdml_input_tag_033() 
 {
 #define  TEST_STRING "<input accesskey=\"1\">"
-#define  RESULT_STRING "<input accesskey=\"1\" />"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8132,7 +8340,8 @@ void test_hdml_input_tag_033()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8144,7 +8353,7 @@ void test_hdml_input_tag_033()
 void test_hdml_input_tag_034() 
 {
 #define  TEST_STRING "<input istyle>"
-#define  RESULT_STRING "<input />"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8161,7 +8370,8 @@ void test_hdml_input_tag_034()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8173,7 +8383,7 @@ void test_hdml_input_tag_034()
 void test_hdml_input_tag_035() 
 {
 #define  TEST_STRING "<input istyle=\"\">"
-#define  RESULT_STRING "<input />"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8190,7 +8400,8 @@ void test_hdml_input_tag_035()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8202,7 +8413,7 @@ void test_hdml_input_tag_035()
 void test_hdml_input_tag_036() 
 {
 #define  TEST_STRING "<input istyle=\"0\">"
-#define  RESULT_STRING "<input />"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8219,7 +8430,8 @@ void test_hdml_input_tag_036()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8231,7 +8443,7 @@ void test_hdml_input_tag_036()
 void test_hdml_input_tag_037() 
 {
 #define  TEST_STRING "<input istyle=\"1\">"
-#define  RESULT_STRING "<input FORMAT=\"*M\" />"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8248,36 +8460,8 @@ void test_hdml_input_tag_037()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_input_tag_037_1() 
-{
-#define  TEST_STRING "<input istyle=\"1\" maxlength=\"10\">"
-#define  RESULT_STRING "<input FORMAT=\"10M\" />"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8289,7 +8473,7 @@ void test_hdml_input_tag_037_1()
 void test_hdml_input_tag_038() 
 {
 #define  TEST_STRING "<input istyle=\"2\">"
-#define  RESULT_STRING "<input FORMAT=\"*M\" />"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8306,7 +8490,8 @@ void test_hdml_input_tag_038()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8318,7 +8503,7 @@ void test_hdml_input_tag_038()
 void test_hdml_input_tag_039() 
 {
 #define  TEST_STRING "<input istyle=\"3\">"
-#define  RESULT_STRING "<input FORMAT=\"*m\" />"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8335,7 +8520,8 @@ void test_hdml_input_tag_039()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8347,7 +8533,7 @@ void test_hdml_input_tag_039()
 void test_hdml_input_tag_040() 
 {
 #define  TEST_STRING "<input istyle=\"4\">"
-#define  RESULT_STRING "<input FORMAT=\"*N\" />"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8364,7 +8550,8 @@ void test_hdml_input_tag_040()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8376,7 +8563,7 @@ void test_hdml_input_tag_040()
 void test_hdml_input_tag_041()
 {
 #define  TEST_STRING "<input istyle=\"5\">"
-#define  RESULT_STRING "<input />"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8393,7 +8580,8 @@ void test_hdml_input_tag_041()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8405,7 +8593,7 @@ void test_hdml_input_tag_041()
 void test_hdml_input_tag_042()
 {
 #define  TEST_STRING "<input istyle=\"a\">"
-#define  RESULT_STRING "<input />"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8422,7 +8610,8 @@ void test_hdml_input_tag_042()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8434,7 +8623,7 @@ void test_hdml_input_tag_042()
 void test_hdml_input_tag_043()
 {
 #define  TEST_STRING "<input istyle=\"1\" maxlength=\"10\">"
-#define  RESULT_STRING "<input FORMAT=\"10M\" />"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8451,7 +8640,8 @@ void test_hdml_input_tag_043()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8463,7 +8653,7 @@ void test_hdml_input_tag_043()
 void test_hdml_input_tag_044()
 {
 #define  TEST_STRING "<input istyle=\"2\" maxlength=\"10\">"
-#define  RESULT_STRING "<input FORMAT=\"10M\" />"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8480,7 +8670,8 @@ void test_hdml_input_tag_044()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8492,7 +8683,7 @@ void test_hdml_input_tag_044()
 void test_hdml_input_tag_045()
 {
 #define  TEST_STRING "<input istyle=\"3\" maxlength=\"10\">"
-#define  RESULT_STRING "<input FORMAT=\"10m\" />"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8509,7 +8700,8 @@ void test_hdml_input_tag_045()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8521,7 +8713,7 @@ void test_hdml_input_tag_045()
 void test_hdml_input_tag_046()
 {
 #define  TEST_STRING "<input istyle=\"4\" maxlength=\"10\">"
-#define  RESULT_STRING "<input FORMAT=\"10N\" />"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8538,7 +8730,8 @@ void test_hdml_input_tag_046()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8550,7 +8743,7 @@ void test_hdml_input_tag_046()
 void test_hdml_input_tag_047()
 {
 #define  TEST_STRING "<input istyle=\"a\" maxlength=\"10\">"
-#define  RESULT_STRING "<input FORMAT=\"10m\" />"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8567,7 +8760,8 @@ void test_hdml_input_tag_047()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8576,6 +8770,7 @@ void test_hdml_input_tag_047()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 /*============================================================================*/
 /* <LI>                                                                       */
 /*============================================================================*/
