@@ -582,7 +582,6 @@ main()
   /* <FORM>                                                                  */
   /*=========================================================================*/
   CU_add_test(hdml_suite, "test <form>.",                                      test_hdml_form_tag_001);
-#if 0
   CU_add_test(hdml_suite, "test <form method>.",                               test_hdml_form_tag_002);
   CU_add_test(hdml_suite, "test <form method=\"post\">.",                      test_hdml_form_tag_003);
   CU_add_test(hdml_suite, "test <form method=\"get\">.",                       test_hdml_form_tag_004);
@@ -591,6 +590,7 @@ main()
   CU_add_test(hdml_suite, "test <form action> with null cookie.",              test_hdml_form_tag_007);
   CU_add_test(hdml_suite, "test <form action> with other site .",              test_hdml_form_tag_008);
   CU_add_test(hdml_suite, "test <form action method>.",                        test_hdml_form_tag_009);
+#if 0
 
   /*=========================================================================*/
   /* <HEAD>                                                                  */
@@ -3146,8 +3146,23 @@ void test_hdml_div_tag_007()
 /*============================================================================*/
 void test_hdml_form_tag_001() 
 {
-#define  TEST_STRING "<form></form>"
-#define  RESULT_STRING ""
+#define  TEST_STRING "<html><body><form></form></body></html>"
+#define  RESULT_STRING \
+"<HDML VERSION=3.0 TTL=0 MARKABLE=TRUE>\r\n" \
+"<NODISPLAY NAME=D0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GOSUB DEST=#D1 NEXT=#D2 CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"<DISPLAY NAME=D2 TITLE=\"NO TITLE\">\r\n" \
+"<ACTION TYPE=ACCEPT TASK=NOOP LABEL=\" \">\r\n" \
+"\r\n" \
+"</DISPLAY>\r\n" \
+"<NODISPLAY NAME=F0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GO METHOD=POST DEST=\"\" POSTDATA=\"_chxj_dmy=\" CLEAR=TRUE >\r\n" \
+"</NODISPLAY>\r\n" \
+"<NODISPLAY NAME=D1>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=RETURN VARS=\"_chxj_dmy=\" CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"</HDML>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -3176,8 +3191,23 @@ void test_hdml_form_tag_001()
 }
 void test_hdml_form_tag_002() 
 {
-#define  TEST_STRING "<form method></form>"
-#define  RESULT_STRING "<form method=\"\"></form>"
+#define  TEST_STRING "<html><body><form method></form></body></html>"
+#define  RESULT_STRING \
+"<HDML VERSION=3.0 TTL=0 MARKABLE=TRUE>\r\n" \
+"<NODISPLAY NAME=D0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GOSUB DEST=#D1 NEXT=#D2 CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"<DISPLAY NAME=D2 TITLE=\"NO TITLE\">\r\n" \
+"<ACTION TYPE=ACCEPT TASK=NOOP LABEL=\" \">\r\n" \
+"\r\n" \
+"</DISPLAY>\r\n" \
+"<NODISPLAY NAME=F0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GO METHOD=POST DEST=\"\" POSTDATA=\"_chxj_dmy=\" CLEAR=TRUE >\r\n" \
+"</NODISPLAY>\r\n" \
+"<NODISPLAY NAME=D1>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=RETURN VARS=\"_chxj_dmy=\" CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n"  \
+"</HDML>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -3194,7 +3224,8 @@ void test_hdml_form_tag_002()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -3203,11 +3234,25 @@ void test_hdml_form_tag_002()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 void test_hdml_form_tag_003() 
 {
-#define  TEST_STRING "<form method=\"post\"></form>"
-#define  RESULT_STRING "<form method=\"post\"></form>"
+#define  TEST_STRING "<html><body><form method=\"post\"></form></body></html>"
+#define  RESULT_STRING \
+"<HDML VERSION=3.0 TTL=0 MARKABLE=TRUE>\r\n" \
+"<NODISPLAY NAME=D0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GOSUB DEST=#D1 NEXT=#D2 CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"<DISPLAY NAME=D2 TITLE=\"NO TITLE\">\r\n" \
+"<ACTION TYPE=ACCEPT TASK=NOOP LABEL=\" \">\r\n" \
+"\r\n" \
+"</DISPLAY>\r\n" \
+"<NODISPLAY NAME=F0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GO METHOD=POST DEST=\"\" POSTDATA=\"_chxj_dmy=\" CLEAR=TRUE >\r\n" \
+"</NODISPLAY>\r\n" \
+"<NODISPLAY NAME=D1>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=RETURN VARS=\"_chxj_dmy=\" CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n"  \
+"</HDML>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -3224,7 +3269,8 @@ void test_hdml_form_tag_003()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -3235,8 +3281,23 @@ void test_hdml_form_tag_003()
 }
 void test_hdml_form_tag_004() 
 {
-#define  TEST_STRING "<form method=\"get\"></form>"
-#define  RESULT_STRING "<form method=\"get\"></form>"
+#define  TEST_STRING "<html><body><form method=\"get\"></form></body></html>"
+#define  RESULT_STRING \
+"<HDML VERSION=3.0 TTL=0 MARKABLE=TRUE>\r\n" \
+"<NODISPLAY NAME=D0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GOSUB DEST=#D1 NEXT=#D2 CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"<DISPLAY NAME=D2 TITLE=\"NO TITLE\">\r\n" \
+"<ACTION TYPE=ACCEPT TASK=NOOP LABEL=\" \">\r\n" \
+"\r\n" \
+"</DISPLAY>\r\n" \
+"<NODISPLAY NAME=F0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GO METHOD=POST DEST=\"\" POSTDATA=\"_chxj_dmy=\" CLEAR=TRUE >\r\n" \
+"</NODISPLAY>\r\n" \
+"<NODISPLAY NAME=D1>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=RETURN VARS=\"_chxj_dmy=\" CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n"  \
+"</HDML>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -3253,7 +3314,8 @@ void test_hdml_form_tag_004()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -3264,8 +3326,23 @@ void test_hdml_form_tag_004()
 }
 void test_hdml_form_tag_005() 
 {
-#define  TEST_STRING "<form method=\"abc\"></form>"
-#define  RESULT_STRING "<form method=\"abc\"></form>"
+#define  TEST_STRING "<html><body><form method=\"abc\"></form></body></html>"
+#define  RESULT_STRING \
+"<HDML VERSION=3.0 TTL=0 MARKABLE=TRUE>\r\n" \
+"<NODISPLAY NAME=D0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GOSUB DEST=#D1 NEXT=#D2 CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"<DISPLAY NAME=D2 TITLE=\"NO TITLE\">\r\n" \
+"<ACTION TYPE=ACCEPT TASK=NOOP LABEL=\" \">\r\n" \
+"\r\n" \
+"</DISPLAY>\r\n" \
+"<NODISPLAY NAME=F0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GO METHOD=POST DEST=\"\" POSTDATA=\"_chxj_dmy=\" CLEAR=TRUE >\r\n" \
+"</NODISPLAY>\r\n" \
+"<NODISPLAY NAME=D1>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=RETURN VARS=\"_chxj_dmy=\" CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n"  \
+"</HDML>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -3282,7 +3359,8 @@ void test_hdml_form_tag_005()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -3293,8 +3371,23 @@ void test_hdml_form_tag_005()
 }
 void test_hdml_form_tag_006() 
 {
-#define  TEST_STRING "<form action></form>"
-#define  RESULT_STRING "<form action=\"\"></form>"
+#define  TEST_STRING "<html><body><form action></form></body></html>"
+#define  RESULT_STRING \
+"<HDML VERSION=3.0 TTL=0 MARKABLE=TRUE>\r\n" \
+"<NODISPLAY NAME=D0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GOSUB DEST=#D1 NEXT=#D2 CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"<DISPLAY NAME=D2 TITLE=\"NO TITLE\">\r\n" \
+"<ACTION TYPE=ACCEPT TASK=NOOP LABEL=\" \">\r\n" \
+"\r\n" \
+"</DISPLAY>\r\n" \
+"<NODISPLAY NAME=F0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GO METHOD=POST DEST=\"\" POSTDATA=\"_chxj_dmy=\" CLEAR=TRUE >\r\n" \
+"</NODISPLAY>\r\n" \
+"<NODISPLAY NAME=D1>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=RETURN VARS=\"_chxj_dmy=\" CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n"  \
+"</HDML>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -3311,7 +3404,8 @@ void test_hdml_form_tag_006()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -3322,8 +3416,23 @@ void test_hdml_form_tag_006()
 }
 void test_hdml_form_tag_007() 
 {
-#define  TEST_STRING "<form action></form>"
-#define  RESULT_STRING "<form action=\"\"></form>"
+#define  TEST_STRING "<html><body><form action></form></body></html>"
+#define  RESULT_STRING \
+"<HDML VERSION=3.0 TTL=0 MARKABLE=TRUE>\r\n" \
+"<NODISPLAY NAME=D0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GOSUB DEST=#D1 NEXT=#D2 CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"<DISPLAY NAME=D2 TITLE=\"NO TITLE\">\r\n" \
+"<ACTION TYPE=ACCEPT TASK=NOOP LABEL=\" \">\r\n" \
+"\r\n" \
+"</DISPLAY>\r\n" \
+"<NODISPLAY NAME=F0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GO METHOD=POST DEST=\"\" POSTDATA=\"_chxj_dmy=\" CLEAR=TRUE >\r\n" \
+"</NODISPLAY>\r\n" \
+"<NODISPLAY NAME=D1>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=RETURN VARS=\"_chxj_dmy=\" CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n"  \
+"</HDML>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -3340,7 +3449,8 @@ void test_hdml_form_tag_007()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, NULL);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -3351,8 +3461,23 @@ void test_hdml_form_tag_007()
 }
 void test_hdml_form_tag_008() 
 {
-#define  TEST_STRING "<form action=\"http://www.google.co.jp/\"></form>"
-#define  RESULT_STRING "<form action=\"http://www.google.co.jp/\"></form>"
+#define  TEST_STRING "<html><body><form action=\"http://www.google.co.jp/\"></form></body></html>"
+#define  RESULT_STRING \
+"<HDML VERSION=3.0 TTL=0 MARKABLE=TRUE>\r\n" \
+"<NODISPLAY NAME=D0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GOSUB DEST=#D1 NEXT=#D2 CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"<DISPLAY NAME=D2 TITLE=\"NO TITLE\">\r\n" \
+"<ACTION TYPE=ACCEPT TASK=NOOP LABEL=\" \">\r\n" \
+"\r\n" \
+"</DISPLAY>\r\n" \
+"<NODISPLAY NAME=F0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GO METHOD=POST DEST=\"http://www.google.co.jp/\" POSTDATA=\"_chxj_dmy=\" CLEAR=TRUE >\r\n" \
+"</NODISPLAY>\r\n" \
+"<NODISPLAY NAME=D1>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=RETURN VARS=\"_chxj_dmy=\" CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n"  \
+"</HDML>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -3369,7 +3494,8 @@ void test_hdml_form_tag_008()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -3380,8 +3506,23 @@ void test_hdml_form_tag_008()
 }
 void test_hdml_form_tag_009() 
 {
-#define  TEST_STRING "<form method=\"post\" action=\"hogehoge\"></form>"
-#define  RESULT_STRING "<form method=\"post\" action=\"hogehoge\"></form>"
+#define  TEST_STRING "<html><body><form method=\"post\" action=\"hogehoge\"></form></body></html>"
+#define  RESULT_STRING \
+"<HDML VERSION=3.0 TTL=0 MARKABLE=TRUE>\r\n" \
+"<NODISPLAY NAME=D0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GOSUB DEST=#D1 NEXT=#D2 CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"<DISPLAY NAME=D2 TITLE=\"NO TITLE\">\r\n" \
+"<ACTION TYPE=ACCEPT TASK=NOOP LABEL=\" \">\r\n" \
+"\r\n" \
+"</DISPLAY>\r\n" \
+"<NODISPLAY NAME=F0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GO METHOD=POST DEST=\"hogehoge\" POSTDATA=\"_chxj_dmy=\" CLEAR=TRUE >\r\n" \
+"</NODISPLAY>\r\n" \
+"<NODISPLAY NAME=D1>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=RETURN VARS=\"_chxj_dmy=\" CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n"  \
+"</HDML>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -3398,7 +3539,8 @@ void test_hdml_form_tag_009()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -3407,6 +3549,7 @@ void test_hdml_form_tag_009()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 /*============================================================================*/
 /* <HEAD>                                                                     */
 /*============================================================================*/
