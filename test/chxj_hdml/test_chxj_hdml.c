@@ -561,12 +561,12 @@ main()
   CU_add_test(hdml_suite, "test <dt>.",                                        test_hdml_dt_tag_001);
   CU_add_test(hdml_suite, "test <dt> with void value.",                        test_hdml_dt_tag_002);
 
-#if 0
   /*=========================================================================*/
   /* <DD>                                                                    */
   /*=========================================================================*/
   CU_add_test(hdml_suite, "test <dd>.",                                        test_hdml_dd_tag_001);
   CU_add_test(hdml_suite, "test <dd> with void value.",                        test_hdml_dd_tag_002);
+#if 0
 
   /*=========================================================================*/
   /* <DIV>                                                                   */
