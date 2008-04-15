@@ -359,6 +359,7 @@ void test_hdml_plaintext_tag_001();
 void test_hdml_plaintext_tag_002();
 void test_hdml_plaintext_tag_003();
 void test_hdml_plaintext_tag_004();
+void test_hdml_plaintext_tag_005();
 
 void test_hdml_pre_tag_001();
 void test_hdml_pre_tag_002();
@@ -852,7 +853,6 @@ main()
   CU_add_test(hdml_suite, "test <p> 6." ,                                      test_hdml_p_tag_006);
   CU_add_test(hdml_suite, "test <p> 7." ,                                      test_hdml_p_tag_007);
   CU_add_test(hdml_suite, "test <p> 8." ,                                      test_hdml_p_tag_008);
-#if 0
 
   /*=========================================================================*/
   /* <plaintext>                                                             */
@@ -860,7 +860,9 @@ main()
   CU_add_test(hdml_suite, "test <plaintext> 1." ,                              test_hdml_plaintext_tag_001);
   CU_add_test(hdml_suite, "test <plaintext> 2." ,                              test_hdml_plaintext_tag_002);
   CU_add_test(hdml_suite, "test <plaintext> 3. value is not closed." ,         test_hdml_plaintext_tag_003);
-  CU_add_test(hdml_suite, "test <plaintext> 3. value is not closed and hankaku." , test_hdml_plaintext_tag_004);
+  CU_add_test(hdml_suite, "test <plaintext> 4. value is not closed and hankaku." , test_hdml_plaintext_tag_004);
+  CU_add_test(hdml_suite, "test <plaintext> 5." ,                              test_hdml_plaintext_tag_005);
+#if 0
 
   /*=========================================================================*/
   /* <pre>                                                                   */
@@ -1058,6 +1060,11 @@ chxj_apply_convrule(request_rec* r, apr_array_header_t* convrules)
   entries.encoding = apr_pstrdup(r->pool, "UTF8");
   entries.pc_flag = 0;
   return &entries;
+}
+
+char *test_ap_escape_html(apr_pool_t *pool, const char *s)
+{
+  return (char *)s;
 }
 
 #define APR_INIT \
@@ -9734,14 +9741,13 @@ void test_hdml_p_tag_008()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/*KONNO*/
 /*============================================================================*/
 /* <PLAINTEXT>                                                                */
 /*============================================================================*/
 void test_hdml_plaintext_tag_001() 
 {
 #define  TEST_STRING "<plaintext>あああ</plaintext>"
-#define  RESULT_STRING "<plaintext>あああ</plaintext>"
+#define  RESULT_STRING "<LINE>あああ"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9758,7 +9764,8 @@ void test_hdml_plaintext_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9770,7 +9777,7 @@ void test_hdml_plaintext_tag_001()
 void test_hdml_plaintext_tag_002() 
 {
 #define  TEST_STRING "<plaintext><h1>あああ</h1><h1>いいい</h1></plaintext>"
-#define  RESULT_STRING "<plaintext><h1>あああ</h1><h1>いいい</h1></plaintext>"
+#define  RESULT_STRING "<LINE><h1>あああ</h1><h1>いいい</h1>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9787,7 +9794,8 @@ void test_hdml_plaintext_tag_002()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9799,7 +9807,7 @@ void test_hdml_plaintext_tag_002()
 void test_hdml_plaintext_tag_003() 
 {
 #define  TEST_STRING "<plaintext><h1>あああ<h1>いいい</h1></plaintext>"
-#define  RESULT_STRING "<plaintext><h1>あああ<h1>いいい</h1></plaintext>"
+#define  RESULT_STRING "<LINE><h1>あああ<h1>いいい</h1>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9816,7 +9824,8 @@ void test_hdml_plaintext_tag_003()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9828,7 +9837,7 @@ void test_hdml_plaintext_tag_003()
 void test_hdml_plaintext_tag_004() 
 {
 #define  TEST_STRING "<plaintext><h1>ﾊﾝｶｸ<h1>ﾊﾝｶｸ</plaintext>"
-#define  RESULT_STRING "<plaintext><h1>ﾊﾝｶｸ<h1>ﾊﾝｶｸ</plaintext>"
+#define  RESULT_STRING "<LINE><h1>ﾊﾝｶｸ<h1>ﾊﾝｶｸ"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9845,7 +9854,8 @@ void test_hdml_plaintext_tag_004()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9854,6 +9864,37 @@ void test_hdml_plaintext_tag_004()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+void test_hdml_plaintext_tag_005() 
+{
+#define  TEST_STRING "<plaintext>あああ\r\nいいい"
+#define  RESULT_STRING "<LINE>あああ\r\n<LINE>いいい"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+/*KONNO*/
 /*============================================================================*/
 /* <PRE>                                                                      */
 /*============================================================================*/

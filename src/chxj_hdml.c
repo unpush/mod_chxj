@@ -79,6 +79,9 @@ static char *s_hdml_start_dt_tag        (void *pdoc, Node *node);
 static char *s_hdml_end_dt_tag          (void *pdoc, Node *node);
 static char *s_hdml_start_dd_tag      (void *pdoc, Node *node);
 static char *s_hdml_end_dd_tag        (void *pdoc, Node *node);
+static char *s_hdml_start_plaintext_tag       (void *pdoc, Node *node);
+static char *s_hdml_start_plaintext_tag_inner (void *pdoc, Node *node);
+static char *s_hdml_end_plaintext_tag         (void *pdoc, Node *node);
 
 static char *((*s_get_form_no)(request_rec* r, hdml_t* hdml)) = s_s_get_form_no;
 
@@ -356,8 +359,8 @@ tag_handler hdml_handler[] = {
   },
   /* tagPLAINTEXT */
   {
-    NULL,
-    NULL,
+    s_hdml_start_plaintext_tag,
+    s_hdml_end_plaintext_tag,
   },
   /* tagBLINK */
   {
@@ -3229,6 +3232,81 @@ s_hdml_end_dd_tag(void *pdoc, Node *UNUSED(child))
 }
 
 
+/**
+ * It is a handler who processes the PLAINTEXT tag.
+ *
+ * @param pdoc  [i/o] The pointer to the HDML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The PLAINTEXT tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_hdml_start_plaintext_tag(void *pdoc, Node *node)
+{
+  hdml_t *hdml = GET_HDML(pdoc);
+  hdml->plaintext_value_len = 0;
+  s_hdml_start_plaintext_tag_inner(pdoc,node);
+  return hdml->out;
+}
+
+static char *
+s_hdml_start_plaintext_tag_inner(void *pdoc, Node *node)
+{
+  hdml_t *hdml = GET_HDML(pdoc);
+  Doc    *doc = hdml->doc;
+  Node   *child;
+  for (child = qs_get_child_node(doc, node);
+       child;
+       child = qs_get_next_node(doc, child)) {
+    int i;
+    char *str = chxj_ap_escape_html(doc->r->pool, child->otext);
+    int len = strlen(str);
+    char oneChar[3];
+    for (i=0; i<len; i++) {
+      if (hdml->plaintext_value_len == 0) {
+        s_output_to_hdml_out(hdml, "<LINE>");
+      }
+      if (is_sjis_kanji(child->otext[i]) && i + 1 < len) {
+        oneChar[0] = child->otext[i+0];
+        oneChar[1] = child->otext[i+1];
+        oneChar[2] = 0; 
+        s_output_to_hdml_out(hdml, oneChar);
+        hdml->plaintext_value_len +=2;
+        i++;
+        continue;
+      }
+      if (child->otext[i] == '\n') {
+        hdml->plaintext_value_len = 0;
+        oneChar[0] = '\n';
+        oneChar[1] = 0;
+        s_output_to_hdml_out(hdml, oneChar);
+        continue;
+      }
+      oneChar[0] = child->otext[i];
+      oneChar[1] = 0;
+      s_output_to_hdml_out(hdml, oneChar);
+      hdml->plaintext_value_len++;
+    }
+    s_hdml_start_plaintext_tag_inner(pdoc, child);
+  }
+  return hdml->out;
+}
+
+
+/**
+ * It is a handler who processes the PLAINTEXT tag.
+ *
+ * @param pdoc  [i/o] The pointer to the HDML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The PLAINTEXT tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_hdml_end_plaintext_tag(void *pdoc, Node *UNUSED(child))
+{
+  hdml_t *hdml = GET_HDML(pdoc);
+  return hdml->out;
+}
 /*
  * vim:ts=2 et
  */

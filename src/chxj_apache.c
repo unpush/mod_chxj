@@ -60,6 +60,17 @@ chxj_get_module_config(const ap_conf_vector_t *cv, const module *m)
   return ap_get_module_config(cv,m);
 #endif
 }
+
+
+char *
+chxj_ap_escape_html(apr_pool_t *p, const char *s) 
+{
+#if defined(CHXJ_TEST)
+  return test_ap_escape_html(p, s);
+#else
+  return ap_escape_html(p, s);
+#endif
+}
 /*
  * vim:ts=2 et
  */
