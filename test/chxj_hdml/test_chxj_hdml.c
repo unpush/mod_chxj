@@ -680,7 +680,6 @@ main()
   CU_add_test(hdml_suite, "test <h6> with align attribute(center).",           test_hdml_h6_tag_009);
   CU_add_test(hdml_suite, "test <h6> with align attribute(unkown).",           test_hdml_h6_tag_010);
 
-#if 0
   /*=========================================================================*/
   /* <hr>                                                                    */
   /*=========================================================================*/
@@ -702,6 +701,7 @@ main()
   CU_add_test(hdml_suite, "test <hr width> with numeric value.",               test_hdml_hr_tag_016);
   CU_add_test(hdml_suite, "test <hr noshade>.",                                test_hdml_hr_tag_017);
   CU_add_test(hdml_suite, "test <hr color>.",                                  test_hdml_hr_tag_018);
+#if 0
 
   /*=========================================================================*/
   /* <html>                                                                  */
@@ -5418,14 +5418,15 @@ void test_hdml_h6_tag_010()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 /*============================================================================*/
 /* <HR>                                                                       */
 /*============================================================================*/
 void test_hdml_hr_tag_001() 
 {
 #define  TEST_STRING "<hr>"
-#define  RESULT_STRING "<hr />"
+#define  RESULT_STRING \
+"<BR>\r\n" \
+"<CENTER>－－－－－－－－－<BR>\r\n" 
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -5442,7 +5443,8 @@ void test_hdml_hr_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -5454,7 +5456,9 @@ void test_hdml_hr_tag_001()
 void test_hdml_hr_tag_002() 
 {
 #define  TEST_STRING "<hr />"
-#define  RESULT_STRING "<hr />"
+#define  RESULT_STRING \
+"<BR>\r\n" \
+"<CENTER>－－－－－－－－－<BR>\r\n" 
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -5471,7 +5475,8 @@ void test_hdml_hr_tag_002()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -5483,7 +5488,9 @@ void test_hdml_hr_tag_002()
 void test_hdml_hr_tag_003() 
 {
 #define  TEST_STRING "<hr align>"
-#define  RESULT_STRING "<hr />"
+#define  RESULT_STRING \
+"<BR>\r\n" \
+"<CENTER>－－－－－－－－－<BR>\r\n" 
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -5500,7 +5507,8 @@ void test_hdml_hr_tag_003()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -5512,7 +5520,9 @@ void test_hdml_hr_tag_003()
 void test_hdml_hr_tag_004() 
 {
 #define  TEST_STRING "<hr align=\"\">"
-#define  RESULT_STRING "<hr />"
+#define  RESULT_STRING \
+"<BR>\r\n" \
+"<CENTER>－－－－－－－－－<BR>\r\n" 
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -5529,7 +5539,8 @@ void test_hdml_hr_tag_004()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -5541,7 +5552,9 @@ void test_hdml_hr_tag_004()
 void test_hdml_hr_tag_005() 
 {
 #define  TEST_STRING "<hr align=\"left\">"
-#define  RESULT_STRING "<hr align=\"left\" />"
+#define  RESULT_STRING \
+"<BR>\r\n" \
+"<CENTER>－－－－－－－－－<BR>\r\n" 
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -5558,6 +5571,8 @@ void test_hdml_hr_tag_005()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -5569,7 +5584,9 @@ void test_hdml_hr_tag_005()
 void test_hdml_hr_tag_006() 
 {
 #define  TEST_STRING "<hr align=\"right\">"
-#define  RESULT_STRING "<hr align=\"right\" />"
+#define  RESULT_STRING \
+"<BR>\r\n" \
+"<CENTER>－－－－－－－－－<BR>\r\n" 
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -5598,7 +5615,9 @@ void test_hdml_hr_tag_006()
 void test_hdml_hr_tag_007() 
 {
 #define  TEST_STRING "<hr align=\"center\">"
-#define  RESULT_STRING "<hr align=\"center\" />"
+#define  RESULT_STRING \
+"<BR>\r\n" \
+"<CENTER>－－－－－－－－－<BR>\r\n" 
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -5615,7 +5634,8 @@ void test_hdml_hr_tag_007()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -5627,7 +5647,9 @@ void test_hdml_hr_tag_007()
 void test_hdml_hr_tag_008() 
 {
 #define  TEST_STRING "<hr align=\"unknown\">"
-#define  RESULT_STRING "<hr />"
+#define  RESULT_STRING \
+"<BR>\r\n" \
+"<CENTER>－－－－－－－－－<BR>\r\n" 
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -5644,7 +5666,8 @@ void test_hdml_hr_tag_008()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -5656,7 +5679,9 @@ void test_hdml_hr_tag_008()
 void test_hdml_hr_tag_009() 
 {
 #define  TEST_STRING "<hr size>"
-#define  RESULT_STRING "<hr />"
+#define  RESULT_STRING \
+"<BR>\r\n" \
+"<CENTER>－－－－－－－－－<BR>\r\n" 
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -5673,7 +5698,8 @@ void test_hdml_hr_tag_009()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -5685,7 +5711,9 @@ void test_hdml_hr_tag_009()
 void test_hdml_hr_tag_010() 
 {
 #define  TEST_STRING "<hr size=\"\">"
-#define  RESULT_STRING "<hr />"
+#define  RESULT_STRING \
+"<BR>\r\n" \
+"<CENTER>－－－－－－－－－<BR>\r\n" 
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -5702,7 +5730,8 @@ void test_hdml_hr_tag_010()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -5714,7 +5743,9 @@ void test_hdml_hr_tag_010()
 void test_hdml_hr_tag_011() 
 {
 #define  TEST_STRING "<hr size=\"abc\">"
-#define  RESULT_STRING "<hr size=\"abc\" />"
+#define  RESULT_STRING \
+"<BR>\r\n" \
+"<CENTER>－－－－－－－－－<BR>\r\n" 
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -5731,7 +5762,8 @@ void test_hdml_hr_tag_011()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -5743,7 +5775,9 @@ void test_hdml_hr_tag_011()
 void test_hdml_hr_tag_012() 
 {
 #define  TEST_STRING "<hr size=\"10\">"
-#define  RESULT_STRING "<hr size=\"10\" />"
+#define  RESULT_STRING \
+"<BR>\r\n" \
+"<CENTER>－－－－－－－－－<BR>\r\n" 
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -5760,7 +5794,8 @@ void test_hdml_hr_tag_012()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -5772,7 +5807,9 @@ void test_hdml_hr_tag_012()
 void test_hdml_hr_tag_013() 
 {
 #define  TEST_STRING "<hr width>"
-#define  RESULT_STRING "<hr />"
+#define  RESULT_STRING \
+"<BR>\r\n" \
+"<CENTER>－－－－－－－－－<BR>\r\n" 
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -5789,7 +5826,8 @@ void test_hdml_hr_tag_013()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -5801,7 +5839,9 @@ void test_hdml_hr_tag_013()
 void test_hdml_hr_tag_014() 
 {
 #define  TEST_STRING "<hr width=\"\">"
-#define  RESULT_STRING "<hr />"
+#define  RESULT_STRING \
+"<BR>\r\n" \
+"<CENTER>－－－－－－－－－<BR>\r\n" 
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -5818,7 +5858,8 @@ void test_hdml_hr_tag_014()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -5830,7 +5871,9 @@ void test_hdml_hr_tag_014()
 void test_hdml_hr_tag_015() 
 {
 #define  TEST_STRING "<hr width=\"abc\">"
-#define  RESULT_STRING "<hr width=\"abc\" />"
+#define  RESULT_STRING \
+"<BR>\r\n" \
+"<CENTER>－－－－－－－－－<BR>\r\n" 
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -5847,7 +5890,8 @@ void test_hdml_hr_tag_015()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -5859,7 +5903,9 @@ void test_hdml_hr_tag_015()
 void test_hdml_hr_tag_016() 
 {
 #define  TEST_STRING "<hr width=\"10\">"
-#define  RESULT_STRING "<hr width=\"10\" />"
+#define  RESULT_STRING \
+"<BR>\r\n" \
+"<CENTER>－－－－－－－－－<BR>\r\n" 
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -5876,7 +5922,8 @@ void test_hdml_hr_tag_016()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -5888,7 +5935,9 @@ void test_hdml_hr_tag_016()
 void test_hdml_hr_tag_017() 
 {
 #define  TEST_STRING "<hr width=\"10\" noshade>"
-#define  RESULT_STRING "<hr width=\"10\" />"
+#define  RESULT_STRING \
+"<BR>\r\n" \
+"<CENTER>－－－－－－－－－<BR>\r\n" 
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -5905,7 +5954,8 @@ void test_hdml_hr_tag_017()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -5917,7 +5967,9 @@ void test_hdml_hr_tag_017()
 void test_hdml_hr_tag_018() 
 {
 #define  TEST_STRING "<hr width=\"10\" color=\"#ff0000\">"
-#define  RESULT_STRING "<hr width=\"10\" />"
+#define  RESULT_STRING \
+"<BR>\r\n" \
+"<CENTER>－－－－－－－－－<BR>\r\n" 
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -5934,7 +5986,8 @@ void test_hdml_hr_tag_018()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -5943,6 +5996,7 @@ void test_hdml_hr_tag_018()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 /*============================================================================*/
 /* <HTML>                                                                     */
 /*============================================================================*/
