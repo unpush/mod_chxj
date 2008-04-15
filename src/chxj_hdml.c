@@ -1467,32 +1467,25 @@ s_hdml_start_input_tag(void* pdoc, Node* node)
         s_hdml_do_input_reset_tag(hdml, node);
       }
     }
-    else 
-    if ((*name == 'n' || *name == 'N') && strcasecmp(name, "name")      == 0) {
+    else if (STRCASEEQ('n','N',"name",name)) {
       /* ignore */
     }
-    else
-    if ((*name == 'v' || *name == 'V') && strcasecmp(name, "value")     == 0) {
+    else if (STRCASEEQ('v','V',"value",name)) {
       /* ignore */
     }
-    else
-    if ((*name == 's' || *name == 'S') && strcasecmp(name, "size")      == 0) {
+    else if (STRCASEEQ('s','S',"size",name)) {
       /* ignore */
     }
-    else
-    if ((*name == 'm' || *name == 'M') && strcasecmp(name, "maxlength") == 0) {
+    else if (STRCASEEQ('m','M',"maxlength",name)) {
       /* ignore */
     }
-    else
-    if ((*name == 'c' || *name == 'C') && strcasecmp(name, "checked")   == 0) {
+    else if (STRCASEEQ('c','C',"checked",name)) {
       /* ignore */
     }
-    else 
-    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "accesskey") == 0) {
+    else  if (STRCASEEQ('a','A',"accesskey",name)) {
       /* ignore */
     }
-    else
-    if ((*name == 'i' || *name == 'I') && strcasecmp(name, "istyle")    == 0) {
+    else if (STRCASEEQ('i','I',"istyle",name)) {
       /* ignore */
     }
   }
