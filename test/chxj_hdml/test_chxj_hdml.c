@@ -848,11 +848,11 @@ main()
   CU_add_test(hdml_suite, "test <p> 2." ,                                      test_hdml_p_tag_002);
   CU_add_test(hdml_suite, "test <p> 3." ,                                      test_hdml_p_tag_003);
   CU_add_test(hdml_suite, "test <p> 4." ,                                      test_hdml_p_tag_004);
-#if 0
   CU_add_test(hdml_suite, "test <p> 5." ,                                      test_hdml_p_tag_005);
   CU_add_test(hdml_suite, "test <p> 6." ,                                      test_hdml_p_tag_006);
   CU_add_test(hdml_suite, "test <p> 7." ,                                      test_hdml_p_tag_007);
   CU_add_test(hdml_suite, "test <p> 8." ,                                      test_hdml_p_tag_008);
+#if 0
 
   /*=========================================================================*/
   /* <plaintext>                                                             */
@@ -9618,7 +9618,7 @@ void test_hdml_p_tag_004()
 void test_hdml_p_tag_005() 
 {
 #define  TEST_STRING "<p align=\"right\">あああ</p>"
-#define  RESULT_STRING "あああ"
+#define  RESULT_STRING "<BR>\r\n<RIGHT>あああ<BR>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9648,7 +9648,7 @@ void test_hdml_p_tag_005()
 void test_hdml_p_tag_006() 
 {
 #define  TEST_STRING "<p align=\"left\">あああ</p>"
-#define  RESULT_STRING "あああ"
+#define  RESULT_STRING "<BR>\r\nあああ"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9677,7 +9677,7 @@ void test_hdml_p_tag_006()
 void test_hdml_p_tag_007() 
 {
 #define  TEST_STRING "<p align=\"center\">あああ</p>"
-#define  RESULT_STRING "あああ"
+#define  RESULT_STRING "<BR>\r\n<CENTER>あああ<BR>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9707,7 +9707,7 @@ void test_hdml_p_tag_007()
 void test_hdml_p_tag_008() 
 {
 #define  TEST_STRING "<p align=\"unknown\">あああ</p>"
-#define  RESULT_STRING "あああ"
+#define  RESULT_STRING "<BR>\r\nあああ"
   char  *ret;
   char  *tmp;
   device_table spec;
