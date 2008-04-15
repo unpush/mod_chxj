@@ -832,7 +832,6 @@ main()
   CU_add_test(hdml_suite, "test <ol>." ,                                       test_hdml_ol_tag_001);
   CU_add_test(hdml_suite, "test <ol> 2." ,                                     test_hdml_ol_tag_002);
   CU_add_test(hdml_suite, "test <ol> 3." ,                                     test_hdml_ol_tag_003);
-#if 0
 
   /*=========================================================================*/
   /* <option>                                                                */
@@ -840,11 +839,8 @@ main()
   CU_add_test(hdml_suite, "test <option>." ,                                   test_hdml_option_tag_001);
   CU_add_test(hdml_suite, "test <option value> with no value." ,               test_hdml_option_tag_002);
   CU_add_test(hdml_suite, "test <option value> with void value." ,             test_hdml_option_tag_003);
-  CU_add_test(hdml_suite, "test <option value> with alphabetic value." ,       test_hdml_option_tag_004);
-  CU_add_test(hdml_suite, "test <option value> with japanese value." ,         test_hdml_option_tag_005);
-  CU_add_test(hdml_suite, "test <option value> with japanese-kana value." ,    test_hdml_option_tag_006);
-  CU_add_test(hdml_suite, "test <option selected>." ,                          test_hdml_option_tag_007);
-
+  CU_add_test(hdml_suite, "test <option value> with japanese value." ,         test_hdml_option_tag_004);
+#if 0
   /*=========================================================================*/
   /* <p>                                                                     */
   /*=========================================================================*/
@@ -9344,14 +9340,13 @@ void test_hdml_ol_tag_003()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/*KONNO*/
 /*============================================================================*/
 /* <OPTION>                                                                   */
 /*============================================================================*/
 void test_hdml_option_tag_001() 
 {
 #define  TEST_STRING "<option></option>"
-#define  RESULT_STRING "<option></option>\r\n"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9368,7 +9363,8 @@ void test_hdml_option_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9380,7 +9376,7 @@ void test_hdml_option_tag_001()
 void test_hdml_option_tag_002() 
 {
 #define  TEST_STRING "<option value></option>"
-#define  RESULT_STRING "<option></option>\r\n"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9397,7 +9393,8 @@ void test_hdml_option_tag_002()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9408,8 +9405,21 @@ void test_hdml_option_tag_002()
 }
 void test_hdml_option_tag_003() 
 {
-#define  TEST_STRING "<option value=\"\"></option>"
-#define  RESULT_STRING "<option></option>\r\n"
+#define  TEST_STRING "<html><select><option value=\"aaa\">bbb</option></select></html>"
+#define  RESULT_STRING \
+"<HDML VERSION=3.0 TTL=0 MARKABLE=TRUE>\r\n" \
+"<NODISPLAY NAME=D0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GOSUB DEST=#D1 NEXT=#D2 CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"<A TASK=GOSUB LABEL=選択 VARS=\"V=$E00000400\" DEST=#D3 RECEIVE=\"E00000300;E00000201\">$E00000101</A>\r\n" \
+"<CHOICE KEY=V NAME=D3 DEFAULT=$V METHOD=ALPHA MARKABLE=FALSE>\r\n" \
+"<CE TASK=RETURN VALUE=\"aaa\" RETVALS=\"$V;bbb\">bbb</CE>\r\n" \
+"</CHOICE>\r\n" \
+"<NODISPLAY NAME=D1>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=RETURN VARS=\"_chxj_dmy=\" CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"</HDML>\r\n" 
+
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9422,11 +9432,13 @@ void test_hdml_option_tag_003()
 
   SPEC_INIT(spec);
   destlen = sizeof(TEST_STRING)-1;
+  form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9437,8 +9449,21 @@ void test_hdml_option_tag_003()
 }
 void test_hdml_option_tag_004() 
 {
-#define  TEST_STRING "<option value=\"a\"></option>"
-#define  RESULT_STRING "<option value=\"a\"></option>\r\n"
+#define  TEST_STRING "<html><select><option value=\"a\" selected></option></select></html>"
+#define  RESULT_STRING \
+"<HDML VERSION=3.0 TTL=0 MARKABLE=TRUE>\r\n" \
+"<NODISPLAY NAME=D0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GOSUB DEST=#D1 NEXT=#D2 CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"<A TASK=GOSUB LABEL=選択 VARS=\"V=$E00000400\" DEST=#D3 RECEIVE=\"E00000300;E00000201\">$E00000101</A>\r\n" \
+"<CHOICE KEY=V NAME=D3 DEFAULT=$V METHOD=ALPHA MARKABLE=FALSE>\r\n" \
+"<CE TASK=RETURN VALUE=\"a\" RETVALS=\"$V;\"></CE>\r\n" \
+"</CHOICE>\r\n" \
+"<NODISPLAY NAME=D1>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=RETURN VARS=\"_chxj_dmy=\" CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"</HDML>\r\n" 
+
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9451,11 +9476,13 @@ void test_hdml_option_tag_004()
 
   SPEC_INIT(spec);
   destlen = sizeof(TEST_STRING)-1;
+  form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9464,93 +9491,7 @@ void test_hdml_option_tag_004()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-void test_hdml_option_tag_005() 
-{
-#define  TEST_STRING "<option value=\"亀\"></option>"
-#define  RESULT_STRING "<option value=\"亀\"></option>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_option_tag_006() 
-{
-#define  TEST_STRING "<option value=\"ﾊﾝｶｸ\"></option>"
-#define  RESULT_STRING "<option value=\"ﾊﾝｶｸ\"></option>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_option_tag_007() 
-{
-#define  TEST_STRING "<option selected></option>"
-#define  RESULT_STRING "<option selected=\"selected\"></option>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
+/*KONNO*/
 /*============================================================================*/
 /* <P>                                                                        */
 /*============================================================================*/

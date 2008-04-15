@@ -2526,8 +2526,8 @@ s_hdml_end_select_tag(void* pdoc,  Node* UNUSED(node))
  * @param node   [i]   The OPTION tag node is specified.
  * @return The conversion result is returned.
  */
-static char* 
-s_hdml_start_option_tag(void* pdoc, Node* node) 
+static char * 
+s_hdml_start_option_tag(void *pdoc, Node *node) 
 {
   request_rec* r;
   Doc*         doc;
