@@ -590,13 +590,13 @@ main()
   CU_add_test(hdml_suite, "test <form action> with null cookie.",              test_hdml_form_tag_007);
   CU_add_test(hdml_suite, "test <form action> with other site .",              test_hdml_form_tag_008);
   CU_add_test(hdml_suite, "test <form action method>.",                        test_hdml_form_tag_009);
-#if 0
 
   /*=========================================================================*/
   /* <HEAD>                                                                  */
   /*=========================================================================*/
   CU_add_test(hdml_suite, "test <head>.",                                      test_hdml_head_tag_001);
   CU_add_test(hdml_suite, "test <head> with value.",                           test_hdml_head_tag_002);
+#if 0
 
   /*=========================================================================*/
   /* <H1>                                                                    */
@@ -3549,14 +3549,13 @@ void test_hdml_form_tag_009()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 /*============================================================================*/
 /* <HEAD>                                                                     */
 /*============================================================================*/
 void test_hdml_head_tag_001()
 {
 #define  TEST_STRING "<head></head>"
-#define  RESULT_STRING "<head>\r\n</head>\r\n"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -3573,7 +3572,8 @@ void test_hdml_head_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -3585,7 +3585,7 @@ void test_hdml_head_tag_001()
 void test_hdml_head_tag_002()
 {
 #define  TEST_STRING "<head><title>あああ</title></head>"
-#define  RESULT_STRING "<head>\r\n<title>あああ</title>\r\n</head>\r\n"
+#define  RESULT_STRING "<DISPLAY NAME=D2 TITLE=\"あああ\">\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -3602,7 +3602,8 @@ void test_hdml_head_tag_002()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -3611,6 +3612,7 @@ void test_hdml_head_tag_002()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 /*============================================================================*/
 /* <H>                                                                        */
 /*============================================================================*/
