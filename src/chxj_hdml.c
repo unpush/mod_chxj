@@ -121,8 +121,8 @@ tag_handler hdml_handler[] = {
   },
   /* tagP */
   {
-    NULL,
-    NULL,
+    s_hdml_start_div_tag,
+    s_hdml_end_div_tag,
   },
   /* tagPRE */
   {
