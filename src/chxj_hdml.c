@@ -74,6 +74,8 @@ static char *s_hdml_start_blockquote_tag(void *pdoc, Node *node);
 static char *s_hdml_end_blockquote_tag  (void *pdoc, Node *node);
 static char *s_hdml_start_dir_tag       (void *pdoc, Node *node);
 static char *s_hdml_end_dir_tag         (void *pdoc, Node *node);
+static char *s_hdml_start_dt_tag        (void *pdoc, Node *node);
+static char *s_hdml_end_dt_tag          (void *pdoc, Node *node);
 
 static char* s_get_form_no          (request_rec* r, hdml_t* hdml);
 
@@ -310,8 +312,8 @@ tag_handler hdml_handler[] = {
   },
   /* tagDT */
   {
-    NULL,
-    NULL,
+    s_hdml_start_dt_tag,
+    s_hdml_end_dt_tag,
   },
   /* tagLEGEND */
   {
@@ -3130,6 +3132,39 @@ s_hdml_end_dir_tag(void *pdoc, Node *UNUSED(child))
   return hdml->out;
 }
 
+
+/**
+ * It is a handler who processes the DT tag.
+ *
+ * @param pdoc  [i/o] The pointer to the HDML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DT tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_hdml_start_dt_tag(void *pdoc, Node *UNUSED(child))
+{
+  hdml_t *hdml = GET_HDML(pdoc);
+  s_output_to_hdml_out(hdml, "<LINE>");
+  return hdml->out;
+}
+
+
+/**
+ * It is a handler who processes the DT tag.
+ *
+ * @param pdoc  [i/o] The pointer to the HDML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DT tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_hdml_end_dt_tag(void *pdoc, Node *UNUSED(child))
+{
+  hdml_t *hdml = GET_HDML(pdoc);
+  s_output_to_hdml_out(hdml, "\r\n");
+  return hdml->out;
+}
 /*
  * vim:ts=2 et
  */
