@@ -2576,12 +2576,12 @@ s_hdml_end_option_tag(void* pdoc,  Node* UNUSED(node))
  * @param node   [i]   The DIV tag node is specified.
  * @return The conversion result is returned.
  */
-static char* 
-s_hdml_start_div_tag(void* pdoc, Node* node) 
+static char *
+s_hdml_start_div_tag(void *pdoc, Node *node) 
 {
-  hdml_t* hdml;
-  Doc*    doc;
-  Attr*   attr;
+  hdml_t *hdml;
+  Doc    *doc;
+  Attr   *attr;
 
   hdml = GET_HDML(pdoc);
   doc  = hdml->doc;
@@ -2599,20 +2599,18 @@ s_hdml_start_div_tag(void* pdoc, Node* node)
   /* The object tag node is scanned.                                          */
   /*--------------------------------------------------------------------------*/
   for (attr = qs_get_attr(doc,node); 
-       attr != NULL; 
+       attr; 
        attr = qs_get_next_attr(doc,attr)) {
-    char* name  = qs_get_attr_name(doc,attr);
-    char* value = qs_get_attr_value(doc,attr);
-
-    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "align") == 0) {
-      if ((*value == 'r' || *value == 'R') && strcasecmp(value, "right") == 0) {
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('a','A',"align",name)) {
+      if (STRCASEEQ('r','R',"right",value)) {
         hdml->div_right_flag = 1;
         s_output_to_hdml_out(hdml, "<RIGHT>");
         hdml->hdml_br_flag = 0;
         break;
       }
-      else 
-      if ((*value == 'c' || *value == 'C') && strcasecmp(value, "center") == 0) {
+      else if (STRCASEEQ('c','C',"center",value)) {
         hdml->div_center_flag = 1;
         s_output_to_hdml_out(hdml, "<CENTER>");
         hdml->hdml_br_flag = 0;
@@ -2634,11 +2632,11 @@ s_hdml_start_div_tag(void* pdoc, Node* node)
  * @param node   [i]   The DIV tag node is specified.
  * @return The conversion result is returned.
  */
-static char* 
-s_hdml_end_div_tag(void* pdoc,  Node* UNUSED(node))
+static char *
+s_hdml_end_div_tag(void *pdoc,  Node *UNUSED(node))
 {
-  hdml_t*      hdml;
-  request_rec* r;
+  hdml_t       *hdml;
+  request_rec  *r;
 
   hdml = GET_HDML(pdoc);
   r    = hdml->doc->r;
