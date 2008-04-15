@@ -2269,15 +2269,15 @@ s_hdml_end_li_tag(void *pdoc, Node *UNUSED(child))
  * @param node   [i]   The IMG tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_hdml_start_img_tag(void* pdoc, Node* node) 
+static char *
+s_hdml_start_img_tag(void *pdoc, Node *node) 
 {
-  hdml_t*       hdml;
-  Doc*          doc;
+  hdml_t        *hdml;
+  Doc           *doc;
 #ifndef IMG_NOT_CONVERT_FILENAME
   device_table  *spec;
 #endif
-  Attr*         attr;
+  Attr          *attr;
 
   hdml = GET_HDML(pdoc);
   doc  = hdml->doc;
@@ -2294,10 +2294,9 @@ s_hdml_start_img_tag(void* pdoc, Node* node)
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
 
-    char* name  = qs_get_attr_name(doc,attr);
-    char* value = qs_get_attr_value(doc,attr);
-
-    if ((*name == 's' || *name == 'S') && strcasecmp(name, "src") == 0) {
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('s','S',"src",name) && value && *value) {
       value = chxj_encoding_parameter(hdml->doc->r, value);
       s_output_to_hdml_out(hdml, " src=\"");
 #ifdef IMG_NOT_CONVERT_FILENAME
@@ -2307,38 +2306,38 @@ s_hdml_start_img_tag(void* pdoc, Node* node)
 #endif
       s_output_to_hdml_out(hdml, "\""     );
     }
-    else 
-    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "align" ) == 0) {
-      s_output_to_hdml_out(hdml, " align=\"" );
-      s_output_to_hdml_out(hdml, value       );
-      s_output_to_hdml_out(hdml, "\""        );
+    else if (STRCASEEQ('a','A',"align",name)) {
+      if (value && (STRCASEEQ('t','T',"top",   value) ||
+                    STRCASEEQ('m','M',"middle",value) ||
+                    STRCASEEQ('b','B',"bottom",value) ||
+                    STRCASEEQ('l','L',"left",  value) ||
+                    STRCASEEQ('r','R',"right", value))) {
+        s_output_to_hdml_out(hdml, " align=\"" );
+        s_output_to_hdml_out(hdml, value       );
+        s_output_to_hdml_out(hdml, "\""        );
+      }
     }
-    else
-    if ((*name == 'w' || *name == 'W') && strcasecmp(name, "width" ) == 0) {
+    else if (STRCASEEQ('w','W',"width",name) && value && *value) {
       s_output_to_hdml_out(hdml, " width=\"");
       s_output_to_hdml_out(hdml, value      );
       s_output_to_hdml_out(hdml, "\""       );
     }
-    else
-    if ((*name == 'h' || *name == 'H') && strcasecmp(name, "height") == 0) {
+    else if (STRCASEEQ('h','H',"height",name) && value && *value) {
       s_output_to_hdml_out(hdml, " height=\"");
       s_output_to_hdml_out(hdml, value       );
       s_output_to_hdml_out(hdml, "\""        );
     }
-    else
-    if ((*name == 'h' || *name == 'H') && strcasecmp(name, "hspace") == 0) {
+    else if (STRCASEEQ('h','H',"hspace", name) && value && *value) {
       s_output_to_hdml_out(hdml, " hspace=\"");
       s_output_to_hdml_out(hdml, value       );
       s_output_to_hdml_out(hdml, "\""        );
     }
-    else
-    if ((*name == 'v' || *name == 'V') && strcasecmp(name, "vspace") == 0) {
+    else if (STRCASEEQ('v','V',"vspace",name) && value && *value) {
       s_output_to_hdml_out(hdml, " vspace=\"");
       s_output_to_hdml_out(hdml, value       );
       s_output_to_hdml_out(hdml, "\""        );
     }
-    else
-    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "alt"   ) == 0) {
+    else if (STRCASEEQ('a','A',"alt",name) && value && *value) {
       s_output_to_hdml_out(hdml, " alt=\""   );
       s_output_to_hdml_out(hdml, value       );
       s_output_to_hdml_out(hdml, "\""        );
@@ -2360,13 +2359,10 @@ s_hdml_start_img_tag(void* pdoc, Node* node)
  * @param node   [i]   The IMG tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_hdml_end_img_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_hdml_end_img_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  hdml_t* hdml;
-
-  hdml = GET_HDML(pdoc);
-
+  hdml_t *hdml = GET_HDML(pdoc);
   return hdml->out;
 }
 
