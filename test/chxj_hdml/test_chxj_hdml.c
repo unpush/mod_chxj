@@ -862,7 +862,6 @@ main()
   CU_add_test(hdml_suite, "test <plaintext> 3. value is not closed." ,         test_hdml_plaintext_tag_003);
   CU_add_test(hdml_suite, "test <plaintext> 4. value is not closed and hankaku." , test_hdml_plaintext_tag_004);
   CU_add_test(hdml_suite, "test <plaintext> 5." ,                              test_hdml_plaintext_tag_005);
-#if 0
 
   /*=========================================================================*/
   /* <pre>                                                                   */
@@ -872,6 +871,7 @@ main()
   CU_add_test(hdml_suite, "test <pre> 3." ,                                    test_hdml_pre_tag_003);
   CU_add_test(hdml_suite, "test <pre> 4." ,                                    test_hdml_pre_tag_004);
   CU_add_test(hdml_suite, "test <pre> 5." ,                                    test_hdml_pre_tag_005);
+#if 0
 
   /*=========================================================================*/
   /* <select>                                                                */
@@ -9894,14 +9894,13 @@ void test_hdml_plaintext_tag_005()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/*KONNO*/
 /*============================================================================*/
 /* <PRE>                                                                      */
 /*============================================================================*/
 void test_hdml_pre_tag_001() 
 {
 #define  TEST_STRING "<pre></pre>"
-#define  RESULT_STRING "<pre></pre>"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9918,7 +9917,8 @@ void test_hdml_pre_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9930,7 +9930,7 @@ void test_hdml_pre_tag_001()
 void test_hdml_pre_tag_002() 
 {
 #define  TEST_STRING "<pre>\n</pre>"
-#define  RESULT_STRING "<pre>\n</pre>"
+#define  RESULT_STRING "<LINE>\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9947,7 +9947,8 @@ void test_hdml_pre_tag_002()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9958,8 +9959,8 @@ void test_hdml_pre_tag_002()
 }
 void test_hdml_pre_tag_003() 
 {
-#define  TEST_STRING "<pre>\n\n</pre>"
-#define  RESULT_STRING "<pre>\n\n</pre>"
+#define  TEST_STRING "<pre>\n \n</pre>"
+#define  RESULT_STRING "<LINE>\n<LINE>&nbsp;\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9976,7 +9977,8 @@ void test_hdml_pre_tag_003()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9988,7 +9990,8 @@ void test_hdml_pre_tag_003()
 void test_hdml_pre_tag_004() 
 {
 #define  TEST_STRING "<pre><h1>あああ\n\n</pre>"
-#define  RESULT_STRING "<pre><h1>あああ\n\n</h1></pre>"
+#define  RESULT_STRING "<BR>\r\n<LINE>あああ\n<LINE>\n"
+
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10005,7 +10008,8 @@ void test_hdml_pre_tag_004()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10017,7 +10021,8 @@ void test_hdml_pre_tag_004()
 void test_hdml_pre_tag_005() 
 {
 #define  TEST_STRING "<pre><h1>ﾊﾝｶｸ</h1>\n\n</pre>"
-#define  RESULT_STRING "<pre><h1>ﾊﾝｶｸ</h1>\n\n</pre>"
+#define  RESULT_STRING "<BR>\r\n<LINE>ﾊﾝｶｸ<LINE>\n<LINE>\n"
+
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10034,7 +10039,8 @@ void test_hdml_pre_tag_005()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10043,6 +10049,7 @@ void test_hdml_pre_tag_005()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/*KONNO*/
 /*============================================================================*/
 /* <SELECT>                                                                   */
 /*============================================================================*/

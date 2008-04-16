@@ -82,6 +82,8 @@ static char *s_hdml_end_dd_tag        (void *pdoc, Node *node);
 static char *s_hdml_start_plaintext_tag       (void *pdoc, Node *node);
 static char *s_hdml_start_plaintext_tag_inner (void *pdoc, Node *node);
 static char *s_hdml_end_plaintext_tag         (void *pdoc, Node *node);
+static char *s_hdml_start_pre_tag      (void *pdoc, Node *node);
+static char *s_hdml_end_pre_tag        (void *pdoc, Node *node);
 
 static char *((*s_get_form_no)(request_rec* r, hdml_t* hdml)) = s_s_get_form_no;
 
@@ -129,8 +131,8 @@ tag_handler hdml_handler[] = {
   },
   /* tagPRE */
   {
-    NULL,
-    NULL,
+    s_hdml_start_pre_tag,
+    s_hdml_end_pre_tag,
   },
   /* tagUL */
   {
@@ -3072,6 +3074,34 @@ s_hdml_text_tag(void* pdoc, Node* child)
       }
       continue;
     }
+    if (hdml->pre_flag) {
+      if (one_line_count == 0) {
+        tdst = qs_out_apr_pstrcat(r, tdst, "<LINE>", &tdst_len);
+      }
+      if (is_sjis_kanji(textval[ii])) {
+        one_byte[0] = textval[ii+0];
+        one_byte[1] = textval[ii+1];
+        one_byte[2] = 0;
+        tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+        ii++;
+        one_line_count+=2;
+      }
+      else {
+        one_byte[0] = textval[ii+0];
+        one_byte[1] = 0;
+        if (one_byte[0] == ' ') {
+          tdst = qs_out_apr_pstrcat(r, tdst, "&nbsp;", &tdst_len);
+        }
+        else {
+          tdst = qs_out_apr_pstrcat(r, tdst, chxj_ap_escape_html(r->pool, one_byte), &tdst_len);
+        }
+        one_line_count++;
+        if (one_byte[0] == '\n') {
+          one_line_count = 0;
+        }
+      }
+      continue;
+    }
     if (is_sjis_kanji(textval[ii])) {
       one_byte[0] = textval[ii+0];
       tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
@@ -3305,6 +3335,55 @@ static char *
 s_hdml_end_plaintext_tag(void *pdoc, Node *UNUSED(child))
 {
   hdml_t *hdml = GET_HDML(pdoc);
+  return hdml->out;
+}
+
+
+/**
+ * It is a handler who processes the PRE tag.
+ *
+ * @param pdoc  [i/o] The pointer to the HDML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The PRE tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_hdml_start_pre_tag(void *pdoc, Node *UNUSED(node)) 
+{
+  hdml_t        *hdml;
+  Doc           *doc;
+  request_rec   *r;
+
+  hdml    = GET_HDML(pdoc);
+  doc     = hdml->doc;
+  r       = doc->r;
+
+  hdml->pre_flag++;
+  return hdml->out;
+}
+
+
+/**
+ * It is a handler who processes the PRE tag.
+ *
+ * @param pdoc  [i/o] The pointer to the HDML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The PRE tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_hdml_end_pre_tag(void *pdoc, Node *UNUSED(child)) 
+{
+  hdml_t     *hdml;
+  Doc           *doc;
+  request_rec   *r;
+
+  hdml = GET_HDML(pdoc);
+  doc     = hdml->doc;
+  r       = doc->r;
+
+  hdml->pre_flag--;
+
   return hdml->out;
 }
 /*
