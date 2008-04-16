@@ -580,10 +580,10 @@ main()
   /*=========================================================================*/
   /* <HEAD>                                                                  */
   /*=========================================================================*/
-#if 0
   CU_add_test(jhtml_suite, "test <head>.",                                      test_jhtml_head_tag_001);
   CU_add_test(jhtml_suite, "test <head> with value.",                           test_jhtml_head_tag_002);
 
+#if 0
   CU_add_test(jhtml_suite, "test <h1>.",                                        test_jhtml_h1_tag_001);
   CU_add_test(jhtml_suite, "test <h1> with value.",                             test_jhtml_h1_tag_002);
   CU_add_test(jhtml_suite, "test <h1> with value(japanese).",                   test_jhtml_h1_tag_003);
@@ -3138,7 +3138,6 @@ void test_jhtml_form_tag_009()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 /*============================================================================*/
 /* <HEAD>                                                                     */
 /*============================================================================*/
@@ -3162,6 +3161,8 @@ void test_jhtml_head_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -3190,6 +3191,8 @@ void test_jhtml_head_tag_002()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -3198,6 +3201,7 @@ void test_jhtml_head_tag_002()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 /*============================================================================*/
 /* <H>                                                                        */
 /*============================================================================*/
