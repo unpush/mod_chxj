@@ -2157,12 +2157,12 @@ s_jhtml_start_div_tag(void *pdoc, Node *child)
  * @param node   [i]   The DIV tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_end_div_tag(void* pdoc, Node* UNUSED(child))
+static char *
+s_jhtml_end_div_tag(void *pdoc, Node *UNUSED(child))
 {
-  jhtml_t*     jhtml;
-  Doc*         doc;
-  request_rec* r;
+  jhtml_t      *jhtml;
+  Doc          *doc;
+  request_rec  *r;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
@@ -2173,10 +2173,10 @@ s_jhtml_end_div_tag(void* pdoc, Node* UNUSED(child))
 }
 
 
-static char*
-chxj_istyle_to_mode(request_rec* r, const char* s)
+static char *
+chxj_istyle_to_mode(request_rec *r, const char *s)
 {
-  char* tmp;
+  char *tmp;
 
   if (s) {
     switch (s[0]) {
@@ -2197,13 +2197,13 @@ chxj_istyle_to_mode(request_rec* r, const char* s)
 }
 
 
-static char*
-s_jhtml_chxjif_tag(void* pdoc, Node* node)
+static char *
+s_jhtml_chxjif_tag(void *pdoc, Node *node)
 {
-  jhtml_t*     jhtml;
-  Doc*         doc;
-  Node*        child;
-  request_rec* r;
+  jhtml_t *jhtml;
+  Doc     *doc;
+  Node    *child;
+  request_rec *r;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
