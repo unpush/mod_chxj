@@ -84,6 +84,8 @@ static char *s_hdml_start_plaintext_tag_inner (void *pdoc, Node *node);
 static char *s_hdml_end_plaintext_tag         (void *pdoc, Node *node);
 static char *s_hdml_start_pre_tag      (void *pdoc, Node *node);
 static char *s_hdml_end_pre_tag        (void *pdoc, Node *node);
+static char *s_hdml_start_textarea_tag (void *pdoc, Node *node);
+static char *s_hdml_inner_textarea_tag_get_value(hdml_t *hdml, Node *node);
 
 static char *((*s_get_form_no)(request_rec* r, hdml_t* hdml)) = s_s_get_form_no;
 
@@ -121,7 +123,7 @@ tag_handler hdml_handler[] = {
   },
   /* tagTEXTAREA */
   {
-    NULL,
+    s_hdml_start_textarea_tag,
     NULL,
   },
   /* tagP */
@@ -3385,6 +3387,133 @@ s_hdml_end_pre_tag(void *pdoc, Node *UNUSED(child))
   hdml->pre_flag--;
 
   return hdml->out;
+}
+
+
+/**
+ * handler of the TEXTAREA tag.
+ * 
+ * @param hdml [i/o] The pointer to the HDML structure at the output 
+ *                   destination is specified. 
+ * @param tag  [i]   Specified The TEXTAREA tag node.
+ */
+static char *
+s_hdml_start_textarea_tag(void *pdoc, Node *node)
+{
+  Doc           *doc;
+  request_rec   *r;
+  char          *mlen;
+  char          *val;
+  char          *is;
+  char          *nm;
+  char          *fmt;
+  size_t        ii;
+  hdml_t        *hdml = GET_HDML(pdoc);
+
+  doc   = hdml->doc;
+  r     = doc->r;
+
+  s_hdml_tag_output_upper_half(hdml, node);
+
+  hdml->card_cnt++;
+  s_output_to_hdml_out(hdml, 
+                       apr_psprintf(r->pool,
+                                    "<A TASK=GOSUB LABEL=\x93\xfc\x97\xcd DEST=#D%d "
+                                    "VARS=\"V=$%s%02d\" RECEIVE=%s%02d>",
+                                    hdml->card_cnt,
+                                    s_get_form_no(r, hdml),
+                                    hdml->var_cnt[hdml->pure_form_cnt],
+                                    s_get_form_no(r, hdml),
+                                    hdml->var_cnt[hdml->pure_form_cnt]
+                      ));
+
+  s_output_to_hdml_out(hdml, 
+                       apr_psprintf(r->pool, 
+                                    "[$%s%02d]</A>\r\n"  , 
+                                    s_get_form_no(r, hdml),
+                          hdml->var_cnt[hdml->pure_form_cnt]));
+
+  /*--------------------------------------------------------------------------*/
+  /* ENTRY CARD is output here.                                               */
+  /*--------------------------------------------------------------------------*/
+  s_output_to_hdml_card(hdml, "<ENTRY NAME="                               );
+  s_output_to_hdml_card(hdml, apr_psprintf(r->pool, "D%d ", hdml->card_cnt));
+  s_output_to_hdml_card(hdml, " KEY=V DEFAULT=$V "                         );
+
+  mlen = NULL;
+  is   = NULL;
+  val  = NULL;
+  fmt  = NULL;
+  nm = qs_get_name_attr(doc, node, r);
+  if (! nm) {
+    nm = qs_alloc_zero_byte_string(r);
+  }
+
+  s_output_to_postdata(hdml, 
+                       apr_psprintf(r->pool, 
+                                    "%s=$%s%02d", 
+                                    nm,
+                                    s_get_form_no(r, hdml),
+                                    hdml->var_cnt[hdml->pure_form_cnt]));
+
+  mlen = qs_get_maxlength_attr  (doc, node, r);
+  is   = qs_get_istyle_attr     (doc, node, r);
+  val  = s_hdml_inner_textarea_tag_get_value(hdml, node);
+
+  fmt  = qs_conv_istyle_to_format(r, is);
+  if (fmt) {
+    if (mlen) {
+      for (ii=0; ii<strlen(mlen); ii++) {
+        if (mlen[ii] < '0' || mlen[ii] > '9') {
+          mlen = apr_psprintf(r->pool, "0");
+          break;
+        }
+      }
+      s_output_to_hdml_card(hdml, apr_psprintf(r->pool, " FORMAT=%d%s", atoi(mlen), fmt));
+    }
+    else {
+      s_output_to_hdml_card(hdml, apr_psprintf(r->pool, " FORMAT=*%s", fmt));
+    }
+  }
+
+  s_output_to_hdml_card(hdml, 
+                        " MARKABLE=FALSE>\r\n"
+                        "<ACTION TYPE=ACCEPT TASK=RETURN RETVALS=$V>\r\n"
+                        "</ENTRY>\r\n");
+  if (val) {
+    s_output_to_init_vars(hdml, 
+                          apr_psprintf(r->pool, 
+                                       "%s%02d=%s", 
+                                       s_get_form_no(r, hdml),
+                                       hdml->var_cnt[hdml->pure_form_cnt],
+                                       chxj_escape_uri(r->pool,val)));
+  }
+  else {
+    s_output_to_init_vars(hdml, 
+                          apr_psprintf(r->pool, 
+                                       "%s%02d=", 
+                                       s_get_form_no(r, hdml),
+                                       hdml->var_cnt[hdml->pure_form_cnt]));
+  }
+  hdml->var_cnt[hdml->pure_form_cnt]++;
+  return hdml->out;
+}
+
+static char *
+s_hdml_inner_textarea_tag_get_value(hdml_t *hdml, Node *node)
+{
+  Doc    *doc = hdml->doc;
+  Node   *child;
+  char   *result = apr_pstrdup(doc->r->pool, "\0");
+  for (child = qs_get_child_node(doc, node);
+       child;
+       child = qs_get_next_node(doc, child)) {
+    char *textval = qs_get_node_value(doc,child);
+    if (textval && *textval) {
+      result = apr_pstrcat(doc->r->pool, result, textval, NULL);
+    }
+  }
+  return result;
 }
 /*
  * vim:ts=2 et
