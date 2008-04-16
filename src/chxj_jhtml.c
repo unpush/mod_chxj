@@ -906,7 +906,7 @@ s_jhtml_start_body_tag(void *pdoc, Node *node)
        attr = qs_get_next_attr(doc,attr)) {
     char *name   = qs_get_attr_name(doc,attr);
     char *value  = qs_get_attr_value(doc,attr);
-    if (STRCASEEQ('b','B',"bgcolor",name)) {
+    if (STRCASEEQ('b','B',"bgcolor",name) && value && *value) {
       /*----------------------------------------------------------------------*/
       /* CHTML 2.0                                                            */
       /*----------------------------------------------------------------------*/
@@ -914,7 +914,7 @@ s_jhtml_start_body_tag(void *pdoc, Node *node)
       W_V(value);
       W_L("\"");
     }
-    else if (STRCASEEQ('t','T',"text",name)) {
+    else if (STRCASEEQ('t','T',"text",name) && value && *value) {
       /*----------------------------------------------------------------------*/
       /* CHTML 2.0                                                            */
       /*----------------------------------------------------------------------*/
@@ -922,7 +922,7 @@ s_jhtml_start_body_tag(void *pdoc, Node *node)
       W_V(value);
       W_L("\"");
     }
-    else if (STRCASEEQ('l','L',"link",name)) {
+    else if (STRCASEEQ('l','L',"link",name) && value && *value) {
       /*----------------------------------------------------------------------*/
       /* CHTML 2.0                                                            */
       /*----------------------------------------------------------------------*/
@@ -936,11 +936,13 @@ s_jhtml_start_body_tag(void *pdoc, Node *node)
       /*----------------------------------------------------------------------*/
       /* ignore */
     }
-    else if (STRCASEEQ('v','V',"vlink",name)) {
+    else if (STRCASEEQ('v','V',"vlink",name) && value && *value) {
       /*----------------------------------------------------------------------*/
       /* CHTML 4.0                                                            */
       /*----------------------------------------------------------------------*/
-      /* ignore */
+      W_L(" vlink=\"");
+      W_V(value);
+      W_L("\"");
     }
   }
   W_L(">");
