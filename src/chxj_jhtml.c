@@ -854,7 +854,7 @@ s_jhtml_start_base_tag(void *pdoc, Node *node)
       W_L("\"");
     }
   }
-  W_L(" >");
+  W_L(">");
   return jhtml->out;
 }
 
