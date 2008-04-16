@@ -2147,13 +2147,11 @@ s_jhtml_start_div_tag(void *pdoc, Node *child)
   Doc          *doc;
   request_rec  *r;
   Attr         *attr;
-  char         *align;
+  char         *align = NULL;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
   r     = doc->r;
-
-  align = NULL;
 
   W_L("<div");
   for (attr = qs_get_attr(doc,child);
@@ -2165,10 +2163,11 @@ s_jhtml_start_div_tag(void *pdoc, Node *child)
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0 (W3C version 3.2)                                          */
       /*----------------------------------------------------------------------*/
-      align = apr_pstrdup(doc->buf.pool, val);
+      if (val && (STRCASEEQ('l','L',"left",val) || STRCASEEQ('r','R',"right",val) || STRCASEEQ('c','C',"center",val))) {
+        align = apr_pstrdup(doc->buf.pool, val);
+      }
     }
   }
-
   if (align) {
     W_L(" align=\"");
     W_V(align);
@@ -2198,7 +2197,7 @@ s_jhtml_end_div_tag(void *pdoc, Node *UNUSED(child))
   doc   = jhtml->doc;
   r     = doc->r;
 
-  W_L("</div>\n");
+  W_L("</div>");
   return jhtml->out;
 }
 
