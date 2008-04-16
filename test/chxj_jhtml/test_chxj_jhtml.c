@@ -486,13 +486,19 @@ main()
   CU_add_test(jhtml_suite, "test base tag href attribute with void value.",     test_jhtml_base_tag_href_attribute_002);
   CU_add_test(jhtml_suite, "test base tag href attribute with normal value.",   test_jhtml_base_tag_href_attribute_003);
   CU_add_test(jhtml_suite, "test base tag href attribute with normal value.",   test_jhtml_base_tag_href_attribute_004);
-#if 0
 
+  /*=========================================================================*/
+  /* <BLOCKQUOTE>                                                            */
+  /*=========================================================================*/
   CU_add_test(jhtml_suite, "test <blockquote> with void value.",                test_jhtml_blockquote_tag_001);
   CU_add_test(jhtml_suite, "test <blockquote> with value.",                     test_jhtml_blockquote_tag_002);
   CU_add_test(jhtml_suite, "test <blockquote> with japanese value.",            test_jhtml_blockquote_tag_003);
   CU_add_test(jhtml_suite, "test <blockquote> with hankaku kana value.",        test_jhtml_blockquote_tag_004);
 
+#if 0
+  /*=========================================================================*/
+  /* <BODY>                                                                  */
+  /*=========================================================================*/
   CU_add_test(jhtml_suite, "test <body> .",                                     test_jhtml_body_tag_001);
   CU_add_test(jhtml_suite, "test <body> with bgcolor attribute 1.",             test_jhtml_body_tag_002);
   CU_add_test(jhtml_suite, "test <body> with bgcolor attribute 2.",             test_jhtml_body_tag_003);
@@ -1465,7 +1471,6 @@ void test_jhtml_base_tag_001()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 void test_jhtml_base_tag_href_attribute_001() 
 {
 #define  TEST_STRING "<html><head><base href></head><body></body></html>"
@@ -1601,6 +1606,8 @@ void test_jhtml_blockquote_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -1629,6 +1636,8 @@ void test_jhtml_blockquote_tag_002()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -1657,6 +1666,8 @@ void test_jhtml_blockquote_tag_003()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -1685,6 +1696,8 @@ void test_jhtml_blockquote_tag_004()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -1693,6 +1706,7 @@ void test_jhtml_blockquote_tag_004()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 /*============================================================================*/
 /* <BODY>                                                                     */
 /*============================================================================*/
