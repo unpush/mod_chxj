@@ -138,8 +138,8 @@ tag_handler hdml_handler[] = {
   },
   /* tagUL */
   {
-    NULL,
-    NULL,
+    s_hdml_start_dir_tag,
+    s_hdml_end_dir_tag,
   },
   /* tagLI */
   {
