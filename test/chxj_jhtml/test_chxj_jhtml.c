@@ -456,8 +456,8 @@ main()
 
   CU_add_test(jhtml_suite, "test void src1",                                    test_jhtml_001);
   CU_add_test(jhtml_suite, "test void src2",                                    test_jhtml_002);
-#if 0
   CU_add_test(jhtml_suite, "test comment tag1",                                 test_jhtml_comment_tag_001);
+#if 0
 
   CU_add_test(jhtml_suite, "test a tag name attr1",                             test_jhtml_a_tag_name_attribute_001);
   CU_add_test(jhtml_suite, "test a tag name attr2",                             test_jhtml_a_tag_name_attribute_002);
@@ -1012,8 +1012,6 @@ void test_jhtml_002()
   APR_TERM;
 #undef TEST_STRING
 }
-/* KONNO */
-
 void test_jhtml_comment_tag_001() 
 {
 #define  TEST_STRING "<html><!--</html><body>--><head></head><body></body></html>"
@@ -1030,7 +1028,8 @@ void test_jhtml_comment_tag_001()
   SPEC_INIT(spec);
 
   ret = chxj_exchange_jhtml(&r, &spec, TEST_STRING, sizeof(TEST_STRING)-1, &destlen, &entry, &cookie);
-fprintf(stderr, "%s",ret);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", TEST_RESULT);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -1039,6 +1038,7 @@ fprintf(stderr, "%s",ret);
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 /*============================================================================*/
 /* <A>                                                                        */
 /*============================================================================*/
