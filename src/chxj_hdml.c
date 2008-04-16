@@ -1509,15 +1509,15 @@ s_hdml_start_input_tag(void* pdoc, Node* node)
  * @param tag  [i]   The tag node of input type=text is specified. 
  */
 static void
-s_hdml_do_input_text_tag(hdml_t* hdml, Node* tag)
+s_hdml_do_input_text_tag(hdml_t *hdml, Node *tag)
 {
-  Doc*          doc;
-  request_rec*  r;
-  char*         mlen;
-  char*         val;
-  char*         is;
-  char*         nm;
-  char*         fmt;
+  Doc           *doc;
+  request_rec   *r;
+  char          *mlen;
+  char          *val;
+  char          *is;
+  char          *nm;
+  char          *fmt;
   size_t        ii;
 
   doc   = hdml->doc;
