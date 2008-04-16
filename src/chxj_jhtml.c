@@ -2679,7 +2679,7 @@ s_jhtml_start_h1_tag(void *pdoc, Node *node)
   if (align) {
     W_L("<div align=\"");
     W_V(align);
-    W_L(">");
+    W_L("\">");
   }
   return jhtml->out;
 }
@@ -2751,7 +2751,7 @@ s_jhtml_start_h2_tag(void *pdoc, Node *node)
   if (align) {
     W_L("<div align=\"");
     W_V(align);
-    W_L(">");
+    W_L("\">");
   }
   return jhtml->out;
 }
@@ -2823,7 +2823,7 @@ s_jhtml_start_h3_tag(void *pdoc, Node *node)
   if (align) {
     W_L("<div align=\"");
     W_V(align);
-    W_L(">");
+    W_L("\">");
   }
   return jhtml->out;
 }
@@ -2895,7 +2895,7 @@ s_jhtml_start_h4_tag(void *pdoc, Node *node)
   if (align) {
     W_L("<div align=\"");
     W_V(align);
-    W_L(">");
+    W_L("\">");
   }
   return jhtml->out;
 }
@@ -2967,7 +2967,7 @@ s_jhtml_start_h5_tag(void *pdoc, Node *node)
   if (align) {
     W_L("<div align=\"");
     W_V(align);
-    W_L(">");
+    W_L("\">");
   }
   return jhtml->out;
 }
@@ -3039,7 +3039,7 @@ s_jhtml_start_h6_tag(void *pdoc, Node *node)
   if (align) {
     W_L("<div align=\"");
     W_V(align);
-    W_L(">");
+    W_L("\">");
   }
   return jhtml->out;
 }
