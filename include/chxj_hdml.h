@@ -91,6 +91,7 @@ struct hdml_t {
   int     hdml_end_flag;
   int     dir_level;
   int     plaintext_value_len;
+  int     pre_flag;
 
   device_table     *spec;
   mod_chxj_config  *conf;
