@@ -109,7 +109,7 @@ static void  s_init_jhtml(jhtml_t *jhtml, Doc *doc, request_rec *r, device_table
 
 static int   s_jhtml_search_emoji(jhtml_t *jhtml, char *txt, char **rslt);
 
-static char *chxj_istyle_to_mode(request_rec *r, const char *s);
+static char *chxj_istyle_to_mode(apr_pool_t *p, const char *s);
 
 
 
@@ -1457,64 +1457,74 @@ s_jhtml_start_input_tag(void *pdoc, Node *node)
   size       = qs_get_size_attr(doc, node, r);
 
   if (type) {
-    W_L(" type=\"");
-    W_V(type);
-    W_L("\" ");
+    if (type && (STRCASEEQ('t','T',"text",    type) ||
+                 STRCASEEQ('p','P',"password",type) ||
+                 STRCASEEQ('c','C',"checkbox",type) ||
+                 STRCASEEQ('r','R',"radio",   type) ||
+                 STRCASEEQ('h','H',"hidden",  type) ||
+                 STRCASEEQ('s','S',"submit",  type) ||
+                 STRCASEEQ('r','R',"reset",   type))) {
+      W_L(" type=\"");
+      W_V(type);
+      W_L("\"");
+    }
   }
-  if (size) {
+  if (size && *size) {
     W_L(" size=\"");
     W_V(size);
-    W_L("\" ");
+    W_L("\"");
   }
-  if (name) {
+  if (name && *name) {
     W_L(" name=\"");
     W_V(name);
-    W_L("\" ");
+    W_L("\"");
   }
-  if (value) {
+  if (value && *value) {
     W_L(" value=\"");
     W_V(value);
-    W_L("\" ");
+    W_L("\"");
   }
-  if (accesskey) {
+  if (accesskey && *accesskey) {
     W_L(" accesskey=\"");
     W_V(accesskey);
-    W_L("\" ");
+    W_L("\"");
   }
-  if (istyle) {
+  if (istyle && (*istyle == '1' || *istyle == '2' || *istyle == '3' || *istyle == '4')) {
     /*------------------------------------------------------------------------*/
     /* CHTML 2.0                                                              */
     /*------------------------------------------------------------------------*/
-    if (STRCASEEQ('p','P',"password", type) && ! jhtml->entryp->pc_flag ) {
+    if (type && STRCASEEQ('p','P',"password", type) && ! jhtml->entryp->pc_flag ) {
       W_L(" mode=\"");
       W_L("numeric");
-      W_L("\" ");
+      W_L("\"");
     }
     else {
-      char *vv = chxj_istyle_to_mode(r,istyle);
+      char *vv = chxj_istyle_to_mode(doc->buf.pool,istyle);
       W_L(" mode=\"");
       W_V(vv);
-      W_L("\" ");
+      W_L("\"");
     }
   }
-  else if (istyle == NULL && type != NULL && STRCASEEQ('p','P',"password",type)) {
+  else if (type && STRCASEEQ('p','P',"password",type)) {
     W_L(" mode=\"");
     W_L("numeric");
-    W_L("\" ");
+    W_L("\"");
   }
   /*--------------------------------------------------------------------------*/
   /* The figure is default for the password.                                  */
   /*--------------------------------------------------------------------------*/
-  if (max_length) {
-    W_L(" maxlength=\"");
-    W_V(max_length);
-    W_L("\"");
+  if (max_length && *max_length) {
+    if (chxj_chk_numeric(max_length) == 0) {
+      W_L(" maxlength=\"");
+      W_V(max_length);
+      W_L("\"");
+    }
   }
 
   if (checked) {
-    W_L(" checked ");
+    W_L(" checked");
   }
-  W_L(" >");
+  W_L(">");
   return jhtml->out;
 }
 
@@ -2231,26 +2241,26 @@ s_jhtml_end_div_tag(void *pdoc, Node *UNUSED(child))
 
 
 static char *
-chxj_istyle_to_mode(request_rec *r, const char *s)
+chxj_istyle_to_mode(apr_pool_t *p, const char *s)
 {
   char *tmp;
 
   if (s) {
     switch (s[0]) {
-    case '1': return apr_psprintf(r->pool, "hiragana");
-    case '2': return apr_psprintf(r->pool, "hankakukana");
-    case '3': return apr_psprintf(r->pool, "alphabet");
-    case '4': return apr_psprintf(r->pool, "numeric");
+    case '1': return apr_psprintf(p, "hiragana");
+    case '2': return apr_psprintf(p, "hankakukana");
+    case '3': return apr_psprintf(p, "alphabet");
+    case '4': return apr_psprintf(p, "numeric");
     default: 
-      tmp = apr_palloc(r->pool, 1);
+      tmp = apr_palloc(p, 1);
       tmp[0] = '\0';
-      return apr_pstrdup(r->pool, tmp);
+      return apr_pstrdup(p, tmp);
     }
   }
 
-  tmp = apr_palloc(r->pool, 1);
+  tmp = apr_palloc(p, 1);
   tmp[0] = '\0';
-  return apr_pstrdup(r->pool,tmp);
+  return apr_pstrdup(p,tmp);
 }
 
 
