@@ -535,10 +535,13 @@ main()
   /*=========================================================================*/
   CU_add_test(jhtml_suite, "test <dir>.",                                       test_jhtml_dir_tag_001);
   CU_add_test(jhtml_suite, "test <dir> with no <li>.",                          test_jhtml_dir_tag_002);
-#if 0
 
+  /*=========================================================================*/
+  /* <DL>                                                                    */
+  /*=========================================================================*/
   CU_add_test(jhtml_suite, "test <dl>.",                                        test_jhtml_dl_tag_001);
 
+#if 0
   CU_add_test(jhtml_suite, "test <dt>.",                                        test_jhtml_dt_tag_001);
   CU_add_test(jhtml_suite, "test <dt> with void value.",                        test_jhtml_dt_tag_002);
 
@@ -2477,7 +2480,6 @@ void test_jhtml_dir_tag_002()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 /*============================================================================*/
 /* <DL>                                                                       */
 /*============================================================================*/
@@ -2501,6 +2503,8 @@ void test_jhtml_dl_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -2509,6 +2513,7 @@ void test_jhtml_dl_tag_001()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 /*============================================================================*/
 /* <DT>                                                                       */
 /*============================================================================*/
