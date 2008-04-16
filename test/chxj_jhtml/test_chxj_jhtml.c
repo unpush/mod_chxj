@@ -530,9 +530,12 @@ main()
   /*=========================================================================*/
   CU_add_test(jhtml_suite, "test <center>.",                                    test_jhtml_center_tag_001);
 
-#if 0
+  /*=========================================================================*/
+  /* <DIR>                                                                   */
+  /*=========================================================================*/
   CU_add_test(jhtml_suite, "test <dir>.",                                       test_jhtml_dir_tag_001);
   CU_add_test(jhtml_suite, "test <dir> with no <li>.",                          test_jhtml_dir_tag_002);
+#if 0
 
   CU_add_test(jhtml_suite, "test <dl>.",                                        test_jhtml_dl_tag_001);
 
@@ -2411,14 +2414,13 @@ void test_jhtml_center_tag_001()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 /*============================================================================*/
 /* <DIR>                                                                      */
 /*============================================================================*/
 void test_jhtml_dir_tag_001()
 {
-#define  TEST_STRING "<html><head></head><body><dir><li>あああ<li>いいい</dir></body></html>"
-#define  RESULT_STRING "<html><head></head><body><dir><li>あああ<li>いいい</dir></body></html>"
+#define  TEST_STRING "<html><head></head><body><dir><li>あああ</li><li>いいい</li></dir></body></html>"
+#define  RESULT_STRING "<html><head></head><body><dir><li>あああ</li><li>いいい</li></dir></body></html>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2435,6 +2437,8 @@ void test_jhtml_dir_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -2463,6 +2467,8 @@ void test_jhtml_dir_tag_002()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -2471,6 +2477,7 @@ void test_jhtml_dir_tag_002()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 /*============================================================================*/
 /* <DL>                                                                       */
 /*============================================================================*/
