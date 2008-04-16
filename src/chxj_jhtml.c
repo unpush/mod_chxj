@@ -92,6 +92,18 @@ static char *s_jhtml_start_dt_tag       (void *pdoc, Node *node);
 static char *s_jhtml_end_dt_tag         (void *pdoc, Node *node);
 static char *s_jhtml_start_dd_tag       (void *pdoc, Node *node);
 static char *s_jhtml_end_dd_tag         (void *pdoc, Node *node);
+static char *s_jhtml_start_h1_tag       (void *pdoc, Node *node);
+static char *s_jhtml_end_h1_tag         (void *pdoc, Node *node);
+static char *s_jhtml_start_h2_tag       (void *pdoc, Node *node);
+static char *s_jhtml_end_h2_tag         (void *pdoc, Node *node);
+static char *s_jhtml_start_h3_tag       (void *pdoc, Node *node);
+static char *s_jhtml_end_h3_tag         (void *pdoc, Node *node);
+static char *s_jhtml_start_h4_tag       (void *pdoc, Node *node);
+static char *s_jhtml_end_h4_tag         (void *pdoc, Node *node);
+static char *s_jhtml_start_h5_tag       (void *pdoc, Node *node);
+static char *s_jhtml_end_h5_tag         (void *pdoc, Node *node);
+static char *s_jhtml_start_h6_tag       (void *pdoc, Node *node);
+static char *s_jhtml_end_h6_tag         (void *pdoc, Node *node);
 
 static void  s_init_jhtml(jhtml_t *jhtml, Doc *doc, request_rec *r, device_table *spec);
 
@@ -144,33 +156,33 @@ tag_handler jhtml_handler[] = {
   },
   /* tagH1 */
   {
-    NULL,
-    NULL,
+    s_jhtml_start_h1_tag,
+    s_jhtml_end_h1_tag,
   },
   /* tagH2 */
   {
-    NULL,
-    NULL,
+    s_jhtml_start_h2_tag,
+    s_jhtml_end_h2_tag,
   },
   /* tagH3 */
   {
-    NULL,
-    NULL,
+    s_jhtml_start_h3_tag,
+    s_jhtml_end_h3_tag,
   },
   /* tagH4 */
   {
-    NULL,
-    NULL,
+    s_jhtml_start_h4_tag,
+    s_jhtml_end_h4_tag,
   },
   /* tagH5 */
   {
-    NULL,
-    NULL,
+    s_jhtml_start_h5_tag,
+    s_jhtml_end_h5_tag,
   },
   /* tagH6 */
   {
-    NULL,
-    NULL,
+    s_jhtml_start_h6_tag,
+    s_jhtml_end_h6_tag,
   },
   /* tagHEAD */
   {
@@ -2624,6 +2636,438 @@ static char *
 s_jhtml_end_dd_tag(void *pdoc, Node *UNUSED(child))
 {
   jhtml_t *jhtml = GET_JHTML(pdoc);
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the H1 tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H1 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_start_h1_tag(void *pdoc, Node *node)
+{
+  jhtml_t       *jhtml;
+  Doc           *doc;
+  request_rec   *r;
+  Attr          *attr;
+  char          *align = NULL;
+
+  jhtml   = GET_JHTML(pdoc);
+  doc     = jhtml->doc;
+  r       = doc->r;
+
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char* name;
+    char* value;
+    name  = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('a','A',"align", name)) {
+      if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('c','C',"center",value))) {
+        jhtml->h1_align_flag++;
+        align = apr_pstrdup(doc->buf.pool, value);
+        break;
+      }
+    }
+  }
+  if (align) {
+    W_L("<div align=\"");
+    W_V(align);
+    W_L(">");
+  }
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the H1 tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H1 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_end_h1_tag(void *pdoc, Node *UNUSED(child)) 
+{
+  jhtml_t*    jhtml;
+  Doc*          doc;
+  request_rec*  r;
+
+  jhtml = GET_JHTML(pdoc);
+  doc     = jhtml->doc;
+  r       = doc->r;
+  
+  if (jhtml->h1_align_flag) {
+    jhtml->h1_align_flag--;
+    W_L("</div>");
+  }
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the H2 tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H1 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_start_h2_tag(void *pdoc, Node *node)
+{
+  jhtml_t       *jhtml;
+  Doc           *doc;
+  request_rec   *r;
+  Attr          *attr;
+  char          *align = NULL;
+
+  jhtml   = GET_JHTML(pdoc);
+  doc     = jhtml->doc;
+  r       = doc->r;
+
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char* name;
+    char* value;
+    name  = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('a','A',"align", name)) {
+      if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('c','C',"center",value))) {
+        jhtml->h2_align_flag++;
+        align = apr_pstrdup(doc->buf.pool, value);
+        break;
+      }
+    }
+  }
+  if (align) {
+    W_L("<div align=\"");
+    W_V(align);
+    W_L(">");
+  }
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the H2 tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H1 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_end_h2_tag(void *pdoc, Node *UNUSED(child)) 
+{
+  jhtml_t*    jhtml;
+  Doc*          doc;
+  request_rec*  r;
+
+  jhtml = GET_JHTML(pdoc);
+  doc     = jhtml->doc;
+  r       = doc->r;
+  
+  if (jhtml->h2_align_flag) {
+    jhtml->h2_align_flag--;
+    W_L("</div>");
+  }
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the H3 tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H1 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_start_h3_tag(void *pdoc, Node *node)
+{
+  jhtml_t       *jhtml;
+  Doc           *doc;
+  request_rec   *r;
+  Attr          *attr;
+  char          *align = NULL;
+
+  jhtml   = GET_JHTML(pdoc);
+  doc     = jhtml->doc;
+  r       = doc->r;
+
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char* name;
+    char* value;
+    name  = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('a','A',"align", name)) {
+      if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('c','C',"center",value))) {
+        jhtml->h3_align_flag++;
+        align = apr_pstrdup(doc->buf.pool, value);
+        break;
+      }
+    }
+  }
+  if (align) {
+    W_L("<div align=\"");
+    W_V(align);
+    W_L(">");
+  }
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the H3 tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H1 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_end_h3_tag(void *pdoc, Node *UNUSED(child)) 
+{
+  jhtml_t*    jhtml;
+  Doc*          doc;
+  request_rec*  r;
+
+  jhtml = GET_JHTML(pdoc);
+  doc     = jhtml->doc;
+  r       = doc->r;
+  
+  if (jhtml->h3_align_flag) {
+    jhtml->h3_align_flag--;
+    W_L("</div>");
+  }
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the H4 tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H1 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_start_h4_tag(void *pdoc, Node *node)
+{
+  jhtml_t       *jhtml;
+  Doc           *doc;
+  request_rec   *r;
+  Attr          *attr;
+  char          *align = NULL;
+
+  jhtml   = GET_JHTML(pdoc);
+  doc     = jhtml->doc;
+  r       = doc->r;
+
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char* name;
+    char* value;
+    name  = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('a','A',"align", name)) {
+      if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('c','C',"center",value))) {
+        jhtml->h4_align_flag++;
+        align = apr_pstrdup(doc->buf.pool, value);
+        break;
+      }
+    }
+  }
+  if (align) {
+    W_L("<div align=\"");
+    W_V(align);
+    W_L(">");
+  }
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the H4 tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H1 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_end_h4_tag(void *pdoc, Node *UNUSED(child)) 
+{
+  jhtml_t*    jhtml;
+  Doc*          doc;
+  request_rec*  r;
+
+  jhtml = GET_JHTML(pdoc);
+  doc     = jhtml->doc;
+  r       = doc->r;
+  
+  if (jhtml->h4_align_flag) {
+    jhtml->h4_align_flag--;
+    W_L("</div>");
+  }
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the H5 tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H1 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_start_h5_tag(void *pdoc, Node *node)
+{
+  jhtml_t       *jhtml;
+  Doc           *doc;
+  request_rec   *r;
+  Attr          *attr;
+  char          *align = NULL;
+
+  jhtml   = GET_JHTML(pdoc);
+  doc     = jhtml->doc;
+  r       = doc->r;
+
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char* name;
+    char* value;
+    name  = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('a','A',"align", name)) {
+      if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('c','C',"center",value))) {
+        jhtml->h5_align_flag++;
+        align = apr_pstrdup(doc->buf.pool, value);
+        break;
+      }
+    }
+  }
+  if (align) {
+    W_L("<div align=\"");
+    W_V(align);
+    W_L(">");
+  }
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the H5 tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H1 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_end_h5_tag(void *pdoc, Node *UNUSED(child)) 
+{
+  jhtml_t*    jhtml;
+  Doc*          doc;
+  request_rec*  r;
+
+  jhtml = GET_JHTML(pdoc);
+  doc     = jhtml->doc;
+  r       = doc->r;
+  
+  if (jhtml->h5_align_flag) {
+    jhtml->h5_align_flag--;
+    W_L("</div>");
+  }
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the H6 tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H1 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_start_h6_tag(void *pdoc, Node *node)
+{
+  jhtml_t       *jhtml;
+  Doc           *doc;
+  request_rec   *r;
+  Attr          *attr;
+  char          *align = NULL;
+
+  jhtml   = GET_JHTML(pdoc);
+  doc     = jhtml->doc;
+  r       = doc->r;
+
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char* name;
+    char* value;
+    name  = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('a','A',"align", name)) {
+      if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('c','C',"center",value))) {
+        jhtml->h6_align_flag++;
+        align = apr_pstrdup(doc->buf.pool, value);
+        break;
+      }
+    }
+  }
+  if (align) {
+    W_L("<div align=\"");
+    W_V(align);
+    W_L(">");
+  }
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the H6 tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H1 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_end_h6_tag(void *pdoc, Node *UNUSED(child)) 
+{
+  jhtml_t*    jhtml;
+  Doc*          doc;
+  request_rec*  r;
+
+  jhtml = GET_JHTML(pdoc);
+  doc     = jhtml->doc;
+  r       = doc->r;
+  
+  if (jhtml->h6_align_flag) {
+    jhtml->h6_align_flag--;
+    W_L("</div>");
+  }
   return jhtml->out;
 }
 /*
