@@ -1252,11 +1252,11 @@ s_jhtml_start_font_tag(void *pdoc, Node *node)
  * @param node   [i]   The FONT tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_end_font_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_jhtml_end_font_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t*     jhtml;
-  request_rec* r;
+  jhtml_t      *jhtml;
+  request_rec  *r;
   Doc          *doc;
 
   jhtml = GET_JHTML(pdoc);
@@ -1276,18 +1276,17 @@ s_jhtml_end_font_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The FORM tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_start_form_tag(void* pdoc, Node* node) 
+static char *
+s_jhtml_start_form_tag(void *pdoc, Node *node) 
 {
-  jhtml_t*     jhtml;
-  Doc*         doc;
-  request_rec* r;
-  Attr*        attr;
+  jhtml_t      *jhtml;
+  Doc          *doc;
+  request_rec  *r;
+  Attr         *attr;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
   r     = doc->r;
-
   W_L("<form");
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -1295,13 +1294,8 @@ s_jhtml_start_form_tag(void* pdoc, Node* node)
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-
-    char* name;
-    char* value;
-
-    name  = qs_get_attr_name(doc,attr);
-    value = qs_get_attr_value(doc,attr);
-
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('a','A',"action",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
@@ -1327,7 +1321,6 @@ s_jhtml_start_form_tag(void* pdoc, Node* node)
     }
   }
   W_L(">");
-
   if (jhtml->cookie && jhtml->cookie->cookie_id) {
     char *vv = apr_psprintf(doc->buf.pool, "%s<input type='hidden' name='%s' value='%s'>",
                             jhtml->out, 
@@ -1335,7 +1328,6 @@ s_jhtml_start_form_tag(void* pdoc, Node* node)
                             chxj_url_decode(r, jhtml->cookie->cookie_id));
     W_V(vv);
   }
-
   return jhtml->out;
 }
 
@@ -1348,12 +1340,11 @@ s_jhtml_start_form_tag(void* pdoc, Node* node)
  * @param node   [i]   The FORM tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_end_form_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_jhtml_end_form_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t*     jhtml = GET_JHTML(pdoc);
-  Doc*         doc   = jhtml->doc;
-
+  jhtml_t *jhtml = GET_JHTML(pdoc);
+  Doc     *doc   = jhtml->doc;
   W_L("</form>");
   return jhtml->out;
 }
