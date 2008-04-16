@@ -455,8 +455,8 @@ main()
   jhtml_suite = CU_add_suite("test chxj_exchange_jhtml()", NULL, NULL);
 
   CU_add_test(jhtml_suite, "test void src1",                                    test_jhtml_001);
-#if 0
   CU_add_test(jhtml_suite, "test void src2",                                    test_jhtml_002);
+#if 0
   CU_add_test(jhtml_suite, "test comment tag1",                                 test_jhtml_comment_tag_001);
 
   CU_add_test(jhtml_suite, "test a tag name attr1",                             test_jhtml_a_tag_name_attribute_001);
@@ -987,10 +987,10 @@ void test_jhtml_001()
   APR_TERM;
 #undef TEST_STRING
 }
-/* KONNO */
 void test_jhtml_002() 
 {
 #define  TEST_STRING ""
+#define TEST_RESULT "\n"
   char  *ret;
   device_table spec;
   chxjconvrule_entry entry;
@@ -1003,6 +1003,8 @@ void test_jhtml_002()
   SPEC_INIT(spec);
 
   ret = chxj_exchange_jhtml(&r, &spec, TEST_STRING, sizeof(TEST_STRING)-1, &destlen, &entry, &cookie);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", TEST_RESULT);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp("\n", ret) == 0);
   CU_ASSERT(destlen == 1);
@@ -1010,6 +1012,7 @@ void test_jhtml_002()
   APR_TERM;
 #undef TEST_STRING
 }
+/* KONNO */
 
 void test_jhtml_comment_tag_001() 
 {
