@@ -926,8 +926,9 @@ chxj_apply_convrule(request_rec* r, apr_array_header_t* convrules)
 
 char *test_ap_escape_html(apr_pool_t *pool, const char *s)
 {
-  return s;
+  return (char *)s;
 }
+
 #define APR_INIT \
   request_rec r; \
   apr_pool_t *p; \
