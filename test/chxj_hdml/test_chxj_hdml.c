@@ -399,11 +399,6 @@ void test_hdml_marquee_tag_001();
 void test_hdml_meta_tag_001();
 
 void test_hdml_font_tag_001();
-void test_hdml_font_tag_002();
-void test_hdml_font_tag_003();
-void test_hdml_font_tag_004();
-void test_hdml_font_tag_005();
-void test_hdml_font_tag_006();
 /* pend */
 static char *test_get_form_no(request_rec *r, hdml_t *hdml);
 
@@ -856,31 +851,16 @@ main()
   /* <marquee>                                                               */
   /*=========================================================================*/
   CU_add_test(hdml_suite, "test <marquee> 1." ,                                test_hdml_marquee_tag_001);
-#if 0
 
   /*=========================================================================*/
   /* <meta>                                                                  */
   /*=========================================================================*/
   CU_add_test(hdml_suite, "test <meta> 1." ,                                   test_hdml_meta_tag_001);
-  CU_add_test(hdml_suite, "test <meta> 2." ,                                   test_hdml_meta_tag_002);
-  CU_add_test(hdml_suite, "test <meta> 3." ,                                   test_hdml_meta_tag_003);
-  CU_add_test(hdml_suite, "test <meta> 4." ,                                   test_hdml_meta_tag_004);
-  CU_add_test(hdml_suite, "test <meta> 5." ,                                   test_hdml_meta_tag_005);
-  CU_add_test(hdml_suite, "test <meta> 6." ,                                   test_hdml_meta_tag_006);
-  CU_add_test(hdml_suite, "test <meta> 7." ,                                   test_hdml_meta_tag_007);
-  CU_add_test(hdml_suite, "test <meta> 8." ,                                   test_hdml_meta_tag_008);
-  CU_add_test(hdml_suite, "test <meta> 9." ,                                   test_hdml_meta_tag_009);
 
   /*=========================================================================*/
   /* <font>                                                                  */
   /*=========================================================================*/
   CU_add_test(hdml_suite, "test <font> 1." ,                                   test_hdml_font_tag_001);
-  CU_add_test(hdml_suite, "test <font> 2." ,                                   test_hdml_font_tag_002);
-  CU_add_test(hdml_suite, "test <font> 3." ,                                   test_hdml_font_tag_003);
-  CU_add_test(hdml_suite, "test <font> 4." ,                                   test_hdml_font_tag_004);
-  CU_add_test(hdml_suite, "test <font> 5." ,                                   test_hdml_font_tag_005);
-  CU_add_test(hdml_suite, "test <font> 6." ,                                   test_hdml_font_tag_006);
-#endif
   /* aend */
 
   CU_basic_run_tests();
@@ -10513,14 +10493,13 @@ void test_hdml_meta_tag_001()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/*KONNO*/
 /*============================================================================*/
 /* <FONT>                                                                     */
 /*============================================================================*/
 void test_hdml_font_tag_001() 
 {
-#define  TEST_STRING "<font>"
-#define  RESULT_STRING "<font></font>"
+#define  TEST_STRING "<font color=\"#ff0000\">あああ</font>"
+#define  RESULT_STRING "あああ"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10537,152 +10516,8 @@ void test_hdml_font_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_font_tag_002() 
-{
-#define  TEST_STRING "<font>あああ</font>"
-#define  RESULT_STRING "<font>あああ</font>"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_font_tag_003() 
-{
-#define  TEST_STRING "<font>ｱｱｱ</font>"
-#define  RESULT_STRING "<font>ｱｱｱ</font>"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_font_tag_004() 
-{
-#define  TEST_STRING "<font color>ｱｱｱ</font>"
-#define  RESULT_STRING "<font>ｱｱｱ</font>"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_font_tag_005() 
-{
-#define  TEST_STRING "<font color=\"\">ｱｱｱ</font>"
-#define  RESULT_STRING "<font>ｱｱｱ</font>"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_font_tag_006() 
-{
-#define  TEST_STRING "<font color=\"#ff0000\">ｱｱｱ</font>"
-#define  RESULT_STRING "<font color=\"#ff0000\">ｱｱｱ</font>"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
