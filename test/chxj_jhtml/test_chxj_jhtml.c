@@ -683,10 +683,13 @@ main()
   CU_add_test(jhtml_suite, "test <hr width> with numeric value.",               test_jhtml_hr_tag_016);
   CU_add_test(jhtml_suite, "test <hr noshade>.",                                test_jhtml_hr_tag_017);
   CU_add_test(jhtml_suite, "test <hr color>.",                                  test_jhtml_hr_tag_018);
-#if 0
 
+  /*=========================================================================*/
+  /* <HTML>                                                                  */
+  /*=========================================================================*/
   CU_add_test(jhtml_suite, "test <html>.",                                      test_jhtml_html_tag_001);
 
+#if 0
   CU_add_test(jhtml_suite, "test <img>." ,                                      test_jhtml_img_tag_001);
   CU_add_test(jhtml_suite, "test <img src> with no value." ,                    test_jhtml_img_tag_002);
   CU_add_test(jhtml_suite, "test <img src> with void value." ,                  test_jhtml_img_tag_003);
@@ -5583,7 +5586,6 @@ void test_jhtml_hr_tag_018()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 /*============================================================================*/
 /* <HTML>                                                                     */
 /*============================================================================*/
@@ -5607,6 +5609,8 @@ void test_jhtml_html_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -5615,6 +5619,7 @@ void test_jhtml_html_tag_001()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 /*============================================================================*/
 /* <IMG>                                                                      */
 /*============================================================================*/
