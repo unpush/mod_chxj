@@ -1029,7 +1029,7 @@ void test_jhtml_comment_tag_001()
 
   ret = chxj_exchange_jhtml(&r, &spec, TEST_STRING, sizeof(TEST_STRING)-1, &destlen, &entry, &cookie);
   fprintf(stderr, "actual:[%s]\n", ret);
-  fprintf(stderr, "expect:[%s]\n", TEST_RESULT);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
