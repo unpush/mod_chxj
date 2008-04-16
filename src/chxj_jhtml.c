@@ -1469,11 +1469,10 @@ s_jhtml_start_input_tag(void *pdoc, Node *node)
  * @param node   [i]   The INPUT tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_end_input_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_jhtml_end_input_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t*  jhtml = GET_JHTML(pdoc);
-
+  jhtml_t *jhtml = GET_JHTML(pdoc);
   return jhtml->out;
 }
 
