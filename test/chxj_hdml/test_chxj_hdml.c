@@ -391,8 +391,6 @@ void test_hdml_title_tag_002();
 void test_hdml_ul_tag_001();
 void test_hdml_ul_tag_002();
 void test_hdml_ul_tag_003();
-void test_hdml_ul_tag_004();
-void test_hdml_ul_tag_005();
 
 void test_hdml_blink_tag_001();
 void test_hdml_blink_tag_002();
@@ -869,7 +867,6 @@ main()
   /*=========================================================================*/
   CU_add_test(hdml_suite, "test <title> 1." ,                                  test_hdml_title_tag_001);
   CU_add_test(hdml_suite, "test <title> 2." ,                                  test_hdml_title_tag_002);
-#if 0
 
   /*=========================================================================*/
   /* <ul>                                                                    */
@@ -877,9 +874,8 @@ main()
   CU_add_test(hdml_suite, "test <ul> 1." ,                                     test_hdml_ul_tag_001);
   CU_add_test(hdml_suite, "test <ul> 2." ,                                     test_hdml_ul_tag_002);
   CU_add_test(hdml_suite, "test <ul> 3." ,                                     test_hdml_ul_tag_003);
-  CU_add_test(hdml_suite, "test <ul> 4." ,                                     test_hdml_ul_tag_004);
-  CU_add_test(hdml_suite, "test <ul> 5." ,                                     test_hdml_ul_tag_005);
 
+#if 0
   /*=========================================================================*/
   /* <blink>                                                                 */
   /*=========================================================================*/
@@ -10367,14 +10363,16 @@ void test_hdml_title_tag_002()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/*KONNO*/
 /*============================================================================*/
 /* <UL>                                                                       */
 /*============================================================================*/
-void test_hdml_ul_tag_001() 
+void test_hdml_ul_tag_001()
 {
-#define  TEST_STRING "<ul>"
-#define  RESULT_STRING "<ul></ul>"
+#define  TEST_STRING "<ul><li>あああ</li><li>いいい</li></ul>"
+#define  RESULT_STRING \
+"<BR>\r\n" \
+"<WRAP>&nbsp;あああ<BR>\r\n" \
+"<WRAP>&nbsp;いいい<BR>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10391,7 +10389,8 @@ void test_hdml_ul_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10400,10 +10399,10 @@ void test_hdml_ul_tag_001()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-void test_hdml_ul_tag_002() 
+void test_hdml_ul_tag_002()
 {
 #define  TEST_STRING "<ul></ul>"
-#define  RESULT_STRING "<ul></ul>"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10420,7 +10419,8 @@ void test_hdml_ul_tag_002()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10429,10 +10429,13 @@ void test_hdml_ul_tag_002()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-void test_hdml_ul_tag_003() 
+void test_hdml_ul_tag_003()
 {
-#define  TEST_STRING "<ul><li></ul>"
-#define  RESULT_STRING "<ul><li></li></ul>"
+#define  TEST_STRING "<ul><li>あああ</li><ul><li>いいい</li></ul></ul>"
+#define  RESULT_STRING \
+"<BR>\r\n" \
+"<WRAP>&nbsp;あああ<BR>\r\n" \
+"<WRAP>&nbsp;&nbsp;いいい<BR>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10449,7 +10452,8 @@ void test_hdml_ul_tag_003()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10458,64 +10462,7 @@ void test_hdml_ul_tag_003()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-void test_hdml_ul_tag_004() 
-{
-#define  TEST_STRING "<ul abc><li></ul>"
-#define  RESULT_STRING "<ul><li></li></ul>"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_ul_tag_005() 
-{
-#define  TEST_STRING "<ul abc><li>abc</ul>"
-#define  RESULT_STRING "<ul><li>abc</li></ul>"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
+/*KONNO*/
 /*============================================================================*/
 /* <BLINK>                                                                    */
 /*============================================================================*/
