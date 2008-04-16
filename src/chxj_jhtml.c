@@ -1166,12 +1166,12 @@ s_jhtml_end_br_tag(void *pdoc, Node *UNUSED(child))
  * @param node   [i]   The TR tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_start_tr_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_jhtml_start_tr_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  jhtml_t*     jhtml;
-  Doc*         doc;
-  request_rec* r;
+  jhtml_t      *jhtml;
+  Doc          *doc;
+  request_rec  *r;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
@@ -1190,13 +1190,10 @@ s_jhtml_start_tr_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The TR tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_end_tr_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_jhtml_end_tr_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t* jhtml;
-
-  jhtml = GET_JHTML(pdoc);
-
+  jhtml_t *jhtml = GET_JHTML(pdoc);
   return jhtml->out;
 }
 
