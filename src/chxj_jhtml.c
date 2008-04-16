@@ -1313,10 +1313,13 @@ s_jhtml_start_form_tag(void *pdoc, Node *node)
   Doc          *doc;
   request_rec  *r;
   Attr         *attr;
+  int          dcflag = 0;
+  char         *dc = NULL;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
   r     = doc->r;
+
   W_L("<form");
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -1333,6 +1336,10 @@ s_jhtml_start_form_tag(void *pdoc, Node *node)
       W_L(" action=\"");
       W_V(value);
       W_L("\"");
+      dc = chxj_add_cookie_parameter(r, value, jhtml->cookie);
+      if (strcmp(dc, value)) {
+        dcflag = 1;
+      } 
     }
     else if (STRCASEEQ('m','M',"method",name)) {
       /*----------------------------------------------------------------------*/
@@ -1347,11 +1354,20 @@ s_jhtml_start_form_tag(void *pdoc, Node *node)
       /* CHTML 3.0                                                            */
       /* It is special only for CHTML.                                        */
       /*----------------------------------------------------------------------*/
-      W_L(" utn ");
+      /* ignore */
     }
   }
   W_L(">");
-  if (jhtml->cookie && jhtml->cookie->cookie_id) {
+  /*-------------------------------------------------------------------------*/
+  /* ``action=""''                                                           */
+  /*-------------------------------------------------------------------------*/
+  if (! dc) {
+    dcflag = 1;
+  }
+  /*-------------------------------------------------------------------------*/
+  /* Add cookie parameter                                                    */
+  /*-------------------------------------------------------------------------*/
+  if (jhtml->cookie && jhtml->cookie->cookie_id && dcflag == 1) {
     char *vv = apr_psprintf(doc->buf.pool, "%s<input type='hidden' name='%s' value='%s'>",
                             jhtml->out, 
                             CHXJ_COOKIE_PARAM,

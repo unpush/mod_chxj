@@ -563,8 +563,10 @@ main()
   CU_add_test(jhtml_suite, "test <div> with align attribute(void).",            test_jhtml_div_tag_005);
   CU_add_test(jhtml_suite, "test <div> with align attribute(unknown).",         test_jhtml_div_tag_006);
   CU_add_test(jhtml_suite, "test <div> with style attribute.",                  test_jhtml_div_tag_007);
-#if 0
 
+  /*=========================================================================*/
+  /* <FORM>                                                                  */
+  /*=========================================================================*/
   CU_add_test(jhtml_suite, "test <form>.",                                      test_jhtml_form_tag_001);
   CU_add_test(jhtml_suite, "test <form method>.",                               test_jhtml_form_tag_002);
   CU_add_test(jhtml_suite, "test <form method=\"post\">.",                      test_jhtml_form_tag_003);
@@ -575,6 +577,10 @@ main()
   CU_add_test(jhtml_suite, "test <form action> with other site .",              test_jhtml_form_tag_008);
   CU_add_test(jhtml_suite, "test <form action method>.",                        test_jhtml_form_tag_009);
 
+  /*=========================================================================*/
+  /* <HEAD>                                                                  */
+  /*=========================================================================*/
+#if 0
   CU_add_test(jhtml_suite, "test <head>.",                                      test_jhtml_head_tag_001);
   CU_add_test(jhtml_suite, "test <head> with value.",                           test_jhtml_head_tag_002);
 
@@ -2861,14 +2867,13 @@ void test_jhtml_div_tag_007()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 /*============================================================================*/
 /* FORM                                                                       */
 /*============================================================================*/
 void test_jhtml_form_tag_001() 
 {
 #define  TEST_STRING "<html><head></head><body><form></form></body></html>"
-#define  RESULT_STRING "<html><head></head><body><form></form></body></html>"
+#define  RESULT_STRING "<html><head></head><body><form><input type='hidden' name='_chxj_cc' value='test_cookie_id'></form></body></html>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2885,6 +2890,8 @@ void test_jhtml_form_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -2896,7 +2903,7 @@ void test_jhtml_form_tag_001()
 void test_jhtml_form_tag_002() 
 {
 #define  TEST_STRING "<html><head></head><body><form method></form></body></html>"
-#define  RESULT_STRING "<html><head></head><body><form method=\"\"></form></body></html>"
+#define  RESULT_STRING "<html><head></head><body><form method=\"\"><input type='hidden' name='_chxj_cc' value='test_cookie_id'></form></body></html>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2913,6 +2920,8 @@ void test_jhtml_form_tag_002()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -2924,7 +2933,7 @@ void test_jhtml_form_tag_002()
 void test_jhtml_form_tag_003() 
 {
 #define  TEST_STRING "<html><head></head><body><form method=\"post\"></form></body></html>"
-#define  RESULT_STRING "<html><head></head><body><form method=\"post\"></form></body></html>"
+#define  RESULT_STRING "<html><head></head><body><form method=\"post\"><input type='hidden' name='_chxj_cc' value='test_cookie_id'></form></body></html>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2941,6 +2950,8 @@ void test_jhtml_form_tag_003()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -2952,7 +2963,7 @@ void test_jhtml_form_tag_003()
 void test_jhtml_form_tag_004() 
 {
 #define  TEST_STRING "<html><head></head><body><form method=\"get\"></form></body></html>"
-#define  RESULT_STRING "<html><head></head><body><form method=\"get\"></form></body></html>"
+#define  RESULT_STRING "<html><head></head><body><form method=\"get\"><input type='hidden' name='_chxj_cc' value='test_cookie_id'></form></body></html>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2969,6 +2980,8 @@ void test_jhtml_form_tag_004()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -2980,7 +2993,7 @@ void test_jhtml_form_tag_004()
 void test_jhtml_form_tag_005() 
 {
 #define  TEST_STRING "<html><head></head><body><form method=\"abc\"></form></body></html>"
-#define  RESULT_STRING "<html><head></head><body><form method=\"abc\"></form></body></html>"
+#define  RESULT_STRING "<html><head></head><body><form method=\"abc\"><input type='hidden' name='_chxj_cc' value='test_cookie_id'></form></body></html>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -3008,7 +3021,7 @@ void test_jhtml_form_tag_005()
 void test_jhtml_form_tag_006() 
 {
 #define  TEST_STRING "<html><head></head><body><form action></form></body></html>"
-#define  RESULT_STRING "<html><head></head><body><form action=\"?_chxj_cc=test_cookie_id\"></form></body></html>"
+#define  RESULT_STRING "<html><head></head><body><form action=\"\"><input type='hidden' name='_chxj_cc' value='test_cookie_id'></form></body></html>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -3025,6 +3038,8 @@ void test_jhtml_form_tag_006()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -3053,6 +3068,8 @@ void test_jhtml_form_tag_007()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, NULL);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -3081,6 +3098,8 @@ void test_jhtml_form_tag_008()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -3092,7 +3111,7 @@ void test_jhtml_form_tag_008()
 void test_jhtml_form_tag_009() 
 {
 #define  TEST_STRING "<html><head></head><body><form method=\"post\" action=\"hogehoge\"></form></body></html>"
-#define  RESULT_STRING "<html><head></head><body><form method=\"post\" action=\"hogehoge?_chxj_cc=test_cookie_id\"></form></body></html>"
+#define  RESULT_STRING "<html><head></head><body><form method=\"post\" action=\"hogehoge\"><input type='hidden' name='_chxj_cc' value='test_cookie_id'></form></body></html>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -3109,6 +3128,8 @@ void test_jhtml_form_tag_009()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -3117,6 +3138,7 @@ void test_jhtml_form_tag_009()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 /*============================================================================*/
 /* <HEAD>                                                                     */
 /*============================================================================*/

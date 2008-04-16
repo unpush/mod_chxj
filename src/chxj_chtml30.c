@@ -1392,10 +1392,9 @@ s_chtml30_start_form_tag(void *pdoc, Node *node)
       /* CHTML 3.0                                                            */
       /* It is special only for CHTML.                                        */
       /*----------------------------------------------------------------------*/
-      W_L(" utn ");
+      W_L(" utn");
     }
   }
-
   W_L(">");
   return chtml30->out;
 }
