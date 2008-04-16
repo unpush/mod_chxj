@@ -1348,33 +1348,27 @@ s_chtml30_end_font_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The FORM tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml30_start_form_tag(void* pdoc, Node* node) 
+static char *
+s_chtml30_start_form_tag(void *pdoc, Node *node) 
 {
-  chtml30_t*    chtml30;
-  Doc*          doc;
-  request_rec*  r;
-  Attr*         attr;
+  chtml30_t     *chtml30;
+  Doc           *doc;
+  request_rec   *r;
+  Attr          *attr;
 
   chtml30 = GET_CHTML30(pdoc);
   doc     = chtml30->doc;
   r       = doc->r;
 
   W_L("<form");
-
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
   /*--------------------------------------------------------------------------*/
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-
-    char* name;
-    char* value;
-
-    name  = qs_get_attr_name(doc,attr);
-    value = qs_get_attr_value(doc,attr);
-
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('a','A',"action", name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
@@ -1403,7 +1397,6 @@ s_chtml30_start_form_tag(void* pdoc, Node* node)
   }
 
   W_L(">");
-
   return chtml30->out;
 }
 
