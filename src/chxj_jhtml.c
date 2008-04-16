@@ -490,11 +490,11 @@ s_init_jhtml(jhtml_t* jhtml, Doc* doc, request_rec* r, device_table* spec)
  * @return When corresponding EMOJI exists, it returns it excluding 0. 
  */
 static int
-s_jhtml_search_emoji(jhtml_t* jhtml, char* txt, char** rslt)
+s_jhtml_search_emoji(jhtml_t *jhtml, char *txt, char **rslt)
 {
-  emoji_t*      ee;
-  request_rec*  r;
-  device_table* spec;
+  emoji_t       *ee;
+  request_rec   *r;
+  device_table  *spec;
   int           len;
 
   spec = jhtml->spec;
@@ -554,12 +554,12 @@ s_jhtml_search_emoji(jhtml_t* jhtml, char* txt, char** rslt)
  * @param node   [i]   The HTML tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_start_html_tag(void* pdoc, Node* UNUSED(node)) 
+static char *
+s_jhtml_start_html_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  jhtml_t*      jhtml;
-  Doc*          doc;
-  request_rec*  r;
+  jhtml_t       *jhtml;
+  Doc           *doc;
+  request_rec   *r;
 
 
   jhtml  = GET_JHTML(pdoc);
@@ -570,7 +570,7 @@ s_jhtml_start_html_tag(void* pdoc, Node* UNUSED(node))
   /*--------------------------------------------------------------------------*/
   /* start HTML tag                                                           */
   /*--------------------------------------------------------------------------*/
-  W_L("<html>\n");
+  W_L("<html>");
 
   DBG(r, "end s_jhtml_start_html_tag()");
 
@@ -586,13 +586,13 @@ s_jhtml_start_html_tag(void* pdoc, Node* UNUSED(node))
  * @param node   [i]   The HTML tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_end_html_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_jhtml_end_html_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t*      jhtml = GET_JHTML(pdoc);
-  Doc*          doc = jhtml->doc;
+  jhtml_t       *jhtml = GET_JHTML(pdoc);
+  Doc           *doc = jhtml->doc;
 
-  W_L("</html>\n");
+  W_L("</html>");
 
   return jhtml->out;
 }
