@@ -525,12 +525,12 @@ main()
   CU_add_test(jhtml_suite, "test <br> with clear attribute(no value).",         test_jhtml_br_tag_006);
   CU_add_test(jhtml_suite, "test <br> with clear attribute(unknown value).",    test_jhtml_br_tag_007);
 
-#if 0
   /*=========================================================================*/
   /* <CENTER>                                                                */
   /*=========================================================================*/
   CU_add_test(jhtml_suite, "test <center>.",                                    test_jhtml_center_tag_001);
 
+#if 0
   CU_add_test(jhtml_suite, "test <dir>.",                                       test_jhtml_dir_tag_001);
   CU_add_test(jhtml_suite, "test <dir> with no <li>.",                          test_jhtml_dir_tag_002);
 
@@ -2378,7 +2378,6 @@ void test_jhtml_br_tag_007()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 /*============================================================================*/
 /* <CENTER>                                                                   */
 /*============================================================================*/
@@ -2402,6 +2401,8 @@ void test_jhtml_center_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -2410,6 +2411,7 @@ void test_jhtml_center_tag_001()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 /*============================================================================*/
 /* <DIR>                                                                      */
 /*============================================================================*/
