@@ -1206,13 +1206,13 @@ s_jhtml_end_tr_tag(void *pdoc, Node *UNUSED(child))
  * @param node   [i]   The FONT tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_start_font_tag(void* pdoc, Node* node) 
+static char *
+s_jhtml_start_font_tag(void *pdoc, Node *node) 
 {
-  jhtml_t*      jhtml;
-  Doc*          doc;
-  request_rec*  r;
-  Attr*         attr;
+  jhtml_t       *jhtml;
+  Doc           *doc;
+  request_rec   *r;
+  Attr          *attr;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
@@ -1225,13 +1225,8 @@ s_jhtml_start_font_tag(void* pdoc, Node* node)
   for (attr = qs_get_attr(doc,node);
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
-
-    char* name;
-    char* value;
-
-    name  = qs_get_attr_name(doc,attr);
-    value = qs_get_attr_value(doc,attr);
-
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('c','C',"color",name)) {
       W_L(" color=\"");
       W_V(value);
@@ -1244,7 +1239,6 @@ s_jhtml_start_font_tag(void* pdoc, Node* node)
       /* ignore */
     }
   }
-
   W_L(">");
   return jhtml->out;
 }
