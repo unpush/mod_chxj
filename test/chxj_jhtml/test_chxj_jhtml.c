@@ -609,7 +609,9 @@ main()
   CU_add_test(jhtml_suite, "test <h2> with align attribute(right).",            test_jhtml_h2_tag_008);
   CU_add_test(jhtml_suite, "test <h2> with align attribute(center).",           test_jhtml_h2_tag_009);
   CU_add_test(jhtml_suite, "test <h2> with align attribute(unkown).",           test_jhtml_h2_tag_010);
-#if 0
+  /*=========================================================================*/
+  /* <H3>                                                                    */
+  /*=========================================================================*/
   CU_add_test(jhtml_suite, "test <h3>.",                                        test_jhtml_h3_tag_001);
   CU_add_test(jhtml_suite, "test <h3> with value.",                             test_jhtml_h3_tag_002);
   CU_add_test(jhtml_suite, "test <h3> with value(japanese).",                   test_jhtml_h3_tag_003);
@@ -620,6 +622,7 @@ main()
   CU_add_test(jhtml_suite, "test <h3> with align attribute(right).",            test_jhtml_h3_tag_008);
   CU_add_test(jhtml_suite, "test <h3> with align attribute(center).",           test_jhtml_h3_tag_009);
   CU_add_test(jhtml_suite, "test <h3> with align attribute(unkown).",           test_jhtml_h3_tag_010);
+#if 0
   CU_add_test(jhtml_suite, "test <h4>.",                                        test_jhtml_h4_tag_001);
   CU_add_test(jhtml_suite, "test <h4> with value.",                             test_jhtml_h4_tag_002);
   CU_add_test(jhtml_suite, "test <h4> with value(japanese).",                   test_jhtml_h4_tag_003);
@@ -3813,14 +3816,13 @@ void test_jhtml_h2_tag_010()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 /*===========================================================================*/
 /* <h3>                                                                      */
 /*===========================================================================*/
 void test_jhtml_h3_tag_001() 
 {
 #define  TEST_STRING "<html><head></head><body><h3></h3></body></html>"
-#define  RESULT_STRING "<html><head></head><body><h3></h3></body></html>"
+#define  RESULT_STRING "<html><head></head><body></body></html>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -3837,6 +3839,8 @@ void test_jhtml_h3_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -3848,7 +3852,7 @@ void test_jhtml_h3_tag_001()
 void test_jhtml_h3_tag_002() 
 {
 #define  TEST_STRING "<html><head></head><body><h3>abc</h3></body></html>"
-#define  RESULT_STRING "<html><head></head><body><h3>abc</h3></body></html>"
+#define  RESULT_STRING "<html><head></head><body>abc</body></html>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -3865,6 +3869,8 @@ void test_jhtml_h3_tag_002()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -3876,7 +3882,7 @@ void test_jhtml_h3_tag_002()
 void test_jhtml_h3_tag_003() 
 {
 #define  TEST_STRING "<html><head></head><body><h3>亀さん</h3></body></html>"
-#define  RESULT_STRING "<html><head></head><body><h3>亀さん</h3></body></html>"
+#define  RESULT_STRING "<html><head></head><body>亀さん</body></html>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -3893,6 +3899,8 @@ void test_jhtml_h3_tag_003()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -3904,7 +3912,7 @@ void test_jhtml_h3_tag_003()
 void test_jhtml_h3_tag_004() 
 {
 #define  TEST_STRING "<html><head></head><body><h3>ﾊﾝｶｸ</h3></body></html>"
-#define  RESULT_STRING "<html><head></head><body><h3>ﾊﾝｶｸ</h3></body></html>"
+#define  RESULT_STRING "<html><head></head><body>ﾊﾝｶｸ</body></html>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -3921,6 +3929,8 @@ void test_jhtml_h3_tag_004()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -3932,7 +3942,7 @@ void test_jhtml_h3_tag_004()
 void test_jhtml_h3_tag_005() 
 {
 #define  TEST_STRING "<html><head></head><body><h3 align></h3></body></html>"
-#define  RESULT_STRING "<html><head></head><body><h3></h3></body></html>"
+#define  RESULT_STRING "<html><head></head><body></body></html>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -3949,6 +3959,8 @@ void test_jhtml_h3_tag_005()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -3960,7 +3972,7 @@ void test_jhtml_h3_tag_005()
 void test_jhtml_h3_tag_006() 
 {
 #define  TEST_STRING "<html><head></head><body><h3 align=\"\"></h3></body></html>"
-#define  RESULT_STRING "<html><head></head><body><h3></h3></body></html>"
+#define  RESULT_STRING "<html><head></head><body></body></html>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -3977,6 +3989,8 @@ void test_jhtml_h3_tag_006()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -3988,7 +4002,7 @@ void test_jhtml_h3_tag_006()
 void test_jhtml_h3_tag_007() 
 {
 #define  TEST_STRING "<html><head></head><body><h3 align=\"left\"></h3></body></html>"
-#define  RESULT_STRING "<html><head></head><body><h3 align=\"left\"></h3></body></html>"
+#define  RESULT_STRING "<html><head></head><body><div align=\"left\"></div></body></html>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -4005,6 +4019,8 @@ void test_jhtml_h3_tag_007()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -4016,7 +4032,7 @@ void test_jhtml_h3_tag_007()
 void test_jhtml_h3_tag_008() 
 {
 #define  TEST_STRING "<html><head></head><body><h3 align=\"right\"></h3></body></html>"
-#define  RESULT_STRING "<html><head></head><body><h3 align=\"right\"></h3></body></html>"
+#define  RESULT_STRING "<html><head></head><body><div align=\"right\"></div></body></html>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -4033,6 +4049,8 @@ void test_jhtml_h3_tag_008()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -4044,7 +4062,7 @@ void test_jhtml_h3_tag_008()
 void test_jhtml_h3_tag_009() 
 {
 #define  TEST_STRING "<html><head></head><body><h3 align=\"center\"></h3></body></html>"
-#define  RESULT_STRING "<html><head></head><body><h3 align=\"center\"></h3></body></html>"
+#define  RESULT_STRING "<html><head></head><body><div align=\"center\"></div></body></html>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -4061,6 +4079,8 @@ void test_jhtml_h3_tag_009()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -4072,7 +4092,7 @@ void test_jhtml_h3_tag_009()
 void test_jhtml_h3_tag_010() 
 {
 #define  TEST_STRING "<html><head></head><body><h3 align=\"unkown\"></h3></body></html>"
-#define  RESULT_STRING "<html><head></head><body><h3></h3></body></html>"
+#define  RESULT_STRING "<html><head></head><body></body></html>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -4089,6 +4109,8 @@ void test_jhtml_h3_tag_010()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -4097,6 +4119,10 @@ void test_jhtml_h3_tag_010()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
+/*===========================================================================*/
+/* <h4>                                                                      */
+/*===========================================================================*/
 void test_jhtml_h4_tag_001() 
 {
 #define  TEST_STRING "<html><head></head><body><h4></h4></body></html>"
