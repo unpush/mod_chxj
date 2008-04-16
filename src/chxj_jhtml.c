@@ -84,6 +84,8 @@ static char *s_jhtml_chxjif_tag         (void *pdoc, Node *node);
 static char *s_jhtml_text_tag           (void *pdoc, Node *node);
 static char *s_jhtml_start_blockquote_tag(void *pdoc, Node *node);
 static char *s_jhtml_end_blockquote_tag  (void *pdoc, Node *node);
+static char *s_jhtml_start_dir_tag      (void *pdoc, Node *node);
+static char *s_jhtml_end_dir_tag        (void *pdoc, Node *node);
 
 static void  s_init_jhtml(jhtml_t *jhtml, Doc *doc, request_rec *r, device_table *spec);
 
@@ -326,8 +328,8 @@ tag_handler jhtml_handler[] = {
   },
   /* tagDIR */
   {
-    NULL,
-    NULL,
+    s_jhtml_start_dir_tag,
+    s_jhtml_end_dir_tag,
   },
   /* tagDL */
   {
@@ -2464,6 +2466,41 @@ s_jhtml_end_blockquote_tag(void *pdoc, Node *UNUSED(child))
   return jhtml->out;
 }
 
+
+/**
+ * It is a handler who processes the DIR tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DIR tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_start_dir_tag(void *pdoc, Node *UNUSED(child))
+{
+  jhtml_t *jhtml = GET_JHTML(pdoc);
+  Doc *doc = jhtml->doc;
+  W_L("<dir>");
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the DIR tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DIR tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_end_dir_tag(void *pdoc, Node *UNUSED(child))
+{
+  jhtml_t *jhtml = GET_JHTML(pdoc);
+  Doc *doc = jhtml->doc;
+  W_L("</dir>");
+  return jhtml->out;
+}
 /*
  * vim:ts=2 et
  */
