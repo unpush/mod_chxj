@@ -2938,7 +2938,7 @@ s_output_to_postdata(hdml_t* hdml, char* s)
  * @param node   [i]   The A tag node is specified.
  */
 static void
-s_hdml_tag_output_upper_half(hdml_t* hdml, Node* UNUSED(node))
+s_hdml_tag_output_upper_half(hdml_t *hdml, Node *UNUSED(node))
 {
   if (hdml->hdml_br_flag   == 1 
   &&  hdml->div_right_flag == 1) {
