@@ -871,7 +871,6 @@ main()
   CU_add_test(hdml_suite, "test <pre> 3." ,                                    test_hdml_pre_tag_003);
   CU_add_test(hdml_suite, "test <pre> 4." ,                                    test_hdml_pre_tag_004);
   CU_add_test(hdml_suite, "test <pre> 5." ,                                    test_hdml_pre_tag_005);
-#if 0
 
   /*=========================================================================*/
   /* <select>                                                                */
@@ -882,19 +881,12 @@ main()
   CU_add_test(hdml_suite, "test <select> 4." ,                                 test_hdml_select_tag_004);
   CU_add_test(hdml_suite, "test <select> 5." ,                                 test_hdml_select_tag_005);
   CU_add_test(hdml_suite, "test <select> 6." ,                                 test_hdml_select_tag_006);
-  CU_add_test(hdml_suite, "test <select> 7." ,                                 test_hdml_select_tag_007);
-  CU_add_test(hdml_suite, "test <select> 8." ,                                 test_hdml_select_tag_008);
-  CU_add_test(hdml_suite, "test <select> 9." ,                                 test_hdml_select_tag_009);
-  CU_add_test(hdml_suite, "test <select> 10." ,                                test_hdml_select_tag_010);
-  CU_add_test(hdml_suite, "test <select> 11." ,                                test_hdml_select_tag_011);
-  CU_add_test(hdml_suite, "test <select> 12." ,                                test_hdml_select_tag_012);
-  CU_add_test(hdml_suite, "test <select> 13." ,                                test_hdml_select_tag_013);
-  CU_add_test(hdml_suite, "test <select> 14." ,                                test_hdml_select_tag_014);
 
   /*=========================================================================*/
   /* <textarea>                                                              */
   /*=========================================================================*/
   CU_add_test(hdml_suite, "test <textarea> 1." ,                               test_hdml_textarea_tag_001);
+#if 0
   CU_add_test(hdml_suite, "test <textarea> 2." ,                               test_hdml_textarea_tag_002);
   CU_add_test(hdml_suite, "test <textarea> 3." ,                               test_hdml_textarea_tag_003);
   CU_add_test(hdml_suite, "test <textarea> 4." ,                               test_hdml_textarea_tag_004);
@@ -10049,14 +10041,13 @@ void test_hdml_pre_tag_005()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/*KONNO*/
 /*============================================================================*/
 /* <SELECT>                                                                   */
 /*============================================================================*/
 void test_hdml_select_tag_001() 
 {
 #define  TEST_STRING "<select></select>"
-#define  RESULT_STRING "<select>\r\n</select>\r\n"
+#define  RESULT_STRING "<A TASK=GOSUB LABEL=選択 VARS=\"V=$E00000400\" DEST=#D1 RECEIVE=\"E00000300;E00000201\">$E00000101</A>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10069,11 +10060,13 @@ void test_hdml_select_tag_001()
 
   SPEC_INIT(spec);
   destlen = sizeof(TEST_STRING)-1;
+  form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10084,8 +10077,25 @@ void test_hdml_select_tag_001()
 }
 void test_hdml_select_tag_002() 
 {
-#define  TEST_STRING "<select>あああ</select>"
-#define  RESULT_STRING "<select>\r\nあああ</select>\r\n"
+#define  TEST_STRING "<html><form><select name=\"a\"><option value=\"1\">あああ</option></select></form></html>"
+#define  RESULT_STRING \
+"<HDML VERSION=3.0 TTL=0 MARKABLE=TRUE>\r\n" \
+"<NODISPLAY NAME=D0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GOSUB DEST=#D1 NEXT=#D2 CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"<A TASK=GOSUB LABEL=選択 VARS=\"V=$E00000400\" DEST=#D3 RECEIVE=\"E00000300;E00000201\">$E00000101</A>\r\n" \
+"<CHOICE KEY=V NAME=D3 DEFAULT=$V METHOD=ALPHA MARKABLE=FALSE>\r\n" \
+"<CE TASK=RETURN VALUE=\"1\" RETVALS=\"$V;あああ\">あああ</CE>\r\n" \
+"</CHOICE>\r\n" \
+"<NODISPLAY NAME=F0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GO METHOD=POST DEST=\"\" POSTDATA=\"a=$E00000500&_chxj_dmy=\" CLEAR=TRUE >\r\n" \
+"</NODISPLAY>\r\n" \
+"<NODISPLAY NAME=D1>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=RETURN VARS=\"E00000700=&E00000601=\" CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"</HDML>\r\n" 
+
+
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10098,11 +10108,13 @@ void test_hdml_select_tag_002()
 
   SPEC_INIT(spec);
   destlen = sizeof(TEST_STRING)-1;
+  form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10114,7 +10126,7 @@ void test_hdml_select_tag_002()
 void test_hdml_select_tag_003() 
 {
 #define  TEST_STRING "<select name></select>"
-#define  RESULT_STRING "<select>\r\n</select>\r\n"
+#define  RESULT_STRING "<A TASK=GOSUB LABEL=選択 VARS=\"V=$E00000400\" DEST=#D1 RECEIVE=\"E00000300;E00000201\">$E00000101</A>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10127,11 +10139,13 @@ void test_hdml_select_tag_003()
 
   SPEC_INIT(spec);
   destlen = sizeof(TEST_STRING)-1;
+  form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10143,7 +10157,7 @@ void test_hdml_select_tag_003()
 void test_hdml_select_tag_004() 
 {
 #define  TEST_STRING "<select name=\"\"></select>"
-#define  RESULT_STRING "<select>\r\n</select>\r\n"
+#define  RESULT_STRING "<A TASK=GOSUB LABEL=選択 VARS=\"V=$E00000400\" DEST=#D1 RECEIVE=\"E00000300;E00000201\">$E00000101</A>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10156,11 +10170,13 @@ void test_hdml_select_tag_004()
 
   SPEC_INIT(spec);
   destlen = sizeof(TEST_STRING)-1;
+  form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10172,7 +10188,8 @@ void test_hdml_select_tag_004()
 void test_hdml_select_tag_005() 
 {
 #define  TEST_STRING "<select name=\"abc\"></select>"
-#define  RESULT_STRING "<select name=\"abc\">\r\n</select>\r\n"
+#define  RESULT_STRING "<A TASK=GOSUB LABEL=選択 VARS=\"V=$E00000400\" DEST=#D1 RECEIVE=\"E00000300;E00000201\">$E00000101</A>\r\n"
+
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10185,11 +10202,13 @@ void test_hdml_select_tag_005()
 
   SPEC_INIT(spec);
   destlen = sizeof(TEST_STRING)-1;
+  form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10201,7 +10220,7 @@ void test_hdml_select_tag_005()
 void test_hdml_select_tag_006() 
 {
 #define  TEST_STRING "<select name=\"あああ\"></select>"
-#define  RESULT_STRING "<select name=\"あああ\">\r\n</select>\r\n"
+#define  RESULT_STRING "<A TASK=GOSUB LABEL=選択 VARS=\"V=$E00000400\" DEST=#D1 RECEIVE=\"E00000300;E00000201\">$E00000101</A>\r\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10214,243 +10233,13 @@ void test_hdml_select_tag_006()
 
   SPEC_INIT(spec);
   destlen = sizeof(TEST_STRING)-1;
+  form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_select_tag_007() 
-{
-#define  TEST_STRING "<select name=\"ﾊﾝｶｸ\"></select>"
-#define  RESULT_STRING "<select name=\"ﾊﾝｶｸ\">\r\n</select>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_select_tag_008() 
-{
-#define  TEST_STRING "<select size></select>"
-#define  RESULT_STRING "<select>\r\n</select>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_select_tag_009() 
-{
-#define  TEST_STRING "<select size=\"\"></select>"
-#define  RESULT_STRING "<select>\r\n</select>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_select_tag_010() 
-{
-#define  TEST_STRING "<select size=\"abc\"></select>"
-#define  RESULT_STRING "<select size=\"abc\">\r\n</select>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_select_tag_011() 
-{
-#define  TEST_STRING "<select size=\"11\"></select>"
-#define  RESULT_STRING "<select size=\"11\">\r\n</select>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_select_tag_012() 
-{
-#define  TEST_STRING "<select multiple></select>"
-#define  RESULT_STRING "<select multiple=\"true\">\r\n</select>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_select_tag_013() 
-{
-#define  TEST_STRING "<select multiple=\"\"></select>"
-#define  RESULT_STRING "<select multiple=\"true\">\r\n</select>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_select_tag_014() 
-{
-#define  TEST_STRING "<select multiple=\"abc\"></select>"
-#define  RESULT_STRING "<select multiple=\"true\">\r\n</select>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10478,11 +10267,13 @@ void test_hdml_textarea_tag_001()
 
   SPEC_INIT(spec);
   destlen = sizeof(TEST_STRING)-1;
+  form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -10491,6 +10282,7 @@ void test_hdml_textarea_tag_001()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/*KONNO*/
 void test_hdml_textarea_tag_002() 
 {
 #define  TEST_STRING "<textarea></textarea>"
