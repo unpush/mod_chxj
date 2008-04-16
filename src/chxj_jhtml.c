@@ -1358,20 +1358,20 @@ s_jhtml_end_form_tag(void *pdoc, Node *UNUSED(child))
  * @param node   [i]   The INPUT tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_start_input_tag(void* pdoc, Node* node) 
+static char *
+s_jhtml_start_input_tag(void *pdoc, Node *node) 
 {
-  jhtml_t*      jhtml;
-  Doc*          doc;
-  request_rec*  r;
-  char*         max_length;
-  char*         type;
-  char*         name;
-  char*         value;
-  char*         istyle;
-  char*         size;
-  char*         checked;
-  char*         accesskey;
+  jhtml_t       *jhtml;
+  Doc           *doc;
+  request_rec   *r;
+  char          *max_length;
+  char          *type;
+  char          *name;
+  char          *value;
+  char          *istyle;
+  char          *size;
+  char          *checked;
+  char          *accesskey;
 
   jhtml       = GET_JHTML(pdoc);
   doc         = jhtml->doc;
