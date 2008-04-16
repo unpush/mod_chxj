@@ -384,30 +384,6 @@ void test_hdml_select_tag_014();
 
 void test_hdml_textarea_tag_001();
 void test_hdml_textarea_tag_002();
-void test_hdml_textarea_tag_003();
-void test_hdml_textarea_tag_004();
-void test_hdml_textarea_tag_005();
-void test_hdml_textarea_tag_006();
-void test_hdml_textarea_tag_007();
-void test_hdml_textarea_tag_008();
-void test_hdml_textarea_tag_009();
-void test_hdml_textarea_tag_010();
-void test_hdml_textarea_tag_011();
-void test_hdml_textarea_tag_012();
-void test_hdml_textarea_tag_013();
-void test_hdml_textarea_tag_014();
-void test_hdml_textarea_tag_015();
-void test_hdml_textarea_tag_016();
-void test_hdml_textarea_tag_017();
-void test_hdml_textarea_tag_018();
-void test_hdml_textarea_tag_019();
-void test_hdml_textarea_tag_020();
-void test_hdml_textarea_tag_021();
-void test_hdml_textarea_tag_022();
-void test_hdml_textarea_tag_023();
-void test_hdml_textarea_tag_024();
-void test_hdml_textarea_tag_025();
-void test_hdml_textarea_tag_026();
 
 void test_hdml_title_tag_001();
 void test_hdml_title_tag_002();
@@ -886,32 +862,8 @@ main()
   /* <textarea>                                                              */
   /*=========================================================================*/
   CU_add_test(hdml_suite, "test <textarea> 1." ,                               test_hdml_textarea_tag_001);
-#if 0
   CU_add_test(hdml_suite, "test <textarea> 2." ,                               test_hdml_textarea_tag_002);
-  CU_add_test(hdml_suite, "test <textarea> 3." ,                               test_hdml_textarea_tag_003);
-  CU_add_test(hdml_suite, "test <textarea> 4." ,                               test_hdml_textarea_tag_004);
-  CU_add_test(hdml_suite, "test <textarea> 5." ,                               test_hdml_textarea_tag_005);
-  CU_add_test(hdml_suite, "test <textarea> 6." ,                               test_hdml_textarea_tag_006);
-  CU_add_test(hdml_suite, "test <textarea> 7." ,                               test_hdml_textarea_tag_007);
-  CU_add_test(hdml_suite, "test <textarea> 8." ,                               test_hdml_textarea_tag_008);
-  CU_add_test(hdml_suite, "test <textarea> 9." ,                               test_hdml_textarea_tag_009);
-  CU_add_test(hdml_suite, "test <textarea> 10." ,                              test_hdml_textarea_tag_010);
-  CU_add_test(hdml_suite, "test <textarea> 11." ,                              test_hdml_textarea_tag_011);
-  CU_add_test(hdml_suite, "test <textarea> 12." ,                              test_hdml_textarea_tag_012);
-  CU_add_test(hdml_suite, "test <textarea> 13." ,                              test_hdml_textarea_tag_013);
-  CU_add_test(hdml_suite, "test <textarea> 14." ,                              test_hdml_textarea_tag_014);
-  CU_add_test(hdml_suite, "test <textarea> 15." ,                              test_hdml_textarea_tag_015);
-  CU_add_test(hdml_suite, "test <textarea> 16." ,                              test_hdml_textarea_tag_016);
-  CU_add_test(hdml_suite, "test <textarea> 17." ,                              test_hdml_textarea_tag_017);
-  CU_add_test(hdml_suite, "test <textarea> 18." ,                              test_hdml_textarea_tag_018);
-  CU_add_test(hdml_suite, "test <textarea> 19." ,                              test_hdml_textarea_tag_019);
-  CU_add_test(hdml_suite, "test <textarea> 20." ,                              test_hdml_textarea_tag_020);
-  CU_add_test(hdml_suite, "test <textarea> 21." ,                              test_hdml_textarea_tag_021);
-  CU_add_test(hdml_suite, "test <textarea> 22." ,                              test_hdml_textarea_tag_022);
-  CU_add_test(hdml_suite, "test <textarea> 23." ,                              test_hdml_textarea_tag_023);
-  CU_add_test(hdml_suite, "test <textarea> 24." ,                              test_hdml_textarea_tag_024);
-  CU_add_test(hdml_suite, "test <textarea> 25." ,                              test_hdml_textarea_tag_025);
-  CU_add_test(hdml_suite, "test <textarea> 26." ,                              test_hdml_textarea_tag_026);
+#if 0
 
   /*=========================================================================*/
   /* <title>                                                                 */
@@ -10253,8 +10205,78 @@ void test_hdml_select_tag_006()
 /*============================================================================*/
 void test_hdml_textarea_tag_001() 
 {
-#define  TEST_STRING "<textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
+#define  TEST_STRING "<html><body><form><textarea></textarea></form></body></html>"
+#define  RESULT_STRING \
+"<HDML VERSION=3.0 TTL=0 MARKABLE=TRUE>\r\n" \
+"<NODISPLAY NAME=D0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GOSUB DEST=#D1 NEXT=#D2 CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"<DISPLAY NAME=D2 TITLE=\"NO TITLE\">\r\n" \
+"<ACTION TYPE=ACCEPT TASK=NOOP LABEL=\" \">\r\n" \
+"<A TASK=GOSUB LABEL=入力 DEST=#D3 VARS=\"V=$E00000200\" RECEIVE=E00000100>[$E00000300]</A>\r\n" \
+"\r\n" \
+"</DISPLAY>\r\n" \
+"<ENTRY NAME=D3  KEY=V DEFAULT=$V  MARKABLE=FALSE>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=RETURN RETVALS=$V>\r\n" \
+"</ENTRY>\r\n" \
+"<NODISPLAY NAME=F0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GO METHOD=POST DEST=\"\" POSTDATA=\"=$E00000400&_chxj_dmy=\" CLEAR=TRUE >\r\n" \
+"</NODISPLAY>\r\n" \
+"<NODISPLAY NAME=D1>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=RETURN VARS=\"E00000500=\" CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"</HDML>\r\n" 
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+  form_no_counter = 0;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_hdml_textarea_tag_002() 
+{
+#define  TEST_STRING "<html><body><form><textarea>あああ\r\nいいいい\r\n</textarea></form></body></html>"
+#define  RESULT_STRING \
+"<HDML VERSION=3.0 TTL=0 MARKABLE=TRUE>\r\n" \
+"<NODISPLAY NAME=D0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GOSUB DEST=#D1 NEXT=#D2 CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"<DISPLAY NAME=D2 TITLE=\"NO TITLE\">\r\n" \
+"<ACTION TYPE=ACCEPT TASK=NOOP LABEL=\" \">\r\n" \
+"<A TASK=GOSUB LABEL=入力 DEST=#D3 VARS=\"V=$E00000200\" RECEIVE=E00000100>[$E00000300]</A>\r\n" \
+"あああいいいい\r\n" \
+"</DISPLAY>\r\n" \
+"<ENTRY NAME=D3  KEY=V DEFAULT=$V  MARKABLE=FALSE>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=RETURN RETVALS=$V>\r\n" \
+"</ENTRY>\r\n" \
+"<NODISPLAY NAME=F0>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=GO METHOD=POST DEST=\"\" POSTDATA=\"=$E00000400&_chxj_dmy=\" CLEAR=TRUE >\r\n" \
+"</NODISPLAY>\r\n" \
+"<NODISPLAY NAME=D1>\r\n" \
+"<ACTION TYPE=ACCEPT TASK=RETURN VARS=\"E00000500=あああ\r\n" \
+"いいいい\" CLEAR=TRUE>\r\n" \
+"</NODISPLAY>\r\n" \
+"</HDML>\r\n" 
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10283,731 +10305,6 @@ void test_hdml_textarea_tag_001()
 #undef RESULT_STRING
 }
 /*KONNO*/
-void test_hdml_textarea_tag_002() 
-{
-#define  TEST_STRING "<textarea></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_textarea_tag_003() 
-{
-#define  TEST_STRING "<textarea>あああ</textarea>"
-#define  RESULT_STRING "<textarea>\r\nあああ</textarea>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_textarea_tag_004() 
-{
-#define  TEST_STRING "<textarea>あああ\nいいい</textarea>"
-#define  RESULT_STRING "<textarea>\r\nあああ\nいいい</textarea>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_textarea_tag_005() 
-{
-#define  TEST_STRING "<textarea>あああ\r\nいいい</textarea>"
-#define  RESULT_STRING "<textarea>\r\nあああ\r\nいいい</textarea>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_textarea_tag_006() 
-{
-#define  TEST_STRING "<textarea>あああ\r\nいいい\n</textarea>"
-#define  RESULT_STRING "<textarea>\r\nあああ\r\nいいい\n</textarea>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_textarea_tag_007() 
-{
-#define  TEST_STRING "<textarea>あああ\r\nいいい\r\n</textarea>"
-#define  RESULT_STRING "<textarea>\r\nあああ\r\nいいい\r\n</textarea>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_textarea_tag_008() 
-{
-#define  TEST_STRING "<textarea name></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_textarea_tag_009() 
-{
-#define  TEST_STRING "<textarea name=\"\"></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_textarea_tag_010() 
-{
-#define  TEST_STRING "<textarea name=\"aaa\"></textarea>"
-#define  RESULT_STRING "<textarea name=\"aaa\">\r\n</textarea>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_textarea_tag_011() 
-{
-#define  TEST_STRING "<textarea rows></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_textarea_tag_012() 
-{
-#define  TEST_STRING "<textarea rows=\"\"></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_textarea_tag_013() 
-{
-#define  TEST_STRING "<textarea rows=\"abc\"></textarea>"
-#define  RESULT_STRING "<textarea rows=\"abc\">\r\n</textarea>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_textarea_tag_014() 
-{
-#define  TEST_STRING "<textarea cols></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_textarea_tag_015() 
-{
-#define  TEST_STRING "<textarea cols=\"\"></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_textarea_tag_016() 
-{
-#define  TEST_STRING "<textarea cols=\"123\"></textarea>"
-#define  RESULT_STRING "<textarea cols=\"123\">\r\n</textarea>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_textarea_tag_017() 
-{
-#define  TEST_STRING "<textarea accesskey></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_textarea_tag_018() 
-{
-#define  TEST_STRING "<textarea accesskey=\"\"></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_textarea_tag_019() 
-{
-#define  TEST_STRING "<textarea accesskey=\"10\"></textarea>"
-#define  RESULT_STRING "<textarea accesskey=\"10\">\r\n</textarea>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_textarea_tag_020() 
-{
-#define  TEST_STRING "<textarea istyle></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_textarea_tag_021() 
-{
-#define  TEST_STRING "<textarea istyle=\"\"></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_textarea_tag_022() 
-{
-#define  TEST_STRING "<textarea istyle=\"1\"></textarea>"
-#define  RESULT_STRING "<textarea FORMAT=\"*M\">\r\n</textarea>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_textarea_tag_023() 
-{
-#define  TEST_STRING "<textarea istyle=\"2\"></textarea>"
-#define  RESULT_STRING "<textarea FORMAT=\"*M\">\r\n</textarea>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_textarea_tag_024() 
-{
-#define  TEST_STRING "<textarea istyle=\"3\"></textarea>"
-#define  RESULT_STRING "<textarea FORMAT=\"*m\">\r\n</textarea>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_textarea_tag_025() 
-{
-#define  TEST_STRING "<textarea istyle=\"4\"></textarea>"
-#define  RESULT_STRING "<textarea FORMAT=\"*N\">\r\n</textarea>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_hdml_textarea_tag_026() 
-{
-#define  TEST_STRING "<textarea istyle=\"a\"></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
-  char  *ret;
-  char  *tmp;
-  device_table spec;
-  chxjconvrule_entry entry;
-  cookie_t cookie;
-  apr_size_t destlen;
-  APR_INIT;
-
-  COOKIE_INIT(cookie);
-
-  SPEC_INIT(spec);
-  destlen = sizeof(TEST_STRING)-1;
-
-  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
-  ret = chxj_rencoding(&r, ret, &destlen);
-  fprintf(stderr, "ret=[%s]",ret);
-  CU_ASSERT(ret != NULL);
-  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
-  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
 /*============================================================================*/
 /* <TITLE>                                                                    */
 /*============================================================================*/
