@@ -1150,13 +1150,10 @@ s_jhtml_start_br_tag(void *pdoc, Node *UNUSED(node))
  * @param node   [i]   The BR tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_end_br_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_jhtml_end_br_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t*  jhtml;
-
-  jhtml = GET_JHTML(pdoc);
-
+  jhtml_t *jhtml = GET_JHTML(pdoc);
   return jhtml->out;
 }
 
