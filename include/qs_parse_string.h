@@ -122,9 +122,10 @@ struct Node {
   struct Attr   *attr_tail;
   char          *name;
   char          *value;
-  int            size;
+  int           size;
   char          *otext;
-  int            line;
+  int           line;
+  int           closed_by_itself;
 };
 
 typedef struct pointer_table_t {

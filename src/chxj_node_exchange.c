@@ -216,6 +216,9 @@ chxj_node_exchange(
         if (handlers[tagH6].end_tag_handler)
           handlers[tagH6].end_tag_handler(pdoc, child);
       }
+      else {
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+      }
       break;
 
 
@@ -246,6 +249,9 @@ chxj_node_exchange(
         if (handlers[tagPRE].end_tag_handler)
           handlers[tagPRE].end_tag_handler(pdoc, child);
       }
+      else {
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+      }
       break;
 
     case 'n':
@@ -262,6 +268,9 @@ chxj_node_exchange(
         if (handlers[tagNOBR].end_tag_handler)
           handlers[tagNOBR].end_tag_handler(pdoc, child);
       }
+      else {
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+      }
       break;
 
     case 'u':
@@ -277,6 +286,9 @@ chxj_node_exchange(
 
         if (handlers[tagUL].end_tag_handler)
           handlers[tagUL].end_tag_handler(pdoc, child);
+      }
+      else {
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
       }
       break;
 
@@ -320,6 +332,9 @@ chxj_node_exchange(
         if (handlers[tagLABEL].end_tag_handler)
           handlers[tagLABEL].end_tag_handler(pdoc, child);
       }
+      else {
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+      }
       
       break;
 
@@ -350,6 +365,9 @@ chxj_node_exchange(
         if (handlers[tagOPTION].end_tag_handler)
           handlers[tagOPTION].end_tag_handler(pdoc, child);
       }
+      else {
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+      }
 
       break;
 
@@ -366,6 +384,9 @@ chxj_node_exchange(
 
         if (handlers[tagMETA].end_tag_handler)
           handlers[tagMETA].end_tag_handler(pdoc, child);
+      }
+      else {
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
       }
       break;
 
@@ -422,6 +443,9 @@ chxj_node_exchange(
         if (handlers[tagBR].end_tag_handler)
           handlers[tagBR].end_tag_handler(pdoc, child);
       }
+      else {
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+      }
       break;
 
     case 'a':
@@ -437,6 +461,9 @@ chxj_node_exchange(
 
         if (handlers[tagA].end_tag_handler)
           handlers[tagA].end_tag_handler(pdoc, child);
+      }
+      else {
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
       }
       break;
 
@@ -480,6 +507,9 @@ chxj_node_exchange(
         if (handlers[tagFIELDSET].end_tag_handler)
           handlers[tagFIELDSET].end_tag_handler(pdoc, child);
       }
+      else {
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+      }
       break;
 
     case 'i':
@@ -508,6 +538,9 @@ chxj_node_exchange(
 
         if (handlers[tagIMG].end_tag_handler)
           handlers[tagIMG].end_tag_handler(pdoc, child);
+      }
+      else {
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
       }
       break;
 
@@ -565,6 +598,9 @@ chxj_node_exchange(
         if (handlers[tagSMALL].end_tag_handler)
           handlers[tagSMALL].end_tag_handler(pdoc, child);
       }
+      else {
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+      }
       break;
   
     case 'd':
@@ -580,6 +616,9 @@ chxj_node_exchange(
 
         if (handlers[tagDIV].end_tag_handler)
           handlers[tagDIV].end_tag_handler(pdoc, child);
+      }
+      else {
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
       }
       break;
 
@@ -615,6 +654,9 @@ chxj_node_exchange(
               handlers[tagCHXJIF].start_tag_handler(pdoc, child);
           }
         }
+      }
+      else {
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
       }
       break;
 
@@ -717,6 +759,9 @@ chxj_node_exchange(
       if (strcasecmp(name, "text") == 0) {
         if (handlers[tagTEXT].start_tag_handler)
           handlers[tagTEXT].start_tag_handler(pdoc, child);
+      }
+      else {
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
       }
       break;
 
