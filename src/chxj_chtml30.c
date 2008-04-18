@@ -3233,7 +3233,7 @@ s_chtml30_end_marquee_tag(void *pdoc, Node *UNUSED(child))
 
 
 /**
- * It is a hanblinker who processes the BLINK tag.
+ * It is a handler who processes the BLINK tag.
  *
  * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
@@ -3251,7 +3251,7 @@ s_chtml30_start_blink_tag(void *pdoc, Node *UNUSED(child))
 
 
 /**
- * It is a hanblinker who processes the BLINK tag.
+ * It is a handler who processes the BLINK tag.
  *
  * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.

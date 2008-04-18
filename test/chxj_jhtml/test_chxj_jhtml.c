@@ -932,12 +932,15 @@ main()
   CU_add_test(jhtml_suite, "test <ul> 4." ,                                     test_jhtml_ul_tag_004);
   CU_add_test(jhtml_suite, "test <ul> 5." ,                                     test_jhtml_ul_tag_005);
 
-#if 0
+  /*=========================================================================*/
+  /* <BLINK>                                                                 */
+  /*=========================================================================*/
   CU_add_test(jhtml_suite, "test <blink> 1." ,                                  test_jhtml_blink_tag_001);
   CU_add_test(jhtml_suite, "test <blink> 2." ,                                  test_jhtml_blink_tag_002);
   CU_add_test(jhtml_suite, "test <blink> 3." ,                                  test_jhtml_blink_tag_003);
   CU_add_test(jhtml_suite, "test <blink> 4." ,                                  test_jhtml_blink_tag_004);
 
+#if 0
   CU_add_test(jhtml_suite, "test <marquee> 1." ,                                test_jhtml_marquee_tag_001);
   CU_add_test(jhtml_suite, "test <marquee> 2." ,                                test_jhtml_marquee_tag_002);
   CU_add_test(jhtml_suite, "test <marquee> 3." ,                                test_jhtml_marquee_tag_003);
@@ -11415,7 +11418,6 @@ void test_jhtml_ul_tag_005()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 /*============================================================================*/
 /* <BLINK>                                                                    */
 /*============================================================================*/
@@ -11439,6 +11441,8 @@ void test_jhtml_blink_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -11467,6 +11471,8 @@ void test_jhtml_blink_tag_002()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -11495,6 +11501,8 @@ void test_jhtml_blink_tag_003()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -11523,6 +11531,8 @@ void test_jhtml_blink_tag_004()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -11531,6 +11541,7 @@ void test_jhtml_blink_tag_004()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 /*============================================================================*/
 /* MARQUEE                                                                    */
 /*============================================================================*/
