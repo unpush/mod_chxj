@@ -112,6 +112,8 @@ static char *s_jhtml_start_plaintext_tag_inner (void *pdoc, Node *node);
 static char *s_jhtml_end_plaintext_tag         (void *pdoc, Node *node);
 static char *s_jhtml_start_blink_tag  (void *pdoc, Node *node);
 static char *s_jhtml_end_blink_tag    (void *pdoc, Node *node);
+static char *s_jhtml_start_marquee_tag(void *pdoc, Node *node);
+static char *s_jhtml_end_marquee_tag  (void *pdoc, Node *node);
 
 static void  s_init_jhtml(jhtml_t *jhtml, Doc *doc, request_rec *r, device_table *spec);
 
@@ -384,8 +386,8 @@ tag_handler jhtml_handler[] = {
   },
   /* tagMARQUEE */
   {
-    NULL,
-    NULL,
+    s_jhtml_start_marquee_tag,
+    s_jhtml_end_marquee_tag,
   },
 };
 
@@ -3281,6 +3283,66 @@ s_jhtml_end_blink_tag(void *pdoc, Node *UNUSED(child))
   jhtml_t *jhtml = GET_JHTML(pdoc);
   Doc     *doc = jhtml->doc;
   W_L("</blink>");
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the MARQUEE tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The MARQUEE tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_start_marquee_tag(void *pdoc, Node *node)
+{
+  jhtml_t *jhtml = GET_JHTML(pdoc);
+  Doc *doc = jhtml->doc;
+  Attr *attr;
+  W_L("<marquee");
+  /*--------------------------------------------------------------------------*/
+  /* Get Attributes                                                           */
+  /*--------------------------------------------------------------------------*/
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char *name   = qs_get_attr_name(doc,attr);
+    char *value  = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('d','D',"direction", name)) {
+      if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value))) {
+        W_L(" direction=\"");
+        W_V(value);
+        W_L("\"");
+      }
+    }
+    else if (STRCASEEQ('b','B',"behavior",name)) {
+      /* ignore */
+    }
+    else if (STRCASEEQ('l','L',"loop",name)) {
+      /* ignore */
+    }
+  }
+  W_L(">");
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the MARQUEE tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The MARQUEE tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_end_marquee_tag(void *pdoc, Node *UNUSED(child))
+{
+  jhtml_t *jhtml = GET_JHTML(pdoc);
+  Doc *doc = jhtml->doc;
+  W_L("</marquee>");
   return jhtml->out;
 }
 /*
