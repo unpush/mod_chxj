@@ -781,7 +781,6 @@ main()
   CU_add_test(jhtml_suite, "test <input istyle> 13." ,                          test_jhtml_input_tag_046);
   CU_add_test(jhtml_suite, "test <input istyle> 14." ,                          test_jhtml_input_tag_047);
 
-#if 0
   /*=========================================================================*/
   /* <LI>                                                                    */
   /*=========================================================================*/
@@ -798,6 +797,7 @@ main()
   CU_add_test(jhtml_suite, "test <li> type attribute 7." ,                      test_jhtml_li_tag_011);
   CU_add_test(jhtml_suite, "test <li> type attribute 8." ,                      test_jhtml_li_tag_012);
   CU_add_test(jhtml_suite, "test <li> type attribute 9." ,                      test_jhtml_li_tag_013);
+#if 0
 
   CU_add_test(jhtml_suite, "test <menu>." ,                                     test_jhtml_menu_tag_001);
   CU_add_test(jhtml_suite, "test <menu> 2." ,                                   test_jhtml_menu_tag_002);
