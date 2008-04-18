@@ -2103,12 +2103,12 @@ s_jhtml_end_img_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_jhtml_start_select_tag(void *pdoc, Node *child)
 {
-  jhtml_t *jhtml = GET_JHTML(pdoc);
-  Doc     *doc   = jhtml->doc;
+  jhtml_t *jhtml    = GET_JHTML(pdoc);
+  Doc     *doc      = jhtml->doc;
   Attr    *attr;
-
-  char *size      = NULL;
-  char *name      = NULL;
+  char    *size     = NULL;
+  char    *name     = NULL;
+  char    *multiple = NULL;
 
   W_L("<select");
   for (attr = qs_get_attr(doc,child);
@@ -2128,28 +2128,30 @@ s_jhtml_start_select_tag(void *pdoc, Node *child)
       /*----------------------------------------------------------------------*/
       name = apr_pstrdup(doc->buf.pool, val);
     }
-    else if (STRCASEEQ('m','M',"multiple",nm)) {
+    else if (STRCASEEQ('m','M',"multiple", nm)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0 version 2.0                                                */
       /*----------------------------------------------------------------------*/
-      /* not support */
+      multiple = apr_pstrdup(doc->buf.pool, val);
     }
   }
-
-  if (size) {
+  if (size && *size) {
     W_L(" size=\"");
     W_V(size);
     W_L("\"");
   }
-
-  if (name) {
+  if (name && *name) {
     W_L(" name=\"");
     W_V(name);
     W_L("\"");
   }
+  if (multiple) {
+    W_L(" multiple");
+  }
   W_L(">");
   return jhtml->out;
 }
+
 
 /**
  * It is a handler who processes the SELECT tag.

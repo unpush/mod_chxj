@@ -1879,8 +1879,8 @@ s_chtml30_start_select_tag(void* pdoc, Node* child)
   for (attr = qs_get_attr(doc,child);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-    char* nm  = qs_get_attr_name(doc,attr);
-    char* val = qs_get_attr_value(doc,attr);
+    char *nm  = qs_get_attr_name(doc,attr);
+    char *val = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('s','S',"size", nm)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0 version 2.0                                                */
