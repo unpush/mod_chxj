@@ -110,6 +110,8 @@ static char *s_jhtml_end_menu_tag       (void *pdoc, Node *node);
 static char *s_jhtml_start_plaintext_tag       (void *pdoc, Node *node);
 static char *s_jhtml_start_plaintext_tag_inner (void *pdoc, Node *node);
 static char *s_jhtml_end_plaintext_tag         (void *pdoc, Node *node);
+static char *s_jhtml_start_blink_tag  (void *pdoc, Node *node);
+static char *s_jhtml_end_blink_tag    (void *pdoc, Node *node);
 
 static void  s_init_jhtml(jhtml_t *jhtml, Doc *doc, request_rec *r, device_table *spec);
 
@@ -377,8 +379,8 @@ tag_handler jhtml_handler[] = {
   },
   /* tagBLINK */
   {
-    NULL,
-    NULL,
+    s_jhtml_start_blink_tag,
+    s_jhtml_end_blink_tag,
   },
   /* tagMARQUEE */
   {
@@ -3243,6 +3245,42 @@ static char *
 s_jhtml_end_plaintext_tag(void *pdoc, Node *UNUSED(child))
 {
   jhtml_t *jhtml = GET_JHTML(pdoc);
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the BLINK tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The BLINK tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_start_blink_tag(void *pdoc, Node *UNUSED(child))
+{
+  jhtml_t *jhtml = GET_JHTML(pdoc);
+  Doc     *doc = jhtml->doc;
+  W_L("<blink>");
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the BLINK tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The BLINK tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_end_blink_tag(void *pdoc, Node *UNUSED(child))
+{
+  jhtml_t *jhtml = GET_JHTML(pdoc);
+  Doc     *doc = jhtml->doc;
+  W_L("</blink>");
   return jhtml->out;
 }
 /*
