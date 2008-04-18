@@ -75,6 +75,7 @@
                         &&  (strcasecmp(c, "hr"       ) != 0) \
                         &&  (strcasecmp(c, "img"      ) != 0) \
                         &&  (strcasecmp(c, "input"    ) != 0) \
+                        &&  (strcasecmp(c, "plaintext") != 0) \
                         &&  (strcasecmp(c, "?xml"     ) != 0) \
                         &&  (strcasecmp(c, "!doctype" ) != 0) \
                         &&  (strcasecmp(c, "link"     ) != 0) \
@@ -116,9 +117,10 @@ struct Node {
   struct Attr   *attr_tail;
   char          *name;
   char          *value;
-  int            size;
+  int           size;
   char          *otext;
-  int            line;
+  int           line;
+  int           closed_by_itself;
 };
 
 typedef struct pointer_table_t {
