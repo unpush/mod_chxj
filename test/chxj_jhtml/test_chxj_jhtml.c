@@ -917,10 +917,13 @@ main()
   CU_add_test(jhtml_suite, "test <textarea> 25." ,                              test_jhtml_textarea_tag_025);
   CU_add_test(jhtml_suite, "test <textarea> 26." ,                              test_jhtml_textarea_tag_026);
 
-#if 0
+  /*=========================================================================*/
+  /* <TITLE>                                                                 */
+  /*=========================================================================*/
   CU_add_test(jhtml_suite, "test <title> 1." ,                                  test_jhtml_title_tag_001);
   CU_add_test(jhtml_suite, "test <title> 2." ,                                  test_jhtml_title_tag_002);
 
+#if 0
   CU_add_test(jhtml_suite, "test <ul> 1." ,                                     test_jhtml_ul_tag_001);
   CU_add_test(jhtml_suite, "test <ul> 2." ,                                     test_jhtml_ul_tag_002);
   CU_add_test(jhtml_suite, "test <ul> 3." ,                                     test_jhtml_ul_tag_003);
@@ -11193,7 +11196,6 @@ void test_jhtml_textarea_tag_026()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 /*============================================================================*/
 /* <TITLE>                                                                    */
 /*============================================================================*/
@@ -11217,6 +11219,8 @@ void test_jhtml_title_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -11245,6 +11249,8 @@ void test_jhtml_title_tag_002()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -11253,6 +11259,7 @@ void test_jhtml_title_tag_002()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 /*============================================================================*/
 /* <UL>                                                                       */
 /*============================================================================*/
