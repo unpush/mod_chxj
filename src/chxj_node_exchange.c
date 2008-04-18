@@ -654,6 +654,13 @@ chxj_node_exchange(
         if (handlers[tagSMALL].end_tag_handler)
           handlers[tagSMALL].end_tag_handler(pdoc, child);
       }
+      /*----------------------------------------------------------------------*/
+      /* <SCRIPT>                                                             */
+      /*----------------------------------------------------------------------*/
+      else 
+      if (strcasecmp(name, "script") == 0) {
+        /* ignore */
+      }
       else {
         chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
       }
