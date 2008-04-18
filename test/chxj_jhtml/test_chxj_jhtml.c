@@ -829,7 +829,9 @@ main()
   CU_add_test(jhtml_suite, "test <ol> 17." ,                                    test_jhtml_ol_tag_017);
   CU_add_test(jhtml_suite, "test <ol> 18." ,                                    test_jhtml_ol_tag_018);
 
-#if 0
+  /*=========================================================================*/
+  /* <OPTION>                                                                */
+  /*=========================================================================*/
   CU_add_test(jhtml_suite, "test <option>." ,                                   test_jhtml_option_tag_001);
   CU_add_test(jhtml_suite, "test <option value> with no value." ,               test_jhtml_option_tag_002);
   CU_add_test(jhtml_suite, "test <option value> with void value." ,             test_jhtml_option_tag_003);
@@ -838,6 +840,10 @@ main()
   CU_add_test(jhtml_suite, "test <option value> with japanese-kana value." ,    test_jhtml_option_tag_006);
   CU_add_test(jhtml_suite, "test <option selected>." ,                          test_jhtml_option_tag_007);
 
+#if 0
+  /*=========================================================================*/
+  /* <P>                                                                     */
+  /*=========================================================================*/
   CU_add_test(jhtml_suite, "test <p> 1." ,                                      test_jhtml_p_tag_001);
   CU_add_test(jhtml_suite, "test <p> 2." ,                                      test_jhtml_p_tag_002);
   CU_add_test(jhtml_suite, "test <p> 3." ,                                      test_jhtml_p_tag_003);
@@ -9249,7 +9255,6 @@ void test_jhtml_ol_tag_018()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 /*============================================================================*/
 /* <OPTION>                                                                   */
 /*============================================================================*/
@@ -9273,6 +9278,8 @@ void test_jhtml_option_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9281,6 +9288,7 @@ void test_jhtml_option_tag_001()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 void test_jhtml_option_tag_002() 
 {
 #define  TEST_STRING "<option value></option>"

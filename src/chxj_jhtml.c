@@ -2180,18 +2180,13 @@ s_jhtml_start_option_tag(void *pdoc, Node *child)
       value = apr_pstrdup(doc->buf.pool, val);
     }
   }
-
-  if (value) {
+  if (value && *value) {
     W_L(" value=\"");
     W_V(value);
     W_L("\"");
   }
-  else {
-    W_L(" value=\"\"");
-  }
-
   if (selected) {
-    W_L(" selected ");
+    W_L(" selected");
   }
   W_L(">");
   return jhtml->out;
