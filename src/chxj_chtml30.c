@@ -1269,13 +1269,13 @@ s_chtml30_end_tr_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The FONT tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml30_start_font_tag(void* pdoc, Node* node) 
+static char *
+s_chtml30_start_font_tag(void *pdoc, Node *node) 
 {
-  Attr*         attr;
-  chtml30_t*    chtml30;
-  Doc*          doc;
-  request_rec*  r;
+  Attr          *attr;
+  chtml30_t     *chtml30;
+  Doc           *doc;
+  request_rec   *r;
 
   chtml30 = GET_CHTML30(pdoc);
   doc     = chtml30->doc;
@@ -1289,14 +1289,9 @@ s_chtml30_start_font_tag(void* pdoc, Node* node)
   for (attr = qs_get_attr(doc,node);
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
-
-    char* name;
-    char* value;
-
-    name  = qs_get_attr_name(doc,attr);
-    value = qs_get_attr_value(doc,attr);
-
-    if (STRCASEEQ('c','C',"color", name)) {
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('c','C',"color", name) && value && *value) {
       W_L(" color=\"");
       W_V(value);
       W_L("\"");
@@ -1323,12 +1318,12 @@ s_chtml30_start_font_tag(void* pdoc, Node* node)
  * @param node   [i]   The FONT tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml30_end_font_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml30_end_font_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml30_t*    chtml30;
-  Doc*          doc;
-  request_rec*  r;
+  chtml30_t     *chtml30;
+  Doc           *doc;
+  request_rec   *r;
 
   chtml30 = GET_CHTML30(pdoc);
   doc     = chtml30->doc;
