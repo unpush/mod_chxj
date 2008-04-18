@@ -1020,12 +1020,12 @@ s_hdml_end_body_tag(void* pdoc, Node* UNUSED(child))
  * @param node   [i]   The A tag node is specified. 
  * @return The conversion result is returned. 
  */
-static char*
-s_hdml_start_a_tag(void* pdoc, Node* node) 
+static char *
+s_hdml_start_a_tag(void *pdoc, Node *node) 
 {
-  hdml_t*      hdml;
-  Doc*         doc;
-  Attr*        attr;
+  hdml_t       *hdml;
+  Doc          *doc;
+  Attr         *attr;
 
   hdml = GET_HDML(pdoc);
   doc  = hdml->doc;
@@ -1041,29 +1041,20 @@ s_hdml_start_a_tag(void* pdoc, Node* node)
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-
-    char* name;
-    char* value;
-
-    name  = qs_get_attr_name(doc,attr);
-    value = qs_get_attr_value(doc,attr);
-
-    if ((*name == 'n' || *name == 'N') && strcasecmp(name, "name") == 0) {
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('n','N',"name",name)) {
       /* IGNORE */
     }
-    else 
-    if ((*name == 'h' || *name == 'H') && strcasecmp(name, "href") == 0) {
-      if ((*value == 'm' || *value == 'M') 
-      && strncasecmp(value, "mailto:", 7) == 0) {
+    else if (STRCASEEQ('h','H',"href",name)) {
+      if ((*value == 'm' || *value == 'M') && strncasecmp(value, "mailto:", 7) == 0) {
         value = chxj_encoding_parameter(hdml->doc->r, value);
         s_output_to_hdml_out(hdml, " TASK=GO DEST=\""     );
         s_output_to_hdml_out(hdml, value                  );
         s_output_to_hdml_out(hdml, "\" "                  );
       }
       else 
-      if ((*value == 't' || *value == 'T') 
-      && strncasecmp(value, "tel:", 4) == 0) {
-
+      if ((*value == 't' || *value == 'T') && strncasecmp(value, "tel:", 4) == 0) {
         s_output_to_hdml_out(hdml,  " TASK=CALL NUMBER=\"");
         s_output_to_hdml_out(hdml, &value[4]              );
         s_output_to_hdml_out(hdml, "\" "                  );
