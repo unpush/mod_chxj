@@ -23,6 +23,7 @@
 
 #include "chxj_preg_replace.h"
 
+
 static inline char *
 s_init_pattern(apr_pool_t *p, const char *old)
 {

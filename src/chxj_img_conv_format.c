@@ -1695,7 +1695,7 @@ s_create_workfile_name(
   char *new_user_agent;
 
 
-  s_init_serial_pattern(r->pool);
+  s_init_serial_pattern(r->server->process->pool);
 
   /* for DoCoMo */
   new_user_agent = chxj_preg_replace(r->pool, v_docomo_serial_pattern1, "", user_agent);
