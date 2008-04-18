@@ -365,6 +365,13 @@ chxj_node_exchange(
         if (handlers[tagOPTION].end_tag_handler)
           handlers[tagOPTION].end_tag_handler(pdoc, child);
       }
+      else 
+      /*----------------------------------------------------------------------*/
+      /* <OBJECT>                                                             */
+      /*----------------------------------------------------------------------*/
+      if (strcasecmp(name,"object") == 0) {
+        /* ignore object block */
+      }
       else {
         chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
       }
@@ -597,6 +604,13 @@ chxj_node_exchange(
 
         if (handlers[tagSMALL].end_tag_handler)
           handlers[tagSMALL].end_tag_handler(pdoc, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <SCRIPT>                                                             */
+      /*----------------------------------------------------------------------*/
+      else
+      if (strcasecmp(name, "script") == 0) {
+        /* ignore script block */
       }
       else {
         chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
