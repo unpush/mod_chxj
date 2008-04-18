@@ -2362,47 +2362,53 @@ s_jhtml_chxjif_tag(void *pdoc, Node *node)
  * @param node   [i]   The TEXTAREA tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_start_textarea_tag(void* pdoc, Node* node) 
+static char *
+s_jhtml_start_textarea_tag(void *pdoc, Node *node) 
 {
-  jhtml_t*      jhtml;
-  Doc*          doc;
-  request_rec*  r;
-  Attr*         attr;
+  jhtml_t       *jhtml;
+  Doc           *doc;
+  request_rec   *r;
+  Attr          *attr;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
   r     = doc->r;
 
   jhtml->textarea_flag++;
-  W_L("<textarea ");
+  W_L("<textarea");
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-
-    char* name;
-    char* value;
-
-    name  = qs_get_attr_name(doc,attr);
-    value = qs_get_attr_value(doc,attr);
-
-    if (STRCASEEQ('n','N',"name",name)) {
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('a','A',"accesskey",name) && value && *value != 0) {
+      W_L(" accesskey=\"");
+      W_V(value);
+      W_L("\"");
+    }
+    else if (STRCASEEQ('i','I',"istyle", name) && value && (*value == '1' || *value == '2' || *value == '3' || *value == '4')) {
+      char *vv = chxj_istyle_to_mode(doc->buf.pool,value);
+      W_L(" mode=\"");
+      W_V(vv);
+      W_L("\"");
+    }
+    else if (STRCASEEQ('n','N',"name", name) && value && *value) {
       W_L(" name=\"");
       W_V(value);
       W_L("\"");
     }
-    else if (STRCASEEQ('r','R',"rows",name)) {
+    else if (STRCASEEQ('r','R',"rows", name) && value && *value) {
       W_L(" rows=\"");
       W_V(value);
       W_L("\"");
     }
-    else if (STRCASEEQ('c','C',"cols",name)) {
+    else if (STRCASEEQ('c','C',"cols", name) && value && *value) {
       W_L(" cols=\"");
       W_V(value);
       W_L("\"");
     }
   }
-  W_L(">\r\n");
+  W_L(">");
   return jhtml->out;
 }
 
@@ -2415,18 +2421,18 @@ s_jhtml_start_textarea_tag(void* pdoc, Node* node)
  * @param node   [i]   The TEXTAREA tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_jhtml_end_textarea_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_jhtml_end_textarea_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t*      jhtml;
-  Doc*          doc;
-  request_rec*  r;
+  jhtml_t       *jhtml;
+  Doc           *doc;
+  request_rec   *r;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
   r     = doc->r;
 
-  W_L("</textarea>\r\n");
+  W_L("</textarea>");
   jhtml->textarea_flag--;
 
   return jhtml->out;
