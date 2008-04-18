@@ -107,6 +107,9 @@ static char *s_jhtml_start_h6_tag       (void *pdoc, Node *node);
 static char *s_jhtml_end_h6_tag         (void *pdoc, Node *node);
 static char *s_jhtml_start_menu_tag     (void *pdoc, Node *node);
 static char *s_jhtml_end_menu_tag       (void *pdoc, Node *node);
+static char *s_jhtml_start_plaintext_tag       (void *pdoc, Node *node);
+static char *s_jhtml_start_plaintext_tag_inner (void *pdoc, Node *node);
+static char *s_jhtml_end_plaintext_tag         (void *pdoc, Node *node);
 
 static void  s_init_jhtml(jhtml_t *jhtml, Doc *doc, request_rec *r, device_table *spec);
 
@@ -369,8 +372,8 @@ tag_handler jhtml_handler[] = {
   },
   /* tagPLAINTEXT */
   {
-    NULL,
-    NULL,
+    s_jhtml_start_plaintext_tag,
+    s_jhtml_end_plaintext_tag,
   },
   /* tagBLINK */
   {
@@ -1737,17 +1740,40 @@ s_jhtml_end_ol_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_jhtml_start_p_tag(void *pdoc, Node *UNUSED(node)) 
+s_jhtml_start_p_tag(void *pdoc, Node *node)
 {
   jhtml_t     *jhtml;
   Doc         *doc;
   request_rec *r;
+  char        *align = NULL;
+  Attr        *attr;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
   r     = doc->r;
 
-  W_L("<p>");
+  W_L("<p");
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char *nm  = qs_get_attr_name(doc,attr);
+    char *val = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('a','A',"align", nm)) {
+      /*----------------------------------------------------------------------*/
+      /* CHTML 1.0 (W3C version 3.2)                                          */
+      /*----------------------------------------------------------------------*/
+      if (val && (STRCASEEQ('l','L',"left",val) || STRCASEEQ('r','R',"right",val) || STRCASEEQ('c','C',"center",val))) {
+        align = apr_pstrdup(doc->buf.pool, val);
+        break;
+      }
+    }
+  }
+  if (align) {
+    W_L(" align=\"");
+    W_V(align);
+    W_L("\"");
+  }
+  W_L(">");
   return jhtml->out;
 }
 
@@ -3154,6 +3180,61 @@ s_jhtml_end_menu_tag(void *pdoc, Node *UNUSED(child))
   jhtml_t *jhtml = GET_JHTML(pdoc);
   Doc     *doc = jhtml->doc;
   W_L("</menu>");
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the PLAINTEXT tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The PLAINTEXT tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_start_plaintext_tag(void *pdoc, Node *node)
+{
+  jhtml_t *jhtml;
+  Doc *doc;
+
+  jhtml = GET_JHTML(pdoc);
+  doc     = jhtml->doc;
+  W_L("<plaintext>");
+  s_jhtml_start_plaintext_tag_inner(pdoc,node);
+  return jhtml->out;
+}
+
+static char *
+s_jhtml_start_plaintext_tag_inner(void *pdoc, Node *node)
+{
+  jhtml_t *jhtml;
+  Doc *doc;
+  Node *child;
+  jhtml = GET_JHTML(pdoc);
+  doc     = jhtml->doc;
+  for (child = qs_get_child_node(doc, node);
+       child;
+       child = qs_get_next_node(doc, child)) {
+    W_V(child->otext);
+    s_jhtml_start_plaintext_tag_inner(pdoc, child);
+  }
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the PLAINTEXT tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The PLAINTEXT tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_end_plaintext_tag(void *pdoc, Node *UNUSED(child))
+{
+  jhtml_t *jhtml = GET_JHTML(pdoc);
   return jhtml->out;
 }
 /*
