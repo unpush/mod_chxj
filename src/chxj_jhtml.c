@@ -2491,9 +2491,9 @@ s_jhtml_text_tag(void* pdoc, Node* child)
   r     = doc->r;
 
   textval = qs_get_node_value(doc,child);
-  textval = qs_trim_string(doc->buf.pool, textval);
-  if (strlen(textval) == 0)
+  if (strlen(textval) == 0) {
     return jhtml->out;
+  }
 
   tmp = apr_palloc(r->pool, qs_get_node_size(doc,child)+1);
   memset(tmp, 0, qs_get_node_size(doc,child)+1);

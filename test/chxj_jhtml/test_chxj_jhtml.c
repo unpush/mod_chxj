@@ -860,13 +860,16 @@ main()
   CU_add_test(jhtml_suite, "test <plaintext> 3. value is not closed." ,         test_jhtml_plaintext_tag_003);
   CU_add_test(jhtml_suite, "test <plaintext> 3. value is not closed and hankaku." , test_jhtml_plaintext_tag_004);
 
-#if 0
+  /*=========================================================================*/
+  /* <PRE>                                                                   */
+  /*=========================================================================*/
   CU_add_test(jhtml_suite, "test <pre> 1." ,                                    test_jhtml_pre_tag_001);
   CU_add_test(jhtml_suite, "test <pre> 2." ,                                    test_jhtml_pre_tag_002);
   CU_add_test(jhtml_suite, "test <pre> 3." ,                                    test_jhtml_pre_tag_003);
   CU_add_test(jhtml_suite, "test <pre> 4." ,                                    test_jhtml_pre_tag_004);
   CU_add_test(jhtml_suite, "test <pre> 5." ,                                    test_jhtml_pre_tag_005);
 
+#if 0
   CU_add_test(jhtml_suite, "test <select> 1." ,                                 test_jhtml_select_tag_001);
   CU_add_test(jhtml_suite, "test <select> 2." ,                                 test_jhtml_select_tag_002);
   CU_add_test(jhtml_suite, "test <select> 3." ,                                 test_jhtml_select_tag_003);
@@ -9825,7 +9828,6 @@ void test_jhtml_plaintext_tag_004()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 /*============================================================================*/
 /* <PRE>                                                                      */
 /*============================================================================*/
@@ -9849,6 +9851,8 @@ void test_jhtml_pre_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9877,6 +9881,8 @@ void test_jhtml_pre_tag_002()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9905,6 +9911,8 @@ void test_jhtml_pre_tag_003()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9916,7 +9924,7 @@ void test_jhtml_pre_tag_003()
 void test_jhtml_pre_tag_004() 
 {
 #define  TEST_STRING "<pre><h1>あああ\n\n</pre>"
-#define  RESULT_STRING "<pre><h1>あああ\n\n</h1></pre>"
+#define  RESULT_STRING "<pre>あああ\n\n</pre>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9933,6 +9941,8 @@ void test_jhtml_pre_tag_004()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9944,7 +9954,7 @@ void test_jhtml_pre_tag_004()
 void test_jhtml_pre_tag_005() 
 {
 #define  TEST_STRING "<pre><h1>ﾊﾝｶｸ</h1>\n\n</pre>"
-#define  RESULT_STRING "<pre><h1>ﾊﾝｶｸ</h1>\n\n</pre>"
+#define  RESULT_STRING "<pre>ﾊﾝｶｸ\n\n</pre>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9961,6 +9971,8 @@ void test_jhtml_pre_tag_005()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9969,6 +9981,7 @@ void test_jhtml_pre_tag_005()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 /*============================================================================*/
 /* <SELECT>                                                                   */
 /*============================================================================*/
