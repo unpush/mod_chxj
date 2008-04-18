@@ -962,7 +962,9 @@ main()
   CU_add_test(jhtml_suite, "test <marquee> 17." ,                               test_jhtml_marquee_tag_017);
   CU_add_test(jhtml_suite, "test <marquee> 18." ,                               test_jhtml_marquee_tag_018);
 
-#if 0
+  /*=========================================================================*/
+  /* <META>                                                                  */
+  /*=========================================================================*/
   CU_add_test(jhtml_suite, "test <meta> 1." ,                                   test_jhtml_meta_tag_001);
   CU_add_test(jhtml_suite, "test <meta> 2." ,                                   test_jhtml_meta_tag_002);
   CU_add_test(jhtml_suite, "test <meta> 3." ,                                   test_jhtml_meta_tag_003);
@@ -972,6 +974,7 @@ main()
   CU_add_test(jhtml_suite, "test <meta> 7." ,                                   test_jhtml_meta_tag_007);
   CU_add_test(jhtml_suite, "test <meta> 8." ,                                   test_jhtml_meta_tag_008);
   CU_add_test(jhtml_suite, "test <meta> 9." ,                                   test_jhtml_meta_tag_009);
+#if 0
 #endif
   /* aend */
 

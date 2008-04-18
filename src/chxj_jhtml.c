@@ -666,7 +666,7 @@ s_jhtml_start_meta_tag(void *pdoc, Node *node)
     switch(*name) {
     case 'h':
     case 'H':
-      if (strcasecmp(name, "http-equiv") == 0) {
+      if (strcasecmp(name, "http-equiv") == 0 && value && *value) {
         /*----------------------------------------------------------------------*/
         /* CHTML 2.0                                                            */
         /*----------------------------------------------------------------------*/
@@ -684,7 +684,7 @@ s_jhtml_start_meta_tag(void *pdoc, Node *node)
 
     case 'c':
     case 'C':
-      if (strcasecmp(name, "content") == 0) {
+      if (strcasecmp(name, "content") == 0 && value && *value) {
         /*----------------------------------------------------------------------*/
         /* CHTML 2.0                                                            */
         /*----------------------------------------------------------------------*/
