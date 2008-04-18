@@ -374,6 +374,13 @@ chxj_node_exchange(
         if (handlers[tagOPTION].end_tag_handler)
           handlers[tagOPTION].end_tag_handler(pdoc, child);
       }
+      else
+      /*----------------------------------------------------------------------*/
+      /* <OBJECT>                                                             */
+      /*----------------------------------------------------------------------*/
+      if (strcasecmp(name, "object") == 0) {
+        /* ignore object block */
+      }
       else {
         chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
       }
