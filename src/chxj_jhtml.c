@@ -21,6 +21,7 @@
 #include "chxj_qr_code.h"
 #include "chxj_encoding.h"
 #include "chxj_url_encode.h"
+#include "chxj_str_util.h"
 
 
 #define GET_JHTML(X) ((jhtml_t *)(X))
@@ -1596,17 +1597,38 @@ s_jhtml_end_center_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_jhtml_start_li_tag(void *pdoc, Node *UNUSED(node)) 
+s_jhtml_start_li_tag(void *pdoc, Node *node)
 {
   jhtml_t       *jhtml;
   Doc           *doc;
   request_rec   *r;
+  Attr          *attr;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
   r     = doc->r;
 
-  W_L("<li>");
+  W_L("<li");
+  /*--------------------------------------------------------------------------*/
+  /* Get Attributes                                                           */
+  /*--------------------------------------------------------------------------*/
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char *name = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('t','T',"type",name) && value && (*value == '1' || *value == 'a' || *value == 'A')) {
+      W_L(" type=\"");
+      W_V(value);
+      W_L("\"");
+    }
+    else if (STRCASEEQ('v','V',"value", name) && value && *value) {
+      W_L(" value=\"");
+      W_V(value);
+      W_L("\"");
+    }
+  }
+  W_L(">");
   return jhtml->out;
 }
 
