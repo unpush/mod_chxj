@@ -255,8 +255,6 @@ chxj_node_exchange(
         if (handlers[tagPLAINTEXT].start_tag_handler) 
           handlers[tagPLAINTEXT].start_tag_handler(pdoc, child);
 
-        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
-
         if (handlers[tagPLAINTEXT].end_tag_handler)
           handlers[tagPLAINTEXT].end_tag_handler(pdoc, child);
       }
