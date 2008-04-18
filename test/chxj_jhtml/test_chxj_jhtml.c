@@ -797,14 +797,19 @@ main()
   CU_add_test(jhtml_suite, "test <li> type attribute 7." ,                      test_jhtml_li_tag_011);
   CU_add_test(jhtml_suite, "test <li> type attribute 8." ,                      test_jhtml_li_tag_012);
   CU_add_test(jhtml_suite, "test <li> type attribute 9." ,                      test_jhtml_li_tag_013);
-#if 0
 
+  /*=========================================================================*/
+  /* <MENU>                                                                  */
+  /*=========================================================================*/
   CU_add_test(jhtml_suite, "test <menu>." ,                                     test_jhtml_menu_tag_001);
   CU_add_test(jhtml_suite, "test <menu> 2." ,                                   test_jhtml_menu_tag_002);
   CU_add_test(jhtml_suite, "test <menu> 3." ,                                   test_jhtml_menu_tag_003);
   CU_add_test(jhtml_suite, "test <menu> 4." ,                                   test_jhtml_menu_tag_004);
   CU_add_test(jhtml_suite, "test <menu> 5." ,                                   test_jhtml_menu_tag_005);
 
+  /*=========================================================================*/
+  /* <OL>                                                                    */
+  /*=========================================================================*/
   CU_add_test(jhtml_suite, "test <ol>." ,                                       test_jhtml_ol_tag_001);
   CU_add_test(jhtml_suite, "test <ol> 2." ,                                     test_jhtml_ol_tag_002);
   CU_add_test(jhtml_suite, "test <ol> 3." ,                                     test_jhtml_ol_tag_003);
@@ -824,6 +829,7 @@ main()
   CU_add_test(jhtml_suite, "test <ol> 17." ,                                    test_jhtml_ol_tag_017);
   CU_add_test(jhtml_suite, "test <ol> 18." ,                                    test_jhtml_ol_tag_018);
 
+#if 0
   CU_add_test(jhtml_suite, "test <option>." ,                                   test_jhtml_option_tag_001);
   CU_add_test(jhtml_suite, "test <option value> with no value." ,               test_jhtml_option_tag_002);
   CU_add_test(jhtml_suite, "test <option value> with void value." ,             test_jhtml_option_tag_003);
@@ -8547,7 +8553,6 @@ void test_jhtml_li_tag_013()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
-/* KONNO */
 /*============================================================================*/
 /* <MENU>                                                                     */
 /*============================================================================*/
@@ -8571,6 +8576,8 @@ void test_jhtml_menu_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8582,7 +8589,7 @@ void test_jhtml_menu_tag_001()
 void test_jhtml_menu_tag_002() 
 {
 #define  TEST_STRING "<menu><li></li><li></li></menu>"
-#define  RESULT_STRING "<menu><li><li></menu>"
+#define  RESULT_STRING "<menu><li></li><li></li></menu>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8599,6 +8606,8 @@ void test_jhtml_menu_tag_002()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8610,7 +8619,7 @@ void test_jhtml_menu_tag_002()
 void test_jhtml_menu_tag_003() 
 {
 #define  TEST_STRING "<menu><li>abc</li><li>def</li></menu>"
-#define  RESULT_STRING "<menu><li>abc<li>def</menu>"
+#define  RESULT_STRING "<menu><li>abc</li><li>def</li></menu>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8627,6 +8636,8 @@ void test_jhtml_menu_tag_003()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8638,7 +8649,7 @@ void test_jhtml_menu_tag_003()
 void test_jhtml_menu_tag_004() 
 {
 #define  TEST_STRING "<menu><li>あああ</li><li>いいい</li></menu>"
-#define  RESULT_STRING "<menu><li>あああ<li>いいい</menu>"
+#define  RESULT_STRING "<menu><li>あああ</li><li>いいい</li></menu>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8655,6 +8666,8 @@ void test_jhtml_menu_tag_004()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8666,7 +8679,7 @@ void test_jhtml_menu_tag_004()
 void test_jhtml_menu_tag_005() 
 {
 #define  TEST_STRING "<menu><li>ﾊﾝｶｸ</li><li>ﾊﾝｶｸ</li></menu>"
-#define  RESULT_STRING "<menu><li>ﾊﾝｶｸ<li>ﾊﾝｶｸ</menu>"
+#define  RESULT_STRING "<menu><li>ﾊﾝｶｸ</li><li>ﾊﾝｶｸ</li></menu>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8683,6 +8696,8 @@ void test_jhtml_menu_tag_005()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8714,6 +8729,8 @@ void test_jhtml_ol_tag_001()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8725,7 +8742,7 @@ void test_jhtml_ol_tag_001()
 void test_jhtml_ol_tag_002() 
 {
 #define  TEST_STRING "<ol><li></li></ol>"
-#define  RESULT_STRING "<ol><li></ol>"
+#define  RESULT_STRING "<ol><li></li></ol>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8742,6 +8759,8 @@ void test_jhtml_ol_tag_002()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8753,7 +8772,7 @@ void test_jhtml_ol_tag_002()
 void test_jhtml_ol_tag_003() 
 {
 #define  TEST_STRING "<ol><li>abc</li></ol>"
-#define  RESULT_STRING "<ol><li>abc</ol>"
+#define  RESULT_STRING "<ol><li>abc</li></ol>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8770,6 +8789,8 @@ void test_jhtml_ol_tag_003()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8781,7 +8802,7 @@ void test_jhtml_ol_tag_003()
 void test_jhtml_ol_tag_004() 
 {
 #define  TEST_STRING "<ol><li>abc</li><li>def</li></ol>"
-#define  RESULT_STRING "<ol><li>abc<li>def</ol>"
+#define  RESULT_STRING "<ol><li>abc</li><li>def</li></ol>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8798,6 +8819,8 @@ void test_jhtml_ol_tag_004()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8809,7 +8832,7 @@ void test_jhtml_ol_tag_004()
 void test_jhtml_ol_tag_005() 
 {
 #define  TEST_STRING "<ol><li>あ</li></ol>"
-#define  RESULT_STRING "<ol><li>あ</ol>"
+#define  RESULT_STRING "<ol><li>あ</li></ol>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8826,6 +8849,8 @@ void test_jhtml_ol_tag_005()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8837,7 +8862,7 @@ void test_jhtml_ol_tag_005()
 void test_jhtml_ol_tag_006() 
 {
 #define  TEST_STRING "<ol><li>あ</li><li>い</li></ol>"
-#define  RESULT_STRING "<ol><li>あ<li>い</ol>"
+#define  RESULT_STRING "<ol><li>あ</li><li>い</li></ol>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8854,6 +8879,8 @@ void test_jhtml_ol_tag_006()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8865,7 +8892,7 @@ void test_jhtml_ol_tag_006()
 void test_jhtml_ol_tag_007() 
 {
 #define  TEST_STRING "<ol><li>ﾊﾝｶｸ</li></ol>"
-#define  RESULT_STRING "<ol><li>ﾊﾝｶｸ</ol>"
+#define  RESULT_STRING "<ol><li>ﾊﾝｶｸ</li></ol>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8882,6 +8909,8 @@ void test_jhtml_ol_tag_007()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8893,7 +8922,7 @@ void test_jhtml_ol_tag_007()
 void test_jhtml_ol_tag_008() 
 {
 #define  TEST_STRING "<ol><li>ﾊﾝｶｸ</li><li>ｶﾅﾀﾞﾖ</li></ol>"
-#define  RESULT_STRING "<ol><li>ﾊﾝｶｸ<li>ｶﾅﾀﾞﾖ</ol>"
+#define  RESULT_STRING "<ol><li>ﾊﾝｶｸ</li><li>ｶﾅﾀﾞﾖ</li></ol>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8910,6 +8939,8 @@ void test_jhtml_ol_tag_008()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8938,6 +8969,8 @@ void test_jhtml_ol_tag_009()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8966,6 +8999,8 @@ void test_jhtml_ol_tag_010()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -8994,6 +9029,8 @@ void test_jhtml_ol_tag_011()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9022,6 +9059,8 @@ void test_jhtml_ol_tag_012()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9050,6 +9089,8 @@ void test_jhtml_ol_tag_013()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9078,6 +9119,8 @@ void test_jhtml_ol_tag_014()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9106,6 +9149,8 @@ void test_jhtml_ol_tag_015()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9134,6 +9179,8 @@ void test_jhtml_ol_tag_016()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9162,6 +9209,8 @@ void test_jhtml_ol_tag_017()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9190,6 +9239,8 @@ void test_jhtml_ol_tag_018()
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
   ret = chxj_exchange_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -9198,6 +9249,7 @@ void test_jhtml_ol_tag_018()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/* KONNO */
 /*============================================================================*/
 /* <OPTION>                                                                   */
 /*============================================================================*/

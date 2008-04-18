@@ -29,7 +29,7 @@
 #undef W_V
 #define W_L(X)          do { jhtml->out = BUFFERED_WRITE_LITERAL(jhtml->out, &doc->buf, (X)); } while(0)
 #define W_V(X)          do { jhtml->out = (X) ? BUFFERED_WRITE_VALUE(jhtml->out, &doc->buf, (X))  \
-                                               : BUFFERED_WRITE_LITERAL(jhtml->out, &doc->buf, ""); } while(0)
+                                              : BUFFERED_WRITE_LITERAL(jhtml->out, &doc->buf, ""); } while(0)
 
 static char *s_jhtml_start_html_tag     (void *pdoc, Node *node);
 static char *s_jhtml_end_html_tag       (void *pdoc, Node *node);
@@ -105,6 +105,8 @@ static char *s_jhtml_start_h5_tag       (void *pdoc, Node *node);
 static char *s_jhtml_end_h5_tag         (void *pdoc, Node *node);
 static char *s_jhtml_start_h6_tag       (void *pdoc, Node *node);
 static char *s_jhtml_end_h6_tag         (void *pdoc, Node *node);
+static char *s_jhtml_start_menu_tag     (void *pdoc, Node *node);
+static char *s_jhtml_end_menu_tag       (void *pdoc, Node *node);
 
 static void  s_init_jhtml(jhtml_t *jhtml, Doc *doc, request_rec *r, device_table *spec);
 
@@ -362,8 +364,8 @@ tag_handler jhtml_handler[] = {
   },
   /* tagMENU */
   {
-    NULL,
-    NULL,
+    s_jhtml_start_menu_tag,
+    s_jhtml_end_menu_tag,
   },
   /* tagPLAINTEXT */
   {
@@ -1666,17 +1668,38 @@ s_jhtml_end_li_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_jhtml_start_ol_tag(void *pdoc, Node *UNUSED(node)) 
+s_jhtml_start_ol_tag(void *pdoc, Node *node)
 {
   jhtml_t     *jhtml;
   Doc         *doc;
   request_rec *r;
+  Attr        *attr;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
   r     = doc->r;
 
-  W_L("<ol>");
+  W_L("<ol");
+  /*--------------------------------------------------------------------------*/
+  /* Get Attributes                                                           */
+  /*--------------------------------------------------------------------------*/
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char *name = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('t','T',"type",name) && value && (*value == '1' || *value == 'a' || *value == 'A')) {
+      W_L(" type=\"");
+      W_V(value);
+      W_L("\"");
+    }
+    else if (STRCASEEQ('s','S',"start",name) && value && *value) {
+      W_L(" start=\"");
+      W_V(value);
+      W_L("\"");
+    }
+  }
+  W_L(">");
   return jhtml->out;
 }
 
@@ -3100,6 +3123,42 @@ s_jhtml_end_h6_tag(void *pdoc, Node *UNUSED(child))
     jhtml->h6_align_flag--;
     W_L("</div>");
   }
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the MENU tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The MENU tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_start_menu_tag(void *pdoc, Node *UNUSED(child))
+{
+  jhtml_t *jhtml = GET_JHTML(pdoc);
+  Doc     *doc = jhtml->doc;
+  W_L("<menu>");
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the MENU tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The MENU tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_end_menu_tag(void *pdoc, Node *UNUSED(child))
+{
+  jhtml_t *jhtml = GET_JHTML(pdoc);
+  Doc     *doc = jhtml->doc;
+  W_L("</menu>");
   return jhtml->out;
 }
 /*
