@@ -691,7 +691,6 @@ valid_expires(request_rec *r, const char *value)
   DBG(r, "name=[%s] val=[%s]", name, val);
   now = apr_time_now();
   expires = chxj_parse_cookie_expires(val);
-  DBG(r, "now=[%lld] expires=[%lld]", now, expires);
   if (expires < now) {
     DBG(r, "end valid_expire() value:[%s] (expired)", value);
     return CHXJ_FALSE;
