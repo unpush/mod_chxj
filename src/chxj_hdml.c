@@ -1867,7 +1867,7 @@ s_hdml_do_input_radio_tag(hdml_t* hdml, Node* tag)
   s_output_to_hdml_out(hdml, 
                   apr_psprintf(r->pool, 
                           "<A TASK=GOSUB "
-                          "LABEL=\"\x93\xfc\x97\xcd\" "
+                          "LABEL=\"check\" "
                           "DEST=#R%d VARS=\"VAL=%s\" "
                           "RECEIVE=\"%s;", 
                           ii, 
@@ -2025,7 +2025,7 @@ s_hdml_do_input_checkbox_tag(hdml_t* hdml, Node* tag)
     nm   = qs_alloc_zero_byte_string(r);
 
   s_output_to_hdml_out(hdml, apr_psprintf(r->pool, 
-                                "<A TASK=GOSUB LABEL=\"a\xaf\xb8\" "
+                                "<A TASK=GOSUB LABEL=\"check\" "
                                    "DEST=\"#$%s%02d\" "
                                    "VARS=\"V=%s\" "
                                    "RECEIVE=\"%s%02d;%s%02d;%s%02d\">"

@@ -302,16 +302,16 @@ chxj_img_conv_format_handler(request_rec* r)
  * @param src [i]   It is former image binary data.
  * @param len [i/o] It is length of former image binary data.
  */
-char*
-chxj_exchange_image(request_rec *r, const char** src, apr_size_t* len)
+char *
+chxj_exchange_image(request_rec *r, const char **src, apr_size_t *len)
 {
-  mod_chxj_config*      conf;
-  query_string_param_t* qsp;
-  char*                 user_agent;
-  device_table*         spec;
-  char*                 dst;
-  char*                 conv_check;
-  chxjconvrule_entry* entryp;
+  mod_chxj_config       *conf;
+  query_string_param_t  *qsp;
+  char                  *user_agent;
+  device_table          *spec;
+  char                  *dst;
+  char                  *conv_check;
+  chxjconvrule_entry    *entryp;
 
   DBG(r, "start chxj_exchange_image()");
 

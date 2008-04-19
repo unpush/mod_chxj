@@ -818,11 +818,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
           for (child = qs_get_child_node(&doc,root);
                child ;
                child = qs_get_next_node(&doc,child)) {
-        
-            char* name;
-        
-            name = qs_get_node_name(&doc,child);
-        
+            char *name = qs_get_node_name(&doc,child);
             if (strcasecmp("qrcode",name) == 0) {
               sts++;
               break;
@@ -837,7 +833,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
               ERR(r, "qrcode create failed.");
               return sts;
             }
-            r->content_type = apr_psprintf(r->pool, "image/jpg");
+            r->content_type = apr_psprintf(r->pool, "image/jpeg");
           }
         }
 
@@ -860,23 +856,13 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
 
             memset(tmp, 0, ctx->len + 1);
             memcpy(tmp, ctx->buffer, ctx->len);
-
-#if 0
-            DBG(r, "input data=[%s]", tmp);
-#endif
-
-
             ctx->buffer = 
               chxj_exchange_image(r, 
                                   (const char**)&tmp,
                                   (apr_size_t*)&ctx->len);
-
-            if (ctx->buffer == NULL)
+            if (ctx->buffer == NULL) {
               ctx->buffer = tmp;
-
-#if 0
-            DBG(r, "output data=[%.*s]", ctx->len,ctx->buffer);
-#endif
+            }
           }
         }
 
