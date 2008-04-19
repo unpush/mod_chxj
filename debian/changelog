@@ -1,3 +1,117 @@
+libapache2-mod-chxj (0.11.0-1) unstable; urgency=low
+
+  * Fixed bug.
+    - chxj_encoding and chxj_rencoding invalid destlen.
+    - <p>a</p> ==> <p></p>a convertion defect.
+    - The line feed code is disregarded at <pre> tag. 
+
+  * Added Features.
+    - Added <blockquote> tag to CHTML1.0 converter.
+    - Added <br> tag clear attribute to CHTML1.0 converter.
+    - Added <dir> tag to CHTML1.0 converter.
+    - Added <dl> tag to CHTML1.0 converter.
+    - Added <dt> tag to CHTML1.0 converter.
+    - Added <dd> tag to CHTML1.0 converter.
+    - Added <menu> tag to CHTML1.0 converter.
+    - Added <p align> attribute to CHTML1.0 converter.
+    - Added <plaintext> tag to CHTML1.0 converter. (no parse mode)
+    - Added <blockquote> tag to CHTML2.0 converter.
+    - Added <dl> tag to CHTML2.0 converter.
+    - Added <dt> tag to CHTML2.0 converter.
+    - Added <dd> tag to CHTML2.0 converter.
+    - Added <h1 align> attribute to CHTML2.0 converter.
+    - Added <h2 align> attribute to CHTML2.0 converter.
+    - Added <h3 align> attribute to CHTML2.0 converter.
+    - Added <h4 align> attribute to CHTML2.0 converter.
+    - Added <h5 align> attribute to CHTML2.0 converter.
+    - Added <h6 align> attribute to CHTML2.0 converter.
+    - Added <li type> attribute to CHTML2.0 converter.
+    - Added <li value> attribute to CHTML2.0 converter.
+    - Added <menu> tag to CHTML2.0 converter.
+    - Added <ol type> attribute to CHTML2.0 converter.
+    - Added <ol start> attribute to CHTML2.0 converter.
+    - Added <p align> attribute to CHTML2.0 converter.
+    - Added <textarea accesskey> attribute to CHTML2.0 converter.
+    - Added <textarea istyle> attribute to CHTML2.0 converter.
+    - Added <blink> tag to CHTML2.0 converter.
+    - Added <marquee> tag to CHTML2.0 converter.
+    - Added <plaintext> tag to CHTML2.0 converter. (no parse mode)
+    - Added <blockquote> tag to CHTML3.0 converter.
+    - Added <dir> tag to CHTML3.0 converter.
+    - Added <dl> tag to CHTML3.0 converter.
+    - Added <dt> tag to CHTML3.0 converter.
+    - Added <dd> tag to CHTML3.0 converter.
+    - Added <h1 align> attribute to CHTML3.0 converter.
+    - Added <h2 align> attribute to CHTML3.0 converter.
+    - Added <h3 align> attribute to CHTML3.0 converter.
+    - Added <h4 align> attribute to CHTML3.0 converter.
+    - Added <h5 align> attribute to CHTML3.0 converter.
+    - Added <h6 align> attribute to CHTML3.0 converter.
+    - Added <blink> tag to CHTML3.0 converter.
+    - Added <marquee> tag to CHTML3.0 converter.
+    - Added <ol type> attribute to CHTML3.0 converter.
+    - Added <ol start> attribute to CHTML3.0 converter.
+    - Added <p align> attribute to CHTML3.0 converter.
+    - Added <textarea accesskey> attribute to CHTML3.0 converter.
+    - Added <textarea istyle> attribute to CHTML3.0 converter.
+    - Added <li type> attribute to CHTML3.0 converter.
+    - Added <li value> attribute to CHTML3.0 converter.
+    - Added <menu> tag to CHTML3.0 converter.
+    - Added <plaintext> tag to CHTML3.0 converter. (no parse mode)
+    - Added <blockquote> tag to au XHTML converter.
+    - Added <dir> tag to au XHTML converter.
+    - Added <dl> tag to au XHTML converter.
+    - Added <dt> tag to au XHTML converter.
+    - Added <dd> tag to au XHTML converter.
+    - Added <h1 align> attribute to au XHTML converter.
+    - Added <h2 align> attribute to au XHTML converter.
+    - Added <h3 align> attribute to au XHTML converter.
+    - Added <h4 align> attribute to au XHTML converter.
+    - Added <h5 align> attribute to au XHTML converter.
+    - Added <h6 align> attribute to au XHTML converter.
+    - Added <hr align> attribute to au XHTML converter.
+    - Added <hr size> attribute to au XHTML converter.
+    - Added <hr width> attribute to au XHTML converter.
+    - Added <li type> attribute to au XHTML converter.
+    - Added <li value> attribute to au XHTML converter.
+    - Added <menu> tag to au XHTML converter.
+    - Added <ol type> attribute to au XHTML converter.
+    - Added <ol start> attribute to au XHTML converter.
+    - Added <plaintext> tag to au XHTML converter. (no parse mode)
+    - Added <textarea accesskey> attribute to au XHTML converter.
+    - Added <textarea istyle> attribute to au XHTML converter.
+    - Added <plaintext> tag to au XHTML converter. (no parse mode)
+    - Added <blockquote> tag to au HDML converter.
+    - Added <dir> tag to au HDML converter.
+    - Added <dl> tag to au HDML converter.
+    - Added <dt> tag to au HDML converter.
+    - Added <dd> tag to au HDML converter.
+    - Added <h1 align> attribute for au HDML converter.
+    - Added <h2 align> attribute for au HDML converter.
+    - Added <h3 align> attribute for au HDML converter.
+    - Added <h4 align> attribute for au HDML converter.
+    - Added <h5 align> attribute for au HDML converter.
+    - Added <h6 align> attribute for au HDML converter.
+    - Added <menu> tag to au HDML converter.
+    - Added <p align> attribute to au HDML converter.
+    - Added <plaintext> tag to au HDML converter. (no parse mode)
+    - Added <pre> tag to au HDML converter. 
+    - Added <textarea> attribute to au HDML converter.
+    - Added <blockquote> tag to SoftBank HTML converter.
+    - Added <br clear> attribute to SoftBank HTML converter.
+    - Added <dir> tag to SoftBank HTML converter.
+    - Added <dl> tag to SoftBank HTML converter.
+    - Added <dt> tag to SoftBank HTML converter.
+    - Added <dd> tag to SoftBank HTML converter.
+    - Added <h1 align> attribute for SoftBank HTML converter.
+    - Added <h2 align> attribute for SoftBank HTML converter.
+    - Added <h3 align> attribute for SoftBank HTML converter.
+    - Added <h4 align> attribute for SoftBank HTML converter.
+    - Added <h5 align> attribute for SoftBank HTML converter.
+    - Added <h6 align> attribute for SoftBank HTML converter.
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Sat, 19 Apr 2008 16:44:57 +0900
+
 libapache2-mod-chxj (0.10.5-1) unstable; urgency=low
 
   * Fixed bug.
