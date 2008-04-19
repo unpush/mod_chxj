@@ -49,7 +49,7 @@ static Node *qs_pop_node(Doc *doc, NodeStack stack);
 static void qs_dump_node_stack(Doc *doc, NodeStack stack);
 #endif
 static void qs_free_node_stack(Doc *doc, NodeStack stack);
-static void s_error_check(Doc *doc, Node *node, NodeStack node_stack, NodeStack err_stack);
+static void s_error_check(Doc *doc, const char *name, int line, NodeStack node_stack, NodeStack err_stack);
 
 
 Node *
@@ -208,7 +208,7 @@ qs_parse_string(Doc *doc, const char *src, int srclen)
             if (STRCASEEQ('s','S',"script",&node->name[1])) {
               script_flag = 0;
             }
-            s_error_check(doc, node, node_stack, err_stack);
+            s_error_check(doc, &node->name[1], node->line, node_stack, err_stack);
           }
           else {
             /* ignore */
@@ -221,7 +221,7 @@ qs_parse_string(Doc *doc, const char *src, int srclen)
             if (doc->now_parent_node->parent != NULL) {
               doc->now_parent_node = doc->now_parent_node->parent;
               doc->parse_mode = PARSE_MODE_CHTML;
-              s_error_check(doc, node, node_stack, err_stack);
+              s_error_check(doc, &node->name[1], node->line, node_stack, err_stack);
             }
           }
         }
@@ -278,7 +278,7 @@ qs_parse_string(Doc *doc, const char *src, int srclen)
           if (STRCASEEQ('s','S',"script",node->name)) {
             script_flag = 0;
           }
-          s_error_check(doc, node, node_stack, err_stack);
+          s_error_check(doc, node->name, node->line, node_stack, err_stack);
         }
         else {
           /* ignore */
@@ -337,14 +337,14 @@ qs_parse_string(Doc *doc, const char *src, int srclen)
 
 
 static void
-s_error_check(Doc *doc, Node *node, NodeStack node_stack, NodeStack err_stack) 
+s_error_check(Doc *doc, const char *name, int line, NodeStack node_stack, NodeStack err_stack) 
 {
   Node *prevNode;
   int err = 0;
   for (prevNode = qs_pop_node(doc,node_stack);
        prevNode;
        prevNode = qs_pop_node(doc, node_stack)) {
-    if (prevNode && strcasecmp(prevNode->name, &node->name[1]) != 0) {
+    if (prevNode && strcasecmp(prevNode->name, name) != 0) {
       qs_push_node(doc, prevNode, err_stack);
       err++;
       continue;
@@ -355,9 +355,9 @@ s_error_check(Doc *doc, Node *node, NodeStack node_stack, NodeStack err_stack)
     Node *tmpNode = qs_pop_node(doc,node_stack);
     if (tmpNode == NULL && err != 1) {
       if (doc->r) 
-        ERR(doc->r, "tag parse error (perhaps, miss spell). tag_name:[%s] line:[%d]", &node->name[1], node->line);
+        ERR(doc->r, "tag parse error (perhaps, miss spell). tag_name:[%s] line:[%d]", name, line);
       else
-        fprintf(stderr, "error :tag parse error (perhaps, miss spell). tag_name:[%s] line:[%d]\n", &node->name[1], node->line);
+        fprintf(stderr, "error :tag parse error (perhaps, miss spell). tag_name:[%s] line:[%d]\n", name, line);
       for (prevNode = qs_pop_node(doc,err_stack);
            prevNode;
            prevNode = qs_pop_node(doc, err_stack)) {
@@ -502,19 +502,20 @@ s_cut_text(const char* s, int len, int script)
 }
 
 
-Node*
-qs_init_root_node(Doc* doc) 
+Node *
+qs_init_root_node(Doc *doc) 
 {
   doc->root_node = (Node*)apr_palloc(doc->pool,sizeof(struct Node));
-  if (doc->root_node == NULL) 
+  if (doc->root_node == NULL) {
     QX_LOGGER_FATAL("Out Of Memory");
+  }
 
   doc->root_node->next   = NULL;
   doc->root_node->parent = NULL;
   doc->root_node->child  = NULL;
   doc->root_node->attr   = NULL;
 
-  doc->root_node->name   = (char*)apr_palloc(doc->pool,5);
+  doc->root_node->name   = (char*)apr_palloc(doc->pool, 5);
   if (doc->root_node->name == NULL) {
     QX_LOGGER_FATAL("Out Of Memory");
   }
