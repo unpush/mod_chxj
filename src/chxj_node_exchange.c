@@ -666,7 +666,7 @@ chxj_node_exchange(
       /*----------------------------------------------------------------------*/
       else 
       if (strcasecmp(name, "script") == 0) {
-        /* ignore */
+        /* ignore script block */
       }
       else {
         chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
