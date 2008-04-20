@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Script-Type" content="text/javascript">
 <meta name="generator" content="SmartDoc 1.1">
 <meta name="author" content="Atsushi Konno" lang="ja">
-<meta name="date" content="Last modified: Sat, 23 Mar 2008 03:21:16 +0900" lang="ja">
+<meta name="date" content="Last modified: Mon Mar 31 20:19:27 JST 2008" lang="ja">
 <title>mod_chxj</title>
 <style type="text/css">
 <!--
@@ -692,7 +692,7 @@ function setOHPHandler() {
 
 <h1 class="title">mod_chxj<br><span class="subtitle"></span></h1>
 
-<div class="date">Last modified: Sat, 23 Mar 2008 03:21:16 +0900</div>
+<div class="date">Last modified: Mon Mar 31 20:19:27 JST 2008</div>
 <div class="author">Atsushi Konno</div>
 <h2>目次</h2>
 
@@ -793,17 +793,23 @@ function setOHPHandler() {
 <ol>
 <li> Apache2.xのヘッダーファイル群
 <li> Apache2.x用のapxs
-<li> apr(Apache Portable Runtime)ライブラリとそのヘッダファイル郡(apu含む)
+<li> apr(Apache Portable Runtime)ライブラリとそのヘッダファイル郡(apu含む)<span class="note"><a href="#doc1_34" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="memcacheを使用する場合、apuは0.9.7以降"><sup>(1)</sup></a></span>
 <li> automake、autoconf、libtool1.3.X
 <li> ImageMagick(MagickWand)
 <li> Linux</ol>
 
 
-<h3 id="doc1_46">mod_chxjの入手</h3>
+<div class="footnote">
+<ol>
+<li id="doc1_34" value="1"> memcacheを使用する場合、apuは0.9.7以降</ol>
+</div>
+
+
+<h3 id="doc1_48">mod_chxjの入手</h3>
 
 <p class="first_ja">mod_chxjは<a href="http://sourceforge.jp/projects/modchxj/" target="_top" onmouseover="hilightExternallink(this)" onmouseout="normal(this)">こちら</a>からダウンロードすることができます。</p>
 
-<h3 id="doc1_52">インストール</h3>
+<h3 id="doc1_54">インストール</h3>
 
 <p class="first_ja">以下にmod_chxjインストール手順を示します。</p>
 
@@ -815,29 +821,29 @@ function setOHPHandler() {
 $ ./buildconf.sh
 </pre>
 
-<p><span class="note"><a href="#doc1_61" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="&quot;$&quot;はプロンプトをあらわします。"><sup>(1)</sup></a></span></p>
+<p><span class="note"><a href="#doc1_63" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="&quot;$&quot;はプロンプトをあらわします。"><sup>(2)</sup></a></span></p>
 <li> <p>Configure</p>
 
-<div id="doc1_67" class="caption">Configure</div>
+<div id="doc1_69" class="caption">Configure</div>
 <pre class="program" style="margin-top:0">
 $ ./configure
 </pre>
 
-<p><span class="note"><a href="#doc1_70" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="場合によっては--with-apr-configや--with-apu-configも必要です。"><sup>(2)</sup></a></span><span class="note"><a href="#doc1_73" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="0.8.6以下の場合には--with-apache-headerが必須です"><sup>(3)</sup></a></span><span class="note"><a href="#doc1_76" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="詳細はBuildを参照"><sup>(4)</sup></a></span></p>
+<p><span class="note"><a href="#doc1_72" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="場合によっては--with-apr-configや--with-apu-config、--with-pcre-configも必要です。"><sup>(3)</sup></a></span><span class="note"><a href="#doc1_75" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="詳細はBuildを参照"><sup>(4)</sup></a></span></p>
 <li> mod_chxj.soを生成します
-<div id="doc1_82" class="caption">make</div>
+<div id="doc1_81" class="caption">make</div>
 <pre class="program" style="margin-top:0">
 $ make
 </pre>
 <li> apacheにインストールします
-<div id="doc1_88" class="caption">install</div>
+<div id="doc1_87" class="caption">install</div>
 <pre class="program" style="margin-top:0">
 $ make install
 </pre>
 <li> <p>データの設置etcディレクトリは以下のdevice_data.xmlとemoji.xmlをApacheからアクセスできるところに配置します。<span class="note"><a href="#doc1_94" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="0.9.0からemoji.xml、device_data.xmlの定義フォーマットを変更しましたのでバージョンをあわせてください"><sup>(5)</sup></a></span></p>
 <p>以下、/etc/apache2/chxjディレクトリにchxj用設定ファイルを用意する場合</p>
 
-<div id="doc1_97" class="caption">データの設置</div>
+<div id="doc1_93" class="caption">データの設置</div>
 <pre class="program" style="margin-top:0">
 $ mkdir -p /etc/apache2/chxj
 $ cp etc/device_data.xml /etc/apache2/chxj
@@ -847,11 +853,11 @@ $ cp etc/emoji.xml /etc/apache2/chxj
 
 <div class="footnote">
 <ol>
-<li id="doc1_61" value="1"> &quot;$&quot;はプロンプトをあらわします。<li id="doc1_70" value="2"> 場合によっては--with-apr-configや--with-apu-configも必要です。<li id="doc1_73" value="3"> 0.8.6以下の場合には--with-apache-headerが必須です<li id="doc1_76" value="4"> 詳細はBuildを参照<li id="doc1_94" value="5"> 0.9.0からemoji.xml、device_data.xmlの定義フォーマットを変更しましたのでバージョンをあわせてください</ol>
+<li id="doc1_63" value="2"> &quot;$&quot;はプロンプトをあらわします。<li id="doc1_72" value="3"> 場合によっては--with-apr-configや--with-apu-config、--with-pcre-configも必要です。<li id="doc1_75" value="4"> 詳細はBuildを参照</ol>
 </div>
 
 
-<h2 id="doc1_104">Build</h2>
+<h2 id="doc1_100">Build</h2>
 
 <p class="first_ja">mod_chxjをコンパイルするにはconfigureを行う必要があります。以下にconfigureのオプションを記します。</p>
 
@@ -862,7 +868,7 @@ $ cp etc/emoji.xml /etc/apache2/chxj
 
 <p class="first_ja">通常指定する必要はありません。configureでApacheのヘッダファイルの場所が検知できなかった場合や、任意のApacheヘッダファイルを使用したい場合に指定します。</p>
 
-<div id="doc1_110" class="caption">--with-apache-header</div>
+<div id="doc1_106" class="caption">--with-apache-header</div>
 <pre class="program" style="margin-top:0">
          $ ./configure --with-apache-header=/usr/include/apache2
       
@@ -874,7 +880,7 @@ $ cp etc/emoji.xml /etc/apache2/chxj
 
 <p class="first_ja">通常指定する必要はありません。configureでapxsを検知できなかった場合や、任意のapxsプログラムを指定したい場合に指定します。</p>
 
-<div id="doc1_116" class="caption">--with-apxs</div>
+<div id="doc1_112" class="caption">--with-apxs</div>
 <pre class="program" style="margin-top:0">
          $ ./configure --with-apxs=/usr/local/apache2/bin/apxs2
       
@@ -882,11 +888,11 @@ $ cp etc/emoji.xml /etc/apache2/chxj
 
 <p>上記は/usr/local/apache2/bin/apxs2を使用するようにapxsに指定しています。</p>
 
-<h3 id="doc1_120">--with-apr-config</h3>
+<h3 id="doc1_116">--with-apr-config</h3>
 
 <p class="first_ja">通常指定する必要はありません。configureでapr-configを検知できなかった場合や、任意のapr-configプログラムを指定したい場合に指定します。</p>
 
-<div id="doc1_122" class="caption">--with-apr-config</div>
+<div id="doc1_118" class="caption">--with-apr-config</div>
 <pre class="program" style="margin-top:0">
 $ ./configure --with-apr-config=/usr/local/apache2/bin/apr-1-config
       
@@ -894,11 +900,11 @@ $ ./configure --with-apr-config=/usr/local/apache2/bin/apr-1-config
 
 <p>上記は/usr/local/apache2/bin/apr-1-configを使用するように指定しています。</p>
 
-<h3 id="doc1_126">--with-apu-config</h3>
+<h3 id="doc1_122">--with-apu-config</h3>
 
 <p class="first_ja">通常指定する必要はありません。configureでapu-configを検知できなかった場合や、任意のapu-configプログラムを指定したい場合に指定します。</p>
 
-<div id="doc1_128" class="caption">--with-apu-config</div>
+<div id="doc1_124" class="caption">--with-apu-config</div>
 <pre class="program" style="margin-top:0">
 $ ./configure --with-apu-config=/usr/local/apache2/bin/apu-1-config
       
@@ -906,14 +912,14 @@ $ ./configure --with-apu-config=/usr/local/apache2/bin/apu-1-config
 
 <p>上記は/usr/local/apache2/bin/apu-1-configを使用するように指定しています。</p>
 
-<h3 id="doc1_133">Cookieシミュレート機能でMySQLを使用する場合</h3>
+<h3 id="doc1_129">Cookieシミュレート機能でMySQLを使用する場合</h3>
 
 
-<h3 id="doc1_135">--enable-mysql-cookie</h3>
+<h3 id="doc1_131">--enable-mysql-cookie</h3>
 
-<p class="first_ja">Cookieシミュレート機能を使用する際、保存先をデフォルトのDBMでは無く、MySQLに保存するようにします。DefaultのDBMで良い場合や、Cookieシミュレート機能を使用しない場合は指定する必要はありません。別途MySQLサーバを用意する必要があります。また、本オプションを指定した場合は、--with-mysql-header、--with-mysql-lib-dirも指定します。これはMySQLのヘッダとライブラリが必要なことを意味します。使用するMySQLのライブラリは今のところlibmysqlclient_r.soのみです。注意) --enable-memcache-cookieとの併用はできません。</p>
+<p class="first_ja">Cookieシミュレート機能を使用する際、保存先をデフォルトのDBMでは無く、MySQLに保存するようにします。DefaultのDBMで良い場合や、Cookieシミュレート機能を使用しない場合は指定する必要はありません。別途MySQLサーバを用意する必要があります。また、本オプションを指定した場合は、--with-mysql-header、--with-mysql-lib-dirも指定します。これはMySQLのヘッダとライブラリが必要なことを意味します。使用するMySQLのライブラリは今のところlibmysqlclient_r.soのみです。</p>
 
-<div id="doc1_137" class="caption">--enable-mysql-cookie</div>
+<div id="doc1_133" class="caption">--enable-mysql-cookie</div>
 <pre class="program" style="margin-top:0">
 $ ./configure --enable-mysql-cookie --with-mysql-header=/usr/include/mysql \
     --with-mysql-lib-dir=/usr/lib
@@ -922,11 +928,11 @@ $ ./configure --enable-mysql-cookie --with-mysql-header=/usr/include/mysql \
 
 <p>上記は、/usr/include/mysql以下にmysql用のヘッダがあり、/usr/lib以下にlibmysqlclient_r.soがある場合の例です。</p>
 
-<h3 id="doc1_141">--with-mysql-header</h3>
+<h3 id="doc1_137">--with-mysql-header</h3>
 
 <p class="first_ja">--enable-mysql-cookieを指定した場合は必須です。MySQLのヘッダファイルの場所を指定します。</p>
 
-<div id="doc1_143" class="caption">--with-mysql-header</div>
+<div id="doc1_139" class="caption">--with-mysql-header</div>
 <pre class="program" style="margin-top:0">
 $ ./configure --enable-mysql-cookie --with-mysql-header=/usr/include/mysql \
     --with-mysql-lib-dir=/usr/lib
@@ -934,11 +940,11 @@ $ ./configure --enable-mysql-cookie --with-mysql-header=/usr/include/mysql \
 </pre>
 
 
-<h3 id="doc1_147">--with-mysql-lib-dir</h3>
+<h3 id="doc1_143">--with-mysql-lib-dir</h3>
 
 <p class="first_ja">--enable-mysql-cookieを指定した場合は必須です。MySQLのライブラリ、libmysqlclient_r.soの設置されているディレクトリを指定します。</p>
 
-<div id="doc1_149" class="caption">--with-mysql-lib-dir</div>
+<div id="doc1_145" class="caption">--with-mysql-lib-dir</div>
 <pre class="program" style="margin-top:0">
 $ ./configure --enable-mysql-cookie --with-mysql-header=/usr/include/mysql \
     --with-mysql-lib-dir=/usr/lib
@@ -946,14 +952,14 @@ $ ./configure --enable-mysql-cookie --with-mysql-header=/usr/include/mysql \
 </pre>
 
 
-<h3 id="doc1_154">Cookieシミュレート機能でmemcachedを使用する場合</h3>
+<h3 id="doc1_150">Cookieシミュレート機能でmemcachedを使用する場合</h3>
 
 
-<h3 id="doc1_156">--enable-memcache-cookie</h3>
+<h3 id="doc1_152">--enable-memcache-cookie</h3>
 
-<p class="first_ja">Cookieシミュレート機能を使用する際、保存先をデフォルトのDBMでは無く、memcachedに保存するようにします。DefaultのDBMで良い場合や、Cookieシミュレート機能を使用しない場合は指定する必要はありません。別途memcachedを用意する必要があります。また、本オプションを指定した場合は、--with-apr-memcache-header、--with-apr-memcache-lib-dirも指定します。これはapr_memcacheのヘッダとライブラリが必要なことを意味します。注意) --enable-mysql-cookieとの併用はできません。</p>
+<p class="first_ja">Cookieシミュレート機能を使用する際、保存先をデフォルトのDBMでは無く、memcachedに保存するようにします。DefaultのDBMで良い場合や、Cookieシミュレート機能を使用しない場合は指定する必要はありません。別途memcachedを用意する必要があります。また、本オプションを指定した場合は、--with-apr-memcache-header、--with-apr-memcache-lib-dirも指定します。これはapr_memcacheのヘッダとライブラリが必要なことを意味します。</p>
 
-<div id="doc1_158" class="caption">--enable-memcache-cookie</div>
+<div id="doc1_154" class="caption">--enable-memcache-cookie</div>
 <pre class="program" style="margin-top:0">
 $ ./configure --enable-memcache-cookie \
     --with-apr-memcache-header=/usr/include/apr-memcache0 \
@@ -963,11 +969,11 @@ $ ./configure --enable-memcache-cookie \
 
 <p>上記は、/usr/include/apr_memcache0以下にapr-memcache用のヘッダがあり、/usr/lib以下にlibapr_memcache.soがある場合の例です。</p>
 
-<h3 id="doc1_162">--with-apr-memcache-header</h3>
+<h3 id="doc1_158">--with-apr-memcache-header</h3>
 
 <p class="first_ja">--enable-memcache-cookieを指定した場合は必須です。apr-memcacheのヘッダファイルの場所を指定します。</p>
 
-<div id="doc1_164" class="caption">--with-apr-memcache-header</div>
+<div id="doc1_160" class="caption">--with-apr-memcache-header</div>
 <pre class="program" style="margin-top:0">
 $ ./configure --enable-memcache-cookie \
     --with-apr-memcache-header=/usr/include/apr_memcache0 \
@@ -976,11 +982,11 @@ $ ./configure --enable-memcache-cookie \
 </pre>
 
 
-<h3 id="doc1_168">--with-apr-memcache-lib-dir</h3>
+<h3 id="doc1_164">--with-apr-memcache-lib-dir</h3>
 
 <p class="first_ja">--enable-mysql-cookieを指定した場合は必須です。apr-memcacheのライブラリ、libapr_memcache.soの設置されているディレクトリを指定します。</p>
 
-<div id="doc1_170" class="caption">--with-apr-memcache-lib-dir</div>
+<div id="doc1_166" class="caption">--with-apr-memcache-lib-dir</div>
 <pre class="program" style="margin-top:0">
 $ ./configure --enable-memcache-cookie \
     --with-apr-memcache-header=/usr/include/apr_memcache0 \
@@ -989,17 +995,17 @@ $ ./configure --enable-memcache-cookie \
 </pre>
 
 
-<h2 id="doc1_176">Configuration</h2>
+<h2 id="doc1_172">Configuration</h2>
 
 <p class="first_ja">以下はmod_chxjが/usr/lib/apache2/modulesディレクトリ配下に設置されたものとしています</p>
 
-<h3 id="doc1_178">htmlファイルが変換対象の場合</h3>
+<h3 id="doc1_174">htmlファイルが変換対象の場合</h3>
 
 <p class="first_ja">例として、Locationが&quot;/chxj&quot;以下のものは全て変換する場合を説明します。</p>
 
 <ol>
 <li> httpd.confに以下を追加します。
-<div id="doc1_184" class="caption">httpd.conf</div>
+<div id="doc1_180" class="caption">httpd.conf</div>
 <pre class="program" style="margin-top:0">
 #====================================================================================
 # モジュールをApache2.0にロード
@@ -1028,12 +1034,12 @@ ChxjConvertRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;NONE&quot;
 <li> apacheの再起動。</ol>
 
 
-<h3 id="doc1_193">php等の出力結果が変換対象の場合</h3>
+<h3 id="doc1_189">php等の出力結果が変換対象の場合</h3>
 
 
 <ol>
 <li> httpd.confに以下を追加します
-<div id="doc1_199" class="caption">httpd.conf</div>
+<div id="doc1_195" class="caption">httpd.conf</div>
 <pre class="program" style="margin-top:0">
 #====================================================================================
 # モジュールをApache2.xにロード
@@ -1063,12 +1069,12 @@ ChxjConvertRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 <li> apacheの再起動。</ol>
 
 
-<h3 id="doc1_208">xoopsを使用し、且つwordpress、bwikiを使用している場合</h3>
+<h3 id="doc1_204">xoopsを使用し、且つwordpress、bwikiを使用している場合</h3>
 
 
 <ol>
 <li> httpd.confに以下を追加します
-<div id="doc1_214" class="caption">httpd.conf</div>
+<div id="doc1_210" class="caption">httpd.conf</div>
 <pre class="program" style="margin-top:0">
 #====================================================================================
 # モジュールをApache2.xにロード
@@ -1138,13 +1144,13 @@ ChxjConvertRule &quot;^/.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 <li> apacheの再起動。</ol>
 
 
-<h3 id="doc1_223">画像自動変換機能を使用する場合</h3>
+<h3 id="doc1_219">画像自動変換機能を使用する場合</h3>
 
 
 <ol>
 <li> <p>httpd.confに以下を追加します。下記は、URIが/imgで始まる全ての画像に対して動作するようmod_chxjに指示しています。</p>
 
-<div id="doc1_229" class="caption">httpd.conf</div>
+<div id="doc1_225" class="caption">httpd.conf</div>
 <pre class="program" style="margin-top:0">
 &lt;Location /img&gt;
 ChxjImageEngine On
@@ -1161,16 +1167,25 @@ ChxjImageCacheLimit 10485760
 <p><br></br> <br></br></p>
 <li> <p>ChxjImageCacheDir<br></br> mod_chxj画像変換ハンドラが使用する変換後の画像をおいておくディレクトリを指定します。デフォルトは/tmp。</p>
 
-<div id="doc1_247" class="caption">ChxjImageCacheDir</div>
+<div id="doc1_243" class="caption">ChxjImageCacheDir</div>
 <pre class="program" style="margin-top:0">
       ChxjImageCacheDir /tmp
       
 </pre>
 
 <p>mod_chxjに画像変換キャッシュとして/tmpを使用するよう指示します。<br></br><br></br></p>
+<li> <p>ChxjImageCacheLimit<br></br> mod_chxj画像変換ハンドラが使用する変換後の画像をおいておくディレクトリの許容量を指定します。単位はbyte。</p>
+
+<div id="doc1_255" class="caption">ChxjImageCacheLimit</div>
+<pre class="program" style="margin-top:0">
+      ChxjImageCacheLimit 1024
+      
+</pre>
+
+<p>mod_chxjに画像変換キャッシュ最大サイズとして1kbyteと指定。※このとき変換結果が1kbyte以上あるような場合にはINTERNAL_SERVER_ERRORを返します。十分な領域を確保するか、画像サイズを小さくしてください。<br></br><br></br></p>
 <li> <p>ChxjImageCopyright<br></br> mod_chxjの画像変換ハンドラに、転送禁止設定を行うよう指示します。パラメータとして任意の文字列をとります。ChxjImageCopyrightディレクティブで指定された文字列は、それぞれのイメージのコメント部に埋め込まれます。</p>
 
-<div id="doc1_259" class="caption">ChxjImageCopyright</div>
+<div id="doc1_267" class="caption">ChxjImageCopyright</div>
 <pre class="program" style="margin-top:0">
       ChxjImageCopyright &quot;A.Konno&quot;
       
@@ -1179,7 +1194,7 @@ ChxjImageCacheLimit 10485760
 <p>mod_chxjに転送禁止設定を行うよう指示しています。変換後イメージのコメント部分には、キャリア毎に以下の文字列を埋め込みます。</p>
 <p><b>AU の場合</b></p>
 
-<div id="doc1_265" class="caption">AU</div>
+<div id="doc1_273" class="caption">AU</div>
 <pre class="program" style="margin-top:0">
        kddi_copyright=on,A.Konno
        
@@ -1187,34 +1202,25 @@ ChxjImageCacheLimit 10485760
 
 <p><b>DoCoMoの場合</b></p>
 
-<div id="doc1_271" class="caption">DoCoMo</div>
+<div id="doc1_279" class="caption">DoCoMo</div>
 <pre class="program" style="margin-top:0">
 copy=&quot;NO&quot;,A.Konno
 </pre>
 
 <p><b>SoftBank/Vodafone</b>の場合は、レスポンスヘッダに</p>
 
-<div id="doc1_277" class="caption">SoftBank/Vodafone/J-PHONE</div>
+<div id="doc1_285" class="caption">SoftBank/Vodafone/J-PHONE</div>
 <pre class="program" style="margin-top:0">
          x-jphone-copyright:no-transfer
        
 </pre>
 
-<p>を埋め込みます。<span class="note"><a href="#doc1_280" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="SoftBank/Vodafoneの場合は、リクエストＵＲＬの最後が.pnzか、.jpzで終わるようにダミーを付けなければなりません。"><sup>(6)</sup></a></span></p>
-<li> <p>ChxjImageCacheLimit<br></br> mod_chxj画像変換ハンドラが使用する変換後の画像をおいておくディレクトリの許容量を指定します。単位はbyte。</p>
-
-<div id="doc1_288" class="caption">ChxjImageCacheLimit</div>
-<pre class="program" style="margin-top:0">
-      ChxjImageCacheLimit 1024
-      
-</pre>
-
-<p>mod_chxjに画像変換キャッシュ最大サイズとして1kbyteと指定。※このとき変換結果が1kbyte以上あるような場合にはINTERNAL_SERVER_ERRORを返します。十分な領域を確保するか、画像サイズを小さくしてください。<br></br><br></br></p></ol></ol>
+<p>を埋め込みます。<span class="note"><a href="#doc1_288" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="SoftBank/Vodafoneの場合は、リクエストＵＲＬの最後が.pnzか、.jpzで終わるようにダミーを付けなければなりません。"><sup>(5)</sup></a></span></p></ol></ol>
 
 
 <div class="footnote">
 <ol>
-<li id="doc1_280" value="6"> SoftBank/Vodafoneの場合は、リクエストＵＲＬの最後が.pnzか、.jpzで終わるようにダミーを付けなければなりません。</ol>
+<li id="doc1_288" value="5"> SoftBank/Vodafoneの場合は、リクエストＵＲＬの最後が.pnzか、.jpzで終わるようにダミーを付けなければなりません。</ol>
 </div>
 
 
@@ -1235,7 +1241,7 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 <li> <p>ChxjConvertRule<br></br>サーバサイドの文字コードを指定します。ここに、EUC-JPと指定してあった場合は、EUC-JPからCP932に変換後、クライアントに出力されます。省略した場合はNONE</p>
 
 <ol>
-<li> 変換エンジン動作指示命令<br></br>ChxjConvertRule ==&gt;ディレクティブ<br></br>&quot;^/chxj.+$&quot; ==&gt; Perl互換のURIパターン<br></br>EngineOn ==&gt;変換エンジンを動作させる指示。動作させたく無い場合は&quot;EngineOff&quot;<br></br> EUC-JP ==&gt;サーバ側の文字コード。（NONEを指定した場合は文字コード変換しない)<br></br> <br></br> EUC-JPからCP932に文字コード変換します。(libiconvに依存します)<br></br></ol>
+<li> 変換エンジン動作指示命令<br></br>ChxjConvertRule ==&gt;ディレクティブ<br></br>&quot;^/chxj.+$&quot; ==&gt; Perl互換のURIパターン<br></br>EngineOn ==&gt;変換エンジンを動作させる指示。動作させたく無い場合は&quot;EngineOff&quot;<br></br> EUC-JP ==&gt;サーバ側の文字コード。（NONEを指定した場合は文字コード変換しない)<br></br> <br></br> EUC-JPからCP932に文字コード変換します。(glibc/iconvに依存します)<br></br></ol>
 
 <p><br></br><br></br></p></ol></ol>
 
@@ -1245,7 +1251,7 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 
 <ol>
 <li> ChxjLoadDeviceData<br></br>デバイス定義ファイルを指定します。
-<div id="doc1_352" class="caption">ex)</div>
+<div id="doc1_348" class="caption">ex)</div>
 <pre class="program" style="margin-top:0">
     ChxjLoadDeviceData /etc/apache2/device.xml
   
@@ -1257,32 +1263,32 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
   
 </pre>
 <li> ChxjImageEngine<br></br>画像変換エンジンを有効にします。パラメータとしてOnとOffを指定できます。DefaultはOffです。
-<div id="doc1_368" class="caption">ex)</div>
+<div id="doc1_364" class="caption">ex)</div>
 <pre class="program" style="margin-top:0">
     ChxjImageEngine On
   
 </pre>
 <li> ChxjImageCacheDir<br></br>イメージの一時ファイル保存場所を指定します。
-<div id="doc1_376" class="caption">ex)</div>
+<div id="doc1_372" class="caption">ex)</div>
 <pre class="program" style="margin-top:0">
     ChxjImageCacheDir   /tmp
   
 </pre>
 <li> ChxjImageCacheLimit<br></br>イメージの一時ファイル保存許容量を指定します。下記は1MByteの例。
-<div id="doc1_384" class="caption">ex)</div>
+<div id="doc1_380" class="caption">ex)</div>
 <pre class="program" style="margin-top:0">
     ChxjImageCacheLimit   1048576
   
 </pre>
 <li> ChxjImageCopyright<br></br>イメージに著作権情報を付与します。
-<div id="doc1_392" class="caption">ex)</div>
+<div id="doc1_388" class="caption">ex)</div>
 <pre class="program" style="margin-top:0">
     ChxjImageCopyright   &quot;chosakuken jyoho&quot;
   
 </pre>
 <li> ChxjConvertRule<br></br> HTML変換エンジンの適用ルールを記述します。本ディレクティブを使用し、変換エンジンのOn|Offを指定します。DefaultはOFFです。また、ルールは記述された順番に評価し、マッチするものがあれば、その時点で対象ルールを適用します。パラメータは3つ必要です。下記にパラメータを記します。
 <div class="table">
-<table id="doc1_400" class="data" rules="groups">
+<table id="doc1_396" class="data" rules="groups">
 <caption>パラメータ</caption>
 <colgroup span="2">
 <col>
@@ -1314,7 +1320,7 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 </div>
 
 
-<div id="doc1_446" class="caption">ex)</div>
+<div id="doc1_442" class="caption">ex)</div>
 <pre class="program" style="margin-top:0">
     ChxjConvertRule &quot;^/chxj.+$/&quot; EngineOn EUC-JP
   
@@ -1332,7 +1338,7 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 <p>詳細は「Cookieシミュレート機能」の項を参照ください。</p>
 <li> <p>ChxjCookieTimeout<br></br>クッキーを使用する場合に指定します。クッキーの保持期間を秒単位で指定します。指定しない場合は、1800秒でクッキーデータを破棄します。</p>
 
-<div id="doc1_462" class="caption">ex)</div>
+<div id="doc1_458" class="caption">ex)</div>
 <pre class="program" style="margin-top:0">
     &lt;Location /&gt;
       ChxjCookieTimeout 10
@@ -1343,7 +1349,7 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 <p>詳細は「Cookieシミュレート機能」の項を参照ください。</p>
 <li> ChxjCookieStoreType<br></br>クッキー保存先を指定します。指定できるものは以下のとおり。
 <div class="table">
-<table id="doc1_470" class="data" rules="groups">
+<table id="doc1_466" class="data" rules="groups">
 <caption>保存先</caption>
 <colgroup span="3">
 <col>
@@ -1378,7 +1384,7 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 </div>
 <li> <p>ChxjCookieMysqlHost<br></br> MySQLサーバの動作するホストを指定します。</p>
 
-<div id="doc1_528" class="caption">ChxjCookieMysqlHostの例</div>
+<div id="doc1_524" class="caption">ChxjCookieMysqlHostの例</div>
 <pre class="program" style="margin-top:0">
          ChxjCookieMysqlHost &quot;localhost&quot;
       
@@ -1387,7 +1393,7 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 <p>詳細は「Cookieシミュレート機能」の項を参照ください。</p>
 <li> <p>ChxjCookieMysqlPort<br></br> MySQLサーバのポート番号を指定します。</p>
 
-<div id="doc1_536" class="caption">ChxjCookieMysqlPortの例</div>
+<div id="doc1_532" class="caption">ChxjCookieMysqlPortの例</div>
 <pre class="program" style="margin-top:0">
          ChxjCookieMysqlPort 3306
       
@@ -1405,7 +1411,7 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 <p>詳細は「Cookieシミュレート機能」の項を参照ください。</p>
 <li> <p>ChxjCookieMysqlUsername<br></br> MySQLサーバに接続する際に使用するユーザ名を指定します。</p>
 
-<div id="doc1_552" class="caption">ChxjCookieMysqlUsernameの例</div>
+<div id="doc1_548" class="caption">ChxjCookieMysqlUsernameの例</div>
 <pre class="program" style="margin-top:0">
          ChxjCookieMysqlUsername &quot;roottest&quot;
       
@@ -1441,7 +1447,7 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 <p>詳細は「Cookieシミュレート機能」の項を参照ください。</p>
 <li> <p>ChxjCookieMysqlTablename<br></br> MySQLのクッキーを保存するテーブル名を指定します。</p>
 
-<div id="doc1_584" class="caption">ChxjCookieMysqlTablenameの例</div>
+<div id="doc1_580" class="caption">ChxjCookieMysqlTablenameの例</div>
 <pre class="program" style="margin-top:0">
          ChxjCookieMysqlTablename  &quot;chxj_cookie&quot;
       
@@ -1450,7 +1456,7 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 <p>上記のように&quot;chxj_cookie&quot;と指定すると、実際に作成されるテーブルは、chxj_cookieとchxj_cookie_expireテーブルの2つになります。詳細は「Cookieシミュレート機能」の項を参照ください。</p>
 <li> <p>ChxjCookieMemcacheHost<br></br> memcachedの動作するホストを指定します。</p>
 
-<div id="doc1_592" class="caption">ChxjCookieMemcacheHostの例</div>
+<div id="doc1_588" class="caption">ChxjCookieMemcacheHostの例</div>
 <pre class="program" style="margin-top:0">
          ChxjCookieMemcacheHost &quot;localhost&quot;
       
@@ -1473,7 +1479,7 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 <p class="first_ja">変換可能なCHTMLタグは以下のとおりです。</p>
 
 <div class="table">
-<table id="doc1_609" class="data" rules="groups">
+<table id="doc1_605" class="data" rules="groups">
 <caption>対応タグ一覧</caption>
 <colgroup span="7">
 <col>
@@ -1692,7 +1698,7 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 <td align="center">○</td>
 <td align="center">○</td>
 <td align="center">○</td>
-<td align="left"><span class="note"><a href="#doc1_1165" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="必ず閉じてください。そのうち対応します。"><sup>(12)</sup></a></span></td>
+<td align="left"><span class="note"><a href="#doc1_1160" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="必ず閉じてください。そのうち対応します。"><sup>(7)</sup></a></span></td>
 </tr>
 <tr class="even">
 <td></td>
@@ -2375,10 +2381,10 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 
 <p>そして、上記のコードを、mod_chxj変換エンジンが処理するはずであるところに設置すれば完了です。</p>
 
-<h2 id="doc1_2120">Cookieシミュレート機能(EXPERIMENTAL)</h2>
+<h2 id="doc1_1498">Cookieシミュレート機能</h2>
 
 
-<h3 id="doc1_2122">Cookieシミュレート機能(EXPERIMENTAL)</h3>
+<h3 id="doc1_1500">Cookieシミュレート機能</h3>
 
 <p class="first_ja">Cookieを受け付けない（無視する）端末のためにCookieをシミュレートします。本機能を有効にするためにはChxjConvertRuleディレクティブを使用する必要があります。ChxjConvertRuleディレクティブの第２パラメータにCookieOnを指定します。</p>
 
@@ -2391,90 +2397,90 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 
 <h3 id="doc1_2128">One-Time ID</h3>
 
-<p class="first_ja">Cookieシミュレートでは、aタグ、imgタグ、formタグのURL部にOne-Time IDを埋め込むことで実現します。そのため、ユーザがブラウザの戻るボタン等で戻った場合はCookieを取得できなくなります。</p>
+<p class="first_ja">Cookieシミュレートでは、aタグ、imgタグ、formタグのURL部にOne-Time IDを埋め込むことで実現します。そのため、ユーザがブラウザの戻るボタン等で戻った場合はCookieを取得できなくなります。One-Time IDを使用する必要が無い場合、またはOne-Time IDを使用したくない場合には、CookieLazyModeを使用することで毎回同一IDを発行させることができます。</p>
 
-<h3 id="doc1_2131">Cookieの保存場所</h3>
+<h3 id="doc1_1509">Cookieの保存場所</h3>
 
 <p class="first_ja">Cookieの内容はサーバ側に保存されます。保存先にはdbm、memcached、mysqlが選択できます。<br></br><font color="#ff0000">注意) memcached、mysqlを保存先に選択する場合はconfigure時にそれぞれ指定する必要があります</font><br></br>保存先の指定にはChxjCookieStoreTypeディレクティブを使用します。</p>
 
-<div id="doc1_2139" class="caption">ChxjCookieStoreTypeでDBMを指定した例</div>
+<div id="doc1_1517" class="caption">ChxjCookieStoreTypeでDBMを指定した例</div>
 <pre class="program" style="margin-top:0">
     ChxjCookieStoreType &quot;dbm&quot;
   
 </pre>
 
 
-<div id="doc1_2142" class="caption">ChxjCookieStoreTypeでMySQLを指定した例</div>
+<div id="doc1_1520" class="caption">ChxjCookieStoreTypeでMySQLを指定した例</div>
 <pre class="program" style="margin-top:0">
     ChxjCookieStoreType &quot;mysql&quot;
   
 </pre>
 
 
-<div id="doc1_2145" class="caption">ChxjCookieStoreTypeでmemcacheを指定した例</div>
+<div id="doc1_1523" class="caption">ChxjCookieStoreTypeでmemcacheを指定した例</div>
 <pre class="program" style="margin-top:0">
     ChxjCookieStoreType &quot;memcache&quot;
   
 </pre>
 
 <p>上記ChxjCookieStoreTypeが指定されない場合はdbmが選択されます。<br></br></p>
-<p>デフォルトではDBMを使用し、保存ディレクトリはChxjCookieDirディレクティブを使用することで指定することができます。指定しなかった場合は、/tmpに保存されます。</p>
+<p>dbmを使用する場合は、ChxjCookieDirディレクティブを指定し、保存ディレクトリを指定します。指定しなかった場合は/tmpに保存されます。</p>
 
-<div id="doc1_2150" class="caption">ChxjCookieDirの例</div>
+<div id="doc1_1528" class="caption">ChxjCookieDirの例</div>
 <pre class="program" style="margin-top:0">
     ChxjCookieDir /var/abc
   
 </pre>
 
-<p>DBMの代わりにMySQLやmemcachedを指定することもできます。その際は、ChxjCookieDirは指定する必要はありません。MySQLを使用するには、configure時にMySQL COOKIE機能を有効にして、コンパイルする必要があります。<span class="note"><a href="#doc1_2153" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="Buildの項参照"><sup>(26)</sup></a></span>memcachedを使用するには、configure時にMEMCACHE COOKIE機能を有効にして、コンパイルする必要があります。<span class="note"><a href="#doc1_2156" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="Buildの項参照"><sup>(27)</sup></a></span></p>
+<p>DBMの代わりにMySQLやmemcachedを指定することもできます。その際は、ChxjCookieDirは指定する必要はありません。MySQLを使用するには、configure時にMySQL COOKIE機能を有効にして、コンパイルする必要があります。<span class="note"><a href="#doc1_1531" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="Buildの項参照"><sup>(11)</sup></a></span>memcachedを使用するには、configure時にMEMCACHE COOKIE機能を有効にして、コンパイルする必要があります。<span class="note"><a href="#doc1_1534" onmouseover="hilightSelflink(this)" onmouseout="normal(this)" title="Buildの項参照"><sup>(12)</sup></a></span></p>
 <p>MySQLを使用する場合にはChxjCookieStoreTypeディレクティブのほかに、以下のディレクティブを指定する必要もあります。</p>
 
 <ol>
 <li> ChxjCookieMysqlHost<br></br> MySQLサーバの動作するホストを指定します。
-<div id="doc1_2165" class="caption">ChxjCookieMysqlHostの例</div>
+<div id="doc1_1543" class="caption">ChxjCookieMysqlHostの例</div>
 <pre class="program" style="margin-top:0">
          ChxjCookieMysqlHost &quot;localhost&quot;
       
 </pre>
 <li> ChxjCookieMysqlPort<br></br> MySQLサーバのポート番号を指定します。
-<div id="doc1_2173" class="caption">ChxjCookieMysqlPortの例</div>
+<div id="doc1_1551" class="caption">ChxjCookieMysqlPortの例</div>
 <pre class="program" style="margin-top:0">
          ChxjCookieMysqlPort 3306
       
 </pre>
 <li> ChxjCookieMysqlDatabase<br></br> MySQLサーバのデータベース名を指定します。
-<div id="doc1_2181" class="caption">ChxjCookieMysqlDatabaseの例</div>
+<div id="doc1_1559" class="caption">ChxjCookieMysqlDatabaseの例</div>
 <pre class="program" style="margin-top:0">
          ChxjCookieMysqlDatabase &quot;test_db&quot;
       
 </pre>
 <li> ChxjCookieMysqlUsername<br></br> MySQLサーバに接続する際に使用するユーザ名を指定します。
-<div id="doc1_2189" class="caption">ChxjCookieMysqlUsernameの例</div>
+<div id="doc1_1567" class="caption">ChxjCookieMysqlUsernameの例</div>
 <pre class="program" style="margin-top:0">
          ChxjCookieMysqlUsername &quot;roottest&quot;
       
 </pre>
 <li> ChxjCookieMysqlPassword<br></br> MySQLサーバに接続する際に使用するパスワードを指定します。
-<div id="doc1_2197" class="caption">ChxjCookieMysqlPasswordの例</div>
+<div id="doc1_1575" class="caption">ChxjCookieMysqlPasswordの例</div>
 <pre class="program" style="margin-top:0">
          ChxjCookieMysqlPassword &quot;pwtest&quot;
       
 </pre>
 <li> ChxjCookieMysqlSocketPath<br></br> MySQLのソケットパスを指定します。
-<div id="doc1_2205" class="caption">ChxjCookieMysqlSocketPathの例</div>
+<div id="doc1_1583" class="caption">ChxjCookieMysqlSocketPathの例</div>
 <pre class="program" style="margin-top:0">
          ChxjCookieMysqlSocketPath  &quot;/tmp/mysql.sock&quot;
       
 </pre>
 <li> ChxjCookieMysqlCharset<br></br> MySQLのエンコードを指定します。
-<div id="doc1_2213" class="caption">ChxjCookieMysqlCharsetの例</div>
+<div id="doc1_1591" class="caption">ChxjCookieMysqlCharsetの例</div>
 <pre class="program" style="margin-top:0">
          ChxjCookieMysqlCharset  &quot;utf8&quot;
       
 </pre>
 <li> <p>ChxjCookieMysqlTablename<br></br> MySQLのクッキーを保存するテーブル名を指定します。</p>
 
-<div id="doc1_2221" class="caption">ChxjCookieMysqlTablenameの例</div>
+<div id="doc1_1599" class="caption">ChxjCookieMysqlTablenameの例</div>
 <pre class="program" style="margin-top:0">
          ChxjCookieMysqlTablename  &quot;chxj_cookie&quot;
       
@@ -2482,17 +2488,17 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 
 <p>上記のように&quot;chxj_cookie&quot;と指定すると、実際に作成されるテーブルは、chxj_cookieとchxj_cookie_expireテーブルの2つになります。</p></ol>
 
-<p>memcachedを使用する場合にはChxjCookieStoreTypeのほかに以下のディレクティブを指定する必要もあります。</p>
+<p>memcachedを使用する場合にはChxjCookieStoreTypeディレクティブの他に以下のディレクティブを指定する必要もあります。</p>
 
 <ol>
 <li> ChxjCookieMemcacheHost<br></br> memcachedの動作するホストを指定します。
-<div id="doc1_2232" class="caption">ChxjCookieMemcacheHostの例</div>
+<div id="doc1_1610" class="caption">ChxjCookieMemcacheHostの例</div>
 <pre class="program" style="margin-top:0">
          ChxjCookieMemcacheHost &quot;localhost&quot;
       
 </pre>
 <li> ChxjCookieMemcachePort<br></br> memcachedのポート番号を指定します。
-<div id="doc1_2240" class="caption">ChxjCookieMemcachePortの例</div>
+<div id="doc1_1618" class="caption">ChxjCookieMemcachePortの例</div>
 <pre class="program" style="margin-top:0">
          ChxjCookieMemcachePort 11211
       
@@ -2501,15 +2507,15 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 
 <div class="footnote">
 <ol>
-<li id="doc1_2153" value="26"> Buildの項参照<li id="doc1_2156" value="27"> Buildの項参照</ol>
+<li id="doc1_1531" value="11"> Buildの項参照<li id="doc1_1534" value="12"> Buildの項参照</ol>
 </div>
 
 
-<h3 id="doc1_2246">Cookieの保持期間</h3>
+<h3 id="doc1_1624">Cookieの保持期間</h3>
 
 <p class="first_ja">ChxjCookieTimeoutディレクティブで保持期間を指定することができます。指定しなかった場合は1800秒でサーバに保存されているCookieは削除されます。</p>
 
-<div id="doc1_2248" class="caption">ChxjCookieTimeoutの例</div>
+<div id="doc1_1626" class="caption">ChxjCookieTimeoutの例</div>
 <pre class="program" style="margin-top:0">
     &lt;Location /&gt;
       ChxjCookieTimeout 10
@@ -2519,10 +2525,21 @@ ChxjConvRule &quot;^/chxj.+$&quot; &quot;EngineOn&quot; &quot;EUC-JP&quot;
 
 <p>上記の例は、10秒でタイムアウト(サーバから削除)するように指定しています。</p>
 
-<h2 id="doc1_2253">Refererシミュレート機能(EXPERIMENTAL)</h2>
+<h3 id="doc1_1630">CookieLazyMode</h3>
+
+<p class="first_ja">ChxjCookieLazyModeディレクティブで&quot;true&quot;を指定するとOne-Time IDを使用しないようにすることができます。Cookie用のIDは毎回同一のIDが割り振られます。以下にCookieLazyModeの例を記します。</p>
+
+<div id="doc1_1632" class="caption">ChxjCookieLazyModeの例</div>
+<pre class="program" style="margin-top:0">
+  ChxjCookieLazyMode true
+</pre>
+
+<p>true以外を指定すると通常のOne-Time IDモードになります。</p>
+
+<h2 id="doc1_1637">Refererシミュレート機能(EXPERIMENTAL)</h2>
 
 
-<h3 id="doc1_2255">Refererシミュレート機能(EXPERIMENTAL)</h3>
+<h3 id="doc1_1639">Refererシミュレート機能(EXPERIMENTAL)</h3>
 
 <p class="first_ja">DoCoMo端末などのRefererに対応していない機種のためにRefererシミュレート機能を提供します。本機能は、Cookieシミュレート機能を有効にすると、自動で有効になります(将来的には変更予定)。</p>
 </body>

@@ -17,7 +17,6 @@
 #include "qs_parse_string.h"
 #include "qs_log.h"
 
-
 /**
  * ignore space
  */

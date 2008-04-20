@@ -80,7 +80,7 @@ chxj_specified_device(request_rec *r, const char *user_agent)
 
   DBG(r, "start chxj_specified_device()");
 
-  conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  conf = chxj_get_module_config(r->per_dir_config, &chxj_module);
   if (! conf->devices) {
     DBG(r, "device_data.xml load failure");
     return returnType;
@@ -92,7 +92,6 @@ chxj_specified_device(request_rec *r, const char *user_agent)
       continue;
     }
 
-    DBG(r, "pattern is [%s]", dtl->pattern);
     if (! dtl->regexp) {
       DBG(r,"compile failed.");
       return returnType;

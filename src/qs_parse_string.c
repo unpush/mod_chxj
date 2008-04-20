@@ -17,8 +17,8 @@
 #include <stdio.h>
 #include <strings.h>
 #include <stdlib.h>
-#include "httpd.h"
-#include "http_log.h"
+
+#include "chxj_apache.h"
 #include "qs_parse_string.h"
 #include "qs_parse_tag.h"
 #include "qs_log.h"
@@ -40,26 +40,26 @@ typedef struct node_stack {
   NodeStackElement tail;
 } *NodeStack;
 
-static int s_cut_tag (const char* s, int len);
-static int s_cut_text(const char* s, int len, int script);
-static void qs_dump_node(Doc* doc, Node* node, int indent);
-static void qs_push_node(Doc* doc, Node *node, NodeStack stack);
-static Node *qs_pop_node(Doc* doc, NodeStack stack);
+static int s_cut_tag (const char *s, int len);
+static int s_cut_text(const char *s, int len, int script);
+static void qs_dump_node(Doc *doc, Node *node, int indent);
+static void qs_push_node(Doc *doc, Node *node, NodeStack stack);
+static Node *qs_pop_node(Doc *doc, NodeStack stack);
 #ifdef DUMP_NODE_STACK
 static void qs_dump_node_stack(Doc *doc, NodeStack stack);
 #endif
 static void qs_free_node_stack(Doc *doc, NodeStack stack);
-static void s_error_check(Doc *doc, Node *node, NodeStack node_stack, NodeStack err_stack);
+static void s_error_check(Doc *doc, const char *name, int line, NodeStack node_stack, NodeStack err_stack);
 
 
-Node*
-qs_parse_string(Doc* doc, const char* src, int srclen) 
+Node *
+qs_parse_string(Doc *doc, const char *src, int srclen) 
 {
   int     ii;
   int     nl_cnt = 0;
   char    encoding[256];
-  char*   osrc;
-  char*   ibuf;
+  char    *osrc;
+  char    *ibuf;
   size_t  olen;
   size_t  ilen;
   int     script_flag = 0;
@@ -73,6 +73,9 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
   memset(encoding, 0, 256);
 
   doc->now_parent_node = qs_init_root_node(doc);
+  if (! src || srclen <= 0) {
+    return doc->root_node;
+  }
   if (doc->r != NULL) {
     node_stack = apr_palloc(doc->r->pool, sizeof(struct node_stack));
     memset(node_stack, 0, sizeof(struct node_stack));
@@ -108,8 +111,7 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
         for(parse_attr = node->attr;
             parse_attr && *encoding == '\0'; 
             parse_attr = parse_attr->next) {
-          if ((*parse_attr->name == 'e' || *parse_attr->name == 'E')
-          &&   strcasecmp(parse_attr->name, "encoding") == 0) {
+          if (STRCASEEQ('e','E',"encoding",parse_attr->name)) {
             switch (*parse_attr->value) {
             case 'X':
             case 'x':
@@ -157,9 +159,9 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
   }
 
   if (strcasecmp(encoding, "NONE") != 0 && strlen(encoding) != 0) {
-    char* sv_osrc;
+    char *sv_osrc;
     olen = srclen * 4 + 1;
-    sv_osrc = osrc =(char*)apr_palloc(doc->pool, olen);
+    sv_osrc = osrc =(char *)apr_palloc(doc->pool, olen);
     memset((char*)osrc, 0, olen);
     if ((cd = iconv_open("CP932", encoding)) != (iconv_t) -1) {
       ilen = srclen;
@@ -185,13 +187,13 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
   for (ii=0; ii<srclen; ii++) {
     if (src[ii] == '\n') nl_cnt++;
     if (doc->parse_mode != PARSE_MODE_NO_PARSE 
-        && is_white_space(src[ii])) {
-
+        && is_white_space(src[ii])
+        && (doc->now_parent_node == NULL || !STRCASEEQ('p','P',"pre",doc->now_parent_node->name))) {
       continue;
     }
     if ((unsigned char)'<' == src[ii]) {
       int endpoint = s_cut_tag(&src[ii], srclen - ii);
-      Node* node   = NULL;
+      Node *node   = NULL;
       node = qs_parse_tag(doc, &src[ii], endpoint);
       node->line = nl_cnt;
 
@@ -206,33 +208,34 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
             if (STRCASEEQ('s','S',"script",&node->name[1])) {
               script_flag = 0;
             }
-            s_error_check(doc, node, node_stack, err_stack);
+            s_error_check(doc, &node->name[1], node->line, node_stack, err_stack);
           }
           else {
+            /* ignore */
             continue;
           }
         }
         else
         if (doc->parse_mode == PARSE_MODE_NO_PARSE) {
-          if ((node->name[1] == 'c' || node->name[1] == 'C')
-              &&  strcasecmp(&node->name[1], "chxj:if") == 0) {
+          if (STRCASEEQ('c','C',"chxj:if",&node->name[1]) || STRCASEEQ('p','P',"plaintext",&node->name[1])) {
             if (doc->now_parent_node->parent != NULL) {
               doc->now_parent_node = doc->now_parent_node->parent;
               doc->parse_mode = PARSE_MODE_CHTML;
+              s_error_check(doc, &node->name[1], node->line, node_stack, err_stack);
             }
           }
         }
 
-        if (doc->parse_mode != PARSE_MODE_NO_PARSE)
+        if (doc->parse_mode != PARSE_MODE_NO_PARSE) {
           continue;
-
+        }
       }
       if (*node->name == '!' && strncmp(node->name, "!--", 3) == 0) {
         /* comment tag */
         continue;
       }
       qs_add_child_node(doc,node);
-      if (has_child(node->name)) {
+      if ((has_child(node->name) && doc->parse_mode != PARSE_MODE_NO_PARSE) || STRCASEEQ('p','P',"plaintext",node->name)) {
         qs_push_node(doc, node, node_stack);
       }
 
@@ -241,37 +244,52 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
           continue;
       }
 
-      if (doc->parse_mode == PARSE_MODE_CHTML 
-          && (*node->name == 'c' || *node->name == 'C') 
-          &&  strcasecmp(node->name, "chxj:if") == 0) {
+      if (doc->parse_mode == PARSE_MODE_CHTML && STRCASEEQ('c','C',"chxj:if", node->name)) {
         Attr* parse_attr;
-
         doc->parse_mode = PARSE_MODE_NO_PARSE;
         doc->now_parent_node = node;
         for(parse_attr = node->attr;
             parse_attr; 
             parse_attr = parse_attr->next) {
-          if ((*parse_attr->name == 'p' || *parse_attr->name == 'P') 
-          &&   strcasecmp(parse_attr->name, "parse") == 0) {
-            if ((*parse_attr->value == 't' || *parse_attr->value == 'T')
-            &&   strcasecmp(parse_attr->value, "true") == 0) {
+          if (STRCASEEQ('p','P',"parse",parse_attr->name)) {
+            if (STRCASEEQ('t','T',"true",parse_attr->value)) {
               doc->parse_mode = PARSE_MODE_CHTML;
             }
           }
         }
-
       }
+      else if (doc->parse_mode == PARSE_MODE_CHTML && STRCASEEQ('p','P',"plaintext",node->name)) {
+        doc->parse_mode = PARSE_MODE_NO_PARSE;
+        doc->now_parent_node = node;
+      }
+
       if (doc->parse_mode == PARSE_MODE_CHTML && has_child(node->name)) {
         doc->now_parent_node = node;
       }
       if (STRCASEEQ('s','S',"script", node->name)) {
         script_flag = 1;
       }
+      if (doc->parse_mode == PARSE_MODE_CHTML && node->closed_by_itself) {
+        if (has_child(node->name)) {
+          if (doc->now_parent_node->parent != NULL) {
+            doc->now_parent_node = doc->now_parent_node->parent;
+            doc->parse_mode = PARSE_MODE_CHTML;
+          }
+          if (STRCASEEQ('s','S',"script",node->name)) {
+            script_flag = 0;
+          }
+          s_error_check(doc, node->name, node->line, node_stack, err_stack);
+        }
+        else {
+          /* ignore */
+          continue;
+        }
+      }
     }
     else {
       /* TEXT */
       int endpoint = s_cut_text(&src[ii], srclen - ii, script_flag);
-      Node* node = qs_new_tag(doc);
+      Node *node = qs_new_tag(doc);
       node->value = (char*)apr_palloc(doc->pool,endpoint+1);
       node->name  = (char*)apr_palloc(doc->pool,4+1);
       node->otext = (char*)apr_palloc(doc->pool,endpoint+1);
@@ -300,7 +318,7 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
   qs_dump_node_stack(doc, node_stack);
 #endif
   {
-    Node* prevNode;
+    Node *prevNode;
     for (prevNode = qs_pop_node(doc,node_stack);
          prevNode;
          prevNode = qs_pop_node(doc, node_stack)) {
@@ -319,14 +337,14 @@ qs_parse_string(Doc* doc, const char* src, int srclen)
 
 
 static void
-s_error_check(Doc *doc, Node *node, NodeStack node_stack, NodeStack err_stack) 
+s_error_check(Doc *doc, const char *name, int line, NodeStack node_stack, NodeStack err_stack) 
 {
   Node *prevNode;
   int err = 0;
   for (prevNode = qs_pop_node(doc,node_stack);
        prevNode;
        prevNode = qs_pop_node(doc, node_stack)) {
-    if (prevNode && strcasecmp(prevNode->name, &node->name[1]) != 0) {
+    if (prevNode && strcasecmp(prevNode->name, name) != 0) {
       qs_push_node(doc, prevNode, err_stack);
       err++;
       continue;
@@ -337,9 +355,9 @@ s_error_check(Doc *doc, Node *node, NodeStack node_stack, NodeStack err_stack)
     Node *tmpNode = qs_pop_node(doc,node_stack);
     if (tmpNode == NULL && err != 1) {
       if (doc->r) 
-        ERR(doc->r, "tag parse error (perhaps, miss spell). tag_name:[%s] line:[%d]", &node->name[1], node->line);
+        ERR(doc->r, "tag parse error (perhaps, miss spell). tag_name:[%s] line:[%d]", name, line);
       else
-        fprintf(stderr, "error :tag parse error (perhaps, miss spell). tag_name:[%s] line:[%d]\n", &node->name[1], node->line);
+        fprintf(stderr, "error :tag parse error (perhaps, miss spell). tag_name:[%s] line:[%d]\n", name, line);
       for (prevNode = qs_pop_node(doc,err_stack);
            prevNode;
            prevNode = qs_pop_node(doc, err_stack)) {
@@ -484,19 +502,20 @@ s_cut_text(const char* s, int len, int script)
 }
 
 
-Node*
-qs_init_root_node(Doc* doc) 
+Node *
+qs_init_root_node(Doc *doc) 
 {
   doc->root_node = (Node*)apr_palloc(doc->pool,sizeof(struct Node));
-  if (doc->root_node == NULL) 
+  if (doc->root_node == NULL) {
     QX_LOGGER_FATAL("Out Of Memory");
+  }
 
   doc->root_node->next   = NULL;
   doc->root_node->parent = NULL;
   doc->root_node->child  = NULL;
   doc->root_node->attr   = NULL;
 
-  doc->root_node->name   = (char*)apr_palloc(doc->pool,5);
+  doc->root_node->name   = (char*)apr_palloc(doc->pool, 5);
   if (doc->root_node->name == NULL) {
     QX_LOGGER_FATAL("Out Of Memory");
   }

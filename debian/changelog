@@ -1,16 +1,240 @@
-libapache2-mod-chxj (0.8.3-1) unstable; urgency=high
+libapache2-mod-chxj (0.11.0-1) unstable; urgency=low
+
+  * Fixed bug.
+    - chxj_encoding and chxj_rencoding invalid destlen.
+    - <p>a</p> ==> <p></p>a convertion defect.
+    - The line feed code is disregarded at <pre> tag. 
+
+  * Added Features.
+    - Added <blockquote> tag to CHTML1.0 converter.
+    - Added <br> tag clear attribute to CHTML1.0 converter.
+    - Added <dir> tag to CHTML1.0 converter.
+    - Added <dl> tag to CHTML1.0 converter.
+    - Added <dt> tag to CHTML1.0 converter.
+    - Added <dd> tag to CHTML1.0 converter.
+    - Added <menu> tag to CHTML1.0 converter.
+    - Added <p align> attribute to CHTML1.0 converter.
+    - Added <plaintext> tag to CHTML1.0 converter. (no parse mode)
+    - Added <blockquote> tag to CHTML2.0 converter.
+    - Added <dl> tag to CHTML2.0 converter.
+    - Added <dt> tag to CHTML2.0 converter.
+    - Added <dd> tag to CHTML2.0 converter.
+    - Added <h1 align> attribute to CHTML2.0 converter.
+    - Added <h2 align> attribute to CHTML2.0 converter.
+    - Added <h3 align> attribute to CHTML2.0 converter.
+    - Added <h4 align> attribute to CHTML2.0 converter.
+    - Added <h5 align> attribute to CHTML2.0 converter.
+    - Added <h6 align> attribute to CHTML2.0 converter.
+    - Added <li type> attribute to CHTML2.0 converter.
+    - Added <li value> attribute to CHTML2.0 converter.
+    - Added <menu> tag to CHTML2.0 converter.
+    - Added <ol type> attribute to CHTML2.0 converter.
+    - Added <ol start> attribute to CHTML2.0 converter.
+    - Added <p align> attribute to CHTML2.0 converter.
+    - Added <textarea accesskey> attribute to CHTML2.0 converter.
+    - Added <textarea istyle> attribute to CHTML2.0 converter.
+    - Added <blink> tag to CHTML2.0 converter.
+    - Added <marquee> tag to CHTML2.0 converter.
+    - Added <plaintext> tag to CHTML2.0 converter. (no parse mode)
+    - Added <blockquote> tag to CHTML3.0 converter.
+    - Added <dir> tag to CHTML3.0 converter.
+    - Added <dl> tag to CHTML3.0 converter.
+    - Added <dt> tag to CHTML3.0 converter.
+    - Added <dd> tag to CHTML3.0 converter.
+    - Added <h1 align> attribute to CHTML3.0 converter.
+    - Added <h2 align> attribute to CHTML3.0 converter.
+    - Added <h3 align> attribute to CHTML3.0 converter.
+    - Added <h4 align> attribute to CHTML3.0 converter.
+    - Added <h5 align> attribute to CHTML3.0 converter.
+    - Added <h6 align> attribute to CHTML3.0 converter.
+    - Added <blink> tag to CHTML3.0 converter.
+    - Added <marquee> tag to CHTML3.0 converter.
+    - Added <ol type> attribute to CHTML3.0 converter.
+    - Added <ol start> attribute to CHTML3.0 converter.
+    - Added <p align> attribute to CHTML3.0 converter.
+    - Added <textarea accesskey> attribute to CHTML3.0 converter.
+    - Added <textarea istyle> attribute to CHTML3.0 converter.
+    - Added <li type> attribute to CHTML3.0 converter.
+    - Added <li value> attribute to CHTML3.0 converter.
+    - Added <menu> tag to CHTML3.0 converter.
+    - Added <plaintext> tag to CHTML3.0 converter. (no parse mode)
+    - Added <blockquote> tag to au XHTML converter.
+    - Added <dir> tag to au XHTML converter.
+    - Added <dl> tag to au XHTML converter.
+    - Added <dt> tag to au XHTML converter.
+    - Added <dd> tag to au XHTML converter.
+    - Added <h1 align> attribute to au XHTML converter.
+    - Added <h2 align> attribute to au XHTML converter.
+    - Added <h3 align> attribute to au XHTML converter.
+    - Added <h4 align> attribute to au XHTML converter.
+    - Added <h5 align> attribute to au XHTML converter.
+    - Added <h6 align> attribute to au XHTML converter.
+    - Added <hr align> attribute to au XHTML converter.
+    - Added <hr size> attribute to au XHTML converter.
+    - Added <hr width> attribute to au XHTML converter.
+    - Added <li type> attribute to au XHTML converter.
+    - Added <li value> attribute to au XHTML converter.
+    - Added <menu> tag to au XHTML converter.
+    - Added <ol type> attribute to au XHTML converter.
+    - Added <ol start> attribute to au XHTML converter.
+    - Added <plaintext> tag to au XHTML converter. (no parse mode)
+    - Added <textarea accesskey> attribute to au XHTML converter.
+    - Added <textarea istyle> attribute to au XHTML converter.
+    - Added <plaintext> tag to au XHTML converter. (no parse mode)
+    - Added <blockquote> tag to au HDML converter.
+    - Added <dir> tag to au HDML converter.
+    - Added <dl> tag to au HDML converter.
+    - Added <dt> tag to au HDML converter.
+    - Added <dd> tag to au HDML converter.
+    - Added <h1 align> attribute for au HDML converter.
+    - Added <h2 align> attribute for au HDML converter.
+    - Added <h3 align> attribute for au HDML converter.
+    - Added <h4 align> attribute for au HDML converter.
+    - Added <h5 align> attribute for au HDML converter.
+    - Added <h6 align> attribute for au HDML converter.
+    - Added <menu> tag to au HDML converter.
+    - Added <p align> attribute to au HDML converter.
+    - Added <plaintext> tag to au HDML converter. (no parse mode)
+    - Added <pre> tag to au HDML converter. 
+    - Added <textarea> attribute to au HDML converter.
+    - Added <blockquote> tag to SoftBank HTML converter.
+    - Added <br clear> attribute to SoftBank HTML converter.
+    - Added <dir> tag to SoftBank HTML converter.
+    - Added <dl> tag to SoftBank HTML converter.
+    - Added <dt> tag to SoftBank HTML converter.
+    - Added <dd> tag to SoftBank HTML converter.
+    - Added <h1 align> attribute for SoftBank HTML converter.
+    - Added <h2 align> attribute for SoftBank HTML converter.
+    - Added <h3 align> attribute for SoftBank HTML converter.
+    - Added <h4 align> attribute for SoftBank HTML converter.
+    - Added <h5 align> attribute for SoftBank HTML converter.
+    - Added <h6 align> attribute for SoftBank HTML converter.
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Sat, 19 Apr 2008 16:44:57 +0900
+
+libapache2-mod-chxj (0.10.5-1) unstable; urgency=low
+
+  * Fixed bug.
+    - the value of the script tag is displayed.
+    - the value of the object tag is displayed.
+
+ -- Atsushi Konno <konn@users.sourceforege.jp>  Fri, 18 Apr 2008 22:25:55 +0900
+
+libapache2-mod-chxj (0.10.4-1) unstable; urgency=low
+
+  * Fixed bug.
+    - Disregarded the tag did not know. 
+    - The tag closing by itself
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Fri, 18 Apr 2008 03:13:27 +0900
+
+libapache2-mod-chxj (0.10.3-1) unstable; urgency=low
+
+  * Fixed bug.
+      - Cookie ID is not given, except when Content-type is text/html and
+        application/xhtml+xml.  (Reported by bayside. Thanks!)
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Thu, 10 Apr 2008 23:30:52 +0900
+
+libapache2-mod-chxj (0.10.2-1) unstable; urgency=low
+
+  * Fixed bug. 
+    - cookie ID is not added when redirect.(reported by bayside)
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Tue,  1 Apr 2008 23:47:26 +0900
+
+libapache2-mod-chxj (0.10.1-1) unstable; urgency=low
+
+  * Fixed bug.
+    - forgot to do -1 in the string length specification part though sizeof was used with STRNCASEEQ. 
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Tue,  1 Apr 2008 19:08:27 +0900
+
+libapache2-mod-chxj (0.10.0-1) unstable; urgency=low
+
+  * Added Features. 
+    - Add cookie path validator.
+    - Add cookie domain validator.
+    - Add cookie expires validator.
+    - Add cookie secure validator.
+    - Add content-type ``application/xhtml+xml''
+    - use Buffering.
+    - Added Cookie Lazy ID mode.
+    - Cookie simulator(delete experimental)
+  * Fixed bug.
+    - Parsing is abnormal of the comment tag.
+    - Parsing is abnormal of the script tag.
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Mon, 31 Mar 2008 17:58:05 +0900
+
+libapache2-mod-chxj (0.9.0-1) unstable; urgency=low
+
+  * Added Features
+    - Cookie can have been recorded in MySQL. 
+    - Cookie can have been recorded in memcached. 
+  * Fixed Bug
+    - When mpeg is downloaded, it memory a large amount of consumes it.
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Mon, 24 Mar 2008 00:57:55 +0900
+
+libapache2-mod-chxj (0.8.7-1) unstable; urgency=low
 
   * Fixed Bug
     - The image conversion is not operated at the access by PC.
+    - Using AC_FUNC_MALLOC by mistake.
+      AC_FUNC_MALLOC is neatly used because it is too good though
+      it is not necessary.
+      AC_FUNC_MALLOC reacts for CentOS due to the bug of autoconf2.59.
+    - When ap_regex.h is not found, pcre.h is used. In that case, to use
+      pcre-config.
+  * Changed Features
+    - Abolition of libiconv. use glibc/iconv.
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Mon, 17 Mar 2008 23:02:33 +0900
+
+libapache2-mod-chxj (0.8.6-1) unstable; urgency=low
+
+  * Added error messages
+    - the error message of the parsing machine of HTML.
+    - the error message when the character-code is converted.
+  * Fixed Bug
+    - forgotten that apache2.0.x doesn't have ap_regex.h. (reported by R)
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Mon, 17 Mar 2008 23:02:13 +0900
+
+libapache2-mod-chxj (0.8.5-1) unstable; urgency=low
+
+  * Fixed Bug
+    - when the image of non-correspondence is converted, and aborted.
+  * Changed features.
+    - Being able to convert the image changed only to jpeg, png, and gif. 
+
+ -- Atsushi Konno <konn@users.sorceforge.jp>  Thu, 14 Feb 2008 20:53:02 +0900
+
+libapache2-mod-chxj (0.8.4-1) unstable; urgency=low
+
+  * Fixed Bug that deb package doesn't correspond to Apache2.2. 
+  * Added features: 
+    - ``ChxjImageCacheLimit'' directive.
+    - The serial number of "image workfile name" is deleted. 
+  * Added Document:
+    ``ChxjImageCacheLimit'' directive.
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Tue,  5 Feb 2008 20:33:16 +0900
+
+libapache2-mod-chxj (0.8.3-1) unstable; urgency=high
+
+  * Fixed Bug  
+    - The image conversion is not operated at the access by PC. 
     - Bug that doesn't erase cache file.
       + default limit size is 10MByte.
-        but the setting cannot be changed now.
+	    but the setting cannot be changed now. 
 
  -- Atsushi Konno <konn@users.sourceforge.jp>  Mon,  4 Feb 2008 12:53:21 +0900
 
 libapache2-mod-chxj (0.8.2-1) unstable; urgency=low
 
-  * Fixed Bug to which compile error occurs when A is specified.
+  * Fixed Bug to which compile error occurs when A is specified. 
 
  -- Atsushi Konno <konn@users.sourceforge.jp>  Sun,  3 Feb 2008 01:40:33 +0900
 
@@ -22,7 +246,7 @@ libapache2-mod-chxj (0.8.1-1) unstable; urgency=low
   * Changed so that ``Configure'' might run well by CentOS5.1.
   * Fixed Bug that Segmentation Falt had occurred when browser inforamtion was
     read in the AMD64 environment.
-  * Fixed buf that the HTML conversion operates when connecting it from PC.
+  * Fixed bug that the HTML conversion operates when connecting it from PC.
   * Fixed bug that the HTML conversion for jhtml.
 
 

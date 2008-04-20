@@ -83,12 +83,8 @@
 
 #include <string.h>
 
-#include "httpd.h"
-#include "http_config.h"
-#include "http_protocol.h"
-#include "http_request.h"
-#include "http_log.h"
-#include "ap_config.h"
+#include "chxj_apache.h"
+
 #include "apr_strings.h"
 #include "apr_buckets.h"
 #include "apr_lib.h"
@@ -96,7 +92,6 @@
 #include "apr_dso.h"
 #include "apr_general.h"
 #include "apr_pools.h"
-#include "util_filter.h"
 
 #if defined(AP_NEED_SET_MUTEX_PERMS)
 #  include "unixd.h"
@@ -115,17 +110,7 @@
 #include "qs_parse_string.h"
 #include "qs_parse_tag.h"
 
-#ifndef __CONFIG_H__
-#define __CONFIG_H__
-
-#undef PACKAGE_NAME
-#undef PACKAGE_STRING
-#undef PACKAGE_TARNAME
-#undef PACKAGE_VERSION
-
-#include "config.h"
-#endif
-#ifdef HAVE_AP_REGEX_H
+#if defined(HAVE_AP_REGEX_H) && HAVE_AP_REGEX_H == 1
 #  include "ap_regex.h"
 #else
 #  include "pcreposix.h"
@@ -292,8 +277,14 @@ typedef enum {
   tagDT,
   tagLEGEND,
   tagLABEL,
+  tagBLOCKQUOTE,
+  tagDIR,
   tagDL,
   tagDD,
+  tagMENU,
+  tagPLAINTEXT,
+  tagBLINK,
+  tagMARQUEE,
 } tag_type;
 
 
@@ -307,6 +298,7 @@ typedef struct mod_chxj_config mod_chxj_config;
 #  include "chxj_memcache.h"
 #endif
 
+/* cookie store type */
 #define CHXJ_COOKIE_STORE_TYPE_DBM      "dbm"
 #define CHXJ_COOKIE_STORE_TYPE_MYSQL    "mysql"
 #define CHXJ_COOKIE_STORE_TYPE_MEMCACHE "memcache"
@@ -392,6 +384,7 @@ struct mod_chxj_config {
 #define CONVRULE_PC_FLAG_ON_BIT       (0x00000001)
 #define CONVRULE_PC_FLAG_OFF_BIT      (0x00000002)
 
+
 typedef struct {
   apr_global_mutex_t    *cookie_db_lock;
 } mod_chxj_global_config;
@@ -402,6 +395,7 @@ typedef struct {
   device_table        *spec;
 
   apr_bucket_brigade *bb;
+  apr_pool_t *pool;
 
   char *buffer;
 } mod_chxj_ctx;
@@ -454,6 +448,10 @@ extern char *chxj_node_convert(
 );
 
 #define IMAGE_CACHE_LIMIT_FMT_LEN  (20)
+
+#if HAVE_MALLOC == 0
+extern void *rpl_malloc(size_t n);
+#endif
 
 #endif
 /*

@@ -224,6 +224,9 @@ chxj_node_convert(
         if (handlers[tagH6].end_tag_handler)
           handlers[tagH6].end_tag_handler(pdoc, child);
       }
+      else {
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+      }
       break;
 
 
@@ -241,11 +244,10 @@ chxj_node_convert(
         if (handlers[tagP].end_tag_handler)
           handlers[tagP].end_tag_handler(pdoc, child);
       }
-      else
       /*----------------------------------------------------------------------*/
       /* <PRE>                                                                */
       /*----------------------------------------------------------------------*/
-      if (strcasecmp(name, "pre") == 0) {
+      else if (strcasecmp(name, "pre") == 0) {
         if (handlers[tagPRE].start_tag_handler) 
           handlers[tagPRE].start_tag_handler(pdoc, child);
 
@@ -253,6 +255,19 @@ chxj_node_convert(
 
         if (handlers[tagPRE].end_tag_handler)
           handlers[tagPRE].end_tag_handler(pdoc, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <PLAINTEXT>                                                          */
+      /*----------------------------------------------------------------------*/
+      else if (strcasecmp(name, "plaintext") == 0) {
+        if (handlers[tagPLAINTEXT].start_tag_handler) 
+          handlers[tagPLAINTEXT].start_tag_handler(pdoc, child);
+
+        if (handlers[tagPLAINTEXT].end_tag_handler)
+          handlers[tagPLAINTEXT].end_tag_handler(pdoc, child);
+      }
+      else {
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
       }
       break;
 
@@ -270,6 +285,9 @@ chxj_node_convert(
         if (handlers[tagNOBR].end_tag_handler)
           handlers[tagNOBR].end_tag_handler(pdoc, child);
       }
+      else {
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+      }
       break;
 
     case 'u':
@@ -285,6 +303,9 @@ chxj_node_convert(
 
         if (handlers[tagUL].end_tag_handler)
           handlers[tagUL].end_tag_handler(pdoc, child);
+      }
+      else {
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
       }
       break;
 
@@ -328,6 +349,9 @@ chxj_node_convert(
         if (handlers[tagLABEL].end_tag_handler)
           handlers[tagLABEL].end_tag_handler(pdoc, child);
       }
+      else {
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+      }
       
       break;
 
@@ -358,6 +382,16 @@ chxj_node_convert(
         if (handlers[tagOPTION].end_tag_handler)
           handlers[tagOPTION].end_tag_handler(pdoc, child);
       }
+      else
+      /*----------------------------------------------------------------------*/
+      /* <OBJECT>                                                             */
+      /*----------------------------------------------------------------------*/
+      if (strcasecmp(name, "object") == 0) {
+        /* ignore object block */
+      }
+      else {
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+      }
 
       break;
 
@@ -374,6 +408,33 @@ chxj_node_convert(
 
         if (handlers[tagMETA].end_tag_handler)
           handlers[tagMETA].end_tag_handler(pdoc, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <MENU>                                                               */
+      /*----------------------------------------------------------------------*/
+      else if (strcasecmp(name, "menu") == 0) {
+        if (handlers[tagMENU].start_tag_handler) 
+          handlers[tagMENU].start_tag_handler(pdoc, child);
+
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+
+        if (handlers[tagMENU].end_tag_handler)
+          handlers[tagMENU].end_tag_handler(pdoc, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <MARQUEE>                                                            */
+      /*----------------------------------------------------------------------*/
+      else if (strcasecmp(name, "marquee") == 0) {
+        if (handlers[tagMARQUEE].start_tag_handler) 
+          handlers[tagMARQUEE].start_tag_handler(pdoc, child);
+
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+
+        if (handlers[tagMARQUEE].end_tag_handler)
+          handlers[tagMARQUEE].end_tag_handler(pdoc, child);
+      }
+      else {
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
       }
       break;
 
@@ -420,8 +481,7 @@ chxj_node_convert(
       /*----------------------------------------------------------------------*/
       /* <BR>                                                                 */
       /*----------------------------------------------------------------------*/
-      else
-      if (strcasecmp(name, "br") == 0) {
+      else if (strcasecmp(name, "br") == 0) {
         if (handlers[tagBR].start_tag_handler) 
           handlers[tagBR].start_tag_handler(pdoc, child);
 
@@ -429,6 +489,33 @@ chxj_node_convert(
 
         if (handlers[tagBR].end_tag_handler)
           handlers[tagBR].end_tag_handler(pdoc, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <BLOCKQUOTE>                                                         */
+      /*----------------------------------------------------------------------*/
+      else if (strcasecmp(name, "blockquote") == 0) {
+        if (handlers[tagBLOCKQUOTE].start_tag_handler) 
+          handlers[tagBLOCKQUOTE].start_tag_handler(pdoc, child);
+
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+
+        if (handlers[tagBLOCKQUOTE].end_tag_handler)
+          handlers[tagBLOCKQUOTE].end_tag_handler(pdoc, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <BLINK>                                                              */
+      /*----------------------------------------------------------------------*/
+      else if (strcasecmp(name, "blink") == 0) {
+        if (handlers[tagBLINK].start_tag_handler) 
+          handlers[tagBLINK].start_tag_handler(pdoc, child);
+
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+
+        if (handlers[tagBLINK].end_tag_handler)
+          handlers[tagBLINK].end_tag_handler(pdoc, child);
+      }
+      else {
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
       }
       break;
 
@@ -445,6 +532,9 @@ chxj_node_convert(
 
         if (handlers[tagA].end_tag_handler)
           handlers[tagA].end_tag_handler(pdoc, child);
+      }
+      else {
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
       }
       break;
 
@@ -488,6 +578,9 @@ chxj_node_convert(
         if (handlers[tagFIELDSET].end_tag_handler)
           handlers[tagFIELDSET].end_tag_handler(pdoc, child);
       }
+      else {
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+      }
       break;
 
     case 'i':
@@ -516,6 +609,9 @@ chxj_node_convert(
 
         if (handlers[tagIMG].end_tag_handler)
           handlers[tagIMG].end_tag_handler(pdoc, child);
+      }
+      else {
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
       }
       break;
 
@@ -569,6 +665,16 @@ chxj_node_convert(
         if (handlers[tagSMALL].end_tag_handler)
           handlers[tagSMALL].end_tag_handler(pdoc, child);
       }
+      /*----------------------------------------------------------------------*/
+      /* <SCRIPT>                                                             */
+      /*----------------------------------------------------------------------*/
+      else 
+      if (strcasecmp(name, "script") == 0) {
+        /* ignore script block */
+      }
+      else {
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+      }
       break;
   
     case 'd':
@@ -586,10 +692,21 @@ chxj_node_convert(
           handlers[tagDIV].end_tag_handler(pdoc, child);
       }
       /*----------------------------------------------------------------------*/
+      /* <DIR>                                                                */
+      /*----------------------------------------------------------------------*/
+      else if (strcasecmp(name, "dir") == 0) {
+        if (handlers[tagDIR].start_tag_handler) 
+          handlers[tagDIR].start_tag_handler(pdoc, child);
+
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
+
+        if (handlers[tagDIR].end_tag_handler)
+          handlers[tagDIR].end_tag_handler(pdoc, child);
+      }
+      /*----------------------------------------------------------------------*/
       /* <DL>                                                                 */
       /*----------------------------------------------------------------------*/
-      else 
-      if (strcasecmp(name, "dl") == 0) {
+      else if (strcasecmp(name, "dl") == 0) {
         if (handlers[tagDL].start_tag_handler) 
           handlers[tagDL].start_tag_handler(pdoc, child);
 
@@ -601,8 +718,7 @@ chxj_node_convert(
       /*----------------------------------------------------------------------*/
       /* <DT>                                                                 */
       /*----------------------------------------------------------------------*/
-      else 
-      if (strcasecmp(name, "dt") == 0) {
+      else if (strcasecmp(name, "dt") == 0) {
         if (handlers[tagDT].start_tag_handler) 
           handlers[tagDT].start_tag_handler(pdoc, child);
 
@@ -614,8 +730,7 @@ chxj_node_convert(
       /*----------------------------------------------------------------------*/
       /* <DD>                                                                 */
       /*----------------------------------------------------------------------*/
-      else 
-      if (strcasecmp(name, "dd") == 0) {
+      else if (strcasecmp(name, "dd") == 0) {
         if (handlers[tagDD].start_tag_handler) 
           handlers[tagDD].start_tag_handler(pdoc, child);
 
@@ -623,6 +738,9 @@ chxj_node_convert(
 
         if (handlers[tagDD].end_tag_handler)
           handlers[tagDD].end_tag_handler(pdoc, child);
+      }
+      else {
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
       }
       break;
 
@@ -658,6 +776,9 @@ chxj_node_convert(
               handlers[tagCHXJIF].start_tag_handler(pdoc, child);
           }
         }
+      }
+      else {
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
       }
       break;
 
@@ -760,6 +881,9 @@ chxj_node_convert(
       if (strcasecmp(name, "text") == 0) {
         if (handlers[tagTEXT].start_tag_handler)
           handlers[tagTEXT].start_tag_handler(pdoc, child);
+      }
+      else {
+        chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
       }
       break;
 

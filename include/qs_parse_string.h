@@ -17,7 +17,8 @@
 #ifndef __QS_PARSE_STRING_H__
 #define __QS_PARSE_STRING_H__
 
-#include <httpd.h>
+#include "chxj_apache.h"
+#include "chxj_buffered_write.h"
 
 /*
 #define DEBUG
@@ -33,10 +34,8 @@
  * It is judged whether it is the first byte of Japanese Shift_JIS 
  * "ZENKAKU KANJI". 
  */
-#define is_sjis_kanji(c)  ((0x81 <= (unsigned char)(c&0xff) && \
-                           (unsigned char)(c&0xff) <= 0x9f)  \
-                          || (0xe0 <= (unsigned char)(c&0xff) && \
-                           (unsigned char)(c&0xff) <= 0xfc))
+#define is_sjis_kanji(c)    ((0x81 <= (unsigned char)(c&0xff) && (unsigned char)(c&0xff) <= 0x9f)  \
+                          || (0xe0 <= (unsigned char)(c&0xff) && (unsigned char)(c&0xff) <= 0xfc))
 /**
  * It is judged whether it is a byte of Japanese Shift_JIS "HANKAKU KANA". 
  */
@@ -76,8 +75,6 @@
                         &&  (strcasecmp(c, "hr"       ) != 0) \
                         &&  (strcasecmp(c, "img"      ) != 0) \
                         &&  (strcasecmp(c, "input"    ) != 0) \
-                        &&  (strcasecmp(c, "p"        ) != 0) \
-                        &&  (strcasecmp(c, "plaintext") != 0) \
                         &&  (strcasecmp(c, "?xml"     ) != 0) \
                         &&  (strcasecmp(c, "!doctype" ) != 0) \
                         &&  (strcasecmp(c, "link"     ) != 0) \
@@ -122,6 +119,7 @@ struct Node {
   int            size;
   char           *otext;
   int            line;
+  int           closed_by_itself;
 };
 
 typedef struct pointer_table_t {
@@ -156,8 +154,7 @@ typedef struct _doc {
 
   apr_allocator_t *allocator;
   apr_pool_t      *pool;
-
-  buf_object buf;
+  buf_object      buf;
 #ifndef __NON_MOD_CHXJ__
   request_rec *r;
 #endif
@@ -189,20 +186,11 @@ extern char *qs_get_node_value(
   Doc         *doc,
   Node        *node);
 
-extern char *qs_get_node_name(
-  Doc         *doc, 
-  Node        *node);
-
+extern char *qs_get_node_name(Doc *doc, Node *node);
 extern int qs_get_node_size(Doc *doc, Node *node) ;
 extern Node *qs_get_child_node(Doc *doc, Node *node) ;
 extern Node *qs_get_next_node(Doc *doc, Node *node) ;
-
-extern void qs_dump_node_to_file(
-  FILE  *fp, 
-  Doc   *doc, 
-  Node  *node, 
-  int   indent);
-
+extern void qs_dump_node_to_file(FILE  *fp, Doc   *doc, Node  *node, int   indent);
 Attr *qs_get_attr(Doc *doc, Node *node);
 Attr *qs_get_next_attr(Doc *doc, Attr *attr);
 char *qs_get_attr_name(Doc *doc, Attr *attr);

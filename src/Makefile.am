@@ -28,18 +28,19 @@ libmod_chxj_la_SOURCES = mod_chxj.c \
     chxj_encoding.c \
     chxj_node_convert.c \
     chxj_url_encode.c \
-    chxj_cookie.c \
     chxj_preg_replace.c \
     chxj_emoji.c \
     chxj_jreserved_tag.c \
+    chxj_cookie.c \
     chxj_mysql.c \
     chxj_memcache.c \
     chxj_dbm.c \
-    chxj_buffered_write.c
+    chxj_buffered_write.c \
+    chxj_apache.c
 
 
-libmod_chxj_la_CFLAGS = $(AM_CFLAGS) -O2 -prefer-pic @QDEFS@ @DDEFS@ -I. -I../include 
-AM_CFLAGS = @CFLAGS@ -O2 -prefer-pic @QDEFS@ @DDEFS@ -I. -I../include 
+libmod_chxj_la_CFLAGS = -O2 -prefer-pic @QDEFS@ @DDEFS@ -I. -I../include -I@with_apache_header@ 
+AM_CFLAGS = @CFLAGS@ -O2 -prefer-pic @QDEFS@ @DDEFS@ -I. -I../include -I@with_apache_header@
 
 lib_LTLIBRARIES = libmod_chxj.la
 
@@ -52,7 +53,7 @@ clean:
 	rm -f mod_chxj.so
 
 install: make_so
-	@@APXS@ -i -n mod_chxj mod_chxj.so
+	@@APXS@ -i -n "chxj" @PACKAGE_NAME@.so
 
 activate: make_so
-	@@APXS@ -i -a -n mod_chxj mod_chxj.so
+	@@APXS@ -i -a -n "chxj" @PACKAGE_NAME@.so

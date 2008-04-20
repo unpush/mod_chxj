@@ -18,7 +18,9 @@
 #include <unistd.h>
 #include "qs_log.h"
 #include "qs_malloc.h"
-#include "http_log.h"
+#include "chxj_apache.h"
+
+
 
 
 void
@@ -77,7 +79,7 @@ qs_log(Doc *doc, int log_level,const char *f, int l, char *msg)
     while(0);
 #endif
     if (doc->r) {
-      ap_log_rerror(f,l, APLOG_CRIT, 0, doc->r, msg);
+      chxj_log_rerror(f,l, APLOG_CRIT, 0, doc->r, msg);
     }
     qs_all_free(doc, QX_LOGMARK);
     _exit(0);

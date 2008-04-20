@@ -20,14 +20,16 @@
 #include "chxj_img_conv.h"
 #include "chxj_qr_code.h"
 #include "chxj_encoding.h"
-#include "chxj_jreserved_tag.h"
-#include "chxj_buffered_write.h"
+#include "chxj_url_encode.h"
+#include "chxj_str_util.h"
 
-#define GET_JHTML(X) ((jhtml_t*)(X))
-#define W_L(X)  do { jhtml->out = BUFFERED_WRITE_LITERAL(jhtml->out, &doc->buf, (X)); } while(0)
-#define W_V(X)  do { jhtml->out = (X) ? BUFFERED_WRITE_VALUE(jhtml->out, &doc->buf, (X))  \
-                                      : BUFFERED_WRITE_LITERAL(jhtml->out, &doc->buf, ""); } while(0)
 
+#define GET_JHTML(X) ((jhtml_t *)(X))
+#undef W_L
+#undef W_V
+#define W_L(X)          do { jhtml->out = BUFFERED_WRITE_LITERAL(jhtml->out, &doc->buf, (X)); } while(0)
+#define W_V(X)          do { jhtml->out = (X) ? BUFFERED_WRITE_VALUE(jhtml->out, &doc->buf, (X))  \
+                                              : BUFFERED_WRITE_LITERAL(jhtml->out, &doc->buf, ""); } while(0)
 
 static char *s_jhtml_start_html_tag     (void *pdoc, Node *node);
 static char *s_jhtml_end_html_tag       (void *pdoc, Node *node);
@@ -81,20 +83,42 @@ static char *s_jhtml_start_b_tag        (void *pdoc, Node *node);
 static char *s_jhtml_end_b_tag          (void *pdoc, Node *node);
 static char *s_jhtml_chxjif_tag         (void *pdoc, Node *node); 
 static char *s_jhtml_text_tag           (void *pdoc, Node *node);
+static char *s_jhtml_start_blockquote_tag(void *pdoc, Node *node);
+static char *s_jhtml_end_blockquote_tag  (void *pdoc, Node *node);
+static char *s_jhtml_start_dir_tag      (void *pdoc, Node *node);
+static char *s_jhtml_end_dir_tag        (void *pdoc, Node *node);
 static char *s_jhtml_start_dl_tag       (void *pdoc, Node *node);
 static char *s_jhtml_end_dl_tag         (void *pdoc, Node *node);
 static char *s_jhtml_start_dt_tag       (void *pdoc, Node *node);
 static char *s_jhtml_end_dt_tag         (void *pdoc, Node *node);
 static char *s_jhtml_start_dd_tag       (void *pdoc, Node *node);
 static char *s_jhtml_end_dd_tag         (void *pdoc, Node *node);
+static char *s_jhtml_start_h1_tag       (void *pdoc, Node *node);
+static char *s_jhtml_end_h1_tag         (void *pdoc, Node *node);
+static char *s_jhtml_start_h2_tag       (void *pdoc, Node *node);
+static char *s_jhtml_end_h2_tag         (void *pdoc, Node *node);
+static char *s_jhtml_start_h3_tag       (void *pdoc, Node *node);
+static char *s_jhtml_end_h3_tag         (void *pdoc, Node *node);
+static char *s_jhtml_start_h4_tag       (void *pdoc, Node *node);
+static char *s_jhtml_end_h4_tag         (void *pdoc, Node *node);
+static char *s_jhtml_start_h5_tag       (void *pdoc, Node *node);
+static char *s_jhtml_end_h5_tag         (void *pdoc, Node *node);
+static char *s_jhtml_start_h6_tag       (void *pdoc, Node *node);
+static char *s_jhtml_end_h6_tag         (void *pdoc, Node *node);
+static char *s_jhtml_start_menu_tag     (void *pdoc, Node *node);
+static char *s_jhtml_end_menu_tag       (void *pdoc, Node *node);
+static char *s_jhtml_start_plaintext_tag       (void *pdoc, Node *node);
+static char *s_jhtml_start_plaintext_tag_inner (void *pdoc, Node *node);
+static char *s_jhtml_end_plaintext_tag         (void *pdoc, Node *node);
+static char *s_jhtml_start_blink_tag  (void *pdoc, Node *node);
+static char *s_jhtml_end_blink_tag    (void *pdoc, Node *node);
+static char *s_jhtml_start_marquee_tag(void *pdoc, Node *node);
+static char *s_jhtml_end_marquee_tag  (void *pdoc, Node *node);
 
-static void  s_init_jhtml(
-  jhtml_t *jhtml,
-  Doc *doc,
-  request_rec *r, 
-  device_table *spec);
+static void  s_init_jhtml(jhtml_t *jhtml, Doc *doc, request_rec *r, device_table *spec);
 
-static char *chxj_istyle_to_mode(Doc *doc, const char *s);
+
+static char *chxj_istyle_to_mode(apr_pool_t *p, const char *s);
 
 
 
@@ -141,33 +165,33 @@ tag_handler jhtml_handler[] = {
   },
   /* tagH1 */
   {
-    NULL,
-    NULL,
+    s_jhtml_start_h1_tag,
+    s_jhtml_end_h1_tag,
   },
   /* tagH2 */
   {
-    NULL,
-    NULL,
+    s_jhtml_start_h2_tag,
+    s_jhtml_end_h2_tag,
   },
   /* tagH3 */
   {
-    NULL,
-    NULL,
+    s_jhtml_start_h3_tag,
+    s_jhtml_end_h3_tag,
   },
   /* tagH4 */
   {
-    NULL,
-    NULL,
+    s_jhtml_start_h4_tag,
+    s_jhtml_end_h4_tag,
   },
   /* tagH5 */
   {
-    NULL,
-    NULL,
+    s_jhtml_start_h5_tag,
+    s_jhtml_end_h5_tag,
   },
   /* tagH6 */
   {
-    NULL,
-    NULL,
+    s_jhtml_start_h6_tag,
+    s_jhtml_end_h6_tag,
   },
   /* tagHEAD */
   {
@@ -324,6 +348,16 @@ tag_handler jhtml_handler[] = {
     NULL,
     NULL,
   },
+  /* tagBLOCKQUOTE */
+  {
+    s_jhtml_start_blockquote_tag,
+    s_jhtml_end_blockquote_tag,
+  },
+  /* tagDIR */
+  {
+    s_jhtml_start_dir_tag,
+    s_jhtml_end_dir_tag,
+  },
   /* tagDL */
   {
     s_jhtml_start_dl_tag,
@@ -333,6 +367,26 @@ tag_handler jhtml_handler[] = {
   {
     s_jhtml_start_dd_tag,
     s_jhtml_end_dd_tag,
+  },
+  /* tagMENU */
+  {
+    s_jhtml_start_menu_tag,
+    s_jhtml_end_menu_tag,
+  },
+  /* tagPLAINTEXT */
+  {
+    s_jhtml_start_plaintext_tag,
+    s_jhtml_end_plaintext_tag,
+  },
+  /* tagBLINK */
+  {
+    s_jhtml_start_blink_tag,
+    s_jhtml_end_blink_tag,
+  },
+  /* tagMARQUEE */
+  {
+    s_jhtml_start_marquee_tag,
+    s_jhtml_end_marquee_tag,
   },
 };
 
@@ -462,7 +516,7 @@ s_init_jhtml(jhtml_t *jhtml, Doc *doc, request_rec *r, device_table *spec)
   jhtml->doc  = doc;
   jhtml->spec = spec;
   jhtml->out  = qs_alloc_zero_byte_string(r);
-  jhtml->conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  jhtml->conf = chxj_get_module_config(r->per_dir_config, &chxj_module);
   jhtml->doc->parse_mode = PARSE_MODE_CHTML;
 }
 
@@ -478,10 +532,9 @@ s_init_jhtml(jhtml_t *jhtml, Doc *doc, request_rec *r, device_table *spec)
 static char *
 s_jhtml_start_html_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  jhtml_t      *jhtml;
-  Doc          *doc;
-  request_rec  *r;
-
+  jhtml_t       *jhtml;
+  Doc           *doc;
+  request_rec   *r;
 
   jhtml  = GET_JHTML(pdoc);
   doc    = jhtml->doc;
@@ -490,8 +543,9 @@ s_jhtml_start_html_tag(void *pdoc, Node *UNUSED(node))
   /*--------------------------------------------------------------------------*/
   /* start HTML tag                                                           */
   /*--------------------------------------------------------------------------*/
-  W_L("<html>\n");
-  DBG(r, "end s_jhtml_start_html_tag()[%s]", jhtml->out);
+  W_L("<html>");
+
+  DBG(r, "end s_jhtml_start_html_tag()");
 
   return jhtml->out;
 }
@@ -510,11 +564,8 @@ s_jhtml_end_html_tag(void *pdoc, Node *UNUSED(child))
 {
   jhtml_t       *jhtml = GET_JHTML(pdoc);
   Doc           *doc = jhtml->doc;
-  request_rec   *r   = doc->r;
 
-  DBG(r, "start s_jhtml_end_html_tag()");
-  W_L("</html>\n");
-  DBG(r, "end s_jhtml_end_html_tag() OUT:[%s]", jhtml->out);
+  W_L("</html>");
 
   return jhtml->out;
 }
@@ -551,24 +602,22 @@ s_jhtml_start_meta_tag(void *pdoc, Node *node)
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-    char *name;
-    char *value;
-    name   = qs_get_attr_name(doc,attr);
-    value  = qs_get_attr_value(doc,attr);
+    char *name   = qs_get_attr_name(doc,attr);
+    char *value  = qs_get_attr_value(doc,attr);
     switch(*name) {
     case 'h':
     case 'H':
-      if (strcasecmp(name, "http-equiv") == 0) {
+      if (strcasecmp(name, "http-equiv") == 0 && value && *value) {
         /*----------------------------------------------------------------------*/
         /* CHTML 2.0                                                            */
         /*----------------------------------------------------------------------*/
         W_L(" http-equiv=\"");
         W_V(value);
         W_L("\"");
-        if (STRCASEEQ('c','C',"content-type", value)) {
+        if (STRCASEEQ('c','C',"content-type",value)) {
           content_type_flag = 1;
         }
-        if (STRCASEEQ('r','R',"refresh", value)) {
+        if (STRCASEEQ('r','R',"refresh",value)) {
           refresh_flag = 1;
         }
       }
@@ -576,7 +625,7 @@ s_jhtml_start_meta_tag(void *pdoc, Node *node)
 
     case 'c':
     case 'C':
-      if (strcasecmp(name, "content") == 0) {
+      if (strcasecmp(name, "content") == 0 && value && *value) {
         /*----------------------------------------------------------------------*/
         /* CHTML 2.0                                                            */
         /*----------------------------------------------------------------------*/
@@ -648,9 +697,7 @@ s_jhtml_start_meta_tag(void *pdoc, Node *node)
 static char *
 s_jhtml_end_meta_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t *jhtml;
-
-  jhtml = GET_JHTML(pdoc);
+  jhtml_t *jhtml = GET_JHTML(pdoc);
 
   return jhtml->out;
 }
@@ -669,9 +716,13 @@ s_jhtml_start_head_tag(void *pdoc, Node *UNUSED(node))
 {
   jhtml_t       *jhtml;
   Doc           *doc;
+  request_rec   *r;
+
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
-  W_L("<head>\r\n");
+  r     = doc->r;
+
+  W_L("<head>");
   return jhtml->out;
 }
 
@@ -695,7 +746,7 @@ s_jhtml_end_head_tag(void *pdoc, Node *UNUSED(child))
   doc   = jhtml->doc;
   r     = doc->r;
 
-  W_L("</head>\r\n");
+  W_L("</head>");
   return jhtml->out;
 }
 
@@ -743,7 +794,7 @@ s_jhtml_end_title_tag(void *pdoc, Node *UNUSED(child))
   doc   = jhtml->doc;
   r     = doc->r;
 
-  W_L("</title>\r\n");
+  W_L("</title>");
   return jhtml->out;
 }
 
@@ -775,20 +826,15 @@ s_jhtml_start_base_tag(void *pdoc, Node *node)
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-
-    char *name;
-    char *value;
-
-    name  = qs_get_attr_name(doc,attr);
-    value = qs_get_attr_value(doc,attr);
-
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('h','H',"href",name)) {
       W_L(" href=\"");
       W_V(value);
       W_L("\"");
     }
   }
-  W_L(" >\r\n");
+  W_L(">");
   return jhtml->out;
 }
 
@@ -804,10 +850,7 @@ s_jhtml_start_base_tag(void *pdoc, Node *node)
 static char *
 s_jhtml_end_base_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t *jhtml;
-
-  jhtml = GET_JHTML(pdoc);
-
+  jhtml_t *jhtml = GET_JHTML(pdoc);
   return jhtml->out;
 }
 
@@ -839,11 +882,9 @@ s_jhtml_start_body_tag(void *pdoc, Node *node)
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-    char *name;
-    char *value;
-    name   = qs_get_attr_name(doc,attr);
-    value  = qs_get_attr_value(doc,attr);
-    if (STRCASEEQ('b','B',"bgcolor",name)) {
+    char *name   = qs_get_attr_name(doc,attr);
+    char *value  = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('b','B',"bgcolor",name) && value && *value) {
       /*----------------------------------------------------------------------*/
       /* CHTML 2.0                                                            */
       /*----------------------------------------------------------------------*/
@@ -851,7 +892,7 @@ s_jhtml_start_body_tag(void *pdoc, Node *node)
       W_V(value);
       W_L("\"");
     }
-    else if (STRCASEEQ('t','T',"text",name)) {
+    else if (STRCASEEQ('t','T',"text",name) && value && *value) {
       /*----------------------------------------------------------------------*/
       /* CHTML 2.0                                                            */
       /*----------------------------------------------------------------------*/
@@ -859,7 +900,7 @@ s_jhtml_start_body_tag(void *pdoc, Node *node)
       W_V(value);
       W_L("\"");
     }
-    else if (STRCASEEQ('l','L',"link",name)) {
+    else if (STRCASEEQ('l','L',"link",name) && value && *value) {
       /*----------------------------------------------------------------------*/
       /* CHTML 2.0                                                            */
       /*----------------------------------------------------------------------*/
@@ -873,14 +914,16 @@ s_jhtml_start_body_tag(void *pdoc, Node *node)
       /*----------------------------------------------------------------------*/
       /* ignore */
     }
-    else if (STRCASEEQ('v','V',"vlink",name)) {
+    else if (STRCASEEQ('v','V',"vlink",name) && value && *value) {
       /*----------------------------------------------------------------------*/
       /* CHTML 4.0                                                            */
       /*----------------------------------------------------------------------*/
-      /* ignore */
+      W_L(" vlink=\"");
+      W_V(value);
+      W_L("\"");
     }
   }
-  W_L(">\r\n");
+  W_L(">");
   return jhtml->out;
 }
 
@@ -898,11 +941,13 @@ s_jhtml_end_body_tag(void *pdoc, Node *UNUSED(child))
 {
   jhtml_t       *jhtml;
   Doc           *doc;
+  request_rec   *r;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
+  r     = doc->r;
 
-  W_L("</body>\r\n");
+  W_L("</body>");
   return jhtml->out;
 }
 
@@ -934,10 +979,8 @@ s_jhtml_start_a_tag(void *pdoc, Node *node)
   for (attr = qs_get_attr(doc,node);
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
-    char *name;
-    char *value;
-    name  = qs_get_attr_name(doc,attr);
-    value = qs_get_attr_value(doc,attr);
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('n','N',"name",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML1.0                                                             */
@@ -1066,15 +1109,35 @@ s_jhtml_end_a_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_jhtml_start_br_tag(void *pdoc, Node *UNUSED(node)) 
+s_jhtml_start_br_tag(void *pdoc, Node *node)
 {
   jhtml_t      *jhtml;
   Doc          *doc;
+  request_rec  *r;
+  Attr         *attr;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
+  r     = doc->r;
 
-  W_L("<br>\r\n");
+  W_L("<br");
+  /*--------------------------------------------------------------------------*/
+  /* Get Attributes                                                           */
+  /*--------------------------------------------------------------------------*/
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('c','C',"clear",name)) {
+      if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('a','A',"all",value))) {
+        W_L(" clear=\"");
+        W_V(value);
+        W_L("\"");
+      }
+    }
+  }
+  W_L(">");
   return jhtml->out;
 }
 
@@ -1090,10 +1153,7 @@ s_jhtml_start_br_tag(void *pdoc, Node *UNUSED(node))
 static char *
 s_jhtml_end_br_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t  *jhtml;
-
-  jhtml = GET_JHTML(pdoc);
-
+  jhtml_t *jhtml = GET_JHTML(pdoc);
   return jhtml->out;
 }
 
@@ -1133,10 +1193,7 @@ s_jhtml_start_tr_tag(void *pdoc, Node *UNUSED(node))
 static char *
 s_jhtml_end_tr_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t *jhtml;
-
-  jhtml = GET_JHTML(pdoc);
-
+  jhtml_t *jhtml = GET_JHTML(pdoc);
   return jhtml->out;
 }
 
@@ -1168,11 +1225,9 @@ s_jhtml_start_font_tag(void *pdoc, Node *node)
   for (attr = qs_get_attr(doc,node);
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
-    char *name;
-    char *value;
-    name  = qs_get_attr_name(doc,attr);
-    value = qs_get_attr_value(doc,attr);
-    if (STRCASEEQ('c','C',"color",name)) {
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('c','C',"color",name) && value && *value) {
       W_L(" color=\"");
       W_V(value);
       W_L("\"");
@@ -1201,12 +1256,12 @@ static char *
 s_jhtml_end_font_tag(void *pdoc, Node *UNUSED(child)) 
 {
   jhtml_t      *jhtml;
-  Doc          *doc;
   request_rec  *r;
+  Doc          *doc;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
-  r     = doc->r;
+  r     = jhtml->doc->r;
 
   W_L("</font>");
   return jhtml->out;
@@ -1228,6 +1283,8 @@ s_jhtml_start_form_tag(void *pdoc, Node *node)
   Doc          *doc;
   request_rec  *r;
   Attr         *attr;
+  int          dcflag = 0;
+  char         *dc = NULL;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
@@ -1240,10 +1297,8 @@ s_jhtml_start_form_tag(void *pdoc, Node *node)
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-    char *name;
-    char *value;
-    name  = qs_get_attr_name(doc,attr);
-    value = qs_get_attr_value(doc,attr);
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('a','A',"action",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
@@ -1251,6 +1306,10 @@ s_jhtml_start_form_tag(void *pdoc, Node *node)
       W_L(" action=\"");
       W_V(value);
       W_L("\"");
+      dc = chxj_add_cookie_parameter(r, value, jhtml->cookie);
+      if (strcmp(dc, value)) {
+        dcflag = 1;
+      } 
     }
     else if (STRCASEEQ('m','M',"method",name)) {
       /*----------------------------------------------------------------------*/
@@ -1265,17 +1324,26 @@ s_jhtml_start_form_tag(void *pdoc, Node *node)
       /* CHTML 3.0                                                            */
       /* It is special only for CHTML.                                        */
       /*----------------------------------------------------------------------*/
-      W_L(" utn ");
+      /* ignore */
     }
   }
   W_L(">");
-  if (jhtml->cookie && jhtml->cookie->cookie_id) {
-    char *vv = apr_psprintf(r->pool, "<input type='hidden' name='%s' value='%s'>",
-                             CHXJ_COOKIE_PARAM,
-                             jhtml->cookie->cookie_id);
+  /*-------------------------------------------------------------------------*/
+  /* ``action=""''                                                           */
+  /*-------------------------------------------------------------------------*/
+  if (! dc) {
+    dcflag = 1;
+  }
+  /*-------------------------------------------------------------------------*/
+  /* Add cookie parameter                                                    */
+  /*-------------------------------------------------------------------------*/
+  if (jhtml->cookie && jhtml->cookie->cookie_id && dcflag == 1) {
+    char *vv = apr_psprintf(doc->buf.pool, "%s<input type='hidden' name='%s' value='%s'>",
+                            jhtml->out, 
+                            CHXJ_COOKIE_PARAM,
+                            chxj_url_decode(r, jhtml->cookie->cookie_id));
     W_V(vv);
   }
-
   return jhtml->out;
 }
 
@@ -1291,9 +1359,8 @@ s_jhtml_start_form_tag(void *pdoc, Node *node)
 static char *
 s_jhtml_end_form_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t      *jhtml = GET_JHTML(pdoc);
-  Doc          *doc   = jhtml->doc;
-
+  jhtml_t *jhtml = GET_JHTML(pdoc);
+  Doc     *doc   = jhtml->doc;
   W_L("</form>");
   return jhtml->out;
 }
@@ -1348,65 +1415,74 @@ s_jhtml_start_input_tag(void *pdoc, Node *node)
   size       = qs_get_size_attr(doc, node, r);
 
   if (type) {
-    W_L(" type=\"");
-    W_V(type);
-    W_L("\" ");
+    if (type && (STRCASEEQ('t','T',"text",    type) ||
+                 STRCASEEQ('p','P',"password",type) ||
+                 STRCASEEQ('c','C',"checkbox",type) ||
+                 STRCASEEQ('r','R',"radio",   type) ||
+                 STRCASEEQ('h','H',"hidden",  type) ||
+                 STRCASEEQ('s','S',"submit",  type) ||
+                 STRCASEEQ('r','R',"reset",   type))) {
+      W_L(" type=\"");
+      W_V(type);
+      W_L("\"");
+    }
   }
-  if (size) {
+  if (size && *size) {
     W_L(" size=\"");
     W_V(size);
-    W_L("\" ");
+    W_L("\"");
   }
-  if (name) {
-    char *vv = chxj_jreserved_to_safe_tag(r, name);
+  if (name && *name) {
     W_L(" name=\"");
-    W_V(vv);
-    W_L("\" ");
+    W_V(name);
+    W_L("\"");
   }
-  if (value) {
+  if (value && *value) {
     W_L(" value=\"");
     W_V(value);
-    W_L("\" ");
+    W_L("\"");
   }
-  if (accesskey) {
+  if (accesskey && *accesskey) {
     W_L(" accesskey=\"");
     W_V(accesskey);
-    W_L("\" ");
+    W_L("\"");
   }
-  if (istyle) {
+  if (istyle && (*istyle == '1' || *istyle == '2' || *istyle == '3' || *istyle == '4')) {
     /*------------------------------------------------------------------------*/
     /* CHTML 2.0                                                              */
     /*------------------------------------------------------------------------*/
     if (type && STRCASEEQ('p','P',"password", type) && ! jhtml->entryp->pc_flag ) {
       W_L(" mode=\"");
       W_L("numeric");
-      W_L("\" ");
+      W_L("\"");
     }
     else {
-      char *vv = chxj_istyle_to_mode(doc,istyle);
+      char *vv = chxj_istyle_to_mode(doc->buf.pool,istyle);
       W_L(" mode=\"");
       W_V(vv);
-      W_L("\" ");
+      W_L("\"");
     }
   }
-  else if (istyle == NULL && type && STRCASEEQ('p','P',"password", type)) {
+  else if (type && STRCASEEQ('p','P',"password",type)) {
     W_L(" mode=\"");
     W_L("numeric");
-    W_L("\" ");
+    W_L("\"");
   }
   /*--------------------------------------------------------------------------*/
   /* The figure is default for the password.                                  */
   /*--------------------------------------------------------------------------*/
-  if (max_length) {
-    W_L(" maxlength=\"");
-    W_V(max_length);
-    W_L("\"");
+  if (max_length && *max_length) {
+    if (chxj_chk_numeric(max_length) == 0) {
+      W_L(" maxlength=\"");
+      W_V(max_length);
+      W_L("\"");
+    }
   }
 
   if (checked) {
-    W_L(" checked ");
+    W_L(" checked");
   }
-  W_L(" >");
+  W_L(">");
   return jhtml->out;
 }
 
@@ -1423,7 +1499,6 @@ static char *
 s_jhtml_end_input_tag(void *pdoc, Node *UNUSED(child)) 
 {
   jhtml_t *jhtml = GET_JHTML(pdoc);
-
   return jhtml->out;
 }
 
@@ -1439,9 +1514,8 @@ s_jhtml_end_input_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_jhtml_start_center_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  jhtml_t       *jhtml = GET_JHTML(pdoc);
-  Doc           *doc   = jhtml->doc;
-
+  jhtml_t *jhtml = GET_JHTML(pdoc);
+  Doc     *doc   = jhtml->doc;
   W_L("<center>");
   return jhtml->out;
 }
@@ -1458,11 +1532,13 @@ s_jhtml_start_center_tag(void *pdoc, Node *UNUSED(node))
 static char *
 s_jhtml_end_center_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t *jhtml;
-  Doc     *doc;
+  jhtml_t     *jhtml;
+  Doc         *doc;
+  request_rec *r;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
+  r     = doc->r;
 
   W_L("</center>");
   return jhtml->out;
@@ -1478,15 +1554,38 @@ s_jhtml_end_center_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_jhtml_start_li_tag(void *pdoc, Node *UNUSED(node)) 
+s_jhtml_start_li_tag(void *pdoc, Node *node)
 {
   jhtml_t       *jhtml;
   Doc           *doc;
+  request_rec   *r;
+  Attr          *attr;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
+  r     = doc->r;
 
-  W_L("<li>");
+  W_L("<li");
+  /*--------------------------------------------------------------------------*/
+  /* Get Attributes                                                           */
+  /*--------------------------------------------------------------------------*/
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char *name = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('t','T',"type",name) && value && (*value == '1' || *value == 'a' || *value == 'A')) {
+      W_L(" type=\"");
+      W_V(value);
+      W_L("\"");
+    }
+    else if (STRCASEEQ('v','V',"value", name) && value && *value) {
+      W_L(" value=\"");
+      W_V(value);
+      W_L("\"");
+    }
+  }
+  W_L(">");
   return jhtml->out;
 }
 
@@ -1502,11 +1601,13 @@ s_jhtml_start_li_tag(void *pdoc, Node *UNUSED(node))
 static char *
 s_jhtml_end_li_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t       *jhtml;
-  Doc           *doc;
+  jhtml_t     *jhtml;
+  Doc         *doc;
+  request_rec *r;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
+  r     = doc->r;
 
   W_L("</li>");
   return jhtml->out;
@@ -1522,15 +1623,38 @@ s_jhtml_end_li_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_jhtml_start_ol_tag(void *pdoc, Node *UNUSED(node)) 
+s_jhtml_start_ol_tag(void *pdoc, Node *node)
 {
-  jhtml_t       *jhtml;
-  Doc           *doc;
+  jhtml_t     *jhtml;
+  Doc         *doc;
+  request_rec *r;
+  Attr        *attr;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
+  r     = doc->r;
 
-  W_L("<ol>");
+  W_L("<ol");
+  /*--------------------------------------------------------------------------*/
+  /* Get Attributes                                                           */
+  /*--------------------------------------------------------------------------*/
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char *name = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('t','T',"type",name) && value && (*value == '1' || *value == 'a' || *value == 'A')) {
+      W_L(" type=\"");
+      W_V(value);
+      W_L("\"");
+    }
+    else if (STRCASEEQ('s','S',"start",name) && value && *value) {
+      W_L(" start=\"");
+      W_V(value);
+      W_L("\"");
+    }
+  }
+  W_L(">");
   return jhtml->out;
 }
 
@@ -1546,11 +1670,13 @@ s_jhtml_start_ol_tag(void *pdoc, Node *UNUSED(node))
 static char *
 s_jhtml_end_ol_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t       *jhtml;
-  Doc           *doc;
+  jhtml_t     *jhtml;
+  Doc         *doc;
+  request_rec *r;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
+  r     = doc->r;
 
   W_L("</ol>");
   return jhtml->out;
@@ -1566,15 +1692,40 @@ s_jhtml_end_ol_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_jhtml_start_p_tag(void *pdoc, Node *UNUSED(node)) 
+s_jhtml_start_p_tag(void *pdoc, Node *node)
 {
-  jhtml_t       *jhtml;
-  Doc           *doc;
+  jhtml_t     *jhtml;
+  Doc         *doc;
+  request_rec *r;
+  char        *align = NULL;
+  Attr        *attr;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
+  r     = doc->r;
 
-  W_L("<p>");
+  W_L("<p");
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char *nm  = qs_get_attr_name(doc,attr);
+    char *val = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('a','A',"align", nm)) {
+      /*----------------------------------------------------------------------*/
+      /* CHTML 1.0 (W3C version 3.2)                                          */
+      /*----------------------------------------------------------------------*/
+      if (val && (STRCASEEQ('l','L',"left",val) || STRCASEEQ('r','R',"right",val) || STRCASEEQ('c','C',"center",val))) {
+        align = apr_pstrdup(doc->buf.pool, val);
+        break;
+      }
+    }
+  }
+  if (align) {
+    W_L(" align=\"");
+    W_V(align);
+    W_L("\"");
+  }
+  W_L(">");
   return jhtml->out;
 }
 
@@ -1590,8 +1741,8 @@ s_jhtml_start_p_tag(void *pdoc, Node *UNUSED(node))
 static char *
 s_jhtml_end_p_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t       *jhtml = GET_JHTML(pdoc);
-  Doc           *doc   = jhtml->doc;
+  jhtml_t   *jhtml = GET_JHTML(pdoc);
+  Doc       *doc   = jhtml->doc;
 
   W_L("</p>");
   return jhtml->out;
@@ -1609,8 +1760,8 @@ s_jhtml_end_p_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_jhtml_start_pre_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  jhtml_t       *jhtml = GET_JHTML(pdoc);
-  Doc           *doc   = jhtml->doc;
+  jhtml_t  *jhtml = GET_JHTML(pdoc);
+  Doc      *doc   = jhtml->doc;
 
   jhtml->pre_flag++;
   W_L("<pre>");
@@ -1629,8 +1780,8 @@ s_jhtml_start_pre_tag(void *pdoc, Node *UNUSED(node))
 static char *
 s_jhtml_end_pre_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t       *jhtml = GET_JHTML(pdoc);
-  Doc           *doc   = jhtml->doc;
+  jhtml_t *jhtml = GET_JHTML(pdoc);
+  Doc     *doc   = jhtml->doc;
 
   W_L("</pre>");
   jhtml->pre_flag--;
@@ -1650,8 +1801,8 @@ s_jhtml_end_pre_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_jhtml_start_ul_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  jhtml_t       *jhtml = GET_JHTML(pdoc);
-  Doc           *doc   = jhtml->doc;
+  jhtml_t *jhtml = GET_JHTML(pdoc);
+  Doc     *doc   = jhtml->doc;
 
   W_L("<ul>");
   return jhtml->out;
@@ -1669,8 +1820,8 @@ s_jhtml_start_ul_tag(void *pdoc, Node *UNUSED(node))
 static char *
 s_jhtml_end_ul_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jhtml_t       *jhtml = GET_JHTML(pdoc);
-  Doc           *doc   = jhtml->doc;
+  jhtml_t *jhtml = GET_JHTML(pdoc);
+  Doc     *doc   = jhtml->doc;
 
   W_L("</ul>");
   return jhtml->out;
@@ -1688,11 +1839,11 @@ s_jhtml_end_ul_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_jhtml_start_hr_tag(void *pdoc, Node *node) 
 {
-  jhtml_t      *jhtml = GET_JHTML(pdoc);
-  Doc          *doc   = jhtml->doc;
-  Attr         *attr;
+  jhtml_t *jhtml = GET_JHTML(pdoc);
+  Doc     *doc   = jhtml->doc;
+  Attr    *attr;
 
-  W_L("<hr ");
+  W_L("<hr");
   for (attr = qs_get_attr(doc,node);
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
@@ -1702,40 +1853,44 @@ s_jhtml_start_hr_tag(void *pdoc, Node *node)
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
-      W_L(" align=\"");
-      W_V(value);
-      W_L("\" ");
+      if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('c','C',"center",value))) {
+        W_L(" align=\"");
+        W_V(value);
+        W_L("\"");
+      }
     }
-    else if (STRCASEEQ('s','S',"size",name)) {
+    else if (STRCASEEQ('s','S',"size",name) && value && *value) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
       W_L(" size=\"");
       W_V(value);
-      W_L("\" ");
+      W_L("\"");
     }
-    else if (STRCASEEQ('w','W',"width",name)) {
+    else if (STRCASEEQ('w','W',"width",name) && value && *value) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
       W_L(" width=\"");
       W_V(value);
-      W_L("\" ");
+      W_L("\"");
     }
     else if (STRCASEEQ('n','N',"noshade",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
-      W_L(" noshade ");
+      W_L(" noshade");
     }
-    else if (STRCASEEQ('c','C',"color",name)) {
+    else if (STRCASEEQ('c','C',"color",name) && value && *value) {
       /*----------------------------------------------------------------------*/
       /* CHTML 4.0                                                            */
       /*----------------------------------------------------------------------*/
-      /* ignore */
+      W_L(" color=\"");
+      W_V(value);
+      W_L("\"");
     }
   }
-  W_L(" >");
+  W_L(">");
   return jhtml->out;
 }
 
@@ -1752,7 +1907,6 @@ static char *
 s_jhtml_end_hr_tag(void *pdoc, Node *UNUSED(child)) 
 {
   jhtml_t *jhtml = GET_JHTML(pdoc);
-
   return jhtml->out;
 }
 
@@ -1785,7 +1939,6 @@ s_jhtml_start_img_tag(void *pdoc, Node *node)
        attr = qs_get_next_attr(doc,attr)) {
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
-
     if (STRCASEEQ('s','S',"src",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
@@ -1815,6 +1968,7 @@ s_jhtml_start_img_tag(void *pdoc, Node *node)
                              CHXJ_COOKIE_NOUPDATE_PARAM);
       }
       W_L(" src=\"");
+      W_V(value);
       W_L("\"");
 #endif
     }
@@ -1822,11 +1976,17 @@ s_jhtml_start_img_tag(void *pdoc, Node *node)
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
-      W_L(" align=\"");
-      W_V(value);
-      W_L("\"");
+      if (value && (STRCASEEQ('t','T',"top",   value) ||
+                    STRCASEEQ('m','M',"middle",value) ||
+                    STRCASEEQ('b','B',"bottom",value) ||
+                    STRCASEEQ('l','L',"left",  value) ||
+                    STRCASEEQ('r','R',"right", value))) {
+        W_L(" align=\"");
+        W_V(value);
+        W_L("\"");
+      }
     }
-    else if (STRCASEEQ('w','W',"width",name)) {
+    else if (STRCASEEQ('w','W',"width",name) && value && *value) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
@@ -1834,7 +1994,7 @@ s_jhtml_start_img_tag(void *pdoc, Node *node)
       W_V(value);
       W_L("\"");
     }
-    else if (STRCASEEQ('h','H',"height",name)) {
+    else if (STRCASEEQ('h','H',"height",name) && value && *value) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
@@ -1846,31 +2006,21 @@ s_jhtml_start_img_tag(void *pdoc, Node *node)
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
-      W_L(" hspace=\"");
-      W_V(value);
-      W_L("\"");
+      /* ignore */
     }
     else if (STRCASEEQ('v','V',"vspace",name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
-      W_L(" vspace=\"");
-      W_V(value);
-      W_L("\"");
+      /* ignore */
     }
-    else if (STRCASEEQ('a','A',"alt",name)) {
+    else if (STRCASEEQ('a','A',"alt",name) && value && *value) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
       W_L(" alt=\"");
       W_V(value);
       W_L("\"");
-    }
-    else if (STRCASEEQ('a','A',"align",name)) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 4.0                                                            */
-      /*----------------------------------------------------------------------*/
-      /* ignore */
     }
   }
   W_L(">");
@@ -1890,7 +2040,6 @@ static char *
 s_jhtml_end_img_tag(void *pdoc, Node *UNUSED(child)) 
 {
   jhtml_t *jhtml = GET_JHTML(pdoc);
-
   return jhtml->out;
 }
 
@@ -1906,12 +2055,12 @@ s_jhtml_end_img_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_jhtml_start_select_tag(void *pdoc, Node *child)
 {
-  jhtml_t     *jhtml = GET_JHTML(pdoc);
-  Doc         *doc   = jhtml->doc;
-  Attr        *attr;
-
-  char *size      = NULL;
-  char *name      = NULL;
+  jhtml_t *jhtml    = GET_JHTML(pdoc);
+  Doc     *doc      = jhtml->doc;
+  Attr    *attr;
+  char    *size     = NULL;
+  char    *name     = NULL;
+  char    *multiple = NULL;
 
   W_L("<select");
   for (attr = qs_get_attr(doc,child);
@@ -1931,28 +2080,30 @@ s_jhtml_start_select_tag(void *pdoc, Node *child)
       /*----------------------------------------------------------------------*/
       name = apr_pstrdup(doc->buf.pool, val);
     }
-    else if (STRCASEEQ('m','M',"multiple",nm)) {
+    else if (STRCASEEQ('m','M',"multiple", nm)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0 version 2.0                                                */
       /*----------------------------------------------------------------------*/
-      /* not support */
+      multiple = apr_pstrdup(doc->buf.pool, val);
     }
   }
-
-  if (size) {
+  if (size && *size) {
     W_L(" size=\"");
     W_V(size);
     W_L("\"");
   }
-
-  if (name) {
+  if (name && *name) {
     W_L(" name=\"");
     W_V(name);
     W_L("\"");
   }
-  W_L(">\n");
+  if (multiple) {
+    W_L(" multiple");
+  }
+  W_L(">");
   return jhtml->out;
 }
+
 
 /**
  * It is a handler who processes the SELECT tag.
@@ -1965,10 +2116,10 @@ s_jhtml_start_select_tag(void *pdoc, Node *child)
 static char *
 s_jhtml_end_select_tag(void *pdoc, Node *UNUSED(child))
 {
-  jhtml_t      *jhtml = GET_JHTML(pdoc);
-  Doc          *doc   = jhtml->doc;
+  jhtml_t *jhtml = GET_JHTML(pdoc);
+  Doc     *doc   = jhtml->doc;
 
-  W_L("</select>\n");
+  W_L("</select>");
   return jhtml->out;
 }
 
@@ -1983,12 +2134,12 @@ s_jhtml_end_select_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_jhtml_start_option_tag(void *pdoc, Node *child)
 {
-  jhtml_t      *jhtml = GET_JHTML(pdoc);
-  Doc          *doc   = jhtml->doc;
-  Attr         *attr;
+  jhtml_t *jhtml = GET_JHTML(pdoc);
+  Doc     *doc   = jhtml->doc;
+  Attr    *attr;
 
-  char         *selected   = NULL;
-  char         *value      = NULL;
+  char *selected   = NULL;
+  char *value      = NULL;
 
   W_L("<option");
   for (attr = qs_get_attr(doc,child);
@@ -2009,18 +2160,13 @@ s_jhtml_start_option_tag(void *pdoc, Node *child)
       value = apr_pstrdup(doc->buf.pool, val);
     }
   }
-
-  if (value) {
+  if (value && *value) {
     W_L(" value=\"");
     W_V(value);
     W_L("\"");
   }
-  else {
-    W_L(" value=\"\"");
-  }
-
   if (selected) {
-    W_L(" selected ");
+    W_L(" selected");
   }
   W_L(">");
   return jhtml->out;
@@ -2038,12 +2184,8 @@ s_jhtml_start_option_tag(void *pdoc, Node *child)
 static char *
 s_jhtml_end_option_tag(void *pdoc, Node *UNUSED(child))
 {
-  jhtml_t *jhtml;
-
-  jhtml = GET_JHTML(pdoc);
-
+  jhtml_t *jhtml = GET_JHTML(pdoc);
   /* Don't close */
-
   return jhtml->out;
 }
 
@@ -2063,31 +2205,27 @@ s_jhtml_start_div_tag(void *pdoc, Node *child)
   Doc          *doc;
   request_rec  *r;
   Attr         *attr;
-
-  char         *align;
+  char         *align = NULL;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
   r     = doc->r;
 
-  align = NULL;
-
   W_L("<div");
   for (attr = qs_get_attr(doc,child);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-    char *nm;
-    char *val;
-    nm  = qs_get_attr_name(doc,attr);
-    val = qs_get_attr_value(doc,attr);
+    char *nm  = qs_get_attr_name(doc,attr);
+    char *val = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('a','A',"align",nm)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0 (W3C version 3.2)                                          */
       /*----------------------------------------------------------------------*/
-      align = apr_pstrdup(doc->buf.pool, val);
+      if (val && (STRCASEEQ('l','L',"left",val) || STRCASEEQ('r','R',"right",val) || STRCASEEQ('c','C',"center",val))) {
+        align = apr_pstrdup(doc->buf.pool, val);
+      }
     }
   }
-
   if (align) {
     W_L(" align=\"");
     W_V(align);
@@ -2111,46 +2249,48 @@ s_jhtml_end_div_tag(void *pdoc, Node *UNUSED(child))
 {
   jhtml_t      *jhtml;
   Doc          *doc;
+  request_rec  *r;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
+  r     = doc->r;
 
-  W_L("</div>\n");
+  W_L("</div>");
   return jhtml->out;
 }
 
 
 static char *
-chxj_istyle_to_mode(Doc *doc, const char *s)
+chxj_istyle_to_mode(apr_pool_t *p, const char *s)
 {
   char *tmp;
 
   if (s) {
     switch (s[0]) {
-    case '1': return apr_psprintf(doc->buf.pool, "hiragana");
-    case '2': return apr_psprintf(doc->buf.pool, "hankakukana");
-    case '3': return apr_psprintf(doc->buf.pool, "alphabet");
-    case '4': return apr_psprintf(doc->buf.pool, "numeric");
+    case '1': return apr_psprintf(p, "hiragana");
+    case '2': return apr_psprintf(p, "hankakukana");
+    case '3': return apr_psprintf(p, "alphabet");
+    case '4': return apr_psprintf(p, "numeric");
     default: 
-      tmp = apr_palloc(doc->buf.pool, 1);
+      tmp = apr_palloc(p, 1);
       tmp[0] = '\0';
-      return apr_pstrdup(doc->buf.pool, tmp);
+      return apr_pstrdup(p, tmp);
     }
   }
 
-  tmp = apr_palloc(doc->buf.pool, 1);
+  tmp = apr_palloc(p, 1);
   tmp[0] = '\0';
-  return apr_pstrdup(doc->buf.pool,tmp);
+  return apr_pstrdup(p,tmp);
 }
 
 
 static char *
 s_jhtml_chxjif_tag(void *pdoc, Node *node)
 {
-  jhtml_t      *jhtml;
-  Doc          *doc;
-  Node         *child;
-  request_rec  *r;
+  jhtml_t *jhtml;
+  Doc     *doc;
+  Node    *child;
+  request_rec *r;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
@@ -2187,32 +2327,40 @@ s_jhtml_start_textarea_tag(void *pdoc, Node *node)
   r     = doc->r;
 
   jhtml->textarea_flag++;
-  W_L("<textarea ");
+  W_L("<textarea");
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-    char *name;
-    char *value;
-    name  = qs_get_attr_name(doc,attr);
-    value = qs_get_attr_value(doc,attr);
-    if (STRCASEEQ('n','N',"name",name)) {
-      char *vv = chxj_jreserved_to_safe_tag(r, value);
-      W_L(" name=\"");
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('a','A',"accesskey",name) && value && *value != 0) {
+      W_L(" accesskey=\"");
+      W_V(value);
+      W_L("\"");
+    }
+    else if (STRCASEEQ('i','I',"istyle", name) && value && (*value == '1' || *value == '2' || *value == '3' || *value == '4')) {
+      char *vv = chxj_istyle_to_mode(doc->buf.pool,value);
+      W_L(" mode=\"");
       W_V(vv);
       W_L("\"");
     }
-    else if (STRCASEEQ('r','R',"rows",name)) {
+    else if (STRCASEEQ('n','N',"name", name) && value && *value) {
+      W_L(" name=\"");
+      W_V(value);
+      W_L("\"");
+    }
+    else if (STRCASEEQ('r','R',"rows", name) && value && *value) {
       W_L(" rows=\"");
       W_V(value);
       W_L("\"");
     }
-    else if (STRCASEEQ('c','C',"cols",name)) {
+    else if (STRCASEEQ('c','C',"cols", name) && value && *value) {
       W_L(" cols=\"");
       W_V(value);
       W_L("\"");
     }
   }
-  W_L(">\r\n");
+  W_L(">");
   return jhtml->out;
 }
 
@@ -2236,7 +2384,7 @@ s_jhtml_end_textarea_tag(void *pdoc, Node *UNUSED(child))
   doc   = jhtml->doc;
   r     = doc->r;
 
-  W_L("</textarea>\r\n");
+  W_L("</textarea>");
   jhtml->textarea_flag--;
 
   return jhtml->out;
@@ -2251,14 +2399,15 @@ s_jhtml_end_textarea_tag(void *pdoc, Node *UNUSED(child))
  * @param node   [i]   The B tag node is specified.
  * @return The conversion result is returned.
  */
-static char *
-s_jhtml_start_b_tag(void *pdoc, Node *UNUSED(node)) 
+static char*
+s_jhtml_start_b_tag(void* pdoc, Node* UNUSED(node)) 
 {
   jhtml_t       *jhtml;
   Doc           *doc;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
+  r     = doc->r;
 
   W_L("<b>");
   return jhtml->out;
@@ -2273,11 +2422,11 @@ s_jhtml_start_b_tag(void *pdoc, Node *UNUSED(node))
  * @param node   [i]   The B tag node is specified.
  * @return The conversion result is returned.
  */
-static char *
-s_jhtml_end_b_tag(void *pdoc, Node *UNUSED(child)) 
+static char*
+s_jhtml_end_b_tag(void* pdoc, Node* UNUSED(child)) 
 {
-  jhtml_t       *jhtml = GET_JHTML(pdoc);
-  Doc           *doc   = jhtml->doc;
+  jhtml_t*      jhtml = GET_JHTML(pdoc);
+  Doc*          doc   = jhtml->doc;
 
   W_L("</b>\r\n");
   return jhtml->out;
@@ -2302,7 +2451,6 @@ s_jhtml_text_tag(void *pdoc, Node *child)
   r     = doc->r;
 
   textval = qs_get_node_value(doc,child);
-  textval = qs_trim_string(r->pool, textval);
   if (strlen(textval) == 0) {
     return jhtml->out;
   }
@@ -2344,11 +2492,82 @@ s_jhtml_text_tag(void *pdoc, Node *child)
 }
 
 
+/**
+ * It is a handler who processes the BLOCKQUOTE tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The BLOCKQUOTE tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_start_blockquote_tag(void *pdoc, Node *UNUSED(child))
+{
+  jhtml_t *jhtml = GET_JHTML(pdoc);
+  Doc     *doc   = jhtml->doc;
+  W_L("<blockquote>");
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the BLOCKQUOTE tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The BLOCKQUOTE tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_end_blockquote_tag(void *pdoc, Node *UNUSED(child))
+{
+  jhtml_t *jhtml = GET_JHTML(pdoc);
+  Doc     *doc   = jhtml->doc;
+  W_L("</blockquote>");
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the DIR tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DIR tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_start_dir_tag(void *pdoc, Node *UNUSED(child))
+{
+  jhtml_t *jhtml = GET_JHTML(pdoc);
+  Doc *doc = jhtml->doc;
+  W_L("<dir>");
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the DIR tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DIR tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_end_dir_tag(void *pdoc, Node *UNUSED(child))
+{
+  jhtml_t *jhtml = GET_JHTML(pdoc);
+  Doc *doc = jhtml->doc;
+  W_L("</dir>");
+  return jhtml->out;
+}
+
 
 /**
  * It is a handler who processes the DL tag.
  *
- * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The DL tag node is specified.
  * @return The conversion result is returned.
@@ -2356,12 +2575,8 @@ s_jhtml_text_tag(void *pdoc, Node *child)
 static char *
 s_jhtml_start_dl_tag(void *pdoc, Node *UNUSED(child))
 {
-  jhtml_t      *jhtml;
-  Doc          *doc;
-
-  jhtml = GET_JHTML(pdoc);
-  doc   = jhtml->doc;
-
+  jhtml_t *jhtml = GET_JHTML(pdoc);
+  Doc *doc = jhtml->doc;
   W_L("<dl>");
   return jhtml->out;
 }
@@ -2370,7 +2585,7 @@ s_jhtml_start_dl_tag(void *pdoc, Node *UNUSED(child))
 /**
  * It is a handler who processes the DL tag.
  *
- * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The DL tag node is specified.
  * @return The conversion result is returned.
@@ -2378,13 +2593,9 @@ s_jhtml_start_dl_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_jhtml_end_dl_tag(void *pdoc, Node *UNUSED(child))
 {
-  jhtml_t      *jhtml;
-  Doc          *doc;
-
-  jhtml = GET_JHTML(pdoc);
-  doc   = jhtml->doc;
-
-  W_L("</dl>\n");
+  jhtml_t *jhtml = GET_JHTML(pdoc);
+  Doc *doc = jhtml->doc;
+  W_L("</dl>");
   return jhtml->out;
 }
 
@@ -2392,7 +2603,7 @@ s_jhtml_end_dl_tag(void *pdoc, Node *UNUSED(child))
 /**
  * It is a handler who processes the DT tag.
  *
- * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The DT tag node is specified.
  * @return The conversion result is returned.
@@ -2400,12 +2611,8 @@ s_jhtml_end_dl_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_jhtml_start_dt_tag(void *pdoc, Node *UNUSED(child))
 {
-  jhtml_t      *jhtml;
-  Doc          *doc;
-
-  jhtml = GET_JHTML(pdoc);
-  doc   = jhtml->doc;
-
+  jhtml_t *jhtml = GET_JHTML(pdoc);
+  Doc     *doc   = jhtml->doc;
   W_L("<dt>");
   return jhtml->out;
 }
@@ -2414,7 +2621,7 @@ s_jhtml_start_dt_tag(void *pdoc, Node *UNUSED(child))
 /**
  * It is a handler who processes the DT tag.
  *
- * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The DT tag node is specified.
  * @return The conversion result is returned.
@@ -2422,14 +2629,7 @@ s_jhtml_start_dt_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_jhtml_end_dt_tag(void *pdoc, Node *UNUSED(child))
 {
-  jhtml_t      *jhtml;
-  Doc          *doc;
-
-  jhtml = GET_JHTML(pdoc);
-  doc   = jhtml->doc;
-
-
-  W_L("\n");
+  jhtml_t *jhtml = GET_JHTML(pdoc);
   return jhtml->out;
 }
 
@@ -2437,7 +2637,7 @@ s_jhtml_end_dt_tag(void *pdoc, Node *UNUSED(child))
 /**
  * It is a handler who processes the DD tag.
  *
- * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The DD tag node is specified.
  * @return The conversion result is returned.
@@ -2445,14 +2645,8 @@ s_jhtml_end_dt_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_jhtml_start_dd_tag(void *pdoc, Node *UNUSED(child))
 {
-  jhtml_t      *jhtml;
-  Doc          *doc;
-  request_rec  *r;
-
-  jhtml = GET_JHTML(pdoc);
-  doc   = jhtml->doc;
-  r     = doc->r;
-
+  jhtml_t *jhtml = GET_JHTML(pdoc);
+  Doc *doc = jhtml->doc;
   W_L("<dd>");
   return jhtml->out;
 }
@@ -2461,7 +2655,7 @@ s_jhtml_start_dd_tag(void *pdoc, Node *UNUSED(child))
 /**
  * It is a handler who processes the DD tag.
  *
- * @param pdoc  [i/o] The pointer to the CHTML structure at the output
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The DD tag node is specified.
  * @return The conversion result is returned.
@@ -2469,15 +2663,626 @@ s_jhtml_start_dd_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_jhtml_end_dd_tag(void *pdoc, Node *UNUSED(child))
 {
-  jhtml_t      *jhtml;
-  Doc          *doc;
-  request_rec  *r;
+  jhtml_t *jhtml = GET_JHTML(pdoc);
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the H1 tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H1 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_start_h1_tag(void *pdoc, Node *node)
+{
+  jhtml_t       *jhtml;
+  Doc           *doc;
+  request_rec   *r;
+  Attr          *attr;
+  char          *align = NULL;
+
+  jhtml   = GET_JHTML(pdoc);
+  doc     = jhtml->doc;
+  r       = doc->r;
+
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char* name;
+    char* value;
+    name  = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('a','A',"align", name)) {
+      if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('c','C',"center",value))) {
+        jhtml->h1_align_flag++;
+        align = apr_pstrdup(doc->buf.pool, value);
+        break;
+      }
+    }
+  }
+  if (align) {
+    W_L("<div align=\"");
+    W_V(align);
+    W_L("\">");
+  }
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the H1 tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H1 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_end_h1_tag(void *pdoc, Node *UNUSED(child)) 
+{
+  jhtml_t*    jhtml;
+  Doc*          doc;
+  request_rec*  r;
 
   jhtml = GET_JHTML(pdoc);
-  doc   = jhtml->doc;
-  r     = doc->r;
+  doc     = jhtml->doc;
+  r       = doc->r;
+  
+  if (jhtml->h1_align_flag) {
+    jhtml->h1_align_flag--;
+    W_L("</div>");
+  }
+  return jhtml->out;
+}
 
-  W_L("\n");
+
+/**
+ * It is a handler who processes the H2 tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H1 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_start_h2_tag(void *pdoc, Node *node)
+{
+  jhtml_t       *jhtml;
+  Doc           *doc;
+  request_rec   *r;
+  Attr          *attr;
+  char          *align = NULL;
+
+  jhtml   = GET_JHTML(pdoc);
+  doc     = jhtml->doc;
+  r       = doc->r;
+
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char* name;
+    char* value;
+    name  = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('a','A',"align", name)) {
+      if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('c','C',"center",value))) {
+        jhtml->h2_align_flag++;
+        align = apr_pstrdup(doc->buf.pool, value);
+        break;
+      }
+    }
+  }
+  if (align) {
+    W_L("<div align=\"");
+    W_V(align);
+    W_L("\">");
+  }
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the H2 tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H1 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_end_h2_tag(void *pdoc, Node *UNUSED(child)) 
+{
+  jhtml_t*    jhtml;
+  Doc*          doc;
+  request_rec*  r;
+
+  jhtml = GET_JHTML(pdoc);
+  doc     = jhtml->doc;
+  r       = doc->r;
+  
+  if (jhtml->h2_align_flag) {
+    jhtml->h2_align_flag--;
+    W_L("</div>");
+  }
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the H3 tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H1 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_start_h3_tag(void *pdoc, Node *node)
+{
+  jhtml_t       *jhtml;
+  Doc           *doc;
+  request_rec   *r;
+  Attr          *attr;
+  char          *align = NULL;
+
+  jhtml   = GET_JHTML(pdoc);
+  doc     = jhtml->doc;
+  r       = doc->r;
+
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char* name;
+    char* value;
+    name  = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('a','A',"align", name)) {
+      if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('c','C',"center",value))) {
+        jhtml->h3_align_flag++;
+        align = apr_pstrdup(doc->buf.pool, value);
+        break;
+      }
+    }
+  }
+  if (align) {
+    W_L("<div align=\"");
+    W_V(align);
+    W_L("\">");
+  }
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the H3 tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H1 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_end_h3_tag(void *pdoc, Node *UNUSED(child)) 
+{
+  jhtml_t*    jhtml;
+  Doc*          doc;
+  request_rec*  r;
+
+  jhtml = GET_JHTML(pdoc);
+  doc     = jhtml->doc;
+  r       = doc->r;
+  
+  if (jhtml->h3_align_flag) {
+    jhtml->h3_align_flag--;
+    W_L("</div>");
+  }
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the H4 tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H1 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_start_h4_tag(void *pdoc, Node *node)
+{
+  jhtml_t       *jhtml;
+  Doc           *doc;
+  request_rec   *r;
+  Attr          *attr;
+  char          *align = NULL;
+
+  jhtml   = GET_JHTML(pdoc);
+  doc     = jhtml->doc;
+  r       = doc->r;
+
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char* name;
+    char* value;
+    name  = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('a','A',"align", name)) {
+      if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('c','C',"center",value))) {
+        jhtml->h4_align_flag++;
+        align = apr_pstrdup(doc->buf.pool, value);
+        break;
+      }
+    }
+  }
+  if (align) {
+    W_L("<div align=\"");
+    W_V(align);
+    W_L("\">");
+  }
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the H4 tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H1 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_end_h4_tag(void *pdoc, Node *UNUSED(child)) 
+{
+  jhtml_t*    jhtml;
+  Doc*          doc;
+  request_rec*  r;
+
+  jhtml = GET_JHTML(pdoc);
+  doc     = jhtml->doc;
+  r       = doc->r;
+  
+  if (jhtml->h4_align_flag) {
+    jhtml->h4_align_flag--;
+    W_L("</div>");
+  }
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the H5 tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H1 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_start_h5_tag(void *pdoc, Node *node)
+{
+  jhtml_t       *jhtml;
+  Doc           *doc;
+  request_rec   *r;
+  Attr          *attr;
+  char          *align = NULL;
+
+  jhtml   = GET_JHTML(pdoc);
+  doc     = jhtml->doc;
+  r       = doc->r;
+
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char* name;
+    char* value;
+    name  = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('a','A',"align", name)) {
+      if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('c','C',"center",value))) {
+        jhtml->h5_align_flag++;
+        align = apr_pstrdup(doc->buf.pool, value);
+        break;
+      }
+    }
+  }
+  if (align) {
+    W_L("<div align=\"");
+    W_V(align);
+    W_L("\">");
+  }
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the H5 tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H1 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_end_h5_tag(void *pdoc, Node *UNUSED(child)) 
+{
+  jhtml_t*    jhtml;
+  Doc*          doc;
+  request_rec*  r;
+
+  jhtml = GET_JHTML(pdoc);
+  doc     = jhtml->doc;
+  r       = doc->r;
+  
+  if (jhtml->h5_align_flag) {
+    jhtml->h5_align_flag--;
+    W_L("</div>");
+  }
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the H6 tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H1 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_start_h6_tag(void *pdoc, Node *node)
+{
+  jhtml_t       *jhtml;
+  Doc           *doc;
+  request_rec   *r;
+  Attr          *attr;
+  char          *align = NULL;
+
+  jhtml   = GET_JHTML(pdoc);
+  doc     = jhtml->doc;
+  r       = doc->r;
+
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char* name;
+    char* value;
+    name  = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('a','A',"align", name)) {
+      if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('c','C',"center",value))) {
+        jhtml->h6_align_flag++;
+        align = apr_pstrdup(doc->buf.pool, value);
+        break;
+      }
+    }
+  }
+  if (align) {
+    W_L("<div align=\"");
+    W_V(align);
+    W_L("\">");
+  }
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the H6 tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The H1 tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_end_h6_tag(void *pdoc, Node *UNUSED(child)) 
+{
+  jhtml_t*    jhtml;
+  Doc*          doc;
+  request_rec*  r;
+
+  jhtml = GET_JHTML(pdoc);
+  doc     = jhtml->doc;
+  r       = doc->r;
+  
+  if (jhtml->h6_align_flag) {
+    jhtml->h6_align_flag--;
+    W_L("</div>");
+  }
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the MENU tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The MENU tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_start_menu_tag(void *pdoc, Node *UNUSED(child))
+{
+  jhtml_t *jhtml = GET_JHTML(pdoc);
+  Doc     *doc = jhtml->doc;
+  W_L("<menu>");
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the MENU tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The MENU tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_end_menu_tag(void *pdoc, Node *UNUSED(child))
+{
+  jhtml_t *jhtml = GET_JHTML(pdoc);
+  Doc     *doc = jhtml->doc;
+  W_L("</menu>");
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the PLAINTEXT tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The PLAINTEXT tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_start_plaintext_tag(void *pdoc, Node *node)
+{
+  jhtml_t *jhtml;
+  Doc *doc;
+
+  jhtml = GET_JHTML(pdoc);
+  doc     = jhtml->doc;
+  W_L("<plaintext>");
+  s_jhtml_start_plaintext_tag_inner(pdoc,node);
+  return jhtml->out;
+}
+
+static char *
+s_jhtml_start_plaintext_tag_inner(void *pdoc, Node *node)
+{
+  jhtml_t *jhtml;
+  Doc *doc;
+  Node *child;
+  jhtml = GET_JHTML(pdoc);
+  doc     = jhtml->doc;
+  for (child = qs_get_child_node(doc, node);
+       child;
+       child = qs_get_next_node(doc, child)) {
+    W_V(child->otext);
+    s_jhtml_start_plaintext_tag_inner(pdoc, child);
+  }
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the PLAINTEXT tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The PLAINTEXT tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_end_plaintext_tag(void *pdoc, Node *UNUSED(child))
+{
+  jhtml_t *jhtml = GET_JHTML(pdoc);
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the BLINK tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The BLINK tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_start_blink_tag(void *pdoc, Node *UNUSED(child))
+{
+  jhtml_t *jhtml = GET_JHTML(pdoc);
+  Doc     *doc = jhtml->doc;
+  W_L("<blink>");
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the BLINK tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The BLINK tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_end_blink_tag(void *pdoc, Node *UNUSED(child))
+{
+  jhtml_t *jhtml = GET_JHTML(pdoc);
+  Doc     *doc = jhtml->doc;
+  W_L("</blink>");
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the MARQUEE tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The MARQUEE tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_start_marquee_tag(void *pdoc, Node *node)
+{
+  jhtml_t *jhtml = GET_JHTML(pdoc);
+  Doc *doc = jhtml->doc;
+  Attr *attr;
+  W_L("<marquee");
+  /*--------------------------------------------------------------------------*/
+  /* Get Attributes                                                           */
+  /*--------------------------------------------------------------------------*/
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char *name   = qs_get_attr_name(doc,attr);
+    char *value  = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('d','D',"direction", name)) {
+      if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value))) {
+        W_L(" direction=\"");
+        W_V(value);
+        W_L("\"");
+      }
+    }
+    else if (STRCASEEQ('b','B',"behavior",name)) {
+      /* ignore */
+    }
+    else if (STRCASEEQ('l','L',"loop",name)) {
+      /* ignore */
+    }
+  }
+  W_L(">");
+  return jhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the MARQUEE tag.
+ *
+ * @param pdoc  [i/o] The pointer to the JHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The MARQUEE tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_jhtml_end_marquee_tag(void *pdoc, Node *UNUSED(child))
+{
+  jhtml_t *jhtml = GET_JHTML(pdoc);
+  Doc *doc = jhtml->doc;
+  W_L("</marquee>");
   return jhtml->out;
 }
 /*

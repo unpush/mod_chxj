@@ -1,6 +1,6 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
-AC_INIT([mod_chxj],[1.0.0])
+AC_INIT([mod_chxj],[1.0.0-1])
 AC_PREREQ(2.59)
 AC_CONFIG_SRCDIR([src/mod_chxj.c])
 AC_CANONICAL_TARGET
@@ -12,16 +12,15 @@ AC_CONFIG_HEADERS([include/config.h])
 AC_PROG_CPP
 AC_PROG_CC
 AC_PROG_INSTALL
-AC_PROG_LIBTOOL
-
+AM_PROG_LIBTOOL
 AC_LANG(C)
+AC_SUBST(LIBTOOL_DEPS)
+
 
 # Checks for libraries.
 AC_CHECK_LIB([apr-1],  [main])
 
 AC_ARG_WITH(apache-header, [  --with-apache-header=ARG The directory with the header file of apache2.x is specified. ]) 
-#[, ACTION-IF-GIVEN[, ACTION-IF-NOT-GIVEN]])
-
 if test "x$with_apache_header" = "xyes"; then
     AC_MSG_ERROR([
 Please specify the --with-apache-header option. And, please specify the place of the header file. 
@@ -65,6 +64,13 @@ AC_ARG_WITH(apu-config, [  --with-apu-config=ARG  Path of apu-config program fil
 if test "x$with_apu_config" = "xyes" ; then
     AC_MSG_ERROR([
 Please specify the --with-apu-config option. And, please specify the place of the apu-config program. 
+])
+fi
+
+AC_ARG_WITH(pcre-config, [  --with-pcre-config=ARG  Path of pcre-config program file.])
+if test "x$with_pcre_config" = "xyes" ; then
+    AC_MSG_ERROR([
+Please specify the --with-pcre-config option. And, please specify the place of the pcre-config program.
 ])
 fi
 
@@ -162,13 +168,13 @@ fi
 
 if test "x$with_apxs" = "x" ; then
   AC_PATH_PROG(APXS2, apxs2, no,
-               /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/usr/local/apache/bin)
+      /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/usr/local/apache/bin)
   if test "x$APXS2" = "xno"; then
-      AC_PATH_PROG(APXS, apxs, no,
-                   /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/usr/local/apache/bin)
-      if test "x$APXS" = "xno" ; then
-        AC_MSG_ERROR([apxs not found.])
-      fi
+    AC_PATH_PROG(APXS, apxs, no,
+      /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/usr/local/apache/bin)
+    if test "x$APXS" = "xno" ; then
+      AC_MSG_ERROR([apxs not found.])
+    fi
   else
     APXS="$APXS2"
   fi
@@ -221,17 +227,15 @@ if test "x$with_apu_config" != "x" ; then
   APU_CONFIG=$with_apu_config
 fi
 
-if test "x$with_apache_header" = "x" ; then
-  with_apache_header=`${APXS} -q includedir`
-  AC_SUBST(with_apache_header)
-fi
-
 case $host_os in
   freebsd*)
     CFLAGS="${CFLAGS} -I/usr/local/include "
     ;;
 esac
 
+if test "x${with_apache_header}" = "x" ; then
+  with_apache_header=`${APXS} -q includedir`
+fi
 
 
 
@@ -246,11 +250,9 @@ CFLAGS="${CFLAGS} `${APU_CONFIG} --includes`"
 CFLAGS="${CFLAGS} -I${with_apache_header}"
 CFLAGS="${CFLAGS} ${MYSQL_COOKIE_DEFS}"
 CFLAGS="${CFLAGS} ${MEMCACHE_COOKIE_DEFS}"
-CPPFLAGS="${CPPFLAGS} `${APR_CONFIG} --includes` "
-CPPFLAGS="${CPPFLAGS} -I${with_apache_header}"
+CPPFLAGS="${CPPFLAGS} `${APR_CONFIG} --includes` -I${with_apache_header}"
 CPPFLAGS="${CPPFLAGS} ${MYSQL_COOKIE_DEFS}"
 CPPFLAGS="${CPPFLAGS} ${MEMCACHE_COOKIE_DEFS}"
-
 
 # Checks for header files.
 AC_HEADER_STDC
@@ -277,7 +279,7 @@ if test "x$use_pcre_flag" = "xyes" ; then
   fi
   CFLAGS="${CFLAGS} `${PCRE_CONFIG} --cflags`"
 else
-  AC_DEFINE([HAVE_AP_REGEX_H], [], [Define to 1 if you have the <ap_regex.h> header file.])
+  AC_DEFINE([HAVE_AP_REGEX_H], [1], [Define to 1 if you have the <ap_regex.h> header file.])
 fi
 
 # Checks for typedefs, structures, and compiler characteristics.

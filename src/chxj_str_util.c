@@ -75,39 +75,38 @@ chxj_atoi(const char *s)
   return result;
 }
 
-
 int
 chxj_strcasenrcmp(apr_pool_t *p, const char *s1, const char *s2, int n)
 {
-   register int s1_len;
-   register int s2_len;
-   char *ss1;
-   char *ss2;
-   register char *ss1p;
-   register char *ss2p;
+    register int s1_len;
+    register int s2_len;
+    char *ss1;
+    char *ss2;
+    register char *ss1p;
+    register char *ss2p;
 
-   s1_len = strlen(s1) - 1;
-   s2_len = strlen(s2) - 1;
+    s1_len = strlen(s1) - 1;
+    s2_len = strlen(s2) - 1;
 
-   ss1 = (char *)apr_palloc(p, s1_len + 2);
-   if (!ss1) {
-     return -1;
-   }
-   ss2 = (char *)apr_palloc(p, s2_len + 2);
-   if (!ss2) {
-     return -1;
-   }
+    ss1 = (char *)apr_palloc(p, s1_len + 2);
+    if (!ss1) {
+      return -1;
+    }
+    ss2 = (char *)apr_palloc(p, s2_len + 2);
+    if (!ss2) {
+      return -1;
+    }
 
-   strcpy(&ss1[1], s1);
-   strcpy(&ss2[1], s2);
-   ss1[0] = 0;
-   ss2[0] = 0;
-   ss1p = &ss1[s1_len+1];
-   ss2p = &ss2[s2_len+1];
+    strcpy(&ss1[1], s1);
+    strcpy(&ss2[1], s2);
+    ss1[0] = 0;
+    ss2[0] = 0;
+    ss1p = &ss1[s1_len+1];
+    ss2p = &ss2[s2_len+1];
 
-   for (;*ss1p && *ss2p && *ss1p == *ss2p && n - 1 > 0; ss1p--, ss2p--, n--);
+    for (;*ss1p && *ss2p && *ss1p == *ss2p && n - 1 > 0; ss1p--, ss2p--, n--);
 
-   return (int)(*ss1p - *ss2p);
+    return (int)(*ss1p - *ss2p);
 }
 
 

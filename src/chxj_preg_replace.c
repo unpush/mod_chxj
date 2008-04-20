@@ -16,11 +16,13 @@
  */
 #include <apr.h>
 #include <ap_config.h>
-#include <ap_regex.h>
 #include <apr_strings.h>
 #include <httpd.h>
 
+#include "mod_chxj.h"
+
 #include "chxj_preg_replace.h"
+
 
 static inline char *
 s_init_pattern(apr_pool_t *p, const char *old)

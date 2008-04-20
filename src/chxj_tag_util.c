@@ -86,17 +86,13 @@ qs_get_checked_attr(Doc *doc, Node *tag, request_rec *r)
       /*----------------------------------------------------------------------*/
       /* The VALUE attribute was found.                                       */
       /*----------------------------------------------------------------------*/
-      found_flag = 1;
-      break;
+      return name;
     }
   }
-  if (! found_flag)
-    /*------------------------------------------------------------------------*/
-    /* not found                                                              */
-    /*------------------------------------------------------------------------*/
-    return NULL;
-
-  return qs_get_value_attr(doc, tag, r);
+  /*------------------------------------------------------------------------*/
+  /* not found                                                              */
+  /*------------------------------------------------------------------------*/
+  return NULL;
 }
 
 
@@ -160,8 +156,8 @@ qs_alloc_zero_byte_string(request_rec *r)
  * @param s    [i]   The character string that should be removed is specified.
  * @return The character string that has been removed is returned.
  */
-char *
-qs_trim_string(apr_pool_t *p, char *s)
+char*
+qs_trim_string(apr_pool_t *p, char* s)
 {
   char *ss = apr_pstrdup(p, s);
   int len = strlen(s);
@@ -212,7 +208,6 @@ qs_get_selected_value_text(Doc *doc, Node *node, request_rec *r)
            attr != NULL; 
            attr = qs_get_next_attr(doc,attr)) {
         char *name  = qs_get_attr_name(doc,attr);
-
         DBG(r, "qs_get_selected_value name::[%s]" , name);
 
         if ((*name == 's'|| *name == 'S') && strcasecmp(name, "selected") == 0) {
@@ -458,7 +453,7 @@ qs_get_maxlength_attr(Doc *doc, Node *tag, request_rec *r)
  * @return 1 is returned when it is CHECKED and, additionally, 0 is returned. 
  */
 int
-qs_is_checked_checkbox_attr(Doc *doc, Node *tag, request_rec *UNUSED(r))
+qs_is_checked_checkbox_attr(Doc* doc, Node* tag, request_rec* UNUSED(r))
 {
   Attr *attr;
 

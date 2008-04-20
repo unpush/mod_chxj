@@ -22,11 +22,14 @@
 #include "chxj_img_conv.h"
 #include "chxj_qr_code.h"
 #include "chxj_buffered_write.h"
+#include "chxj_str_util.h"
 
-#define GET_XHTML(X) ((xhtml_t *)(X))
-#define W_L(X)  do { xhtml->out = BUFFERED_WRITE_LITERAL(xhtml->out, &doc->buf, (X)); } while(0)
-#define W_V(X)  do { xhtml->out = (X) ? BUFFERED_WRITE_VALUE(xhtml->out, &doc->buf, (X))  \
-                                      : BUFFERED_WRITE_LITERAL(xhtml->out, &doc->buf, ""); } while(0)
+#define GET_XHTML(X) ((xhtml_t*)(X))
+#undef W_L
+#undef W_V
+#define W_L(X)          do { xhtml->out = BUFFERED_WRITE_LITERAL(xhtml->out, &doc->buf, (X)); } while(0)
+#define W_V(X)          do { xhtml->out = (X) ? BUFFERED_WRITE_VALUE(xhtml->out, &doc->buf, (X))  \
+                                               : BUFFERED_WRITE_LITERAL(xhtml->out, &doc->buf, ""); } while(0)
 
 static char *s_xhtml_1_0_start_html_tag   (void *pdoc, Node *node);
 static char *s_xhtml_1_0_end_html_tag     (void *pdoc, Node *node);
@@ -84,19 +87,32 @@ static char *s_xhtml_1_0_start_select_tag (void *pdoc, Node *node);
 static char *s_xhtml_1_0_end_select_tag   (void *pdoc, Node *node);
 static char *s_xhtml_1_0_start_option_tag (void *pdoc, Node *node);
 static char *s_xhtml_1_0_end_option_tag   (void *pdoc, Node *node);
-static char *s_xhtml_1_0_start_div_tag    (void *pdoc, Node *node);
-static char *s_xhtml_1_0_end_div_tag      (void *pdoc, Node *node);
-static char *s_xhtml_1_0_start_textarea_tag(void *pdoc, Node *node);
-static char *s_xhtml_1_0_end_textarea_tag (void *pdoc, Node *node);
-static char *s_xhtml_1_0_start_b_tag      (void *pdoc, Node *node);
-static char *s_xhtml_1_0_end_b_tag        (void *pdoc, Node *node);
-static char *s_xhtml_1_0_chxjif_tag       (void *pdoc, Node *node);
-static char *s_xhtml_1_0_start_dl_tag     (void *pdoc, Node *node);
-static char *s_xhtml_1_0_end_dl_tag       (void *pdoc, Node *node);
-static char *s_xhtml_1_0_start_dt_tag     (void *pdoc, Node *node);
-static char *s_xhtml_1_0_end_dt_tag       (void *pdoc, Node *node);
-static char *s_xhtml_1_0_start_dd_tag     (void *pdoc, Node *node);
-static char *s_xhtml_1_0_end_dd_tag       (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_div_tag       (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_div_tag         (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_textarea_tag  (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_textarea_tag    (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_b_tag         (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_b_tag           (void *pdoc, Node *node);
+static char *s_xhtml_1_0_chxjif_tag          (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_blockquote_tag(void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_blockquote_tag  (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_dir_tag       (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_dir_tag         (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_dl_tag        (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_dl_tag          (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_dt_tag        (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_dt_tag          (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_dd_tag        (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_dd_tag          (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_menu_tag      (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_menu_tag        (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_plaintext_tag       (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_plaintext_tag_inner (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_plaintext_tag         (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_blink_tag     (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_blink_tag       (void *pdoc, Node *node);
+static char *s_xhtml_1_0_start_marquee_tag   (void *pdoc, Node *node);
+static char *s_xhtml_1_0_end_marquee_tag     (void *pdoc, Node *node);
 
 static void  s_init_xhtml(xhtml_t *xhtml, Doc *doc, request_rec *r, device_table *spec);
 static char* s_xhtml_1_0_text_tag(void *pdoc, Node *child);
@@ -328,6 +344,16 @@ tag_handler xhtml_handler[] = {
     NULL,
     NULL,
   },
+  /* tagBLOCKQUOTE */
+  {
+    s_xhtml_1_0_start_blockquote_tag,
+    s_xhtml_1_0_end_blockquote_tag,
+  },
+  /* tagDIR */
+  {
+    s_xhtml_1_0_start_dir_tag,
+    s_xhtml_1_0_end_dir_tag,
+  },
   /* tagDL */
   {
     s_xhtml_1_0_start_dl_tag,
@@ -337,6 +363,26 @@ tag_handler xhtml_handler[] = {
   {
     s_xhtml_1_0_start_dd_tag,
     s_xhtml_1_0_end_dd_tag,
+  },
+  /* tagMENU */
+  {
+    s_xhtml_1_0_start_menu_tag,
+    s_xhtml_1_0_end_menu_tag,
+  },
+  /* tagPLAINTEXT */
+  {
+    s_xhtml_1_0_start_plaintext_tag,
+    s_xhtml_1_0_end_plaintext_tag,
+  },
+  /* tagBLINK */
+  {
+    s_xhtml_1_0_start_blink_tag,
+    s_xhtml_1_0_end_blink_tag,
+  },
+  /* tagMARQUEE */
+  {
+    s_xhtml_1_0_start_marquee_tag,
+    s_xhtml_1_0_end_marquee_tag,
   },
 };
  
@@ -357,17 +403,17 @@ tag_handler xhtml_handler[] = {
  */
 char *
 chxj_convert_xhtml_mobile_1_0(
-  request_rec     *r,
-  device_table    *spec,
-  const char      *src,
-  apr_size_t      srclen,
-  apr_size_t      *dstlen,
+  request_rec        *r,
+  device_table       *spec,
+  const char         *src,
+  apr_size_t         srclen,
+  apr_size_t         *dstlen,
   chxjconvrule_entry *entryp,
-  cookie_t        *UNUSED(cookie)
+  cookie_t           *UNUSED(cookie)
 )
 {
-  char *dst = NULL;
-  char *ss;
+  char      *dst = NULL;
+  char      *ss;
   xhtml_t   xhtml;
   Doc       doc;
 
@@ -379,10 +425,9 @@ chxj_convert_xhtml_mobile_1_0(
   *dstlen = srclen;
   dst = chxj_qr_code_blob_handler(r, src, (size_t*)dstlen);
   if (dst != NULL) {
-    DBG(r,"i found qrcode xml");
+    DBG(r,"end chxj_exchange_xhtml_mobile_1_0() (found qrcode.xml)");
     return dst;
   }
-  DBG(r,"not found qrcode xml");
 
   /*--------------------------------------------------------------------------*/
   /* The XHTML structure is initialized.                                      */
@@ -434,10 +479,9 @@ chxj_convert_xhtml_mobile_1_0(
     return apr_pstrdup(r->pool,ss);
   }
 
-  if (! strlen(dst)) {
+  if (! *dst) {
     dst = apr_psprintf(r->pool, "\n");
   }
-
   *dstlen = strlen(dst);
 
 #ifdef DUMP_LOG
@@ -445,7 +489,6 @@ chxj_convert_xhtml_mobile_1_0(
 #endif
 
   DBG(r,"end chxj_convert_xhtml_mobile_1_0()");
-
   return dst;
 }
 
@@ -470,7 +513,7 @@ s_init_xhtml(xhtml_t *xhtml, Doc *doc, request_rec *r, device_table *spec)
   xhtml->doc  = doc;
   xhtml->spec = spec;
   xhtml->out  = qs_alloc_zero_byte_string(r);
-  xhtml->conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  xhtml->conf = chxj_get_module_config(r->per_dir_config, &chxj_module);
   xhtml->doc->parse_mode = PARSE_MODE_CHTML;
 }
 
@@ -486,9 +529,9 @@ s_init_xhtml(xhtml_t *xhtml, Doc *doc, request_rec *r, device_table *spec)
 static char *
 s_xhtml_1_0_start_html_tag(void *pdoc, Node *node) 
 {
-  xhtml_t     *xhtml = GET_XHTML(pdoc);
-  Attr        *attr;
-  Doc         *doc   = xhtml->doc;
+  xhtml_t       *xhtml = GET_XHTML(pdoc);
+  Attr          *attr;
+  Doc           *doc   = xhtml->doc;
 
   /*--------------------------------------------------------------------------*/
   /* Add XML Declare                                                          */
@@ -502,8 +545,7 @@ s_xhtml_1_0_start_html_tag(void *pdoc, Node *node)
   /*--------------------------------------------------------------------------*/
   /* start HTML tag                                                           */
   /*--------------------------------------------------------------------------*/
-  W_L("<html");
-  W_L(" xmlns=\"http://www.w3.org/1999/xhtml\"");
+  W_L("<html xmlns=\"http://www.w3.org/1999/xhtml\"");
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
   /*--------------------------------------------------------------------------*/
@@ -517,7 +559,7 @@ s_xhtml_1_0_start_html_tag(void *pdoc, Node *node)
       W_V(value);
       W_L("\"");
     }
-    else if (STRCASEEQ('v','V',"version",name)) {
+    else if (STRCASEEQ('v','V',"version", name)) {
       W_L(" version=\"-//OPENWAVE//DTD XHTML Mobile 1.0//EN\"");
     }
   }
@@ -569,24 +611,24 @@ s_xhtml_1_0_start_meta_tag(void *pdoc, Node *node)
        attr = qs_get_next_attr(doc,attr)) {
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
-    if (STRCASEEQ('n','N', "name", name)) {
+    if (STRCASEEQ('n','N',"name", name) && value && *value) {
       W_L(" ");
       W_V(name);
       W_L("=\"");
       W_V(value);
       W_L("\"");
     }
-    else if (STRCASEEQ('h','H',"http-equiv", name)) {
+    else if (STRCASEEQ('h','H',"http-equiv", name) && value && *value) {
       W_L(" ");
       W_V(name);
       W_L("=\"");
       W_V(value);
       W_L("\"");
-      if (STRCASEEQ('c','C',"content-type", value)) {
+      if (STRCASEEQ('c','C', "content-type", value)) {
         content_type_flag = 1;
       }
     }
-    else if (STRCASEEQ('c','C',"content", name)) {
+    else if (STRCASEEQ('c','C',"content", name) && value && *value) {
       if (content_type_flag) {
         if (IS_SJIS_STRING(GET_SPEC_CHARSET(xhtml->spec))) {
           W_L(" ");
@@ -717,9 +759,10 @@ s_xhtml_1_0_end_title_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_xhtml_1_0_start_base_tag(void *pdoc, Node *node) 
 {
-  xhtml_t     *xhtml = GET_XHTML(pdoc);
-  Attr        *attr;
-  Doc         *doc   = xhtml->doc;
+  xhtml_t       *xhtml = GET_XHTML(pdoc);
+  Attr          *attr;
+  Doc           *doc   = xhtml->doc;
+
   W_L("<base");
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -733,6 +776,7 @@ s_xhtml_1_0_start_base_tag(void *pdoc, Node *node)
       W_L(" href=\"");
       W_V(value);
       W_L("\"");
+      break;
     }
   }
   W_L(" />\r\n");
@@ -779,22 +823,22 @@ s_xhtml_1_0_start_body_tag(void *pdoc, Node *node)
        attr = qs_get_next_attr(doc,attr)) {
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
-    if (STRCASEEQ('b','B',"bgcolor",name)) {
+    if (STRCASEEQ('b','B',"bgcolor", name) && value && *value) {
       W_L(" bgcolor=\"");
       W_V(value);
       W_L("\"");
     }
-    else if (STRCASEEQ('t','T',"text",name)) {
+    else if (STRCASEEQ('t','T',"text",name) && value && *value) {
       W_L(" text=\"");
       W_V(value);
       W_L("\"");
     }
-    else if (STRCASEEQ('l','L',"link",name)) {
+    else if (STRCASEEQ('l','L',"link", name) && value && *value) {
       W_L(" link=\"");
       W_V(value);
       W_L("\"");
     }
-    else if (STRCASEEQ('a','A',"alink",name)) {
+    else if (STRCASEEQ('a','A',"alink", name)) {
       /* ignore */
     }
     else if (STRCASEEQ('v','V',"vlink",name)) {
@@ -846,20 +890,20 @@ s_xhtml_1_0_start_a_tag(void *pdoc, Node *node)
   for (attr = qs_get_attr(doc,node);
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
-    char *name  = qs_get_attr_name(doc,attr);
-    char *value = qs_get_attr_value(doc,attr);
-    if (STRCASEEQ('n','N',"name",name)) {
+    char* name  = qs_get_attr_name(doc,attr);
+    char* value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('n','N',"name",name) && value && *value) {
       W_L(" id=\"");
       W_V(value);
       W_L("\"");
     }
-    else if (STRCASEEQ('h','H',"href",name)) {
+    else if (STRCASEEQ('h','H',"href", name) && value && *value) {
       value = chxj_encoding_parameter(r, value);
       W_L(" href=\"");
       W_V(value);
       W_L("\"");
     }
-    else if (STRCASEEQ('a','A',"accesskey",name)) {
+    else if (STRCASEEQ('a','A',"accesskey", name)) {
       W_L(" accesskey=\"");
       W_V(value);
       W_L("\"");
@@ -870,7 +914,7 @@ s_xhtml_1_0_start_a_tag(void *pdoc, Node *node)
     else if (STRCASEEQ('i','I',"ijam",name)) {
       /* ignore */
     }
-    else if (STRCASEEQ('u','U',"utn",name)) {
+    else if (STRCASEEQ('u','U',"utn", name)) {
       /* ignore */
     }
     else if (STRCASEEQ('t','T',"telbook",name)) {
@@ -911,8 +955,9 @@ s_xhtml_1_0_start_a_tag(void *pdoc, Node *node)
 static char *
 s_xhtml_1_0_end_a_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  xhtml_t      *xhtml = GET_XHTML(pdoc);
-  Doc          *doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+
   W_L("</a>");
   return xhtml->out;
 }
@@ -927,11 +972,30 @@ s_xhtml_1_0_end_a_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_xhtml_1_0_start_br_tag(void *pdoc, Node *UNUSED(node)) 
+s_xhtml_1_0_start_br_tag(void *pdoc, Node *node) 
 {
-  xhtml_t      *xhtml = GET_XHTML(pdoc);
-  Doc          *doc   = xhtml->doc;
-  W_L("<br />\r\n");
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+  Attr    *attr;
+
+  W_L("<br");
+  /*--------------------------------------------------------------------------*/
+  /* Get Attributes                                                           */
+  /*--------------------------------------------------------------------------*/
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('c','C',"clear",name)) {
+      if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('a','A',"all",value))) {
+        W_L(" clear=\"");
+        W_V(value);
+        W_L("\"");
+      }
+    }
+  }
+  W_L(" />\r\n");
   return xhtml->out;
 }
 
@@ -964,8 +1028,9 @@ s_xhtml_1_0_end_br_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_xhtml_1_0_start_tr_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  xhtml_t      *xhtml = GET_XHTML(pdoc);
-  Doc          *doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+
   W_L("<br />\r\n");
   return xhtml->out;
 }
@@ -999,22 +1064,25 @@ s_xhtml_1_0_end_tr_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_xhtml_1_0_start_font_tag(void *pdoc, Node *node) 
 {
-  xhtml_t      *xhtml = GET_XHTML(pdoc);
-  Doc          *doc   = xhtml->doc;
-  Attr         *attr;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+  Attr    *attr;
+
   W_L("<font");
-  /* Get Attributes */
+  /*=========================================================================*/
+  /* Get Attributes                                                          */
+  /*=========================================================================*/
   for (attr = qs_get_attr(doc,node);
-       attr; 
+       attr;
        attr = qs_get_next_attr(doc,attr)) {
     char *name = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
-    if (STRCASEEQ('c','C',"color",name)) {
+    if (STRCASEEQ('c','C',"color",name) && value && *value) {
       W_L(" color=\"");
-      W_V(value); 
+      W_V(value);
       W_L("\"");
     }
-    else if (STRCASEEQ('s','S',"size",name)) {
+    else if (STRCASEEQ('s','S',"size",name) && value && *value) {
       W_L(" size=\"");
       W_V(value);
       W_L("\"");
@@ -1036,8 +1104,9 @@ s_xhtml_1_0_start_font_tag(void *pdoc, Node *node)
 static char *
 s_xhtml_1_0_end_font_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  xhtml_t      *xhtml = GET_XHTML(pdoc);
-  Doc          *doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+
   W_L("</font>");
   return xhtml->out;
 }
@@ -1054,10 +1123,11 @@ s_xhtml_1_0_end_font_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_xhtml_1_0_start_form_tag(void *pdoc, Node *node) 
 {
-  xhtml_t      *xhtml = GET_XHTML(pdoc);
-  Doc          *doc   = xhtml->doc;
-  request_rec  *r     = doc->r;
-  Attr         *attr;
+  xhtml_t     *xhtml = GET_XHTML(pdoc);
+  Doc         *doc   = xhtml->doc;
+  request_rec *r     = doc->r;
+  Attr        *attr;
+
   W_L("<form");
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -1098,8 +1168,9 @@ s_xhtml_1_0_start_form_tag(void *pdoc, Node *node)
 static char *
 s_xhtml_1_0_end_form_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  xhtml_t      *xhtml = GET_XHTML(pdoc);
-  Doc          *doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+
   W_L("</form>");
   return xhtml->out;
 }
@@ -1116,17 +1187,18 @@ s_xhtml_1_0_end_form_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_xhtml_1_0_start_input_tag(void *pdoc, Node *node) 
 {
-  xhtml_t       *xhtml       = GET_XHTML(pdoc);
-  Doc           *doc         = xhtml->doc;
-  request_rec   *r           = doc->r;
-  char          *max_length  = NULL;
-  char          *type        = NULL;
-  char          *name        = NULL;
-  char          *value       = NULL;
-  char          *istyle      = NULL;
-  char          *size        = NULL;
-  char          *checked     = NULL;
-  char          *accesskey   = NULL;
+  xhtml_t     *xhtml       = GET_XHTML(pdoc);
+  Doc         *doc         = xhtml->doc;
+  request_rec *r           = doc->r;
+  char        *max_length  = NULL;
+  char        *type        = NULL;
+  char        *name        = NULL;
+  char        *value       = NULL;
+  char        *istyle      = NULL;
+  char        *size        = NULL;
+  char        *checked     = NULL;
+  char        *accesskey   = NULL;
+
   W_L("<input");
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -1140,33 +1212,42 @@ s_xhtml_1_0_start_input_tag(void *pdoc, Node *node)
   accesskey  = qs_get_accesskey_attr(doc, node, r);
   size       = qs_get_size_attr(doc, node, r);
   if (type) {
-    W_L(" type=\"");
-    W_V(type);
-    W_L("\" ");
+    type = qs_trim_string(doc->buf.pool, type);
+    if (type && (STRCASEEQ('t','T',"text",    type) ||
+                 STRCASEEQ('p','P',"password",type) ||
+                 STRCASEEQ('c','C',"checkbox",type) ||
+                 STRCASEEQ('r','R',"radio",   type) ||
+                 STRCASEEQ('h','H',"hidden",  type) ||
+                 STRCASEEQ('s','S',"submit",  type) ||
+                 STRCASEEQ('r','R',"reset",   type))) {
+      W_L(" type=\"");
+      W_V(type);
+      W_L("\"");
+    }
   }
-  if (size) {
+  if (size && *size) {
     W_L(" size=\"");
     W_V(size);
-    W_L("\" ");
+    W_L("\"");
   }
-  if (name) {
+  if (name && *name) {
     W_L(" name=\"");
     W_V(name);
-    W_L("\" ");
+    W_L("\"");
   }
-  if (value) {
+  if (value && *value) {
     W_L(" value=\"");
     W_V(value);
-    W_L("\" ");
+    W_L("\"");
   }
-  if (accesskey) {
+  if (accesskey && *accesskey) {
     W_L(" accesskey=\"");
     W_V(accesskey);
-    W_L("\" ");
+    W_L("\"");
   }
-  if (istyle) {
-    char* fmt = qs_conv_istyle_to_format(r,istyle);
-    if (max_length) {
+  if (istyle && *istyle && (*istyle == '1' || *istyle == '2' || *istyle == '3' || *istyle == '4')) {
+    char *fmt = qs_conv_istyle_to_format(r,istyle);
+    if (max_length && *max_length) {
       int ii;
       for (ii=0; (unsigned int)ii<strlen(max_length); ii++) {
         if (max_length[ii] < '0' || max_length[ii] > '9') {
@@ -1174,11 +1255,10 @@ s_xhtml_1_0_start_input_tag(void *pdoc, Node *node)
           break;
         }
       }
-      char *vv = apr_psprintf(doc->buf.pool, 
-                              " FORMAT=\"%d%s\"", 
-                              atoi(max_length), 
-                              fmt);
-      W_V(vv);
+      if (strcmp(max_length, "0")) {
+        char *vv = apr_psprintf(r->pool, " FORMAT=\"%d%s\"", atoi(max_length), fmt);
+        W_V(vv);
+      }
     }
     else {
       W_L(" FORMAT=\"");
@@ -1187,21 +1267,28 @@ s_xhtml_1_0_start_input_tag(void *pdoc, Node *node)
       W_L("\"");
     }
   }
+  else {
+    if (max_length && *max_length) {
+      if (chxj_chk_numeric(max_length) != 0) {
+        max_length = apr_psprintf(r->pool, "0");
+      }
+      if (strcmp(max_length, "0")) {
+        char *vv = apr_psprintf(r->pool, " FORMAT=\"%dm\"", atoi(max_length));
+        W_V(vv);
+      }
+    }
+  }
   /*--------------------------------------------------------------------------*/
   /* The figure is default for the password.                                  */
   /*--------------------------------------------------------------------------*/
-  if (type && istyle == NULL  && STRCASEEQ('p','P',"password", type) && ! xhtml->entryp->pc_flag) {
+  if (type && (istyle == NULL || *istyle == 0) && STRCASEEQ('p','P',"password", type) && ! xhtml->entryp->pc_flag) {
     if (max_length) {
       W_L(" FORMAT=\"");
       W_V(max_length);
-      W_L("N");
-      W_L("\"");
+      W_L("N\"");
     }
     else {
-      W_L(" FORMAT=\"");
-      W_L("*");
-      W_L("N");
-      W_L("\"");
+      W_L(" FORMAT=\"*N\"");
     }
   }
   if (checked) {
@@ -1240,8 +1327,9 @@ s_xhtml_1_0_end_input_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_xhtml_1_0_start_center_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  xhtml_t       *xhtml = GET_XHTML(pdoc);
-  Doc           *doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+
   W_L("<center>");
   return xhtml->out;
 }
@@ -1258,8 +1346,9 @@ s_xhtml_1_0_start_center_tag(void *pdoc, Node *UNUSED(node))
 static char *
 s_xhtml_1_0_end_center_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  xhtml_t       *xhtml = GET_XHTML(pdoc);
-  Doc           *doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+
   W_L("</center>");
   return xhtml->out;
 }
@@ -1274,11 +1363,63 @@ s_xhtml_1_0_end_center_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_xhtml_1_0_start_hr_tag(void *pdoc, Node *UNUSED(node)) 
+s_xhtml_1_0_start_hr_tag(void *pdoc, Node *node)
 {
-  xhtml_t       *xhtml = GET_XHTML(pdoc);
-  Doc           *doc   = xhtml->doc;
-  W_L("<hr />");
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+  Attr    *attr;
+
+  W_L("<hr");
+ 
+  for (attr = qs_get_attr(doc,node);
+       attr; 
+       attr = qs_get_next_attr(doc,attr)) {
+    char *name = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('a','A',"align", name)) {
+      /*----------------------------------------------------------------------*/
+      /* CHTML 1.0                                                            */
+      /*----------------------------------------------------------------------*/
+      if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('c','C',"center",value))) {
+        W_L(" align=\"");
+        W_V(value);
+        W_L("\"");
+      }
+    }
+    else if (STRCASEEQ('s','S',"size", name)) {
+      /*----------------------------------------------------------------------*/
+      /* CHTML 1.0                                                            */
+      /*----------------------------------------------------------------------*/
+      if (value && *value) {
+        W_L(" size=\"");
+        W_V(value);
+        W_L("\"");
+      }
+    }
+    else if (STRCASEEQ('w','W',"width", name)) {
+      /*----------------------------------------------------------------------*/
+      /* CHTML 1.0                                                            */
+      /*----------------------------------------------------------------------*/
+      if (value && *value) {
+        W_L(" width=\"");
+        W_V(value);
+        W_L("\"");
+      }
+    }
+    else if (STRCASEEQ('n','N',"noshade", name)) {
+      /*----------------------------------------------------------------------*/
+      /* CHTML 1.0                                                            */
+      /*----------------------------------------------------------------------*/
+      /* ignore */
+    }
+    else if (STRCASEEQ('c','C',"color", name)) {
+      /*----------------------------------------------------------------------*/
+      /* CHTML 4.0                                                            */
+      /*----------------------------------------------------------------------*/
+      /* ignore */
+    }
+  }
+  W_L(" />");
   return xhtml->out;
 }
 
@@ -1309,10 +1450,11 @@ s_xhtml_1_0_end_hr_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_xhtml_1_0_start_pre_tag(void *pdoc, Node *UNUSED(node)) 
+s_xhtml_1_0_start_pre_tag(void* pdoc, Node* UNUSED(node)) 
 {
-  xhtml_t       *xhtml = GET_XHTML(pdoc);
-  Doc           *doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+
   xhtml->pre_flag++;
   W_L("<pre>");
   return xhtml->out;
@@ -1330,8 +1472,9 @@ s_xhtml_1_0_start_pre_tag(void *pdoc, Node *UNUSED(node))
 static char *
 s_xhtml_1_0_end_pre_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  xhtml_t       *xhtml = GET_XHTML(pdoc);
-  Doc           *doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+
   W_L("</pre>");
   xhtml->pre_flag--;
   return xhtml->out;
@@ -1347,11 +1490,35 @@ s_xhtml_1_0_end_pre_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_xhtml_1_0_start_p_tag(void *pdoc, Node *UNUSED(node)) 
+s_xhtml_1_0_start_p_tag(void *pdoc, Node *node) 
 {
-  xhtml_t       *xhtml = GET_XHTML(pdoc);
-  Doc           *doc   = xhtml->doc;
-  W_L("<p>");
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+  Attr    *attr;
+  char    *align = NULL;
+
+  W_L("<p");
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char *nm  = qs_get_attr_name(doc,attr);
+    char *val = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('a','A',"align", nm)) {
+      /*----------------------------------------------------------------------*/
+      /* CHTML 1.0 (W3C version 3.2)                                          */
+      /*----------------------------------------------------------------------*/
+      if (val && (STRCASEEQ('l','L',"left",val) || STRCASEEQ('r','R',"right",val) || STRCASEEQ('c','C',"center",val))) {
+        align = apr_pstrdup(doc->buf.pool, val);
+        break;
+      }
+    }
+  }
+  if (align) {
+    W_L(" align=\"");
+    W_V(align);
+    W_L("\"");
+  }
+  W_L(">");
   return xhtml->out;
 }
 
@@ -1367,8 +1534,9 @@ s_xhtml_1_0_start_p_tag(void *pdoc, Node *UNUSED(node))
 static char *
 s_xhtml_1_0_end_p_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  xhtml_t       *xhtml = GET_XHTML(pdoc);
-  Doc           *doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+
   W_L("</p>");
   return xhtml->out;
 }
@@ -1385,8 +1553,9 @@ s_xhtml_1_0_end_p_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_xhtml_1_0_start_ul_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  xhtml_t       *xhtml = GET_XHTML(pdoc);
-  Doc           *doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+
   W_L("<ul>");
   return xhtml->out;
 }
@@ -1403,8 +1572,9 @@ s_xhtml_1_0_start_ul_tag(void *pdoc, Node *UNUSED(node))
 static char *
 s_xhtml_1_0_end_ul_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  xhtml_t       *xhtml = GET_XHTML(pdoc);
-  Doc           *doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+
   W_L("</ul>");
   return xhtml->out;
 }
@@ -1419,11 +1589,42 @@ s_xhtml_1_0_end_ul_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_xhtml_1_0_start_h1_tag(void *pdoc, Node *UNUSED(node)) 
+s_xhtml_1_0_start_h1_tag(void *pdoc, Node *node) 
 {
-  xhtml_t       *xhtml = GET_XHTML(pdoc);
-  Doc           *doc   = xhtml->doc;
-  W_L("<h1>");
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+  Attr    *attr;
+
+  W_L("<h1");
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char* name;
+    char* value;
+    name  = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('a','A',"align", name)) {
+      if (value) {
+        if (STRCASEEQ('l','L',"left",value)) {
+          W_L(" style=\"");
+          W_L("text-align:left");
+          W_L("\"");
+        }
+        else if (STRCASEEQ('r','R',"right",value)) {
+          W_L(" style=\"");
+          W_L("text-align:right");
+          W_L("\"");
+        }
+        else if (STRCASEEQ('c','C',"center",value)) {
+          W_L(" style=\"");
+          W_L("text-align:center");
+          W_L("\"");
+        }
+        break;
+      }
+    }
+  }
+  W_L(">");
   return xhtml->out;
 }
 
@@ -1439,8 +1640,9 @@ s_xhtml_1_0_start_h1_tag(void *pdoc, Node *UNUSED(node))
 static char *
 s_xhtml_1_0_end_h1_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  xhtml_t       *xhtml = GET_XHTML(pdoc);
-  Doc           *doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+
   W_L("</h1>");
   return xhtml->out;
 }
@@ -1455,11 +1657,42 @@ s_xhtml_1_0_end_h1_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_xhtml_1_0_start_h2_tag(void *pdoc, Node *UNUSED(node)) 
+s_xhtml_1_0_start_h2_tag(void *pdoc, Node *node)
 {
-  xhtml_t       *xhtml = GET_XHTML(pdoc);
-  Doc           *doc = xhtml->doc;
-  W_L("<h2>");
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc = xhtml->doc;
+  Attr    *attr;
+
+  W_L("<h2");
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char* name;
+    char* value;
+    name  = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('a','A',"align", name)) {
+      if (value) {
+        if (STRCASEEQ('l','L',"left",value)) {
+          W_L(" style=\"");
+          W_L("text-align:left");
+          W_L("\"");
+        }
+        else if (STRCASEEQ('r','R',"right",value)) {
+          W_L(" style=\"");
+          W_L("text-align:right");
+          W_L("\"");
+        }
+        else if (STRCASEEQ('c','C',"center",value)) {
+          W_L(" style=\"");
+          W_L("text-align:center");
+          W_L("\"");
+        }
+        break;
+      }
+    }
+  }
+  W_L(">");
   return xhtml->out;
 }
 
@@ -1473,10 +1706,11 @@ s_xhtml_1_0_start_h2_tag(void *pdoc, Node *UNUSED(node))
  * @return The conversion result is returned.
  */
 static char *
-s_xhtml_1_0_end_h2_tag(void *pdoc, Node*UNUSED(child)) 
+s_xhtml_1_0_end_h2_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  xhtml_t       *xhtml = GET_XHTML(pdoc);
-  Doc           *doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+
   W_L("</h2>");
   return xhtml->out;
 }
@@ -1491,11 +1725,42 @@ s_xhtml_1_0_end_h2_tag(void *pdoc, Node*UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_xhtml_1_0_start_h3_tag(void *pdoc, Node *UNUSED(node)) 
+s_xhtml_1_0_start_h3_tag(void *pdoc, Node *node)
 {
-  xhtml_t       *xhtml = GET_XHTML(pdoc);
-  Doc           *doc   = xhtml->doc;
-  W_L("<h3>");
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+  Attr    *attr;
+
+  W_L("<h3");
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char* name;
+    char* value;
+    name  = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('a','A',"align", name)) {
+      if (value) {
+        if (STRCASEEQ('l','L',"left",value)) {
+          W_L(" style=\"");
+          W_L("text-align:left");
+          W_L("\"");
+        }
+        else if (STRCASEEQ('r','R',"right",value)) {
+          W_L(" style=\"");
+          W_L("text-align:right");
+          W_L("\"");
+        }
+        else if (STRCASEEQ('c','C',"center",value)) {
+          W_L(" style=\"");
+          W_L("text-align:center");
+          W_L("\"");
+        }
+        break;
+      }
+    }
+  }
+  W_L(">");
   return xhtml->out;
 }
 
@@ -1511,8 +1776,9 @@ s_xhtml_1_0_start_h3_tag(void *pdoc, Node *UNUSED(node))
 static char *
 s_xhtml_1_0_end_h3_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  xhtml_t       *xhtml = GET_XHTML(pdoc);
-  Doc           *doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+
   W_L("</h3>");
   return xhtml->out;
 }
@@ -1527,11 +1793,42 @@ s_xhtml_1_0_end_h3_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_xhtml_1_0_start_h4_tag(void *pdoc, Node *UNUSED(node)) 
+s_xhtml_1_0_start_h4_tag(void *pdoc, Node *node)
 {
-  xhtml_t       *xhtml = GET_XHTML(pdoc);
-  Doc           *doc   = xhtml->doc;
-  W_L("<h4>");
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+  Attr    *attr;
+
+  W_L("<h4");
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char* name;
+    char* value;
+    name  = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('a','A',"align", name)) {
+      if (value) {
+        if (STRCASEEQ('l','L',"left",value)) {
+          W_L(" style=\"");
+          W_L("text-align:left");
+          W_L("\"");
+        }
+        else if (STRCASEEQ('r','R',"right",value)) {
+          W_L(" style=\"");
+          W_L("text-align:right");
+          W_L("\"");
+        }
+        else if (STRCASEEQ('c','C',"center",value)) {
+          W_L(" style=\"");
+          W_L("text-align:center");
+          W_L("\"");
+        }
+        break;
+      }
+    }
+  }
+  W_L(">");
   return xhtml->out;
 }
 
@@ -1547,8 +1844,9 @@ s_xhtml_1_0_start_h4_tag(void *pdoc, Node *UNUSED(node))
 static char *
 s_xhtml_1_0_end_h4_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  xhtml_t       *xhtml = GET_XHTML(pdoc);
-  Doc           *doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+
   W_L("</h4>");
   return xhtml->out;
 }
@@ -1563,11 +1861,42 @@ s_xhtml_1_0_end_h4_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_xhtml_1_0_start_h5_tag(void *pdoc, Node *UNUSED(node)) 
+s_xhtml_1_0_start_h5_tag(void *pdoc, Node *node)
 {
-  xhtml_t       *xhtml = GET_XHTML(pdoc);
-  Doc           *doc   = xhtml->doc;
-  W_L("<h5>");
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+  Attr    *attr;
+
+  W_L("<h5");
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char* name;
+    char* value;
+    name  = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('a','A',"align", name)) {
+      if (value) {
+        if (STRCASEEQ('l','L',"left",value)) {
+          W_L(" style=\"");
+          W_L("text-align:left");
+          W_L("\"");
+        }
+        else if (STRCASEEQ('r','R',"right",value)) {
+          W_L(" style=\"");
+          W_L("text-align:right");
+          W_L("\"");
+        }
+        else if (STRCASEEQ('c','C',"center",value)) {
+          W_L(" style=\"");
+          W_L("text-align:center");
+          W_L("\"");
+        }
+        break;
+      }
+    }
+  }
+  W_L(">");
   return xhtml->out;
 }
 
@@ -1583,8 +1912,9 @@ s_xhtml_1_0_start_h5_tag(void *pdoc, Node *UNUSED(node))
 static char *
 s_xhtml_1_0_end_h5_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  xhtml_t       *xhtml = GET_XHTML(pdoc);
-  Doc           *doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+
   W_L("</h5>");
   return xhtml->out;
 }
@@ -1599,11 +1929,42 @@ s_xhtml_1_0_end_h5_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_xhtml_1_0_start_h6_tag(void *pdoc, Node *UNUSED(node)) 
+s_xhtml_1_0_start_h6_tag(void *pdoc, Node *node)
 {
-  xhtml_t       *xhtml = GET_XHTML(pdoc);
-  Doc           *doc   = xhtml->doc;
-  W_L("<h6>");
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+  Attr    *attr;
+
+  W_L("<h6");
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char* name;
+    char* value;
+    name  = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('a','A',"align", name)) {
+      if (value) {
+        if (STRCASEEQ('l','L',"left",value)) {
+          W_L(" style=\"");
+          W_L("text-align:left");
+          W_L("\"");
+        }
+        else if (STRCASEEQ('r','R',"right",value)) {
+          W_L(" style=\"");
+          W_L("text-align:right");
+          W_L("\"");
+        }
+        else if (STRCASEEQ('c','C',"center",value)) {
+          W_L(" style=\"");
+          W_L("text-align:center");
+          W_L("\"");
+        }
+        break;
+      }
+    }
+  }
+  W_L(">");
   return xhtml->out;
 }
 
@@ -1619,8 +1980,9 @@ s_xhtml_1_0_start_h6_tag(void *pdoc, Node *UNUSED(node))
 static char *
 s_xhtml_1_0_end_h6_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  xhtml_t       *xhtml = GET_XHTML(pdoc);
-  Doc           *doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+
   W_L("</h6>");
   return xhtml->out;
 }
@@ -1635,11 +1997,33 @@ s_xhtml_1_0_end_h6_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_xhtml_1_0_start_ol_tag(void *pdoc, Node *UNUSED(node)) 
+s_xhtml_1_0_start_ol_tag(void *pdoc, Node *node)
 {
-  xhtml_t       *xhtml = GET_XHTML(pdoc);
-  Doc           *doc   = xhtml->doc;
-  W_L("<ol>");
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+  Attr    *attr;
+
+  W_L("<ol");
+  /*--------------------------------------------------------------------------*/
+  /* Get Attributes                                                           */
+  /*--------------------------------------------------------------------------*/
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char *name = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('t','T',"type",name) && value && (*value == '1' || *value == 'a' || *value == 'A')) {
+      W_L(" type=\"");
+      W_V(value);
+      W_L("\"");
+    }
+    else if (STRCASEEQ('s','S',"start",name) && value && *value) {
+      W_L(" start=\"");
+      W_V(value);
+      W_L("\"");
+    }
+  }
+  W_L(">");
   return xhtml->out;
 }
 
@@ -1655,8 +2039,8 @@ s_xhtml_1_0_start_ol_tag(void *pdoc, Node *UNUSED(node))
 static char *
 s_xhtml_1_0_end_ol_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  xhtml_t       *xhtml = GET_XHTML(pdoc);
-  Doc           *doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
   W_L("</ol>");
   return xhtml->out;
 }
@@ -1671,11 +2055,33 @@ s_xhtml_1_0_end_ol_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_xhtml_1_0_start_li_tag(void *pdoc, Node *UNUSED(node)) 
+s_xhtml_1_0_start_li_tag(void *pdoc, Node *node)
 {
-  xhtml_t       *xhtml = GET_XHTML(pdoc);
-  Doc           *doc   = xhtml->doc;
-  W_L("<li>");
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+  Attr    *attr;
+
+  W_L("<li");
+  /*--------------------------------------------------------------------------*/
+  /* Get Attributes                                                           */
+  /*--------------------------------------------------------------------------*/
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char *name = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('t','T',"type",name) && value && (*value == '1' || *value == 'a' || *value == 'A')) {
+      W_L(" type=\"");
+      W_V(value);
+      W_L("\"");
+    }
+    else if (STRCASEEQ('v','V',"value", name) && value && *value) {
+      W_L(" value=\"");
+      W_V(value);
+      W_L("\"");
+    }
+  }
+  W_L(">");
   return xhtml->out;
 }
 
@@ -1691,8 +2097,9 @@ s_xhtml_1_0_start_li_tag(void *pdoc, Node *UNUSED(node))
 static char *
 s_xhtml_1_0_end_li_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  xhtml_t       *xhtml = GET_XHTML(pdoc);
-  Doc           *doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+
   W_L("</li>");
   return xhtml->out;
 }
@@ -1715,7 +2122,7 @@ s_xhtml_1_0_start_img_tag(void *pdoc, Node *node)
   request_rec   *r     = doc->r;
 
 #ifndef IMG_NOT_CONVERT_FILENAME
-  device_table *spec = xhtml->spec;
+  device_table  *spec = xhtml->spec;
 #endif
 
   W_L("<img");
@@ -1740,38 +2147,45 @@ s_xhtml_1_0_start_img_tag(void *pdoc, Node *node)
       W_L("\"");
 #endif
     }
-    else if (STRCASEEQ('a','A',"align",name)) {
-      W_L(" align=\"");
-      W_V(value);
-      W_L("\"");
+    else 
+    if (STRCASEEQ('a','A',"align",name)) {
+      if (value && (STRCASEEQ('t','T',"top",   value) ||
+                    STRCASEEQ('m','M',"middle",value) ||
+                    STRCASEEQ('b','B',"bottom",value) ||
+                    STRCASEEQ('l','L',"left",  value) ||
+                    STRCASEEQ('r','R',"right", value))) {
+        W_L(" align=\"");
+        W_V(value);
+        W_L("\"");
+      }
     }
-    else if (STRCASEEQ('a','A',"alt",name)) {
+    else if (STRCASEEQ('a','A',"alt",name) && value && *value) {
       W_L(" alt=\"");
       W_V(value);
       W_L("\"");
     }
-    else if (STRCASEEQ('w','W',"width",name)) {
+    else if (STRCASEEQ('w','W',"width",name) && value && *value) {
       W_L(" width=\"");
       W_V(value);
       W_L("\"");
     }
-    else if (STRCASEEQ('h','H',"height",name)) {
+    else if (STRCASEEQ('h','H',"height",name) && value && *value) {
       W_L(" height=\"");
       W_V(value);
       W_L("\"");
     }
-    else if (STRCASEEQ('h','H',"hspace",name)) {
+    else if (STRCASEEQ('h','H',"hspace",name) && value && *value) {
       W_L(" hspace=\"");
       W_V(value);
       W_L("\"");
     }
-    else if (STRCASEEQ('v','V',"vspace",name)) {
+    else if (STRCASEEQ('v','V',"vspace",name) && value && *value) {
       W_L(" vspace=\"");
       W_V(value);
       W_L("\"");
     }
   }
-  W_L(">");
+  W_L(" />");
   return xhtml->out;
 }
 
@@ -1804,12 +2218,13 @@ s_xhtml_1_0_end_img_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_xhtml_1_0_start_select_tag(void *pdoc, Node *child)
 {
-  xhtml_t      *xhtml = GET_XHTML(pdoc);
-  Doc          *doc   = xhtml->doc;
-  Attr         *attr;
+  xhtml_t *xhtml    = GET_XHTML(pdoc);
+  Doc     *doc      = xhtml->doc;
+  char    *size     = NULL;
+  char    *name     = NULL;
+  char    *multiple = NULL;
+  Attr    *attr;
 
-  char *size      = NULL;
-  char *name      = NULL;
   W_L("<select");
   for (attr = qs_get_attr(doc,child);
        attr;
@@ -1817,29 +2232,39 @@ s_xhtml_1_0_start_select_tag(void *pdoc, Node *child)
     char *nm  = qs_get_attr_name(doc,attr);
     char *val = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('s','S',"size",nm)) {
-      /* CHTML version 2.0 */
+      /*----------------------------------------------------------------------*/
+      /* CHTML 1.0 version 2.0                                                */
+      /*----------------------------------------------------------------------*/
       size = apr_pstrdup(doc->buf.pool, val);
     }
     else if (STRCASEEQ('n','N',"name",nm)) {
-      /* CHTML version 2.0 */
+      /*----------------------------------------------------------------------*/
+      /* CHTML 1.0 version 2.0                                                */
+      /*----------------------------------------------------------------------*/
       name = apr_pstrdup(doc->buf.pool, val);
     }
     else if (STRCASEEQ('m','M',"multiple",nm)) {
-      /* CHTML version 2.0 */
-      /* Ignore */
+      /*----------------------------------------------------------------------*/
+      /* CHTML 1.0 version 2.0                                                */
+      /*----------------------------------------------------------------------*/
+      multiple = apr_pstrdup(doc->buf.pool, val);
     }
   }
-  if (size) {
+  if (size && *size) {
     W_L(" size=\"");
     W_V(size);
     W_L("\"");
   }
-  if (name) {
+  if (name && *name) {
     W_L(" name=\"");
     W_V(name);
     W_L("\"");
   }
-  W_L(">\n");
+  if (multiple) {
+    /* "true" is *NOT* W3C. it is specification of WAP2.0 for EZWEB */
+    W_L(" multiple=\"true\"");
+  }
+  W_L(">\r\n");
   return xhtml->out;
 }
 
@@ -1855,9 +2280,10 @@ s_xhtml_1_0_start_select_tag(void *pdoc, Node *child)
 static char *
 s_xhtml_1_0_end_select_tag(void *pdoc, Node *UNUSED(child))
 {
-  xhtml_t      *xhtml = GET_XHTML(pdoc);
-  Doc          *doc   = xhtml->doc;
-  W_L("</select>\n");
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+
+  W_L("</select>\r\n");
   return xhtml->out;
 }
 
@@ -1873,9 +2299,10 @@ s_xhtml_1_0_end_select_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_xhtml_1_0_start_option_tag(void *pdoc, Node *child)
 {
-  xhtml_t      *xhtml = GET_XHTML(pdoc);
-  Doc          *doc   = xhtml->doc;
-  Attr         *attr;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+  Attr    *attr;
+
   char *selected   = NULL;
   char *value      = NULL;
   W_L("<option");
@@ -1893,13 +2320,10 @@ s_xhtml_1_0_start_option_tag(void *pdoc, Node *child)
       value = apr_pstrdup(doc->buf.pool, val);
     }
   }
-  if (value) {
+  if (value && *value) {
     W_L(" value=\"");
     W_V(value);
     W_L("\"");
-  }
-  else {
-    W_L(" value=\"\"");
   }
   if (selected) {
     W_L(" selected=\"selected\"");
@@ -1920,9 +2344,10 @@ s_xhtml_1_0_start_option_tag(void *pdoc, Node *child)
 static char *
 s_xhtml_1_0_end_option_tag(void *pdoc, Node *UNUSED(child))
 {
-  xhtml_t      *xhtml = GET_XHTML(pdoc);
-  Doc          *doc   = xhtml->doc;
-  W_L("</option>\n");
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+
+  W_L("</option>\r\n");
   return xhtml->out;
 }
 
@@ -1938,10 +2363,11 @@ s_xhtml_1_0_end_option_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_xhtml_1_0_start_div_tag(void *pdoc, Node *child)
 {
-  xhtml_t      *xhtml = GET_XHTML(pdoc);
-  Doc          *doc   = xhtml->doc;
-  Attr         *attr;
-  char *align   = NULL;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+  Attr    *attr;
+  char    *align   = NULL;
+
   W_L("<div");
   for (attr = qs_get_attr(doc,child);
        attr;
@@ -1949,8 +2375,12 @@ s_xhtml_1_0_start_div_tag(void *pdoc, Node *child)
     char *nm  = qs_get_attr_name(doc,attr);
     char *val = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('a','A',"align",nm)) {
-      /* CHTML version 3.2 */
-      align = apr_pstrdup(doc->buf.pool, val);
+      /*=====================================================================*/
+      /* CHTML version 3.2                                                   */
+      /*=====================================================================*/
+      if (val && (STRCASEEQ('l','L',"left",val) || STRCASEEQ('r','R',"right",val) || STRCASEEQ('c','C',"center",val))) {
+        align = apr_pstrdup(doc->buf.pool, val);
+      }
     }
   }
   if (align) {
@@ -1974,9 +2404,9 @@ s_xhtml_1_0_start_div_tag(void *pdoc, Node *child)
 static char *
 s_xhtml_1_0_end_div_tag(void *pdoc, Node *UNUSED(child))
 {
-  xhtml_t      *xhtml = GET_XHTML(pdoc);
-  Doc          *doc   = xhtml->doc;
-  W_L("</div>\n");
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+  W_L("</div>\r\n");
   return xhtml->out;
 }
 
@@ -1992,8 +2422,9 @@ s_xhtml_1_0_end_div_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_xhtml_1_0_start_b_tag(void *pdoc, Node *UNUSED(child))
 {
-  xhtml_t      *xhtml = GET_XHTML(pdoc);
-  Doc          *doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+
   W_L("<div style=\"font-weight:bold\">");
   return xhtml->out;
 }
@@ -2010,8 +2441,9 @@ s_xhtml_1_0_start_b_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_xhtml_1_0_end_b_tag(void *pdoc, Node *UNUSED(child))
 {
-  xhtml_t      *xhtml = GET_XHTML(pdoc);
-  Doc          *doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+
   W_L("</div>\n");
   return xhtml->out;
 }
@@ -2052,29 +2484,40 @@ s_xhtml_1_0_chxjif_tag(void *pdoc, Node *node)
 static char *
 s_xhtml_1_0_start_textarea_tag(void *pdoc, Node *node) 
 {
-  xhtml_t       *xhtml = GET_XHTML(pdoc);
-  Doc           *doc   = xhtml->doc;
-  Attr          *attr;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+  Attr    *attr;
 
   xhtml->textarea_flag++;
-  W_L("<textarea ");
+  W_L("<textarea");
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
-    if (STRCASEEQ('n','N',"name",name)) {
+    if (STRCASEEQ('n','N',"name",name) && value && *value) {
       W_L(" name=\"");
       W_V(value);
       W_L("\"");
     }
-    else if (STRCASEEQ('r','R',"rows",name)) {
+    else if (STRCASEEQ('r','R',"rows",name) && value && *value) {
       W_L(" rows=\"");
       W_V(value);
       W_L("\"");
     }
-    else if (STRCASEEQ('c','C',"cols",name)) {
+    else if (STRCASEEQ('c','C',"cols",name) && value && *value) {
       W_L(" cols=\"");
+      W_V(value);
+      W_L("\"");
+    }
+    else if (STRCASEEQ('i','I',"istyle", name) && value && (*value == '1' || *value == '2' || *value == '3' || *value == '4')) {
+      char *fmt = qs_conv_istyle_to_format(doc->r,value);
+      W_L(" FORMAT=\"*");
+      W_V(fmt);
+      W_L("\"");
+    }
+    else if (STRCASEEQ('a','A',"accesskey",name) && value && *value != 0) {
+      W_L(" accesskey=\"");
       W_V(value);
       W_L("\"");
     }
@@ -2095,31 +2538,31 @@ s_xhtml_1_0_start_textarea_tag(void *pdoc, Node *node)
 static char *
 s_xhtml_1_0_end_textarea_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  xhtml_t       *xhtml = GET_XHTML(pdoc);
-  Doc           *doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+
   W_L("</textarea>\r\n");
   xhtml->textarea_flag--;
   return xhtml->out;
 }
 
-
 static char *
 s_xhtml_1_0_text_tag(void *pdoc, Node *child)
 {
-  xhtml_t      *xhtml   = GET_XHTML(pdoc);
-  Doc          *doc     = xhtml->doc;
-  request_rec  *r       = doc->r;
-  char         *textval;
-  char         *tmp;
-  char         *tdst;
-  char         one_byte[2];
-  int          ii;
-  int          tdst_len;
+  xhtml_t     *xhtml   = GET_XHTML(pdoc);
+  Doc         *doc     = xhtml->doc;
+  request_rec *r       = doc->r;
+  char        *textval;
+  char        *tmp;
+  char        *tdst;
+  char        one_byte[2];
+  int         ii;
+  int         tdst_len;
   
   textval = qs_get_node_value(doc,child);
-  textval = qs_trim_string(r->pool, textval);
-  if (strlen(textval) == 0)
+  if (strlen(textval) == 0) {
     return xhtml->out;
+  }
   
   tmp = apr_palloc(r->pool, qs_get_node_size(doc,child)+1);
   memset(tmp, 0, qs_get_node_size(doc,child)+1);
@@ -2129,6 +2572,14 @@ s_xhtml_1_0_text_tag(void *pdoc, Node *child)
   tdst_len = 0;
   
   for (ii=0; ii<qs_get_node_size(doc,child); ii++) {
+    char *out;
+    int rtn = s_xhtml_search_emoji(xhtml, &textval[ii], &out);
+    if (rtn != 0) {
+      DBG(r,"[%s][%d]", out, rtn);
+      tdst = qs_out_apr_pstrcat(r, tdst, out, &tdst_len);
+      ii+=(rtn - 1);
+      continue;
+    }
     if (is_sjis_kanji(textval[ii])) {
       one_byte[0] = textval[ii+0];
       tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
@@ -2155,6 +2606,78 @@ s_xhtml_1_0_text_tag(void *pdoc, Node *child)
 
 
 /**
+ * It is a handler who processes the BLOCKQUOTE tag.
+ *
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The BLOCKQUOTE tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_xhtml_1_0_start_blockquote_tag(void *pdoc, Node *UNUSED(child))
+{
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+  W_L("<blockquote>");
+  return xhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the BLOCKQUOTE tag.
+ *
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The BLOCKQUOTE tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_xhtml_1_0_end_blockquote_tag(void *pdoc, Node *UNUSED(child))
+{
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+  W_L("</blockquote>");
+  return xhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the DIR tag.
+ *
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DIR tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_xhtml_1_0_start_dir_tag(void *pdoc, Node *UNUSED(child))
+{
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc = xhtml->doc;
+  W_L("<dir>");
+  return xhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the DIR tag.
+ *
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DIR tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_xhtml_1_0_end_dir_tag(void *pdoc, Node *UNUSED(child))
+{
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc = xhtml->doc;
+  W_L("</dir>");
+  return xhtml->out;
+}
+
+
+/**
  * It is a handler who processes the DL tag.
  *
  * @param pdoc  [i/o] The pointer to the XHTML structure at the output
@@ -2165,8 +2688,8 @@ s_xhtml_1_0_text_tag(void *pdoc, Node *child)
 static char *
 s_xhtml_1_0_start_dl_tag(void *pdoc, Node *UNUSED(child))
 {
-  xhtml_t      *xhtml = GET_XHTML(pdoc);
-  Doc          *doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc *doc = xhtml->doc;
   W_L("<dl>");
   return xhtml->out;
 }
@@ -2183,15 +2706,15 @@ s_xhtml_1_0_start_dl_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_xhtml_1_0_end_dl_tag(void *pdoc, Node *UNUSED(child))
 {
-  xhtml_t      *xhtml = GET_XHTML(pdoc);
-  Doc          *doc   = xhtml->doc;
-  W_L("</dl>\n");
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc *doc = xhtml->doc;
+  W_L("</dl>");
   return xhtml->out;
 }
 
 
 /**
- * It is a handler who processes the DT tag.
+ * It is a handter who processes the DT tag.
  *
  * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
@@ -2201,15 +2724,15 @@ s_xhtml_1_0_end_dl_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_xhtml_1_0_start_dt_tag(void *pdoc, Node *UNUSED(child))
 {
-  xhtml_t      *xhtml = GET_XHTML(pdoc);
-  Doc          *doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
   W_L("<dt>");
   return xhtml->out;
 }
 
 
 /**
- * It is a handler who processes the DT tag.
+ * It is a handter who processes the DT tag.
  *
  * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
@@ -2219,15 +2742,15 @@ s_xhtml_1_0_start_dt_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_xhtml_1_0_end_dt_tag(void *pdoc, Node *UNUSED(child))
 {
-  xhtml_t      *xhtml = GET_XHTML(pdoc);
-  Doc          *doc   = xhtml->doc;
-  W_L("\n");
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+  W_L("</dt>");
   return xhtml->out;
 }
 
 
 /**
- * It is a handler who processes the DD tag.
+ * It is a handder who processes the DD tag.
  *
  * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
@@ -2237,15 +2760,15 @@ s_xhtml_1_0_end_dt_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_xhtml_1_0_start_dd_tag(void *pdoc, Node *UNUSED(child))
 {
-  xhtml_t      *xhtml = GET_XHTML(pdoc);
-  Doc          *doc   = xhtml->doc;
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
   W_L("<dd>");
   return xhtml->out;
 }
 
 
 /**
- * It is a handler who processes the DD tag.
+ * It is a handder who processes the DD tag.
  *
  * @param pdoc  [i/o] The pointer to the XHTML structure at the output
  *                     destination is specified.
@@ -2255,9 +2778,203 @@ s_xhtml_1_0_start_dd_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_xhtml_1_0_end_dd_tag(void *pdoc, Node *UNUSED(child))
 {
-  xhtml_t      *xhtml = GET_XHTML(pdoc);
-  Doc          *doc   = xhtml->doc;
-  W_L("\n");
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc   = xhtml->doc;
+  W_L("</dd>");
+  return xhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the MENU tag.
+ *
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The MENU tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_xhtml_1_0_start_menu_tag(void *pdoc, Node *UNUSED(child))
+{
+  xhtml_t *xhtml;
+  Doc *doc;
+  xhtml = GET_XHTML(pdoc);
+  doc     = xhtml->doc;
+  W_L("<menu>");
+  return xhtml->out;
+}
+
+
+/**
+ * It is a hanmenuer who processes the MENU tag.
+ *
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The MENU tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_xhtml_1_0_end_menu_tag(void *pdoc, Node *UNUSED(child))
+{
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc *doc = xhtml->doc;
+  W_L("</menu>");
+  return xhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the PLAINTEXT tag.
+ *
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The PLAINTEXT tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_xhtml_1_0_start_plaintext_tag(void *pdoc, Node *node)
+{
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc     = xhtml->doc;
+  W_L("<plaintext>");
+  s_xhtml_1_0_start_plaintext_tag_inner(pdoc,node);
+  return xhtml->out;
+}
+
+static char *
+s_xhtml_1_0_start_plaintext_tag_inner(void *pdoc, Node *node)
+{
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc     = xhtml->doc;
+  Node    *child;
+  for (child = qs_get_child_node(doc, node);
+       child;
+       child = qs_get_next_node(doc, child)) {
+    W_V(child->otext);
+    s_xhtml_1_0_start_plaintext_tag_inner(pdoc, child);
+  }
+  return xhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the PLAINTEXT tag.
+ *
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The PLAINTEXT tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_xhtml_1_0_end_plaintext_tag(void *pdoc, Node *UNUSED(child))
+{
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc     = xhtml->doc;
+  W_L("</plaintext>");
+  return xhtml->out;
+}
+
+
+/**
+ * It is a hanblinker who processes the BLINK tag.
+ *
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The BLINK tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_xhtml_1_0_start_blink_tag(void *pdoc, Node *UNUSED(child))
+{
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc = xhtml->doc;
+  W_L("<blink>");
+  return xhtml->out;
+}
+
+
+/**
+ * It is a hanblinker who processes the BLINK tag.
+ *
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The BLINK tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_xhtml_1_0_end_blink_tag(void *pdoc, Node *UNUSED(child))
+{
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc = xhtml->doc;
+  W_L("</blink>");
+  return xhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the MARQUEE tag.
+ *
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The MARQUEE tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_xhtml_1_0_start_marquee_tag(void *pdoc, Node *node)
+{
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc = xhtml->doc;
+  Attr *attr;
+  W_L("<marquee");
+  /*--------------------------------------------------------------------------*/
+  /* Get Attributes                                                           */
+  /*--------------------------------------------------------------------------*/
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char *name   = qs_get_attr_name(doc,attr);
+    char *value  = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('d','D',"direction", name)) {
+      if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value))) {
+        W_L(" direction=\"");
+        W_V(value);
+        W_L("\"");
+      }
+    }
+    else if (STRCASEEQ('b','B',"behavior",name)) {
+      if (value && (STRCASEEQ('s','S',"scroll",value) || STRCASEEQ('s','S',"slide",value) || STRCASEEQ('a','A',"alternate",value))) {
+        W_L(" behavior=\""); 
+        W_V(value);
+        W_L("\"");
+      }
+    }
+    else if (STRCASEEQ('l','L',"loop",name)) {
+      if (value && *value) {
+        W_L(" loop=\"");
+        W_V(value);
+        W_L("\"");
+      }
+    }
+  }
+  W_L(">");
+  return xhtml->out;
+}
+
+
+/**
+ * It is a handler who processes the MARQUEE tag.
+ *
+ * @param pdoc  [i/o] The pointer to the XHTML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The MARQUEE tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_xhtml_1_0_end_marquee_tag(void *pdoc, Node *UNUSED(child))
+{
+  xhtml_t *xhtml = GET_XHTML(pdoc);
+  Doc     *doc = xhtml->doc;
+  W_L("</marquee>");
   return xhtml->out;
 }
 /*

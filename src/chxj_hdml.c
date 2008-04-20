@@ -30,7 +30,8 @@
 #define GET_HDML(X) ((hdml_t *)(X))
 
 static void  s_init_hdml            (hdml_t *hdml, Doc *doc, request_rec *r, device_table *spec);
-
+static void  s_init_hdml            (hdml_t* hdml, Doc* doc, request_rec* r, device_table* spec);
+static char *s_s_get_form_no(request_rec *r, hdml_t *hdml);
 
 static char *s_hdml_start_html_tag    (void *pdoc,  Node *node);
 static char *s_hdml_end_html_tag      (void *pdoc,  Node *node);
@@ -70,27 +71,41 @@ static char *s_hdml_start_img_tag     (void *pdoc,  Node *node);
 static char *s_hdml_end_img_tag       (void *pdoc,  Node *node);
 static char *s_hdml_start_div_tag     (void *pdoc,  Node *node);
 static char *s_hdml_end_div_tag       (void *pdoc,  Node *node);
-static char *s_hdml_start_dt_tag      (void *pdoc,  Node *node);
-static char *s_hdml_end_dt_tag        (void *pdoc,  Node *node);
-static char *s_hdml_start_dd_tag      (void *pdoc,  Node *node);
-static char *s_hdml_end_dd_tag        (void *pdoc,  Node *node);
+static char *s_hdml_start_blockquote_tag(void *pdoc, Node *node);
+static char *s_hdml_end_blockquote_tag  (void *pdoc, Node *node);
+static char *s_hdml_start_dir_tag       (void *pdoc, Node *node);
+static char *s_hdml_end_dir_tag         (void *pdoc, Node *node);
+static char *s_hdml_start_dt_tag        (void *pdoc, Node *node);
+static char *s_hdml_end_dt_tag          (void *pdoc, Node *node);
+static char *s_hdml_start_dd_tag      (void *pdoc, Node *node);
+static char *s_hdml_end_dd_tag        (void *pdoc, Node *node);
+static char *s_hdml_start_plaintext_tag       (void *pdoc, Node *node);
+static char *s_hdml_start_plaintext_tag_inner (void *pdoc, Node *node);
+static char *s_hdml_end_plaintext_tag         (void *pdoc, Node *node);
+static char *s_hdml_start_pre_tag      (void *pdoc, Node *node);
+static char *s_hdml_end_pre_tag        (void *pdoc, Node *node);
+static char *s_hdml_start_textarea_tag (void *pdoc, Node *node);
+static char *s_hdml_inner_textarea_tag_get_value(hdml_t *hdml, Node *node);
 
-static char *s_get_form_no          (request_rec *r, hdml_t *hdml);
+static char *((*s_get_form_no)(request_rec* r, hdml_t* hdml)) = s_s_get_form_no;
 
-static void  s_hdml_count_radio_tag (hdml_t *hdml, Node *node) ;
+static void  s_hdml_count_radio_tag (hdml_t* hdml, Node* node) ;
 
 static void  s_hdml_do_input_text_tag    (hdml_t *hdml, Node *tag);
 static void  s_hdml_do_input_password_tag(hdml_t *hdml, Node *tag);
 static void  s_hdml_do_input_submit_tag  (hdml_t *hdml, Node *tag);
+static void  s_hdml_do_input_reset_tag   (hdml_t *hdml, Node *tag);
 static void  s_hdml_do_input_hidden_tag  (hdml_t *hdml, Node *tag);
 static void  s_hdml_do_input_radio_tag   (hdml_t *hdml, Node *tag);
 static void  s_hdml_do_input_checkbox_tag(hdml_t *hdml, Node *tag);
-static void  s_hdml_tag_output_upper_half(hdml_t *hdml, Node *node);
+static void  s_hdml_tag_output_upper_half(hdml_t *hdml, Node* node);
 
 static hdml_t *s_output_to_hdml_out       (hdml_t *hdml, char *s);
 static hdml_t *s_output_to_hdml_card      (hdml_t *hdml, char *s);
 static void  s_output_to_postdata         (hdml_t *hdml, char *s);
 static void  s_output_to_init_vars        (hdml_t *hdml, char *s);
+static int   s_hdml_search_emoji          (hdml_t *hdml, char *txt, char **rslt);
+
 static char *s_hdml_chxjif_tag            (void *pdoc, Node *node);
 static char *s_hdml_text_tag              (void *pdoc, Node *node);
 
@@ -108,23 +123,23 @@ tag_handler hdml_handler[] = {
   },
   /* tagTEXTAREA */
   {
-    NULL,
+    s_hdml_start_textarea_tag,
     NULL,
   },
   /* tagP */
   {
-    NULL,
-    NULL,
+    s_hdml_start_div_tag,
+    s_hdml_end_div_tag,
   },
   /* tagPRE */
   {
-    NULL,
-    NULL,
+    s_hdml_start_pre_tag,
+    s_hdml_end_pre_tag,
   },
   /* tagUL */
   {
-    NULL,
-    NULL,
+    s_hdml_start_dir_tag,
+    s_hdml_end_dir_tag,
   },
   /* tagLI */
   {
@@ -133,38 +148,38 @@ tag_handler hdml_handler[] = {
   },
   /* tagOL */
   {
-    NULL,
-    NULL,
+    s_hdml_start_dir_tag,
+    s_hdml_end_dir_tag,
   },
   /* tagH1 */
   {
-    NULL,
-    NULL,
+    s_hdml_start_div_tag,
+    s_hdml_end_div_tag,
   },
   /* tagH2 */
   {
-    NULL,
-    NULL,
+    s_hdml_start_div_tag,
+    s_hdml_end_div_tag,
   },
   /* tagH3 */
   {
-    NULL,
-    NULL,
+    s_hdml_start_div_tag,
+    s_hdml_end_div_tag,
   },
   /* tagH4 */
   {
-    NULL,
-    NULL,
+    s_hdml_start_div_tag,
+    s_hdml_end_div_tag,
   },
   /* tagH5 */
   {
-    NULL,
-    NULL,
+    s_hdml_start_div_tag,
+    s_hdml_end_div_tag,
   },
   /* tagH6 */
   {
-    NULL,
-    NULL,
+    s_hdml_start_div_tag,
+    s_hdml_end_div_tag,
   },
   /* tagHEAD */
   {
@@ -321,15 +336,45 @@ tag_handler hdml_handler[] = {
     NULL,
     NULL,
   },
+  /* tagBLOCKQUOTE */
+  {
+    s_hdml_start_blockquote_tag,
+    s_hdml_end_blockquote_tag,
+  },
+  /* tagDIR */
+  {
+    s_hdml_start_dir_tag,
+    s_hdml_end_dir_tag,
+  },
   /* tagDL */
   {
-    NULL,     /* not support */
-    NULL,     /* not support */
+    NULL,
+    NULL,
   },
   /* tagDD */
   {
     s_hdml_start_dd_tag,
     s_hdml_end_dd_tag,
+  },
+  /* tagMENU */
+  {
+    s_hdml_start_dir_tag,
+    s_hdml_end_dir_tag,
+  },
+  /* tagPLAINTEXT */
+  {
+    s_hdml_start_plaintext_tag,
+    s_hdml_end_plaintext_tag,
+  },
+  /* tagBLINK */
+  {
+    NULL,
+    NULL,
+  },
+  /* tagMARQUEE */
+  {
+    NULL,
+    NULL,
   },
 };
 
@@ -342,15 +387,15 @@ tag_handler hdml_handler[] = {
  * @param src  [i] The character string before the converting is appointed.
  * @return         The character string after the converting is returned.
  */
-char *
-chxj_convert_hdml(
-  request_rec         *r, 
-  device_table        *spec, 
-  const char          *src, 
-  apr_size_t          srclen, 
-  apr_size_t          *dstlen,
-  chxjconvrule_entry  *entryp,
-  cookie_t            *UNUSED(cookie)
+char*
+chxj_exchange_hdml(
+  request_rec* r, 
+  device_table* spec, 
+  const char* src, 
+  apr_size_t srclen, 
+  apr_size_t* dstlen,
+  chxjconvrule_entry* entryp,
+  cookie_t* UNUSED(cookie)
 )
 {
   char      *dst;
@@ -379,7 +424,7 @@ chxj_convert_hdml(
 
   hdml.entryp = entryp;
 
-  ap_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
+  chxj_set_content_type(r, "text/x-hdml; charset=Shift_JIS");
   /*--------------------------------------------------------------------------*/
   /* DEBUG                                                                    */
   /*--------------------------------------------------------------------------*/
@@ -399,15 +444,15 @@ chxj_convert_hdml(
     /*------------------------------------------------------------------------*/
     DBG(r, "Location is not null[Location:%s]", buf);
     s_output_to_hdml_out(&hdml, 
-        "<HDML VERSION=3.0 MARKABLE=TRUE PUBLIC=TRUE>\n"
-        "<NODISPLAY MARKABLE=TRUE PUBLIC=TRUE TITLE=\" \">\n"
+        "<HDML VERSION=3.0 MARKABLE=TRUE PUBLIC=TRUE>\r\n"
+        "<NODISPLAY MARKABLE=TRUE PUBLIC=TRUE TITLE=\" \">\r\n"
         "<ACTION TYPE=ACCEPT TASK=GO DEST=\""
         );
     s_output_to_hdml_out(&hdml, buf);
     s_output_to_hdml_out(&hdml,
-        "\">\n"
-        "</NODISPLAY>\n"
-        "</HDML>\n"
+        "\">\r\n"
+        "</NODISPLAY>\r\n"
+        "</HDML>\r\n"
         );
     dst = apr_pstrdup(r->pool, hdml.out);
   }
@@ -415,13 +460,12 @@ chxj_convert_hdml(
     /*------------------------------------------------------------------------*/
     /* Here, the parsing of the received character string is done             */
     /*------------------------------------------------------------------------*/
-    // char *ss = apr_pstrdup(r->pool, src);
     char *ss = apr_palloc(r->pool, srclen + 1);
     memset(ss, 0, srclen + 1);
     memcpy(ss, src, srclen);
     
-    DBG(r, "input strlen(src)=[%d]\n", (int)srclen);
-    DBG(r, "[[[[%s]]]\n", src);
+    DBG(r, "input strlen(src)=[%d]", (int)srclen);
+    DBG(r, "[[[[%s]]]", src);
 
     qs_init_malloc(&doc); 
     qs_init_root_node(&doc);
@@ -490,7 +534,7 @@ s_init_hdml(hdml_t *hdml, Doc *doc, request_rec *r, device_table *spec)
   hdml->doc      = doc;
   hdml->card     = qs_alloc_zero_byte_string(r);
   hdml->spec     = spec;
-  hdml->conf     = ap_get_module_config(r->per_dir_config, &chxj_module);
+  hdml->conf     = chxj_get_module_config(r->per_dir_config, &chxj_module);
   hdml->doc->parse_mode = PARSE_MODE_CHTML;
 
   for (ii=0; ii<MAX_FORM_COUNT; ii++) {
@@ -527,18 +571,18 @@ s_init_hdml(hdml_t *hdml, Doc *doc, request_rec *r, device_table *spec)
  * @param node   [i]   The HTML tag node is specified. 
  * @return The conversion result is returned. 
  */
-static char *
-s_hdml_start_html_tag(void *pdoc, Node *UNUSED(node)) 
+static char*
+s_hdml_start_html_tag(void* pdoc, Node* UNUSED(node)) 
 {
   hdml_t *hdml;
  
   hdml = GET_HDML(pdoc);
 
   s_output_to_hdml_out(hdml, 
-    "<HDML VERSION=3.0 TTL=0 MARKABLE=TRUE>\n"
-    "<NODISPLAY NAME=D0>\n"
-    "<ACTION TYPE=ACCEPT TASK=GOSUB DEST=#D1 NEXT=#D2 CLEAR=TRUE>\n"
-    "</NODISPLAY>\n"
+    "<HDML VERSION=3.0 TTL=0 MARKABLE=TRUE>\r\n"
+    "<NODISPLAY NAME=D0>\r\n"
+    "<ACTION TYPE=ACCEPT TASK=GOSUB DEST=#D1 NEXT=#D2 CLEAR=TRUE>\r\n"
+    "</NODISPLAY>\r\n"
     );
 
   hdml->card_cnt = 2;
@@ -556,15 +600,15 @@ s_hdml_start_html_tag(void *pdoc, Node *UNUSED(node))
  * @param node   [i]   The HTML tag node is specified. 
  * @return The conversion result is returned. 
  */
-static char *
-s_hdml_end_html_tag(void *pdoc, Node *UNUSED(child)) 
+static char*
+s_hdml_end_html_tag(void* pdoc, Node* UNUSED(child)) 
 {
   hdml_t *hdml;
 
   hdml = GET_HDML(pdoc);
 
   s_output_to_hdml_card(hdml, 
-                  "<NODISPLAY NAME=D1>\n"
+                  "<NODISPLAY NAME=D1>\r\n"
                   "<ACTION TYPE=ACCEPT TASK=RETURN VARS=\""
                   );
 
@@ -574,12 +618,12 @@ s_hdml_end_html_tag(void *pdoc, Node *UNUSED(child))
     s_output_to_hdml_card(hdml, "_chxj_dmy="            );
 
   s_output_to_hdml_card(hdml,   
-                  "\" CLEAR=TRUE>\n"
-                  "</NODISPLAY>\n"
+                  "\" CLEAR=TRUE>\r\n"
+                  "</NODISPLAY>\r\n"
                   );
 
   s_output_to_hdml_out(hdml, hdml->card );
-  s_output_to_hdml_out(hdml, "</HDML>\n");
+  s_output_to_hdml_out(hdml, "</HDML>\r\n");
 
   hdml->hdml_end_flag = 1;
 
@@ -595,8 +639,8 @@ s_hdml_end_html_tag(void *pdoc, Node *UNUSED(child))
  * @param node   [i]   The META tag node is specified. 
  * @return The conversion result is returned. 
  */
-static char *
-s_hdml_start_meta_tag(void *pdoc, Node *UNUSED(node)) 
+static char*
+s_hdml_start_meta_tag(void* pdoc, Node* UNUSED(node)) 
 {
   hdml_t *hdml;
 
@@ -618,8 +662,8 @@ s_hdml_start_meta_tag(void *pdoc, Node *UNUSED(node))
  * @param node   [i]   The META tag node is specified. 
  * @return The conversion result is returned. 
  */
-static char *
-s_hdml_end_meta_tag(void *pdoc, Node *UNUSED(child)) 
+static char*
+s_hdml_end_meta_tag(void* pdoc, Node* UNUSED(child)) 
 {
   hdml_t *hdml;
 
@@ -637,8 +681,8 @@ s_hdml_end_meta_tag(void *pdoc, Node *UNUSED(child))
  * @param node   [i]   The HEAD tag node is specified. 
  * @return The conversion result is returned. 
  */
-static char *
-s_hdml_start_head_tag(void *pdoc, Node *UNUSED(node)) 
+static char*
+s_hdml_start_head_tag(void* pdoc, Node* UNUSED(node)) 
 {
   hdml_t *hdml;
 
@@ -660,8 +704,8 @@ s_hdml_start_head_tag(void *pdoc, Node *UNUSED(node))
  * @param node   [i]   The HEAD tag node is specified. 
  * @return The conversion result is returned. 
  */
-static char *
-s_hdml_end_head_tag(void *pdoc, Node *UNUSED(child)) 
+static char*
+s_hdml_end_head_tag(void* pdoc, Node* UNUSED(child)) 
 {
   hdml_t *hdml;
 
@@ -680,8 +724,8 @@ s_hdml_end_head_tag(void *pdoc, Node *UNUSED(child))
  * @param node   [i]   The TITLE tag node is specified. 
  * @return The conversion result is returned. 
  */
-static char *
-s_hdml_start_title_tag(void *pdoc, Node *UNUSED(node)) 
+static char*
+s_hdml_start_title_tag(void* pdoc, Node* UNUSED(node)) 
 {
   hdml_t *hdml;
 
@@ -704,14 +748,14 @@ s_hdml_start_title_tag(void *pdoc, Node *UNUSED(node))
  * @param node   [i]   The TITLE tag node is specified. 
  * @return The conversion result is returned. 
  */
-static char *
-s_hdml_end_title_tag(void *pdoc, Node *UNUSED(child)) 
+static char*
+s_hdml_end_title_tag(void* pdoc, Node* UNUSED(child)) 
 {
   hdml_t *hdml;
 
   hdml = GET_HDML(pdoc);
 
-  s_output_to_hdml_out(hdml, "\">\n");
+  s_output_to_hdml_out(hdml, "\">\r\n");
 
   return hdml->out;
 }
@@ -725,8 +769,8 @@ s_hdml_end_title_tag(void *pdoc, Node *UNUSED(child))
  * @param node   [i]   The BASE tag node is specified. 
  * @return The conversion result is returned. 
  */
-static char *
-s_hdml_start_base_tag(void *pdoc, Node *UNUSED(node)) 
+static char*
+s_hdml_start_base_tag(void* pdoc, Node* UNUSED(node)) 
 {
   hdml_t *hdml;
 
@@ -746,8 +790,8 @@ s_hdml_start_base_tag(void *pdoc, Node *UNUSED(node))
  * @param node   [i]   The BASE tag node is specified. 
  * @return The conversion result is returned. 
  */
-static char *
-s_hdml_end_base_tag(void *pdoc, Node *UNUSED(child)) 
+static char*
+s_hdml_end_base_tag(void* pdoc, Node* UNUSED(child)) 
 {
   hdml_t *hdml;
 
@@ -777,7 +821,7 @@ s_hdml_start_body_tag(void *pdoc, Node *node)
   doc  = hdml->doc;
 
   if (hdml->found_title == 0)
-    s_output_to_hdml_out(hdml, "<DISPLAY NAME=D2 TITLE=\"NO TITLE\">\n");
+    s_output_to_hdml_out(hdml, "<DISPLAY NAME=D2 TITLE=\"NO TITLE\">\r\n");
 
   s_output_to_hdml_out(hdml, "<ACTION TYPE=ACCEPT TASK=NOOP LABEL=\" \"");
 
@@ -813,7 +857,7 @@ s_hdml_start_body_tag(void *pdoc, Node *node)
     }
   }
 
-  s_output_to_hdml_out(hdml, ">\n");
+  s_output_to_hdml_out(hdml, ">\r\n");
 
   hdml->hdml_br_flag = 0;
 
@@ -829,14 +873,14 @@ s_hdml_start_body_tag(void *pdoc, Node *node)
  * @param node   [i]   The BODY tag node is specified. 
  * @return The conversion result is returned. 
  */
-static char *
-s_hdml_end_body_tag(void *pdoc, Node *UNUSED(child)) 
+static char*
+s_hdml_end_body_tag(void* pdoc, Node* UNUSED(child)) 
 {
   hdml_t *hdml;
 
   hdml = GET_HDML(pdoc);
 
-  s_output_to_hdml_out(hdml, "\n</DISPLAY>\n");
+  s_output_to_hdml_out(hdml, "\r\n</DISPLAY>\r\n");
 
   return hdml->out;
 }
@@ -871,29 +915,20 @@ s_hdml_start_a_tag(void *pdoc, Node *node)
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-
-    char *name;
-    char *value;
-
-    name  = qs_get_attr_name(doc,attr);
-    value = qs_get_attr_value(doc,attr);
-
-    if ((*name == 'n' || *name == 'N') && strcasecmp(name, "name") == 0) {
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('n','N',"name",name)) {
       /* IGNORE */
     }
-    else 
-    if ((*name == 'h' || *name == 'H') && strcasecmp(name, "href") == 0) {
-      if ((*value == 'm' || *value == 'M') 
-      && strncasecmp(value, "mailto:", 7) == 0) {
+    else if (STRCASEEQ('h','H',"href",name)) {
+      if ((*value == 'm' || *value == 'M') && strncasecmp(value, "mailto:", 7) == 0) {
         value = chxj_encoding_parameter(hdml->doc->r, value);
         s_output_to_hdml_out(hdml, " TASK=GO DEST=\""     );
         s_output_to_hdml_out(hdml, value                  );
         s_output_to_hdml_out(hdml, "\" "                  );
       }
       else 
-      if ((*value == 't' || *value == 'T') 
-      && strncasecmp(value, "tel:", 4) == 0) {
-
+      if ((*value == 't' || *value == 'T') && strncasecmp(value, "tel:", 4) == 0) {
         s_output_to_hdml_out(hdml,  " TASK=CALL NUMBER=\"");
         s_output_to_hdml_out(hdml, &value[4]              );
         s_output_to_hdml_out(hdml, "\" "                  );
@@ -905,7 +940,7 @@ s_hdml_start_a_tag(void *pdoc, Node *node)
       }
     }
     else
-    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "accesskey") == 0) {
+    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "accesskey") == 0 && value && *value) {
       if (strcasecmp(value, "0") != 0) {
         s_output_to_hdml_out(hdml, " ACCESSKEY="          );
         s_output_to_hdml_out(hdml, value                  );
@@ -971,14 +1006,14 @@ s_hdml_start_a_tag(void *pdoc, Node *node)
  * @param node   [i]   The A tag node is specified. 
  * @return The conversion result is returned. 
  */
-static char *
-s_hdml_end_a_tag(void *pdoc, Node *UNUSED(child)) 
+static char*
+s_hdml_end_a_tag(void* pdoc, Node* UNUSED(child)) 
 {
   hdml_t *hdml;
 
   hdml = GET_HDML(pdoc);
 
-  s_output_to_hdml_out(hdml, "</A>\n");
+  s_output_to_hdml_out(hdml, "</A>\r\n");
 
   hdml->hdml_a_flag = 0;
 
@@ -994,8 +1029,8 @@ s_hdml_end_a_tag(void *pdoc, Node *UNUSED(child))
  * @param node   [i]   The BR tag node is specified. 
  * @return The conversion result is returned. 
  */
-static char *
-s_hdml_start_br_tag(void *pdoc, Node *UNUSED(node)) 
+static char*
+s_hdml_start_br_tag(void* pdoc, Node* UNUSED(node)) 
 {
   hdml_t *hdml;
 
@@ -1007,7 +1042,7 @@ s_hdml_start_br_tag(void *pdoc, Node *UNUSED(node))
   if (hdml->div_in_center > 0) 
     hdml->div_in_center = 0;
 
-  s_output_to_hdml_out(hdml, "<BR>\n");
+  s_output_to_hdml_out(hdml, "<BR>\r\n");
 
   hdml->hdml_br_flag = 1;
 
@@ -1023,8 +1058,8 @@ s_hdml_start_br_tag(void *pdoc, Node *UNUSED(node))
  * @param node   [i]   The BR tag node is specified. 
  * @return The conversion result is returned. 
  */
-static char *
-s_hdml_end_br_tag(void *pdoc, Node *UNUSED(child)) 
+static char*
+s_hdml_end_br_tag(void* pdoc, Node* UNUSED(child)) 
 {
   hdml_t *hdml;
 
@@ -1042,8 +1077,8 @@ s_hdml_end_br_tag(void *pdoc, Node *UNUSED(child))
  * @param node   [i]   The TR tag node is specified. 
  * @return The conversion result is returned. 
  */
-static char *
-s_hdml_start_tr_tag(void *pdoc, Node *UNUSED(node)) 
+static char*
+s_hdml_start_tr_tag(void* pdoc, Node* UNUSED(node)) 
 {
   hdml_t *hdml;
 
@@ -1055,7 +1090,7 @@ s_hdml_start_tr_tag(void *pdoc, Node *UNUSED(node))
   if (hdml->div_in_center > 0) 
     hdml->div_in_center = 0;
 
-  s_output_to_hdml_out(hdml, "<BR>\n");
+  s_output_to_hdml_out(hdml, "<BR>\r\n");
 
   hdml->hdml_br_flag = 1;
 
@@ -1071,8 +1106,8 @@ s_hdml_start_tr_tag(void *pdoc, Node *UNUSED(node))
  * @param node   [i]   The TR tag node is specified. 
  * @return The conversion result is returned. 
  */
-static char *
-s_hdml_end_tr_tag(void *pdoc, Node *UNUSED(child)) 
+static char*
+s_hdml_end_tr_tag(void* pdoc, Node* UNUSED(child)) 
 {
   hdml_t *hdml;
 
@@ -1090,8 +1125,8 @@ s_hdml_end_tr_tag(void *pdoc, Node *UNUSED(child))
  * @param node   [i]   The FONT tag node is specified. 
  * @return The conversion result is returned. 
  */
-static char *
-s_hdml_start_font_tag(void *pdoc, Node *UNUSED(node)) 
+static char*
+s_hdml_start_font_tag(void* pdoc, Node* UNUSED(node)) 
 {
   hdml_t *hdml;
 
@@ -1109,8 +1144,8 @@ s_hdml_start_font_tag(void *pdoc, Node *UNUSED(node))
  * @param node   [i]   The FONT tag node is specified. 
  * @return The conversion result is returned. 
  */
-static char *
-s_hdml_end_font_tag(void *pdoc, Node *UNUSED(child)) 
+static char*
+s_hdml_end_font_tag(void* pdoc, Node* UNUSED(child)) 
 {
   hdml_t *hdml;
 
@@ -1143,7 +1178,7 @@ s_hdml_start_form_tag(void *pdoc, Node *node)
   act  = NULL;
 
   hdml->form_tmp = apr_psprintf(r->pool,
-                  "<NODISPLAY NAME=F%d>\n",
+                  "<NODISPLAY NAME=F%d>\r\n",
                   hdml->pure_form_cnt);
   hdml->form_tmp = apr_pstrcat(r->pool,
                               hdml->form_tmp,
@@ -1196,8 +1231,8 @@ s_hdml_start_form_tag(void *pdoc, Node *node)
  * @param child [i]  unused.
  * @return The HDML output result after it edits it is returned. 
  */
-static char *
-s_hdml_end_form_tag(void *pdoc, Node *UNUSED(child)) 
+static char*
+s_hdml_end_form_tag(void* pdoc, Node* UNUSED(child)) 
 {
   hdml_t       *hdml;
   request_rec  *r;
@@ -1214,11 +1249,11 @@ s_hdml_end_form_tag(void *pdoc, Node *UNUSED(child))
 
   hdml->form_tmp = apr_pstrcat(r->pool,
                                hdml->form_tmp,
-                               "\" CLEAR=TRUE >\n", 
+                               "\" CLEAR=TRUE >\r\n", 
                                NULL);
   hdml->form_tmp = apr_pstrcat(r->pool,
                                hdml->form_tmp,
-                               "</NODISPLAY>\n",
+                               "</NODISPLAY>\r\n",
                                NULL);
 
   s_output_to_hdml_card(hdml, hdml->form_tmp);
@@ -1260,75 +1295,69 @@ s_hdml_start_input_tag(void *pdoc, Node *node)
     name  = qs_get_attr_name(doc,attr);
     value = qs_get_attr_value(doc,attr);
 
-    if ((*name == 't'|| *name == 'T') && strcasecmp(name, "type") == 0) {
-      if ((*value == 't' || *value == 'T') && strcasecmp(value, "text") == 0) {
+    if (STRCASEEQ('t','T',"type",name)) {
+      if (STRCASEEQ('t','T',"text",value)) {
         /*--------------------------------------------------------------------*/
         /* "input type ='text'" tag is processed.                             */
         /*--------------------------------------------------------------------*/
         s_hdml_do_input_text_tag(hdml, node);
       }
-      else
-      if ((*value == 'p' || *value == 'P') && strcasecmp(value, "password") == 0) {
+      else if (STRCASEEQ('p','P',"password",value)) {
         /*--------------------------------------------------------------------*/
         /* "input type='password'" tag is processed.                          */
         /*--------------------------------------------------------------------*/
         s_hdml_do_input_password_tag(hdml, node);
       }
-      else
-      if ((*value == 's' || *value == 'S') && strcasecmp(value, "submit") == 0) {
+      else if (STRCASEEQ('s','S',"submit",value)) {
         /*--------------------------------------------------------------------*/
         /* "input type='submit'" tag is processed.                            */
         /*--------------------------------------------------------------------*/
         s_hdml_do_input_submit_tag(hdml, node);
       }
-      else 
-      if ((*value == 'h' || *value == 'H') && strcasecmp(value, "hidden") == 0) {
+      else if (STRCASEEQ('h','H',"hidden",value)) {
         /*--------------------------------------------------------------------*/
         /* "input type='hidden'" tag is processed.                            */
         /*--------------------------------------------------------------------*/
         s_hdml_do_input_hidden_tag(hdml, node);
       }
-      else
-      if ((*value == 'r' || *value == 'R') && strcasecmp(value, "radio") == 0) {
+      else if (STRCASEEQ('r','R',"radio",value)) {
         /*--------------------------------------------------------------------*/
         /* "input type='radio'" tag is processed.                             */
         /*--------------------------------------------------------------------*/
         s_hdml_do_input_radio_tag(hdml, node);
       }
-      else 
-      if ((*value == 'c' || *value == 'C') && strcasecmp(value, "checkbox") == 0) {
+      else if (STRCASEEQ('c','C',"checkbox",value)) {
         /*--------------------------------------------------------------------*/
         /* "input type='checkbox'" tag is processed.                          */
         /*--------------------------------------------------------------------*/
         s_hdml_do_input_checkbox_tag(hdml, node);
       }
+      else if (STRCASEEQ('r','R',"reset",value)) {
+        /*--------------------------------------------------------------------*/
+        /* "input type='reset'" tag is processed.                            */
+        /*--------------------------------------------------------------------*/
+        s_hdml_do_input_reset_tag(hdml, node);
+      }
     }
-    else 
-    if ((*name == 'n' || *name == 'N') && strcasecmp(name, "name")      == 0) {
+    else if (STRCASEEQ('n','N',"name",name)) {
       /* ignore */
     }
-    else
-    if ((*name == 'v' || *name == 'V') && strcasecmp(name, "value")     == 0) {
+    else if (STRCASEEQ('v','V',"value",name)) {
       /* ignore */
     }
-    else
-    if ((*name == 's' || *name == 'S') && strcasecmp(name, "size")      == 0) {
+    else if (STRCASEEQ('s','S',"size",name)) {
       /* ignore */
     }
-    else
-    if ((*name == 'm' || *name == 'M') && strcasecmp(name, "maxlength") == 0) {
+    else if (STRCASEEQ('m','M',"maxlength",name)) {
       /* ignore */
     }
-    else
-    if ((*name == 'c' || *name == 'C') && strcasecmp(name, "checked")   == 0) {
+    else if (STRCASEEQ('c','C',"checked",name)) {
       /* ignore */
     }
-    else 
-    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "accesskey") == 0) {
+    else  if (STRCASEEQ('a','A',"accesskey",name)) {
       /* ignore */
     }
-    else
-    if ((*name == 'i' || *name == 'I') && strcasecmp(name, "istyle")    == 0) {
+    else if (STRCASEEQ('i','I',"istyle",name)) {
       /* ignore */
     }
   }
@@ -1377,7 +1406,7 @@ s_hdml_do_input_text_tag(hdml_t *hdml, Node *tag)
 
   s_output_to_hdml_out(hdml, 
                        apr_psprintf(r->pool, 
-                                    "[$%s%02d]</A>\n"  , 
+                                    "[$%s%02d]</A>\r\n"  , 
                                     s_get_form_no(r, hdml),
                           hdml->var_cnt[hdml->pure_form_cnt]));
 
@@ -1426,9 +1455,9 @@ s_hdml_do_input_text_tag(hdml_t *hdml, Node *tag)
   }
 
   s_output_to_hdml_card(hdml, 
-                        " MARKABLE=FALSE>\n"
-                        "<ACTION TYPE=ACCEPT TASK=RETURN RETVALS=$V>\n"
-                        "</ENTRY>\n");
+                        " MARKABLE=FALSE>\r\n"
+                        "<ACTION TYPE=ACCEPT TASK=RETURN RETVALS=$V>\r\n"
+                        "</ENTRY>\r\n");
 
   if (val) 
     s_output_to_init_vars(hdml, 
@@ -1436,7 +1465,7 @@ s_hdml_do_input_text_tag(hdml_t *hdml, Node *tag)
                                        "%s%02d=%s", 
                                        s_get_form_no(r, hdml),
                                        hdml->var_cnt[hdml->pure_form_cnt],
-                                       ap_escape_uri(r->pool,val)));
+                                       chxj_escape_uri(r->pool,val)));
   else 
     s_output_to_init_vars(hdml, 
                           apr_psprintf(r->pool, 
@@ -1485,7 +1514,7 @@ s_hdml_do_input_password_tag(hdml_t *hdml, Node *tag)
                                s_get_form_no(r, hdml),
                           hdml->var_cnt[hdml->pure_form_cnt]));
   s_output_to_hdml_out(hdml, 
-                  apr_psprintf(r->pool, "[$%s%02d]</A>\n"  , 
+                  apr_psprintf(r->pool, "[$%s%02d]</A>\r\n"  , 
                           s_get_form_no(r, hdml),
                           hdml->var_cnt[hdml->pure_form_cnt]));
 
@@ -1528,16 +1557,16 @@ s_hdml_do_input_password_tag(hdml_t *hdml, Node *tag)
   s_output_to_hdml_card(hdml, apr_psprintf(r->pool, " NOECHO=TRUE "));
 
   s_output_to_hdml_card(hdml, 
-                  " MARKABLE=FALSE>\n"
-                  "<ACTION TYPE=ACCEPT TASK=RETURN RETVALS=$V>\n"
-                  "</ENTRY>\n");
+                  " MARKABLE=FALSE>\r\n"
+                  "<ACTION TYPE=ACCEPT TASK=RETURN RETVALS=$V>\r\n"
+                  "</ENTRY>\r\n");
 
   if (val) 
     s_output_to_init_vars(hdml, 
                     apr_psprintf(r->pool, "%s%02d=%s", 
                         s_get_form_no(r, hdml),
                         hdml->var_cnt[hdml->pure_form_cnt], 
-                        ap_escape_uri(r->pool,val)));
+                        chxj_escape_uri(r->pool,val)));
   else 
     s_output_to_init_vars(hdml, 
                     apr_psprintf(r->pool, "%s%02d=", 
@@ -1579,7 +1608,7 @@ s_hdml_do_input_submit_tag(hdml_t *hdml, Node *tag)
     s_output_to_hdml_out(hdml, 
                     apr_psprintf(r->pool, "VARS=\"%s=%s\" ", 
                             nm, 
-                            ap_escape_uri(r->pool,val)));
+                            chxj_escape_uri(r->pool,val)));
     if (strstr(hdml->postdata[hdml->pure_form_cnt], nm) == NULL) {
       s_output_to_postdata(hdml, 
                       apr_psprintf(r->pool,"%s%s=$%s", 
@@ -1587,8 +1616,43 @@ s_hdml_do_input_submit_tag(hdml_t *hdml, Node *tag)
     }
   }
   s_output_to_hdml_out(hdml, ">"         );
-  s_output_to_hdml_out(hdml, val);
-  s_output_to_hdml_out(hdml, "</A>\n"    );
+  if (val) {
+    s_output_to_hdml_out(hdml, val);
+  }
+  s_output_to_hdml_out(hdml, "</A>\r\n"    );
+}
+
+
+/**
+ * The substitution processing of tag "input type = reset" is done. 
+ * 
+ * @param hdml [i/o] The pointer to the HDML structure at the output 
+ *                   destination is specified. 
+ * @param tag  [i]   The tag node of input type=submit is specified. 
+ */
+static void
+s_hdml_do_input_reset_tag(hdml_t *hdml, Node *tag)
+{
+  Doc           *doc = hdml->doc;
+  request_rec   *r   = doc->r;
+  char          *nm  = NULL;
+  char          *val = NULL;
+
+  s_hdml_tag_output_upper_half(hdml, tag);
+
+  s_output_to_hdml_out(hdml, 
+                  apr_psprintf(r->pool, 
+                          "<A TASK=GO LABEL=OK DEST=#D0>"));
+
+  /*--------------------------------------------------------------------------*/
+  /* get name and value attribute                                             */
+  /*--------------------------------------------------------------------------*/
+  nm  = qs_get_name_attr  (doc, tag, r);
+  val = qs_get_value_attr (doc, tag, r);
+  if (val) {
+    s_output_to_hdml_out(hdml, val);
+  }
+  s_output_to_hdml_out(hdml, "</A>\r\n"    );
 }
 
 
@@ -1618,7 +1682,7 @@ s_hdml_do_input_hidden_tag(hdml_t *hdml, Node *tag)
                     apr_psprintf(r->pool, 
                             "%s=%s", 
                             nm, 
-                            ap_escape_uri(r->pool, val)));
+                            chxj_escape_uri(r->pool, val)));
   }
 }
 
@@ -1677,7 +1741,7 @@ s_hdml_do_input_radio_tag(hdml_t *hdml, Node *tag)
   s_output_to_hdml_out(hdml, 
                   apr_psprintf(r->pool, 
                           "<A TASK=GOSUB "
-                          "LABEL=\"\x93\xfc\x97\xcd\" "
+                          "LABEL=\"check\" "
                           "DEST=#R%d VARS=\"VAL=%s\" "
                           "RECEIVE=\"%s;", 
                           ii, 
@@ -1687,7 +1751,7 @@ s_hdml_do_input_radio_tag(hdml_t *hdml, Node *tag)
   if (hdml->radio_out_cnt[ii] == 0) {
     s_output_to_hdml_card(hdml, 
                     apr_psprintf(r->pool,
-                            "<NODISPLAY NAME=R%d>\n",
+                            "<NODISPLAY NAME=R%d>\r\n",
                             ii));
     s_output_to_hdml_card(hdml, 
                     apr_psprintf(r->pool, 
@@ -1729,8 +1793,8 @@ s_hdml_do_input_radio_tag(hdml_t *hdml, Node *tag)
                           nm, 
                           hdml->radio_out_cnt[ii]));
   if (! hdml->radio_out_cnt[ii]) {
-    s_output_to_hdml_card(hdml, "\">\n"         );
-    s_output_to_hdml_card(hdml, "</NODISPLAY>\n");
+    s_output_to_hdml_card(hdml, "\">\r\n"         );
+    s_output_to_hdml_card(hdml, "</NODISPLAY>\r\n");
 
     s_output_to_postdata(hdml,  apr_psprintf(r->pool, "%s%s=$%s", RADIO_BUTTON_PREFIX, nm, nm));
 
@@ -1805,14 +1869,14 @@ s_hdml_do_input_checkbox_tag(hdml_t *hdml, Node *tag)
   if (! hdml->has_checkbox) {
     hdml->has_checkbox++;
     s_output_to_hdml_card(hdml, 
-                    "<NODISPLAY NAME=\"_chk\">\n"
+                    "<NODISPLAY NAME=\"_chk\">\r\n"
                     "<ACTION TYPE=\"ACCEPT\" TASK=\"RETURN\" "
-                                             "RETVALS=\"_uchk;$V;X\" >\n"
-                    "</NODISPLAY>\n"
-                    "<NODISPLAY NAME=\"_uchk\">\n"
+                                             "RETVALS=\"_uchk;$V;X\" >\r\n"
+                    "</NODISPLAY>\r\n"
+                    "<NODISPLAY NAME=\"_uchk\">\r\n"
                     "<ACTION TYPE=\"ACCEPT\" TASK=\"RETURN\" "
-                                             "RETVALS=\"_chk;;_\" >\n"
-                    "</NODISPLAY>\n"
+                                             "RETVALS=\"_chk;;_\" >\r\n"
+                    "</NODISPLAY>\r\n"
                     );
     DBG(r, "wrote checkbox hdml card.");
   }
@@ -1836,11 +1900,11 @@ s_hdml_do_input_checkbox_tag(hdml_t *hdml, Node *tag)
     nm   = qs_alloc_zero_byte_string(r);
 
   s_output_to_hdml_out(hdml, apr_psprintf(r->pool, 
-                                "<A TASK=GOSUB LABEL=\"a\xaf\xb8\" "
+                                "<A TASK=GOSUB LABEL=\"check\" "
                                    "DEST=\"#$%s%02d\" "
                                    "VARS=\"V=%s\" "
                                    "RECEIVE=\"%s%02d;%s%02d;%s%02d\">"
-                                   "$%s%02d</A>\n",
+                                   "$%s%02d</A>\r\n",
                                 s_get_form_no(r, hdml),
                                 hdml->var_cnt[hdml->pure_form_cnt] + 0,
                                 val,
@@ -1860,7 +1924,7 @@ s_hdml_do_input_checkbox_tag(hdml_t *hdml, Node *tag)
                             hdml->var_cnt[hdml->pure_form_cnt] + 0,
                             s_get_form_no(r, hdml),
                             hdml->var_cnt[hdml->pure_form_cnt] + 1,
-                            ap_escape_uri(r->pool,val),
+                            chxj_escape_uri(r->pool,val),
                             s_get_form_no(r, hdml),
                             hdml->var_cnt[hdml->pure_form_cnt] + 2
                             ));
@@ -1933,8 +1997,8 @@ qs_conv_istyle_to_format(request_rec *r, char *is)
  * @param node   [i]   The INPUT tag node is specified.
  * @return The conversion result is returned.
  */
-static char *
-s_hdml_end_input_tag(void *pdoc, Node *UNUSED(child)) 
+static char*
+s_hdml_end_input_tag(void* pdoc, Node* UNUSED(child)) 
 {
   hdml_t *hdml;
 
@@ -1952,8 +2016,8 @@ s_hdml_end_input_tag(void *pdoc, Node *UNUSED(child))
  * @param node   [i]   The CENTER tag node is specified.
  * @return The conversion result is returned.
  */
-static char *
-s_hdml_start_center_tag(void *pdoc, Node *UNUSED(node)) 
+static char*
+s_hdml_start_center_tag(void* pdoc, Node* UNUSED(node)) 
 {
   hdml_t *hdml;
 
@@ -1963,7 +2027,7 @@ s_hdml_start_center_tag(void *pdoc, Node *UNUSED(node))
   hdml->in_center++;
 
   if (hdml->hdml_br_flag == 0)
-    hdml = s_output_to_hdml_out(hdml, "<BR>\n");
+    hdml = s_output_to_hdml_out(hdml, "<BR>\r\n");
 
   hdml = s_output_to_hdml_out(hdml, "<CENTER>");
 
@@ -1979,8 +2043,8 @@ s_hdml_start_center_tag(void *pdoc, Node *UNUSED(node))
  * @param node   [i]   The CENTER tag node is specified.
  * @return The conversion result is returned.
  */
-static char *
-s_hdml_end_center_tag(void *pdoc, Node *UNUSED(child)) 
+static char*
+s_hdml_end_center_tag(void* pdoc, Node* UNUSED(child)) 
 {
   hdml_t *hdml;
 
@@ -1989,7 +2053,7 @@ s_hdml_end_center_tag(void *pdoc, Node *UNUSED(child))
   hdml->center = 0;
   hdml->in_center = 0;
 
-  hdml = s_output_to_hdml_out(hdml, "<BR>\n");
+  hdml = s_output_to_hdml_out(hdml, "<BR>\r\n");
   hdml->hdml_br_flag = 1;
 
   return hdml->out;
@@ -2004,15 +2068,15 @@ s_hdml_end_center_tag(void *pdoc, Node *UNUSED(child))
  * @param node   [i]   The HR tag node is specified.
  * @return The conversion result is returned.
  */
-static char *
-s_hdml_start_hr_tag(void *pdoc, Node *UNUSED(node)) 
+static char*
+s_hdml_start_hr_tag(void* pdoc, Node* UNUSED(node)) 
 {
   hdml_t *hdml;
 
   hdml = GET_HDML(pdoc);
 
   if (hdml->hdml_br_flag == 0) {
-    s_output_to_hdml_out(hdml, "<BR>\n");
+    s_output_to_hdml_out(hdml, "<BR>\r\n");
     if (hdml->in_center)
       hdml->in_center--;
     else
@@ -2020,7 +2084,7 @@ s_hdml_start_hr_tag(void *pdoc, Node *UNUSED(node))
       hdml->div_in_center--;
   }
 
-  s_output_to_hdml_out(hdml, "<CENTER>\x81\x7c\x81\x7c\x81\x7c\x81\x7c\x81\x7c\x81\x7c\x81\x7c\x81\x7c\x81\x7c<BR>\n");
+  s_output_to_hdml_out(hdml, "<CENTER>\x81\x7c\x81\x7c\x81\x7c\x81\x7c\x81\x7c\x81\x7c\x81\x7c\x81\x7c\x81\x7c<BR>\r\n");
 
   hdml->hdml_br_flag = 1;
 
@@ -2036,8 +2100,8 @@ s_hdml_start_hr_tag(void *pdoc, Node *UNUSED(node))
  * @param node   [i]   The HR tag node is specified.
  * @return The conversion result is returned.
  */
-static char *
-s_hdml_end_hr_tag(void *pdoc, Node *UNUSED(child)) 
+static char*
+s_hdml_end_hr_tag(void* pdoc, Node* UNUSED(child)) 
 {
   hdml_t *hdml;
 
@@ -2058,21 +2122,22 @@ s_hdml_end_hr_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_hdml_start_li_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  hdml_t *hdml;
-
-  hdml = GET_HDML(pdoc);
+  hdml_t *hdml = GET_HDML(pdoc);
+  int i;
 
   if (hdml->hdml_br_flag == 0) {
-    s_output_to_hdml_out(hdml, "<BR>\n");
+    s_output_to_hdml_out(hdml, "<BR>\r\n");
     if (hdml->in_center)
       hdml->in_center--;
     else
     if (hdml->div_in_center) 
       hdml->div_in_center--;
   }
-
+  s_output_to_hdml_out(hdml, "<WRAP>");
+  for (i=0; i<hdml->dir_level; i++) {
+    s_output_to_hdml_out(hdml, "&nbsp;");
+  } 
   hdml->hdml_br_flag = 1;
-
   return hdml->out;
 }
 
@@ -2088,21 +2153,16 @@ s_hdml_start_li_tag(void *pdoc, Node *UNUSED(node))
 static char *
 s_hdml_end_li_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  hdml_t *hdml;
-
-  hdml = GET_HDML(pdoc);
-
+  hdml_t *hdml = GET_HDML(pdoc);
   if (hdml->hdml_br_flag == 0) {
-    s_output_to_hdml_out(hdml, "<BR>\n");
+    s_output_to_hdml_out(hdml, "<BR>\r\n");
     if (hdml->in_center)
       hdml->in_center--;
     else
     if (hdml->div_in_center) 
       hdml->div_in_center--;
   }
-
   hdml->hdml_br_flag = 1;
-
   return hdml->out;
 }
 
@@ -2118,12 +2178,12 @@ s_hdml_end_li_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_hdml_start_img_tag(void *pdoc, Node *node) 
 {
-  hdml_t         *hdml;
-  Doc            *doc;
+  hdml_t        *hdml;
+  Doc           *doc;
 #ifndef IMG_NOT_CONVERT_FILENAME
-  device_table   *spec;
+  device_table  *spec;
 #endif
-  Attr           *attr;
+  Attr          *attr;
 
   hdml = GET_HDML(pdoc);
   doc  = hdml->doc;
@@ -2142,8 +2202,7 @@ s_hdml_start_img_tag(void *pdoc, Node *node)
 
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
-
-    if ((*name == 's' || *name == 'S') && strcasecmp(name, "src") == 0) {
+    if (STRCASEEQ('s','S',"src",name) && value && *value) {
       value = chxj_encoding_parameter(hdml->doc->r, value);
       s_output_to_hdml_out(hdml, " src=\"");
 #ifdef IMG_NOT_CONVERT_FILENAME
@@ -2153,38 +2212,38 @@ s_hdml_start_img_tag(void *pdoc, Node *node)
 #endif
       s_output_to_hdml_out(hdml, "\""     );
     }
-    else 
-    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "align" ) == 0) {
-      s_output_to_hdml_out(hdml, " align=\"" );
-      s_output_to_hdml_out(hdml, value       );
-      s_output_to_hdml_out(hdml, "\""        );
+    else if (STRCASEEQ('a','A',"align",name)) {
+      if (value && (STRCASEEQ('t','T',"top",   value) ||
+                    STRCASEEQ('m','M',"middle",value) ||
+                    STRCASEEQ('b','B',"bottom",value) ||
+                    STRCASEEQ('l','L',"left",  value) ||
+                    STRCASEEQ('r','R',"right", value))) {
+        s_output_to_hdml_out(hdml, " align=\"" );
+        s_output_to_hdml_out(hdml, value       );
+        s_output_to_hdml_out(hdml, "\""        );
+      }
     }
-    else
-    if ((*name == 'w' || *name == 'W') && strcasecmp(name, "width" ) == 0) {
+    else if (STRCASEEQ('w','W',"width",name) && value && *value) {
       s_output_to_hdml_out(hdml, " width=\"");
       s_output_to_hdml_out(hdml, value      );
       s_output_to_hdml_out(hdml, "\""       );
     }
-    else
-    if ((*name == 'h' || *name == 'H') && strcasecmp(name, "height") == 0) {
+    else if (STRCASEEQ('h','H',"height",name) && value && *value) {
       s_output_to_hdml_out(hdml, " height=\"");
       s_output_to_hdml_out(hdml, value       );
       s_output_to_hdml_out(hdml, "\""        );
     }
-    else
-    if ((*name == 'h' || *name == 'H') && strcasecmp(name, "hspace") == 0) {
+    else if (STRCASEEQ('h','H',"hspace", name) && value && *value) {
       s_output_to_hdml_out(hdml, " hspace=\"");
       s_output_to_hdml_out(hdml, value       );
       s_output_to_hdml_out(hdml, "\""        );
     }
-    else
-    if ((*name == 'v' || *name == 'V') && strcasecmp(name, "vspace") == 0) {
+    else if (STRCASEEQ('v','V',"vspace",name) && value && *value) {
       s_output_to_hdml_out(hdml, " vspace=\"");
       s_output_to_hdml_out(hdml, value       );
       s_output_to_hdml_out(hdml, "\""        );
     }
-    else
-    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "alt"   ) == 0) {
+    else if (STRCASEEQ('a','A',"alt",name) && value && *value) {
       s_output_to_hdml_out(hdml, " alt=\""   );
       s_output_to_hdml_out(hdml, value       );
       s_output_to_hdml_out(hdml, "\""        );
@@ -2209,10 +2268,7 @@ s_hdml_start_img_tag(void *pdoc, Node *node)
 static char *
 s_hdml_end_img_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  hdml_t *hdml;
-
-  hdml = GET_HDML(pdoc);
-
+  hdml_t *hdml = GET_HDML(pdoc);
   return hdml->out;
 }
 
@@ -2245,7 +2301,7 @@ s_hdml_start_select_tag(void *pdoc, Node *node)
                                    "<A TASK=GOSUB LABEL=\x91\x49\x91\xf0 "
                                    "VARS=\"V=$%s%02d\" DEST=#D%d "
                                    "RECEIVE=\"%s%02d;%s%02d\">"
-                                   "$%s%02d</A>\n",
+                                   "$%s%02d</A>\r\n",
                                    s_get_form_no(r, hdml),
                                    hdml->var_cnt[hdml->pure_form_cnt]+0, 
                                    hdml->card_cnt,
@@ -2261,7 +2317,7 @@ s_hdml_start_select_tag(void *pdoc, Node *node)
                           "<CHOICE KEY=V NAME=D%d ", hdml->card_cnt));
   s_output_to_hdml_card(hdml, 
                   apr_psprintf(r->pool, 
-                          "DEFAULT=$V METHOD=ALPHA MARKABLE=FALSE>\n"));
+                          "DEFAULT=$V METHOD=ALPHA MARKABLE=FALSE>\r\n"));
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
   /*--------------------------------------------------------------------------*/
@@ -2324,14 +2380,14 @@ s_hdml_start_select_tag(void *pdoc, Node *node)
  * @param node   [i]   The SELECT tag node is specified.
  * @return The conversion result is returned.
  */
-static char *
-s_hdml_end_select_tag(void *pdoc,  Node *UNUSED(node))
+static char* 
+s_hdml_end_select_tag(void* pdoc,  Node* UNUSED(node))
 {
   hdml_t *hdml;
 
   hdml = GET_HDML(pdoc);
 
-  s_output_to_hdml_card(hdml, "</CHOICE>\n");
+  s_output_to_hdml_card(hdml, "</CHOICE>\r\n");
 
   return hdml->out;
 }
@@ -2345,7 +2401,7 @@ s_hdml_end_select_tag(void *pdoc,  Node *UNUSED(node))
  * @param node   [i]   The OPTION tag node is specified.
  * @return The conversion result is returned.
  */
-static char *
+static char * 
 s_hdml_start_option_tag(void *pdoc, Node *node) 
 {
   request_rec  *r;
@@ -2382,7 +2438,7 @@ s_hdml_start_option_tag(void *pdoc, Node *node)
     s_output_to_hdml_card(hdml, 
                     apr_psprintf(r->pool, 
                             "<CE TASK=RETURN VALUE=\"%s\" "
-                            "RETVALS=\"$V;%s\">%s</CE>\n", 
+                            "RETVALS=\"$V;%s\">%s</CE>\r\n", 
                             val, 
                             qs_trim_string(r->pool,txtval), 
                             qs_trim_string(r->pool,txtval)));
@@ -2402,8 +2458,8 @@ s_hdml_start_option_tag(void *pdoc, Node *node)
  * @param node   [i]   The OPTION tag node is specified.
  * @return The conversion result is returned.
  */
-static char *
-s_hdml_end_option_tag(void *pdoc,  Node *UNUSED(node)) 
+static char* 
+s_hdml_end_option_tag(void* pdoc,  Node* UNUSED(node)) 
 {
   hdml_t *hdml;
 
@@ -2439,27 +2495,25 @@ s_hdml_start_div_tag(void *pdoc, Node *node)
   /*--------------------------------------------------------------------------*/
   if (hdml->hdml_br_flag == 0) {
     hdml->hdml_br_flag = 1;
-    s_output_to_hdml_out(hdml, "<BR>\n");
+    s_output_to_hdml_out(hdml, "<BR>\r\n");
   }
 
   /*--------------------------------------------------------------------------*/
   /* The object tag node is scanned.                                          */
   /*--------------------------------------------------------------------------*/
   for (attr = qs_get_attr(doc,node); 
-       attr != NULL; 
+       attr; 
        attr = qs_get_next_attr(doc,attr)) {
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
-
-    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "align") == 0) {
-      if ((*value == 'r' || *value == 'R') && strcasecmp(value, "right") == 0) {
+    if (STRCASEEQ('a','A',"align",name)) {
+      if (STRCASEEQ('r','R',"right",value)) {
         hdml->div_right_flag = 1;
         s_output_to_hdml_out(hdml, "<RIGHT>");
         hdml->hdml_br_flag = 0;
         break;
       }
-      else 
-      if ((*value == 'c' || *value == 'C') && strcasecmp(value, "center") == 0) {
+      else if (STRCASEEQ('c','C',"center",value)) {
         hdml->div_center_flag = 1;
         s_output_to_hdml_out(hdml, "<CENTER>");
         hdml->hdml_br_flag = 0;
@@ -2491,11 +2545,11 @@ s_hdml_end_div_tag(void *pdoc,  Node *UNUSED(node))
   r    = hdml->doc->r;
 
   if (hdml->div_right_flag == 1) {
-    s_output_to_hdml_out(hdml, apr_psprintf(r->pool, "<BR>\n"));
+    s_output_to_hdml_out(hdml, apr_psprintf(r->pool, "<BR>\r\n"));
     hdml->div_right_flag = 0;
   }
   if (hdml->div_center_flag == 1) {
-    s_output_to_hdml_out(hdml, apr_psprintf(r->pool, "<BR>\n"));
+    s_output_to_hdml_out(hdml, apr_psprintf(r->pool, "<BR>\r\n"));
     hdml->div_center_flag = 0;
     hdml->div_in_center   = 0;
   }
@@ -2532,7 +2586,7 @@ qs_out_apr_pstrcat(request_rec *r, char *o, char *s, int *len)
  * @return The character string after it generates it is returned. 
  */
 static char *
-s_get_form_no(request_rec *r, hdml_t *hdml) 
+s_s_get_form_no(request_rec *r, hdml_t *hdml) 
 {
   char           *result;
   apr_time_exp_t tm;
@@ -2686,7 +2740,7 @@ s_hdml_count_radio_tag(hdml_t *hdml, Node *node)
  * @param s    [i]   The character string that should be output is specified. 
  * @return The pointer to the HDML structure after it processes it is returned.
  */
-static hdml_t * 
+static hdml_t *
 s_output_to_hdml_out(hdml_t *hdml, char *s)
 {
   hdml->out = qs_out_apr_pstrcat(hdml->doc->r, hdml->out, s, &hdml->out_len);
@@ -2825,27 +2879,29 @@ s_hdml_chxjif_tag(void *pdoc, Node *node)
 static char *
 s_hdml_text_tag(void *pdoc, Node *child) 
 {
-  hdml_t  *hdml;
-  Doc     *doc;
-  char    *textval;
-  char    *tmp;
-  char    *tdst;
-  char    one_byte[2];
+  hdml_t* hdml;
+  Doc*    doc;
+  char*   textval;
+  char*   tmp;
+  char*   tdst;
+  char    one_byte[3];
   int     ii;
   int     tdst_len = 0;
-  request_rec *r;
+  int     one_line_count = 0;
+  request_rec* r;
 
   hdml = GET_HDML(pdoc);
   doc  = hdml->doc;
   r    = doc->r;
   
   textval = qs_get_node_value(doc,child);
-  textval = qs_trim_string(r->pool, textval);
-  if (strlen(textval) == 0)
+  if (strlen(textval) == 0) {
     return hdml->out;
+  }
   
-  if (hdml->option_flag == 1) 
+  if (hdml->option_flag == 1) {
     return hdml->out;
+  }
   
   tmp = apr_palloc(r->pool, qs_get_node_size(doc,child)+1);
   memset(tmp, 0, qs_get_node_size(doc,child)+1);
@@ -2853,17 +2909,77 @@ s_hdml_text_tag(void *pdoc, Node *child)
   tdst[0] = '\0';
   one_byte[0] = '\0';
   one_byte[1] = '\0';
+  one_byte[2] = '\0';
   
   for (ii=0; ii<qs_get_node_size(doc,child); ii++) {
+    char* out;
+    int rtn = s_hdml_search_emoji(hdml, &textval[ii], &out);
+    if (rtn) {
+      tdst = qs_out_apr_pstrcat(r, tdst, out, &tdst_len);
+      ii += (rtn-1);
+      one_line_count+=(rtn-1);
+      continue;
+    }
+    if (hdml->hdml_blockquote_flag) {
+      if (one_line_count == 0) {
+        tdst = qs_out_apr_pstrcat(r, tdst, "<WRAP>&nbsp;<TAB>", &tdst_len);
+      }
+      if (is_sjis_kanji(textval[ii])) {
+        one_byte[0] = textval[ii+0];
+        one_byte[1] = textval[ii+1];
+        one_byte[2] = 0;
+        tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+        ii++;
+        one_line_count+=2;
+      }
+      else {
+        one_byte[0] = textval[ii+0];
+        one_byte[1] = 0;
+        tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+        one_line_count++;
+        if (one_byte[0] == '\n') {
+          one_line_count = 0;
+        }
+      }
+      continue;
+    }
+    if (hdml->pre_flag) {
+      if (one_line_count == 0) {
+        tdst = qs_out_apr_pstrcat(r, tdst, "<LINE>", &tdst_len);
+      }
+      if (is_sjis_kanji(textval[ii])) {
+        one_byte[0] = textval[ii+0];
+        one_byte[1] = textval[ii+1];
+        one_byte[2] = 0;
+        tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
+        ii++;
+        one_line_count+=2;
+      }
+      else {
+        one_byte[0] = textval[ii+0];
+        one_byte[1] = 0;
+        if (one_byte[0] == ' ') {
+          tdst = qs_out_apr_pstrcat(r, tdst, "&nbsp;", &tdst_len);
+        }
+        else {
+          tdst = qs_out_apr_pstrcat(r, tdst, chxj_ap_escape_html(r->pool, one_byte), &tdst_len);
+        }
+        one_line_count++;
+        if (one_byte[0] == '\n') {
+          one_line_count = 0;
+        }
+      }
+      continue;
+    }
     if (is_sjis_kanji(textval[ii])) {
       one_byte[0] = textval[ii+0];
       tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
       one_byte[0] = textval[ii+1];
       tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
       ii++;
+      one_line_count+=2;
     }
-    else 
-    if (textval[ii] != '\r' && textval[ii] != '\n') {
+    else if (textval[ii] != '\r' && textval[ii] != '\n') {
       one_byte[0] = textval[ii+0];
       tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
     }
@@ -2879,47 +2995,103 @@ s_hdml_text_tag(void *pdoc, Node *child)
 
 
 /**
+ * It is a handler who processes the BLOCKQUOTE tag.
+ *
+ * @param pdoc  [i/o] The pointer to the HDML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The BLOCKQUOTE tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_hdml_start_blockquote_tag(void *pdoc, Node *UNUSED(child))
+{
+  hdml_t *hdml = GET_HDML(pdoc);
+  hdml->hdml_blockquote_flag++;
+  return hdml->out;
+}
+
+
+/**
+ * It is a handler who processes the BLOCKQUOTE tag.
+ *
+ * @param pdoc  [i/o] The pointer to the HDML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The BLOCKQUOTE tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_hdml_end_blockquote_tag(void *pdoc, Node *UNUSED(child))
+{
+  hdml_t *hdml = GET_HDML(pdoc);
+  hdml->hdml_blockquote_flag--;
+  s_output_to_hdml_out(hdml, "\r\n");
+  return hdml->out;
+}
+
+
+/**
+ * It is a handler who processes the DIR tag.
+ *
+ * @param pdoc  [i/o] The pointer to the HDML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DIR tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_hdml_start_dir_tag(void *pdoc, Node *UNUSED(child))
+{
+  hdml_t *hdml = GET_HDML(pdoc);
+  hdml->dir_level++;
+  return hdml->out;
+}
+
+
+/**
+ * It is a handler who processes the DIR tag.
+ *
+ * @param pdoc  [i/o] The pointer to the HDML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The DIR tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_hdml_end_dir_tag(void *pdoc, Node *UNUSED(child))
+{
+  hdml_t *hdml = GET_HDML(pdoc);
+  hdml->dir_level--;
+  return hdml->out;
+}
+
+
+/**
  * It is a handler who processes the DT tag.
  *
- * @param pdoc   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc  [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The DT tag node is specified.
  * @return The conversion result is returned.
  */
 static char *
-s_hdml_start_dt_tag(void *pdoc, Node *UNUSED(node)) 
+s_hdml_start_dt_tag(void *pdoc, Node *UNUSED(child))
 {
-  hdml_t *hdml;
-  Doc    *doc;
-
-  hdml = GET_HDML(pdoc);
-  doc  = hdml->doc;
-
+  hdml_t *hdml = GET_HDML(pdoc);
   s_output_to_hdml_out(hdml, "<LINE>");
-
   return hdml->out;
 }
-
 
 /**
  * It is a handler who processes the DT tag.
  *
- * @param pdoc   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc  [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The DT tag node is specified.
  * @return The conversion result is returned.
  */
 static char *
-s_hdml_end_dt_tag(void *pdoc, Node *UNUSED(node)) 
+s_hdml_end_dt_tag(void *pdoc, Node *UNUSED(child))
 {
-  hdml_t *hdml;
-  Doc    *doc;
-
-  hdml = GET_HDML(pdoc);
-  doc  = hdml->doc;
-
-  s_output_to_hdml_out(hdml, "\n");
-
+  hdml_t *hdml = GET_HDML(pdoc);
+  s_output_to_hdml_out(hdml, "\r\n");
   return hdml->out;
 }
 
@@ -2927,22 +3099,16 @@ s_hdml_end_dt_tag(void *pdoc, Node *UNUSED(node))
 /**
  * It is a handler who processes the DD tag.
  *
- * @param pdoc   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc  [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The DD tag node is specified.
  * @return The conversion result is returned.
  */
 static char *
-s_hdml_start_dd_tag(void *pdoc, Node *UNUSED(node)) 
+s_hdml_start_dd_tag(void *pdoc, Node *UNUSED(child))
 {
-  hdml_t *hdml;
-  Doc    *doc;
-
-  hdml = GET_HDML(pdoc);
-  doc  = hdml->doc;
-
+  hdml_t *hdml = GET_HDML(pdoc);
   s_output_to_hdml_out(hdml, "<WRAP>&nbsp;<TAB>");
-
   return hdml->out;
 }
 
@@ -2950,25 +3116,272 @@ s_hdml_start_dd_tag(void *pdoc, Node *UNUSED(node))
 /**
  * It is a handler who processes the DD tag.
  *
- * @param pdoc   [i/o] The pointer to the HDML structure at the output
+ * @param pdoc  [i/o] The pointer to the HDML structure at the output
  *                     destination is specified.
  * @param node   [i]   The DD tag node is specified.
  * @return The conversion result is returned.
  */
 static char *
-s_hdml_end_dd_tag(void *pdoc, Node *UNUSED(node)) 
+s_hdml_end_dd_tag(void *pdoc, Node *UNUSED(child))
 {
-  hdml_t *hdml;
-  Doc    *doc;
+  hdml_t *hdml = GET_HDML(pdoc);
+  s_output_to_hdml_out(hdml, "\r\n");
+  return hdml->out;
+}
+
+
+/**
+ * It is a handler who processes the PLAINTEXT tag.
+ *
+ * @param pdoc  [i/o] The pointer to the HDML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The PLAINTEXT tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_hdml_start_plaintext_tag(void *pdoc, Node *node)
+{
+  hdml_t *hdml = GET_HDML(pdoc);
+  hdml->plaintext_value_len = 0;
+  s_hdml_start_plaintext_tag_inner(pdoc,node);
+  return hdml->out;
+}
+
+static char *
+s_hdml_start_plaintext_tag_inner(void *pdoc, Node *node)
+{
+  hdml_t *hdml = GET_HDML(pdoc);
+  Doc    *doc = hdml->doc;
+  Node   *child;
+  for (child = qs_get_child_node(doc, node);
+       child;
+       child = qs_get_next_node(doc, child)) {
+    int i;
+    char *str = chxj_ap_escape_html(doc->r->pool, child->otext);
+    int len = strlen(str);
+    char oneChar[3];
+    for (i=0; i<len; i++) {
+      if (hdml->plaintext_value_len == 0) {
+        s_output_to_hdml_out(hdml, "<LINE>");
+      }
+      if (is_sjis_kanji(child->otext[i]) && i + 1 < len) {
+        oneChar[0] = child->otext[i+0];
+        oneChar[1] = child->otext[i+1];
+        oneChar[2] = 0; 
+        s_output_to_hdml_out(hdml, oneChar);
+        hdml->plaintext_value_len +=2;
+        i++;
+        continue;
+      }
+      if (child->otext[i] == '\n') {
+        hdml->plaintext_value_len = 0;
+        oneChar[0] = '\n';
+        oneChar[1] = 0;
+        s_output_to_hdml_out(hdml, oneChar);
+        continue;
+      }
+      oneChar[0] = child->otext[i];
+      oneChar[1] = 0;
+      s_output_to_hdml_out(hdml, oneChar);
+      hdml->plaintext_value_len++;
+    }
+    s_hdml_start_plaintext_tag_inner(pdoc, child);
+  }
+  return hdml->out;
+}
+
+
+/**
+ * It is a handler who processes the PLAINTEXT tag.
+ *
+ * @param pdoc  [i/o] The pointer to the HDML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The PLAINTEXT tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_hdml_end_plaintext_tag(void *pdoc, Node *UNUSED(child))
+{
+  hdml_t *hdml = GET_HDML(pdoc);
+  return hdml->out;
+}
+
+
+/**
+ * It is a handler who processes the PRE tag.
+ *
+ * @param pdoc  [i/o] The pointer to the HDML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The PRE tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_hdml_start_pre_tag(void *pdoc, Node *UNUSED(node)) 
+{
+  hdml_t        *hdml;
+  Doc           *doc;
+  request_rec   *r;
+
+  hdml    = GET_HDML(pdoc);
+  doc     = hdml->doc;
+  r       = doc->r;
+
+  hdml->pre_flag++;
+  return hdml->out;
+}
+
+
+/**
+ * It is a handler who processes the PRE tag.
+ *
+ * @param pdoc  [i/o] The pointer to the HDML structure at the output
+ *                     destination is specified.
+ * @param node   [i]   The PRE tag node is specified.
+ * @return The conversion result is returned.
+ */
+static char *
+s_hdml_end_pre_tag(void *pdoc, Node *UNUSED(child)) 
+{
+  hdml_t     *hdml;
+  Doc           *doc;
+  request_rec   *r;
 
   hdml = GET_HDML(pdoc);
-  doc  = hdml->doc;
+  doc     = hdml->doc;
+  r       = doc->r;
 
-  s_output_to_hdml_out(hdml, "\n");
+  hdml->pre_flag--;
 
   return hdml->out;
 }
 
+
+/**
+ * handler of the TEXTAREA tag.
+ * 
+ * @param hdml [i/o] The pointer to the HDML structure at the output 
+ *                   destination is specified. 
+ * @param tag  [i]   Specified The TEXTAREA tag node.
+ */
+static char *
+s_hdml_start_textarea_tag(void *pdoc, Node *node)
+{
+  Doc           *doc;
+  request_rec   *r;
+  char          *mlen;
+  char          *val;
+  char          *is;
+  char          *nm;
+  char          *fmt;
+  size_t        ii;
+  hdml_t        *hdml = GET_HDML(pdoc);
+
+  doc   = hdml->doc;
+  r     = doc->r;
+
+  s_hdml_tag_output_upper_half(hdml, node);
+
+  hdml->card_cnt++;
+  s_output_to_hdml_out(hdml, 
+                       apr_psprintf(r->pool,
+                                    "<A TASK=GOSUB LABEL=\x93\xfc\x97\xcd DEST=#D%d "
+                                    "VARS=\"V=$%s%02d\" RECEIVE=%s%02d>",
+                                    hdml->card_cnt,
+                                    s_get_form_no(r, hdml),
+                                    hdml->var_cnt[hdml->pure_form_cnt],
+                                    s_get_form_no(r, hdml),
+                                    hdml->var_cnt[hdml->pure_form_cnt]
+                      ));
+
+  s_output_to_hdml_out(hdml, 
+                       apr_psprintf(r->pool, 
+                                    "[$%s%02d]</A>\r\n"  , 
+                                    s_get_form_no(r, hdml),
+                          hdml->var_cnt[hdml->pure_form_cnt]));
+
+  /*--------------------------------------------------------------------------*/
+  /* ENTRY CARD is output here.                                               */
+  /*--------------------------------------------------------------------------*/
+  s_output_to_hdml_card(hdml, "<ENTRY NAME="                               );
+  s_output_to_hdml_card(hdml, apr_psprintf(r->pool, "D%d ", hdml->card_cnt));
+  s_output_to_hdml_card(hdml, " KEY=V DEFAULT=$V "                         );
+
+  mlen = NULL;
+  is   = NULL;
+  val  = NULL;
+  fmt  = NULL;
+  nm = qs_get_name_attr(doc, node, r);
+  if (! nm) {
+    nm = qs_alloc_zero_byte_string(r);
+  }
+
+  s_output_to_postdata(hdml, 
+                       apr_psprintf(r->pool, 
+                                    "%s=$%s%02d", 
+                                    nm,
+                                    s_get_form_no(r, hdml),
+                                    hdml->var_cnt[hdml->pure_form_cnt]));
+
+  mlen = qs_get_maxlength_attr  (doc, node, r);
+  is   = qs_get_istyle_attr     (doc, node, r);
+  val  = s_hdml_inner_textarea_tag_get_value(hdml, node);
+
+  fmt  = qs_conv_istyle_to_format(r, is);
+  if (fmt) {
+    if (mlen) {
+      for (ii=0; ii<strlen(mlen); ii++) {
+        if (mlen[ii] < '0' || mlen[ii] > '9') {
+          mlen = apr_psprintf(r->pool, "0");
+          break;
+        }
+      }
+      s_output_to_hdml_card(hdml, apr_psprintf(r->pool, " FORMAT=%d%s", atoi(mlen), fmt));
+    }
+    else {
+      s_output_to_hdml_card(hdml, apr_psprintf(r->pool, " FORMAT=*%s", fmt));
+    }
+  }
+
+  s_output_to_hdml_card(hdml, 
+                        " MARKABLE=FALSE>\r\n"
+                        "<ACTION TYPE=ACCEPT TASK=RETURN RETVALS=$V>\r\n"
+                        "</ENTRY>\r\n");
+  if (val) {
+    s_output_to_init_vars(hdml, 
+                          apr_psprintf(r->pool, 
+                                       "%s%02d=%s", 
+                                       s_get_form_no(r, hdml),
+                                       hdml->var_cnt[hdml->pure_form_cnt],
+                                       chxj_escape_uri(r->pool,val)));
+  }
+  else {
+    s_output_to_init_vars(hdml, 
+                          apr_psprintf(r->pool, 
+                                       "%s%02d=", 
+                                       s_get_form_no(r, hdml),
+                                       hdml->var_cnt[hdml->pure_form_cnt]));
+  }
+  hdml->var_cnt[hdml->pure_form_cnt]++;
+  return hdml->out;
+}
+
+
+static char *
+s_hdml_inner_textarea_tag_get_value(hdml_t *hdml, Node *node)
+{
+  Doc    *doc = hdml->doc;
+  Node   *child;
+  char   *result = apr_pstrdup(doc->r->pool, "\0");
+  for (child = qs_get_child_node(doc, node);
+       child;
+       child = qs_get_next_node(doc, child)) {
+    char *textval = qs_get_node_value(doc,child);
+    if (textval && *textval) {
+      result = apr_pstrcat(doc->r->pool, result, textval, NULL);
+    }
+  }
+  return result;
+}
 /*
  * vim:ts=2 et
  */

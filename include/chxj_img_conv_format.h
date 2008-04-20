@@ -23,6 +23,9 @@
 /* default: 10MByte */
 #define DEFAULT_IMAGE_CACHE_LIMIT (10*1024*1024)    
 
+/* micro second */
+#define CACHE_RECHECK_WAIT        (200000)
+#define CACHE_RETRY_COUNT         (5)
 
 extern int chxj_img_conv_format_handler(
   request_rec *r);

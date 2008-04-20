@@ -35,7 +35,7 @@ major=2
 
 config.status: configure
 	dh_testdir
-	CFLAGS="$(CFLAGS)  " ./configure --with-apache-header=/usr/include/apache2 
+	CFLAGS="$(CFLAGS)  " ./configure --enable-mysql-cookie --with-mysql-header=/usr/include/mysql --with-mysql-lib-dir=/usr/lib
 
 
 

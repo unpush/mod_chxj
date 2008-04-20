@@ -95,7 +95,7 @@ Environment variables override the default commands:
   CHGRPPROG CHMODPROG CHOWNPROG CPPROG MKDIRPROG MVPROG RMPROG STRIPPROG
 "
 
-while test -n "$1"; do
+while test $# -ne 0; do
   case $1 in
     -c) shift
         continue;;
@@ -111,7 +111,7 @@ while test -n "$1"; do
 
     --help) echo "$usage"; exit $?;;
 
-    -m) chmodcmd="$chmodprog $2"
+    -m) mode=$2
         shift
         shift
         continue;;
@@ -252,7 +252,6 @@ do
       && { test -z "$chgrpcmd" || $doit $chgrpcmd "$dst"; } \
       && { test -z "$stripcmd" || $doit $stripcmd "$dst"; } \
       && { test -z "$chmodcmd" || $doit $chmodcmd "$dst"; }
-
   else
     dstfile=`basename "$dst"`
 

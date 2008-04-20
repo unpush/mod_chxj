@@ -30,15 +30,16 @@ qs_parse_tag(Doc *doc, const char *s, int len)
   Node   *node;
   char   *tag_name;
   char   *sp;
+  char   *sv_s;
   int    ll;
   int    next_point;
 
-  sp         = (char *)s;
+  sv_s = sp = (char *)s;
   ll         = len;
   next_point = 0;
 
   /* 
-   * s[0] == '<' && s[len-1] == '>' 
+   * s[0] == '<' && s[len] == '>' 
    */
   tag_name = (char *)s_get_tag_name(doc, ++s, --ll);
 
@@ -51,7 +52,7 @@ qs_parse_tag(Doc *doc, const char *s, int len)
   ll -= (strlen(tag_name));
   sp += (strlen(tag_name)+1);
   for (;;) {
-    Attr* attr = qs_parse_attr(doc,sp, ll, &next_point);
+    Attr *attr = qs_parse_attr(doc,sp, ll, &next_point);
     if (attr == NULL) {
       break;
     }
@@ -59,6 +60,15 @@ qs_parse_tag(Doc *doc, const char *s, int len)
     ll -= next_point;
     node = (Node*)qs_add_attr(doc,node, attr);
   }
+
+  if (sv_s[len-1] == '/') {
+    node->closed_by_itself = 1;
+  }
+  else {
+    node->closed_by_itself = 0;
+  }
+  QX_LOGGER_DEBUG("end parse_tag()");
+
   return node;
 }
 

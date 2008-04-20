@@ -17,7 +17,7 @@
 #ifndef __CHXJ_QR_CODE_H__
 #define __CHXJ_QR_CODE_H__
 
-#include "httpd.h"
+#include "chxj_apache.h"
 #include "qs_parse_string.h"
 
 typedef enum _qr_ver_t {

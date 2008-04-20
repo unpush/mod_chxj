@@ -86,15 +86,17 @@ struct hdml_t {
   int     div_in_center;
   int     hdml_a_flag;
   int     hdml_br_flag;
+  int     hdml_blockquote_flag;
 
-  int                 hdml_end_flag;
+  int     hdml_end_flag;
+  int     dir_level;
+  int     plaintext_value_len;
+  int     pre_flag;
 
-  device_table        *spec;
-
-  mod_chxj_config     *conf;
-
-  chxjconvrule_entry  *entryp;
-  cookie_t            *cookie;
+  device_table     *spec;
+  mod_chxj_config  *conf;
+  chxjconvrule_entry *entryp;
+  cookie_t           *cookie;
 };
 
 
@@ -117,7 +119,7 @@ extern char *qs_out_apr_pstrcat(
   int          *len);
 
 extern char *qs_conv_istyle_to_format(
-  request_rec *r, 
-  char        *is);
+  request_rec  *r, 
+  char         *is);
 
 #endif

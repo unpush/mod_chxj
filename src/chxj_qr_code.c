@@ -34,7 +34,8 @@
 
 #define EXIT_MAGICK_ERROR() \
           do { \
-             char *description; ExceptionType severity; \
+             char *description; \
+             ExceptionType severity; \
              description=MagickGetException(magick_wand,&severity); \
              ap_log_rerror(APLOG_MARK,APLOG_DEBUG, 0, r,"%s %s %d %s\n",__FILE__,(__func__),__LINE__,description); \
              description=(char *) MagickRelinquishMemory(description); \
@@ -597,7 +598,7 @@ chxj_qr_code_handler(request_rec *r)
   /*--------------------------------------------------------------------------*/
   /* もし、イメージ変換ハンドラ中であれば、ここでは処理しない                 */
   /*--------------------------------------------------------------------------*/
-  conf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  conf = chxj_get_module_config(r->per_dir_config, &chxj_module);
   if (!conf || conf->image == CHXJ_IMG_ON)
     return DECLINED;
 
@@ -623,7 +624,7 @@ chxj_qr_code_handler(request_rec *r)
   if (sts != OK)
     return sts;
 
-  ap_set_content_type(r, "image/jpg");
+  chxj_set_content_type(r, "image/jpg");
 
   ap_rwrite((void *)img, len, r);
 
@@ -665,7 +666,7 @@ chxj_qr_code_blob_handler(request_rec *r, const char *indata, size_t *len)
     return NULL;
   }
 
-  ap_set_content_type(r, "image/jpg");
+  chxj_set_content_type(r, "image/jpg");
 
   DBG(r, "end chxj_qr_code_blob_handler() len:[%d]", *len);
 

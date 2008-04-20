@@ -6,16 +6,16 @@ rm -f ./aclocal.m4
 rm -f ./Makefile
 rm -f ./Makefile.in
 rm -f ./configure
-rm -f ./build/config.guess
-rm -f ./build/config.log
-rm -f ./build/config.sub
-rm -f ./build/config.status
-rm -f ./build/install-sh
-rm -f ./build/libtool
-rm -f ./build/ltmain.sh
-rm -f ./build/missing
-rm -f ./build/mkinstalldirs
 #libtoolize --force --copy
+rm -f ./config.guess
+rm -f ./config.log
+rm -f ./config.sub
+rm -f ./config.status
+rm -f ./install-sh
+#rm -f ./libtool
+#rm -f ./ltmain.sh
+rm -f ./missing
+rm -f ./mkinstalldirs
 aclocal 
 autoheader
 # automake -a -c 

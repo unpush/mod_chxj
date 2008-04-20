@@ -18,19 +18,9 @@
 #include "chxj_encoding.h"
 #include "chxj_apply_convrule.h"
 #include "chxj_url_encode.h"
-
-#include <iconv.h>
 #include <errno.h>
+#include <iconv.h>
 
-static char *
-do_encoding(
-  request_rec *r,
-  char **ibuf,
-  apr_size_t *ilenp,
-  char **obuf,
-  apr_size_t *olenp,
-  const char *from_code,
-  const char *to_code);
 
 char *
 chxj_encoding(request_rec *r, const char *src, apr_size_t *len)
@@ -47,7 +37,8 @@ chxj_encoding(request_rec *r, const char *src, apr_size_t *len)
 
   DBG(r,"start chxj_encoding() len=[%d] input[%.*s]", (int)*len, (int)*len, src);
 
-  dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  dconf = chxj_get_module_config(r->per_dir_config, &chxj_module);
+
   if (dconf == NULL) {
     DBG(r,"none encoding.");
     return (char*)src;
@@ -59,7 +50,7 @@ chxj_encoding(request_rec *r, const char *src, apr_size_t *len)
     return (char*)src;
   }
 
-  if (STRCASEEQ('n','N', "none", entryp->encoding)) {
+  if (STRCASEEQ('n','N',"none", entryp->encoding)) {
     DBG(r,"none encoding.");
     return (char*)src;
   }
@@ -78,124 +69,18 @@ chxj_encoding(request_rec *r, const char *src, apr_size_t *len)
     DBG(r,"memory allocation failure. end   chxj_encoding()");
     return ibuf;
   }
+  DBG(r,"encode convert [%s] -> [%s]", entryp->encoding, "CP932");
 
   memset(obuf, 0, olen);
-  rtn = NULL;
-  if (IS_EUCJP_STRING(entryp->encoding)) {
-    DBG(r,"try encode convert [%s] -> [%s]", 
-      "EUCJP-WIN",        MOD_CHXJ_INTERNAL_ENCODING);
-    rtn = do_encoding(r, 
-                      &ibuf, 
-                      &ilen, 
-                      &obuf, 
-                      &olen, 
-                      "EUCJP-WIN", 
-                      MOD_CHXJ_INTERNAL_ENCODING);
-    DBG(r, "rtn:[%s]", rtn);
-  }
-  if (rtn == NULL) {
-    DBG(r,"encode convert [%s] -> [%s]", 
-      entryp->encoding,MOD_CHXJ_INTERNAL_ENCODING);
-    rtn = do_encoding(r, 
-                      &ibuf, 
-                      &ilen, 
-                      &obuf, 
-                      &olen, 
-                      entryp->encoding, 
-                      MOD_CHXJ_INTERNAL_ENCODING);
-  }
-  if (rtn == NULL) {
-    ERR(r, "error: convert charactor encoding failure.[%s]", ibuf);
-    return ibuf;
-  }
-  *len = olen;
-  DBG(r,"end   chxj_encoding() len=[%d] obuf=[%.*s]", (int)*len, (int)*len, spos);
-  DBG(r,"end   chxj_encoding() obuf=[%s]", spos);
-  return spos;
-}
-
-
-char *
-chxj_encoding_by_spec(
-  request_rec        *r,
-  device_table       *spec,
-  const char         *src,
-  apr_size_t         *len)
-{
-  char                *obuf;
-  char                *ibuf;
-  
-  apr_size_t          ilen;
-  apr_size_t          olen;
-  char                *rtn;
-
-  DBG(r,"start chxj_encoding_by_spec() len=[%d] input[%.*s]", (int)*len, (int)*len, src);
-
-  ilen = *len;
-  ibuf = apr_palloc(r->pool, ilen+1);
-  if (ibuf == NULL) {
-    ERR(r, "%s:%d allocation error: not enough memory", __FILE__,__LINE__);
-    return (char*)src;
-  }
-  memset(ibuf, 0, ilen+1);
-  memcpy(ibuf, src, ilen);
-
-  olen = ilen * 4 + 1;
-  obuf = apr_palloc(r->pool, olen);
-  if (obuf == NULL) {
-    ERR(r, "%s:%d allocation error: not enough memory", __FILE__,__LINE__);
-    return ibuf;
-  }
-
-  memset(obuf, 0, (int)olen);
-  rtn = do_encoding(r, &ibuf, &ilen, &obuf, &olen, MOD_CHXJ_INTERNAL_ENCODING, spec->charset);
-  if (rtn == NULL) {
-    ERR(r, "%s:%d error: convert charactor encoding failure.[%s]",__FILE__,__LINE__,ibuf);
-    return ibuf;
-  }
-  *len = strlen(rtn);
-  DBG(r,"end   chxj_encoding() len=[%d] obuf=[%.*s]", (int)*len, (int)*len, rtn);
-  return rtn;
-}
-
-
-char *
-chxj_convert_encoding(
-  request_rec        *r,
-  const char         *from_encoding,
-  const char         *to_encoding,
-  const char         *src,
-  apr_size_t         *len)
-{
-  char                *obuf;
-  char                *ibuf;
-  
-  apr_size_t          ilen;
-  apr_size_t          olen;
-  char                *rtn;
-
-  DBG(r,"start chxj_convert_encoding() From:[%s] To:[%s] len=[%d] input[%.*s]", from_encoding, to_encoding, (int)*len, (int)*len, src);
-
-  ilen = *len;
-  ibuf = apr_palloc(r->pool, ilen+1);
-  if (ibuf == NULL) {
-    ERR(r, "%s:%d allocation error: not enough memory", __FILE__,__LINE__);
-    return (char*)src;
-  }
-  memset(ibuf, 0, ilen+1);
-  memcpy(ibuf, src, ilen);
-
-  olen = ilen * 4 + 1;
-  obuf = apr_palloc(r->pool, olen);
-  if (obuf == NULL) {
-    ERR(r, "%s:%d allocation error: not enough memory", __FILE__,__LINE__);
-    return ibuf;
-  }
-
-  memset(obuf, 0, (int)olen);
-  rtn = do_encoding(r, &ibuf, &ilen, &obuf, &olen, from_encoding, to_encoding);
-  if (rtn == NULL) {
-    ERR(r, "%s:%d error: convert charactor encoding failure.[%s]",__FILE__,__LINE__,ibuf);
+  cd = iconv_open("CP932", entryp->encoding);
+  if (cd == (iconv_t)-1) {
+    if (EINVAL == errno) {
+      ERR(r, "The conversion from %s to %s is not supported by the implementation.", entryp->encoding, "CP932");
+    }
+    else {
+      ERR(r, "iconv open failed. from:[%s] to:[%s] errno:[%d]", entryp->encoding, "CP932", errno);
+    }
+    DBG(r,"end   chxj_encoding()");
     return ibuf;
   }
   *len = strlen(rtn);
@@ -274,24 +159,22 @@ do_encoding(
     errno = 0;
     result = iconv(cd, ibuf, &ilen, obuf, &olen);
     if (result == (size_t)(-1)) {
-      if (errno == E2BIG) {
-        ERR(r, "outbuf is not an enough size. ");
-        return NULL;
+      if (E2BIG == errno) {
+        ERR(r, "There is not sufficient room at *outbuf.");
       }
-      else if (errno == EILSEQ) {
-        ERR(r, "%s:%d invalid multi byte character string to the input. [%.2s]", APLOG_MARK, *ibuf);
-        return NULL;
+      else if (EILSEQ == errno) {
+        ERR(r, "An invalid multibyte sequence has been encountered in the input. input:[%s]", ibuf);
       }
-      else if (errno == EINVAL) {
-        ERR(r, "Imperfect character string in the input.");
-        return NULL;
+      else if (EINVAL == errno) {
+        ERR(r, "An incomplete multibyte sequence has been encountered in the input. input:[%s]", ibuf);
       }
       break;
     }
   }
+  *len = strlen(spos);
   iconv_close(cd);
-  *olenp = strlen(spos);
-  DBG(r, "end do_encoding() from:[%s] --> to:[%s] spos:[%s]", from_code, to_code, spos);
+
+  DBG(r,"end   chxj_encoding() len=[%d] obuf=[%.*s]", (int)*len, (int)*len, spos);
   return spos;
 }
 
@@ -315,7 +198,7 @@ chxj_rencoding(
 
   DBG(r,"start chxj_rencoding() input:[%s] len:[%d]", src, *len);
 
-  dconf = ap_get_module_config(r->per_dir_config, &chxj_module);
+  dconf = chxj_get_module_config(r->per_dir_config, &chxj_module);
   if (! dconf) {
     DBG(r,"none encoding.");
     DBG(r,"end   chxj_rencoding()");
@@ -329,7 +212,7 @@ chxj_rencoding(
     return (char*)src;
   }
 
-  if (STRCASEEQ('n','N', "none", entryp->encoding)) {
+  if (STRCASEEQ('n','N',"none", entryp->encoding)) {
     DBG(r,"none encoding.");
     DBG(r,"end   chxj_rencoding() no convert.");
     return (char*)apr_pstrdup(r->pool, src);
@@ -353,12 +236,15 @@ chxj_rencoding(
     ERR(r,"memory allocation error.");
     return ibuf;
   }
-  DBG(r,"encode convert [%s] -> [%s]", MOD_CHXJ_INTERNAL_ENCODING, entryp->encoding);
+  DBG(r,"encode convert [%s] -> [%s]", "CP932", entryp->encoding);
 
   memset(obuf, 0, olen);
 
   cd = iconv_open(entryp->encoding, MOD_CHXJ_INTERNAL_ENCODING);
   if (cd == (iconv_t)-1) {
+    if (EINVAL == errno) {
+      ERR(r, "The conversion from %s to %s is not supported by the implementation.", "CP932", entryp->encoding);
+    }
     DBG(r,"end   chxj_rencoding()");
     return ibuf;
   }
@@ -366,22 +252,20 @@ chxj_rencoding(
   while (ilen > 0) {
     result = iconv(cd, &ibuf, &ilen, &obuf, &olen);
     if (result == (size_t)(-1)) {
-      if (errno == E2BIG) {
-        ERR(r, "outbuf is not an enough size. ");
-        return NULL;
+      if (E2BIG == errno) {
+        ERR(r, "There is not sufficient room at *outbuf");
       }
-      else if (errno == EILSEQ) {
-        ERR(r, "%s:%d invalid multi byte character string to the input. [%s]", APLOG_MARK, ibuf);
-        return NULL;
+      else if (EILSEQ == errno) {
+        ERR(r, "An invalid multibyte sequence has been encountered in the input. input:[%s]", ibuf);
       }
-      else if (errno == EINVAL) {
-        ERR(r, "Imperfect character string in the input. input:[%s]", ibuf);
-        return NULL;
+      else if (EINVAL == errno) {
+        ERR(r, "An incomplete multibyte sequence has been encountered in the input. input:[%s]", ibuf);
       }
       break;
     }
   }
-  *len = olen;
+
+  *len = strlen(spos);
   iconv_close(cd);
 
   DBG(r,"end   chxj_rencoding() len=[%d] obuf=[%.*s]", (int)*len, (int)*len, spos);
