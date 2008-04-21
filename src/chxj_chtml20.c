@@ -398,17 +398,17 @@ tag_handler chtml20_handler[] = {
  */
 char *
 chxj_exchange_chtml20(
-  request_rec *r,
-  device_table *spec,
-  const char *src,
-  apr_size_t srclen,
-  apr_size_t *dstlen,
+  request_rec        *r,
+  device_table       *spec,
+  const char         *src,
+  apr_size_t         srclen,
+  apr_size_t         *dstlen,
   chxjconvrule_entry *entryp,
-  cookie_t *cookie
+  cookie_t           *cookie
 )
 {
-  char *dst = NULL;
-  char *ss;
+  char      *dst = NULL;
+  char      *ss;
   chtml20_t chtml20;
   Doc       doc;
 
@@ -518,9 +518,9 @@ s_init_chtml20(chtml20_t *chtml20, Doc *doc, request_rec *r, device_table *spec)
 static int
 s_chtml20_search_emoji(chtml20_t *chtml20, char *txt, char **rslt)
 {
-  emoji_t *ee;
-  request_rec *r;
-  device_table *spec;
+  emoji_t       *ee;
+  request_rec   *r;
+  device_table  *spec;
   int           len;
 
   spec = chtml20->spec;
@@ -570,9 +570,9 @@ s_chtml20_search_emoji(chtml20_t *chtml20, char *txt, char **rslt)
 static char *
 s_chtml20_start_html_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  Doc *doc;
+  Doc         *doc;
   request_rec *r;
-  chtml20_t *chtml20;
+  chtml20_t   *chtml20;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -621,12 +621,12 @@ s_chtml20_end_html_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml20_start_meta_tag(void *pdoc, Node *node) 
 {
-  chtml20_t *chtml20;
-  Doc *doc;
+  chtml20_t   *chtml20;
+  Doc         *doc;
   request_rec *r;
-  Attr *attr;
-  int content_type_flag;
-  int refresh_flag;
+  Attr        *attr;
+  int         content_type_flag;
+  int         refresh_flag;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -722,9 +722,7 @@ s_chtml20_start_meta_tag(void *pdoc, Node *node)
 static char *
 s_chtml20_end_meta_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t *chtml20;
-
-  chtml20 = GET_CHTML20(pdoc);
+  chtml20_t *chtml20 = GET_CHTML20(pdoc);
 
   return chtml20->out;
 }
@@ -741,13 +739,11 @@ s_chtml20_end_meta_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml20_start_head_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  chtml20_t *chtml20;
-  Doc *doc;
-  request_rec *r;
+  chtml20_t   *chtml20;
+  Doc         *doc;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
-  r       = doc->r;
 
   W_L("<head>");
   return chtml20->out;
@@ -765,8 +761,8 @@ s_chtml20_start_head_tag(void *pdoc, Node *UNUSED(node))
 static char *
 s_chtml20_end_head_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t *chtml20;
-  Doc *doc;
+  chtml20_t   *chtml20;
+  Doc         *doc;
   request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
@@ -789,8 +785,8 @@ s_chtml20_end_head_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml20_start_title_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  chtml20_t *chtml20;
-  Doc *doc;
+  chtml20_t   *chtml20;
+  Doc         *doc;
   request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
@@ -813,8 +809,8 @@ s_chtml20_start_title_tag(void *pdoc, Node *UNUSED(node))
 static char *
 s_chtml20_end_title_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t *chtml20;
-  Doc *doc;
+  chtml20_t   *chtml20;
+  Doc         *doc;
   request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
@@ -837,10 +833,10 @@ s_chtml20_end_title_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml20_start_base_tag(void *pdoc, Node *node) 
 {
-  chtml20_t *chtml20;
-  Doc *doc;
+  chtml20_t   *chtml20;
+  Doc         *doc;
   request_rec *r;
-  Attr *attr;
+  Attr        *attr;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -853,13 +849,8 @@ s_chtml20_start_base_tag(void *pdoc, Node *node)
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-
-    char *name;
-    char *value;
-
-    name  = qs_get_attr_name(doc,attr);
-    value = qs_get_attr_value(doc,attr);
-
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('h','H',"href", name)) {
       W_L(" href=\"");
       W_V(value);
@@ -882,8 +873,8 @@ s_chtml20_start_base_tag(void *pdoc, Node *node)
 static char *
 s_chtml20_end_base_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t *chtml20;
-  Doc *doc;
+  chtml20_t   *chtml20;
+  Doc         *doc;
   request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
@@ -905,10 +896,10 @@ s_chtml20_end_base_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml20_start_body_tag(void *pdoc, Node *node) 
 {
-  chtml20_t *chtml20;
-  Doc *doc;
+  chtml20_t   *chtml20;
+  Doc         *doc;
   request_rec *r;
-  Attr *attr;
+  Attr        *attr;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -921,12 +912,8 @@ s_chtml20_start_body_tag(void *pdoc, Node *node)
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-    char *name;
-    char *value;
-
-    name  = qs_get_attr_name(doc,attr);
-    value = qs_get_attr_value(doc,attr);
-
+    char *name = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
     switch(*name) {
     case 'b':
     case 'B':
@@ -1004,8 +991,8 @@ s_chtml20_start_body_tag(void *pdoc, Node *node)
 static char *
 s_chtml20_end_body_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t *chtml20;
-  Doc *doc;
+  chtml20_t   *chtml20;
+  Doc         *doc;
   request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
@@ -1028,9 +1015,9 @@ s_chtml20_end_body_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml20_start_a_tag(void *pdoc, Node *node) 
 {
-  Attr *attr;
-  chtml20_t *chtml20;
-  Doc *doc;
+  Attr        *attr;
+  chtml20_t   *chtml20;
+  Doc         *doc;
   request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
@@ -1195,8 +1182,8 @@ s_chtml20_start_a_tag(void *pdoc, Node *node)
 static char *
 s_chtml20_end_a_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t *chtml20;
-  Doc *doc;
+  chtml20_t   *chtml20;
+  Doc         *doc;
   request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
@@ -1219,10 +1206,10 @@ s_chtml20_end_a_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml20_start_br_tag(void *pdoc, Node *node) 
 {
-  chtml20_t *chtml20;
-  Doc *doc;
+  chtml20_t   *chtml20;
+  Doc         *doc;
   request_rec *r;
-  Attr *attr;
+  Attr        *attr;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -1235,12 +1222,8 @@ s_chtml20_start_br_tag(void *pdoc, Node *node)
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-    char *name;
-    char *value;
-
-    name  = qs_get_attr_name(doc,attr);
-    value = qs_get_attr_value(doc,attr);
-
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('c','C',"clear",name)) {
       if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('a','A',"all",value))) {
         W_L(" clear=\"");
@@ -1265,8 +1248,8 @@ s_chtml20_start_br_tag(void *pdoc, Node *node)
 static char *
 s_chtml20_end_br_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t *chtml20;
-  Doc *doc;
+  chtml20_t   *chtml20;
+  Doc         *doc;
   request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
@@ -1288,8 +1271,8 @@ s_chtml20_end_br_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml20_start_tr_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  chtml20_t *chtml20;
-  Doc *doc;
+  chtml20_t   *chtml20;
+  Doc         *doc;
   request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
@@ -1311,8 +1294,8 @@ s_chtml20_start_tr_tag(void *pdoc, Node *UNUSED(node))
 static char *
 s_chtml20_end_tr_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t *chtml20;
-  Doc *doc;
+  chtml20_t   *chtml20;
+  Doc         *doc;
   request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
@@ -1335,10 +1318,10 @@ s_chtml20_end_tr_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml20_start_font_tag(void *pdoc, Node *node) 
 {
-  chtml20_t *chtml20;
-  Doc *doc;
+  chtml20_t   *chtml20;
+  Doc         *doc;
   request_rec *r;
-  Attr *attr;
+  Attr        *attr;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -1352,13 +1335,8 @@ s_chtml20_start_font_tag(void *pdoc, Node *node)
   for (attr = qs_get_attr(doc,node);
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
-
-    char *name;
-    char *value;
-
-    name  = qs_get_attr_name(doc,attr);
-    value = qs_get_attr_value(doc,attr);
-
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
     switch(*name) {
     case 'c':
     case 'C':
@@ -1399,8 +1377,8 @@ s_chtml20_start_font_tag(void *pdoc, Node *node)
 static char *
 s_chtml20_end_font_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t *chtml20;
-  Doc *doc;
+  chtml20_t   *chtml20;
+  Doc         *doc;
   request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
@@ -1423,10 +1401,10 @@ s_chtml20_end_font_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml20_start_form_tag(void *pdoc, Node *node) 
 {
-  chtml20_t *chtml20;
-  Doc *doc;
+  chtml20_t   *chtml20;
+  Doc         *doc;
   request_rec *r;
-  Attr *attr;
+  Attr        *attr;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -1439,13 +1417,8 @@ s_chtml20_start_form_tag(void *pdoc, Node *node)
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-
-    char *name;
-    char *value;
-
-    name  = qs_get_attr_name(doc,attr);
-    value = qs_get_attr_value(doc,attr);
-
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
     switch(*name) {
     case 'a':
     case 'A':
@@ -1504,8 +1477,8 @@ s_chtml20_start_form_tag(void *pdoc, Node *node)
 static char *
 s_chtml20_end_form_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t *chtml20;
-  Doc *doc;
+  chtml20_t   *chtml20;
+  Doc         *doc;
   request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
@@ -1528,17 +1501,17 @@ s_chtml20_end_form_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml20_start_input_tag(void *pdoc, Node *node) 
 {
-  chtml20_t *chtml20;
-  Doc *doc;
+  chtml20_t   *chtml20;
+  Doc         *doc;
   request_rec *r;
-  char *max_length  = NULL;
-  char *type        = NULL;
-  char *name        = NULL;
-  char *value       = NULL;
-  char *istyle      = NULL;
-  char *size        = NULL;
-  char *checked     = NULL;
-  char *accesskey   = NULL;
+  char        *max_length  = NULL;
+  char        *type        = NULL;
+  char        *name        = NULL;
+  char        *value       = NULL;
+  char        *istyle      = NULL;
+  char        *size        = NULL;
+  char        *checked     = NULL;
+  char        *accesskey   = NULL;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -1549,7 +1522,6 @@ s_chtml20_start_input_tag(void *pdoc, Node *node)
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
   /*--------------------------------------------------------------------------*/
-
   type       = qs_get_type_attr(doc, node, r);
   name       = qs_get_name_attr(doc, node, r);
   value      = qs_get_value_attr(doc,node,r);
@@ -1603,7 +1575,6 @@ s_chtml20_start_input_tag(void *pdoc, Node *node)
       W_L("\"");
     }
   }
-
   /*--------------------------------------------------------------------------*/
   /* The figure is default for the password.                                  */
   /*--------------------------------------------------------------------------*/
@@ -1620,7 +1591,6 @@ s_chtml20_start_input_tag(void *pdoc, Node *node)
       W_V(vv);
     }
   }
-
   if (checked) {
     W_L(" checked");
   }
@@ -1640,8 +1610,8 @@ s_chtml20_start_input_tag(void *pdoc, Node *node)
 static char *
 s_chtml20_end_input_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t *chtml20;
-  Doc *doc;
+  chtml20_t   *chtml20;
+  Doc         *doc;
   request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
@@ -1663,8 +1633,8 @@ s_chtml20_end_input_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml20_start_center_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  chtml20_t *chtml20;
-  Doc *doc;
+  chtml20_t   *chtml20;
+  Doc         *doc;
   request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
@@ -1687,8 +1657,8 @@ s_chtml20_start_center_tag(void *pdoc, Node *UNUSED(node))
 static char *
 s_chtml20_end_center_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t *chtml20;
-  Doc *doc;
+  chtml20_t   *chtml20;
+  Doc         *doc;
   request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
@@ -1711,8 +1681,8 @@ s_chtml20_end_center_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml20_start_ul_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  chtml20_t *chtml20;
-  Doc *doc;
+  chtml20_t   *chtml20;
+  Doc         *doc;
   request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
@@ -1735,9 +1705,9 @@ s_chtml20_start_ul_tag(void *pdoc, Node *UNUSED(node))
 static char *
 s_chtml20_end_ul_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t*    chtml20;
-  Doc*          doc;
-  request_rec*  r;
+  chtml20_t     *chtml20;
+  Doc           *doc;
+  request_rec   *r;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -1759,10 +1729,10 @@ s_chtml20_end_ul_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml20_start_ol_tag(void *pdoc, Node *node) 
 {
-  chtml20_t *chtml20;
-  Doc *doc;
+  chtml20_t   *chtml20;
+  Doc         *doc;
   request_rec *r;
-  Attr *attr;
+  Attr        *attr;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -1804,8 +1774,8 @@ s_chtml20_start_ol_tag(void *pdoc, Node *node)
 static char *
 s_chtml20_end_ol_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t *chtml20;
-  Doc *doc;
+  chtml20_t   *chtml20;
+  Doc         *doc;
   request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
@@ -1828,10 +1798,10 @@ s_chtml20_end_ol_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml20_start_li_tag(void *pdoc, Node *node) 
 {
-  chtml20_t *chtml20;
-  Doc *doc;
+  chtml20_t   *chtml20;
+  Doc         *doc;
   request_rec *r;
-  Attr *attr;
+  Attr        *attr;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -1889,10 +1859,10 @@ s_chtml20_end_li_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml20_start_hr_tag(void *pdoc, Node *node) 
 {
-  chtml20_t *chtml20;
-  Doc *doc;
+  chtml20_t   *chtml20;
+  Doc         *doc;
   request_rec *r;
-  Attr *attr;
+  Attr        *attr;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -1903,13 +1873,8 @@ s_chtml20_start_hr_tag(void *pdoc, Node *node)
   for (attr = qs_get_attr(doc,node);
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
-
-    char *name;
-    char *value;
-
-    name  = qs_get_attr_name(doc,attr);
-    value = qs_get_attr_value(doc,attr);
-
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
     switch(*name) {
     case 'a':
     case 'A':
@@ -1993,14 +1958,7 @@ s_chtml20_start_hr_tag(void *pdoc, Node *node)
 static char *
 s_chtml20_end_hr_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t *chtml20;
-  Doc *doc;
-  request_rec *r;
-
-  chtml20 = GET_CHTML20(pdoc);
-  doc     = chtml20->doc;
-  r       = doc->r;
-
+  chtml20_t *chtml20 = GET_CHTML20(pdoc);
   return chtml20->out;
 }
 
@@ -2016,10 +1974,10 @@ s_chtml20_end_hr_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml20_start_img_tag(void *pdoc, Node *node) 
 {
-  chtml20_t *chtml20;
-  Doc *doc;
-  request_rec *r;
-  Attr *attr;
+  chtml20_t    *chtml20;
+  Doc          *doc;
+  request_rec  *r;
+  Attr         *attr;
 #ifndef IMG_NOT_CONVERT_FILENAME
   device_table *spec;
 #endif
@@ -2169,13 +2127,7 @@ s_chtml20_start_img_tag(void *pdoc, Node *node)
 static char *
 s_chtml20_end_img_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t *chtml20;
-  Doc *doc;
-  request_rec *r;
-
-  chtml20 = GET_CHTML20(pdoc);
-  doc     = chtml20->doc;
-  r       = doc->r;
+  chtml20_t *chtml20 = GET_CHTML20(pdoc);
 
   return chtml20->out;
 }
@@ -2192,10 +2144,10 @@ s_chtml20_end_img_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml20_start_select_tag(void *pdoc, Node *child)
 {
-  chtml20_t *chtml20;
-  Doc *doc;
+  chtml20_t   *chtml20;
+  Doc         *doc;
   request_rec *r;
-  Attr *attr;
+  Attr        *attr;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -2275,13 +2227,11 @@ s_chtml20_start_select_tag(void *pdoc, Node *child)
 static char *
 s_chtml20_end_select_tag(void *pdoc, Node *UNUSED(child))
 {
-  chtml20_t *chtml20;
-  Doc *doc;
-  request_rec *r;
+  chtml20_t   *chtml20;
+  Doc         *doc;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
-  r       = doc->r;
 
   W_L("</select>");
   return chtml20->out;
@@ -2299,10 +2249,10 @@ s_chtml20_end_select_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml20_start_option_tag(void *pdoc, Node *child)
 {
-  chtml20_t *chtml20;
-  Doc *doc;
+  chtml20_t   *chtml20;
+  Doc         *doc;
   request_rec *r;
-  Attr *attr;
+  Attr        *attr;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -2315,13 +2265,8 @@ s_chtml20_start_option_tag(void *pdoc, Node *child)
   for (attr = qs_get_attr(doc,child);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-
-    char *nm;
-    char *val;
-
-    nm  = qs_get_attr_name(doc,attr);
-    val = qs_get_attr_value(doc,attr);
-
+    char *nm  = qs_get_attr_name(doc,attr);
+    char *val = qs_get_attr_value(doc,attr);
     switch(*nm) {
     case 's':
     case 'S':
@@ -2373,13 +2318,7 @@ s_chtml20_start_option_tag(void *pdoc, Node *child)
 static char *
 s_chtml20_end_option_tag(void *pdoc, Node *UNUSED(child))
 {
-  chtml20_t *chtml20;
-  Doc *doc;
-  request_rec *r;
-
-  chtml20 = GET_CHTML20(pdoc);
-  doc     = chtml20->doc;
-  r       = doc->r;
+  chtml20_t   *chtml20 = GET_CHTML20(pdoc);
 
   /* Don't close */
 
@@ -2414,7 +2353,6 @@ s_chtml20_start_div_tag(void *pdoc, Node *child)
   for (attr = qs_get_attr(doc,child);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-
     char *nm  = qs_get_attr_name(doc,attr);
     char *val = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('a','A', "align", nm)) {
@@ -2426,13 +2364,11 @@ s_chtml20_start_div_tag(void *pdoc, Node *child)
       }
     }
   }
-
   if (align) {
     W_L(" align=\"");
     W_V(align);
     W_L("\"");
   }
-
   W_L(">");
   return chtml20->out;
 }
@@ -2449,11 +2385,8 @@ s_chtml20_start_div_tag(void *pdoc, Node *child)
 static char *
 s_chtml20_end_div_tag(void *pdoc, Node *UNUSED(child))
 {
-  chtml20_t   *chtml20;
-  Doc         *doc;
-
-  chtml20 = GET_CHTML20(pdoc);
-  doc     = chtml20->doc;
+  chtml20_t   *chtml20 = GET_CHTML20(pdoc);
+  Doc         *doc     = chtml20->doc;
 
   W_L("</div>");
   return chtml20->out;
@@ -2573,13 +2506,11 @@ s_chtml20_start_h2_tag(void *pdoc, Node *node)
 static char *
 s_chtml20_end_h2_tag(void *pdoc, Node *UNUSED(child)) 
 { 
-  chtml20_t   *chtml20;
-  Doc         *doc;
-
-  chtml20 = GET_CHTML20(pdoc);
-  doc     = chtml20->doc;
+  chtml20_t   *chtml20 = GET_CHTML20(pdoc);
+  Doc         *doc     = chtml20->doc;
 
   W_L("</h2>");
+
   return chtml20->out;
 }
 
@@ -2635,11 +2566,8 @@ s_chtml20_start_h3_tag(void *pdoc, Node *node)
 static char *
 s_chtml20_end_h3_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t   *chtml20;
-  Doc         *doc;
-
-  chtml20 = GET_CHTML20(pdoc);
-  doc     = chtml20->doc;
+  chtml20_t   *chtml20 = GET_CHTML20(pdoc);
+  Doc         *doc     = chtml20->doc;
 
   W_L("</h3>");
   return chtml20->out;
@@ -2697,13 +2625,8 @@ s_chtml20_start_h4_tag(void *pdoc, Node *node)
 static char *
 s_chtml20_end_h4_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t   *chtml20;
-  Doc         *doc;
-  request_rec *r;
-
-  chtml20 = GET_CHTML20(pdoc);
-  doc     = chtml20->doc;
-  r       = doc->r;
+  chtml20_t   *chtml20 = GET_CHTML20(pdoc);
+  Doc         *doc     = chtml20->doc;
 
   W_L("</h4>");
   return chtml20->out;
@@ -2761,11 +2684,8 @@ s_chtml20_start_h5_tag(void *pdoc, Node *node)
 static char *
 s_chtml20_end_h5_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t   *chtml20;
-  Doc         *doc;
-
-  chtml20 = GET_CHTML20(pdoc);
-  doc     = chtml20->doc;
+  chtml20_t   *chtml20 = GET_CHTML20(pdoc);
+  Doc         *doc     = chtml20->doc;
 
   W_L("</h5>");
   return chtml20->out;
@@ -2823,11 +2743,8 @@ s_chtml20_start_h6_tag(void *pdoc, Node *node)
 static char *
 s_chtml20_end_h6_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t   *chtml20;
-  Doc         *doc;
-
-  chtml20 = GET_CHTML20(pdoc);
-  doc     = chtml20->doc;
+  chtml20_t   *chtml20 = GET_CHTML20(pdoc);
+  Doc         *doc     = chtml20->doc;
 
   W_L("</h6>");
   return chtml20->out;
@@ -2845,11 +2762,8 @@ s_chtml20_end_h6_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml20_start_pre_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  chtml20_t   *chtml20;
-  Doc         *doc;
-
-  chtml20 = GET_CHTML20(pdoc);
-  doc     = chtml20->doc;
+  chtml20_t   *chtml20 = GET_CHTML20(pdoc);
+  Doc         *doc     = chtml20->doc;
 
   chtml20->pre_flag++;
   W_L("<pre>");
@@ -2868,11 +2782,8 @@ s_chtml20_start_pre_tag(void *pdoc, Node *UNUSED(node))
 static char *
 s_chtml20_end_pre_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t   *chtml20;
-  Doc         *doc;
-
-  chtml20 = GET_CHTML20(pdoc);
-  doc     = chtml20->doc;
+  chtml20_t   *chtml20 = GET_CHTML20(pdoc);
+  Doc         *doc     = chtml20->doc;
 
   W_L("</pre>");
   chtml20->pre_flag--;
@@ -2892,11 +2803,11 @@ s_chtml20_end_pre_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml20_start_p_tag(void *pdoc, Node *node)
 {
-  chtml20_t *chtml20;
-  Doc *doc;
+  chtml20_t   *chtml20;
+  Doc         *doc;
   request_rec *r;
-  Attr *attr;
-  char *align = NULL;
+  Attr        *attr;
+  char        *align = NULL;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
@@ -2939,8 +2850,8 @@ s_chtml20_start_p_tag(void *pdoc, Node *node)
 static char *
 s_chtml20_end_p_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t *chtml20;
-  Doc *doc;
+  chtml20_t   *chtml20;
+  Doc         *doc;
   request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
@@ -2955,9 +2866,9 @@ s_chtml20_end_p_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml20_chxjif_tag(void *pdoc, Node *node)
 {
-  chtml20_t *chtml20;
-  Doc *doc;
-  Node *child;
+  chtml20_t   *chtml20;
+  Doc         *doc;
+  Node        *child;
   request_rec *r;
 
   chtml20 = GET_CHTML20(pdoc);
@@ -3069,11 +2980,8 @@ s_chtml20_start_textarea_tag(void *pdoc, Node *node)
 static char *
 s_chtml20_end_textarea_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml20_t   *chtml20;
-  Doc         *doc;
-
-  chtml20 = GET_CHTML20(pdoc);
-  doc     = chtml20->doc;
+  chtml20_t   *chtml20 = GET_CHTML20(pdoc);
+  Doc         *doc     = chtml20->doc;
 
   W_L("</textarea>");
   chtml20->textarea_flag--;
@@ -3337,10 +3245,9 @@ s_chtml20_end_dd_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml20_start_menu_tag(void *pdoc, Node *UNUSED(child))
 {
-  chtml20_t *chtml20;
-  Doc       *doc;
-  chtml20 = GET_CHTML20(pdoc);
-  doc     = chtml20->doc;
+  chtml20_t *chtml20 = GET_CHTML20(pdoc);
+  Doc       *doc     = chtml20->doc;
+
   W_L("<menu>");
   return chtml20->out;
 }
@@ -3376,11 +3283,8 @@ s_chtml20_end_menu_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml20_start_plaintext_tag(void *pdoc, Node *node)
 {
-  chtml20_t *chtml20;
-  Doc       *doc;
-
-  chtml20 = GET_CHTML20(pdoc);
-  doc     = chtml20->doc;
+  chtml20_t *chtml20 = GET_CHTML20(pdoc);
+  Doc       *doc     = chtml20->doc;
 
   W_L("<plaintext>");
   s_chtml20_start_plaintext_tag_inner(pdoc,node);
@@ -3390,12 +3294,9 @@ s_chtml20_start_plaintext_tag(void *pdoc, Node *node)
 static char *
 s_chtml20_start_plaintext_tag_inner(void *pdoc, Node *node)
 {
-  chtml20_t *chtml20;
-  Doc       *doc;
+  chtml20_t *chtml20 = GET_CHTML20(pdoc);
+  Doc       *doc     = chtml20->doc;
   Node      *child;
-
-  chtml20 = GET_CHTML20(pdoc);
-  doc     = chtml20->doc;
 
   for (child = qs_get_child_node(doc, node);
        child;
