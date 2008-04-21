@@ -18,10 +18,10 @@
 #include "qs_log.h"
 
 void
-chxj_dump_out(const char* UNUSED(title), const char* UNUSED(s), int UNUSED(slen))
+chxj_dump_out(const char *UNUSED(title), const char *UNUSED(s), int UNUSED(slen))
 {
 #ifdef DUMP_LOG
-  FILE* fp=fopen(DUMP_LOG, "a");
+  FILE *fp=fopen(DUMP_LOG, "a");
   if (fp != NULL) {
     fprintf(fp, "%s\n", title);
     fprintf(fp, "[%.*s]\n", slen, s);
