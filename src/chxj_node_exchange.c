@@ -84,18 +84,18 @@ tag_handlers chxj_tag_handlers[] = {
  *
  * @return The character string after it converts it is returned. 
  */
-char*
+char *
 chxj_node_exchange(
-  device_table* spec,
-  request_rec*  r,
-  void*         pdoc, 
-  Doc*          doc, 
-  Node*         node, 
-  int           indent
+  device_table *spec,
+  request_rec  *r,
+  void         *pdoc, 
+  Doc          *doc, 
+  Node         *node, 
+  int          indent
 )
 {
-  Node*         child;
-  tag_handler*  handlers;
+  Node         *child;
+  tag_handler  *handlers;
 
 
   handlers = chxj_tag_handlers[spec->html_spec_type].handler;
@@ -106,11 +106,7 @@ chxj_node_exchange(
   for (child = qs_get_child_node(doc,node);
        child;
        child = qs_get_next_node(doc,child)) {
-
-    char* name;
-
-    name = qs_get_node_name(doc,child);
-
+    char *name = qs_get_node_name(doc,child);
     switch(*name) {
     case 'h':
     case 'H':

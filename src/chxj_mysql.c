@@ -39,7 +39,7 @@
 #define CHXJ_MYSQL_RECONNECT_COUNT (3)
 
 typedef struct {
-  MYSQL * handle;
+  MYSQL *handle;
   char host[255];
   char username[255];
   char database[255];
