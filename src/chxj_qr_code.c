@@ -553,43 +553,43 @@ static qr_capacity_t v_capacity_table[] = {
 };
 
 
-static char*  s_get_mode_spec       (qr_code_t* qrcode);
-static char*  s_get_char_bit_count  (qr_code_t* qrcode, int len);
-static char*  s_data_to_bin_num     (qr_code_t* qrcode, int data_code_count);
-static char*  s_data_to_bin_alpha   (qr_code_t* qrcode, int data_code_count);
-static int    s_char_to_num_alpha   (qr_code_t* qrcode, char src);
-static char*  s_data_to_bin_8bit    (qr_code_t* qrcode, int data_code_count);
-static char*  s_data_to_bin_kanji   (qr_code_t* qrcode, int data_code_count);
-static char*  s_tidy_8bit_code      (qr_code_t* qrcode, const char* indata, int data_code_count);
-static char*  s_str_to_bin          (qr_code_t* qrcode, char* indata, int data_code_count);
-static void   s_init_modules        (qr_code_t* qrcode, qr_mask_pattern_t pat, char* module[]);
-static void   s_setup_probe_position(qr_code_t* qrcode, char* dst[], int pos_x, int pos_y);
-static void   s_setup_timing_pattern(qr_code_t* qrcode, char* dst[]);
-static void   s_setup_position_adjust(qr_code_t* qrcode, char* dst[]);
-static void   s_setup_type_info     (qr_code_t* qrcode, char* dst[], qr_mask_pattern_t pat);
-static void   s_setup_version_info  (qr_code_t* qrcode, char* dst[]);
-static void   s_map_data            (qr_code_t* qrcode, char* dst[], unsigned char* indata,
+static char   *s_get_mode_spec       (qr_code_t *qrcode);
+static char   *s_get_char_bit_count  (qr_code_t *qrcode, int len);
+static char   *s_data_to_bin_num     (qr_code_t *qrcode, int data_code_count);
+static char   *s_data_to_bin_alpha   (qr_code_t *qrcode, int data_code_count);
+static int    s_char_to_num_alpha    (qr_code_t *qrcode, char src);
+static char   *s_data_to_bin_8bit    (qr_code_t *qrcode, int data_code_count);
+static char   *s_data_to_bin_kanji   (qr_code_t *qrcode, int data_code_count);
+static char   *s_tidy_8bit_code      (qr_code_t *qrcode, const char *indata, int data_code_count);
+static char   *s_str_to_bin          (qr_code_t *qrcode, char *indata, int data_code_count);
+static void   s_init_modules         (qr_code_t *qrcode, qr_mask_pattern_t pat, char *module[]);
+static void   s_setup_probe_position (qr_code_t *qrcode, char *dst[], int pos_x, int pos_y);
+static void   s_setup_timing_pattern (qr_code_t *qrcode, char *dst[]);
+static void   s_setup_position_adjust(qr_code_t *qrcode, char *dst[]);
+static void   s_setup_type_info      (qr_code_t *qrcode, char *dst[], qr_mask_pattern_t pat);
+static void   s_setup_version_info   (qr_code_t *qrcode, char *dst[]);
+static void   s_map_data             (qr_code_t *qrcode, char *dst[], unsigned char *indata,
                 int data_count, qr_mask_pattern_t pat);
 static int    s_get_mask            (qr_mask_pattern_t pat, int yy, int xx);
 static int    s_get_bit_count       (int data);
-static int    s_calc_lost_point     (qr_code_t* qrcode, char* dst[]);
+static int    s_calc_lost_point     (qr_code_t *qrcode, char *dst[]);
 static int    s_count_same_module   (qr_ver_t ver, char* dst[]);
 static int    s_count_same_block    (qr_ver_t ver, char* dst[]);
 static int    s_count_11311_pattern (qr_ver_t ver, char* dst[]);
 static int    s_count_dark_ratio    (qr_ver_t ver, char* dst[]);
 
-static void   chxj_qr_code          (qr_code_t* qrcode, char* module[]);
+static void   chxj_qr_code          (qr_code_t *qrcode, char *module[]);
 
 int
-chxj_qr_code_handler(request_rec* r)
+chxj_qr_code_handler(request_rec *r)
 {
   int                sts;
   size_t             len;
   qr_code_t          qrcode;
   Doc                doc;
-  char*              img;
-  Node*              root;
-  mod_chxj_config*   conf;
+  char               *img;
+  Node               *root;
+  mod_chxj_config    *conf;
 
   DBG(r,"start chxj_qr_code_handler()");
 
@@ -629,20 +629,20 @@ chxj_qr_code_handler(request_rec* r)
 
   chxj_set_content_type(r, "image/jpg");
 
-  ap_rwrite((void*)img, len, r);
+  ap_rwrite((void *)img, len, r);
 
   return OK;
 }
 
 
-char* 
-chxj_qr_code_blob_handler(request_rec* r, const char* indata, size_t* len)
+char *
+chxj_qr_code_blob_handler(request_rec *r, const char *indata, size_t *len)
 {
   int                sts;
   qr_code_t          qrcode;
   Doc                doc;
-  char*              img;
-  Node*              root;
+  char               *img;
+  Node               *root;
 
   DBG(r, "start chxj_qr_code_blob_handler()");
 
@@ -679,32 +679,31 @@ chxj_qr_code_blob_handler(request_rec* r, const char* indata, size_t* len)
 
 int
 chxj_qrcode_create_image_data(
-  qr_code_t* qrcode,
-  char**     img,
-  apr_size_t*    img_len)
+  qr_code_t   *qrcode,
+  char        **img,
+  apr_size_t  *img_len)
 {
   int                xx, yy;
   int                module_count;
   MagickBooleanType  status;
-  request_rec*       r = qrcode->r;
-  MagickWand*        magick_wand;
-  MagickWand*        black_wand;
-  unsigned char*     tmp;
-  char**             module;
+  request_rec        *r = qrcode->r;
+  MagickWand         *magick_wand;
+  MagickWand         *black_wand;
+  unsigned char      *tmp;
+  char               **module;
 
 #ifdef QR_CODE_DEBUG
   DBG(r,"start s_create_image_file()");
 #endif
 
   module_count  = v_module_count_table[qrcode->version];
-  module = (char**)apr_palloc(r->pool, sizeof(char*)*(module_count+1));
+  module = (char **)apr_palloc(r->pool, sizeof(char*)*(module_count+1));
   for (yy=0; yy<module_count; yy++) {
     module[yy] = (char*)apr_palloc(r->pool, module_count+1);
     memset(module[yy], -1, module_count+1);
   }
 
   chxj_qr_code(qrcode,  module);
-
 
   magick_wand = NewMagickWand();
   black_wand = NewMagickWand();
@@ -796,15 +795,15 @@ on_error:
 
 
 static void
-chxj_qr_code(qr_code_t* qrcode, char* module[])
+chxj_qr_code(qr_code_t *qrcode, char *module[])
 {
-  request_rec*      r     = qrcode->doc->r;
-  unsigned char*    eccstr;
+  request_rec       *r     = qrcode->doc->r;
+  unsigned char     *eccstr;
   int               ii;
   int               data_code_count;
-  char*             real_data  = NULL;
-  char*             decstr;
-  char*             binstr;
+  char              *real_data  = NULL;
+  char              *decstr;
+  char              *binstr;
   int               data_total_count;
   int               min_lost_point;
   int               min_mask_pattern;
@@ -994,11 +993,11 @@ chxj_qr_code(qr_code_t* qrcode, char* module[])
 }
 
 void
-chxj_qrcode_node_to_qrcode(qr_code_t* qrcode, Node* node)
+chxj_qrcode_node_to_qrcode(qr_code_t *qrcode, Node *node)
 {
-  request_rec* r;
-  Doc*         doc;
-  Node*        child;
+  request_rec  *r;
+  Doc          *doc;
+  Node         *child;
 
   r   = qrcode->r;
   doc = qrcode->doc;
@@ -1006,10 +1005,7 @@ chxj_qrcode_node_to_qrcode(qr_code_t* qrcode, Node* node)
   for (child = qs_get_child_node(doc,node);
        child ;
        child = qs_get_next_node(doc,child)) {
-
-    char* name;
-
-    name = qs_get_node_name(doc,child);
+    char *name = qs_get_node_name(doc,child);
 
     if (strcasecmp("qrcode",name) == 0) {
 
@@ -1025,8 +1021,8 @@ chxj_qrcode_node_to_qrcode(qr_code_t* qrcode, Node* node)
     else
     if (strcasecmp("version", name) == 0) {
       int   ver;
-      Node* cchild;
-      char* value;
+      Node  *cchild;
+      char  *value;
 
       cchild = qs_get_child_node(doc, child);
 
@@ -1060,8 +1056,8 @@ chxj_qrcode_node_to_qrcode(qr_code_t* qrcode, Node* node)
     }
     else
     if (strcasecmp("level", name) == 0) {
-      Node* cchild = qs_get_child_node(doc, child);
-      char* value;
+      Node *cchild = qs_get_child_node(doc, child);
+      char *value;
       if (cchild == NULL) {
         qrcode->level = QR_LEVEL_L;
         continue;
@@ -1101,8 +1097,8 @@ chxj_qrcode_node_to_qrcode(qr_code_t* qrcode, Node* node)
     else
     if (strcasecmp("mode", name) == 0)
     {
-      Node* cchild = qs_get_child_node(doc, child);
-      char* value;
+      Node *cchild = qs_get_child_node(doc, child);
+      char *value;
       if (cchild == NULL)
       {
         qrcode->mode = QR_NUM_MODE;
@@ -1161,8 +1157,8 @@ chxj_qrcode_node_to_qrcode(qr_code_t* qrcode, Node* node)
     if (strcasecmp("data", name) == 0)
     {
       /* TODO: 改行も可能なように修正する */
-      Node* cchild = qs_get_child_node(doc, child);
-      char* value;
+      Node *cchild = qs_get_child_node(doc, child);
+      char *value;
 
       qrcode->indata = apr_palloc(r->pool, 1);
       qrcode->indata[0] = 0;
@@ -1189,8 +1185,8 @@ chxj_qrcode_node_to_qrcode(qr_code_t* qrcode, Node* node)
     if (strcasecmp("size", name) == 0)
     {
       int size;
-      char* value;
-      Node* cchild = qs_get_child_node(doc, child);
+      char *value;
+      Node *cchild = qs_get_child_node(doc, child);
 
       if (cchild == NULL)
       {
@@ -1241,10 +1237,10 @@ chxj_qrcode_node_to_qrcode(qr_code_t* qrcode, Node* node)
 /**
  * モード指示子を取得します.
  */
-static char*
+static char *
 s_get_mode_spec(qr_code_t *qrcode)
 {
-  char* result = (char*)apr_palloc(qrcode->r->pool, 4+1);
+  char *result = (char*)apr_palloc(qrcode->r->pool, 4+1);
 
   memset(result, 0, 5);
   memcpy(result, v_mode_table[qrcode->mode], 4);
@@ -1259,13 +1255,13 @@ s_get_mode_spec(qr_code_t *qrcode)
 /**
  * 文字数指示子を取得します.
  */
-static char*
-s_get_char_bit_count(qr_code_t* qrcode, int len)
+static char *
+s_get_char_bit_count(qr_code_t *qrcode, int len)
 {
   int bit_count = v_char_count_table[qrcode->version][qrcode->mode];
   int ii,jj;
-  char* tmp;
-  char* result;
+  char *tmp;
+  char *result;
   int data_capacity   = v_capacity_table[qrcode->version*4+qrcode->level].size[qrcode->mode];
 
   DBG(qrcode->r, "len [%d]", len);
@@ -1283,7 +1279,7 @@ s_get_char_bit_count(qr_code_t* qrcode, int len)
 
   DBG(qrcode->r, "len [%d]", len);
 
-  tmp = (char*)apr_palloc(qrcode->r->pool, bit_count + 1);
+  tmp = (char *)apr_palloc(qrcode->r->pool, bit_count + 1);
   for (ii=0; ii<bit_count; ii++) {
     tmp[ii] = (len & 0x01) ? '1' : '0';
     len = len >> 1;
@@ -1291,7 +1287,7 @@ s_get_char_bit_count(qr_code_t* qrcode, int len)
 
   tmp[bit_count] = '\0';
 
-  result = (char*)apr_palloc(qrcode->r->pool, bit_count+1);
+  result = (char *)apr_palloc(qrcode->r->pool, bit_count+1);
   for (jj=0,ii=bit_count-1; ii>=0 && jj < bit_count; ii--, jj++) {
     result[ii] = tmp[jj];
   }
@@ -1309,8 +1305,8 @@ s_get_char_bit_count(qr_code_t* qrcode, int len)
  * 数字モード
  * 入力データから、２進文字列を取得します.
  */
-static char*
-s_data_to_bin_num(qr_code_t* qrcode, int UNUSED(data_code_count))
+static char *
+s_data_to_bin_num(qr_code_t *qrcode, int UNUSED(data_code_count))
 {
   int len = strlen(qrcode->indata);
   int setn;
@@ -1318,7 +1314,7 @@ s_data_to_bin_num(qr_code_t* qrcode, int UNUSED(data_code_count))
   int ii;
   int jj;
   int kk;
-  char* result;
+  char  *result;
   char  tmp[4];
   char  tmp_bit[11];
   int data_capacity   = v_capacity_table[qrcode->version*4+qrcode->level].size[qrcode->mode];
@@ -1379,8 +1375,8 @@ s_data_to_bin_num(qr_code_t* qrcode, int UNUSED(data_code_count))
  * 英数字モード
  * 入力データから、２進文字列を取得します.
  */
-static char*
-s_data_to_bin_alpha(qr_code_t* qrcode, int UNUSED(data_code_count))
+static char *
+s_data_to_bin_alpha(qr_code_t *qrcode, int UNUSED(data_code_count))
 {
   int len = strlen(qrcode->indata);
   int setn;
@@ -1388,7 +1384,7 @@ s_data_to_bin_alpha(qr_code_t* qrcode, int UNUSED(data_code_count))
   int ii;
   int jj;
   int kk;
-  char* result;
+  char  *result;
   char  tmp[2+1];
   char  tmp_bit[11+1];
   int data_capacity   = v_capacity_table[qrcode->version*4+qrcode->level].size[qrcode->mode];
@@ -1400,7 +1396,7 @@ s_data_to_bin_alpha(qr_code_t* qrcode, int UNUSED(data_code_count))
   setn = len / 2;
   modn = len % 2;
 
-  result = (char*)apr_palloc(qrcode->r->pool, setn*11 + ((modn == 1) ? 6 : 0) + 1); 
+  result = (char *)apr_palloc(qrcode->r->pool, setn*11 + ((modn == 1) ? 6 : 0) + 1); 
 
   kk = 0;
   for (ii=0; ii<len; ii++) {
@@ -1456,7 +1452,7 @@ s_data_to_bin_alpha(qr_code_t* qrcode, int UNUSED(data_code_count))
  * 英数字から、数値に変換します.
  */
 static int
-s_char_to_num_alpha(qr_code_t* qrcode, char src)
+s_char_to_num_alpha(qr_code_t *qrcode, char src)
 {
   switch(src) {
   case '0': return 0;
@@ -1524,14 +1520,14 @@ s_char_to_num_alpha(qr_code_t* qrcode, char src)
  * 8bitバイトモード
  * 入力データから２進文字列を取得します.
  */
-static char*
-s_data_to_bin_8bit(qr_code_t* qrcode, int UNUSED(data_code_count))
+static char *
+s_data_to_bin_8bit(qr_code_t *qrcode, int UNUSED(data_code_count))
 {
   int len = strlen(qrcode->indata);
   int ii;
   int jj;
   int kk;
-  char* result;
+  char  *result;
   char  tmp_bit[8+1];
   int data_capacity   = v_capacity_table[qrcode->version*4+qrcode->level].size[qrcode->mode];
 
@@ -1570,14 +1566,14 @@ s_data_to_bin_8bit(qr_code_t* qrcode, int UNUSED(data_code_count))
  * Kanji mode.
  * A binary character string is acquired from input data.
  */
-static char*
-s_data_to_bin_kanji(qr_code_t* qrcode, int UNUSED(data_code_count))
+static char *
+s_data_to_bin_kanji(qr_code_t *qrcode, int UNUSED(data_code_count))
 {
   int len = strlen(qrcode->indata);
   int ii;
   int jj;
   int kk;
-  char* result;
+  char  *result;
   char  tmp_bit[13+1];
 
   int data_capacity   = v_capacity_table[qrcode->version*4+qrcode->level].size[qrcode->mode];
@@ -1647,15 +1643,15 @@ s_data_to_bin_kanji(qr_code_t* qrcode, int UNUSED(data_code_count))
 /**
  * 8bit長にあわせます
  */
-static char*
-s_tidy_8bit_code(qr_code_t* qrcode, const char* indata, int data_code_count)
+static char *
+s_tidy_8bit_code(qr_code_t *qrcode, const char *indata, int data_code_count)
 {
   int len = strlen(indata);
   int ii;
   int n;
   int rest;
-  char* tmp = NULL;
-  char* result;
+  char *tmp = NULL;
+  char *result;
 
 #ifdef QR_CODE_DEBUG
   DBG(qrcode->r, "len[%d] data_code_count * 8 [%d]", len, data_code_count * 8);
@@ -1701,16 +1697,16 @@ s_tidy_8bit_code(qr_code_t* qrcode, const char* indata, int data_code_count)
 /**
  * ２進文字列をバイナリに変換します.
  */
-static char* 
-s_str_to_bin(qr_code_t* qrcode, char* indata, int data_code_count)
+static char *
+s_str_to_bin(qr_code_t *qrcode, char *indata, int data_code_count)
 {
-  char* result ;
+  char *result;
   int pos;
   int len ;
   int ii;
 
   len = strlen(indata);
-  result = (char*)apr_palloc(qrcode->r->pool, data_code_count);
+  result = (char *)apr_palloc(qrcode->r->pool, data_code_count);
   memset(result, 0, data_code_count);
 
   pos = 0;
@@ -1728,7 +1724,7 @@ s_str_to_bin(qr_code_t* qrcode, char* indata, int data_code_count)
  * そのほかの場所には、-1を設定します.
  */
 static void
-s_init_modules(qr_code_t* qrcode, qr_mask_pattern_t pat, char* dst[])
+s_init_modules(qr_code_t *qrcode, qr_mask_pattern_t pat, char *dst[])
 {
   int module_count = v_module_count_table[qrcode->version];
   int yy;
@@ -1760,7 +1756,7 @@ s_init_modules(qr_code_t* qrcode, qr_mask_pattern_t pat, char* dst[])
  * 位置検出パターンとついでに分離パターンの出力
  */
 static void
-s_setup_probe_position(qr_code_t* qrcode, char* dst[], int pos_x, int pos_y)
+s_setup_probe_position(qr_code_t *qrcode, char *dst[], int pos_x, int pos_y)
 {
   int module_count = v_module_count_table[qrcode->version];
   int xx;
@@ -1829,7 +1825,7 @@ s_setup_probe_position(qr_code_t* qrcode, char* dst[], int pos_x, int pos_y)
  * タイミングパターン
  */
 static void
-s_setup_timing_pattern(qr_code_t* qrcode, char* dst[])
+s_setup_timing_pattern(qr_code_t *qrcode, char *dst[])
 {
   int module_count = v_module_count_table[qrcode->version];
   int xx, yy;
@@ -1869,10 +1865,10 @@ s_setup_timing_pattern(qr_code_t* qrcode, char* dst[])
  * 位置合わせパターン
  */
 static void
-s_setup_position_adjust(qr_code_t* qrcode, char* dst[])
+s_setup_position_adjust(qr_code_t *qrcode, char *dst[])
 {
   int module_count = v_module_count_table[qrcode->version];
-  int* pos_list = v_position_adjust_table[qrcode->version].position;
+  int *pos_list = v_position_adjust_table[qrcode->version].position;
   int xx, yy;
   int mxx, myy;
   int dxx, dyy;
@@ -1919,7 +1915,7 @@ s_setup_position_adjust(qr_code_t* qrcode, char* dst[])
 }
 
 static void
-s_setup_type_info(qr_code_t* qrcode, char* dst[], qr_mask_pattern_t pat)
+s_setup_type_info(qr_code_t *qrcode, char *dst[], qr_mask_pattern_t pat)
 {
   int module_count = v_module_count_table[qrcode->version];
   int typedata;
@@ -2019,9 +2015,9 @@ s_get_bit_count(int data)
 
 
 static void
-s_setup_version_info(qr_code_t* qrcode, char* dst[])
+s_setup_version_info(qr_code_t *qrcode, char *dst[])
 {
-  char* bits = v_version_info_table[qrcode->version].bits;
+  char *bits = v_version_info_table[qrcode->version].bits;
   int module_count = v_module_count_table[qrcode->version];
   size_t xx;
   size_t yy;
@@ -2043,9 +2039,9 @@ s_setup_version_info(qr_code_t* qrcode, char* dst[])
 }
 
 static void 
-s_map_data(qr_code_t* qrcode,
-           char* dst[], 
-           unsigned char* indata, int data_count,qr_mask_pattern_t pat)
+s_map_data(qr_code_t     *qrcode,
+           char          *dst[], 
+           unsigned char *indata, int data_count,qr_mask_pattern_t pat)
 {
   int module_count = v_module_count_table[qrcode->version];
   int inc_yy_flag = -1;
@@ -2140,7 +2136,7 @@ s_get_mask(qr_mask_pattern_t pat, int yy, int xx)
 
 
 static int
-s_calc_lost_point(qr_code_t* qrcode, char* dst[])
+s_calc_lost_point(qr_code_t *qrcode, char *dst[])
 {
   int point = 0;
 
@@ -2164,7 +2160,7 @@ s_calc_lost_point(qr_code_t* qrcode, char* dst[])
  * 失点=3+i
  */
 static int
-s_count_same_module(qr_ver_t ver, char* dst[])
+s_count_same_module(qr_ver_t ver, char *dst[])
 {
   int module_count;
   int point;
@@ -2224,7 +2220,7 @@ s_count_same_module(qr_ver_t ver, char* dst[])
  * 同色のモジュールブロック ブロックサイズ 2×2 
  */
 static int
-s_count_same_block(qr_ver_t ver, char* dst[])
+s_count_same_block(qr_ver_t ver, char *dst[])
 {
   int module_count;
   int point;
@@ -2250,7 +2246,7 @@ s_count_same_block(qr_ver_t ver, char* dst[])
 }
 
 static int
-s_count_11311_pattern(qr_ver_t ver, char* dst[])
+s_count_11311_pattern(qr_ver_t ver, char *dst[])
 {
   int module_count;
   int point;
@@ -2297,7 +2293,7 @@ s_count_11311_pattern(qr_ver_t ver, char* dst[])
  * 全体に占める暗モジュールの割合 50±(5+k)%〜50±(5+(k+1))% 
  */
 static int
-s_count_dark_ratio(qr_ver_t ver, char* dst[])
+s_count_dark_ratio(qr_ver_t ver, char *dst[])
 {
   int module_count;
   int dark_count;

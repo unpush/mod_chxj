@@ -64,15 +64,15 @@ static device_table  UNKNOWN_DEVICE      = {
  * @param userAgent UserAgent is appointed here,
  * @return The style which corresponds is returned.
  */
-device_table*
-chxj_specified_device(request_rec* r, const char* user_agent) 
+device_table *
+chxj_specified_device(request_rec *r, const char *user_agent) 
 {
   ap_regmatch_t        match[10];
-  device_table*        returnType = &UNKNOWN_DEVICE;
-  device_table_list*   dtl;
-  device_table*        dt;
-  mod_chxj_config*     conf; 
-  char*                device_id;
+  device_table         *returnType = &UNKNOWN_DEVICE;
+  device_table_list    *dtl;
+  device_table         *dt;
+  mod_chxj_config      *conf; 
+  char                 *device_id;
 
   if (! user_agent) 
     return returnType;

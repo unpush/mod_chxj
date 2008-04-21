@@ -36,11 +36,11 @@ s_hex_value(char c)
   return 0;
 }
 
-char*
-chxj_url_encode(request_rec* r, const char* src)
+char *
+chxj_url_encode(request_rec *r, const char *src)
 {
-  char* dst;
-  char* sp = (char*)src;
+  char *dst;
+  char *sp = (char *)src;
   unsigned char tmp;
 
   dst = apr_palloc(r->pool, 1);
@@ -74,10 +74,11 @@ chxj_url_encode(request_rec* r, const char* src)
   return dst;
 }
 
-char*
-chxj_url_decode(request_rec* r, const char* src)
+
+char *
+chxj_url_decode(request_rec *r, const char *src)
 {
-  char* dst;
+  char  *dst;
   int   len; 
   int   ii;
   int   jj;
