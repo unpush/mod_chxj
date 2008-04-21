@@ -67,13 +67,10 @@ s_set_devices_data(Doc *doc, apr_pool_t *p, mod_chxj_config *conf, Node *node)
   for (child = qs_get_child_node(doc,node); 
        child ; 
        child = qs_get_next_node(doc,child)) {
-
-    char* name;
-
-    name = qs_get_node_name(doc,child);
-
-    if ((*name == 'd' || *name == 'D') && strcasecmp(name, "devices") == 0)
+    char *name = qs_get_node_name(doc,child);
+    if (STRCASEEQ('d','D',"devices",name)) {
       s_set_user_agent_data(doc, p, conf, child);
+    }
   }
 }
 
@@ -81,22 +78,18 @@ s_set_devices_data(Doc *doc, apr_pool_t *p, mod_chxj_config *conf, Node *node)
  * <user_agent>
  */
 static void
-s_set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node) 
+s_set_user_agent_data(Doc *doc, apr_pool_t *p, mod_chxj_config *conf, Node *node) 
 {
-  Node*              child;
-  device_table_list* t;
+  Node              *child;
+  device_table_list *t;
 
   for (child = qs_get_child_node(doc,node);
        child ;
        child = qs_get_next_node(doc,child)) {
-
-    char* name;
-
-    name = qs_get_node_name(doc,child);
-
-    if ((*name == 'u' || *name == 'U') && strcasecmp(name, "user_agent") == 0 ) {
-      Attr* attr;
-      device_table_list* dtl;
+    char *name = qs_get_node_name(doc,child);
+    if (STRCASEEQ('u','U',"user_agent",name)) {
+      Attr *attr;
+      device_table_list *dtl;
 
       if (! conf->devices) {
         conf->devices = apr_pcalloc(p, sizeof(device_table_list));
@@ -122,10 +115,9 @@ s_set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node
       for (attr = qs_get_attr(doc,child); 
            attr ; 
            attr = qs_get_next_attr(doc,attr)) {
+        char *attr_name = qs_get_attr_name(doc,attr);
 
-        char* attr_name = qs_get_attr_name(doc,attr);
-
-        if ((*attr_name == 'p' || *attr_name == 'P') && strcasecmp(attr_name, "pattern") == 0) {
+        if (STRCASEEQ('p','P',"pattern",attr_name)) {
             dtl->pattern = apr_pstrdup(p, qs_get_attr_value(doc,attr));
             dtl->regexp = ap_pregcomp(p, (const char *)dtl->pattern, AP_REG_EXTENDED|AP_REG_ICASE);
         }
@@ -135,11 +127,12 @@ s_set_user_agent_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node
   }
 }
 
+
 static void
-s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node) 
+s_set_device_data(Doc *doc, apr_pool_t *p, device_table_list *dtl, Node *node) 
 {
-  Node* child;
-  device_table* dt;
+  Node         *child;
+  device_table *dt;
 
   dt = apr_pcalloc(p, sizeof(device_table));
   dt->next           = NULL;
@@ -159,8 +152,7 @@ s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node)
   for (child = qs_get_child_node(doc,node); 
        child ;
        child = qs_get_next_node(doc,child)) {
-    char* name = qs_get_node_name(doc,child);
-
+    char *name = qs_get_node_name(doc,child);
     switch (*name) {
     case 'd':
     case 'D':
@@ -282,7 +274,7 @@ s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node)
     case 'w':
     case 'W':
       if (strcasecmp(name, "width") == 0) {
-        Node* ch = qs_get_child_node(doc, child);
+        Node *ch = qs_get_child_node(doc, child);
         if (ch && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) {
           char *vv = qs_get_node_value(doc,ch);
           unsigned int ii;
@@ -299,7 +291,7 @@ s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node)
       }
       else
       if (strcasecmp(name, "wp_width") == 0) {
-        Node* ch = qs_get_child_node(doc, child);
+        Node *ch = qs_get_child_node(doc, child);
         if (ch && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) {
           char *vv = qs_get_node_value(doc,ch);
           unsigned int ii;
@@ -317,7 +309,7 @@ s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node)
       }
       else
       if (strcasecmp(name, "wp_heigh") == 0) {
-        Node* ch = qs_get_child_node(doc, child);
+        Node *ch = qs_get_child_node(doc, child);
         if (ch && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) {
           char *vv = qs_get_node_value(doc,ch);
           unsigned int ii;
@@ -338,7 +330,7 @@ s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node)
     case 'g':
     case 'G':
       if (strcasecmp(name, "gif") == 0) {
-        Node* ch = qs_get_child_node(doc, child);
+        Node *ch = qs_get_child_node(doc, child);
         if (ch && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) {
           char *vv = qs_get_node_value(doc,ch);
   
@@ -353,7 +345,7 @@ s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node)
     case 'j':
     case 'J':
       if (strcasecmp(name, "jpeg") == 0 || strcasecmp(name, "jpg") == 0) {
-        Node* ch = qs_get_child_node(doc, child);
+        Node *ch = qs_get_child_node(doc, child);
         if (ch != NULL && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) {
           char *vv = qs_get_node_value(doc,ch);
   
@@ -368,7 +360,7 @@ s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node)
     case 'p':
     case 'P':
       if (strcasecmp(name, "png") == 0) {
-        Node* ch = qs_get_child_node(doc, child);
+        Node *ch = qs_get_child_node(doc, child);
         if (ch && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) {
           char *vv = qs_get_node_value(doc,ch);
   
@@ -383,7 +375,7 @@ s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node)
     case 'b':
     case 'B':
       if (strcasecmp(name, "bmp2") == 0) {
-        Node* ch = qs_get_child_node(doc, child);
+        Node *ch = qs_get_child_node(doc, child);
         if (ch && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) {
           char *vv = qs_get_node_value(doc,ch);
   
@@ -395,7 +387,7 @@ s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node)
       }
       else
       if (strcasecmp(name, "bmp4") == 0) {
-        Node* ch = qs_get_child_node(doc, child);
+        Node *ch = qs_get_child_node(doc, child);
         if (ch && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) {
           char *vv = qs_get_node_value(doc,ch);
   
@@ -410,7 +402,7 @@ s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node)
     case 'c':
     case 'C':
       if (strcasecmp(name, "color") == 0) {
-        Node* ch = qs_get_child_node(doc, child);
+        Node *ch = qs_get_child_node(doc, child);
         if (ch && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) {
           char *vv = qs_get_node_value(doc,ch);
   
@@ -422,7 +414,7 @@ s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node)
       }
       else
       if (strcasecmp(name, "cache") == 0) {
-        Node* ch = qs_get_child_node(doc, child);
+        Node *ch = qs_get_child_node(doc, child);
         if (ch && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) {
           char *vv = qs_get_node_value(doc,ch);
           unsigned int ii;
@@ -443,7 +435,7 @@ s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node)
     case 'e':
     case 'E':
       if (strcasecmp(name, "emoji_type") == 0) {
-        Node* ch = qs_get_child_node(doc, child);
+        Node *ch = qs_get_child_node(doc, child);
         if (ch && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) 
           dt->emoji_type = apr_pstrdup(p, qs_get_node_value(doc, ch));
       }
