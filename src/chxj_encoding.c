@@ -25,16 +25,16 @@
 char *
 chxj_encoding(request_rec *r, const char *src, apr_size_t *len)
 {
-  char*               obuf;
-  char*               ibuf;
-  char*               spos;
+  char                *obuf;
+  char                *ibuf;
+  char                *spos;
   
   iconv_t             cd;
   size_t              result;
   apr_size_t          ilen;
   apr_size_t          olen;
-  mod_chxj_config*    dconf;
-  chxjconvrule_entry* entryp;
+  mod_chxj_config     *dconf;
+  chxjconvrule_entry  *entryp;
 
 
   DBG(r,"start chxj_encoding()");
@@ -108,19 +108,19 @@ chxj_encoding(request_rec *r, const char *src, apr_size_t *len)
 }
 
 
-char*
-chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
+char *
+chxj_rencoding(request_rec *r, const char *src, apr_size_t *len)
 {
-  char*               obuf;
-  char*               ibuf;
-  char*               spos;
+  char                *obuf;
+  char                *ibuf;
+  char                *spos;
   
   iconv_t             cd;
   size_t              result;
   apr_size_t          ilen;
   apr_size_t          olen;
-  mod_chxj_config*    dconf;
-  chxjconvrule_entry* entryp;
+  mod_chxj_config     *dconf;
+  chxjconvrule_entry  *entryp;
 
   DBG(r,"start chxj_rencoding()");
 
@@ -198,7 +198,7 @@ chxj_rencoding(request_rec *r, const char* src, apr_size_t* len)
 }
 
 
-char*
+char *
 chxj_encoding_parameter(request_rec *r, const char *value)
 {
   char *src;
