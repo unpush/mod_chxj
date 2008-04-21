@@ -17,16 +17,13 @@
 #include "mod_chxj.h"
 
 
-char* 
+char * 
 chxj_img_conv(
-  request_rec*  r, 
-  device_table* spec, 
-  const char*   s)
+  request_rec  *r, 
+  device_table *spec, 
+  const char   *s)
 {
-  char* dst;
-
-  dst = apr_pstrdup(r->pool, s);
-
+  char *dst = apr_pstrdup(r->pool, s);
   if (spec) {
     switch (spec->color) {
     case 2       : dst = apr_pstrcat(r->pool, dst,".10", NULL); break;
