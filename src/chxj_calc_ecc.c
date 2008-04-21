@@ -924,11 +924,11 @@ static qr_ecc_spec_t v_ecc_spec_table[] = {
  * インタリーブした結果を<code>dst</code>に設定します.
  */
 int
-chxj_calc_ecc(qr_code_t* qrcode,
-              unsigned char* indata, 
-              unsigned char* dst)
+chxj_calc_ecc(qr_code_t     *qrcode,
+              unsigned char *indata, 
+              unsigned char *dst)
 {
-  request_rec* r = qrcode->r;
+  request_rec *r = qrcode->r;
   int ii;
   int jj;
   int rslt_pos = 0;
@@ -953,10 +953,10 @@ chxj_calc_ecc(qr_code_t* qrcode,
   rs_total_block_count = v_ecc_spec_table[qrcode->version*4+qrcode->level].rs[0].rs_block_count +
                          v_ecc_spec_table[qrcode->version*4+qrcode->level].rs[1].rs_block_count ;
 
-  rs_block = (unsigned char**)apr_palloc(r->pool, sizeof(unsigned char*)*rs_total_block_count);
-  rs_block_rest = (int*)apr_palloc(r->pool, sizeof(int)*rs_total_block_count);
-  rs_block_size = (int*)apr_palloc(r->pool, sizeof(int)*rs_total_block_count);
-  rs_block_ecc_size = (int*)apr_palloc(r->pool, sizeof(int)*rs_total_block_count);
+  rs_block = (unsigned char **)apr_palloc(r->pool, sizeof(unsigned char*)*rs_total_block_count);
+  rs_block_rest = (int *)apr_palloc(r->pool, sizeof(int)*rs_total_block_count);
+  rs_block_size = (int *)apr_palloc(r->pool, sizeof(int)*rs_total_block_count);
+  rs_block_ecc_size = (int *)apr_palloc(r->pool, sizeof(int)*rs_total_block_count);
 
   total_size = (v_ecc_spec_table[qrcode->version*4+qrcode->level].rs[0].rs_block_count 
                * v_ecc_spec_table[qrcode->version*4+qrcode->level].rs[0].total_code_count) +
@@ -970,7 +970,7 @@ chxj_calc_ecc(qr_code_t* qrcode,
          rs_cnt > 0;
          rs_cnt--) {
 
-      unsigned char* tmp;
+      unsigned char *tmp;
       int  rs_ii = 0;
 
       data_count  = v_ecc_spec_table[qrcode->version*4+qrcode->level].rs[rs_pos].data_code_count;
@@ -1008,7 +1008,7 @@ chxj_calc_ecc(qr_code_t* qrcode,
 #ifdef QR_CODE_DEBUG
       /* for DEBUG */
       do {
-        char* debug_rows;
+        char *debug_rows;
 
         debug_rows    = apr_palloc(r->pool, 1);
         debug_rows[0] = 0;
@@ -1039,7 +1039,7 @@ chxj_calc_ecc(qr_code_t* qrcode,
 #ifdef QR_CODE_DEBUG
         /* for DEBUG */
         do {
-          char* debug_rows;
+          char *debug_rows;
 
           debug_rows = apr_palloc(r->pool, 1);
           debug_rows[0] = 0;
@@ -1064,7 +1064,7 @@ chxj_calc_ecc(qr_code_t* qrcode,
   do {
     DBG(r,"######### RS BLOCK DUMP ###############");
     for (jj=0; jj<rs_total_block_count; jj++) {
-       char* rows = apr_psprintf(r->pool, "%02d size:[%d] rest:[%d]",jj, rs_block_size[jj], rs_block_rest[jj]);
+       char *rows = apr_psprintf(r->pool, "%02d size:[%d] rest:[%d]",jj, rs_block_size[jj], rs_block_rest[jj]);
        for (ii=0; ii<rs_block_size[jj]; ii++) {
          rows = apr_pstrcat(r->pool, rows, apr_psprintf(r->pool, "[%d]", rs_block[jj][ii]), NULL);
        }
