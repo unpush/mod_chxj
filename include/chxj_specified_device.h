@@ -24,9 +24,12 @@ typedef enum {
   CHXJ_SPEC_Chtml_3_0,
   CHXJ_SPEC_Chtml_4_0,
   CHXJ_SPEC_Chtml_5_0,
+  CHXJ_SPEC_Chtml_6_0, /* use XHTML */
+  CHXJ_SPEC_Chtml_7_0, /* use XHTML */
   CHXJ_SPEC_XHtml_Mobile_1_0,
   CHXJ_SPEC_Hdml,
   CHXJ_SPEC_Jhtml,
+  CHXJ_SPEC_Jxhtml,    /* use XHTML */
   CHXJ_SPEC_HTML,
 } spec_type;
 

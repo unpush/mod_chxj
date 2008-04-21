@@ -42,6 +42,14 @@ tag_handlers chxj_tag_handlers[] = {
     .handler = chtml30_handler,
   },
   {
+    .type    = CHXJ_SPEC_Chtml_6_0,
+    .handler = chtml30_handler,
+  },
+  {
+    .type    = CHXJ_SPEC_Chtml_7_0,
+    .handler = chtml30_handler,
+  },
+  {
     .type    = CHXJ_SPEC_XHtml_Mobile_1_0,
     .handler = xhtml_handler,
   },
@@ -51,6 +59,10 @@ tag_handlers chxj_tag_handlers[] = {
   },
   {
     .type    = CHXJ_SPEC_Jhtml,
+    .handler = jhtml_handler,
+  },
+  {
+    .type    = CHXJ_SPEC_Jxhtml,
     .handler = jhtml_handler,
   },
   {

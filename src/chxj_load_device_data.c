@@ -27,29 +27,29 @@
 
 
 static void s_set_devices_data(
-  Doc*             doc, 
-  apr_pool_t*      p, 
-  mod_chxj_config* conf, 
-  Node*            node) ;
+  Doc              *doc, 
+  apr_pool_t       *p, 
+  mod_chxj_config  *conf, 
+  Node             *node) ;
 
 static void s_set_user_agent_data(
-  Doc*             doc, 
-  apr_pool_t*      p, 
-  mod_chxj_config* conf, 
-  Node*            node);
+  Doc              *doc, 
+  apr_pool_t       *p, 
+  mod_chxj_config  *conf, 
+  Node             *node);
 
 static void s_set_device_data(
-  Doc*        doc, 
-  apr_pool_t* p, 
-  device_table_list* dtl, 
-  Node* node) ;
+  Doc               *doc, 
+  apr_pool_t        *p, 
+  device_table_list *dtl, 
+  Node              *node) ;
 
 
 /**
  * load device_data.xml
  */
 void
-chxj_load_device_data(Doc* doc, apr_pool_t *p, mod_chxj_config* conf) 
+chxj_load_device_data(Doc *doc, apr_pool_t *p, mod_chxj_config *conf) 
 {
   conf->devices = NULL;
   s_set_devices_data(doc, p, conf,qs_get_root(doc));
@@ -60,9 +60,9 @@ chxj_load_device_data(Doc* doc, apr_pool_t *p, mod_chxj_config* conf)
  * <devices>
  */
 static void
-s_set_devices_data(Doc* doc, apr_pool_t* p, mod_chxj_config* conf, Node* node) 
+s_set_devices_data(Doc *doc, apr_pool_t *p, mod_chxj_config *conf, Node *node) 
 {
-  Node* child;
+  Node *child;
 
   for (child = qs_get_child_node(doc,node); 
        child ; 
@@ -221,39 +221,41 @@ s_set_device_data(Doc* doc, apr_pool_t* p, device_table_list* dtl, Node* node)
     case 'h':
     case 'H':
       if (strcasecmp(name, "html_spec_type") == 0) {
-        Node* ch = qs_get_child_node(doc, child);
+        Node *ch = qs_get_child_node(doc, child);
         if (ch &&  strcasecmp(qs_get_node_name(doc,ch), "text") == 0) {
-          char* vv = qs_get_node_value(doc, ch);
-          if (strcasecmp(vv, "xhtml_mobile_1_0") == 0) {
+          char *vv = qs_get_node_value(doc, ch);
+          if (STRCASEEQ('x','X',"xhtml_mobile_1_0",vv)) {
             dt->html_spec_type = CHXJ_SPEC_XHtml_Mobile_1_0;
           }
-          else
-          if (strcasecmp(vv, "chtml_1_0") == 0) {
+          else if (STRCASEEQ('c','C',"chtml_1_0",vv)) {
             dt->html_spec_type = CHXJ_SPEC_Chtml_1_0;
           }
-          else
-          if (strcasecmp(vv, "chtml_2_0") == 0) {
+          else if (STRCASEEQ('c','C',"chtml_2_0",vv)) {
             dt->html_spec_type = CHXJ_SPEC_Chtml_2_0;
           }
-          else
-          if (strcasecmp(vv, "chtml_3_0") == 0) {
+          else if (STRCASEEQ('c','C',"chtml_3_0",vv)) {
             dt->html_spec_type = CHXJ_SPEC_Chtml_3_0;
           }
-          else
-          if (strcasecmp(vv, "chtml_4_0") == 0) {
+          else if (STRCASEEQ('c','C',"chtml_4_0",vv)) {
             dt->html_spec_type = CHXJ_SPEC_Chtml_4_0;
           }
-          else
-          if (strcasecmp(vv, "chtml_5_0") == 0) {
+          else if (STRCASEEQ('c','C',"chtml_5_0",vv)) {
             dt->html_spec_type = CHXJ_SPEC_Chtml_5_0;
           }
-          else
-          if (strcasecmp(vv, "hdml") == 0) {
+          else if (STRCASEEQ('c','C',"chtml_6_0",vv)) {
+            dt->html_spec_type = CHXJ_SPEC_Chtml_6_0;
+          }
+          else if (STRCASEEQ('c','C',"chtml_7_0",vv)) {
+            dt->html_spec_type = CHXJ_SPEC_Chtml_7_0;
+          }
+          else if (STRCASEEQ('h','H',"hdml",vv)) {
             dt->html_spec_type = CHXJ_SPEC_Hdml;
           }
-          else
-          if (strcasecmp(vv, "jhtml") == 0) {
+          else if (STRCASEEQ('j','J',"jhtml",vv)) {
             dt->html_spec_type = CHXJ_SPEC_Jhtml;
+          }
+          else if (STRCASEEQ('j','J',"jxhtml",vv)) {
+            dt->html_spec_type = CHXJ_SPEC_Jxhtml;
           }
         }
       }

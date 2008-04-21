@@ -101,6 +101,16 @@ converter_t convert_routine[] = {
     .encoder  = chxj_encoding,
   },
   {
+    /* CHXJ_SPEC_Chtml_6_0        */
+    .converter = chxj_exchange_chtml30,
+    .encoder  = chxj_encoding,
+  },
+  {
+    /* CHXJ_SPEC_Chtml_7_0        */
+    .converter = chxj_exchange_chtml30,
+    .encoder  = chxj_encoding,
+  },
+  {
     /* CHXJ_SPEC_XHtml_Mobile_1_0 */
     .converter = chxj_exchange_xhtml_mobile_1_0,
     .encoder  = chxj_encoding,
@@ -112,6 +122,11 @@ converter_t convert_routine[] = {
   },
   {
     /* CHXJ_SPEC_Jhtml            */
+    .converter = chxj_exchange_jhtml,
+    .encoder  = chxj_encoding,
+  },
+  {
+    /* CHXJ_SPEC_Jxtml            */
     .converter = chxj_exchange_jhtml,
     .encoder  = chxj_encoding,
   },
@@ -150,9 +165,12 @@ chxj_headers_fixup(request_rec *r)
   case CHXJ_SPEC_Chtml_3_0:
   case CHXJ_SPEC_Chtml_4_0:
   case CHXJ_SPEC_Chtml_5_0:
+  case CHXJ_SPEC_Chtml_6_0:
+  case CHXJ_SPEC_Chtml_7_0:
   case CHXJ_SPEC_XHtml_Mobile_1_0:
   case CHXJ_SPEC_Hdml:
   case CHXJ_SPEC_Jhtml:
+  case CHXJ_SPEC_Jxhtml:
     entryp = chxj_apply_convrule(r, dconf->convrules);
     if (! entryp) {
       DBG(r, "end chxj_headers_fixup() no pattern");
@@ -247,7 +265,10 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len, device_table *s
     case CHXJ_SPEC_Chtml_3_0:
     case CHXJ_SPEC_Chtml_4_0:
     case CHXJ_SPEC_Chtml_5_0:
+    case CHXJ_SPEC_Chtml_6_0:
+    case CHXJ_SPEC_Chtml_7_0:
     case CHXJ_SPEC_Jhtml:
+    case CHXJ_SPEC_Jxhtml:
       cookie = chxj_save_cookie(r);
       break;
     default:
@@ -673,7 +694,10 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
         case CHXJ_SPEC_Chtml_3_0:
         case CHXJ_SPEC_Chtml_4_0:
         case CHXJ_SPEC_Chtml_5_0:
+        case CHXJ_SPEC_Chtml_6_0:
+        case CHXJ_SPEC_Chtml_7_0:
         case CHXJ_SPEC_Jhtml:
+        case CHXJ_SPEC_Jxhtml:
           cookie = chxj_save_cookie(r);
           s_add_cookie_id_if_has_location_header(r, cookie);
           break;
@@ -894,7 +918,10 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
           case CHXJ_SPEC_Chtml_3_0:
           case CHXJ_SPEC_Chtml_4_0:
           case CHXJ_SPEC_Chtml_5_0:
+          case CHXJ_SPEC_Chtml_6_0:
+          case CHXJ_SPEC_Chtml_7_0:
           case CHXJ_SPEC_Jhtml:
+          case CHXJ_SPEC_Jxhtml:
             cookie = chxj_save_cookie(r);
             /*
              * Location Header Check to add cookie parameter.
@@ -1023,9 +1050,12 @@ chxj_input_filter(ap_filter_t*        f,
   case CHXJ_SPEC_Chtml_3_0:
   case CHXJ_SPEC_Chtml_4_0:
   case CHXJ_SPEC_Chtml_5_0:
+  case CHXJ_SPEC_Chtml_6_0:
+  case CHXJ_SPEC_Chtml_7_0:
   case CHXJ_SPEC_XHtml_Mobile_1_0:
   case CHXJ_SPEC_Hdml:
   case CHXJ_SPEC_Jhtml:
+  case CHXJ_SPEC_Jxhtml:
     break;
 
   default:
