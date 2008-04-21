@@ -454,7 +454,7 @@ chxj_exchange_chtml20(
   /*--------------------------------------------------------------------------*/
   /* It converts it from CHTML to CHTML.                                      */
   /*--------------------------------------------------------------------------*/
-  chxj_node_exchange(spec,r,(void *)&chtml20, &doc, qs_get_root(&doc), 0);
+  chxj_node_convert(spec,r,(void *)&chtml20, &doc, qs_get_root(&doc), 0);
   chtml20.out = chxj_buffered_write_flush(chtml20.out, &doc.buf);
   dst = apr_pstrdup(r->pool, chtml20.out);
   chxj_buffered_write_terminate(&doc.buf);

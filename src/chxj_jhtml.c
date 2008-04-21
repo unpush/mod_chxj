@@ -461,7 +461,7 @@ chxj_exchange_jhtml(
   /*--------------------------------------------------------------------------*/
   /* It converts it from CHTML to JHTML.                                      */
   /*--------------------------------------------------------------------------*/
-  chxj_node_exchange(spec,r,(void*)&jhtml, &doc, qs_get_root(&doc), 0);
+  chxj_node_convert(spec,r,(void*)&jhtml, &doc, qs_get_root(&doc), 0);
   jhtml.out = chxj_buffered_write_flush(jhtml.out, &doc.buf);
   dst = apr_pstrdup(r->pool, jhtml.out);
   chxj_buffered_write_terminate(&doc.buf);

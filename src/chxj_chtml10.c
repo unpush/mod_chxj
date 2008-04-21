@@ -450,7 +450,7 @@ chxj_exchange_chtml10(
   /*--------------------------------------------------------------------------*/
   /* It converts it from CHTML to CHTML.                                      */
   /*--------------------------------------------------------------------------*/
-  chxj_node_exchange(spec,r,(void*)&chtml10, &doc, qs_get_root(&doc), 0);
+  chxj_node_convert(spec,r,(void *)&chtml10, &doc, qs_get_root(&doc), 0);
   chtml10.out = chxj_buffered_write_flush(chtml10.out, &doc.buf);
   dst = apr_pstrdup(r->pool, chtml10.out);
   chxj_buffered_write_terminate(&doc.buf);

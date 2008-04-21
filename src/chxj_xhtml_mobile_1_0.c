@@ -451,7 +451,7 @@ chxj_exchange_xhtml_mobile_1_0(
   /*--------------------------------------------------------------------------*/
   /* It converts it from CHTML to XHTML.                                      */
   /*--------------------------------------------------------------------------*/
-  chxj_node_exchange(spec,r,(void*)&xhtml, &doc, qs_get_root(&doc), 0);
+  chxj_node_convert(spec,r,(void *)&xhtml, &doc, qs_get_root(&doc), 0);
   xhtml.out = chxj_buffered_write_flush(xhtml.out, &doc.buf);
   dst = apr_pstrdup(r->pool, xhtml.out);
   chxj_buffered_write_terminate(&doc.buf);
