@@ -496,7 +496,7 @@ chxj_exchange_jhtml(
  * @param spec  [i]   The pointer to the device_table
  */
 static void
-s_init_jhtml(jhtml_t* jhtml, Doc* doc, request_rec* r, device_table* spec)
+s_init_jhtml(jhtml_t *jhtml, Doc *doc, request_rec *r, device_table *spec)
 {
   memset(doc,   0, sizeof(Doc));
   memset(jhtml, 0, sizeof(jhtml_t));
