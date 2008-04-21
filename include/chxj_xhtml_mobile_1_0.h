@@ -25,28 +25,28 @@
 typedef struct xhtml_t xhtml_t;
 
 struct xhtml_t {
-    Doc*                doc;
-    char*               out;
+    Doc                 *doc;
+    char                *out;
     int                 out_len;
     int                 pre_flag;
     int                 textarea_flag;
 
-    device_table*       spec;
-    mod_chxj_config*    conf;
-    chxjconvrule_entry* entryp;
-    cookie_t*           cookie;
+    device_table        *spec;
+    mod_chxj_config     *conf;
+    chxjconvrule_entry  *entryp;
+    cookie_t            *cookie;
 };
 
 /*----------------------------------------------------------------------------*/
 /* Prototype                                                                  */
 /*----------------------------------------------------------------------------*/
-extern char* chxj_exchange_xhtml_mobile_1_0(
-  request_rec*          r,
-  device_table*         spec,
-  const char*           src,
+extern char *chxj_convert_xhtml_mobile_1_0(
+  request_rec           *r,
+  device_table          *spec,
+  const char            *src,
   apr_size_t            srclen,
-  apr_size_t*           dstlen,
-  chxjconvrule_entry*   entryp,
-  cookie_t*             cookie);
+  apr_size_t            *dstlen,
+  chxjconvrule_entry    *entryp,
+  cookie_t              *cookie);
 
 #endif

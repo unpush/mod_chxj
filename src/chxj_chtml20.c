@@ -397,7 +397,7 @@ tag_handler chtml20_handler[] = {
  * @return The character string after the converting is returned.
  */
 char *
-chxj_exchange_chtml20(
+chxj_convert_chtml20(
   request_rec        *r,
   device_table       *spec,
   const char         *src,

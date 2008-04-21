@@ -388,7 +388,7 @@ tag_handler hdml_handler[] = {
  * @return         The character string after the converting is returned.
  */
 char *
-chxj_exchange_hdml(
+chxj_convert_hdml(
   request_rec        *r, 
   device_table       *spec, 
   const char         *src, 

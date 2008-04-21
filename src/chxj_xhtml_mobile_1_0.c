@@ -397,7 +397,7 @@ tag_handler xhtml_handler[] = {
  * @return The character string after the converting is returned.
  */
 char *
-chxj_exchange_xhtml_mobile_1_0(
+chxj_convert_xhtml_mobile_1_0(
   request_rec        *r,
   device_table       *spec,
   const char         *src,
@@ -412,14 +412,14 @@ chxj_exchange_xhtml_mobile_1_0(
   xhtml_t   xhtml;
   Doc       doc;
 
-  DBG(r,"start chxj_exchange_xhtml_mobile_1_0()");
+  DBG(r,"start chxj_convert_xhtml_mobile_1_0()");
   /*--------------------------------------------------------------------------*/
   /* If qrcode xml                                                            */
   /*--------------------------------------------------------------------------*/
   *dstlen = srclen;
   dst = chxj_qr_code_blob_handler(r, src, (size_t*)dstlen);
   if (dst != NULL) {
-    DBG(r,"end chxj_exchange_xhtml_mobile_1_0() (found qrcode.xml)");
+    DBG(r,"end chxj_convert_xhtml_mobile_1_0() (found qrcode.xml)");
     return dst;
   }
 
@@ -471,7 +471,7 @@ chxj_exchange_xhtml_mobile_1_0(
   chxj_dump_out("[dst] CHTML->XHTML", dst, *dstlen);
 #endif
 
-  DBG(r,"end chxj_exchange_xhtml_mobile_1_0()");
+  DBG(r,"end chxj_convert_xhtml_mobile_1_0()");
   return dst;
 }
 

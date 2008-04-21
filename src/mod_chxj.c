@@ -77,57 +77,57 @@ converter_t convert_routine[] = {
   },
   {
     /* CHXJ_SPEC_Chtml_1_0        */
-    .converter = chxj_exchange_chtml10,
+    .converter = chxj_convert_chtml10,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_Chtml_2_0        */
-    .converter = chxj_exchange_chtml20,
+    .converter = chxj_convert_chtml20,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_Chtml_3_0        */
-    .converter = chxj_exchange_chtml30,
+    .converter = chxj_convert_chtml30,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_Chtml_4_0        */
-    .converter = chxj_exchange_chtml30,
+    .converter = chxj_convert_chtml30,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_Chtml_5_0        */
-    .converter = chxj_exchange_chtml30,
+    .converter = chxj_convert_chtml30,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_Chtml_6_0        */
-    .converter = chxj_exchange_chtml30,
+    .converter = chxj_convert_chtml30,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_Chtml_7_0        */
-    .converter = chxj_exchange_chtml30,
+    .converter = chxj_convert_chtml30,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_XHtml_Mobile_1_0 */
-    .converter = chxj_exchange_xhtml_mobile_1_0,
+    .converter = chxj_convert_xhtml_mobile_1_0,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_Hdml             */
-    .converter = chxj_exchange_hdml,
+    .converter = chxj_convert_hdml,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_Jhtml            */
-    .converter = chxj_exchange_jhtml,
+    .converter = chxj_convert_jhtml,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_Jxtml            */
-    .converter = chxj_exchange_jhtml,
+    .converter = chxj_convert_jhtml,
     .encoder  = chxj_encoding,
   },
   {
@@ -208,8 +208,8 @@ chxj_headers_fixup(request_rec *r)
  * @param src [i]   It is former HTML character string. 
  * @param len [i/o] It is length of former HTML character string. 
  */
-static char* 
-chxj_exchange(request_rec *r, const char** src, apr_size_t* len, device_table *spec, const char *ua, cookie_t **cookiep)
+static char * 
+chxj_convert(request_rec *r, const char** src, apr_size_t* len, device_table *spec, const char *ua, cookie_t **cookiep)
 {
   char                *user_agent;
   char                *dst;
@@ -218,7 +218,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len, device_table *s
   mod_chxj_config     *dconf; 
   chxjconvrule_entry  *entryp;
 
-  DBG(r,"start of chxj_exchange() input:[%.*s]", (int)*len, *src);
+  DBG(r,"start of chxj_convert() input:[%.*s]", (int)*len, *src);
   dst  = apr_pstrcat(r->pool, (char*)*src, NULL);
 
   dconf = chxj_get_module_config(r->per_dir_config, &chxj_module);
@@ -245,7 +245,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len, device_table *s
   if (! STRNCASEEQ('t','T', "text/html", r->content_type, sizeof("text/html")-1)
   &&  ! STRNCASEEQ('a','A', "application/xhtml+xml", r->content_type, sizeof("application/xhtml+xml")-1)) {
     DBG(r,"no convert. content type is %s", r->content_type);
-    DBG(r,"end of chxj_exchange()");
+    DBG(r,"end of chxj_convert()");
     return (char*)*src;
   }
 
@@ -313,7 +313,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len, device_table *s
     *cookiep = cookie;
   }
 
-  DBG(r, "end of chxj_exchange()");
+  DBG(r, "end of chxj_convert()");
 
   return dst;
 }
@@ -781,7 +781,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
             && r->content_type 
             && (STRNCASEEQ('a','A',"application/xhtml+xml", r->content_type, sizeof("application/xhtml+xml")-1)
             ||  STRNCASEEQ('t','T',"text/html", r->content_type, sizeof("text/html")-1))) {
-          DBG(r, "detect exchange target:[%s]", r->content_type);
+          DBG(r, "detect convert target:[%s]", r->content_type);
 
           if (ctx->len) {
             char* tmp;
@@ -795,11 +795,11 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
             DBG(r, "input data=[%s] len=[%d]", tmp, ctx->len);
 #endif
 
-            ctx->buffer = chxj_exchange(r, 
-                                        (const char**)&tmp, 
-                                        (apr_size_t*)&ctx->len,
-                                        spec,
-                                        user_agent, &cookie);
+            ctx->buffer = chxj_convert(r, 
+                                       (const char**)&tmp, 
+                                       (apr_size_t*)&ctx->len,
+                                       spec,
+                                       user_agent, &cookie);
 
 #if 0
             DBG(r, "output data=[%.*s]", ctx->len,ctx->buffer);
@@ -808,11 +808,11 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
           else {
             ctx->buffer = apr_psprintf(r->pool, "\n");
             ctx->len += 1;
-            ctx->buffer = chxj_exchange(r, 
-                                        (const char**)&ctx->buffer, 
-                                        (apr_size_t*)&ctx->len,
-                                        spec,
-                                        user_agent, &cookie);
+            ctx->buffer = chxj_convert(r, 
+                                       (const char**)&ctx->buffer, 
+                                       (apr_size_t*)&ctx->len,
+                                       spec,
+                                       user_agent, &cookie);
 
           }
         }
@@ -881,7 +881,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
             memset(tmp, 0, ctx->len + 1);
             memcpy(tmp, ctx->buffer, ctx->len);
             ctx->buffer = 
-              chxj_exchange_image(r, 
+              chxj_convert_image(r, 
                                   (const char**)&tmp,
                                   (apr_size_t*)&ctx->len);
             if (ctx->buffer == NULL) {
@@ -1126,7 +1126,7 @@ chxj_input_filter(ap_filter_t*        f,
       );
   
     if (len > 0) {
-      DBG(r, "(in:exchange)POSTDATA:[%s]", data_brigade);
+      DBG(r, "(in:convert)POSTDATA:[%s]", data_brigade);
   
       obb = apr_brigade_create(r->pool, c->bucket_alloc);
   

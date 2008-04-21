@@ -299,7 +299,7 @@ chxj_img_conv_format_handler(request_rec *r)
  * @param len [i/o] It is length of former image binary data.
  */
 char *
-chxj_exchange_image(request_rec *r, const char **src, apr_size_t *len)
+chxj_convert_image(request_rec *r, const char **src, apr_size_t *len)
 {
   mod_chxj_config       *conf;
   query_string_param_t  *qsp;
@@ -309,7 +309,7 @@ chxj_exchange_image(request_rec *r, const char **src, apr_size_t *len)
   char                  *conv_check;
   chxjconvrule_entry    *entryp;
 
-  DBG(r, "start chxj_exchange_image()");
+  DBG(r, "start chxj_convert_image()");
 
   conv_check = (char*)apr_table_get(r->headers_in, "CHXJ_IMG_CONV");
   if (conv_check) {
@@ -321,7 +321,7 @@ chxj_exchange_image(request_rec *r, const char **src, apr_size_t *len)
   qsp = s_get_query_string_param(r);
   conf = chxj_get_module_config(r->per_dir_config, &chxj_module);
   if (conf == NULL) {
-    DBG(r, "end chxj_exchange_image()");
+    DBG(r, "end chxj_convert_image()");
     return NULL;
   }
 
@@ -356,7 +356,7 @@ chxj_exchange_image(request_rec *r, const char **src, apr_size_t *len)
   if (dst == NULL) 
     *len = 0;
 
-  DBG(r, "end chxj_exchange_image()");
+  DBG(r, "end chxj_convert_image()");
 
   return dst;
 }

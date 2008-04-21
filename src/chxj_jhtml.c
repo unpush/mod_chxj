@@ -401,8 +401,8 @@ tag_handler jhtml_handler[] = {
  * @param src   [i]   The character string before the converting is appointed.
  * @return The character string after the converting is returned.
  */
-char*
-chxj_exchange_jhtml(
+char *
+chxj_convert_jhtml(
   request_rec         *r,
   device_table        *spec,
   const char          *src,

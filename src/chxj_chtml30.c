@@ -396,7 +396,7 @@ tag_handler chtml30_handler[] = {
  * @return The character string after the converting is returned.
  */
 char*
-chxj_exchange_chtml30(
+chxj_convert_chtml30(
   request_rec         *r,
   device_table        *spec,
   const char          *src,
@@ -411,7 +411,7 @@ chxj_exchange_chtml30(
   chtml30_t chtml30;
   Doc       doc;
 
-  DBG(r, "start chxj_exchange_chtml30()");
+  DBG(r, "start chxj_convert_chtml30()");
 
   /*--------------------------------------------------------------------------*/
   /* If qrcode xml                                                            */
@@ -420,7 +420,7 @@ chxj_exchange_chtml30(
   dst = chxj_qr_code_blob_handler(r, src, (size_t*)dstlen);
   if (dst) {
     DBG(r,"i found qrcode xml");
-    DBG(r, "end chxj_exchange_chtml30()");
+    DBG(r, "end chxj_convert_chtml30()");
     return dst;
   }
   DBG(r,"not found qrcode xml");
@@ -475,7 +475,7 @@ chxj_exchange_chtml30(
   chxj_dump_out("[src] CHTML -> CHTML3.0", dst, *dstlen);
 #endif
 
-  DBG(r, "end chxj_exchange_chtml30()");
+  DBG(r, "end chxj_convert_chtml30()");
   return dst;
 }
 
