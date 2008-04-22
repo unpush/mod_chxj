@@ -64,7 +64,8 @@ am_libmod_chxj_la_OBJECTS = libmod_chxj_la-mod_chxj.lo \
 	libmod_chxj_la-chxj_xhtml_mobile_1_0.lo \
 	libmod_chxj_la-chxj_hdml.lo libmod_chxj_la-chxj_chtml10.lo \
 	libmod_chxj_la-chxj_chtml20.lo libmod_chxj_la-chxj_chtml30.lo \
-	libmod_chxj_la-chxj_jhtml.lo libmod_chxj_la-chxj_str_util.lo \
+	libmod_chxj_la-chxj_chtml40.lo libmod_chxj_la-chxj_jhtml.lo \
+	libmod_chxj_la-chxj_str_util.lo \
 	libmod_chxj_la-chxj_img_conv.lo libmod_chxj_la-chxj_dump.lo \
 	libmod_chxj_la-chxj_img_conv_format.lo \
 	libmod_chxj_la-chxj_qr_code.lo libmod_chxj_la-chxj_calc_ecc.lo \
@@ -238,6 +239,7 @@ libmod_chxj_la_SOURCES = mod_chxj.c \
     chxj_chtml10.c \
     chxj_chtml20.c \
     chxj_chtml30.c  \
+    chxj_chtml40.c  \
     chxj_jhtml.c \
     chxj_str_util.c  \
     chxj_img_conv.c  \
@@ -336,6 +338,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmod_chxj_la-chxj_chtml10.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmod_chxj_la-chxj_chtml20.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmod_chxj_la-chxj_chtml30.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmod_chxj_la-chxj_chtml40.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmod_chxj_la-chxj_cookie.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmod_chxj_la-chxj_dbm.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmod_chxj_la-chxj_dump.Plo@am__quote@
@@ -504,6 +507,13 @@ libmod_chxj_la-chxj_chtml30.lo: chxj_chtml30.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='chxj_chtml30.c' object='libmod_chxj_la-chxj_chtml30.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmod_chxj_la_CFLAGS) $(CFLAGS) -c -o libmod_chxj_la-chxj_chtml30.lo `test -f 'chxj_chtml30.c' || echo '$(srcdir)/'`chxj_chtml30.c
+
+libmod_chxj_la-chxj_chtml40.lo: chxj_chtml40.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmod_chxj_la_CFLAGS) $(CFLAGS) -MT libmod_chxj_la-chxj_chtml40.lo -MD -MP -MF $(DEPDIR)/libmod_chxj_la-chxj_chtml40.Tpo -c -o libmod_chxj_la-chxj_chtml40.lo `test -f 'chxj_chtml40.c' || echo '$(srcdir)/'`chxj_chtml40.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/libmod_chxj_la-chxj_chtml40.Tpo $(DEPDIR)/libmod_chxj_la-chxj_chtml40.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='chxj_chtml40.c' object='libmod_chxj_la-chxj_chtml40.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmod_chxj_la_CFLAGS) $(CFLAGS) -c -o libmod_chxj_la-chxj_chtml40.lo `test -f 'chxj_chtml40.c' || echo '$(srcdir)/'`chxj_chtml40.c
 
 libmod_chxj_la-chxj_jhtml.lo: chxj_jhtml.c
 @am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmod_chxj_la_CFLAGS) $(CFLAGS) -MT libmod_chxj_la-chxj_jhtml.lo -MD -MP -MF $(DEPDIR)/libmod_chxj_la-chxj_jhtml.Tpo -c -o libmod_chxj_la-chxj_jhtml.lo `test -f 'chxj_jhtml.c' || echo '$(srcdir)/'`chxj_jhtml.c
