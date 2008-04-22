@@ -46,7 +46,7 @@ qs_parse_tag(Doc *doc, const char *s, int len)
    */
   tag_name = (char *)s_get_tag_name(doc, ++s, --ll);
 
-  node = (Node*)qs_new_tag(doc);
+  node = (Node *)qs_new_tag(doc);
   node->name = tag_name;
   node->otext = apr_palloc(doc->pool,len+2);
   memset(node->otext, 0, len+2);
@@ -68,7 +68,7 @@ qs_parse_tag(Doc *doc, const char *s, int len)
     sp += next_point;
     ll -= next_point;
     QX_LOGGER_DEBUG_INT(sp, ll);
-    node = (Node*)qs_add_attr(doc,node, attr);
+    node = (Node *)qs_add_attr(doc,node, attr);
   }
 
   if (sv_s[len-1] == '/') {
@@ -85,13 +85,13 @@ qs_parse_tag(Doc *doc, const char *s, int len)
 
 
 
-static char* 
-s_get_tag_name(Doc* doc, const char* s, int len)  
+static char * 
+s_get_tag_name(Doc *doc, const char *s, int len)  
 {
   int ii;
   int sp;
   int size;
-  char* return_value = NULL;
+  char *return_value = NULL;
 
   /* ignore space. */
   for (ii = 0; ii < len; ii++) {
@@ -108,7 +108,7 @@ s_get_tag_name(Doc* doc, const char* s, int len)
 
   size = ii-sp;
 
-  return_value = (char*)apr_palloc(doc->pool, size+1);
+  return_value = (char *)apr_palloc(doc->pool, size+1);
 
   memset(return_value, 0, size+1);
   memcpy(return_value, &s[sp], size);
@@ -119,10 +119,10 @@ s_get_tag_name(Doc* doc, const char* s, int len)
 
 
 
-Node*
-qs_new_tag(Doc* doc) 
+Node *
+qs_new_tag(Doc *doc) 
 {
-  Node* node      = (Node*)apr_palloc(doc->pool, sizeof(Node));
+  Node *node      = (Node *)apr_palloc(doc->pool, sizeof(Node));
   node->next      = NULL;
   node->parent    = NULL;
   node->child     = NULL;
@@ -138,8 +138,8 @@ qs_new_tag(Doc* doc)
 
 
 
-Node*
-qs_add_attr(Doc* doc, Node* node, Attr* attr) 
+Node *
+qs_add_attr(Doc *doc, Node *node, Attr *attr) 
 {
   if (node == NULL)
     QX_LOGGER_FATAL("qs_add_attr() node is null");

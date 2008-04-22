@@ -21,16 +21,16 @@
 #include "qs_ignore_sp.h"
 
 
-Attr*
-qs_parse_attr(Doc* doc, const char*s, int len, int *pos) 
+Attr *
+qs_parse_attr(Doc *doc, const char *s, int len, int *pos) 
 {
   int   ii;
   int   start_pos;
   int   size;
   int   novalue;
-  char* name;
-  char* value;
-  Attr* attr;
+  char  *name;
+  char  *value;
+  Attr  *attr;
   int   use_quote;
   int   backslash;
 
@@ -63,11 +63,11 @@ qs_parse_attr(Doc* doc, const char*s, int len, int *pos)
     return NULL;
   }
 
-  name = (char*)apr_palloc(doc->pool,size+1);
+  name = (char *)apr_palloc(doc->pool,size+1);
   memset(name, 0, size+1);
   memcpy(name, &s[start_pos], size);
 
-  QX_LOGGER_DEBUG((char*)name);
+  QX_LOGGER_DEBUG((char *)name);
 
   novalue = 0;
   /* find '=' */
@@ -147,7 +147,7 @@ qs_parse_attr(Doc* doc, const char*s, int len, int *pos)
     QX_LOGGER_DEBUG_INT("size",size);
   }
 
-  value = (char*)apr_palloc(doc->pool, size+1);
+  value = (char *)apr_palloc(doc->pool, size+1);
   memset(value, 0, size+1);
   if (size != 0) 
     memcpy(value, &s[start_pos], size);
@@ -164,12 +164,12 @@ qs_parse_attr(Doc* doc, const char*s, int len, int *pos)
 }
 
 
-Attr*
-qs_new_attr(Doc* doc) 
+Attr *
+qs_new_attr(Doc *doc) 
 {
-  Attr* attr;
+  Attr *attr;
 
-  attr = (Attr*)apr_palloc(doc->pool,sizeof(Attr));
+  attr = (Attr *)apr_palloc(doc->pool,sizeof(Attr));
 
   if (attr == NULL) {
     QX_LOGGER_FATAL("Out Of Memory");

@@ -30,11 +30,11 @@
 #include "qs_log.h"
 
 
-Node*
-qs_parse_file(Doc* doc, const char* filename) 
+Node *
+qs_parse_file(Doc *doc, const char *filename) 
 {
-  char*       tgt;
-  Node*       return_value;
+  char        *tgt;
+  Node        *return_value;
   struct stat st;
   int         rtn;
   int         fd;
@@ -53,7 +53,7 @@ qs_parse_file(Doc* doc, const char* filename)
   if (fd == -1)
     return return_value;
 
-  tgt = (char*)mmap(0, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
+  tgt = (char *)mmap(0, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
   if (tgt == (void *)-1) {
     close(fd);
     return return_value;
