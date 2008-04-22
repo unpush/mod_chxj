@@ -13846,7 +13846,7 @@
     <device>
       <device_id>V702NK</device_id>
       <device_name>V702NK</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>208</width>
       <heigh>176</heigh>
       <gif>false</gif>
@@ -13866,7 +13866,7 @@
     <device>
       <device_id>V802SE</device_id>
       <device_name>V802SE</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>176</width>
       <heigh>220</heigh>
       <gif>false</gif>
@@ -13887,7 +13887,7 @@
     <device>
       <device_id>V802SH</device_id>
       <device_name>V802SH</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>176</width>
       <heigh>220</heigh>
       <gif>false</gif>
@@ -13908,7 +13908,7 @@
     <device>
       <device_id>V802N</device_id>
       <device_name>V802N</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>176</width>
       <heigh>220</heigh>
       <gif>false</gif>
@@ -13933,7 +13933,7 @@
     <device>
       <device_id>V902SH</device_id>
       <device_name>902SH</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>240</width>
       <heigh>264</heigh>
       <gif>true</gif>
@@ -13957,7 +13957,7 @@
     <device>
       <device_id>V902T</device_id>
       <device_name>902T</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>240</width>
       <heigh>261</heigh>
       <gif>true</gif>
@@ -13981,7 +13981,7 @@
     <device>
       <device_id>V703SH</device_id>
       <device_name>703SH</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>240</width>
       <heigh>264</heigh>
       <gif>true</gif>
@@ -14005,7 +14005,7 @@
     <device>
       <device_id>V802SH</device_id>
       <device_name>802SH</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>240</width>
       <heigh>264</heigh>
       <gif>true</gif>
@@ -14029,7 +14029,7 @@
     <device>
       <device_id>V703SHf</device_id>
       <device_name>703SHf</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>240</width>
       <heigh>264</heigh>
       <gif>true</gif>
@@ -14053,7 +14053,7 @@
     <device>
       <device_id>V703N</device_id>
       <device_name>703N</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>240</width>
       <heigh>269</heigh>
       <gif>true</gif>
@@ -14078,7 +14078,7 @@
     <device>
       <device_id>V903T</device_id>
       <device_name>903T</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>240</width>
       <heigh>261</heigh>
       <gif>true</gif>
@@ -14103,7 +14103,7 @@
     <device>
       <device_id>V903SH</device_id>
       <device_name>903SH</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>240</width>
       <heigh>264</heigh>
       <gif>true</gif>
@@ -14128,7 +14128,7 @@
     <device>
       <device_id>V702NK2</device_id>
       <device_name>702NKII</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>176</width>
       <heigh>173</heigh>
       <gif>true</gif>
@@ -14178,7 +14178,7 @@
     <device>
       <device_id>V803T</device_id>
       <device_name>803T</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>240</width>
       <heigh>261</heigh>
       <gif>true</gif>
@@ -14203,7 +14203,7 @@
     <device>
       <device_id>V702NK</device_id>
       <device_name>702NK</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>176</width>
       <heigh>173</heigh>
       <gif>true</gif>
@@ -14417,7 +14417,7 @@
     <device>
       <device_id>C980</device_id>
       <device_name>702sMO</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>176</width>
       <heigh>220</heigh>
       <gif>false</gif>
@@ -14437,7 +14437,7 @@
     <device>
       <device_id>V980</device_id>
       <device_name>702MO</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>176</width>
       <heigh>220</heigh>
       <gif>false</gif>
@@ -14464,7 +14464,7 @@
     <device>
       <device_id>706P</device_id>
       <device_name>SoftBank 706P</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>236</width>
       <heigh>258</heigh>
       <gif>true</gif>
@@ -14488,7 +14488,7 @@
     <device>
       <device_id>910SH</device_id>
       <device_name>SoftBank 910SH</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>468</width>
       <heigh>540</heigh>
       <gif>true</gif>
@@ -14513,7 +14513,7 @@
     <device>
       <device_id>911SH</device_id>
       <device_name>SoftBank 911SH</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>234</width>
       <heigh>350</heigh>
       <gif>true</gif>
@@ -14538,7 +14538,7 @@
     <device>
       <device_id>706N</device_id>
       <device_name>SoftBank 706N</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>233</width>
       <heigh>269</heigh>
       <gif>true</gif>
@@ -14562,7 +14562,7 @@
     <device>
       <device_id>705N</device_id>
       <device_name>SoftBank 705N</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>233</width>
       <heigh>269</heigh>
       <gif>true</gif>
@@ -14587,7 +14587,7 @@
     <device>
       <device_id>708SC</device_id>
       <device_name>SoftBank 708SC</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>310</width>
       <heigh>186</heigh>
       <gif>true</gif>
@@ -14612,7 +14612,7 @@
     <device>
       <device_id>810P</device_id>
       <device_name>SoftBank 810P</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>236</width>
       <heigh>258</heigh>
       <gif>true</gif>
@@ -14636,7 +14636,7 @@
     <device>
       <device_id>812SH</device_id>
       <device_name>SoftBank 812SH</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>234</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -14660,7 +14660,7 @@
     <device>
       <device_id>813SH</device_id>
       <device_name>SoftBank 813SH</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>234</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -14685,7 +14685,7 @@
     <device>
       <device_id>813SHe</device_id>
       <device_name>SoftBank 813SH for Biz</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>234</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -14709,7 +14709,7 @@
     <device>
       <device_id>912SH</device_id>
       <device_name>SoftBank 912SH</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>468</width>
       <heigh>700</heigh>
       <gif>true</gif>
@@ -14733,7 +14733,7 @@
     <device>
       <device_id>911T</device_id>
       <device_name>SoftBank 911T</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>234</width>
       <heigh>339</heigh>
       <gif>true</gif>
@@ -14757,7 +14757,7 @@
     <device>
       <device_id>812Hs</device_id>
       <device_name>SoftBank 812SHs</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>234</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -14782,7 +14782,7 @@
     <device>
       <device_id>816SH</device_id>
       <device_name>SoftBank 816SH</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -14807,7 +14807,7 @@
     <device>
       <device_id>815SH</device_id>
       <device_name>SoftBank 815SH</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -14832,7 +14832,7 @@
     <device>
       <device_id>814SH</device_id>
       <device_name>SoftBank 814SH</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>468</width>
       <heigh>540</heigh>
       <gif>true</gif>
@@ -14857,7 +14857,7 @@
     <device>
       <device_id>912T</device_id>
       <device_name>SoftBank 912T</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>234</width>
       <heigh>339</heigh>
       <gif>true</gif>
@@ -14881,7 +14881,7 @@
     <device>
       <device_id>815T</device_id>
       <device_name>SoftBank 815T</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>234</width>
       <heigh>259</heigh>
       <gif>true</gif>
@@ -14905,7 +14905,7 @@
     <device>
       <device_id>814T</device_id>
       <device_name>SoftBank 814T</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>234</width>
       <heigh>259</heigh>
       <gif>true</gif>
@@ -14930,7 +14930,7 @@
     <device>
       <device_id>805SC</device_id>
       <device_name>SoftBank 805SC</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>230</width>
       <heigh>264</heigh>
       <gif>true</gif>
@@ -14955,7 +14955,7 @@
     <device>
       <device_id>913SH</device_id>
       <device_name>SoftBank 913SH</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>234</width>
       <heigh>350</heigh>
       <gif>true</gif>
@@ -14980,7 +14980,7 @@
     <device>
       <device_id>820SH</device_id>
       <device_name>SoftBank 820SH</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>234</width>
       <heigh>350</heigh>
       <gif>true</gif>
@@ -15005,7 +15005,7 @@
     <device>
       <device_id>821SH</device_id>
       <device_name>SoftBank 821SH</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>234</width>
       <heigh>350</heigh>
       <gif>true</gif>
@@ -15030,7 +15030,7 @@
     <device>
       <device_id>820P</device_id>
       <device_name>SoftBank 820P</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>234</width>
       <heigh>342</heigh>
       <gif>true</gif>
@@ -15055,7 +15055,7 @@
     <device>
       <device_id>920SH</device_id>
       <device_name>SoftBank 920SH</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>468</width>
       <heigh>700</heigh>
       <gif>true</gif>
@@ -15080,7 +15080,7 @@
     <device>
       <device_id>821P</device_id>
       <device_name>SoftBank 821P</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>240</width>
       <heigh>342</heigh>
       <gif>true</gif>
@@ -15105,7 +15105,7 @@
     <device>
       <device_id>705P</device_id>
       <device_name>SoftBank 705P/705Px</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>236</width>
       <heigh>258</heigh>
       <gif>true</gif>
