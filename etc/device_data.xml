@@ -1712,6 +1712,48 @@
       <dpi_heigh>96</dpi_heigh>
     </device>
 
+    <device>
+      <device_id>TS3H</device_id>
+      <device_name>W56T</device_name>
+      <html_spec_type>XHTML_MOBILE_1_0</html_spec_type>
+      <width>239</width>
+      <heigh>331</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>65536</color>
+      <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>400</wp_heigh>
+      <cache>9000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <device>
+      <device_id>SN3C</device_id>
+      <device_name>W54S</device_name>
+      <html_spec_type>XHTML_MOBILE_1_0</html_spec_type>
+      <width>233</width>
+      <heigh>331</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>260000</color>
+      <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>400</wp_heigh>
+      <cache>9000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
     <!-- Sale in 2007.11 W53K -->
     <device>
       <device_id>KC3B</device_id>
@@ -1793,6 +1835,237 @@
 
       <wp_width>240</wp_width>
       <wp_heigh>400</wp_heigh>
+      <cache>9000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <device>
+      <device_id>SH34</device_id>
+      <device_name>W61SH</device_name>
+      <html_spec_type>XHTML_MOBILE_1_0</html_spec_type>
+      <width>229</width>
+      <heigh>323</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>260000</color>
+      <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>400</wp_heigh>
+      <cache>9000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <device>
+      <device_id>CA3A</device_id>
+      <device_name>W61CA</device_name>
+      <html_spec_type>XHTML_MOBILE_1_0</html_spec_type>
+      <width>229</width>
+      <heigh>323</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>260000</color>
+      <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>400</wp_heigh>
+      <cache>9000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <device>
+      <device_id>KC3D</device_id>
+      <device_name>W61K</device_name>
+      <html_spec_type>XHTML_MOBILE_1_0</html_spec_type>
+      <width>240</width>
+      <heigh>325</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>260000</color>
+      <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>400</wp_heigh>
+      <cache>9000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <device>
+      <device_id>SA3B</device_id>
+      <device_name>W54SA</device_name>
+      <html_spec_type>XHTML_MOBILE_1_0</html_spec_type>
+      <width>230</width>
+      <heigh>323</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type>D</emoji_type>
+
+      <wp_width>480</wp_width>
+      <wp_heigh>800</wp_heigh>
+      <cache>9000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <device>
+      <device_id>MA33</device_id>
+      <device_name>W61P</device_name>
+      <html_spec_type>XHTML_MOBILE_1_0</html_spec_type>
+      <width>232</width>
+      <heigh>323</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>400</wp_heigh>
+      <cache>9000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <device>
+      <device_id>ST34</device_id>
+      <device_name>W62SA</device_name>
+      <html_spec_type>XHTML_MOBILE_1_0</html_spec_type>
+      <width>228</width>
+      <heigh>323</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>400</wp_heigh>
+      <cache>9000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <device>
+      <device_id>HI3C</device_id>
+      <device_name>W61H</device_name>
+      <html_spec_type>XHTML_MOBILE_1_0</html_spec_type>
+      <width>232</width>
+      <heigh>323</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>400</wp_heigh>
+      <cache>9000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <device>
+      <device_id>TS3I</device_id>
+      <device_name>W61T</device_name>
+      <html_spec_type>XHTML_MOBILE_1_0</html_spec_type>
+      <width>233</width>
+      <heigh>331</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>65536</color>
+      <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>400</wp_heigh>
+      <cache>9000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <device>
+      <device_id>SN3E</device_id>
+      <device_name>W62S</device_name>
+      <html_spec_type>XHTML_MOBILE_1_0</html_spec_type>
+      <width>228</width>
+      <heigh>345</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>432</wp_heigh>
+      <cache>9000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <device>
+      <device_id>SA37</device_id>
+      <device_name>E02SA</device_name>
+      <html_spec_type>XHTML_MOBILE_1_0</html_spec_type>
+      <width>228</width>
+      <heigh>243</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>9000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <device>
+      <device_id>CA36</device_id>
+      <device_name>E03CA</device_name>
+      <html_spec_type>XHTML_MOBILE_1_0</html_spec_type>
+      <width>232</width>
+      <heigh>243</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>65536</color>
+      <emoji_type>D</emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
       <cache>9000</cache>
       <dpi_width>96</dpi_width>
       <dpi_heigh>96</dpi_heigh>
