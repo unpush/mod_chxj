@@ -35,19 +35,19 @@ tag_handlers chxj_tag_handlers[] = {
   },
   {
     .type    = CHXJ_SPEC_Chtml_4_0,
-    .handler = chtml30_handler,
+    .handler = chtml40_handler,
   },
   {
     .type    = CHXJ_SPEC_Chtml_5_0,
-    .handler = chtml30_handler,
+    .handler = chtml50_handler,
   },
   {
     .type    = CHXJ_SPEC_Chtml_6_0,
-    .handler = chtml30_handler,
+    .handler = chtml50_handler,
   },
   {
     .type    = CHXJ_SPEC_Chtml_7_0,
-    .handler = chtml30_handler,
+    .handler = chtml50_handler,
   },
   {
     .type    = CHXJ_SPEC_XHtml_Mobile_1_0,
@@ -63,7 +63,7 @@ tag_handlers chxj_tag_handlers[] = {
   },
   {
     .type    = CHXJ_SPEC_Jxhtml,
-    .handler = jhtml_handler,
+    .handler = jxhtml_handler,
   },
   {
     .type    = CHXJ_SPEC_HTML,
@@ -265,6 +265,12 @@ chxj_node_convert(
 
         if (handlers[tagPLAINTEXT].end_tag_handler)
           handlers[tagPLAINTEXT].end_tag_handler(pdoc, child);
+      }
+      /*----------------------------------------------------------------------*/
+      /* <PARAM>                                                              */
+      /*----------------------------------------------------------------------*/
+      else if (strcasecmp(name, "param") == 0) {
+        /* ignore param tag block. */
       }
       else {
         chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
