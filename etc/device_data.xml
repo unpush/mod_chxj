@@ -15233,6 +15233,28 @@
       <dpi_width>96</dpi_width>
       <dpi_heigh>96</dpi_heigh>
     </device>
+    <!--
+      SoftBank/1.0/810T/TJ001[/Serial] Browser/VF-Browser/1.0 Profile/MIDP-2.0 Configuration/CLDC-1.1 Ext-J-Profile/JSCL-1.2.2 Ext-V-Profile/VSCL-2.0.0
+    -->
+    <device>
+      <device_id>810T</device_id>
+      <device_name>SoftBank 810T</device_name>
+      <html_spec_type>JXHTML</html_spec_type>
+      <width>234</width>
+      <heigh>259</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>307200</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
 
   </user_agent>
   <!--=======================================================================-->
