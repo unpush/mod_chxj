@@ -4226,7 +4226,6 @@
   <!-- DoCoMo                                                                -->
   <!--=======================================================================-->
   <user_agent pattern="^DoCoMo/1.0/([^   /]+)$">
-
     <device>
       <device_id>D501i</device_id>
       <device_name>D501i</device_name>
@@ -5704,7 +5703,7 @@
     <device>
       <device_id>F904i</device_id>
       <device_name>F904i_H1</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>352</heigh>
       <gif>true</gif>
@@ -5730,7 +5729,7 @@
     <device>
       <device_id>F904i</device_id>
       <device_name>F904i_H2</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>352</heigh>
       <gif>true</gif>
@@ -5756,7 +5755,7 @@
     <device>
       <device_id>F904i</device_id>
       <device_name>F904i_H3</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>352</heigh>
       <gif>true</gif>
@@ -5783,7 +5782,7 @@
     <device>
       <device_id>F904i</device_id>
       <device_name>F904i_W1</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -5809,7 +5808,7 @@
     <device>
       <device_id>F904i</device_id>
       <device_name>F904i_W2</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -5835,7 +5834,7 @@
     <device>
       <device_id>F904i</device_id>
       <device_name>F904i_W3</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -5861,7 +5860,7 @@
     <device>
       <device_id>F905i</device_id>
       <device_name>F905i_H1</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>352</heigh>
       <gif>true</gif>
@@ -5887,7 +5886,7 @@
     <device>
       <device_id>F905i</device_id>
       <device_name>F905i_H2</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>352</heigh>
       <gif>true</gif>
@@ -5913,7 +5912,7 @@
     <device>
       <device_id>F905i</device_id>
       <device_name>F905i_H3</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>352</heigh>
       <gif>true</gif>
@@ -5939,7 +5938,7 @@
     <device>
       <device_id>F905i</device_id>
       <device_name>F905i_H4</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>352</heigh>
       <gif>true</gif>
@@ -5965,7 +5964,7 @@
     <device>
       <device_id>F905i</device_id>
       <device_name>F905i_H5</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>352</heigh>
       <gif>true</gif>
@@ -5991,7 +5990,7 @@
     <device>
       <device_id>F905i</device_id>
       <device_name>F905i_W1</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -6017,7 +6016,7 @@
     <device>
       <device_id>F905i</device_id>
       <device_name>F905i_W2</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -6043,7 +6042,7 @@
     <device>
       <device_id>F905i</device_id>
       <device_name>F905i_W3</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -6069,7 +6068,7 @@
     <device>
       <device_id>F905i</device_id>
       <device_name>F905i_W4</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -6095,7 +6094,7 @@
     <device>
       <device_id>F905i</device_id>
       <device_name>F905i_W5</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -6121,7 +6120,7 @@
     <device>
       <device_id>SH905i</device_id>
       <device_name>SH905i_H1</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>320</heigh>
       <gif>true</gif>
@@ -6147,7 +6146,7 @@
     <device>
       <device_id>SH905i</device_id>
       <device_name>SH905i_H2</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>320</heigh>
       <gif>true</gif>
@@ -6173,7 +6172,7 @@
     <device>
       <device_id>SH905i</device_id>
       <device_name>SH905i_H3</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>320</heigh>
       <gif>true</gif>
@@ -6199,7 +6198,7 @@
     <device>
       <device_id>SH905i</device_id>
       <device_name>SH905i_H4</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>320</heigh>
       <gif>true</gif>
@@ -6226,7 +6225,7 @@
     <device>
       <device_id>SH905i</device_id>
       <device_name>SH905i_H5</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>320</heigh>
       <gif>true</gif>
@@ -6252,7 +6251,7 @@
     <device>
       <device_id>SH905i</device_id>
       <device_name>SH905i_W1</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -6278,7 +6277,7 @@
     <device>
       <device_id>SH905i</device_id>
       <device_name>SH905i_W2</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -6304,7 +6303,7 @@
     <device>
       <device_id>SH905i</device_id>
       <device_name>SH905i_W3</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -6330,7 +6329,7 @@
     <device>
       <device_id>SH905i</device_id>
       <device_name>SH905i_W4</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -6343,6 +6342,120 @@
 
       <wp_width>480</wp_width>
       <wp_heigh>854</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+  </user_agent>
+  <user_agent pattern="DoCoMo/2.0[ 	]+(SH905iTV)\(c100;TB;(W24H16|W30H20|W16H10)\)$">
+    <!--
+      DoCoMo/2.0 SH905iTV(c100;TB;W24H16)
+      DoCoMo/2.0 SH905iTV(c100;TB;W20H13)
+      DoCoMo/2.0 SH905iTV(c100;TB;W30H20)
+      DoCoMo/2.0 SH905iTV(c100;TB;W16H10)
+    -->
+    <device>
+      <device_id>SH905iTV</device_id>
+      <device_name>SH905iTV</device_name>
+      <html_spec_type>CHTML_7_0</html_spec_type>
+      <width>240</width>
+      <heigh>320</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>false</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>480</wp_width>
+      <wp_heigh>854</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+  </user_agent>
+  <user_agent pattern="DoCoMo/2.0[ 	]+(SH905iTV)\(c100;TB;(W24H12|W20H10|W30H15|W16H08)\)$">
+    <!--
+      DoCoMo/2.0 SH905iTV(c100;TB;W24H12)
+      DoCoMo/2.0 SH905iTV(c100;TB;W20H10)
+      DoCoMo/2.0 SH905iTV(c100;TB;W30H15)
+      DoCoMo/2.0 SH905iTV(c100;TB;W16H08)
+    -->
+    <device>
+      <device_id>SH905iTV</device_id>
+      <device_name>SH905iTV</device_name>
+      <html_spec_type>CHTML_7_0</html_spec_type>
+      <width>240</width>
+      <heigh>240</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>false</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>480</wp_width>
+      <wp_heigh>854</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+  </user_agent>
+  <user_agent pattern="DoCoMo/2.0[ 	]+(F905iBiz)\(c100;TB;(W24H17|W20H14|W30H22|W16H12|W40H29)\)$">
+    <!--
+      DoCoMo/2.0 F905iBiz(c100;TB;W24H17)
+      DoCoMo/2.0 F905iBiz(c100;TB;W20H14)
+      DoCoMo/2.0 F905iBiz(c100;TB;W30H22)
+      DoCoMo/2.0 F905iBiz(c100;TB;W16H12)
+      DoCoMo/2.0 F905iBiz(c100;TB;W40H29)
+    -->
+    <device>
+      <device_id>F905iBiz</device_id>
+      <device_name>F905iBiz_H</device_name>
+      <html_spec_type>CHTML_7_0</html_spec_type>
+      <width>240</width>
+      <heigh>352</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>false</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>480</wp_width>
+      <wp_heigh>864</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+  </user_agent>
+  <user_agent pattern="DoCoMo/2.0[ 	]+(F905iBiz)\(c100;(W24H12|W20H10|W30H15|W16H8|W40H20)\)$">
+    <!--
+      DoCoMo/2.0 F905iBiz(c100;TB;W24H12)
+      DoCoMo/2.0 F905iBiz(c100;TB;W20H10)
+      DoCoMo/2.0 F905iBiz(c100;TB;W30H15)
+      DoCoMo/2.0 F905iBiz(c100;TB;W16H8)
+      DoCoMo/2.0 F905iBiz(c100;TB;W40H20)
+    -->
+    <device>
+      <device_id>F905iBiz</device_id>
+      <device_name>F905iBiz_W</device_name>
+      <html_spec_type>CHTML_7_0</html_spec_type>
+      <width>240</width>
+      <heigh>240</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>false</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>480</wp_width>
+      <wp_heigh>864</wp_heigh>
       <cache>100000</cache>
       <dpi_width>96</dpi_width>
       <dpi_heigh>96</dpi_heigh>
@@ -7218,7 +7331,7 @@
     <device>
       <device_id>SH851i</device_id>
       <device_name>SH851i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>252</heigh>
       <gif>true</gif>
@@ -7350,7 +7463,7 @@
     <device>
       <device_id>N902i</device_id>
       <device_name>N902i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -7372,7 +7485,7 @@
     <device>
       <device_id>D902i</device_id>
       <device_name>D902i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>230</width>
       <heigh>320</heigh>
       <gif>true</gif>
@@ -7394,7 +7507,7 @@
     <device>
       <device_id>F902i</device_id>
       <device_name>F902i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>230</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -7438,7 +7551,7 @@
     <device>
       <device_id>SH902i</device_id>
       <device_name>SH902i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -7460,7 +7573,7 @@
     <device>
       <device_id>P902i</device_id>
       <device_name>P902i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -7482,7 +7595,7 @@
     <device>
       <device_id>F702iD</device_id>
       <device_name>F702iD</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>230</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -7509,7 +7622,7 @@
     <device>
       <device_id>SH702iD</device_id>
       <device_name>SH702iD</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -7536,7 +7649,7 @@
     <device>
       <device_id>P702i</device_id>
       <device_name>P702i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -7670,7 +7783,7 @@
     <device>
       <device_id>D702i</device_id>
       <device_name>D702i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>230</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -7697,7 +7810,7 @@
     <device>
       <device_id>SO902i</device_id>
       <device_name>SO902i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>256</heigh>
       <gif>true</gif>
@@ -7804,7 +7917,7 @@
     <device>
       <device_id>SO702i</device_id>
       <device_name>SO702i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>256</heigh>
       <gif>true</gif>
@@ -7831,7 +7944,7 @@
     <device>
       <device_id>SO902i</device_id>
       <device_name>SO902i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -7858,7 +7971,7 @@
     <device>
       <device_id>P902iS</device_id>
       <device_name>P902iS</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -7885,7 +7998,7 @@
     <device>
       <device_id>SO902iWP+</device_id>
       <device_name>SO902iWP+</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>256</heigh>
       <gif>true</gif>
@@ -7912,7 +8025,7 @@
     <device>
       <device_id>D702iBCL</device_id>
       <device_name>D702iBCL</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>230</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -7939,7 +8052,7 @@
     <device>
       <device_id>F902iS</device_id>
       <device_name>F902iS</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>230</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -7966,7 +8079,7 @@
     <device>
       <device_id>N902iS</device_id>
       <device_name>N902iS</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -7993,7 +8106,7 @@
     <device>
       <device_id>D902iS</device_id>
       <device_name>D902iS</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>230</width>
       <heigh>320</heigh>
       <gif>true</gif>
@@ -8020,7 +8133,7 @@
     <device>
       <device_id>SH702iS</device_id>
       <device_name>SH702iS</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -8047,7 +8160,7 @@
     <device>
       <device_id>SA702i</device_id>
       <device_name>SA702i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>252</heigh>
       <gif>true</gif>
@@ -8074,7 +8187,7 @@
     <device>
       <device_id>SH902iSL</device_id>
       <device_name>SH902iSL</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -8101,7 +8214,7 @@
     <device>
       <device_id>N902iX</device_id>
       <device_name>N902iX</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -8128,7 +8241,7 @@
     <device>
       <device_id>P702iD</device_id>
       <device_name>P702iD</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -8155,7 +8268,7 @@
     <device>
       <device_id>N702iS</device_id>
       <device_name>N702iS</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -8182,7 +8295,7 @@
     <device>
       <device_id>D702iF</device_id>
       <device_name>D702iF</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>230</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -8208,7 +8321,7 @@
     <device>
       <device_id>F882iES</device_id>
       <device_name>F882iES</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>256</heigh>
       <gif>true</gif>
@@ -8235,7 +8348,7 @@
     <device>
       <device_id>N902iX</device_id>
       <device_name>N902iX</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -8262,7 +8375,7 @@
     <device>
       <device_id>SH903i</device_id>
       <device_name>SH903i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>320</heigh>
       <gif>true</gif>
@@ -8289,7 +8402,7 @@
     <device>
       <device_id>SO903i</device_id>
       <device_name>SO903i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>368</heigh>
       <gif>true</gif>
@@ -8343,7 +8456,7 @@
     <device>
       <device_id>N903i</device_id>
       <device_name>N903i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -8370,7 +8483,7 @@
     <device>
       <device_id>D903i</device_id>
       <device_name>D903i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>230</width>
       <heigh>320</heigh>
       <gif>true</gif>
@@ -8397,7 +8510,7 @@
     <device>
       <device_id>F903i</device_id>
       <device_name>F903i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>230</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -8424,7 +8537,7 @@
     <device>
       <device_id>P903i</device_id>
       <device_name>P903i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -8451,7 +8564,7 @@
     <device>
       <device_id>M702iG</device_id>
       <device_name>M702iG</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>267</heigh>
       <gif>true</gif>
@@ -8478,7 +8591,7 @@
     <device>
       <device_id>M702iS</device_id>
       <device_name>M702iS</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>267</heigh>
       <gif>true</gif>
@@ -8505,7 +8618,7 @@
     <device>
       <device_id>N601i</device_id>
       <device_name>N601i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -8559,7 +8672,7 @@
     <device>
       <device_id>N703iD</device_id>
       <device_name>N703iD</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -8586,7 +8699,7 @@
     <device>
       <device_id>SH903iTV</device_id>
       <device_name>SH903iTV</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>320</heigh>
       <gif>true</gif>
@@ -8613,7 +8726,7 @@
     <device>
       <device_id>P903iTV</device_id>
       <device_name>P903iTV</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>350</heigh>
       <gif>true</gif>
@@ -8640,7 +8753,7 @@
     <device>
       <device_id>SO703i</device_id>
       <device_name>SO703i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>368</heigh>
       <gif>true</gif>
@@ -8667,7 +8780,7 @@
     <device>
       <device_id>N703imyu</device_id>
       <device_name>N703imyu</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -8694,7 +8807,7 @@
     <device>
       <device_id>F903iX</device_id>
       <device_name>F903iX</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>230</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -8721,7 +8834,7 @@
     <device>
       <device_id>D903iTV</device_id>
       <device_name>D903iTV</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>230</width>
       <heigh>320</heigh>
       <gif>true</gif>
@@ -8748,7 +8861,7 @@
     <device>
       <device_id>D800iDS</device_id>
       <device_name>D800iDS</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>230</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -8773,9 +8886,9 @@
       DoCoMo/2.0 SH703i(c100;TB;W30H15)
     -->
     <device>
-      <device_id>D800iDS</device_id>
-      <device_name>D800iDS</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <device_id>SH703i</device_id>
+      <device_name>SH703i</device_name>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -8829,7 +8942,7 @@
     <device>
       <device_id>D703i</device_id>
       <device_name>D703i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>230</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -8856,7 +8969,7 @@
     <device>
       <device_id>F703i</device_id>
       <device_name>F703i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>230</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -8883,7 +8996,27 @@
     <device>
       <device_id>P703i</device_id>
       <device_name>P703i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
+      <width>240</width>
+      <heigh>270</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>false</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+    <device>
+      <device_id>P703imyu</device_id>
+      <device_name>P703imyu</device_name>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -8910,7 +9043,7 @@
     <device>
       <device_id>F903iBSC</device_id>
       <device_name>F903iBSC</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>230</width>
       <heigh>240</heigh>
       <gif>true</gif>
@@ -8937,7 +9070,7 @@
     <device>
       <device_id>P903iX</device_id>
       <device_name>P903iX</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -8963,7 +9096,7 @@
     <device>
       <device_id>F883i</device_id>
       <device_name>F883i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>256</heigh>
       <gif>true</gif>
@@ -8990,7 +9123,7 @@
     <device>
       <device_id>N904i</device_id>
       <device_name>N904i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>352</heigh>
       <gif>true</gif>
@@ -9017,7 +9150,7 @@
     <device>
       <device_id>SH904i</device_id>
       <device_name>SH904i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>320</heigh>
       <gif>true</gif>
@@ -9071,7 +9204,7 @@
     <device>
       <device_id>SO903iTV</device_id>
       <device_name>SO903iTV</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>368</heigh>
       <gif>true</gif>
@@ -9098,7 +9231,7 @@
     <device>
       <device_id>P904i</device_id>
       <device_name>P904i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>350</heigh>
       <gif>true</gif>
@@ -9125,7 +9258,7 @@
     <device>
       <device_id>D904i</device_id>
       <device_name>D904i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>320</heigh>
       <gif>true</gif>
@@ -9152,7 +9285,7 @@
     <device>
       <device_id>P704imyu</device_id>
       <device_name>P704imyu</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -9179,7 +9312,7 @@
     <device>
       <device_id>SH704i</device_id>
       <device_name>SH704i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>320</heigh>
       <gif>true</gif>
@@ -9206,7 +9339,7 @@
     <device>
       <device_id>N704imyu</device_id>
       <device_name>N704imyu</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -9233,7 +9366,7 @@
     <device>
       <device_id>SO704i</device_id>
       <device_name>SO704i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>368</heigh>
       <gif>true</gif>
@@ -9260,7 +9393,7 @@
     <device>
       <device_id>P704i</device_id>
       <device_name>P704i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>270</heigh>
       <gif>true</gif>
@@ -9287,7 +9420,7 @@
     <device>
       <device_id>D704i</device_id>
       <device_name>D704i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>320</heigh>
       <gif>true</gif>
@@ -9313,7 +9446,7 @@
     <device>
       <device_id>F883iES</device_id>
       <device_name>F883iES</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>256</heigh>
       <gif>true</gif>
@@ -9340,9 +9473,30 @@
     <device>
       <device_id>L704i</device_id>
       <device_name>L704i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_6_0</html_spec_type>
       <width>240</width>
       <heigh>280</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>false</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <device>
+      <device_id>F704i</device_id>
+      <device_name>F704i</device_name>
+      <html_spec_type>CHTML_7_0</html_spec_type>
+      <width>230</width>
+      <heigh>240</heigh>
       <gif>true</gif>
       <jpeg>true</jpeg>
       <png>false</png>
@@ -9374,7 +9528,7 @@
     <device>
       <device_id>D905i</device_id>
       <device_name>D905i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>352</heigh>
       <gif>true</gif>
@@ -9403,7 +9557,7 @@
     <device>
       <device_id>N905i</device_id>
       <device_name>N905i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>320</heigh>
       <gif>true</gif>
@@ -9430,7 +9584,7 @@
     <device>
       <device_id>P905i</device_id>
       <device_name>P905i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>350</heigh>
       <gif>true</gif>
@@ -9460,7 +9614,7 @@
     <device>
       <device_id>SO905i</device_id>
       <device_name>SO905i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>368</heigh>
       <gif>true</gif>
@@ -9488,7 +9642,7 @@
     <device>
       <device_id>N905imyu</device_id>
       <device_name>N905imyu</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>320</heigh>
       <gif>true</gif>
@@ -9516,7 +9670,7 @@
     <device>
       <device_id>F801i</device_id>
       <device_name>F801i</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>352</heigh>
       <gif>true</gif>
@@ -9544,7 +9698,7 @@
     <device>
       <device_id>N905iBiz</device_id>
       <device_name>N905iBiz</device_name>
-      <html_spec_type>CHTML_5_0</html_spec_type>
+      <html_spec_type>CHTML_7_0</html_spec_type>
       <width>240</width>
       <heigh>320</heigh>
       <gif>true</gif>
@@ -9562,6 +9716,422 @@
       <dpi_heigh>96</dpi_heigh>
     </device>
 
+    <!--
+      DoCoMo/2.0 F705i(c100;TB;W24H17)
+      DoCoMo/2.0 F705i(c100;TB;W20H14)
+      DoCoMo/2.0 F705i(c100;TB;W30H22)
+    -->
+    <device>
+      <device_id>F705i</device_id>
+      <device_name>F705i</device_name>
+      <html_spec_type>CHTML_7_0</html_spec_type>
+      <width>240</width>
+      <heigh>352</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>false</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>432</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+    <!--
+      DoCoMo/2.0 D705i(c100;TB;W24H16)
+      DoCoMo/2.0 D705i(c100;TB;W20H13)
+      DoCoMo/2.0 D705i(c100;TB;W30H20)
+    -->
+    <device>
+      <device_id>D705i</device_id>
+      <device_name>D705i</device_name>
+      <html_spec_type>CHTML_7_0</html_spec_type>
+      <width>240</width>
+      <heigh>320</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>false</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>432</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+    <!--
+      DoCoMo/2.0 D705imyu(c100;TB;W24H12)
+      DoCoMo/2.0 D705imyu(c100;TB;W20H10)
+      DoCoMo/2.0 D705imyu(c100;TB;W30H15)
+    -->
+    <device>
+      <device_id>D705imyu</device_id>
+      <device_name>D705imyu</device_name>
+      <html_spec_type>CHTML_7_0</html_spec_type>
+      <width>240</width>
+      <heigh>240</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>false</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+    <!--
+      DoCoMo/2.0 L705i(c100;TB;W16H09)
+      DoCoMo/2.0 L705i(c100;TB;W20H11)
+      DoCoMo/2.0 L705i(c100;TB;W24H14)
+    -->
+    <device>
+      <device_id>L705i</device_id>
+      <device_name>L705i</device_name>
+      <html_spec_type>CHTML_6_0</html_spec_type>
+      <width>240</width>
+      <heigh>280</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>false</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+    <!--
+      DoCoMo/2.0 L705iX(c100;TB;W24H14)
+      DoCoMo/2.0 L705iX(c100;TB;W20H11)
+      DoCoMo/2.0 L705iX(c100;TB;W30H17)
+    -->
+    <device>
+      <device_id>L705iX</device_id>
+      <device_name>L705iX</device_name>
+      <html_spec_type>CHTML_6_0</html_spec_type>
+      <width>240</width>
+      <heigh>280</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>false</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+    <!--
+      DoCoMo/2.0 SH705i(c100;TB;W24H16)
+      DoCoMo/2.0 SH705i(c100;TB;W20H13)
+      DoCoMo/2.0 SH705i(c100;TB;W30H20)
+    -->
+    <device>
+      <device_id>SH705i</device_id>
+      <device_name>SH705i</device_name>
+      <html_spec_type>CHTML_7_0</html_spec_type>
+      <width>240</width>
+      <heigh>320</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>false</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>400</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <!--
+      DoCoMo/2.0 SH705i2(c100;TB;W20H13)
+      DoCoMo/2.0 SH705i2(c100;TB;W24H16)
+      DoCoMo/2.0 SH705i2(c100;TB;W30H20)
+    -->
+    <device>
+      <device_id>SH705i2</device_id>
+      <device_name>SH705i2</device_name>
+      <html_spec_type>CHTML_7_0</html_spec_type>
+      <width>240</width>
+      <heigh>320</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>false</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>400</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <!--
+      DoCoMo/2.0 SO905iCS(c100;TB;W24H18)
+      DoCoMo/2.0 SO905iCS(c100;TB;W20H15)
+      DoCoMo/2.0 SO905iCS(c100;TB;W30H23)
+      DoCoMo/2.0 SO905iCS(c100;TB;W16H12)
+      DoCoMo/2.0 SO905iCS(c100;TB;W12H9)
+    -->
+    <device>
+      <device_id>SO905iCS</device_id>
+      <device_name>SO905iCS</device_name>
+      <html_spec_type>CHTML_7_0</html_spec_type>
+      <width>240</width>
+      <heigh>368</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>false</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>480</wp_width>
+      <wp_heigh>864</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+    <!--
+      DoCoMo/2.0 P905iTV(c100;TB;W24H15)
+      DoCoMo/2.0 P905iTV(c100;TB;W20H13)
+      DoCoMo/2.0 P905iTV(c100;TB;W30H19)
+    -->
+    <device>
+      <device_id>P905iTV</device_id>
+      <device_name>P905iTV</device_name>
+      <html_spec_type>CHTML_7_0</html_spec_type>
+      <width>240</width>
+      <heigh>350</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>false</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>480</wp_width>
+      <wp_heigh>854</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <!--
+      DoCoMo/2.0 P705i(c100;TB;W24H15)
+      DoCoMo/2.0 P705i(c100;TB;W20H13)
+      DoCoMo/2.0 P705i(c100;TB;W30H19)
+      DoCoMo/2.0 P705i(c100;TB;W16H10)
+    -->
+    <device>
+      <device_id>P705i</device_id>
+      <device_name>P705i</device_name>
+      <html_spec_type>CHTML_7_0</html_spec_type>
+      <width>240</width>
+      <heigh>350</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>false</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>427</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <!--
+      DoCoMo/2.0 N705i(c100;TB;W24H16)
+      DoCoMo/2.0 N705i(c100;TB;W20H13)
+      DoCoMo/2.0 N705i(c100;TB;W30H20)
+      DoCoMo/2.0 N705i(c100;TB;W16H10)
+    -->
+    <device>
+      <device_id>N705i</device_id>
+      <device_name>N705i</device_name>
+      <html_spec_type>CHTML_7_0</html_spec_type>
+      <width>240</width>
+      <heigh>320</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>false</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>427</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <!--
+      DoCoMo/2.0 N705imyu(c100;TB;W24H16)
+      DoCoMo/2.0 N705imyu(c100;TB;W20H13)
+      DoCoMo/2.0 N705imyu(c100;TB;W30H20)
+      DoCoMo/2.0 N705imyu(c100;TB;W16H10)
+    -->
+    <device>
+      <device_id>N705imyu</device_id>
+      <device_name>N705imyu</device_name>
+      <html_spec_type>CHTML_7_0</html_spec_type>
+      <width>240</width>
+      <heigh>320</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>false</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>427</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <!--
+      DoCoMo/2.0 P705imyu(c100;TB;W24H15)
+      DoCoMo/2.0 P705imyu(c100;TB;W20H13)
+      DoCoMo/2.0 P705imyu(c100;TB;W30H19)
+      DoCoMo/2.0 P705imyu(c100;TB;W16H10)
+    -->
+    <device>
+      <device_id>P705imyu</device_id>
+      <device_name>P705imyu</device_name>
+      <html_spec_type>CHTML_7_0</html_spec_type>
+      <width>240</width>
+      <heigh>350</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>false</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>427</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <!--
+      DoCoMo/2.0 SO705i(c100;TB;W24H16)
+      DoCoMo/2.0 SO705i(c100;TB;W20H13)
+      DoCoMo/2.0 SO705i(c100;TB;W30H20)
+      DoCoMo/2.0 SO705i(c100;TB;W16H10)
+    -->
+    <device>
+      <device_id>SO705i</device_id>
+      <device_name>SO705i</device_name>
+      <html_spec_type>CHTML_7_0</html_spec_type>
+      <width>240</width>
+      <heigh>320</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>false</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>427</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <!--
+      DoCoMo/2.0 P705iCL(c100;TB;W16H10)
+      DoCoMo/2.0 P705iCL(c100;TB;W20H13)
+      DoCoMo/2.0 P705iCL(c100;TB;W24H15)
+      DoCoMo/2.0 P705iCL(c100;TB;W30H19)
+    -->
+    <device>
+      <device_id>P705iCL</device_id>
+      <device_name>P705iCL</device_name>
+      <html_spec_type>CHTML_7_0</html_spec_type>
+      <width>240</width>
+      <heigh>350</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>false</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>427</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <!--
+      DoCoMo/2.0 F884i(c100;TB;W20H11)
+      DoCoMo/2.0 F884i(c100;TB;W16H11)
+    -->
+    <device>
+      <device_id>F884i</device_id>
+      <device_name>F884i</device_name>
+      <html_spec_type>CHTML_7_0</html_spec_type>
+      <width>240</width>
+      <heigh>364</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>false</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>432</wp_heigh>
+      <cache>100000</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
   </user_agent>
 
 
@@ -13583,7 +14153,7 @@
     <device>
       <device_id>V904T</device_id>
       <device_name>904T</device_name>
-      <html_spec_type>JHTML</html_spec_type>
+      <html_spec_type>JXHTML</html_spec_type>
       <width>240</width>
       <heigh>261</heigh>
       <gif>true</gif>
@@ -13651,6 +14221,196 @@
       <dpi_heigh>96</dpi_heigh>
     </device>
 
+    <!--
+      Vodafone/1.0/V804SH/SHJ001[/Serial] Browser/UP.Browser/7.0.2.1 Profile/MIDP-2.0 Configuration/CLDC-1.1 Ext-J-Profile/JSCL-1.3.2 Ext-V-Profile/VSCL-2.0.0
+    -->
+    <device>
+      <device_id>V804SH</device_id>
+      <device_name>804SH</device_name>
+      <html_spec_type>JXHTML</html_spec_type>
+      <width>240</width>
+      <heigh>264</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>307200</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <!--
+      Vodafone/1.0/V804SS/SSJ001[/Serial] Browser/NetFront/3.3 Profile/MIDP-2.0 Configuration/CLDC-1.1
+    -->
+    <device>
+      <device_id>V804SS</device_id>
+      <device_name>804SS</device_name>
+      <html_spec_type>JXHTML</html_spec_type>
+      <width>240</width>
+      <heigh>264</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>307200</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <!--
+      Vodafone/1.0/V904SH/SHJ001[/Serial] Browser/VF-NetFront/3.3 Profile/MIDP-2.0 Configuration/CLDC-1.1
+    -->
+    <device>
+      <device_id>V904SH</device_id>
+      <device_name>904SH</device_name>
+      <html_spec_type>JXHTML</html_spec_type>
+      <width>480</width>
+      <heigh>540</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+      <wp_width>480</wp_width>
+      <wp_heigh>640</wp_heigh>
+      <cache>307200</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <!--
+      Vodafone/1.0/V905SH/SHJ001[/Serial] Browser/VF-NetFront/3.3 Profile/MIDP-2.0 Configuration/CLDC-1.1
+    -->
+    <device>
+      <device_id>V905SH</device_id>
+      <device_name>905SH</device_name>
+      <html_spec_type>JXHTML</html_spec_type>
+      <width>240</width>
+      <heigh>350</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>400</wp_heigh>
+      <cache>307200</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <!--
+      Vodafone/1.0/V804N/NJ001[/Serial] Browser/UP.Browser/7.0.2.1 Profile/MIDP-2.0 Configuration/CLDC-1.1 Ext-J-Profile/JSCL-1.2.2 Ext-V-Profile/VSCL-2.0.0
+    -->
+    <device>
+      <device_id>V804N</device_id>
+      <device_name>804N</device_name>
+      <html_spec_type>JXHTML</html_spec_type>
+      <width>240</width>
+      <heigh>270</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>307200</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <!--
+      Vodafone/1.0/V705SH/SHJ001[/Serial] Browser/VF-NetFront/3.3 Profile/MIDP-2.0 Configuration/CLDC-1.1
+    -->
+    <device>
+      <device_id>V705SH</device_id>
+      <device_name>705SH</device_name>
+      <html_spec_type>JXHTML</html_spec_type>
+      <width>240</width>
+      <heigh>270</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>307200</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <!--
+      Vodafone/1.0/V705T/TJ001[/Serial] Browser/VF-Browser/1.0 Profile/MIDP-2.0 Configuration/CLDC-1.1 Ext-J-Profile/JSCL-1.2.2 Ext-V-Profile/VSCL-2.0.0
+    -->
+    <device>
+      <device_id>V705T</device_id>
+      <device_name>705T</device_name>
+      <html_spec_type>JXHTML</html_spec_type>
+      <width>240</width>
+      <heigh>261</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>307200</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <!--
+      Vodafone/1.0/V804NK/NKJ001[/Serial] Profile/MIDP-2.0 Configuration/CLDC-1.1
+    -->
+    <device>
+      <device_id>V804NK</device_id>
+      <device_name>804NK</device_name>
+      <html_spec_type>JXHTML</html_spec_type>
+      <width>240</width>
+      <heigh>276</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>307200</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
 
   </user_agent>
   <user_agent pattern="^MOT-([^/ ]+?)/.+?$">
@@ -14362,6 +15122,118 @@
       <dpi_width>96</dpi_width>
       <dpi_heigh>96</dpi_heigh>
     </device>
+    <!--
+      SoftBank/1.0/910T/TJ001[/Serial] Browser/VF-Browser/1.0 Profile/MIDP-2.0 Configuration/CLDC-1.1 Ext-J-Profile/JSCL-1.2.2 Ext-V-Profile/VSCL-2.0.0
+    -->
+    <device>
+      <device_id>910T</device_id>
+      <device_name>SoftBank 910T</device_name>
+      <html_spec_type>JXHTML</html_spec_type>
+      <width>234</width>
+      <heigh>259</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>16777216</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>307200</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+    <!--
+      SoftBank/1.0/810SH/SHJ001[/Serial] Browser/VF-NetFront/3.3 Profile/MIDP-2.0 Configuration/CLDC-1.1
+    -->
+    <device>
+      <device_id>810SH</device_id>
+      <device_name>SoftBank 810SH</device_name>
+      <html_spec_type>JXHTML</html_spec_type>
+      <width>468</width>
+      <heigh>540</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+      <wp_width>480</wp_width>
+      <wp_heigh>640</wp_heigh>
+      <cache>307200</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+    <!--
+      SoftBank/1.0/811SH/SHJ001[/Serial] Browser/VF-NetFront/3.3 Profile/MIDP-2.0 Configuration/CLDC-1.1
+    -->
+    <device>
+      <device_id>811SH</device_id>
+      <device_name>SoftBank 811SH</device_name>
+      <html_spec_type>JXHTML</html_spec_type>
+      <width>468</width>
+      <heigh>540</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+      <wp_width>480</wp_width>
+      <wp_heigh>640</wp_heigh>
+      <cache>307200</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+    <!--
+      SoftBank/1.0/705SC/SCJ001[/Serial] Browser/NetFront/3.3 Profile/MIDP-2.0 Configuration/CLDC-1.1
+    -->
+    <device>
+      <device_id>705SC</device_id>
+      <device_name>SoftBank 705SC</device_name>
+      <html_spec_type>JXHTML</html_spec_type>
+      <width>230</width>
+      <heigh>264</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>307200</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+    <!--
+      SoftBank/1.0/706SC/SCJ001[/Serial] Browser/NetFront/3.3 Profile/MIDP-2.0 Configuration/CLDC-1.1
+    -->
+    <device>
+      <device_id>706SC</device_id>
+      <device_name>SoftBank 706SC</device_name>
+      <html_spec_type>JXHTML</html_spec_type>
+      <width>230</width>
+      <heigh>264</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>307200</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
   </user_agent>
   <!--=======================================================================-->
   <!-- L-mode                                                                -->
