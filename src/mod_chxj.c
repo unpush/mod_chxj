@@ -53,8 +53,9 @@
 #include "chxj_chtml20.h"
 #include "chxj_chtml30.h"
 #include "chxj_chtml40.h"
+#include "chxj_chtml50.h"
 #include "chxj_jhtml.h"
-
+#include "chxj_jxhtml.h"
 #include "chxj_img_conv_format.h"
 #include "chxj_qr_code.h"
 #include "chxj_encoding.h"
@@ -98,17 +99,17 @@ converter_t convert_routine[] = {
   },
   {
     /* CHXJ_SPEC_Chtml_5_0        */
-    .converter = chxj_convert_chtml30,
+    .converter = chxj_convert_chtml50,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_Chtml_6_0        */
-    .converter = chxj_convert_chtml30,
+    .converter = chxj_convert_chtml50,
     .encoder  = chxj_encoding,
   },
   {
     /* CHXJ_SPEC_Chtml_7_0        */
-    .converter = chxj_convert_chtml30,
+    .converter = chxj_convert_chtml50,
     .encoder  = chxj_encoding,
   },
   {
@@ -128,7 +129,7 @@ converter_t convert_routine[] = {
   },
   {
     /* CHXJ_SPEC_Jxtml            */
-    .converter = chxj_convert_jhtml,
+    .converter = chxj_convert_jxhtml,
     .encoder  = chxj_encoding,
   },
   {

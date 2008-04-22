@@ -18,7 +18,9 @@ libmod_chxj_la_SOURCES = mod_chxj.c \
     chxj_chtml20.c \
     chxj_chtml30.c  \
     chxj_chtml40.c  \
+    chxj_chtml50.c  \
     chxj_jhtml.c \
+    chxj_jxhtml.c \
     chxj_str_util.c  \
     chxj_img_conv.c  \
     chxj_dump.c \

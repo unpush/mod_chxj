@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 #include <apr_time.h>
-#include "chxj_chtml40.h"
+#include "chxj_chtml50.h"
 #include "chxj_hdml.h"
 #include "chxj_str_util.h"
 #include "chxj_dump.h"
@@ -23,200 +23,200 @@
 #include "chxj_qr_code.h"
 #include "chxj_encoding.h"
 
-#define GET_CHTML40(X) ((chtml40_t *)(X))
+#define GET_CHTML50(X) ((chtml50_t *)(X))
 #undef W_L
 #undef W_V
-#define W_L(X)          do { chtml40->out = BUFFERED_WRITE_LITERAL(chtml40->out, &doc->buf, (X)); } while(0)
-#define W_V(X)          do { chtml40->out = (X) ? BUFFERED_WRITE_VALUE(chtml40->out, &doc->buf, (X))  \
-                                                : BUFFERED_WRITE_LITERAL(chtml40->out, &doc->buf, ""); } while(0)
+#define W_L(X)          do { chtml50->out = BUFFERED_WRITE_LITERAL(chtml50->out, &doc->buf, (X)); } while(0)
+#define W_V(X)          do { chtml50->out = (X) ? BUFFERED_WRITE_VALUE(chtml50->out, &doc->buf, (X))  \
+                                                : BUFFERED_WRITE_LITERAL(chtml50->out, &doc->buf, ""); } while(0)
 
-static char *s_chtml40_start_html_tag     (void *pdoc, Node *node);
-static char *s_chtml40_end_html_tag       (void *pdoc, Node *node);
-static char *s_chtml40_start_meta_tag     (void *pdoc, Node *node);
-static char *s_chtml40_end_meta_tag       (void *pdoc, Node *node);
-static char *s_chtml40_start_textarea_tag (void *pdoc, Node *node);
-static char *s_chtml40_end_textarea_tag   (void *pdoc, Node *node);
-static char *s_chtml40_start_p_tag        (void *pdoc, Node *node);
-static char *s_chtml40_end_p_tag          (void *pdoc, Node *node);
-static char *s_chtml40_start_pre_tag      (void *pdoc, Node *node);
-static char *s_chtml40_end_pre_tag        (void *pdoc, Node *node);
-static char *s_chtml40_start_h1_tag       (void *pdoc, Node *node);
-static char *s_chtml40_end_h1_tag         (void *pdoc, Node *node);
-static char *s_chtml40_start_h2_tag       (void *pdoc, Node *node);
-static char *s_chtml40_end_h2_tag         (void *pdoc, Node *node);
-static char *s_chtml40_start_h3_tag       (void *pdoc, Node *node);
-static char *s_chtml40_end_h3_tag         (void *pdoc, Node *node);
-static char *s_chtml40_start_h4_tag       (void *pdoc, Node *node);
-static char *s_chtml40_end_h4_tag         (void *pdoc, Node *node);
-static char *s_chtml40_start_h5_tag       (void *pdoc, Node *node);
-static char *s_chtml40_end_h5_tag         (void *pdoc, Node *node);
-static char *s_chtml40_start_h6_tag       (void *pdoc, Node *node);
-static char *s_chtml40_end_h6_tag         (void *pdoc, Node *node);
-static char *s_chtml40_start_ul_tag       (void *pdoc, Node *node);
-static char *s_chtml40_end_ul_tag         (void *pdoc, Node *node);
-static char *s_chtml40_start_ol_tag       (void *pdoc, Node *node);
-static char *s_chtml40_end_ol_tag         (void *pdoc, Node *node);
-static char *s_chtml40_start_li_tag       (void *pdoc, Node *node);
-static char *s_chtml40_end_li_tag         (void *pdoc, Node *node);
-static char *s_chtml40_start_head_tag     (void *pdoc, Node *node);
-static char *s_chtml40_end_head_tag       (void *pdoc, Node *node);
-static char *s_chtml40_start_title_tag    (void *pdoc, Node *node);
-static char *s_chtml40_end_title_tag      (void *pdoc, Node *node);
-static char *s_chtml40_start_base_tag     (void *pdoc, Node *node);
-static char *s_chtml40_end_base_tag       (void *pdoc, Node *node);
-static char *s_chtml40_start_body_tag     (void *pdoc, Node *node);
-static char *s_chtml40_end_body_tag       (void *pdoc, Node *node);
-static char *s_chtml40_start_a_tag        (void *pdoc, Node *node);
-static char *s_chtml40_end_a_tag          (void *pdoc, Node *node);
-static char *s_chtml40_start_br_tag       (void *pdoc, Node *node);
-static char *s_chtml40_end_br_tag         (void *pdoc, Node *node);
-static char *s_chtml40_start_tr_tag       (void *pdoc, Node *node);
-static char *s_chtml40_end_tr_tag         (void *pdoc, Node *node);
-static char *s_chtml40_start_font_tag     (void *pdoc, Node *node);
-static char *s_chtml40_end_font_tag       (void *pdoc, Node *node);
-static char *s_chtml40_start_form_tag     (void *pdoc, Node *node);
-static char *s_chtml40_end_form_tag       (void *pdoc, Node *node);
-static char *s_chtml40_start_input_tag    (void *pdoc, Node *node);
-static char *s_chtml40_end_input_tag      (void *pdoc, Node *node);
-static char *s_chtml40_start_center_tag   (void *pdoc, Node *node);
-static char *s_chtml40_end_center_tag     (void *pdoc, Node *node);
-static char *s_chtml40_start_hr_tag       (void *pdoc, Node *node);
-static char *s_chtml40_end_hr_tag         (void *pdoc, Node *node);
-static char *s_chtml40_start_img_tag      (void *pdoc, Node *node);
-static char *s_chtml40_end_img_tag        (void *pdoc, Node *node);
-static char *s_chtml40_start_select_tag   (void *pdoc, Node *node);
-static char *s_chtml40_end_select_tag     (void *pdoc, Node *node);
-static char *s_chtml40_start_option_tag   (void *pdoc, Node *node);
-static char *s_chtml40_end_option_tag     (void *pdoc, Node *node);
-static char *s_chtml40_start_div_tag      (void *pdoc, Node *node);
-static char *s_chtml40_end_div_tag        (void *pdoc, Node *node);
-static char *s_chtml40_chxjif_tag         (void *pdoc, Node *node); 
-static char *s_chtml40_text_tag           (void *pdoc, Node *node);
-static char *s_chtml40_start_blockquote_tag(void *pdoc, Node *node);
-static char *s_chtml40_end_blockquote_tag  (void *pdoc, Node *node);
-static char *s_chtml40_start_dir_tag      (void *pdoc, Node *node);
-static char *s_chtml40_end_dir_tag        (void *pdoc, Node *node);
-static char *s_chtml40_start_dl_tag       (void *pdoc, Node *node);
-static char *s_chtml40_end_dl_tag         (void *pdoc, Node *node);
-static char *s_chtml40_start_dt_tag       (void *pdoc, Node *node);
-static char *s_chtml40_end_dt_tag         (void *pdoc, Node *node);
-static char *s_chtml40_start_dd_tag       (void *pdoc, Node *node);
-static char *s_chtml40_end_dd_tag         (void *pdoc, Node *node);
-static char *s_chtml40_start_marquee_tag  (void *pdoc, Node *node);
-static char *s_chtml40_end_marquee_tag    (void *pdoc, Node *node);
-static char *s_chtml40_start_blink_tag    (void *pdoc, Node *node);
-static char *s_chtml40_end_blink_tag      (void *pdoc, Node *node);
-static char *s_chtml40_start_menu_tag     (void *pdoc, Node *node);
-static char *s_chtml40_end_menu_tag       (void *pdoc, Node *node);
-static char *s_chtml40_start_plaintext_tag       (void *pdoc, Node *node);
-static char *s_chtml40_start_plaintext_tag_inner (void *pdoc, Node *node);
-static char *s_chtml40_end_plaintext_tag         (void *pdoc, Node *node);
+static char *s_chtml50_start_html_tag     (void *pdoc, Node *node);
+static char *s_chtml50_end_html_tag       (void *pdoc, Node *node);
+static char *s_chtml50_start_meta_tag     (void *pdoc, Node *node);
+static char *s_chtml50_end_meta_tag       (void *pdoc, Node *node);
+static char *s_chtml50_start_textarea_tag (void *pdoc, Node *node);
+static char *s_chtml50_end_textarea_tag   (void *pdoc, Node *node);
+static char *s_chtml50_start_p_tag        (void *pdoc, Node *node);
+static char *s_chtml50_end_p_tag          (void *pdoc, Node *node);
+static char *s_chtml50_start_pre_tag      (void *pdoc, Node *node);
+static char *s_chtml50_end_pre_tag        (void *pdoc, Node *node);
+static char *s_chtml50_start_h1_tag       (void *pdoc, Node *node);
+static char *s_chtml50_end_h1_tag         (void *pdoc, Node *node);
+static char *s_chtml50_start_h2_tag       (void *pdoc, Node *node);
+static char *s_chtml50_end_h2_tag         (void *pdoc, Node *node);
+static char *s_chtml50_start_h3_tag       (void *pdoc, Node *node);
+static char *s_chtml50_end_h3_tag         (void *pdoc, Node *node);
+static char *s_chtml50_start_h4_tag       (void *pdoc, Node *node);
+static char *s_chtml50_end_h4_tag         (void *pdoc, Node *node);
+static char *s_chtml50_start_h5_tag       (void *pdoc, Node *node);
+static char *s_chtml50_end_h5_tag         (void *pdoc, Node *node);
+static char *s_chtml50_start_h6_tag       (void *pdoc, Node *node);
+static char *s_chtml50_end_h6_tag         (void *pdoc, Node *node);
+static char *s_chtml50_start_ul_tag       (void *pdoc, Node *node);
+static char *s_chtml50_end_ul_tag         (void *pdoc, Node *node);
+static char *s_chtml50_start_ol_tag       (void *pdoc, Node *node);
+static char *s_chtml50_end_ol_tag         (void *pdoc, Node *node);
+static char *s_chtml50_start_li_tag       (void *pdoc, Node *node);
+static char *s_chtml50_end_li_tag         (void *pdoc, Node *node);
+static char *s_chtml50_start_head_tag     (void *pdoc, Node *node);
+static char *s_chtml50_end_head_tag       (void *pdoc, Node *node);
+static char *s_chtml50_start_title_tag    (void *pdoc, Node *node);
+static char *s_chtml50_end_title_tag      (void *pdoc, Node *node);
+static char *s_chtml50_start_base_tag     (void *pdoc, Node *node);
+static char *s_chtml50_end_base_tag       (void *pdoc, Node *node);
+static char *s_chtml50_start_body_tag     (void *pdoc, Node *node);
+static char *s_chtml50_end_body_tag       (void *pdoc, Node *node);
+static char *s_chtml50_start_a_tag        (void *pdoc, Node *node);
+static char *s_chtml50_end_a_tag          (void *pdoc, Node *node);
+static char *s_chtml50_start_br_tag       (void *pdoc, Node *node);
+static char *s_chtml50_end_br_tag         (void *pdoc, Node *node);
+static char *s_chtml50_start_tr_tag       (void *pdoc, Node *node);
+static char *s_chtml50_end_tr_tag         (void *pdoc, Node *node);
+static char *s_chtml50_start_font_tag     (void *pdoc, Node *node);
+static char *s_chtml50_end_font_tag       (void *pdoc, Node *node);
+static char *s_chtml50_start_form_tag     (void *pdoc, Node *node);
+static char *s_chtml50_end_form_tag       (void *pdoc, Node *node);
+static char *s_chtml50_start_input_tag    (void *pdoc, Node *node);
+static char *s_chtml50_end_input_tag      (void *pdoc, Node *node);
+static char *s_chtml50_start_center_tag   (void *pdoc, Node *node);
+static char *s_chtml50_end_center_tag     (void *pdoc, Node *node);
+static char *s_chtml50_start_hr_tag       (void *pdoc, Node *node);
+static char *s_chtml50_end_hr_tag         (void *pdoc, Node *node);
+static char *s_chtml50_start_img_tag      (void *pdoc, Node *node);
+static char *s_chtml50_end_img_tag        (void *pdoc, Node *node);
+static char *s_chtml50_start_select_tag   (void *pdoc, Node *node);
+static char *s_chtml50_end_select_tag     (void *pdoc, Node *node);
+static char *s_chtml50_start_option_tag   (void *pdoc, Node *node);
+static char *s_chtml50_end_option_tag     (void *pdoc, Node *node);
+static char *s_chtml50_start_div_tag      (void *pdoc, Node *node);
+static char *s_chtml50_end_div_tag        (void *pdoc, Node *node);
+static char *s_chtml50_chxjif_tag         (void *pdoc, Node *node); 
+static char *s_chtml50_text_tag           (void *pdoc, Node *node);
+static char *s_chtml50_start_blockquote_tag(void *pdoc, Node *node);
+static char *s_chtml50_end_blockquote_tag  (void *pdoc, Node *node);
+static char *s_chtml50_start_dir_tag      (void *pdoc, Node *node);
+static char *s_chtml50_end_dir_tag        (void *pdoc, Node *node);
+static char *s_chtml50_start_dl_tag       (void *pdoc, Node *node);
+static char *s_chtml50_end_dl_tag         (void *pdoc, Node *node);
+static char *s_chtml50_start_dt_tag       (void *pdoc, Node *node);
+static char *s_chtml50_end_dt_tag         (void *pdoc, Node *node);
+static char *s_chtml50_start_dd_tag       (void *pdoc, Node *node);
+static char *s_chtml50_end_dd_tag         (void *pdoc, Node *node);
+static char *s_chtml50_start_marquee_tag  (void *pdoc, Node *node);
+static char *s_chtml50_end_marquee_tag    (void *pdoc, Node *node);
+static char *s_chtml50_start_blink_tag    (void *pdoc, Node *node);
+static char *s_chtml50_end_blink_tag      (void *pdoc, Node *node);
+static char *s_chtml50_start_menu_tag     (void *pdoc, Node *node);
+static char *s_chtml50_end_menu_tag       (void *pdoc, Node *node);
+static char *s_chtml50_start_plaintext_tag       (void *pdoc, Node *node);
+static char *s_chtml50_start_plaintext_tag_inner (void *pdoc, Node *node);
+static char *s_chtml50_end_plaintext_tag         (void *pdoc, Node *node);
 
-static void  s_init_chtml40(chtml40_t *chtml, Doc *doc, request_rec *r, device_table *spec);
+static void  s_init_chtml50(chtml50_t *chtml, Doc *doc, request_rec *r, device_table *spec);
 
-static int   s_chtml40_search_emoji(chtml40_t *chtml, char *txt, char **rslt);
+static int   s_chtml50_search_emoji(chtml50_t *chtml, char *txt, char **rslt);
 
 
-tag_handler chtml40_handler[] = {
+tag_handler chtml50_handler[] = {
   /* tagHTML */
   {
-    s_chtml40_start_html_tag,
-    s_chtml40_end_html_tag,
+    s_chtml50_start_html_tag,
+    s_chtml50_end_html_tag,
   },
   /* tagMETA */
   {
-    s_chtml40_start_meta_tag,
-    s_chtml40_end_meta_tag,
+    s_chtml50_start_meta_tag,
+    s_chtml50_end_meta_tag,
   },
   /* tagTEXTAREA */
   {
-    s_chtml40_start_textarea_tag,
-    s_chtml40_end_textarea_tag,
+    s_chtml50_start_textarea_tag,
+    s_chtml50_end_textarea_tag,
   },
   /* tagP */
   {
-    s_chtml40_start_p_tag,
-    s_chtml40_end_p_tag,
+    s_chtml50_start_p_tag,
+    s_chtml50_end_p_tag,
   },
   /* tagPRE */
   {
-    s_chtml40_start_pre_tag,
-    s_chtml40_end_pre_tag,
+    s_chtml50_start_pre_tag,
+    s_chtml50_end_pre_tag,
   },
   /* tagUL */
   {
-    s_chtml40_start_ul_tag,
-    s_chtml40_end_ul_tag,
+    s_chtml50_start_ul_tag,
+    s_chtml50_end_ul_tag,
   },
   /* tagLI */
   {
-    s_chtml40_start_li_tag,
-    s_chtml40_end_li_tag,
+    s_chtml50_start_li_tag,
+    s_chtml50_end_li_tag,
   },
   /* tagOL */
   {
-    s_chtml40_start_ol_tag,
-    s_chtml40_end_ol_tag,
+    s_chtml50_start_ol_tag,
+    s_chtml50_end_ol_tag,
   },
   /* tagH1 */
   {
-    s_chtml40_start_h1_tag,
-    s_chtml40_end_h1_tag,
+    s_chtml50_start_h1_tag,
+    s_chtml50_end_h1_tag,
   },
   /* tagH2 */
   {
-    s_chtml40_start_h2_tag,
-    s_chtml40_end_h2_tag,
+    s_chtml50_start_h2_tag,
+    s_chtml50_end_h2_tag,
   },
   /* tagH3 */
   {
-    s_chtml40_start_h3_tag,
-    s_chtml40_end_h3_tag,
+    s_chtml50_start_h3_tag,
+    s_chtml50_end_h3_tag,
   },
   /* tagH4 */
   {
-    s_chtml40_start_h4_tag,
-    s_chtml40_end_h4_tag,
+    s_chtml50_start_h4_tag,
+    s_chtml50_end_h4_tag,
   },
   /* tagH5 */
   {
-    s_chtml40_start_h5_tag,
-    s_chtml40_end_h5_tag,
+    s_chtml50_start_h5_tag,
+    s_chtml50_end_h5_tag,
   },
   /* tagH6 */
   {
-    s_chtml40_start_h6_tag,
-    s_chtml40_end_h6_tag,
+    s_chtml50_start_h6_tag,
+    s_chtml50_end_h6_tag,
   },
   /* tagHEAD */
   {
-    s_chtml40_start_head_tag,
-    s_chtml40_end_head_tag,
+    s_chtml50_start_head_tag,
+    s_chtml50_end_head_tag,
   },
   /* tagTITLE */
   {
-    s_chtml40_start_title_tag,
-    s_chtml40_end_title_tag,
+    s_chtml50_start_title_tag,
+    s_chtml50_end_title_tag,
   },
   /* tagBASE */
   {
-    s_chtml40_start_base_tag,
-    s_chtml40_end_base_tag,
+    s_chtml50_start_base_tag,
+    s_chtml50_end_base_tag,
   },
   /* tagBODY */
   {
-    s_chtml40_start_body_tag,
-    s_chtml40_end_body_tag,
+    s_chtml50_start_body_tag,
+    s_chtml50_end_body_tag,
   },
   /* tagA */
   {
-    s_chtml40_start_a_tag,
-    s_chtml40_end_a_tag,
+    s_chtml50_start_a_tag,
+    s_chtml50_end_a_tag,
   },
   /* tagBR */
   {
-    s_chtml40_start_br_tag,
-    s_chtml40_end_br_tag,
+    s_chtml50_start_br_tag,
+    s_chtml50_end_br_tag,
   },
   /* tagTABLE */
   {
@@ -225,8 +225,8 @@ tag_handler chtml40_handler[] = {
   },
   /* tagTR */
   {
-    s_chtml40_start_tr_tag,
-    s_chtml40_end_tr_tag,
+    s_chtml50_start_tr_tag,
+    s_chtml50_end_tr_tag,
   },
   /* tagTD */
   {
@@ -240,52 +240,52 @@ tag_handler chtml40_handler[] = {
   },
   /* tagFONT */
   {
-    s_chtml40_start_font_tag,
-    s_chtml40_end_font_tag,
+    s_chtml50_start_font_tag,
+    s_chtml50_end_font_tag,
   },
   /* tagFORM */
   {
-    s_chtml40_start_form_tag,
-    s_chtml40_end_form_tag,
+    s_chtml50_start_form_tag,
+    s_chtml50_end_form_tag,
   },
   /* tagINPUT */
   {
-    s_chtml40_start_input_tag,
-    s_chtml40_end_input_tag,
+    s_chtml50_start_input_tag,
+    s_chtml50_end_input_tag,
   },
   /* tagCENTER */
   {
-    s_chtml40_start_center_tag,
-    s_chtml40_end_center_tag,
+    s_chtml50_start_center_tag,
+    s_chtml50_end_center_tag,
   },
   /* tagHR */
   {
-    s_chtml40_start_hr_tag,
-    s_chtml40_end_hr_tag,
+    s_chtml50_start_hr_tag,
+    s_chtml50_end_hr_tag,
   },
   /* tagIMG */
   {
-    s_chtml40_start_img_tag,
-    s_chtml40_end_img_tag,
+    s_chtml50_start_img_tag,
+    s_chtml50_end_img_tag,
   },
   /* tagSELECT */
   {
-    s_chtml40_start_select_tag,
-    s_chtml40_end_select_tag,
+    s_chtml50_start_select_tag,
+    s_chtml50_end_select_tag,
   },
   /* tagOPTION */
   {
-    s_chtml40_start_option_tag,
-    s_chtml40_end_option_tag,
+    s_chtml50_start_option_tag,
+    s_chtml50_end_option_tag,
   },
   /* tagDIV */
   {
-    s_chtml40_start_div_tag,
-    s_chtml40_end_div_tag,
+    s_chtml50_start_div_tag,
+    s_chtml50_end_div_tag,
   },
   /* tagCHXJIF */
   {
-    s_chtml40_chxjif_tag,
+    s_chtml50_chxjif_tag,
     NULL,
   },
   /* tagNOBR */
@@ -310,7 +310,7 @@ tag_handler chtml40_handler[] = {
   },
   /* tagTEXT */
   {
-    s_chtml40_text_tag,
+    s_chtml50_text_tag,
     NULL,
   },
   /* tagTH */
@@ -330,8 +330,8 @@ tag_handler chtml40_handler[] = {
   },
   /* tagDT */
   {
-    s_chtml40_start_dt_tag,
-    s_chtml40_end_dt_tag,
+    s_chtml50_start_dt_tag,
+    s_chtml50_end_dt_tag,
   },
   /* tagLEGEND */
   {
@@ -345,43 +345,43 @@ tag_handler chtml40_handler[] = {
   },
   /* tagBLOCKQUOTE */
   {
-    s_chtml40_start_blockquote_tag,
-    s_chtml40_end_blockquote_tag,
+    s_chtml50_start_blockquote_tag,
+    s_chtml50_end_blockquote_tag,
   },
   /* tagDIR */
   {
-    s_chtml40_start_dir_tag,
-    s_chtml40_end_dir_tag,
+    s_chtml50_start_dir_tag,
+    s_chtml50_end_dir_tag,
   },
   /* tagDL */
   {
-    s_chtml40_start_dl_tag,
-    s_chtml40_end_dl_tag,
+    s_chtml50_start_dl_tag,
+    s_chtml50_end_dl_tag,
   },
   /* tagDD */
   {
-    s_chtml40_start_dd_tag,
-    s_chtml40_end_dd_tag,
+    s_chtml50_start_dd_tag,
+    s_chtml50_end_dd_tag,
   },
   /* tagMENU */
   {
-    s_chtml40_start_menu_tag,
-    s_chtml40_end_menu_tag,
+    s_chtml50_start_menu_tag,
+    s_chtml50_end_menu_tag,
   },
   /* tagPLAINTEXT */
   {
-    s_chtml40_start_plaintext_tag,
-    s_chtml40_end_plaintext_tag,
+    s_chtml50_start_plaintext_tag,
+    s_chtml50_end_plaintext_tag,
   },
   /* tagBLINK */
   {
-    s_chtml40_start_blink_tag,
-    s_chtml40_end_blink_tag,
+    s_chtml50_start_blink_tag,
+    s_chtml50_end_blink_tag,
   },
   /* tagMARQUEE */
   {
-    s_chtml40_start_marquee_tag,
-    s_chtml40_end_marquee_tag,
+    s_chtml50_start_marquee_tag,
+    s_chtml50_end_marquee_tag,
   },
 };
 
@@ -396,7 +396,7 @@ tag_handler chtml40_handler[] = {
  * @return The character string after the converting is returned.
  */
 char*
-chxj_convert_chtml40(
+chxj_convert_chtml50(
   request_rec         *r,
   device_table        *spec,
   const char          *src,
@@ -408,10 +408,10 @@ chxj_convert_chtml40(
 {
   char      *dst = NULL;
   char      *ss;
-  chtml40_t chtml40;
+  chtml50_t chtml50;
   Doc       doc;
 
-  DBG(r, "start chxj_convert_chtml40()");
+  DBG(r, "start chxj_convert_chtml50()");
 
   /*--------------------------------------------------------------------------*/
   /* If qrcode xml                                                            */
@@ -420,7 +420,7 @@ chxj_convert_chtml40(
   dst = chxj_qr_code_blob_handler(r, src, (size_t*)dstlen);
   if (dst) {
     DBG(r,"i found qrcode xml");
-    DBG(r, "end chxj_convert_chtml40()");
+    DBG(r, "end chxj_convert_chtml50()");
     return dst;
   }
   DBG(r,"not found qrcode xml");
@@ -428,10 +428,10 @@ chxj_convert_chtml40(
   /*--------------------------------------------------------------------------*/
   /* The CHTML structure is initialized.                                      */
   /*--------------------------------------------------------------------------*/
-  s_init_chtml40(&chtml40, &doc, r, spec);
+  s_init_chtml50(&chtml50, &doc, r, spec);
 
-  chtml40.entryp = entryp;
-  chtml40.cookie = cookie;
+  chtml50.entryp = entryp;
+  chtml50.cookie = cookie;
 
   chxj_set_content_type(r, "text/html; charset=Windows-31J");
 
@@ -455,9 +455,9 @@ chxj_convert_chtml40(
   /*--------------------------------------------------------------------------*/
   /* It converts it from CHTML to CHTML.                                      */
   /*--------------------------------------------------------------------------*/
-  chxj_node_convert(spec,r,(void*)&chtml40, &doc, qs_get_root(&doc), 0);
-  chtml40.out = chxj_buffered_write_flush(chtml40.out, &doc.buf);
-  dst = apr_pstrdup(r->pool, chtml40.out);
+  chxj_node_convert(spec,r,(void*)&chtml50, &doc, qs_get_root(&doc), 0);
+  chtml50.out = chxj_buffered_write_flush(chtml50.out, &doc.buf);
+  dst = apr_pstrdup(r->pool, chtml50.out);
   chxj_buffered_write_terminate(&doc.buf);
 
   qs_all_free(&doc,QX_LOGMARK);
@@ -475,7 +475,7 @@ chxj_convert_chtml40(
   chxj_dump_out("[src] CHTML -> CHTML4.0", dst, *dstlen);
 #endif
 
-  DBG(r, "end chxj_convert_chtml40()");
+  DBG(r, "end chxj_convert_chtml50()");
   return dst;
 }
 
@@ -483,7 +483,7 @@ chxj_convert_chtml40(
 /**
  * The CHTML structure is initialized.
  *
- * @param chtml40 [i/o] The pointer to the HDML structure that wants to be
+ * @param chtml50 [i/o] The pointer to the HDML structure that wants to be
  *                   initialized is specified.
  * @param doc   [i]   The Doc structure that should be set to the initialized
  *                   HDML structure is specified.
@@ -491,17 +491,17 @@ chxj_convert_chtml40(
  * @param spec  [i]   The pointer to the device_table
  */
 static void
-s_init_chtml40(chtml40_t *chtml40, Doc *doc, request_rec *r, device_table *spec)
+s_init_chtml50(chtml50_t *chtml50, Doc *doc, request_rec *r, device_table *spec)
 {
   memset(doc,     0, sizeof(Doc));
-  memset(chtml40, 0, sizeof(chtml40_t));
+  memset(chtml50, 0, sizeof(chtml50_t));
 
   doc->r        = r;
-  chtml40->doc  = doc;
-  chtml40->spec = spec;
-  chtml40->out  = qs_alloc_zero_byte_string(r);
-  chtml40->conf = chxj_get_module_config(r->per_dir_config, &chxj_module);
-  chtml40->doc->parse_mode = PARSE_MODE_CHTML;
+  chtml50->doc  = doc;
+  chtml50->spec = spec;
+  chtml50->out  = qs_alloc_zero_byte_string(r);
+  chtml50->conf = chxj_get_module_config(r->per_dir_config, &chxj_module);
+  chtml50->doc->parse_mode = PARSE_MODE_CHTML;
 }
 
 
@@ -509,7 +509,7 @@ s_init_chtml40(chtml40_t *chtml40, Doc *doc, request_rec *r, device_table *spec)
  * Corresponding EMOJI to a current character-code is retrieved. 
  * The substitution character string is stored in the rslt pointer if agreeing.
  *
- * @param chtml40   [i]   The pointer to the CHTML structure is specified. 
+ * @param chtml50   [i]   The pointer to the CHTML structure is specified. 
  * @param txt     [i]   The character string to want to examine whether it is 
  *                      EMOJI is specified. 
  * @param rslt    [o]   The pointer to the pointer that stores the result is 
@@ -517,23 +517,23 @@ s_init_chtml40(chtml40_t *chtml40, Doc *doc, request_rec *r, device_table *spec)
  * @return When corresponding EMOJI exists, it returns it excluding 0. 
  */
 static int
-s_chtml40_search_emoji(chtml40_t *chtml40, char *txt, char **rslt)
+s_chtml50_search_emoji(chtml50_t *chtml50, char *txt, char **rslt)
 {
   emoji_t       *ee;
   request_rec   *r;
   device_table  *spec;
   int           len;
 
-  spec = chtml40->spec;
+  spec = chtml50->spec;
 
   len = strlen(txt);
-  r   = chtml40->doc->r;
+  r   = chtml50->doc->r;
 
   if (!spec) {
     DBG(r,"spec is NULL");
   }
 
-  for (ee = chtml40->conf->emoji;
+  for (ee = chtml50->conf->emoji;
        ee;
        ee = ee->next) {
     if (ee->imode == NULL) {
@@ -570,17 +570,17 @@ s_chtml40_search_emoji(chtml40_t *chtml40, char *txt, char **rslt)
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_html_tag(void *pdoc, Node *UNUSED(node)) 
+s_chtml50_start_html_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
-  Doc       *doc     = chtml40->doc;
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
+  Doc       *doc     = chtml50->doc;
 
   /*--------------------------------------------------------------------------*/
   /* start HTML tag                                                           */
   /*--------------------------------------------------------------------------*/
   W_L("<html>");
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -593,13 +593,13 @@ s_chtml40_start_html_tag(void *pdoc, Node *UNUSED(node))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_html_tag(void *pdoc, Node *UNUSED(child)) 
+s_chtml50_end_html_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml40_t   *chtml40 = GET_CHTML40(pdoc);
-  Doc         *doc     = chtml40->doc;
+  chtml50_t   *chtml50 = GET_CHTML50(pdoc);
+  Doc         *doc     = chtml50->doc;
 
   W_L("</html>");
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -612,17 +612,17 @@ s_chtml40_end_html_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_meta_tag(void *pdoc, Node *node) 
+s_chtml50_start_meta_tag(void *pdoc, Node *node) 
 {
-  chtml40_t     *chtml40;
+  chtml50_t     *chtml50;
   Doc           *doc;
   request_rec   *r;
   Attr          *attr;
   int           content_type_flag;
   int           refresh_flag;
 
-  chtml40 = GET_CHTML40(pdoc);
-  doc     = chtml40->doc;
+  chtml50 = GET_CHTML50(pdoc);
+  doc     = chtml50->doc;
   r       = doc->r;
 
   content_type_flag = 0;
@@ -675,7 +675,7 @@ s_chtml40_start_meta_tag(void *pdoc, Node *node)
             sec[url-buf] = 0;
             url++;
             url = chxj_encoding_parameter(r, url);
-            url = chxj_add_cookie_parameter(r, url, chtml40->cookie);
+            url = chxj_add_cookie_parameter(r, url, chtml50->cookie);
             W_L(" ");
             W_V(name);
             W_L("=\"");
@@ -700,7 +700,7 @@ s_chtml40_start_meta_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -713,11 +713,11 @@ s_chtml40_start_meta_tag(void *pdoc, Node *node)
  * @return The conversion result is returned.
  */
 static char*
-s_chtml40_end_meta_tag(void* pdoc, Node* UNUSED(child)) 
+s_chtml50_end_meta_tag(void* pdoc, Node* UNUSED(child)) 
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -730,14 +730,14 @@ s_chtml40_end_meta_tag(void* pdoc, Node* UNUSED(child))
  * @return The conversion result is returned.
  */
 static char*
-s_chtml40_start_head_tag(void* pdoc, Node* UNUSED(node)) 
+s_chtml50_start_head_tag(void* pdoc, Node* UNUSED(node)) 
 {
-  chtml40_t   *chtml40 = GET_CHTML40(pdoc);
-  Doc         *doc     = chtml40->doc;
+  chtml50_t   *chtml50 = GET_CHTML50(pdoc);
+  Doc         *doc     = chtml50->doc;
 
   W_L("<head>");
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -750,14 +750,14 @@ s_chtml40_start_head_tag(void* pdoc, Node* UNUSED(node))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_head_tag(void *pdoc, Node *UNUSED(node)) 
+s_chtml50_end_head_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
-  Doc       *doc     = chtml40->doc;
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
+  Doc       *doc     = chtml50->doc;
 
   W_L("</head>");
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -770,14 +770,14 @@ s_chtml40_end_head_tag(void *pdoc, Node *UNUSED(node))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_title_tag(void *pdoc, Node *UNUSED(node)) 
+s_chtml50_start_title_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  chtml40_t     *chtml40 = GET_CHTML40(pdoc);
-  Doc           *doc     = chtml40->doc;
+  chtml50_t     *chtml50 = GET_CHTML50(pdoc);
+  Doc           *doc     = chtml50->doc;
 
   W_L("<title>");
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -790,14 +790,14 @@ s_chtml40_start_title_tag(void *pdoc, Node *UNUSED(node))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_title_tag(void *pdoc, Node *UNUSED(child)) 
+s_chtml50_end_title_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml40_t    *chtml40 = GET_CHTML40(pdoc);
-  Doc          *doc     = chtml40->doc;
+  chtml50_t    *chtml50 = GET_CHTML50(pdoc);
+  Doc          *doc     = chtml50->doc;
 
   W_L("</title>");
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -810,15 +810,15 @@ s_chtml40_end_title_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_base_tag(void *pdoc, Node *node) 
+s_chtml50_start_base_tag(void *pdoc, Node *node) 
 {
   Attr        *attr;
-  chtml40_t   *chtml40;
+  chtml50_t   *chtml50;
   Doc         *doc;
   request_rec *r;
 
-  chtml40 = GET_CHTML40(pdoc);
-  doc     = chtml40->doc;
+  chtml50 = GET_CHTML50(pdoc);
+  doc     = chtml50->doc;
   r       = doc->r;
 
   W_L("<base");
@@ -837,7 +837,7 @@ s_chtml40_start_base_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -850,11 +850,11 @@ s_chtml40_start_base_tag(void *pdoc, Node *node)
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_base_tag(void *pdoc, Node *UNUSED(child)) 
+s_chtml50_end_base_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -867,15 +867,15 @@ s_chtml40_end_base_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_body_tag(void *pdoc, Node *node) 
+s_chtml50_start_body_tag(void *pdoc, Node *node) 
 {
-  chtml40_t   *chtml40;
+  chtml50_t   *chtml50;
   Doc         *doc;
   request_rec *r;
   Attr        *attr;
 
-  chtml40 = GET_CHTML40(pdoc);
-  doc     = chtml40->doc;
+  chtml50 = GET_CHTML50(pdoc);
+  doc     = chtml50->doc;
   r       = doc->r;
 
   W_L("<body");
@@ -925,7 +925,7 @@ s_chtml40_start_body_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -938,17 +938,17 @@ s_chtml40_start_body_tag(void *pdoc, Node *node)
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_body_tag(void *pdoc, Node *UNUSED(child)) 
+s_chtml50_end_body_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml40_t   *chtml40;
+  chtml50_t   *chtml50;
   Doc         *doc;
 
-  chtml40 = GET_CHTML40(pdoc);
-  doc     = chtml40->doc;
+  chtml50 = GET_CHTML50(pdoc);
+  doc     = chtml50->doc;
 
   W_L("</body>");
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -961,15 +961,15 @@ s_chtml40_end_body_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_a_tag(void *pdoc, Node *node) 
+s_chtml50_start_a_tag(void *pdoc, Node *node) 
 {
-  chtml40_t     *chtml40;
+  chtml50_t     *chtml50;
   Doc           *doc;
   request_rec   *r;
   Attr          *attr;
 
-  chtml40 = GET_CHTML40(pdoc);
-  doc     = chtml40->doc;
+  chtml50 = GET_CHTML50(pdoc);
+  doc     = chtml50->doc;
   r       = doc->r;
 
   W_L("<a");
@@ -994,7 +994,7 @@ s_chtml40_start_a_tag(void *pdoc, Node *node)
       /* CHTML1.0                                                             */
       /*----------------------------------------------------------------------*/
       value = chxj_encoding_parameter(r, value);
-      value = chxj_add_cookie_parameter(r, value, chtml40->cookie);
+      value = chxj_add_cookie_parameter(r, value, chtml50->cookie);
       W_L(" href=\"");
       W_V(value);
       W_L("\"");
@@ -1072,7 +1072,7 @@ s_chtml40_start_a_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -1085,17 +1085,17 @@ s_chtml40_start_a_tag(void *pdoc, Node *node)
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_a_tag(void *pdoc, Node *UNUSED(child)) 
+s_chtml50_end_a_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml40_t   *chtml40;
+  chtml50_t   *chtml50;
   Doc         *doc;
 
-  chtml40 = GET_CHTML40(pdoc);
-  doc     = chtml40->doc;
+  chtml50 = GET_CHTML50(pdoc);
+  doc     = chtml50->doc;
 
   W_L("</a>");
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -1108,15 +1108,15 @@ s_chtml40_end_a_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_br_tag(void *pdoc, Node *node)
+s_chtml50_start_br_tag(void *pdoc, Node *node)
 {
-  chtml40_t   *chtml40;
+  chtml50_t   *chtml50;
   Doc         *doc;
   request_rec *r;
   Attr        *attr;
 
-  chtml40 = GET_CHTML40(pdoc);
-  doc     = chtml40->doc;
+  chtml50 = GET_CHTML50(pdoc);
+  doc     = chtml50->doc;
   r       = doc->r;
   W_L("<br");
   /*--------------------------------------------------------------------------*/
@@ -1136,7 +1136,7 @@ s_chtml40_start_br_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -1149,28 +1149,28 @@ s_chtml40_start_br_tag(void *pdoc, Node *node)
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_br_tag(void *pdoc, Node *UNUSED(child)) 
+s_chtml50_end_br_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
 /**
  * It is a handler who processes the TR tag.
  *
- * @param chtml40  [i/o] The pointer to the CHTML structure at the output
+ * @param chtml50  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
  * @param node   [i]   The TR tag node is specified.
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_tr_tag(void *pdoc, Node *UNUSED(node)) 
+s_chtml50_start_tr_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -1183,19 +1183,19 @@ s_chtml40_start_tr_tag(void *pdoc, Node *UNUSED(node))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_tr_tag(void *pdoc, Node *UNUSED(child)) 
+s_chtml50_end_tr_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml40_t   *chtml40;
+  chtml50_t   *chtml50;
   Doc         *doc;
   request_rec *r;
 
-  chtml40 = GET_CHTML40(pdoc);
-  doc     = chtml40->doc;
+  chtml50 = GET_CHTML50(pdoc);
+  doc     = chtml50->doc;
   r       = doc->r;
 
   W_L("<br>");
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -1208,15 +1208,15 @@ s_chtml40_end_tr_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_font_tag(void *pdoc, Node *node) 
+s_chtml50_start_font_tag(void *pdoc, Node *node) 
 {
   Attr          *attr;
-  chtml40_t     *chtml40;
+  chtml50_t     *chtml50;
   Doc           *doc;
   request_rec   *r;
 
-  chtml40 = GET_CHTML40(pdoc);
-  doc     = chtml40->doc;
+  chtml50 = GET_CHTML50(pdoc);
+  doc     = chtml50->doc;
   r       = doc->r;
 
   W_L("<font");
@@ -1241,7 +1241,7 @@ s_chtml40_start_font_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -1254,19 +1254,19 @@ s_chtml40_start_font_tag(void *pdoc, Node *node)
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_font_tag(void *pdoc, Node *UNUSED(child)) 
+s_chtml50_end_font_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml40_t     *chtml40;
+  chtml50_t     *chtml50;
   Doc           *doc;
   request_rec   *r;
 
-  chtml40 = GET_CHTML40(pdoc);
-  doc     = chtml40->doc;
+  chtml50 = GET_CHTML50(pdoc);
+  doc     = chtml50->doc;
   r       = doc->r;
 
   W_L("</font>");
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -1279,15 +1279,15 @@ s_chtml40_end_font_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_form_tag(void *pdoc, Node *node) 
+s_chtml50_start_form_tag(void *pdoc, Node *node) 
 {
-  chtml40_t     *chtml40;
+  chtml50_t     *chtml50;
   Doc           *doc;
   request_rec   *r;
   Attr          *attr;
 
-  chtml40 = GET_CHTML40(pdoc);
-  doc     = chtml40->doc;
+  chtml50 = GET_CHTML50(pdoc);
+  doc     = chtml50->doc;
   r       = doc->r;
 
   W_L("<form");
@@ -1304,7 +1304,7 @@ s_chtml40_start_form_tag(void *pdoc, Node *node)
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
       value = chxj_encoding_parameter(r, value);
-      value = chxj_add_cookie_parameter(r, value, chtml40->cookie);
+      value = chxj_add_cookie_parameter(r, value, chtml50->cookie);
       W_L(" action=\"");
       W_V(value);
       W_L("\"");
@@ -1326,7 +1326,7 @@ s_chtml40_start_form_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -1339,17 +1339,17 @@ s_chtml40_start_form_tag(void *pdoc, Node *node)
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_form_tag(void *pdoc, Node *UNUSED(child)) 
+s_chtml50_end_form_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml40_t    *chtml40;
+  chtml50_t    *chtml50;
   Doc          *doc;
 
-  chtml40 = GET_CHTML40(pdoc);
-  doc     = chtml40->doc;
+  chtml50 = GET_CHTML50(pdoc);
+  doc     = chtml50->doc;
 
   W_L("</form>");
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -1362,9 +1362,9 @@ s_chtml40_end_form_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_input_tag(void *pdoc, Node *node) 
+s_chtml50_start_input_tag(void *pdoc, Node *node) 
 {
-  chtml40_t   *chtml40;
+  chtml50_t   *chtml50;
   Doc         *doc;
   request_rec *r;
   char        *max_length  = NULL;
@@ -1376,8 +1376,8 @@ s_chtml40_start_input_tag(void *pdoc, Node *node)
   char        *checked     = NULL;
   char        *accesskey   = NULL;
 
-  chtml40   = GET_CHTML40(pdoc);
-  doc       = chtml40->doc;
+  chtml50   = GET_CHTML50(pdoc);
+  doc       = chtml50->doc;
   r         = doc->r;
   W_L("<input");
   /*--------------------------------------------------------------------------*/
@@ -1457,7 +1457,7 @@ s_chtml40_start_input_tag(void *pdoc, Node *node)
     W_L(" checked");
   }
   W_L(">");
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -1470,11 +1470,11 @@ s_chtml40_start_input_tag(void *pdoc, Node *node)
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_input_tag(void *pdoc, Node *UNUSED(child)) 
+s_chtml50_end_input_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -1487,17 +1487,17 @@ s_chtml40_end_input_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_center_tag(void *pdoc, Node *UNUSED(node)) 
+s_chtml50_start_center_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  chtml40_t     *chtml40;
+  chtml50_t     *chtml50;
   Doc           *doc;
 
-  chtml40 = GET_CHTML40(pdoc);
-  doc     = chtml40->doc;
+  chtml50 = GET_CHTML50(pdoc);
+  doc     = chtml50->doc;
 
   W_L("<center>");
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -1510,17 +1510,17 @@ s_chtml40_start_center_tag(void *pdoc, Node *UNUSED(node))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_center_tag(void *pdoc, Node *UNUSED(child)) 
+s_chtml50_end_center_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml40_t     *chtml40;
+  chtml50_t     *chtml50;
   Doc           *doc;
 
-  chtml40 = GET_CHTML40(pdoc);
-  doc     = chtml40->doc;
+  chtml50 = GET_CHTML50(pdoc);
+  doc     = chtml50->doc;
 
   W_L("</center>");
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -1533,15 +1533,15 @@ s_chtml40_end_center_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_hr_tag(void *pdoc, Node *node) 
+s_chtml50_start_hr_tag(void *pdoc, Node *node) 
 {
   Attr        *attr;
-  chtml40_t   *chtml40;
+  chtml50_t   *chtml50;
   Doc         *doc;
   request_rec *r;
 
-  chtml40 = GET_CHTML40(pdoc);
-  doc     = chtml40->doc;
+  chtml50 = GET_CHTML50(pdoc);
+  doc     = chtml50->doc;
   r       = doc->r;
 
   W_L("<hr");
@@ -1595,7 +1595,7 @@ s_chtml40_start_hr_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -1608,11 +1608,11 @@ s_chtml40_start_hr_tag(void *pdoc, Node *node)
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_hr_tag(void *pdoc, Node *UNUSED(child)) 
+s_chtml50_end_hr_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -1625,21 +1625,21 @@ s_chtml40_end_hr_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_img_tag(void *pdoc, Node *node) 
+s_chtml50_start_img_tag(void *pdoc, Node *node) 
 {
 #ifndef IMG_NOT_CONVERT_FILENAME
   device_table *spec;
 #endif
-  chtml40_t    *chtml40;
+  chtml50_t    *chtml50;
   Doc          *doc;
   request_rec  *r;
   Attr         *attr;
 
-  chtml40 = GET_CHTML40(pdoc);
-  doc     = chtml40->doc;
+  chtml50 = GET_CHTML50(pdoc);
+  doc     = chtml50->doc;
   r       = doc->r;
 #ifndef IMG_NOT_CONVERT_FILENAME
-  spec    = chtml40->spec;
+  spec    = chtml50->spec;
 #endif
 
   W_L("<img");
@@ -1657,7 +1657,7 @@ s_chtml40_start_img_tag(void *pdoc, Node *node)
       /*----------------------------------------------------------------------*/
 #ifdef IMG_NOT_CONVERT_FILENAME
       value = chxj_encoding_parameter(r, value);
-      value = chxj_add_cookie_parameter(r, value, chtml40->cookie);
+      value = chxj_add_cookie_parameter(r, value, chtml50->cookie);
       if (value) {
         value = apr_psprintf(r->pool,
                              "%s%c%s=true",
@@ -1672,7 +1672,7 @@ s_chtml40_start_img_tag(void *pdoc, Node *node)
 #else
       value = chxj_img_conv(r,spec,value);
       value = chxj_encoding_parameter(r, value);
-      value = chxj_add_cookie_parameter(r, value, chtml40->cookie);
+      value = chxj_add_cookie_parameter(r, value, chtml50->cookie);
       if (value) {
         value = apr_psprintf(r->pool,
                              "%s%c%s=true",
@@ -1747,7 +1747,7 @@ s_chtml40_start_img_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -1760,11 +1760,11 @@ s_chtml40_start_img_tag(void *pdoc, Node *node)
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_img_tag(void *pdoc, Node *UNUSED(child)) 
+s_chtml50_end_img_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -1777,10 +1777,10 @@ s_chtml40_end_img_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_select_tag(void *pdoc, Node *child)
+s_chtml50_start_select_tag(void *pdoc, Node *child)
 {
-  chtml40_t   *chtml40  = GET_CHTML40(pdoc);
-  Doc         *doc      = chtml40->doc;
+  chtml50_t   *chtml50  = GET_CHTML50(pdoc);
+  Doc         *doc      = chtml50->doc;
   char        *size     = NULL;
   char        *name     = NULL;
   char        *multiple = NULL;
@@ -1825,7 +1825,7 @@ s_chtml40_start_select_tag(void *pdoc, Node *child)
     W_L(" multiple");
   }
   W_L(">");
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -1838,13 +1838,13 @@ s_chtml40_start_select_tag(void *pdoc, Node *child)
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_select_tag(void *pdoc, Node *UNUSED(child))
+s_chtml50_end_select_tag(void *pdoc, Node *UNUSED(child))
 {
-  chtml40_t    *chtml40 = GET_CHTML40(pdoc);
-  Doc          *doc   = chtml40->doc;
+  chtml50_t    *chtml50 = GET_CHTML50(pdoc);
+  Doc          *doc   = chtml50->doc;
 
   W_L("</select>");
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -1857,17 +1857,17 @@ s_chtml40_end_select_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_option_tag(void *pdoc, Node *child)
+s_chtml50_start_option_tag(void *pdoc, Node *child)
 {
   Attr        *attr;
-  chtml40_t   *chtml40;
+  chtml50_t   *chtml50;
   Doc         *doc;
   request_rec *r;
   char        *selected;
   char        *value;
 
-  chtml40    = GET_CHTML40(pdoc);
-  doc        = chtml40->doc;
+  chtml50    = GET_CHTML50(pdoc);
+  doc        = chtml50->doc;
   r          = doc->r;
   selected   = NULL;
   value      = NULL;
@@ -1900,7 +1900,7 @@ s_chtml40_start_option_tag(void *pdoc, Node *child)
     W_L(" selected");
   }
   W_L(">");
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -1913,13 +1913,13 @@ s_chtml40_start_option_tag(void *pdoc, Node *child)
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_option_tag(void *pdoc, Node *UNUSED(child))
+s_chtml50_end_option_tag(void *pdoc, Node *UNUSED(child))
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
 
   /* Don't close */
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -1932,16 +1932,16 @@ s_chtml40_end_option_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_div_tag(void *pdoc, Node *child)
+s_chtml50_start_div_tag(void *pdoc, Node *child)
 {
   Attr          *attr;
-  chtml40_t     *chtml40;
+  chtml50_t     *chtml50;
   Doc           *doc;
   request_rec   *r;
   char          *align;
 
-  chtml40 = GET_CHTML40(pdoc);
-  doc     = chtml40->doc;
+  chtml50 = GET_CHTML50(pdoc);
+  doc     = chtml50->doc;
   r       = doc->r;
   align   = NULL;
 
@@ -1966,7 +1966,7 @@ s_chtml40_start_div_tag(void *pdoc, Node *child)
     W_L("\"");
   }
   W_L(">");
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -1979,14 +1979,14 @@ s_chtml40_start_div_tag(void *pdoc, Node *child)
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_div_tag(void *pdoc, Node *UNUSED(node))
+s_chtml50_end_div_tag(void *pdoc, Node *UNUSED(node))
 {
-  chtml40_t    *chtml40 = GET_CHTML40(pdoc);
-  Doc          *doc     = chtml40->doc;
+  chtml50_t    *chtml50 = GET_CHTML50(pdoc);
+  Doc          *doc     = chtml50->doc;
 
   W_L("</div>");
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -1999,14 +1999,14 @@ s_chtml40_end_div_tag(void *pdoc, Node *UNUSED(node))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_ul_tag(void *pdoc, Node *UNUSED(node)) 
+s_chtml50_start_ul_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  chtml40_t   *chtml40 = GET_CHTML40(pdoc);
-  Doc         *doc     = chtml40->doc;
+  chtml50_t   *chtml50 = GET_CHTML50(pdoc);
+  Doc         *doc     = chtml50->doc;
 
   W_L("<ul>");
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -2019,14 +2019,14 @@ s_chtml40_start_ul_tag(void *pdoc, Node *UNUSED(node))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_ul_tag(void *pdoc, Node *UNUSED(child)) 
+s_chtml50_end_ul_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml40_t     *chtml40 = GET_CHTML40(pdoc);
-  Doc           *doc     = chtml40->doc;
+  chtml50_t     *chtml50 = GET_CHTML50(pdoc);
+  Doc           *doc     = chtml50->doc;
 
   W_L("</ul>");
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -2039,15 +2039,15 @@ s_chtml40_end_ul_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_pre_tag(void *pdoc, Node *UNUSED(node)) 
+s_chtml50_start_pre_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
-  Doc       *doc     = chtml40->doc;
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
+  Doc       *doc     = chtml50->doc;
 
-  chtml40->pre_flag++;
+  chtml50->pre_flag++;
   W_L("<pre>");
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -2060,15 +2060,15 @@ s_chtml40_start_pre_tag(void *pdoc, Node *UNUSED(node))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_pre_tag(void *pdoc, Node *UNUSED(child)) 
+s_chtml50_end_pre_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml40_t     *chtml40 = GET_CHTML40(pdoc);
-  Doc           *doc     = chtml40->doc;
+  chtml50_t     *chtml50 = GET_CHTML50(pdoc);
+  Doc           *doc     = chtml50->doc;
 
   W_L("</pre>");
-  chtml40->pre_flag--;
+  chtml50->pre_flag--;
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -2081,16 +2081,16 @@ s_chtml40_end_pre_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_p_tag(void *pdoc, Node *node) 
+s_chtml50_start_p_tag(void *pdoc, Node *node) 
 {
-  chtml40_t     *chtml40;
+  chtml50_t     *chtml50;
   Doc           *doc;
   request_rec   *r;
   Attr          *attr;
   char          *align = NULL;
 
-  chtml40 = GET_CHTML40(pdoc);
-  doc     = chtml40->doc;
+  chtml50 = GET_CHTML50(pdoc);
+  doc     = chtml50->doc;
   r       = doc->r;
 
   W_L("<p");
@@ -2115,7 +2115,7 @@ s_chtml40_start_p_tag(void *pdoc, Node *node)
     W_L("\"");
   }
   W_L(">");
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -2128,17 +2128,17 @@ s_chtml40_start_p_tag(void *pdoc, Node *node)
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_p_tag(void *pdoc, Node *UNUSED(child)) 
+s_chtml50_end_p_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml40_t   *chtml40;
+  chtml50_t   *chtml50;
   Doc         *doc;
 
-  chtml40 = GET_CHTML40(pdoc);
-  doc     = chtml40->doc;
+  chtml50 = GET_CHTML50(pdoc);
+  doc     = chtml50->doc;
 
   W_L("</p>");
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -2151,15 +2151,15 @@ s_chtml40_end_p_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_ol_tag(void *pdoc, Node *node)
+s_chtml50_start_ol_tag(void *pdoc, Node *node)
 {
-  chtml40_t     *chtml40;
+  chtml50_t     *chtml50;
   Doc           *doc;
   request_rec   *r;
   Attr          *attr;
 
-  chtml40 = GET_CHTML40(pdoc);
-  doc     = chtml40->doc;
+  chtml50 = GET_CHTML50(pdoc);
+  doc     = chtml50->doc;
   r       = doc->r;
 
   W_L("<ol");
@@ -2184,7 +2184,7 @@ s_chtml40_start_ol_tag(void *pdoc, Node *node)
   }
   W_L(">");
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -2197,14 +2197,14 @@ s_chtml40_start_ol_tag(void *pdoc, Node *node)
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_ol_tag(void *pdoc, Node *UNUSED(node)) 
+s_chtml50_end_ol_tag(void *pdoc, Node *UNUSED(node)) 
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
-  Doc       *doc     = chtml40->doc;
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
+  Doc       *doc     = chtml50->doc;
 
   W_L("</ol>");
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -2217,10 +2217,10 @@ s_chtml40_end_ol_tag(void *pdoc, Node *UNUSED(node))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_li_tag(void *pdoc, Node *node) 
+s_chtml50_start_li_tag(void *pdoc, Node *node) 
 {
-  chtml40_t   *chtml40 = GET_CHTML40(pdoc);
-  Doc         *doc     = chtml40->doc;
+  chtml50_t   *chtml50 = GET_CHTML50(pdoc);
+  Doc         *doc     = chtml50->doc;
   Attr        *attr;
 
   W_L("<li");
@@ -2244,7 +2244,7 @@ s_chtml40_start_li_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -2257,11 +2257,11 @@ s_chtml40_start_li_tag(void *pdoc, Node *node)
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_li_tag(void *pdoc, Node *UNUSED(child)) 
+s_chtml50_end_li_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -2274,15 +2274,15 @@ s_chtml40_end_li_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_h1_tag(void *pdoc, Node *node)
+s_chtml50_start_h1_tag(void *pdoc, Node *node)
 {
-  chtml40_t     *chtml40;
+  chtml50_t     *chtml50;
   Doc           *doc;
   request_rec   *r;
   Attr          *attr;
 
-  chtml40 = GET_CHTML40(pdoc);
-  doc     = chtml40->doc;
+  chtml50 = GET_CHTML50(pdoc);
+  doc     = chtml50->doc;
   r       = doc->r;
 
   W_L("<h1");
@@ -2302,7 +2302,7 @@ s_chtml40_start_h1_tag(void *pdoc, Node *node)
   }
   W_L(">");
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -2315,17 +2315,17 @@ s_chtml40_start_h1_tag(void *pdoc, Node *node)
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_h1_tag(void *pdoc, Node *UNUSED(child)) 
+s_chtml50_end_h1_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml40_t   *chtml40;
+  chtml50_t   *chtml50;
   Doc         *doc;
 
-  chtml40 = GET_CHTML40(pdoc);
-  doc     = chtml40->doc;
+  chtml50 = GET_CHTML50(pdoc);
+  doc     = chtml50->doc;
 
   W_L("</h1>");
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -2338,15 +2338,15 @@ s_chtml40_end_h1_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_h2_tag(void *pdoc, Node *node)
+s_chtml50_start_h2_tag(void *pdoc, Node *node)
 {
-  chtml40_t     *chtml40;
+  chtml50_t     *chtml50;
   Doc           *doc;
   request_rec   *r;
   Attr          *attr;
 
-  chtml40 = GET_CHTML40(pdoc);
-  doc     = chtml40->doc;
+  chtml50 = GET_CHTML50(pdoc);
+  doc     = chtml50->doc;
   r       = doc->r;
 
   W_L("<h2");
@@ -2365,7 +2365,7 @@ s_chtml40_start_h2_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -2378,14 +2378,14 @@ s_chtml40_start_h2_tag(void *pdoc, Node *node)
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_h2_tag(void *pdoc, Node *UNUSED(child)) 
+s_chtml50_end_h2_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml40_t   *chtml40 = GET_CHTML40(pdoc);
-  Doc         *doc     = chtml40->doc;
+  chtml50_t   *chtml50 = GET_CHTML50(pdoc);
+  Doc         *doc     = chtml50->doc;
 
   W_L("</h2>");
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -2398,15 +2398,15 @@ s_chtml40_end_h2_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_h3_tag(void *pdoc, Node *node)
+s_chtml50_start_h3_tag(void *pdoc, Node *node)
 {
-  chtml40_t   *chtml40;
+  chtml50_t   *chtml50;
   Doc         *doc;
   request_rec *r;
   Attr        *attr;
 
-  chtml40 = GET_CHTML40(pdoc);
-  doc     = chtml40->doc;
+  chtml50 = GET_CHTML50(pdoc);
+  doc     = chtml50->doc;
   r       = doc->r;
 
   W_L("<h3");
@@ -2426,7 +2426,7 @@ s_chtml40_start_h3_tag(void *pdoc, Node *node)
   }
   W_L(">");
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -2439,14 +2439,14 @@ s_chtml40_start_h3_tag(void *pdoc, Node *node)
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_h3_tag(void *pdoc, Node *UNUSED(child))
+s_chtml50_end_h3_tag(void *pdoc, Node *UNUSED(child))
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
-  Doc       *doc   = chtml40->doc;
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
+  Doc       *doc   = chtml50->doc;
 
   W_L("</h3>");
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -2459,15 +2459,15 @@ s_chtml40_end_h3_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_h4_tag(void *pdoc, Node *node)
+s_chtml50_start_h4_tag(void *pdoc, Node *node)
 {
-  chtml40_t   *chtml40;
+  chtml50_t   *chtml50;
   Doc         *doc;
   request_rec *r;
   Attr        *attr;
 
-  chtml40 = GET_CHTML40(pdoc);
-  doc     = chtml40->doc;
+  chtml50 = GET_CHTML50(pdoc);
+  doc     = chtml50->doc;
   r       = doc->r;
 
   W_L("<h4");
@@ -2486,7 +2486,7 @@ s_chtml40_start_h4_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -2499,14 +2499,14 @@ s_chtml40_start_h4_tag(void *pdoc, Node *node)
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_h4_tag(void *pdoc, Node *UNUSED(child)) 
+s_chtml50_end_h4_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
-  Doc       *doc     = chtml40->doc;
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
+  Doc       *doc     = chtml50->doc;
 
   W_L("</h4>");
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -2519,15 +2519,15 @@ s_chtml40_end_h4_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_h5_tag(void *pdoc, Node *node)
+s_chtml50_start_h5_tag(void *pdoc, Node *node)
 {
-  chtml40_t   *chtml40;
+  chtml50_t   *chtml50;
   Doc         *doc;
   request_rec *r;
   Attr        *attr;
 
-  chtml40 = GET_CHTML40(pdoc);
-  doc     = chtml40->doc;
+  chtml50 = GET_CHTML50(pdoc);
+  doc     = chtml50->doc;
   r       = doc->r;
 
   W_L("<h5");
@@ -2546,7 +2546,7 @@ s_chtml40_start_h5_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -2559,14 +2559,14 @@ s_chtml40_start_h5_tag(void *pdoc, Node *node)
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_h5_tag(void *pdoc, Node *UNUSED(child)) 
+s_chtml50_end_h5_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
-  Doc       *doc     = chtml40->doc;
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
+  Doc       *doc     = chtml50->doc;
 
   W_L("</h5>");
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -2579,15 +2579,15 @@ s_chtml40_end_h5_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_h6_tag(void *pdoc, Node *node)
+s_chtml50_start_h6_tag(void *pdoc, Node *node)
 {
-  chtml40_t   *chtml40;
+  chtml50_t   *chtml50;
   Doc         *doc;
   request_rec *r;
   Attr        *attr;
 
-  chtml40 = GET_CHTML40(pdoc);
-  doc     = chtml40->doc;
+  chtml50 = GET_CHTML50(pdoc);
+  doc     = chtml50->doc;
   r       = doc->r;
 
   W_L("<h6");
@@ -2606,7 +2606,7 @@ s_chtml40_start_h6_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -2619,14 +2619,14 @@ s_chtml40_start_h6_tag(void *pdoc, Node *node)
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_h6_tag(void *pdoc, Node *UNUSED(child)) 
+s_chtml50_end_h6_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
-  Doc       *doc     = chtml40->doc;
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
+  Doc       *doc     = chtml50->doc;
 
   W_L("</h6>");
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -2639,18 +2639,18 @@ s_chtml40_end_h6_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_textarea_tag(void *pdoc, Node *node) 
+s_chtml50_start_textarea_tag(void *pdoc, Node *node) 
 {
-  chtml40_t     *chtml40;
+  chtml50_t     *chtml50;
   Doc           *doc;
   request_rec   *r;
   Attr          *attr;
 
-  chtml40 = GET_CHTML40(pdoc);
-  doc     = chtml40->doc;
+  chtml50 = GET_CHTML50(pdoc);
+  doc     = chtml50->doc;
   r       = doc->r;
 
-  chtml40->textarea_flag++;
+  chtml50->textarea_flag++;
 
   W_L("<textarea");
   for (attr = qs_get_attr(doc,node);
@@ -2685,7 +2685,7 @@ s_chtml40_start_textarea_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -2698,35 +2698,35 @@ s_chtml40_start_textarea_tag(void *pdoc, Node *node)
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_textarea_tag(void *pdoc, Node *UNUSED(child)) 
+s_chtml50_end_textarea_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
-  Doc       *doc     = chtml40->doc;
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
+  Doc       *doc     = chtml50->doc;
 
   W_L("</textarea>");
-  chtml40->textarea_flag--;
+  chtml50->textarea_flag--;
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
 static char *
-s_chtml40_chxjif_tag(void *pdoc, Node *node)
+s_chtml50_chxjif_tag(void *pdoc, Node *node)
 {
   Node        *child;
-  chtml40_t   *chtml40;
+  chtml50_t   *chtml50;
   Doc         *doc;
   request_rec *r;
 
-  chtml40 = GET_CHTML40(pdoc);
-  doc     = chtml40->doc;
+  chtml50 = GET_CHTML50(pdoc);
+  doc     = chtml50->doc;
   r       = doc->r;
 
   for (child = qs_get_child_node(doc, node);
        child;
        child = qs_get_next_node(doc, child)) {
     W_V(child->otext);
-    s_chtml40_chxjif_tag(chtml40, child);
+    s_chtml50_chxjif_tag(chtml50, child);
   }
 
   return NULL;
@@ -2734,9 +2734,9 @@ s_chtml40_chxjif_tag(void *pdoc, Node *node)
 
 
 static char *
-s_chtml40_text_tag(void *pdoc, Node *child)
+s_chtml50_text_tag(void *pdoc, Node *child)
 {
-  chtml40_t   *chtml40;
+  chtml50_t   *chtml50;
   Doc         *doc;
   request_rec *r;
 
@@ -2747,13 +2747,13 @@ s_chtml40_text_tag(void *pdoc, Node *child)
   int         ii;
   int         tdst_len;
 
-  chtml40 = GET_CHTML40(pdoc);
-  doc     = chtml40->doc;
+  chtml50 = GET_CHTML50(pdoc);
+  doc     = chtml50->doc;
   r       = doc->r;
   
   textval = qs_get_node_value(doc,child);
   if (strlen(textval) == 0) {
-    return chtml40->out;
+    return chtml50->out;
   }
   
   tmp = apr_palloc(r->pool, qs_get_node_size(doc,child)+1);
@@ -2765,7 +2765,7 @@ s_chtml40_text_tag(void *pdoc, Node *child)
   
   for (ii=0; ii<qs_get_node_size(doc,child); ii++) {
     char* out;
-    int rtn = s_chtml40_search_emoji(chtml40, &textval[ii], &out);
+    int rtn = s_chtml50_search_emoji(chtml50, &textval[ii], &out);
     if (rtn) {
       tdst = qs_out_apr_pstrcat(r, tdst, out, &tdst_len);
       ii+=(rtn - 1);
@@ -2779,11 +2779,11 @@ s_chtml40_text_tag(void *pdoc, Node *child)
       tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
       ii++;
     }
-    else if (chtml40->pre_flag) {
+    else if (chtml50->pre_flag) {
       one_byte[0] = textval[ii+0];
       tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
     }
-    else if (chtml40->textarea_flag) {
+    else if (chtml50->textarea_flag) {
       one_byte[0] = textval[ii+0];
       tdst = qs_out_apr_pstrcat(r, tdst, one_byte, &tdst_len);
     }
@@ -2793,7 +2793,7 @@ s_chtml40_text_tag(void *pdoc, Node *child)
     }
   }
   W_V(tdst);
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -2806,12 +2806,12 @@ s_chtml40_text_tag(void *pdoc, Node *child)
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_blockquote_tag(void *pdoc, Node *UNUSED(child))
+s_chtml50_start_blockquote_tag(void *pdoc, Node *UNUSED(child))
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
-  Doc       *doc     = chtml40->doc;
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
+  Doc       *doc     = chtml50->doc;
   W_L("<blockquote>");
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -2824,12 +2824,12 @@ s_chtml40_start_blockquote_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_blockquote_tag(void *pdoc, Node *UNUSED(child))
+s_chtml50_end_blockquote_tag(void *pdoc, Node *UNUSED(child))
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
-  Doc       *doc     = chtml40->doc;
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
+  Doc       *doc     = chtml50->doc;
   W_L("</blockquote>");
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -2842,12 +2842,12 @@ s_chtml40_end_blockquote_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_dir_tag(void *pdoc, Node *UNUSED(child))
+s_chtml50_start_dir_tag(void *pdoc, Node *UNUSED(child))
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
-  Doc       *doc     = chtml40->doc;
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
+  Doc       *doc     = chtml50->doc;
   W_L("<dir>");
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -2860,12 +2860,12 @@ s_chtml40_start_dir_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_dir_tag(void *pdoc, Node *UNUSED(child))
+s_chtml50_end_dir_tag(void *pdoc, Node *UNUSED(child))
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
-  Doc       *doc = chtml40->doc;
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
+  Doc       *doc = chtml50->doc;
   W_L("</dir>");
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -2878,12 +2878,12 @@ s_chtml40_end_dir_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_dl_tag(void *pdoc, Node *UNUSED(child))
+s_chtml50_start_dl_tag(void *pdoc, Node *UNUSED(child))
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
-  Doc       *doc     = chtml40->doc;
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
+  Doc       *doc     = chtml50->doc;
   W_L("<dl>");
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -2896,12 +2896,12 @@ s_chtml40_start_dl_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_dl_tag(void *pdoc, Node *UNUSED(child))
+s_chtml50_end_dl_tag(void *pdoc, Node *UNUSED(child))
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
-  Doc       *doc     = chtml40->doc;
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
+  Doc       *doc     = chtml50->doc;
   W_L("</dl>");
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -2914,12 +2914,12 @@ s_chtml40_end_dl_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_dt_tag(void *pdoc, Node *UNUSED(child))
+s_chtml50_start_dt_tag(void *pdoc, Node *UNUSED(child))
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
-  Doc       *doc     = chtml40->doc;
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
+  Doc       *doc     = chtml50->doc;
   W_L("<dt>");
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -2932,11 +2932,11 @@ s_chtml40_start_dt_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_dt_tag(void *pdoc, Node *UNUSED(child))
+s_chtml50_end_dt_tag(void *pdoc, Node *UNUSED(child))
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -2949,14 +2949,14 @@ s_chtml40_end_dt_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_dd_tag(void *pdoc, Node *UNUSED(child))
+s_chtml50_start_dd_tag(void *pdoc, Node *UNUSED(child))
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
-  Doc       *doc     = chtml40->doc;
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
+  Doc       *doc     = chtml50->doc;
 
   W_L("<dd>");
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -2969,11 +2969,11 @@ s_chtml40_start_dd_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_dd_tag(void *pdoc, Node *UNUSED(child))
+s_chtml50_end_dd_tag(void *pdoc, Node *UNUSED(child))
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
 
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -2986,10 +2986,10 @@ s_chtml40_end_dd_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_marquee_tag(void *pdoc, Node *node)
+s_chtml50_start_marquee_tag(void *pdoc, Node *node)
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
-  Doc       *doc = chtml40->doc;
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
+  Doc       *doc = chtml50->doc;
   Attr      *attr;
   W_L("<marquee");
   /*--------------------------------------------------------------------------*/
@@ -3023,7 +3023,7 @@ s_chtml40_start_marquee_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -3036,12 +3036,12 @@ s_chtml40_start_marquee_tag(void *pdoc, Node *node)
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_marquee_tag(void *pdoc, Node *UNUSED(child))
+s_chtml50_end_marquee_tag(void *pdoc, Node *UNUSED(child))
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
-  Doc       *doc = chtml40->doc;
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
+  Doc       *doc = chtml50->doc;
   W_L("</marquee>");
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -3054,12 +3054,12 @@ s_chtml40_end_marquee_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_blink_tag(void *pdoc, Node *UNUSED(child))
+s_chtml50_start_blink_tag(void *pdoc, Node *UNUSED(child))
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
-  Doc       *doc = chtml40->doc;
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
+  Doc       *doc = chtml50->doc;
   W_L("<blink>");
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -3072,12 +3072,12 @@ s_chtml40_start_blink_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_blink_tag(void *pdoc, Node *UNUSED(child))
+s_chtml50_end_blink_tag(void *pdoc, Node *UNUSED(child))
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
-  Doc       *doc = chtml40->doc;
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
+  Doc       *doc = chtml50->doc;
   W_L("</blink>");
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -3090,12 +3090,12 @@ s_chtml40_end_blink_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_menu_tag(void *pdoc, Node *UNUSED(child))
+s_chtml50_start_menu_tag(void *pdoc, Node *UNUSED(child))
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
-  Doc       *doc     = chtml40->doc;
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
+  Doc       *doc     = chtml50->doc;
   W_L("<menu>");
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -3108,12 +3108,12 @@ s_chtml40_start_menu_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_menu_tag(void *pdoc, Node *UNUSED(child))
+s_chtml50_end_menu_tag(void *pdoc, Node *UNUSED(child))
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
-  Doc       *doc = chtml40->doc;
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
+  Doc       *doc = chtml50->doc;
   W_L("</menu>");
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -3126,28 +3126,28 @@ s_chtml40_end_menu_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_start_plaintext_tag(void *pdoc, Node *node)
+s_chtml50_start_plaintext_tag(void *pdoc, Node *node)
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
-  Doc       *doc     = chtml40->doc;
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
+  Doc       *doc     = chtml50->doc;
   W_L("<plaintext>");
-  s_chtml40_start_plaintext_tag_inner(pdoc,node);
-  return chtml40->out;
+  s_chtml50_start_plaintext_tag_inner(pdoc,node);
+  return chtml50->out;
 }
 
 static char *
-s_chtml40_start_plaintext_tag_inner(void *pdoc, Node *node)
+s_chtml50_start_plaintext_tag_inner(void *pdoc, Node *node)
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
-  Doc       *doc     = chtml40->doc;
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
+  Doc       *doc     = chtml50->doc;
   Node      *child;
   for (child = qs_get_child_node(doc, node);
        child;
        child = qs_get_next_node(doc, child)) {
     W_V(child->otext);
-    s_chtml40_start_plaintext_tag_inner(pdoc, child);
+    s_chtml50_start_plaintext_tag_inner(pdoc, child);
   }
-  return chtml40->out;
+  return chtml50->out;
 }
 
 
@@ -3160,10 +3160,10 @@ s_chtml40_start_plaintext_tag_inner(void *pdoc, Node *node)
  * @return The conversion result is returned.
  */
 static char *
-s_chtml40_end_plaintext_tag(void *pdoc, Node *UNUSED(child))
+s_chtml50_end_plaintext_tag(void *pdoc, Node *UNUSED(child))
 {
-  chtml40_t *chtml40 = GET_CHTML40(pdoc);
-  return chtml40->out;
+  chtml50_t *chtml50 = GET_CHTML50(pdoc);
+  return chtml50->out;
 }
 /*
  * vim:ts=2 et

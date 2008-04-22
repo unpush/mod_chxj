@@ -14,25 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef __CHXJ_CHTML40_H__
-#define __CHXJ_CHTML40_H__
+#ifndef __CHXJ_JXHTML_H__
+#define __CHXJ_JXHTML_H__
 
-/* #define DUMP_CHTML40 "" */
+/* #define DUMP_JXHTML "" */
 
 #include "mod_chxj.h"
 #include "chxj_cookie.h"
 
 /*----------------------------------------------------------------------------*/
-/* Structure for CHTML4.0                                                     */
+/* Structure for J-PHONE HTML                                                 */
 /*----------------------------------------------------------------------------*/
-typedef struct chtml40_t chtml40_t;
+typedef struct jxhtml_t jxhtml_t;
 
-struct chtml40_t {
+struct jxhtml_t {
     Doc                 *doc;
     char                *out;
     int                 out_len;
     int                 pre_flag;
     int                 textarea_flag;
+    int                 h1_align_flag;
+    int                 h2_align_flag;
+    int                 h3_align_flag;
+    int                 h4_align_flag;
+    int                 h5_align_flag;
+    int                 h6_align_flag;
 
     device_table        *spec;
     mod_chxj_config     *conf;
@@ -43,13 +49,13 @@ struct chtml40_t {
 /*----------------------------------------------------------------------------*/
 /* Prototype                                                                  */
 /*----------------------------------------------------------------------------*/
-extern char *chxj_convert_chtml40(
-  request_rec           *r,
-  device_table          *spec,
-  const char            *src,
-  apr_size_t            srclen,
-  apr_size_t            *dstlen,
-  chxjconvrule_entry    *entryp,
-  cookie_t              *cookie);
+extern char *chxj_convert_jxhtml(
+  request_rec               *r,
+  device_table              *spec,
+  const char                *src,
+  apr_size_t                srclen,
+  apr_size_t                *dstlen,
+  chxjconvrule_entry        *entryp,
+  cookie_t                  *cookie);
 
 #endif

@@ -14,10 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef __CHXJ_CHTML40_H__
-#define __CHXJ_CHTML40_H__
+#ifndef __CHXJ_CHTML50_H__
+#define __CHXJ_CHTML50_H__
 
-/* #define DUMP_CHTML40 "" */
+/* #define DUMP_CHTML50 "" */
 
 #include "mod_chxj.h"
 #include "chxj_cookie.h"
@@ -25,9 +25,9 @@
 /*----------------------------------------------------------------------------*/
 /* Structure for CHTML4.0                                                     */
 /*----------------------------------------------------------------------------*/
-typedef struct chtml40_t chtml40_t;
+typedef struct chtml50_t chtml50_t;
 
-struct chtml40_t {
+struct chtml50_t {
     Doc                 *doc;
     char                *out;
     int                 out_len;
@@ -43,7 +43,7 @@ struct chtml40_t {
 /*----------------------------------------------------------------------------*/
 /* Prototype                                                                  */
 /*----------------------------------------------------------------------------*/
-extern char *chxj_convert_chtml40(
+extern char *chxj_convert_chtml50(
   request_rec           *r,
   device_table          *spec,
   const char            *src,
