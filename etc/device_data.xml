@@ -15387,6 +15387,337 @@
       <dpi_width>96</dpi_width>
       <dpi_heigh>96</dpi_heigh>
     </device>
+    <!--
+      SoftBank/1.0/813T/TJ001[/Serial] Browser/VF-Browser/1.0 Profile/MIDP-2.0 Configuration/CLDC-1.1 Ext-J-Profile/JSCL-1.2.2 Ext-V-Profile/VSCL-2.0.0
+    -->
+    <device>
+      <device_id>813T</device_id>
+      <device_name>SoftBank 813T</device_name>
+      <html_spec_type>JXHTML</html_spec_type>
+      <width>234</width>
+      <heigh>259</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>307200</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <!-- 
+    -->
+    <device>
+      <device_id>822SH</device_id>
+      <device_name>SoftBank 822SH</device_name>
+      <html_spec_type>JXHTML</html_spec_type>
+      <width>234</width>
+      <heigh>350</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>400</wp_heigh>
+      <cache>307200</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <!-- 
+    -->
+    <device>
+      <device_id>920T</device_id>
+      <device_name>SoftBank 920T</device_name>
+      <html_spec_type>JXHTML</html_spec_type>
+      <width>234</width>
+      <heigh>339</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>480</wp_width>
+      <wp_heigh>800</wp_heigh>
+      <cache>307200</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <!-- 
+    -->
+    <device>
+      <device_id>920SC</device_id>
+      <device_name>SoftBank 920SC</device_name>
+      <html_spec_type>JXHTML</html_spec_type>
+      <width>230</width>
+      <heigh>264</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>307200</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <!-- 
+    -->
+    <device>
+      <device_id>822P</device_id>
+      <device_name>SoftBank 822P</device_name>
+      <html_spec_type>JXHTML</html_spec_type>
+      <width>240</width>
+      <heigh>262</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>307200</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+    <!-- 
+    -->
+    <device>
+      <device_id>DM001SH</device_id>
+      <device_name>SoftBank DM001SH</device_name>
+      <html_spec_type>JXHTML</html_spec_type>
+      <width>234</width>
+      <heigh>350</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+      <wp_width>240</wp_width>
+      <wp_heigh>400</wp_heigh>
+      <cache>307200</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+    <!-- 
+    -->
+    <device>
+      <device_id>820T</device_id>
+      <device_name>SoftBank 820T</device_name>
+      <html_spec_type>JXHTML</html_spec_type>
+      <width>240</width>
+      <heigh>320</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>307200</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+    <!-- 
+    -->
+    <device>
+      <device_id>820SC</device_id>
+      <device_name>SoftBank 820SC</device_name>
+      <html_spec_type>JXHTML</html_spec_type>
+      <width>230</width>
+      <heigh>264</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>307200</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <!-- 
+    -->
+    <device>
+      <device_id>920P</device_id>
+      <device_name>SoftBank 920P</device_name>
+      <html_spec_type>JXHTML</html_spec_type>
+      <width>471</width>
+      <heigh>700</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+      <wp_width>480</wp_width>
+      <wp_heigh>854</wp_heigh>
+      <cache>307200</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <!-- 
+    -->
+    <device>
+      <device_id>822T</device_id>
+      <device_name>SoftBank 822T</device_name>
+      <html_spec_type>JXHTML</html_spec_type>
+      <width>234</width>
+      <heigh>259</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>307200</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <!-- 
+    -->
+    <device>
+      <device_id>921SH</device_id>
+      <device_name>SoftBank 921SH</device_name>
+      <html_spec_type>JXHTML</html_spec_type>
+      <width>468</width>
+      <heigh>754</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+      <wp_width>480</wp_width>
+      <wp_heigh>854</wp_heigh>
+      <cache>307200</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <!-- 
+    -->
+    <device>
+      <device_id>823SH</device_id>
+      <device_name>SoftBank 823SH</device_name>
+      <html_spec_type>JXHTML</html_spec_type>
+      <width>234</width>
+      <heigh>350</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+      <wp_width>240</wp_width>
+      <wp_heigh>400</wp_heigh>
+      <cache>307200</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <!-- 
+    -->
+    <device>
+      <device_id>821T</device_id>
+      <device_name>SoftBank 821T</device_name>
+      <html_spec_type>JXHTML</html_spec_type>
+      <width>234</width>
+      <heigh>243</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+      <wp_width>240</wp_width>
+      <wp_heigh>320</wp_heigh>
+      <cache>307200</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <!-- 
+    -->
+    <device>
+      <device_id>921T</device_id>
+      <device_name>SoftBank 921T</device_name>
+      <html_spec_type>JXHTML</html_spec_type>
+      <width>234</width>
+      <heigh>339</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+
+      <wp_width>240</wp_width>
+      <wp_heigh>400</wp_heigh>
+      <cache>307200</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
+
+    <!-- 
+    -->
+    <device>
+      <device_id>922SH</device_id>
+      <device_name>SoftBank 922SH</device_name>
+      <html_spec_type>JXHTML</html_spec_type>
+      <width>842</width>
+      <heigh>384</heigh>
+      <gif>true</gif>
+      <jpeg>true</jpeg>
+      <png>true</png>
+      <bmp2>false</bmp2>
+      <bmp4>false</bmp4>
+      <color>262144</color>
+      <emoji_type></emoji_type>
+      <wp_width>854</wp_width>
+      <wp_heigh>480</wp_heigh>
+      <cache>307200</cache>
+      <dpi_width>96</dpi_width>
+      <dpi_heigh>96</dpi_heigh>
+    </device>
 
   </user_agent>
   <!--=======================================================================-->
