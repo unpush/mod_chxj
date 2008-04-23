@@ -467,7 +467,6 @@ main()
   /*=========================================================================*/
   /* <!-- -->                                                                */
   /*=========================================================================*/
-#if 0
   CU_add_test(jxhtml_suite, "test void src1",                                    test_jxhtml_001);
   CU_add_test(jxhtml_suite, "test void src2",                                    test_jxhtml_002);
   CU_add_test(jxhtml_suite, "test comment tag1",                                 test_jxhtml_comment_tag_001);
@@ -953,7 +952,6 @@ main()
   CU_add_test(jxhtml_suite, "test <meta> 7." ,                                   test_jxhtml_meta_tag_007);
   CU_add_test(jxhtml_suite, "test <meta> 8." ,                                   test_jxhtml_meta_tag_008);
   CU_add_test(jxhtml_suite, "test <meta> 9." ,                                   test_jxhtml_meta_tag_009);
-#endif
   /*=========================================================================*/
   /* <font>                                                                  */
   /*=========================================================================*/
@@ -2158,7 +2156,7 @@ void test_jxhtml_body_tag_012()
 void test_jxhtml_body_tag_013() 
 {
 #define  TEST_STRING   "<body vlink=\"#ff0000\"></body>"
-#define  RESULT_STRING "<body vlink=\"#ff0000\"></body>"
+#define  RESULT_STRING "<body></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2177,6 +2175,7 @@ void test_jxhtml_body_tag_013()
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual:[%s]\n", ret);
   fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
+
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
