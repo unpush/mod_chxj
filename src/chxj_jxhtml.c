@@ -119,7 +119,7 @@ static void  s_init_jxhtml(jxhtml_t *jxhtml, Doc *doc, request_rec *r, device_ta
 
 static int   s_jxhtml_search_emoji(jxhtml_t *jxhtml, char *txt, char **rslt);
 
-static char *chxj_istyle_to_mode(apr_pool_t *p, const char *s);
+static char *s_jxhtml_istyle_to_mode(apr_pool_t *p, const char *s);
 
 
 
@@ -1509,7 +1509,7 @@ s_jxhtml_start_input_tag(void *pdoc, Node *node)
       W_L("\"");
     }
     else {
-      char *vv = chxj_istyle_to_mode(doc->buf.pool,istyle);
+      char *vv = s_jxhtml_istyle_to_mode(doc->buf.pool,istyle);
       W_L(" mode=\"");
       W_V(vv);
       W_L("\"");
@@ -2313,7 +2313,7 @@ s_jxhtml_end_div_tag(void *pdoc, Node *UNUSED(child))
 
 
 static char *
-chxj_istyle_to_mode(apr_pool_t *p, const char *s)
+s_jxhtml_istyle_to_mode(apr_pool_t *p, const char *s)
 {
   char *tmp;
 
@@ -2391,7 +2391,7 @@ s_jxhtml_start_textarea_tag(void *pdoc, Node *node)
       W_L("\"");
     }
     else if (STRCASEEQ('i','I',"istyle", name) && value && (*value == '1' || *value == '2' || *value == '3' || *value == '4')) {
-      char *vv = chxj_istyle_to_mode(doc->buf.pool,value);
+      char *vv = s_jxhtml_istyle_to_mode(doc->buf.pool,value);
       W_L(" mode=\"");
       W_V(vv);
       W_L("\"");

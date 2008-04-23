@@ -911,17 +911,21 @@ s_chtml50_start_body_tag(void *pdoc, Node *node)
       W_V(value);
       W_L("\"");
     }
-    else if (STRCASEEQ('a','A',"alink", name)) {
+    else if (STRCASEEQ('a','A',"alink", name) && value && *value) {
       /*----------------------------------------------------------------------*/
       /* CHTML 4.0                                                            */
       /*----------------------------------------------------------------------*/
-      /* ignore */
+      W_L(" alink=\"");
+      W_V(value);
+      W_L("\"");
     }
-    else if (STRCASEEQ('v','V',"vlink", name)) {
+    else if (STRCASEEQ('v','V',"vlink", name) && value && *value) {
       /*----------------------------------------------------------------------*/
       /* CHTML 4.0                                                            */
       /*----------------------------------------------------------------------*/
-      /* ignore */
+      W_L(" vlink=\"");
+      W_V(value);
+      W_L("\"");
     }
   }
   W_L(">");
