@@ -448,6 +448,8 @@ void test_chtml20_meta_tag_006();
 void test_chtml20_meta_tag_007();
 void test_chtml20_meta_tag_008();
 void test_chtml20_meta_tag_009();
+
+void test_chtml20_param_tag_001();
 /* pend */
 
 int
@@ -862,6 +864,8 @@ main()
   CU_add_test(chtml20_suite, "test <meta> 7." ,                                   test_chtml20_meta_tag_007);
   CU_add_test(chtml20_suite, "test <meta> 8." ,                                   test_chtml20_meta_tag_008);
   CU_add_test(chtml20_suite, "test <meta> 9." ,                                   test_chtml20_meta_tag_009);
+
+  CU_add_test(chtml20_suite, "test <param> 1." ,                                  test_chtml20_param_tag_001);
   /* aend */
 
   CU_basic_run_tests();
@@ -11483,6 +11487,35 @@ void test_chtml20_meta_tag_009()
 {
 #define  TEST_STRING "<meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml\">"
 #define  RESULT_STRING "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=Windows-31J\">"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_chtml20(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+
+void test_chtml20_param_tag_001() 
+{
+#define  TEST_STRING "<param>aaa</param>"
+#define  RESULT_STRING "\n"
   char  *ret;
   char  *tmp;
   device_table spec;

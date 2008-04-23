@@ -457,6 +457,8 @@ void test_xhtml_font_tag_003();
 void test_xhtml_font_tag_004();
 void test_xhtml_font_tag_005();
 void test_xhtml_font_tag_006();
+
+void test_xhtml_param_tag_001();
 /* pend */
 
 int
@@ -957,6 +959,11 @@ main()
   CU_add_test(xhtml_suite, "test <font> 4." ,                                   test_xhtml_font_tag_004);
   CU_add_test(xhtml_suite, "test <font> 5." ,                                   test_xhtml_font_tag_005);
   CU_add_test(xhtml_suite, "test <font> 6." ,                                   test_xhtml_font_tag_006);
+
+  /*=========================================================================*/
+  /* <param>                                                                 */
+  /*=========================================================================*/
+  CU_add_test(xhtml_suite, "test <param> 1." ,                                  test_xhtml_param_tag_001);
   /* aend */
 
   CU_basic_run_tests();
@@ -12191,6 +12198,35 @@ void test_xhtml_font_tag_006()
 {
 #define  TEST_STRING "<font color=\"#ff0000\">ｱｱｱ</font>"
 #define  RESULT_STRING "<font color=\"#ff0000\">ｱｱｱ</font>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_param_tag_001() 
+{
+#define  TEST_STRING "<param>aaa</param>"
+#define  RESULT_STRING "\n"
   char  *ret;
   char  *tmp;
   device_table spec;

@@ -402,6 +402,8 @@ void test_hdml_marquee_tag_001();
 void test_hdml_meta_tag_001();
 
 void test_hdml_font_tag_001();
+
+void test_hdml_param_tag_001();
 /* pend */
 static char *test_get_form_no(request_rec *r, hdml_t *hdml);
 
@@ -864,6 +866,11 @@ main()
   /* <font>                                                                  */
   /*=========================================================================*/
   CU_add_test(hdml_suite, "test <font> 1." ,                                   test_hdml_font_tag_001);
+
+  /*=========================================================================*/
+  /* <param>                                                                 */
+  /*=========================================================================*/
+  CU_add_test(hdml_suite, "test <param> 1." ,                                  test_hdml_param_tag_001);
   /* aend */
 
   CU_basic_run_tests();
@@ -10503,6 +10510,39 @@ void test_hdml_font_tag_001()
 {
 #define  TEST_STRING "<font color=\"#ff0000\">あああ</font>"
 #define  RESULT_STRING "あああ"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+/*============================================================================*/
+/* <PARAM>                                                                    */
+/*============================================================================*/
+void test_hdml_param_tag_001() 
+{
+#define  TEST_STRING   "<param>aaa</param>"
+#define  RESULT_STRING ""
   char  *ret;
   char  *tmp;
   device_table spec;
