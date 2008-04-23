@@ -683,7 +683,6 @@ main()
   /* <HTML>                                                                  */
   /*=========================================================================*/
   CU_add_test(jxhtml_suite, "test <html>.",                                      test_jxhtml_html_tag_001);
-#endif
   /*=========================================================================*/
   /* <IMG>                                                                   */
   /*=========================================================================*/
@@ -724,7 +723,6 @@ main()
   CU_add_test(jxhtml_suite, "test <img alt> with alphabetic value." ,            test_jxhtml_img_tag_035);
   CU_add_test(jxhtml_suite, "test <img alt> with japanese value." ,              test_jxhtml_img_tag_036);
   CU_add_test(jxhtml_suite, "test <img alt> with japanese-hankaku value." ,      test_jxhtml_img_tag_037);
-#if 0
   /*=========================================================================*/
   /* <INPUT>                                                                 */
   /*=========================================================================*/
@@ -775,7 +773,6 @@ main()
   CU_add_test(jxhtml_suite, "test <input istyle> 12." ,                          test_jxhtml_input_tag_045);
   CU_add_test(jxhtml_suite, "test <input istyle> 13." ,                          test_jxhtml_input_tag_046);
   CU_add_test(jxhtml_suite, "test <input istyle> 14." ,                          test_jxhtml_input_tag_047);
-
   /*=========================================================================*/
   /* <LI>                                                                    */
   /*=========================================================================*/
@@ -792,7 +789,6 @@ main()
   CU_add_test(jxhtml_suite, "test <li> type attribute 7." ,                      test_jxhtml_li_tag_011);
   CU_add_test(jxhtml_suite, "test <li> type attribute 8." ,                      test_jxhtml_li_tag_012);
   CU_add_test(jxhtml_suite, "test <li> type attribute 9." ,                      test_jxhtml_li_tag_013);
-
   /*=========================================================================*/
   /* <MENU>                                                                  */
   /*=========================================================================*/
@@ -801,7 +797,6 @@ main()
   CU_add_test(jxhtml_suite, "test <menu> 3." ,                                   test_jxhtml_menu_tag_003);
   CU_add_test(jxhtml_suite, "test <menu> 4." ,                                   test_jxhtml_menu_tag_004);
   CU_add_test(jxhtml_suite, "test <menu> 5." ,                                   test_jxhtml_menu_tag_005);
-
   /*=========================================================================*/
   /* <OL>                                                                    */
   /*=========================================================================*/
@@ -823,7 +818,6 @@ main()
   CU_add_test(jxhtml_suite, "test <ol> 16." ,                                    test_jxhtml_ol_tag_016);
   CU_add_test(jxhtml_suite, "test <ol> 17." ,                                    test_jxhtml_ol_tag_017);
   CU_add_test(jxhtml_suite, "test <ol> 18." ,                                    test_jxhtml_ol_tag_018);
-
   /*=========================================================================*/
   /* <OPTION>                                                                */
   /*=========================================================================*/
@@ -834,7 +828,6 @@ main()
   CU_add_test(jxhtml_suite, "test <option value> with japanese value." ,         test_jxhtml_option_tag_005);
   CU_add_test(jxhtml_suite, "test <option value> with japanese-kana value." ,    test_jxhtml_option_tag_006);
   CU_add_test(jxhtml_suite, "test <option selected>." ,                          test_jxhtml_option_tag_007);
-
   /*=========================================================================*/
   /* <P>                                                                     */
   /*=========================================================================*/
@@ -846,7 +839,6 @@ main()
   CU_add_test(jxhtml_suite, "test <p> 6." ,                                      test_jxhtml_p_tag_006);
   CU_add_test(jxhtml_suite, "test <p> 7." ,                                      test_jxhtml_p_tag_007);
   CU_add_test(jxhtml_suite, "test <p> 8." ,                                      test_jxhtml_p_tag_008);
-
   /*=========================================================================*/
   /* <PLAINTEXT>                                                             */
   /*=========================================================================*/
@@ -854,7 +846,6 @@ main()
   CU_add_test(jxhtml_suite, "test <plaintext> 2." ,                              test_jxhtml_plaintext_tag_002);
   CU_add_test(jxhtml_suite, "test <plaintext> 3. value is not closed." ,         test_jxhtml_plaintext_tag_003);
   CU_add_test(jxhtml_suite, "test <plaintext> 3. value is not closed and hankaku." , test_jxhtml_plaintext_tag_004);
-
   /*=========================================================================*/
   /* <PRE>                                                                   */
   /*=========================================================================*/
@@ -863,7 +854,6 @@ main()
   CU_add_test(jxhtml_suite, "test <pre> 3." ,                                    test_jxhtml_pre_tag_003);
   CU_add_test(jxhtml_suite, "test <pre> 4." ,                                    test_jxhtml_pre_tag_004);
   CU_add_test(jxhtml_suite, "test <pre> 5." ,                                    test_jxhtml_pre_tag_005);
-
   /*=========================================================================*/
   /* <SELECT>                                                                */
   /*=========================================================================*/
@@ -881,7 +871,6 @@ main()
   CU_add_test(jxhtml_suite, "test <select> 12." ,                                test_jxhtml_select_tag_012);
   CU_add_test(jxhtml_suite, "test <select> 13." ,                                test_jxhtml_select_tag_013);
   CU_add_test(jxhtml_suite, "test <select> 14." ,                                test_jxhtml_select_tag_014);
-
   /*=========================================================================*/
   /* <TEXTAREA>                                                              */
   /*=========================================================================*/
@@ -911,13 +900,11 @@ main()
   CU_add_test(jxhtml_suite, "test <textarea> 24." ,                              test_jxhtml_textarea_tag_024);
   CU_add_test(jxhtml_suite, "test <textarea> 25." ,                              test_jxhtml_textarea_tag_025);
   CU_add_test(jxhtml_suite, "test <textarea> 26." ,                              test_jxhtml_textarea_tag_026);
-
   /*=========================================================================*/
   /* <TITLE>                                                                 */
   /*=========================================================================*/
   CU_add_test(jxhtml_suite, "test <title> 1." ,                                  test_jxhtml_title_tag_001);
   CU_add_test(jxhtml_suite, "test <title> 2." ,                                  test_jxhtml_title_tag_002);
-
   /*=========================================================================*/
   /* <UL>                                                                    */
   /*=========================================================================*/
@@ -926,7 +913,6 @@ main()
   CU_add_test(jxhtml_suite, "test <ul> 3." ,                                     test_jxhtml_ul_tag_003);
   CU_add_test(jxhtml_suite, "test <ul> 4." ,                                     test_jxhtml_ul_tag_004);
   CU_add_test(jxhtml_suite, "test <ul> 5." ,                                     test_jxhtml_ul_tag_005);
-
   /*=========================================================================*/
   /* <BLINK>                                                                 */
   /*=========================================================================*/
@@ -934,7 +920,6 @@ main()
   CU_add_test(jxhtml_suite, "test <blink> 2." ,                                  test_jxhtml_blink_tag_002);
   CU_add_test(jxhtml_suite, "test <blink> 3." ,                                  test_jxhtml_blink_tag_003);
   CU_add_test(jxhtml_suite, "test <blink> 4." ,                                  test_jxhtml_blink_tag_004);
-
   /*=========================================================================*/
   /* <MARQUEE>                                                               */
   /*=========================================================================*/
@@ -956,7 +941,6 @@ main()
   CU_add_test(jxhtml_suite, "test <marquee> 16." ,                               test_jxhtml_marquee_tag_016);
   CU_add_test(jxhtml_suite, "test <marquee> 17." ,                               test_jxhtml_marquee_tag_017);
   CU_add_test(jxhtml_suite, "test <marquee> 18." ,                               test_jxhtml_marquee_tag_018);
-
   /*=========================================================================*/
   /* <META>                                                                  */
   /*=========================================================================*/
@@ -969,7 +953,7 @@ main()
   CU_add_test(jxhtml_suite, "test <meta> 7." ,                                   test_jxhtml_meta_tag_007);
   CU_add_test(jxhtml_suite, "test <meta> 8." ,                                   test_jxhtml_meta_tag_008);
   CU_add_test(jxhtml_suite, "test <meta> 9." ,                                   test_jxhtml_meta_tag_009);
-
+#endif
   /*=========================================================================*/
   /* <font>                                                                  */
   /*=========================================================================*/
@@ -979,7 +963,6 @@ main()
   CU_add_test(jxhtml_suite, "test <font> 4." ,                                   test_jxhtml_font_tag_004);
   CU_add_test(jxhtml_suite, "test <font> 5." ,                                   test_jxhtml_font_tag_005);
   CU_add_test(jxhtml_suite, "test <font> 6." ,                                   test_jxhtml_font_tag_006);
-#endif
   /* aend */
 
   CU_basic_run_tests();
@@ -2949,7 +2932,7 @@ void test_jxhtml_div_tag_007()
 void test_jxhtml_form_tag_001() 
 {
 #define  TEST_STRING "<form></form>"
-#define  RESULT_STRING "<form><input type='hidden' name='_chxj_cc' value='test_cookie_id'></form>"
+#define  RESULT_STRING "<form><input type='hidden' name='_chxj_cc' value='test_cookie_id' /></form>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2979,7 +2962,7 @@ void test_jxhtml_form_tag_001()
 void test_jxhtml_form_tag_002() 
 {
 #define  TEST_STRING   "<form method></form>"
-#define  RESULT_STRING "<form method=\"\"><input type='hidden' name='_chxj_cc' value='test_cookie_id'></form>"
+#define  RESULT_STRING "<form method=\"\"><input type='hidden' name='_chxj_cc' value='test_cookie_id' /></form>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -3009,7 +2992,7 @@ void test_jxhtml_form_tag_002()
 void test_jxhtml_form_tag_003() 
 {
 #define  TEST_STRING "<form method=\"post\"></form>"
-#define  RESULT_STRING "<form method=\"post\"><input type='hidden' name='_chxj_cc' value='test_cookie_id'></form>"
+#define  RESULT_STRING "<form method=\"post\"><input type='hidden' name='_chxj_cc' value='test_cookie_id' /></form>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -3039,7 +3022,7 @@ void test_jxhtml_form_tag_003()
 void test_jxhtml_form_tag_004() 
 {
 #define  TEST_STRING   "<form method=\"get\"></form>"
-#define  RESULT_STRING "<form method=\"get\"><input type='hidden' name='_chxj_cc' value='test_cookie_id'></form>"
+#define  RESULT_STRING "<form method=\"get\"><input type='hidden' name='_chxj_cc' value='test_cookie_id' /></form>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -3069,7 +3052,7 @@ void test_jxhtml_form_tag_004()
 void test_jxhtml_form_tag_005() 
 {
 #define  TEST_STRING   "<form method=\"abc\"></form>"
-#define  RESULT_STRING "<form method=\"abc\"><input type='hidden' name='_chxj_cc' value='test_cookie_id'></form>"
+#define  RESULT_STRING "<form method=\"abc\"><input type='hidden' name='_chxj_cc' value='test_cookie_id' /></form>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -3097,7 +3080,7 @@ void test_jxhtml_form_tag_005()
 void test_jxhtml_form_tag_006() 
 {
 #define  TEST_STRING   "<form action></form>"
-#define  RESULT_STRING "<form action=\"\"><input type='hidden' name='_chxj_cc' value='test_cookie_id'></form>"
+#define  RESULT_STRING "<form action=\"\"><input type='hidden' name='_chxj_cc' value='test_cookie_id' /></form>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -3187,7 +3170,7 @@ void test_jxhtml_form_tag_008()
 void test_jxhtml_form_tag_009() 
 {
 #define  TEST_STRING   "<form method=\"post\" action=\"hogehoge\"></form>"
-#define  RESULT_STRING "<form method=\"post\" action=\"hogehoge\"><input type='hidden' name='_chxj_cc' value='test_cookie_id'></form>"
+#define  RESULT_STRING "<form method=\"post\" action=\"hogehoge\"><input type='hidden' name='_chxj_cc' value='test_cookie_id' /></form>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -6791,8 +6774,8 @@ void test_jxhtml_img_tag_037()
 /*============================================================================*/
 void test_jxhtml_input_tag_001() 
 {
-#define  TEST_STRING "<html><head></head><body><input></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input></body></html>"
+#define  TEST_STRING "<input>"
+#define  RESULT_STRING "<input />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -6821,8 +6804,8 @@ void test_jxhtml_input_tag_001()
 }
 void test_jxhtml_input_tag_002() 
 {
-#define  TEST_STRING "<html><head></head><body><input type></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input></body></html>"
+#define  TEST_STRING "<input type>"
+#define  RESULT_STRING "<input />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -6851,8 +6834,8 @@ void test_jxhtml_input_tag_002()
 }
 void test_jxhtml_input_tag_003() 
 {
-#define  TEST_STRING "<html><head></head><body><input type=\"\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input></body></html>"
+#define  TEST_STRING "<input type=\"\">"
+#define  RESULT_STRING "<input />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -6881,8 +6864,8 @@ void test_jxhtml_input_tag_003()
 }
 void test_jxhtml_input_tag_004() 
 {
-#define  TEST_STRING "<html><head></head><body><input type=\"text\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input type=\"text\"></body></html>"
+#define  TEST_STRING "<input type=\"text\">"
+#define  RESULT_STRING "<input type=\"text\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -6911,8 +6894,8 @@ void test_jxhtml_input_tag_004()
 }
 void test_jxhtml_input_tag_005() 
 {
-#define  TEST_STRING "<html><head></head><body><input type=\"password\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input type=\"password\" mode=\"numeric\"></body></html>"
+#define  TEST_STRING "<input type=\"password\">"
+#define  RESULT_STRING "<input type=\"password\" mode=\"numeric\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -6941,8 +6924,8 @@ void test_jxhtml_input_tag_005()
 }
 void test_jxhtml_input_tag_006() 
 {
-#define  TEST_STRING "<html><head></head><body><input type=\"checkbox\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input type=\"checkbox\"></body></html>"
+#define  TEST_STRING "<input type=\"checkbox\">"
+#define  RESULT_STRING "<input type=\"checkbox\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -6971,8 +6954,8 @@ void test_jxhtml_input_tag_006()
 }
 void test_jxhtml_input_tag_007() 
 {
-#define  TEST_STRING "<html><head></head><body><input type=\"radio\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input type=\"radio\"></body></html>"
+#define  TEST_STRING "<input type=\"radio\">"
+#define  RESULT_STRING "<input type=\"radio\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7001,8 +6984,8 @@ void test_jxhtml_input_tag_007()
 }
 void test_jxhtml_input_tag_008() 
 {
-#define  TEST_STRING "<html><head></head><body><input type=\"hidden\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input type=\"hidden\"></body></html>"
+#define  TEST_STRING "<input type=\"hidden\">"
+#define  RESULT_STRING "<input type=\"hidden\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7031,8 +7014,8 @@ void test_jxhtml_input_tag_008()
 }
 void test_jxhtml_input_tag_009() 
 {
-#define  TEST_STRING "<html><head></head><body><input type=\"submit\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input type=\"submit\"></body></html>"
+#define  TEST_STRING "<input type=\"submit\">"
+#define  RESULT_STRING "<input type=\"submit\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7061,8 +7044,8 @@ void test_jxhtml_input_tag_009()
 }
 void test_jxhtml_input_tag_010() 
 {
-#define  TEST_STRING "<html><head></head><body><input type=\"reset\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input type=\"reset\"></body></html>"
+#define  TEST_STRING "<input type=\"reset\">"
+#define  RESULT_STRING "<input type=\"reset\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7091,8 +7074,8 @@ void test_jxhtml_input_tag_010()
 }
 void test_jxhtml_input_tag_011() 
 {
-#define  TEST_STRING "<html><head></head><body><input type=\"unknown\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input></body></html>"
+#define  TEST_STRING "<input type=\"unknown\">"
+#define  RESULT_STRING "<input />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7121,8 +7104,8 @@ void test_jxhtml_input_tag_011()
 }
 void test_jxhtml_input_tag_012() 
 {
-#define  TEST_STRING "<html><head></head><body><input name></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input></body></html>"
+#define  TEST_STRING "<input name>"
+#define  RESULT_STRING "<input />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7151,8 +7134,8 @@ void test_jxhtml_input_tag_012()
 }
 void test_jxhtml_input_tag_013() 
 {
-#define  TEST_STRING "<html><head></head><body><input name=\"\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input></body></html>"
+#define  TEST_STRING "<input name=\"\">"
+#define  RESULT_STRING "<input />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7181,8 +7164,8 @@ void test_jxhtml_input_tag_013()
 }
 void test_jxhtml_input_tag_014() 
 {
-#define  TEST_STRING "<html><head></head><body><input name=\"a\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input name=\"a\"></body></html>"
+#define  TEST_STRING "<input name=\"a\">"
+#define  RESULT_STRING "<input name=\"a\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7211,8 +7194,8 @@ void test_jxhtml_input_tag_014()
 }
 void test_jxhtml_input_tag_015() 
 {
-#define  TEST_STRING "<html><head></head><body><input name=\"亀\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input name=\"亀\"></body></html>"
+#define  TEST_STRING "<input name=\"亀\">"
+#define  RESULT_STRING "<input name=\"亀\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7241,8 +7224,8 @@ void test_jxhtml_input_tag_015()
 }
 void test_jxhtml_input_tag_016() 
 {
-#define  TEST_STRING "<html><head></head><body><input name=\"ﾊﾝｶｸ\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input name=\"ﾊﾝｶｸ\"></body></html>"
+#define  TEST_STRING "<input name=\"ﾊﾝｶｸ\">"
+#define  RESULT_STRING "<input name=\"ﾊﾝｶｸ\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7271,8 +7254,8 @@ void test_jxhtml_input_tag_016()
 }
 void test_jxhtml_input_tag_017() 
 {
-#define  TEST_STRING "<html><head></head><body><input value></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input></body></html>"
+#define  TEST_STRING "<input value>"
+#define  RESULT_STRING "<input />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7301,8 +7284,8 @@ void test_jxhtml_input_tag_017()
 }
 void test_jxhtml_input_tag_018() 
 {
-#define  TEST_STRING "<html><head></head><body><input value=\"\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input></body></html>"
+#define  TEST_STRING "<input value=\"\">"
+#define  RESULT_STRING "<input />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7331,8 +7314,8 @@ void test_jxhtml_input_tag_018()
 }
 void test_jxhtml_input_tag_019() 
 {
-#define  TEST_STRING "<html><head></head><body><input value=\"a\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input value=\"a\"></body></html>"
+#define  TEST_STRING "<input value=\"a\">"
+#define  RESULT_STRING "<input value=\"a\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7361,8 +7344,8 @@ void test_jxhtml_input_tag_019()
 }
 void test_jxhtml_input_tag_020() 
 {
-#define  TEST_STRING "<html><head></head><body><input value=\"亀\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input value=\"亀\"></body></html>"
+#define  TEST_STRING "<input value=\"亀\">"
+#define  RESULT_STRING "<input value=\"亀\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7391,8 +7374,8 @@ void test_jxhtml_input_tag_020()
 }
 void test_jxhtml_input_tag_021() 
 {
-#define  TEST_STRING "<html><head></head><body><input value=\"ﾊﾝｶｸ\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input value=\"ﾊﾝｶｸ\"></body></html>"
+#define  TEST_STRING "<input value=\"ﾊﾝｶｸ\">"
+#define  RESULT_STRING "<input value=\"ﾊﾝｶｸ\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7421,8 +7404,8 @@ void test_jxhtml_input_tag_021()
 }
 void test_jxhtml_input_tag_022() 
 {
-#define  TEST_STRING "<html><head></head><body><input size></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input></body></html>"
+#define  TEST_STRING "<input size>"
+#define  RESULT_STRING "<input />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7451,8 +7434,8 @@ void test_jxhtml_input_tag_022()
 }
 void test_jxhtml_input_tag_023() 
 {
-#define  TEST_STRING "<html><head></head><body><input size=\"\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input></body></html>"
+#define  TEST_STRING "<input size=\"\">"
+#define  RESULT_STRING "<input />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7481,8 +7464,8 @@ void test_jxhtml_input_tag_023()
 }
 void test_jxhtml_input_tag_024() 
 {
-#define  TEST_STRING "<html><head></head><body><input size=\"a\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input size=\"a\"></body></html>"
+#define  TEST_STRING "<input size=\"a\">"
+#define  RESULT_STRING "<input size=\"a\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7511,8 +7494,8 @@ void test_jxhtml_input_tag_024()
 }
 void test_jxhtml_input_tag_025() 
 {
-#define  TEST_STRING "<html><head></head><body><input size=\"1\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input size=\"1\"></body></html>"
+#define  TEST_STRING "<input size=\"1\">"
+#define  RESULT_STRING "<input size=\"1\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7541,8 +7524,8 @@ void test_jxhtml_input_tag_025()
 }
 void test_jxhtml_input_tag_026() 
 {
-#define  TEST_STRING "<html><head></head><body><input maxlength></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input></body></html>"
+#define  TEST_STRING "<input maxlength>"
+#define  RESULT_STRING "<input />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7571,8 +7554,8 @@ void test_jxhtml_input_tag_026()
 }
 void test_jxhtml_input_tag_027() 
 {
-#define  TEST_STRING "<html><head></head><body><input maxlength=\"\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input></body></html>"
+#define  TEST_STRING "<input maxlength=\"\">"
+#define  RESULT_STRING "<input />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7601,8 +7584,8 @@ void test_jxhtml_input_tag_027()
 }
 void test_jxhtml_input_tag_028() 
 {
-#define  TEST_STRING "<html><head></head><body><input maxlength=\"a\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input></body></html>"
+#define  TEST_STRING "<input maxlength=\"a\">"
+#define  RESULT_STRING "<input />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7631,8 +7614,8 @@ void test_jxhtml_input_tag_028()
 }
 void test_jxhtml_input_tag_029() 
 {
-#define  TEST_STRING "<html><head></head><body><input maxlength=\"1\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input maxlength=\"1\"></body></html>"
+#define  TEST_STRING "<input maxlength=\"1\">"
+#define  RESULT_STRING "<input maxlength=\"1\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7661,8 +7644,8 @@ void test_jxhtml_input_tag_029()
 }
 void test_jxhtml_input_tag_030() 
 {
-#define  TEST_STRING "<html><head></head><body><input checked></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input checked></body></html>"
+#define  TEST_STRING "<input checked>"
+#define  RESULT_STRING "<input checked />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7691,8 +7674,8 @@ void test_jxhtml_input_tag_030()
 }
 void test_jxhtml_input_tag_031() 
 {
-#define  TEST_STRING "<html><head></head><body><input accesskey></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input></body></html>"
+#define  TEST_STRING "<input accesskey>"
+#define  RESULT_STRING "<input />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7721,8 +7704,8 @@ void test_jxhtml_input_tag_031()
 }
 void test_jxhtml_input_tag_032() 
 {
-#define  TEST_STRING "<html><head></head><body><input accesskey=\"\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input></body></html>"
+#define  TEST_STRING "<input accesskey=\"\">"
+#define  RESULT_STRING "<input />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7751,8 +7734,8 @@ void test_jxhtml_input_tag_032()
 }
 void test_jxhtml_input_tag_033() 
 {
-#define  TEST_STRING "<html><head></head><body><input accesskey=\"1\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input accesskey=\"1\"></body></html>"
+#define  TEST_STRING "<input accesskey=\"1\">"
+#define  RESULT_STRING "<input accesskey=\"1\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7781,8 +7764,8 @@ void test_jxhtml_input_tag_033()
 }
 void test_jxhtml_input_tag_034() 
 {
-#define  TEST_STRING "<html><head></head><body><input istyle></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input></body></html>"
+#define  TEST_STRING "<input istyle>"
+#define  RESULT_STRING "<input />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7811,8 +7794,8 @@ void test_jxhtml_input_tag_034()
 }
 void test_jxhtml_input_tag_035() 
 {
-#define  TEST_STRING "<html><head></head><body><input istyle=\"\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input></body></html>"
+#define  TEST_STRING "<input istyle=\"\">"
+#define  RESULT_STRING "<input />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7841,8 +7824,8 @@ void test_jxhtml_input_tag_035()
 }
 void test_jxhtml_input_tag_036() 
 {
-#define  TEST_STRING "<html><head></head><body><input istyle=\"0\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input></body></html>"
+#define  TEST_STRING "<input istyle=\"0\">"
+#define  RESULT_STRING "<input />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7871,8 +7854,8 @@ void test_jxhtml_input_tag_036()
 }
 void test_jxhtml_input_tag_037() 
 {
-#define  TEST_STRING "<html><head></head><body><input istyle=\"1\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input mode=\"hiragana\"></body></html>"
+#define  TEST_STRING "<input istyle=\"1\">"
+#define  RESULT_STRING "<input mode=\"hiragana\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7901,8 +7884,8 @@ void test_jxhtml_input_tag_037()
 }
 void test_jxhtml_input_tag_038() 
 {
-#define  TEST_STRING "<html><head></head><body><input istyle=\"2\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input mode=\"hankakukana\"></body></html>"
+#define  TEST_STRING "<input istyle=\"2\">"
+#define  RESULT_STRING "<input mode=\"hankakukana\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7931,8 +7914,8 @@ void test_jxhtml_input_tag_038()
 }
 void test_jxhtml_input_tag_039() 
 {
-#define  TEST_STRING "<html><head></head><body><input istyle=\"3\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input mode=\"alphabet\"></body></html>"
+#define  TEST_STRING "<input istyle=\"3\">"
+#define  RESULT_STRING "<input mode=\"alphabet\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7961,8 +7944,8 @@ void test_jxhtml_input_tag_039()
 }
 void test_jxhtml_input_tag_040() 
 {
-#define  TEST_STRING "<html><head></head><body><input istyle=\"4\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input mode=\"numeric\"></body></html>"
+#define  TEST_STRING "<input istyle=\"4\">"
+#define  RESULT_STRING "<input mode=\"numeric\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7991,8 +7974,8 @@ void test_jxhtml_input_tag_040()
 }
 void test_jxhtml_input_tag_041()
 {
-#define  TEST_STRING "<html><head></head><body><input istyle=\"5\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input></body></html>"
+#define  TEST_STRING "<input istyle=\"5\">"
+#define  RESULT_STRING "<input />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8021,8 +8004,8 @@ void test_jxhtml_input_tag_041()
 }
 void test_jxhtml_input_tag_042()
 {
-#define  TEST_STRING "<html><head></head><body><input istyle=\"a\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input></body></html>"
+#define  TEST_STRING "<input istyle=\"a\">"
+#define  RESULT_STRING "<input />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8051,8 +8034,8 @@ void test_jxhtml_input_tag_042()
 }
 void test_jxhtml_input_tag_043()
 {
-#define  TEST_STRING "<html><head></head><body><input istyle=\"1\" maxlength=\"10\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input mode=\"hiragana\" maxlength=\"10\"></body></html>"
+#define  TEST_STRING   "<input istyle=\"1\" maxlength=\"10\">"
+#define  RESULT_STRING "<input mode=\"hiragana\" maxlength=\"10\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8081,8 +8064,8 @@ void test_jxhtml_input_tag_043()
 }
 void test_jxhtml_input_tag_044()
 {
-#define  TEST_STRING "<html><head></head><body><input istyle=\"2\" maxlength=\"10\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input mode=\"hankakukana\" maxlength=\"10\"></body></html>"
+#define  TEST_STRING   "<input istyle=\"2\" maxlength=\"10\">"
+#define  RESULT_STRING "<input mode=\"hankakukana\" maxlength=\"10\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8111,8 +8094,8 @@ void test_jxhtml_input_tag_044()
 }
 void test_jxhtml_input_tag_045()
 {
-#define  TEST_STRING "<html><head></head><body><input istyle=\"3\" maxlength=\"10\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input mode=\"alphabet\" maxlength=\"10\"></body></html>"
+#define  TEST_STRING   "<input istyle=\"3\" maxlength=\"10\">"
+#define  RESULT_STRING "<input mode=\"alphabet\" maxlength=\"10\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8141,8 +8124,8 @@ void test_jxhtml_input_tag_045()
 }
 void test_jxhtml_input_tag_046()
 {
-#define  TEST_STRING "<html><head></head><body><input istyle=\"4\" maxlength=\"10\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input mode=\"numeric\" maxlength=\"10\"></body></html>"
+#define  TEST_STRING "<input istyle=\"4\" maxlength=\"10\">"
+#define  RESULT_STRING "<input mode=\"numeric\" maxlength=\"10\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -8171,8 +8154,8 @@ void test_jxhtml_input_tag_046()
 }
 void test_jxhtml_input_tag_047()
 {
-#define  TEST_STRING "<html><head></head><body><input istyle=\"a\" maxlength=\"10\"></body></html>"
-#define  RESULT_STRING "<html><head></head><body><input maxlength=\"10\"></body></html>"
+#define  TEST_STRING "<input istyle=\"a\" maxlength=\"10\">"
+#define  RESULT_STRING "<input maxlength=\"10\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9294,7 +9277,7 @@ void test_jxhtml_ol_tag_018()
 void test_jxhtml_option_tag_001() 
 {
 #define  TEST_STRING "<option></option>"
-#define  RESULT_STRING "<option>"
+#define  RESULT_STRING "<option></option>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9324,7 +9307,7 @@ void test_jxhtml_option_tag_001()
 void test_jxhtml_option_tag_002() 
 {
 #define  TEST_STRING "<option value></option>"
-#define  RESULT_STRING "<option>"
+#define  RESULT_STRING "<option></option>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9352,7 +9335,7 @@ void test_jxhtml_option_tag_002()
 void test_jxhtml_option_tag_003() 
 {
 #define  TEST_STRING "<option value=\"\"></option>"
-#define  RESULT_STRING "<option>"
+#define  RESULT_STRING "<option></option>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9380,7 +9363,7 @@ void test_jxhtml_option_tag_003()
 void test_jxhtml_option_tag_004() 
 {
 #define  TEST_STRING "<option value=\"a\"></option>"
-#define  RESULT_STRING "<option value=\"a\">"
+#define  RESULT_STRING "<option value=\"a\"></option>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9408,7 +9391,7 @@ void test_jxhtml_option_tag_004()
 void test_jxhtml_option_tag_005() 
 {
 #define  TEST_STRING "<option value=\"亀\"></option>"
-#define  RESULT_STRING "<option value=\"亀\">"
+#define  RESULT_STRING "<option value=\"亀\"></option>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9436,7 +9419,7 @@ void test_jxhtml_option_tag_005()
 void test_jxhtml_option_tag_006() 
 {
 #define  TEST_STRING "<option value=\"ﾊﾝｶｸ\"></option>"
-#define  RESULT_STRING "<option value=\"ﾊﾝｶｸ\">"
+#define  RESULT_STRING "<option value=\"ﾊﾝｶｸ\"></option>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9464,7 +9447,7 @@ void test_jxhtml_option_tag_006()
 void test_jxhtml_option_tag_007() 
 {
 #define  TEST_STRING "<option selected></option>"
-#define  RESULT_STRING "<option selected>"
+#define  RESULT_STRING "<option selected></option>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -12102,8 +12085,8 @@ void test_jxhtml_marquee_tag_018()
 /*============================================================================*/
 void test_jxhtml_meta_tag_001() 
 {
-#define  TEST_STRING "<meta>"
-#define  RESULT_STRING "<meta>"
+#define  TEST_STRING   "<meta>"
+#define  RESULT_STRING "<meta />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -12131,7 +12114,7 @@ void test_jxhtml_meta_tag_001()
 void test_jxhtml_meta_tag_002() 
 {
 #define  TEST_STRING "<meta http-equiv>"
-#define  RESULT_STRING "<meta>"
+#define  RESULT_STRING "<meta />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -12159,7 +12142,7 @@ void test_jxhtml_meta_tag_002()
 void test_jxhtml_meta_tag_003() 
 {
 #define  TEST_STRING "<meta http-equiv=\"\">"
-#define  RESULT_STRING "<meta>"
+#define  RESULT_STRING "<meta />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -12187,7 +12170,7 @@ void test_jxhtml_meta_tag_003()
 void test_jxhtml_meta_tag_004() 
 {
 #define  TEST_STRING "<meta http-equiv=\"content-type\">"
-#define  RESULT_STRING "<meta http-equiv=\"content-type\">"
+#define  RESULT_STRING "<meta http-equiv=\"content-type\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -12215,7 +12198,7 @@ void test_jxhtml_meta_tag_004()
 void test_jxhtml_meta_tag_005() 
 {
 #define  TEST_STRING "<meta http-equiv=\"abc\">"
-#define  RESULT_STRING "<meta http-equiv=\"abc\">"
+#define  RESULT_STRING "<meta http-equiv=\"abc\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -12243,7 +12226,7 @@ void test_jxhtml_meta_tag_005()
 void test_jxhtml_meta_tag_006() 
 {
 #define  TEST_STRING "<meta content>"
-#define  RESULT_STRING "<meta>"
+#define  RESULT_STRING "<meta />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -12271,7 +12254,7 @@ void test_jxhtml_meta_tag_006()
 void test_jxhtml_meta_tag_007() 
 {
 #define  TEST_STRING "<meta content=\"\">"
-#define  RESULT_STRING "<meta>"
+#define  RESULT_STRING "<meta />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -12299,7 +12282,7 @@ void test_jxhtml_meta_tag_007()
 void test_jxhtml_meta_tag_008() 
 {
 #define  TEST_STRING "<meta http-equiv=\"Content-Type\" content=\"text/html\">"
-#define  RESULT_STRING "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=Windows-31J\">"
+#define  RESULT_STRING "<meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml; charset=Windows-31J\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -12327,7 +12310,7 @@ void test_jxhtml_meta_tag_008()
 void test_jxhtml_meta_tag_009() 
 {
 #define  TEST_STRING "<meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml\">"
-#define  RESULT_STRING "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=Windows-31J\">"
+#define  RESULT_STRING "<meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml; charset=Windows-31J\" />"
   char  *ret;
   char  *tmp;
   device_table spec;

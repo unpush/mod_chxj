@@ -1393,7 +1393,7 @@ s_jxhtml_start_form_tag(void *pdoc, Node *node)
   /* Add cookie parameter                                                    */
   /*-------------------------------------------------------------------------*/
   if (jxhtml->cookie && jxhtml->cookie->cookie_id && dcflag == 1) {
-    char *vv = apr_psprintf(doc->buf.pool, "%s<input type='hidden' name='%s' value='%s'>",
+    char *vv = apr_psprintf(doc->buf.pool, "%s<input type='hidden' name='%s' value='%s' />",
                             jxhtml->out, 
                             CHXJ_COOKIE_PARAM,
                             chxj_url_decode(r, jxhtml->cookie->cookie_id));
@@ -2245,7 +2245,8 @@ static char *
 s_jxhtml_end_option_tag(void *pdoc, Node *UNUSED(child))
 {
   jxhtml_t *jxhtml = GET_JXHTML(pdoc);
-  /* Don't close */
+  Doc      *doc = jxhtml->doc;
+  W_L("</option>");
   return jxhtml->out;
 }
 
@@ -2261,7 +2262,7 @@ s_jxhtml_end_option_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_jxhtml_start_div_tag(void *pdoc, Node *child)
 {
-  jxhtml_t      *jxhtml;
+  jxhtml_t     *jxhtml;
   Doc          *doc;
   request_rec  *r;
   Attr         *attr;
