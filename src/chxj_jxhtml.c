@@ -438,7 +438,7 @@ chxj_convert_jxhtml(
   jxhtml.entryp = entryp;
   jxhtml.cookie = cookie;
 
-  chxj_set_content_type(r, "text/html; charset=Windows-31J");
+  chxj_set_content_type(r, "application/xhtml+xml; charset=Windows-31J");
 
   /*--------------------------------------------------------------------------*/
   /* The character string of the input is analyzed.                           */
@@ -599,10 +599,13 @@ s_jxhtml_start_html_tag(void *pdoc, Node *UNUSED(node))
   r      = doc->r;
   DBG(r, "start s_jxhtml_start_html_tag()");
 
+  W_L("<?xml version='1.0' encoding='Shift_JIS' ?>");
+  W_L("<!DOCTYPE html PUBLIC \"-//J-PHONE//DTD XHTML Basic 1.0 Plus//EN\" \"html-basic10-plus.dtd\">");
+
   /*--------------------------------------------------------------------------*/
   /* start HTML tag                                                           */
   /*--------------------------------------------------------------------------*/
-  W_L("<html>");
+  W_L("<html version=\"1.0\">");
 
   DBG(r, "end s_jxhtml_start_html_tag()");
 
@@ -621,7 +624,7 @@ s_jxhtml_start_html_tag(void *pdoc, Node *UNUSED(node))
 static char *
 s_jxhtml_end_html_tag(void *pdoc, Node *UNUSED(child)) 
 {
-  jxhtml_t       *jxhtml = GET_JXHTML(pdoc);
+  jxhtml_t      *jxhtml = GET_JXHTML(pdoc);
   Doc           *doc = jxhtml->doc;
 
   W_L("</html>");
@@ -641,7 +644,7 @@ s_jxhtml_end_html_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_jxhtml_start_meta_tag(void *pdoc, Node *node) 
 {
-  jxhtml_t      *jxhtml;
+  jxhtml_t     *jxhtml;
   Doc          *doc;
   request_rec  *r;
   Attr         *attr;
@@ -692,7 +695,7 @@ s_jxhtml_start_meta_tag(void *pdoc, Node *node)
           W_L(" ");
           W_V(name);
           W_L("=\"");
-          W_L("text/html; charset=Windows-31J");
+          W_L("application/xhtml+xml; charset=Windows-31J");
           W_L("\"");
         }
         else
@@ -733,7 +736,7 @@ s_jxhtml_start_meta_tag(void *pdoc, Node *node)
       break;
     }
   }
-  W_L(">");
+  W_L(" />");
   return jxhtml->out;
 }
 
@@ -886,7 +889,7 @@ s_jxhtml_start_base_tag(void *pdoc, Node *node)
       W_L("\"");
     }
   }
-  W_L(">");
+  W_L(" />");
   return jxhtml->out;
 }
 
@@ -1163,7 +1166,7 @@ s_jxhtml_end_a_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_jxhtml_start_br_tag(void *pdoc, Node *node)
 {
-  jxhtml_t      *jxhtml;
+  jxhtml_t     *jxhtml;
   Doc          *doc;
   request_rec  *r;
   Attr         *attr;
@@ -1189,7 +1192,7 @@ s_jxhtml_start_br_tag(void *pdoc, Node *node)
       }
     }
   }
-  W_L(">");
+  W_L(" />");
   return jxhtml->out;
 }
 
@@ -1229,7 +1232,7 @@ s_jxhtml_start_tr_tag(void *pdoc, Node *UNUSED(node))
   doc   = jxhtml->doc;
   r     = doc->r;
 
-  W_L("<br>\r\n");
+  W_L("<br />");
   return jxhtml->out;
 }
 
@@ -1534,7 +1537,7 @@ s_jxhtml_start_input_tag(void *pdoc, Node *node)
   if (checked) {
     W_L(" checked");
   }
-  W_L(">");
+  W_L(" />");
   return jxhtml->out;
 }
 
@@ -1942,7 +1945,7 @@ s_jxhtml_start_hr_tag(void *pdoc, Node *node)
       W_L("\"");
     }
   }
-  W_L(">");
+  W_L(" />");
   return jxhtml->out;
 }
 
@@ -1981,6 +1984,7 @@ s_jxhtml_start_img_tag(void *pdoc, Node *node)
 #ifndef IMG_NOT_CONVERT_FILENAME
   device_table  *spec = jxhtml->spec;
 #endif
+  int           has_alt = 0;
 
   W_L("<img");
   /*--------------------------------------------------------------------------*/
@@ -2073,9 +2077,13 @@ s_jxhtml_start_img_tag(void *pdoc, Node *node)
       W_L(" alt=\"");
       W_V(value);
       W_L("\"");
+      has_alt = 1;
     }
   }
-  W_L(">");
+  if (! has_alt) {
+    W_L(" alt=\"\"");
+  }
+  W_L(" />");
   return jxhtml->out;
 }
 

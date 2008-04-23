@@ -18,10 +18,13 @@
 #include "chxj_chtml10.c"
 #include "chxj_chtml20.c"
 #include "chxj_chtml30.c"
+#include "chxj_chtml40.c"
+#include "chxj_chtml50.c"
 #include "chxj_jhtml.c"
+#include "chxj_jxhtml.c"
 #include "chxj_hdml.c"
 #include "chxj_xhtml_mobile_1_0.c"
-#include "chxj_node_exchange.c"
+#include "chxj_node_convert.c"
 #include "chxj_tag_util.c"
 #include "chxj_encoding.c"
 #include "chxj_cookie.c"
@@ -407,7 +410,7 @@ main()
 {
   CU_pSuite hdml_suite;
   CU_initialize_registry();
-  hdml_suite = CU_add_suite("test chxj_exchange_hdml()", NULL, NULL);
+  hdml_suite = CU_add_suite("test chxj_convert_hdml()", NULL, NULL);
   s_get_form_no = test_get_form_no;
     
 
@@ -983,7 +986,7 @@ void test_hdml_001()
 
   SPEC_INIT(spec);
 
-  ret = chxj_exchange_hdml(&r, &spec, TEST_STRING, sizeof(TEST_STRING)-1, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, TEST_STRING, sizeof(TEST_STRING)-1, &destlen, &entry, &cookie);
   fprintf(stderr, "ret=[%s]\n", ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp("", ret) == 0);
@@ -1006,7 +1009,7 @@ void test_hdml_002()
 
   SPEC_INIT(spec);
 
-  ret = chxj_exchange_hdml(&r, &spec, TEST_STRING, sizeof(TEST_STRING)-1, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, TEST_STRING, sizeof(TEST_STRING)-1, &destlen, &entry, &cookie);
   fprintf(stderr, "ret=[%s]\n", ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp("", ret) == 0);
@@ -1043,7 +1046,7 @@ void test_hdml_comment_tag_001()
 
   SPEC_INIT(spec);
 
-  ret = chxj_exchange_hdml(&r, &spec, TEST_STRING, sizeof(TEST_STRING)-1, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, TEST_STRING, sizeof(TEST_STRING)-1, &destlen, &entry, &cookie);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "expect=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
@@ -1072,7 +1075,7 @@ void test_hdml_a_tag_name_attribute_001()
 
   SPEC_INIT(spec);
 
-  ret = chxj_exchange_hdml(&r, &spec, TEST_STRING, sizeof(TEST_STRING)-1, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, TEST_STRING, sizeof(TEST_STRING)-1, &destlen, &entry, &cookie);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
@@ -1098,7 +1101,7 @@ void test_hdml_a_tag_name_attribute_002()
 
   SPEC_INIT(spec);
 
-  ret = chxj_exchange_hdml(&r, &spec, TEST_STRING, sizeof(TEST_STRING)-1, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, TEST_STRING, sizeof(TEST_STRING)-1, &destlen, &entry, &cookie);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
   CU_ASSERT(ret != NULL);
@@ -1127,7 +1130,7 @@ void test_hdml_a_tag_name_attribute_003()
 
   destlen = sizeof(TEST_STRING)-1;
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -1157,7 +1160,7 @@ void test_hdml_a_tag_name_attribute_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -1187,7 +1190,7 @@ void test_hdml_a_tag_href_attribute_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -1217,7 +1220,7 @@ void test_hdml_a_tag_href_attribute_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -1247,7 +1250,7 @@ void test_hdml_a_tag_href_attribute_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -1277,7 +1280,7 @@ void test_hdml_a_tag_href_attribute_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -1307,7 +1310,7 @@ void test_hdml_a_tag_href_attribute_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -1337,7 +1340,7 @@ void test_hdml_a_tag_href_attribute_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, NULL);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, NULL);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -1367,7 +1370,7 @@ void test_hdml_a_tag_accesskey_attribute_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -1397,7 +1400,7 @@ void test_hdml_a_tag_accesskey_attribute_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -1427,7 +1430,7 @@ void test_hdml_a_tag_accesskey_attribute_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -1459,7 +1462,7 @@ void test_hdml_base_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -1489,7 +1492,7 @@ void test_hdml_base_tag_href_attribute_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -1519,7 +1522,7 @@ void test_hdml_base_tag_href_attribute_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -1549,7 +1552,7 @@ void test_hdml_base_tag_href_attribute_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -1579,7 +1582,7 @@ void test_hdml_base_tag_href_attribute_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -1612,7 +1615,7 @@ void test_hdml_blockquote_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -1642,7 +1645,7 @@ void test_hdml_blockquote_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -1672,7 +1675,7 @@ void test_hdml_blockquote_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -1702,7 +1705,7 @@ void test_hdml_blockquote_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -1732,7 +1735,7 @@ void test_hdml_blockquote_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -1762,7 +1765,7 @@ void test_hdml_blockquote_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -1799,7 +1802,7 @@ void test_hdml_body_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -1834,7 +1837,7 @@ void test_hdml_body_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -1868,7 +1871,7 @@ void test_hdml_body_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -1902,7 +1905,7 @@ void test_hdml_body_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -1936,7 +1939,7 @@ void test_hdml_body_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -1970,7 +1973,7 @@ void test_hdml_body_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -2004,7 +2007,7 @@ void test_hdml_body_tag_007()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -2038,7 +2041,7 @@ void test_hdml_body_tag_008()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -2072,7 +2075,7 @@ void test_hdml_body_tag_009()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -2106,7 +2109,7 @@ void test_hdml_body_tag_010()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -2140,7 +2143,7 @@ void test_hdml_body_tag_011()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -2174,7 +2177,7 @@ void test_hdml_body_tag_012()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -2208,7 +2211,7 @@ void test_hdml_body_tag_013()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -2242,7 +2245,7 @@ void test_hdml_body_tag_014()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -2276,7 +2279,7 @@ void test_hdml_body_tag_015()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -2309,7 +2312,7 @@ void test_hdml_br_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -2339,7 +2342,7 @@ void test_hdml_br_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -2369,7 +2372,7 @@ void test_hdml_br_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -2399,7 +2402,7 @@ void test_hdml_br_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -2429,7 +2432,7 @@ void test_hdml_br_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -2459,7 +2462,7 @@ void test_hdml_br_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -2489,7 +2492,7 @@ void test_hdml_br_tag_007()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -2524,7 +2527,7 @@ void test_hdml_center_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -2560,7 +2563,7 @@ void test_hdml_dir_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -2590,7 +2593,7 @@ void test_hdml_dir_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -2623,7 +2626,7 @@ void test_hdml_dir_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -2656,7 +2659,7 @@ void test_hdml_dl_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -2689,7 +2692,7 @@ void test_hdml_dt_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -2719,7 +2722,7 @@ void test_hdml_dt_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -2752,7 +2755,7 @@ void test_hdml_dd_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -2784,7 +2787,7 @@ void test_hdml_dd_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -2817,7 +2820,7 @@ void test_hdml_div_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -2847,7 +2850,7 @@ void test_hdml_div_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -2877,7 +2880,7 @@ void test_hdml_div_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -2907,7 +2910,7 @@ void test_hdml_div_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -2937,7 +2940,7 @@ void test_hdml_div_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -2967,7 +2970,7 @@ void test_hdml_div_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -2997,7 +3000,7 @@ void test_hdml_div_tag_007()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -3045,7 +3048,7 @@ void test_hdml_form_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -3090,7 +3093,7 @@ void test_hdml_form_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -3135,7 +3138,7 @@ void test_hdml_form_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -3180,7 +3183,7 @@ void test_hdml_form_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -3225,7 +3228,7 @@ void test_hdml_form_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -3270,7 +3273,7 @@ void test_hdml_form_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -3315,7 +3318,7 @@ void test_hdml_form_tag_007()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, NULL);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, NULL);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -3360,7 +3363,7 @@ void test_hdml_form_tag_008()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -3405,7 +3408,7 @@ void test_hdml_form_tag_009()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -3438,7 +3441,7 @@ void test_hdml_head_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -3468,7 +3471,7 @@ void test_hdml_head_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -3501,7 +3504,7 @@ void test_hdml_h1_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -3531,7 +3534,7 @@ void test_hdml_h1_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -3561,7 +3564,7 @@ void test_hdml_h1_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -3591,7 +3594,7 @@ void test_hdml_h1_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -3621,7 +3624,7 @@ void test_hdml_h1_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3650,7 +3653,7 @@ void test_hdml_h1_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -3680,7 +3683,7 @@ void test_hdml_h1_tag_007()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -3710,7 +3713,7 @@ void test_hdml_h1_tag_008()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -3740,7 +3743,7 @@ void test_hdml_h1_tag_009()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -3770,7 +3773,7 @@ void test_hdml_h1_tag_010()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3802,7 +3805,7 @@ void test_hdml_h2_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -3832,7 +3835,7 @@ void test_hdml_h2_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -3862,7 +3865,7 @@ void test_hdml_h2_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -3892,7 +3895,7 @@ void test_hdml_h2_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -3922,7 +3925,7 @@ void test_hdml_h2_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3951,7 +3954,7 @@ void test_hdml_h2_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -3981,7 +3984,7 @@ void test_hdml_h2_tag_007()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -4011,7 +4014,7 @@ void test_hdml_h2_tag_008()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -4041,7 +4044,7 @@ void test_hdml_h2_tag_009()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -4071,7 +4074,7 @@ void test_hdml_h2_tag_010()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4103,7 +4106,7 @@ void test_hdml_h3_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -4133,7 +4136,7 @@ void test_hdml_h3_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -4163,7 +4166,7 @@ void test_hdml_h3_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -4193,7 +4196,7 @@ void test_hdml_h3_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -4223,7 +4226,7 @@ void test_hdml_h3_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4252,7 +4255,7 @@ void test_hdml_h3_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -4282,7 +4285,7 @@ void test_hdml_h3_tag_007()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -4312,7 +4315,7 @@ void test_hdml_h3_tag_008()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -4342,7 +4345,7 @@ void test_hdml_h3_tag_009()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -4372,7 +4375,7 @@ void test_hdml_h3_tag_010()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4404,7 +4407,7 @@ void test_hdml_h4_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -4434,7 +4437,7 @@ void test_hdml_h4_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -4464,7 +4467,7 @@ void test_hdml_h4_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -4494,7 +4497,7 @@ void test_hdml_h4_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -4524,7 +4527,7 @@ void test_hdml_h4_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4553,7 +4556,7 @@ void test_hdml_h4_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -4583,7 +4586,7 @@ void test_hdml_h4_tag_007()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -4613,7 +4616,7 @@ void test_hdml_h4_tag_008()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -4643,7 +4646,7 @@ void test_hdml_h4_tag_009()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -4673,7 +4676,7 @@ void test_hdml_h4_tag_010()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4705,7 +4708,7 @@ void test_hdml_h5_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -4735,7 +4738,7 @@ void test_hdml_h5_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -4765,7 +4768,7 @@ void test_hdml_h5_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -4795,7 +4798,7 @@ void test_hdml_h5_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -4825,7 +4828,7 @@ void test_hdml_h5_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4854,7 +4857,7 @@ void test_hdml_h5_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -4884,7 +4887,7 @@ void test_hdml_h5_tag_007()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -4914,7 +4917,7 @@ void test_hdml_h5_tag_008()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -4944,7 +4947,7 @@ void test_hdml_h5_tag_009()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -4974,7 +4977,7 @@ void test_hdml_h5_tag_010()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5006,7 +5009,7 @@ void test_hdml_h6_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -5036,7 +5039,7 @@ void test_hdml_h6_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -5066,7 +5069,7 @@ void test_hdml_h6_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -5096,7 +5099,7 @@ void test_hdml_h6_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -5126,7 +5129,7 @@ void test_hdml_h6_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5155,7 +5158,7 @@ void test_hdml_h6_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -5185,7 +5188,7 @@ void test_hdml_h6_tag_007()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -5215,7 +5218,7 @@ void test_hdml_h6_tag_008()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -5245,7 +5248,7 @@ void test_hdml_h6_tag_009()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -5275,7 +5278,7 @@ void test_hdml_h6_tag_010()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5309,7 +5312,7 @@ void test_hdml_hr_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -5341,7 +5344,7 @@ void test_hdml_hr_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -5373,7 +5376,7 @@ void test_hdml_hr_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -5405,7 +5408,7 @@ void test_hdml_hr_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -5437,7 +5440,7 @@ void test_hdml_hr_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -5469,7 +5472,7 @@ void test_hdml_hr_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5500,7 +5503,7 @@ void test_hdml_hr_tag_007()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -5532,7 +5535,7 @@ void test_hdml_hr_tag_008()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -5564,7 +5567,7 @@ void test_hdml_hr_tag_009()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -5596,7 +5599,7 @@ void test_hdml_hr_tag_010()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -5628,7 +5631,7 @@ void test_hdml_hr_tag_011()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -5660,7 +5663,7 @@ void test_hdml_hr_tag_012()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -5692,7 +5695,7 @@ void test_hdml_hr_tag_013()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -5724,7 +5727,7 @@ void test_hdml_hr_tag_014()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -5756,7 +5759,7 @@ void test_hdml_hr_tag_015()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -5788,7 +5791,7 @@ void test_hdml_hr_tag_016()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -5820,7 +5823,7 @@ void test_hdml_hr_tag_017()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -5852,7 +5855,7 @@ void test_hdml_hr_tag_018()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -5893,7 +5896,7 @@ void test_hdml_html_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -5926,7 +5929,7 @@ void test_hdml_img_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -5956,7 +5959,7 @@ void test_hdml_img_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -5986,7 +5989,7 @@ void test_hdml_img_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -6016,7 +6019,7 @@ void test_hdml_img_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -6046,7 +6049,7 @@ void test_hdml_img_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -6076,7 +6079,7 @@ void test_hdml_img_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -6106,7 +6109,7 @@ void test_hdml_img_tag_007()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -6136,7 +6139,7 @@ void test_hdml_img_tag_008()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -6166,7 +6169,7 @@ void test_hdml_img_tag_009()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -6196,7 +6199,7 @@ void test_hdml_img_tag_010()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -6226,7 +6229,7 @@ void test_hdml_img_tag_011()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -6256,7 +6259,7 @@ void test_hdml_img_tag_012()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -6286,7 +6289,7 @@ void test_hdml_img_tag_013()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -6316,7 +6319,7 @@ void test_hdml_img_tag_014()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6345,7 +6348,7 @@ void test_hdml_img_tag_015()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -6375,7 +6378,7 @@ void test_hdml_img_tag_016()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -6405,7 +6408,7 @@ void test_hdml_img_tag_017()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -6435,7 +6438,7 @@ void test_hdml_img_tag_018()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -6465,7 +6468,7 @@ void test_hdml_img_tag_019()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -6495,7 +6498,7 @@ void test_hdml_img_tag_020()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -6525,7 +6528,7 @@ void test_hdml_img_tag_021()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -6555,7 +6558,7 @@ void test_hdml_img_tag_022()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -6585,7 +6588,7 @@ void test_hdml_img_tag_023()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -6615,7 +6618,7 @@ void test_hdml_img_tag_024()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -6645,7 +6648,7 @@ void test_hdml_img_tag_025()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -6675,7 +6678,7 @@ void test_hdml_img_tag_026()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -6705,7 +6708,7 @@ void test_hdml_img_tag_027()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -6735,7 +6738,7 @@ void test_hdml_img_tag_028()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -6765,7 +6768,7 @@ void test_hdml_img_tag_029()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -6795,7 +6798,7 @@ void test_hdml_img_tag_030()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -6825,7 +6828,7 @@ void test_hdml_img_tag_031()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -6855,7 +6858,7 @@ void test_hdml_img_tag_032()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -6885,7 +6888,7 @@ void test_hdml_img_tag_033()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -6915,7 +6918,7 @@ void test_hdml_img_tag_034()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -6945,7 +6948,7 @@ void test_hdml_img_tag_035()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -6975,7 +6978,7 @@ void test_hdml_img_tag_036()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -7005,7 +7008,7 @@ void test_hdml_img_tag_037()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -7053,7 +7056,7 @@ void test_hdml_input_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -7098,7 +7101,7 @@ void test_hdml_input_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -7143,7 +7146,7 @@ void test_hdml_input_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -7193,7 +7196,7 @@ void test_hdml_input_tag_004()
   form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -7245,7 +7248,7 @@ void test_hdml_input_tag_005()
   form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -7267,7 +7270,7 @@ void test_hdml_input_tag_006()
 "</NODISPLAY>\r\n" \
 "<DISPLAY NAME=D2 TITLE=\"NO TITLE\">\r\n" \
 "<ACTION TYPE=ACCEPT TASK=NOOP LABEL=\" \">\r\n" \
-"<A TASK=GOSUB LABEL=\"aｯｸ\" DEST=\"#$E00000500\" VARS=\"V=\" RECEIVE=\"E00000400;E00000301;E00000202\">$E00000102</A>\r\n" \
+"<A TASK=GOSUB LABEL=\"check\" DEST=\"#$E00000500\" VARS=\"V=\" RECEIVE=\"E00000400;E00000301;E00000202\">$E00000102</A>\r\n" \
 "\r\n" \
 "</DISPLAY>\r\n" \
 "<NODISPLAY NAME=\"_chk\">\r\n" \
@@ -7298,7 +7301,7 @@ void test_hdml_input_tag_006()
   form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -7345,7 +7348,7 @@ void test_hdml_input_tag_007()
   form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -7392,7 +7395,7 @@ void test_hdml_input_tag_008()
   form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -7440,7 +7443,7 @@ void test_hdml_input_tag_009()
   form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -7487,7 +7490,7 @@ void test_hdml_input_tag_010()
   form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -7518,7 +7521,7 @@ void test_hdml_input_tag_011()
   form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -7549,7 +7552,7 @@ void test_hdml_input_tag_012()
   form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -7580,7 +7583,7 @@ void test_hdml_input_tag_013()
   form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -7611,7 +7614,7 @@ void test_hdml_input_tag_014()
   form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -7642,7 +7645,7 @@ void test_hdml_input_tag_015()
   form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -7673,7 +7676,7 @@ void test_hdml_input_tag_016()
   form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -7704,7 +7707,7 @@ void test_hdml_input_tag_017()
   form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -7735,7 +7738,7 @@ void test_hdml_input_tag_018()
   form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -7766,7 +7769,7 @@ void test_hdml_input_tag_019()
   form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -7799,7 +7802,7 @@ void test_hdml_input_tag_020()
   form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -7831,7 +7834,7 @@ void test_hdml_input_tag_021()
   form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -7862,7 +7865,7 @@ void test_hdml_input_tag_022()
   form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -7893,7 +7896,7 @@ void test_hdml_input_tag_023()
   form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -7924,7 +7927,7 @@ void test_hdml_input_tag_024()
   form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -7955,7 +7958,7 @@ void test_hdml_input_tag_025()
   form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -7986,7 +7989,7 @@ void test_hdml_input_tag_026()
   form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -8017,7 +8020,7 @@ void test_hdml_input_tag_027()
   form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -8047,7 +8050,7 @@ void test_hdml_input_tag_028()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -8077,7 +8080,7 @@ void test_hdml_input_tag_029()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -8107,7 +8110,7 @@ void test_hdml_input_tag_030()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -8137,7 +8140,7 @@ void test_hdml_input_tag_031()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -8167,7 +8170,7 @@ void test_hdml_input_tag_032()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -8197,7 +8200,7 @@ void test_hdml_input_tag_033()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -8227,7 +8230,7 @@ void test_hdml_input_tag_034()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -8257,7 +8260,7 @@ void test_hdml_input_tag_035()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -8287,7 +8290,7 @@ void test_hdml_input_tag_036()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -8317,7 +8320,7 @@ void test_hdml_input_tag_037()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -8347,7 +8350,7 @@ void test_hdml_input_tag_038()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -8377,7 +8380,7 @@ void test_hdml_input_tag_039()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -8407,7 +8410,7 @@ void test_hdml_input_tag_040()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -8437,7 +8440,7 @@ void test_hdml_input_tag_041()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -8467,7 +8470,7 @@ void test_hdml_input_tag_042()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -8497,7 +8500,7 @@ void test_hdml_input_tag_043()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -8527,7 +8530,7 @@ void test_hdml_input_tag_044()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -8557,7 +8560,7 @@ void test_hdml_input_tag_045()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -8587,7 +8590,7 @@ void test_hdml_input_tag_046()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -8617,7 +8620,7 @@ void test_hdml_input_tag_047()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -8650,7 +8653,7 @@ void test_hdml_li_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -8680,7 +8683,7 @@ void test_hdml_li_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -8710,7 +8713,7 @@ void test_hdml_li_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -8740,7 +8743,7 @@ void test_hdml_li_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -8770,7 +8773,7 @@ void test_hdml_li_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -8800,7 +8803,7 @@ void test_hdml_li_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -8830,7 +8833,7 @@ void test_hdml_li_tag_007()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -8860,7 +8863,7 @@ void test_hdml_li_tag_008()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -8890,7 +8893,7 @@ void test_hdml_li_tag_009()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -8920,7 +8923,7 @@ void test_hdml_li_tag_010()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -8950,7 +8953,7 @@ void test_hdml_li_tag_011()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -8980,7 +8983,7 @@ void test_hdml_li_tag_012()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -9010,7 +9013,7 @@ void test_hdml_li_tag_013()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -9046,7 +9049,7 @@ void test_hdml_menu_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -9076,7 +9079,7 @@ void test_hdml_menu_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -9109,7 +9112,7 @@ void test_hdml_menu_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -9145,7 +9148,7 @@ void test_hdml_ol_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -9175,7 +9178,7 @@ void test_hdml_ol_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -9208,7 +9211,7 @@ void test_hdml_ol_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -9241,7 +9244,7 @@ void test_hdml_option_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -9271,7 +9274,7 @@ void test_hdml_option_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -9315,7 +9318,7 @@ void test_hdml_option_tag_003()
   form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -9359,7 +9362,7 @@ void test_hdml_option_tag_004()
   form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -9392,7 +9395,7 @@ void test_hdml_p_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -9422,7 +9425,7 @@ void test_hdml_p_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -9452,7 +9455,7 @@ void test_hdml_p_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -9482,7 +9485,7 @@ void test_hdml_p_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -9512,7 +9515,7 @@ void test_hdml_p_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -9542,7 +9545,7 @@ void test_hdml_p_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9571,7 +9574,7 @@ void test_hdml_p_tag_007()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -9601,7 +9604,7 @@ void test_hdml_p_tag_008()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -9634,7 +9637,7 @@ void test_hdml_plaintext_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -9664,7 +9667,7 @@ void test_hdml_plaintext_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -9694,7 +9697,7 @@ void test_hdml_plaintext_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -9724,7 +9727,7 @@ void test_hdml_plaintext_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -9754,7 +9757,7 @@ void test_hdml_plaintext_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -9787,7 +9790,7 @@ void test_hdml_pre_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -9817,7 +9820,7 @@ void test_hdml_pre_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -9847,7 +9850,7 @@ void test_hdml_pre_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -9878,7 +9881,7 @@ void test_hdml_pre_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -9909,7 +9912,7 @@ void test_hdml_pre_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -9943,7 +9946,7 @@ void test_hdml_select_tag_001()
   form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -9991,7 +9994,7 @@ void test_hdml_select_tag_002()
   form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -10022,7 +10025,7 @@ void test_hdml_select_tag_003()
   form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -10053,7 +10056,7 @@ void test_hdml_select_tag_004()
   form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -10085,7 +10088,7 @@ void test_hdml_select_tag_005()
   form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -10116,7 +10119,7 @@ void test_hdml_select_tag_006()
   form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -10169,7 +10172,7 @@ void test_hdml_textarea_tag_001()
   form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -10220,7 +10223,7 @@ void test_hdml_textarea_tag_002()
   form_no_counter = 0;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -10253,7 +10256,7 @@ void test_hdml_title_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -10283,7 +10286,7 @@ void test_hdml_title_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -10319,7 +10322,7 @@ void test_hdml_ul_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -10349,7 +10352,7 @@ void test_hdml_ul_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -10382,7 +10385,7 @@ void test_hdml_ul_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -10415,7 +10418,7 @@ void test_hdml_blink_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -10448,7 +10451,7 @@ void test_hdml_marquee_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -10481,7 +10484,7 @@ void test_hdml_meta_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
@@ -10514,7 +10517,7 @@ void test_hdml_font_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "actual=[%s]\n", ret);
   fprintf(stderr, "except=[%s]\n", RESULT_STRING);
