@@ -228,6 +228,7 @@ void test_chtml50_img_tag_010();
 void test_chtml50_img_tag_011();
 void test_chtml50_img_tag_012();
 void test_chtml50_img_tag_013();
+void test_chtml50_img_tag_013_1();
 void test_chtml50_img_tag_014();
 void test_chtml50_img_tag_015();
 void test_chtml50_img_tag_016();
@@ -649,6 +650,7 @@ main()
   CU_add_test(chtml50_suite, "test <img align> with value(bottom)." ,             test_chtml50_img_tag_011);
   CU_add_test(chtml50_suite, "test <img align> with value(left)." ,               test_chtml50_img_tag_012);
   CU_add_test(chtml50_suite, "test <img align> with value(right)." ,              test_chtml50_img_tag_013);
+  CU_add_test(chtml50_suite, "test <img align> with value(center)." ,             test_chtml50_img_tag_013_1);
   CU_add_test(chtml50_suite, "test <img align> with value(unkown)." ,             test_chtml50_img_tag_014);
   CU_add_test(chtml50_suite, "test <img width> with no value." ,                  test_chtml50_img_tag_015);
   CU_add_test(chtml50_suite, "test <img width> with void value." ,                test_chtml50_img_tag_016);
@@ -5715,6 +5717,34 @@ void test_chtml50_img_tag_013()
 {
 #define  TEST_STRING "<html><head></head><body><img align=\"right\"></body></html>"
 #define  RESULT_STRING "<html><head></head><body><img align=\"right\"></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_chtml50(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml50_img_tag_013_1() 
+{
+#define  TEST_STRING "<html><head></head><body><img align=\"center\"></body></html>"
+#define  RESULT_STRING "<html><head></head><body><img align=\"center\"></body></html>"
   char  *ret;
   char  *tmp;
   device_table spec;
