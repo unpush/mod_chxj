@@ -2278,14 +2278,21 @@ s_xhtml_1_0_start_img_tag(void *pdoc, Node *node)
     }
     else 
     if (STRCASEEQ('a','A',"align",name)) {
-      if (value && (STRCASEEQ('t','T',"top",   value) ||
-                    STRCASEEQ('m','M',"middle",value) ||
-                    STRCASEEQ('b','B',"bottom",value) ||
-                    STRCASEEQ('l','L',"left",  value) ||
-                    STRCASEEQ('r','R',"right", value))) {
-        W_L(" align=\"");
-        W_V(value);
-        W_L("\"");
+      if (value) {
+        if (STRCASEEQ('t','T',"top",   value) ||
+            STRCASEEQ('m','M',"middle",value) ||
+            STRCASEEQ('b','B',"bottom",value) ||
+            STRCASEEQ('l','L',"left",  value) ||
+            STRCASEEQ('r','R',"right", value)) {
+          W_L(" align=\"");
+          W_V(value);
+          W_L("\"");
+        }
+        else if (STRCASEEQ('c','C',"center",  value)) {
+          W_L(" align=\"");
+          W_L("middle");
+          W_L("\"");
+        }
       }
     }
     else if (STRCASEEQ('a','A',"alt",name) && value && *value) {
