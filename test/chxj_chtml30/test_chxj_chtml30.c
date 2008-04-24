@@ -208,6 +208,8 @@ void test_chtml30_hr_tag_015();
 void test_chtml30_hr_tag_016();
 void test_chtml30_hr_tag_017();
 void test_chtml30_hr_tag_018();
+void test_chtml30_hr_tag_018_1();
+void test_chtml30_hr_tag_018_2();
 
 void test_chtml30_html_tag_001();
 
@@ -624,7 +626,9 @@ main()
   CU_add_test(chtml30_suite, "test <hr width> with non numeric value.",           test_chtml30_hr_tag_015);
   CU_add_test(chtml30_suite, "test <hr width> with numeric value.",               test_chtml30_hr_tag_016);
   CU_add_test(chtml30_suite, "test <hr noshade>.",                                test_chtml30_hr_tag_017);
-  CU_add_test(chtml30_suite, "test <hr color>.",                                  test_chtml30_hr_tag_018);
+  CU_add_test(chtml30_suite, "test <hr color> 1.",                                test_chtml30_hr_tag_018);
+  CU_add_test(chtml30_suite, "test <hr color> 2.",                                test_chtml30_hr_tag_018_1);
+  CU_add_test(chtml30_suite, "test <hr color> 3.",                                test_chtml30_hr_tag_018_2);
 
   CU_add_test(chtml30_suite, "test <html>.",                                      test_chtml30_html_tag_001);
 
@@ -5192,6 +5196,62 @@ void test_chtml30_hr_tag_017()
 void test_chtml30_hr_tag_018() 
 {
 #define  TEST_STRING "<html><head></head><body><hr width=\"10\" color=\"#ff0000\"></body></html>"
+#define  RESULT_STRING "<html><head></head><body><hr width=\"10\"></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_chtml30(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml30_hr_tag_018_1() 
+{
+#define  TEST_STRING "<html><head></head><body><hr width=\"10\" color=\"\"></body></html>"
+#define  RESULT_STRING "<html><head></head><body><hr width=\"10\"></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_chtml30(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml30_hr_tag_018_2() 
+{
+#define  TEST_STRING "<html><head></head><body><hr width=\"10\" color></body></html>"
 #define  RESULT_STRING "<html><head></head><body><hr width=\"10\"></body></html>"
   char  *ret;
   char  *tmp;
