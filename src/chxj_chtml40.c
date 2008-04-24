@@ -1695,11 +1695,12 @@ s_chtml40_start_img_tag(void *pdoc, Node *node)
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
-      if (value && (STRCASEEQ('t','T',"top",   value) ||
-                    STRCASEEQ('m','M',"middle",value) ||
-                    STRCASEEQ('b','B',"bottom",value) ||
-                    STRCASEEQ('l','L',"left",  value) ||
-                    STRCASEEQ('r','R',"right", value))) {
+      if (value && (STRCASEEQ('t','T',"top",    value) ||
+                    STRCASEEQ('m','M',"middle", value) ||
+                    STRCASEEQ('b','B',"bottom", value) ||
+                    STRCASEEQ('l','L',"left",   value) ||
+                    STRCASEEQ('c','C',"center", value) ||
+                    STRCASEEQ('r','R',"right",  value))) {
         W_L(" align=\"");
         W_V(value);
         W_L("\"");
@@ -1744,12 +1745,6 @@ s_chtml40_start_img_tag(void *pdoc, Node *node)
       W_L(" alt=\"");
       W_V(value);
       W_L("\"");
-    }
-    else if (STRCASEEQ('a','A',"align", name) && value && *value) {
-      /*----------------------------------------------------------------------*/
-      /* CHTML 4.0                                                            */
-      /*----------------------------------------------------------------------*/
-      /* ignore */
     }
   }
   W_L(">");
