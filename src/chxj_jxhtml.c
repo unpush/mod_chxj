@@ -2611,11 +2611,26 @@ s_jxhtml_end_blockquote_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_jxhtml_start_dir_tag(void *pdoc, Node *UNUSED(child))
+s_jxhtml_start_dir_tag(void *pdoc, Node *node)
 {
   jxhtml_t *jxhtml = GET_JXHTML(pdoc);
-  Doc *doc = jxhtml->doc;
-  W_L("<dir>");
+  Doc      *doc = jxhtml->doc;
+  Attr     *attr;
+  W_L("<dir");
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char *name   = qs_get_attr_name(doc,attr);
+    char *value  = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('t','T',"type",name)) {
+      if (value && (STRCASEEQ('d','D',"disc",value) || STRCASEEQ('c','C',"circle",value) || STRCASEEQ('s','S',"square",value))) {
+        W_L(" type=\"");
+        W_V(value);
+        W_L("\"");
+      }
+    }
+  }
+  W_L(">");
   return jxhtml->out;
 }
 
