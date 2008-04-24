@@ -2234,6 +2234,8 @@ s_hdml_start_img_tag(void *pdoc, Node *node)
   device_table  *spec;
 #endif
   Attr          *attr;
+  char          *out;
+  int           align_flag = 0;
 
   hdml = GET_HDML(pdoc);
   doc  = hdml->doc;
@@ -2243,7 +2245,9 @@ s_hdml_start_img_tag(void *pdoc, Node *node)
 
   s_hdml_tag_output_upper_half(hdml, node);
 
-  s_output_to_hdml_out(hdml, "<img");
+  out = apr_palloc(doc->r->pool, 1);
+  out[0] = 0;
+  out = apr_pstrcat(doc->r->pool, out, "<img", NULL);
 
   /* Get Attributes */
   for (attr = qs_get_attr(doc,node);
@@ -2253,52 +2257,49 @@ s_hdml_start_img_tag(void *pdoc, Node *node)
     char *value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('s','S',"src",name) && value && *value) {
       value = chxj_encoding_parameter(hdml->doc->r, value);
-      s_output_to_hdml_out(hdml, " src=\"");
+      out = apr_pstrcat(doc->r->pool, out, " src=\"", NULL);
 #ifdef IMG_NOT_CONVERT_FILENAME
-      s_output_to_hdml_out(hdml, value    );
+      out = apr_pstrcat(doc->r->pool, out, value, NULL);
 #else
-      s_output_to_hdml_out(hdml, chxj_img_conv(doc->r, spec,value));
+      out = apr_pstrcat(doc->r->pool, out, chxj_img_conv(doc->r, spec,value), NULL);
 #endif
-      s_output_to_hdml_out(hdml, "\""     );
+      out = apr_pstrcat(doc->r->pool, out, "\"", NULL);
     }
     else if (STRCASEEQ('a','A',"align",name)) {
-      if (value && (STRCASEEQ('t','T',"top",   value) ||
-                    STRCASEEQ('m','M',"middle",value) ||
-                    STRCASEEQ('b','B',"bottom",value) ||
-                    STRCASEEQ('l','L',"left",  value) ||
-                    STRCASEEQ('r','R',"right", value))) {
-        s_output_to_hdml_out(hdml, " align=\"" );
-        s_output_to_hdml_out(hdml, value       );
-        s_output_to_hdml_out(hdml, "\""        );
+      if (value) {
+        if (STRCASEEQ('r','R',"right", value)) {
+          s_output_to_hdml_out(hdml, "<RIGHT>" );
+          align_flag = 1;
+        }
+        else if (STRCASEEQ('c','C',"center",value)) {
+          s_output_to_hdml_out(hdml, "<CENTER>" );
+          align_flag = 1;
+        }
       }
     }
-    else if (STRCASEEQ('w','W',"width",name) && value && *value) {
-      s_output_to_hdml_out(hdml, " width=\"");
-      s_output_to_hdml_out(hdml, value      );
-      s_output_to_hdml_out(hdml, "\""       );
+    else if (STRCASEEQ('w','W',"width",name)) {
+      /* ignore */
     }
     else if (STRCASEEQ('h','H',"height",name) && value && *value) {
-      s_output_to_hdml_out(hdml, " height=\"");
-      s_output_to_hdml_out(hdml, value       );
-      s_output_to_hdml_out(hdml, "\""        );
+      /* ignore */
     }
     else if (STRCASEEQ('h','H',"hspace", name) && value && *value) {
-      s_output_to_hdml_out(hdml, " hspace=\"");
-      s_output_to_hdml_out(hdml, value       );
-      s_output_to_hdml_out(hdml, "\""        );
+      /* ignore */
     }
     else if (STRCASEEQ('v','V',"vspace",name) && value && *value) {
-      s_output_to_hdml_out(hdml, " vspace=\"");
-      s_output_to_hdml_out(hdml, value       );
-      s_output_to_hdml_out(hdml, "\""        );
+      /* ignore */
     }
     else if (STRCASEEQ('a','A',"alt",name) && value && *value) {
-      s_output_to_hdml_out(hdml, " alt=\""   );
-      s_output_to_hdml_out(hdml, value       );
-      s_output_to_hdml_out(hdml, "\""        );
+      out = apr_pstrcat(doc->r->pool, out, " alt=\"", NULL);
+      out = apr_pstrcat(doc->r->pool, out, value, NULL);
+      out = apr_pstrcat(doc->r->pool, out, "\"", NULL);
     }
   }
-  s_output_to_hdml_out(hdml, ">"             );
+  out = apr_pstrcat(doc->r->pool, out, ">", NULL);
+  s_output_to_hdml_out(hdml, out);
+  if (align_flag) {
+    s_output_to_hdml_out(hdml, "<BR>");
+  }
 
   hdml->hdml_br_flag = 0;
 

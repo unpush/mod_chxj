@@ -229,6 +229,7 @@ void test_hdml_img_tag_010();
 void test_hdml_img_tag_011();
 void test_hdml_img_tag_012();
 void test_hdml_img_tag_013();
+void test_hdml_img_tag_013_1();
 void test_hdml_img_tag_014();
 void test_hdml_img_tag_015();
 void test_hdml_img_tag_016();
@@ -417,7 +418,6 @@ main()
   hdml_suite = CU_add_suite("test chxj_convert_hdml()", NULL, NULL);
   s_get_form_no = test_get_form_no;
     
-
   /*=========================================================================*/
   /* COMMENT                                                                 */
   /*=========================================================================*/
@@ -660,7 +660,6 @@ main()
   /* <html>                                                                  */
   /*=========================================================================*/
   CU_add_test(hdml_suite, "test <html>.",                                      test_hdml_html_tag_001);
-
   /*=========================================================================*/
   /* <img>                                                                   */
   /*=========================================================================*/
@@ -677,6 +676,7 @@ main()
   CU_add_test(hdml_suite, "test <img align> with value(bottom)." ,             test_hdml_img_tag_011);
   CU_add_test(hdml_suite, "test <img align> with value(left)." ,               test_hdml_img_tag_012);
   CU_add_test(hdml_suite, "test <img align> with value(right)." ,              test_hdml_img_tag_013);
+  CU_add_test(hdml_suite, "test <img align> with value(center)." ,             test_hdml_img_tag_013_1);
   CU_add_test(hdml_suite, "test <img align> with value(unkown)." ,             test_hdml_img_tag_014);
   CU_add_test(hdml_suite, "test <img width> with no value." ,                  test_hdml_img_tag_015);
   CU_add_test(hdml_suite, "test <img width> with void value." ,                test_hdml_img_tag_016);
@@ -701,7 +701,6 @@ main()
   CU_add_test(hdml_suite, "test <img alt> with alphabetic value." ,            test_hdml_img_tag_035);
   CU_add_test(hdml_suite, "test <img alt> with japanese value." ,              test_hdml_img_tag_036);
   CU_add_test(hdml_suite, "test <img alt> with japanese-hankaku value." ,      test_hdml_img_tag_037);
-
   /*=========================================================================*/
   /* <input>                                                                 */
   /*=========================================================================*/
@@ -6229,7 +6228,7 @@ void test_hdml_img_tag_008()
 void test_hdml_img_tag_009() 
 {
 #define  TEST_STRING "<img align=\"top\">"
-#define  RESULT_STRING "<img align=\"top\">"
+#define  RESULT_STRING "<img>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -6259,7 +6258,7 @@ void test_hdml_img_tag_009()
 void test_hdml_img_tag_010() 
 {
 #define  TEST_STRING "<img align=\"middle\">"
-#define  RESULT_STRING "<img align=\"middle\">"
+#define  RESULT_STRING "<img>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -6289,7 +6288,7 @@ void test_hdml_img_tag_010()
 void test_hdml_img_tag_011() 
 {
 #define  TEST_STRING "<img align=\"bottom\">"
-#define  RESULT_STRING "<img align=\"bottom\">"
+#define  RESULT_STRING "<img>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -6319,7 +6318,7 @@ void test_hdml_img_tag_011()
 void test_hdml_img_tag_012() 
 {
 #define  TEST_STRING "<img align=\"left\">"
-#define  RESULT_STRING "<img align=\"left\">"
+#define  RESULT_STRING "<img>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -6349,7 +6348,37 @@ void test_hdml_img_tag_012()
 void test_hdml_img_tag_013() 
 {
 #define  TEST_STRING "<img align=\"right\">"
-#define  RESULT_STRING "<img align=\"right\">"
+#define  RESULT_STRING "<RIGHT><img><BR>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_hdml_img_tag_013_1() 
+{
+#define  TEST_STRING "<img align=\"center\">"
+#define  RESULT_STRING "<CENTER><img><BR>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -6468,7 +6497,7 @@ void test_hdml_img_tag_016()
 void test_hdml_img_tag_017() 
 {
 #define  TEST_STRING "<img width=\"abc\">"
-#define  RESULT_STRING "<img width=\"abc\">"
+#define  RESULT_STRING "<img>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -6498,7 +6527,7 @@ void test_hdml_img_tag_017()
 void test_hdml_img_tag_018() 
 {
 #define  TEST_STRING "<img width=\"10\">"
-#define  RESULT_STRING "<img width=\"10\">"
+#define  RESULT_STRING "<img>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -6528,7 +6557,7 @@ void test_hdml_img_tag_018()
 void test_hdml_img_tag_019() 
 {
 #define  TEST_STRING "<img width=\"10%\">"
-#define  RESULT_STRING "<img width=\"10%\">"
+#define  RESULT_STRING "<img>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -6618,7 +6647,7 @@ void test_hdml_img_tag_021()
 void test_hdml_img_tag_022() 
 {
 #define  TEST_STRING "<img height=\"abc\">"
-#define  RESULT_STRING "<img height=\"abc\">"
+#define  RESULT_STRING "<img>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -6648,7 +6677,7 @@ void test_hdml_img_tag_022()
 void test_hdml_img_tag_023() 
 {
 #define  TEST_STRING "<img height=\"10\">"
-#define  RESULT_STRING "<img height=\"10\">"
+#define  RESULT_STRING "<img>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -6678,7 +6707,7 @@ void test_hdml_img_tag_023()
 void test_hdml_img_tag_024() 
 {
 #define  TEST_STRING "<img height=\"10%\">"
-#define  RESULT_STRING "<img height=\"10%\">"
+#define  RESULT_STRING "<img>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -6768,7 +6797,7 @@ void test_hdml_img_tag_026()
 void test_hdml_img_tag_027() 
 {
 #define  TEST_STRING "<img hspace=\"abc\">"
-#define  RESULT_STRING "<img hspace=\"abc\">"
+#define  RESULT_STRING "<img>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -6798,7 +6827,7 @@ void test_hdml_img_tag_027()
 void test_hdml_img_tag_028() 
 {
 #define  TEST_STRING "<img hspace=\"10\">"
-#define  RESULT_STRING "<img hspace=\"10\">"
+#define  RESULT_STRING "<img>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -6888,7 +6917,7 @@ void test_hdml_img_tag_030()
 void test_hdml_img_tag_031() 
 {
 #define  TEST_STRING "<img vspace=\"abc\">"
-#define  RESULT_STRING "<img vspace=\"abc\">"
+#define  RESULT_STRING "<img>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -6918,7 +6947,7 @@ void test_hdml_img_tag_031()
 void test_hdml_img_tag_032() 
 {
 #define  TEST_STRING "<img vspace=\"10\">"
-#define  RESULT_STRING "<img vspace=\"10\">"
+#define  RESULT_STRING "<img>"
   char  *ret;
   char  *tmp;
   device_table spec;
