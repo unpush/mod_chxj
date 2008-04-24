@@ -97,6 +97,7 @@ void test_hdml_center_tag_001();
 void test_hdml_dir_tag_001();
 void test_hdml_dir_tag_002();
 void test_hdml_dir_tag_003();
+void test_hdml_dir_tag_004();
 
 void test_hdml_dl_tag_001();
 
@@ -501,6 +502,7 @@ main()
   CU_add_test(hdml_suite, "test <dir>.",                                       test_hdml_dir_tag_001);
   CU_add_test(hdml_suite, "test <dir> with no <li>.",                          test_hdml_dir_tag_002);
   CU_add_test(hdml_suite, "test <dir> with nested.",                           test_hdml_dir_tag_003);
+  CU_add_test(hdml_suite, "test <dir type> 1.",                                test_hdml_dir_tag_004);
 
   /*=========================================================================*/
   /* <DL>                                                                    */
@@ -2618,6 +2620,39 @@ void test_hdml_dir_tag_002()
 void test_hdml_dir_tag_003()
 {
 #define  TEST_STRING "<dir><li>あああ</li><dir><li>いいい</li></dir></dir>"
+#define  RESULT_STRING \
+"<BR>\r\n" \
+"<WRAP>&nbsp;あああ<BR>\r\n" \
+"<WRAP>&nbsp;&nbsp;いいい<BR>\r\n"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_hdml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual=[%s]\n", ret);
+  fprintf(stderr, "except=[%s]\n", RESULT_STRING);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_hdml_dir_tag_004()
+{
+#define  TEST_STRING "<dir type=\"disc\"><li>あああ</li><dir><li>いいい</li></dir></dir>"
 #define  RESULT_STRING \
 "<BR>\r\n" \
 "<WRAP>&nbsp;あああ<BR>\r\n" \
