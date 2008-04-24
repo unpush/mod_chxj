@@ -379,8 +379,9 @@ typedef struct {
 
 module AP_MODULE_DECLARE_DATA chxj_module;
 
-#define CHXJ_IMG_ON     (1)
-#define CHXJ_IMG_OFF    (0)
+#define CHXJ_IMG_ON     (2)
+#define CHXJ_IMG_OFF    (1)
+#define CHXJ_IMG_NONE   (0)
 
 
 #define DBG(X,args...)  chxj_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(request_rec*)(X),##args)

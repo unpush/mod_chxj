@@ -654,7 +654,8 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
     if (! STRNCASEEQ('t','T',"text/html",r->content_type, sizeof("text/html")-1)
     &&  ! STRNCASEEQ('t','T',"text/xml", r->content_type, sizeof("text/xml")-1)
     &&  ! STRNCASEEQ('a','A',"application/xhtml+xml", r->content_type, sizeof("application/xhtml+xml")-1)
-    &&  ! (STRNCASEEQ('i','I',"image/",  r->content_type, sizeof("image/") -1)
+    &&  ! (dconf->image == CHXJ_IMG_ON
+          && STRNCASEEQ('i','I',"image/",  r->content_type, sizeof("image/") -1)
           && ( STRCASEEQ('j','J',"jpeg",            &r->content_type[6])         /* JPEG */
             || STRCASEEQ('j','J',"jp2",             &r->content_type[6])         /* JPEG2000 */
             || STRCASEEQ('j','J',"jpeg2000",        &r->content_type[6])         /* JPEG2000 */
@@ -840,6 +841,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
         if (spec->html_spec_type != CHXJ_SPEC_UNKNOWN 
             && r->content_type 
             && ( *r->content_type == 'i' || *r->content_type == 'I')
+            && dconf->image == CHXJ_IMG_ON
             && strncasecmp("image/", r->content_type, 6) == 0
             && ( STRCASEEQ('j','J',"jpeg",            &r->content_type[6])         /* JPEG */
               || STRCASEEQ('j','J',"jp2",             &r->content_type[6])         /* JPEG2000 */
@@ -1334,7 +1336,7 @@ chxj_create_per_dir_config(apr_pool_t *p, char *arg)
   conf->emoji_data_file  = NULL;
   conf->emoji            = NULL;
   conf->emoji_tail       = NULL;
-  conf->image            = CHXJ_IMG_OFF;
+  conf->image            = CHXJ_IMG_NONE;
   conf->image_cache_dir  = apr_psprintf(p, "%s",DEFAULT_IMAGE_CACHE_DIR);
   conf->image_cache_limit = 0;
   conf->server_side_encoding = NULL;
@@ -1387,7 +1389,7 @@ chxj_merge_per_dir_config(apr_pool_t *p, void *basev, void *addv)
   mrg->device_data_file = NULL;
   mrg->devices          = NULL;
   mrg->emoji_data_file  = NULL;
-  mrg->image            = CHXJ_IMG_OFF;
+  mrg->image            = CHXJ_IMG_NONE;
   mrg->image_cache_dir  = NULL;
   mrg->image_copyright  = NULL;
   mrg->image_cache_limit  = 0;
@@ -1416,11 +1418,12 @@ chxj_merge_per_dir_config(apr_pool_t *p, void *basev, void *addv)
     mrg->emoji_data_file = apr_pstrdup(p, add->emoji_data_file);
   }
 
-  if (add->image == CHXJ_IMG_OFF) 
+  if (add->image == CHXJ_IMG_NONE) {
     mrg->image = base->image;
-  else 
+  }
+  else {
     mrg->image = add->image;
-
+  }
 
   if (strcasecmp(add->image_cache_dir ,DEFAULT_IMAGE_CACHE_DIR)==0) {
     mrg->image_cache_dir = apr_pstrdup(p, base->image_cache_dir);
@@ -1835,10 +1838,12 @@ cmd_set_image_engine(cmd_parms* UNUSED(parms), void *mconfig, const char* arg)
     return "image uri is too long.";
 
   conf = (mod_chxj_config*)mconfig;
-  if (strcasecmp("ON", arg) == 0)
+  if (strcasecmp("ON", arg) == 0) {
     conf->image = CHXJ_IMG_ON;
-  else
+  }
+  else {
     conf->image = CHXJ_IMG_OFF;
+  }
 
   return NULL;
 }
