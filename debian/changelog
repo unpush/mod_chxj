@@ -2,6 +2,7 @@ libapache2-mod-chxj (0.11.1-1) unstable; urgency=low
 
   * Fixed bug. 
     - ``Off'' did not work by the ChxjImageEngine directive. 
+      (Reported by R. thanks!)
 
  -- Atsushi Konno <konn@users.sourceforge.jp>  Thu, 24 Apr 2008 19:54:14 +0900
 
