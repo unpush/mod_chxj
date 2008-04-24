@@ -1689,14 +1689,21 @@ s_chtml30_start_img_tag(void *pdoc, Node *node)
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
-      if (value && (STRCASEEQ('t','T',"top",   value) ||
-                    STRCASEEQ('m','M',"middle",value) ||
-                    STRCASEEQ('b','B',"bottom",value) ||
-                    STRCASEEQ('l','L',"left",  value) ||
-                    STRCASEEQ('r','R',"right", value))) {
-        W_L(" align=\"");
-        W_V(value);
-        W_L("\"");
+      if (value) {
+        if (STRCASEEQ('t','T',"top",   value) ||
+            STRCASEEQ('m','M',"middle",value) ||
+            STRCASEEQ('b','B',"bottom",value) ||
+            STRCASEEQ('l','L',"left",  value) ||
+            STRCASEEQ('r','R',"right", value)) {
+          W_L(" align=\"");
+          W_V(value);
+          W_L("\"");
+        }
+        else if (STRCASEEQ('c','C',"center",  value)) {
+          W_L(" align=\"");
+          W_L("middle");
+          W_L("\"");
+        }
       }
     }
     else if (STRCASEEQ('w','W',"width", name) && value && *value) {
