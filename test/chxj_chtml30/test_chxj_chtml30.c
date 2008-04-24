@@ -94,6 +94,7 @@ void test_chtml30_center_tag_001();
 
 void test_chtml30_dir_tag_001();
 void test_chtml30_dir_tag_002();
+void test_chtml30_dir_tag_003();
 
 void test_chtml30_dl_tag_001();
 
@@ -519,6 +520,7 @@ main()
 
   CU_add_test(chtml30_suite, "test <dir>.",                                       test_chtml30_dir_tag_001);
   CU_add_test(chtml30_suite, "test <dir> with no <li>.",                          test_chtml30_dir_tag_002);
+  CU_add_test(chtml30_suite, "test <dir type>.",                                  test_chtml30_dir_tag_003);
 
   CU_add_test(chtml30_suite, "test <dl>.",                                        test_chtml30_dl_tag_001);
 
@@ -2346,6 +2348,34 @@ void test_chtml30_dir_tag_001()
 void test_chtml30_dir_tag_002()
 {
 #define  TEST_STRING "<html><head></head><body><dir></dir></body></html>"
+#define  RESULT_STRING "<html><head></head><body><dir></dir></body></html>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_chtml30(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml30_dir_tag_003()
+{
+#define  TEST_STRING "<html><head></head><body><dir type=\"abc\"></dir></body></html>"
 #define  RESULT_STRING "<html><head></head><body><dir></dir></body></html>"
   char  *ret;
   char  *tmp;
