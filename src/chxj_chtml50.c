@@ -2845,11 +2845,26 @@ s_chtml50_end_blockquote_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-s_chtml50_start_dir_tag(void *pdoc, Node *UNUSED(child))
+s_chtml50_start_dir_tag(void *pdoc, Node *node)
 {
   chtml50_t *chtml50 = GET_CHTML50(pdoc);
   Doc       *doc     = chtml50->doc;
-  W_L("<dir>");
+  Attr      *attr;
+  W_L("<dir");
+  for (attr = qs_get_attr(doc,node);
+       attr;
+       attr = qs_get_next_attr(doc,attr)) {
+    char *name   = qs_get_attr_name(doc,attr);
+    char *value  = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('t','T',"type",name)) {
+      if (value && (STRCASEEQ('d','D',"disc",value) || STRCASEEQ('c','C',"circle",value) || STRCASEEQ('s','S',"square",value))) {
+        W_L(" type=\"");
+        W_V(value);
+        W_L("\"");
+      }
+    }
+  }
+  W_L(">");
   return chtml50->out;
 }
 
