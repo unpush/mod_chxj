@@ -24,8 +24,8 @@
 #include "chxj_buffered_write.h"
 
 #define GET_CHTML10(X) ((chtml10_t *)(X))
-#define W10_L(X)          do { chtml10->out = BUFFERED_WRITE_LITERAL(chtml10->out, &doc->buf, (X)); } while(0)
-#define W10_V(X)          do { chtml10->out = (X) ? BUFFERED_WRITE_VALUE(chtml10->out, &doc->buf, (X))  \
+#define W_L(X)          do { chtml10->out = BUFFERED_WRITE_LITERAL(chtml10->out, &doc->buf, (X)); } while(0)
+#define W_V(X)          do { chtml10->out = (X) ? BUFFERED_WRITE_VALUE(chtml10->out, &doc->buf, (X))  \
                                                   : BUFFERED_WRITE_LITERAL(chtml10->out, &doc->buf, ""); } while(0)
 
 static char *s_chtml10_start_html_tag     (void *pdoc, Node *node);
@@ -584,7 +584,7 @@ s_chtml10_start_html_tag(void *pdoc, Node *UNUSED(node))
   /*--------------------------------------------------------------------------*/
   /* start HTML tag                                                           */
   /*--------------------------------------------------------------------------*/
-  W10_L("<html>");
+  W_L("<html>");
 
   return chtml10->out;
 }
@@ -610,7 +610,7 @@ s_chtml10_end_html_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("</html>");
+  W_L("</html>");
 
   return chtml10->out;
 }
@@ -671,7 +671,7 @@ s_chtml10_start_head_tag(void *pdoc, Node *UNUSED(node))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("<head>");
+  W_L("<head>");
 
   return chtml10->out;
 }
@@ -696,7 +696,7 @@ s_chtml10_end_head_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("</head>");
+  W_L("</head>");
 
   return chtml10->out;
 }
@@ -721,7 +721,7 @@ s_chtml10_start_ol_tag(void *pdoc, Node *UNUSED(node))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("<ol>");
+  W_L("<ol>");
 
   return chtml10->out;
 }
@@ -746,7 +746,7 @@ s_chtml10_end_ol_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("</ol>");
+  W_L("</ol>");
 
   return chtml10->out;
 }
@@ -771,7 +771,7 @@ s_chtml10_start_ul_tag(void *pdoc, Node *UNUSED(node))
   doc        = chtml10->doc;
   r          = doc->r;
 
-  W10_L("<ul>");
+  W_L("<ul>");
 
   return chtml10->out;
 }
@@ -796,7 +796,7 @@ s_chtml10_end_ul_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("</ul>");
+  W_L("</ul>");
 
   return chtml10->out;
 }
@@ -821,7 +821,7 @@ s_chtml10_start_li_tag(void *pdoc, Node *UNUSED(node))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("<li>");
+  W_L("<li>");
 
   return chtml10->out;
 }
@@ -863,7 +863,7 @@ s_chtml10_start_h1_tag(void *pdoc, Node *node)
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("<h1");
+  W_L("<h1");
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
@@ -871,14 +871,14 @@ s_chtml10_start_h1_tag(void *pdoc, Node *node)
     char *value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('a','A',"align", name)) {
       if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('c','C',"center",value))) {
-        W10_L(" align=\"");
-        W10_V(value);
-        W10_L("\"");
+        W_L(" align=\"");
+        W_V(value);
+        W_L("\"");
         break;
       }
     }
   }
-  W10_L(">");
+  W_L(">");
 
   return chtml10->out;
 }
@@ -903,7 +903,7 @@ s_chtml10_end_h1_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("</h1>");
+  W_L("</h1>");
 
   return chtml10->out;
 }
@@ -927,7 +927,7 @@ s_chtml10_start_h2_tag(void *pdoc, Node *node)
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
 
-  W10_L("<h2");
+  W_L("<h2");
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
@@ -935,14 +935,14 @@ s_chtml10_start_h2_tag(void *pdoc, Node *node)
     char *value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('a','A',"align", name)) {
       if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('c','C',"center",value))) {
-        W10_L(" align=\"");
-        W10_V(value);
-        W10_L("\"");
+        W_L(" align=\"");
+        W_V(value);
+        W_L("\"");
         break;
       }
     }
   }
-  W10_L(">");
+  W_L(">");
 
   return chtml10->out;
 }
@@ -967,7 +967,7 @@ s_chtml10_end_h2_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("</h2>");
+  W_L("</h2>");
 
   return chtml10->out;
 }
@@ -993,7 +993,7 @@ s_chtml10_start_h3_tag(void *pdoc, Node *node)
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("<h3");
+  W_L("<h3");
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
@@ -1001,14 +1001,14 @@ s_chtml10_start_h3_tag(void *pdoc, Node *node)
     char *value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('a','A',"align", name)) {
       if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('c','C',"center",value))) {
-        W10_L(" align=\"");
-        W10_V(value);
-        W10_L("\"");
+        W_L(" align=\"");
+        W_V(value);
+        W_L("\"");
         break;
       }
     }
   }
-  W10_L(">");
+  W_L(">");
 
   return chtml10->out;
 }
@@ -1033,7 +1033,7 @@ s_chtml10_end_h3_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("</h3>");
+  W_L("</h3>");
 
   return chtml10->out;
 }
@@ -1057,7 +1057,7 @@ s_chtml10_start_h4_tag(void *pdoc, Node *node)
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
 
-  W10_L("<h4");
+  W_L("<h4");
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
@@ -1065,14 +1065,14 @@ s_chtml10_start_h4_tag(void *pdoc, Node *node)
     char *value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('a','A',"align", name)) {
       if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('c','C',"center",value))) {
-        W10_L(" align=\"");
-        W10_V(value);
-        W10_L("\"");
+        W_L(" align=\"");
+        W_V(value);
+        W_L("\"");
         break;
       }
     }
   }
-  W10_L(">");
+  W_L(">");
 
   return chtml10->out;
 }
@@ -1095,7 +1095,7 @@ s_chtml10_end_h4_tag(void *pdoc, Node *UNUSED(child))
   chtml10  = GET_CHTML10(pdoc);
   doc      = chtml10->doc;
 
-  W10_L("</h4>");
+  W_L("</h4>");
 
   return chtml10->out;
 }
@@ -1121,7 +1121,7 @@ s_chtml10_start_h5_tag(void *pdoc, Node *node)
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("<h5");
+  W_L("<h5");
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
@@ -1129,14 +1129,14 @@ s_chtml10_start_h5_tag(void *pdoc, Node *node)
     char *value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('a','A',"align", name)) {
       if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('c','C',"center",value))) {
-        W10_L(" align=\"");
-        W10_V(value);
-        W10_L("\"");
+        W_L(" align=\"");
+        W_V(value);
+        W_L("\"");
         break;
       }
     }
   }
-  W10_L(">");
+  W_L(">");
 
   return chtml10->out;
 }
@@ -1159,7 +1159,7 @@ s_chtml10_end_h5_tag(void *pdoc, Node *UNUSED(child))
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
 
-  W10_L("</h5>");
+  W_L("</h5>");
 
   return chtml10->out;
 }
@@ -1183,7 +1183,7 @@ s_chtml10_start_h6_tag(void *pdoc, Node *node)
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
 
-  W10_L("<h6");
+  W_L("<h6");
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
@@ -1191,14 +1191,14 @@ s_chtml10_start_h6_tag(void *pdoc, Node *node)
     char *value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('a','A',"align", name)) {
       if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('c','C',"center",value))) {
-        W10_L(" align=\"");
-        W10_V(value);
-        W10_L("\"");
+        W_L(" align=\"");
+        W_V(value);
+        W_L("\"");
         break;
       }
     }
   }
-  W10_L(">");
+  W_L(">");
 
   return chtml10->out;
 }
@@ -1221,7 +1221,7 @@ s_chtml10_end_h6_tag(void *pdoc, Node *UNUSED(child))
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
 
-  W10_L("</h6>");
+  W_L("</h6>");
 
   return chtml10->out;
 }
@@ -1244,7 +1244,7 @@ s_chtml10_start_title_tag(void *pdoc, Node *UNUSED(node))
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
 
-  W10_L("<title>");
+  W_L("<title>");
 
   return chtml10->out;
 }
@@ -1267,7 +1267,7 @@ s_chtml10_end_title_tag(void *pdoc, Node *UNUSED(child))
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
 
-  W10_L("</title>");
+  W_L("</title>");
 
   return chtml10->out;
 }
@@ -1291,7 +1291,7 @@ s_chtml10_start_base_tag(void *pdoc, Node *node)
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
   
-  W10_L("<base");
+  W_L("<base");
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
   /*--------------------------------------------------------------------------*/
@@ -1301,13 +1301,13 @@ s_chtml10_start_base_tag(void *pdoc, Node *node)
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('h','H',"href", name)) {
-      W10_L(" href=\"");
-      W10_V(value);
-      W10_L("\"");
+      W_L(" href=\"");
+      W_V(value);
+      W_L("\"");
     }
   }
 
-  W10_L(">");
+  W_L(">");
 
   return chtml10->out;
 }
@@ -1348,7 +1348,7 @@ s_chtml10_start_body_tag(void *pdoc, Node *node)
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
 
-  W10_L("<body");
+  W_L("<body");
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
   /*--------------------------------------------------------------------------*/
@@ -1412,7 +1412,7 @@ s_chtml10_start_body_tag(void *pdoc, Node *node)
     }
   }
 
-  W10_L(">");
+  W_L(">");
 
   return chtml10->out;
 }
@@ -1435,7 +1435,7 @@ s_chtml10_end_body_tag(void *pdoc, Node *UNUSED(child))
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
 
-  W10_L("</body>");
+  W_L("</body>");
 
   return chtml10->out;
 }
@@ -1461,7 +1461,7 @@ s_chtml10_start_a_tag(void *pdoc, Node *node)
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("<a");
+  W_L("<a");
 
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -1478,9 +1478,9 @@ s_chtml10_start_a_tag(void *pdoc, Node *node)
         /*--------------------------------------------------------------------*/
         /* CHTML1.0                                                           */
         /*--------------------------------------------------------------------*/
-        W10_L(" name=\"");
-        W10_V(value);
-        W10_L("\"");
+        W_L(" name=\"");
+        W_V(value);
+        W_L("\"");
       }
       break;
 
@@ -1492,9 +1492,9 @@ s_chtml10_start_a_tag(void *pdoc, Node *node)
         /*--------------------------------------------------------------------*/
         value = chxj_encoding_parameter(r, value);
         value = chxj_add_cookie_parameter(r, value, chtml10->cookie);
-        W10_L(" href=\"");
-        W10_V(value);
-        W10_L("\"");
+        W_L(" href=\"");
+        W_V(value);
+        W_L("\"");
       }
       break;
 
@@ -1504,9 +1504,9 @@ s_chtml10_start_a_tag(void *pdoc, Node *node)
         /*--------------------------------------------------------------------*/
         /* CHTML1.0                                                           */
         /*--------------------------------------------------------------------*/
-        W10_L(" accesskey=\"");
-        W10_V(value);
-        W10_L("\"");
+        W_L(" accesskey=\"");
+        W_V(value);
+        W_L("\"");
       }
       break;
 
@@ -1603,7 +1603,7 @@ s_chtml10_start_a_tag(void *pdoc, Node *node)
     }
   }
 
-  W10_L(">");
+  W_L(">");
   return chtml10->out;
 }
 
@@ -1627,7 +1627,7 @@ s_chtml10_end_a_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("</a>");
+  W_L("</a>");
   return chtml10->out;
 }
 
@@ -1652,7 +1652,7 @@ s_chtml10_start_br_tag(void *pdoc, Node *node)
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("<br");
+  W_L("<br");
 
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -1664,13 +1664,13 @@ s_chtml10_start_br_tag(void *pdoc, Node *node)
     char *value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('c','C',"clear",name)) {
       if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('a','A',"all",value))) {
-        W10_L(" clear=\"");
-        W10_V(value);
-        W10_L("\"");
+        W_L(" clear=\"");
+        W_V(value);
+        W_L("\"");
       }
     }
   }
-  W10_L(">");
+  W_L(">");
   return chtml10->out;
 }
 
@@ -1728,7 +1728,7 @@ s_chtml10_end_tr_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("<br>\r\n");
+  W_L("<br>\r\n");
 
   return chtml10->out;
 }
@@ -1792,7 +1792,7 @@ s_chtml10_start_form_tag(void *pdoc, Node *node)
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("<form");
+  W_L("<form");
 
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -1812,9 +1812,9 @@ s_chtml10_start_form_tag(void *pdoc, Node *node)
         value = chxj_encoding_parameter(r, value);
         value = chxj_add_cookie_parameter(r, value, chtml10->cookie);
   
-        W10_L(" action=\"");
-        W10_V(value);
-        W10_L("\"");
+        W_L(" action=\"");
+        W_V(value);
+        W_L("\"");
       }
       break;
 
@@ -1824,9 +1824,9 @@ s_chtml10_start_form_tag(void *pdoc, Node *node)
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
-        W10_L(" method=\"");
-        W10_V(value);
-        W10_L("\"");
+        W_L(" method=\"");
+        W_V(value);
+        W_L("\"");
       }
       break;
 
@@ -1845,7 +1845,7 @@ s_chtml10_start_form_tag(void *pdoc, Node *node)
     }
   }
 
-  W10_L(">");
+  W_L(">");
 
   return chtml10->out;
 }
@@ -1870,7 +1870,7 @@ s_chtml10_end_form_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("</form>");
+  W_L("</form>");
 
   return chtml10->out;
 }
@@ -1912,7 +1912,7 @@ s_chtml10_start_input_tag(void *pdoc, Node *node)
   checked     = NULL;
   accesskey   = NULL;
 
-  W10_L("<input");
+  W_L("<input");
 
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -1936,34 +1936,34 @@ s_chtml10_start_input_tag(void *pdoc, Node *node)
                  STRCASEEQ('h','H',"hidden",  type) ||
                  STRCASEEQ('s','S',"submit",  type) ||
                  STRCASEEQ('r','R',"reset",   type))) {
-      W10_L(" type=\"");
-      W10_V(type);
-      W10_L("\"");
+      W_L(" type=\"");
+      W_V(type);
+      W_L("\"");
     }
   }
 
   if (size && *size != 0) {
-    W10_L(" size=\"");
-    W10_V(size);
-    W10_L("\"");
+    W_L(" size=\"");
+    W_V(size);
+    W_L("\"");
   }
 
   if (name && *name != 0) {
-    W10_L(" name=\"");
-    W10_V(name);
-    W10_L("\"");
+    W_L(" name=\"");
+    W_V(name);
+    W_L("\"");
   }
 
   if (value && *value != 0) {
-    W10_L(" value=\"");
-    W10_V(value);
-    W10_L("\"");
+    W_L(" value=\"");
+    W_V(value);
+    W_L("\"");
   }
 
   if (accesskey && *accesskey != 0) {
-    W10_L(" accesskey=\"");
-    W10_V(accesskey);
-    W10_L("\"");
+    W_L(" accesskey=\"");
+    W_V(accesskey);
+    W_L("\"");
   }
 
   if (istyle) {
@@ -1976,16 +1976,16 @@ s_chtml10_start_input_tag(void *pdoc, Node *node)
   /* The figure is default for the password.                                  */
   /*--------------------------------------------------------------------------*/
   if (max_length && *max_length != 0) {
-    W10_L(" maxlength=\"");
-    W10_V(max_length);
-    W10_L("\"");
+    W_L(" maxlength=\"");
+    W_V(max_length);
+    W_L("\"");
   }
 
   if (checked) {
-    W10_L(" checked");
+    W_L(" checked");
   }
 
-  W10_L(">");
+  W_L(">");
   return chtml10->out;
 }
 
@@ -2026,7 +2026,7 @@ s_chtml10_start_center_tag(void *pdoc, Node *UNUSED(node))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("<center>");
+  W_L("<center>");
 
   return chtml10->out;
 }
@@ -2051,7 +2051,7 @@ s_chtml10_end_center_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("</center>");
+  W_L("</center>");
 
   return chtml10->out;
 }
@@ -2077,7 +2077,7 @@ s_chtml10_start_hr_tag(void *pdoc, Node *node)
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("<hr");
+  W_L("<hr");
  
   for (attr = qs_get_attr(doc,node);
        attr; 
@@ -2092,9 +2092,9 @@ s_chtml10_start_hr_tag(void *pdoc, Node *node)
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
         if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('c','C',"center",value))) {
-          W10_L(" align=\"");
-          W10_V(value);
-          W10_L("\"");
+          W_L(" align=\"");
+          W_V(value);
+          W_L("\"");
         }
       }
       break;
@@ -2106,9 +2106,9 @@ s_chtml10_start_hr_tag(void *pdoc, Node *node)
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
         if (value && value[0] != '\0') {
-          W10_L(" size=\"");
-          W10_V(value);
-          W10_L("\"");
+          W_L(" size=\"");
+          W_V(value);
+          W_L("\"");
         }
       }
       break;
@@ -2120,9 +2120,9 @@ s_chtml10_start_hr_tag(void *pdoc, Node *node)
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
         if (value && value[0] != '\0') {
-          W10_L(" width=\"");
-          W10_V(value);
-          W10_L("\"");
+          W_L(" width=\"");
+          W_V(value);
+          W_L("\"");
         }
       }
       break;
@@ -2133,7 +2133,7 @@ s_chtml10_start_hr_tag(void *pdoc, Node *node)
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
-        W10_L(" noshade");
+        W_L(" noshade");
       }
       break;
 
@@ -2151,7 +2151,7 @@ s_chtml10_start_hr_tag(void *pdoc, Node *node)
       break;
     }
   }
-  W10_L(">");
+  W_L(">");
   return chtml10->out;
 }
 
@@ -2200,7 +2200,7 @@ s_chtml10_start_img_tag(void *pdoc, Node *node)
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("<img");
+  W_L("<img");
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
   /*--------------------------------------------------------------------------*/
@@ -2226,9 +2226,9 @@ s_chtml10_start_img_tag(void *pdoc, Node *node)
                                (strchr(value, '?')) ? '&' : '?',
                                CHXJ_COOKIE_NOUPDATE_PARAM);
         }
-        W10_L(" src=\"");
-        W10_V(value);
-        W10_L("\"");
+        W_L(" src=\"");
+        W_V(value);
+        W_L("\"");
 #else
         value = chxj_img_conv(r, spec, value);
         value = chxj_encoding_parameter(r, value);
@@ -2240,9 +2240,9 @@ s_chtml10_start_img_tag(void *pdoc, Node *node)
                                (strchr(value, '?')) ? '&' : '?',
                                CHXJ_COOKIE_NOUPDATE_PARAM);
         }
-        W10_L(" src=\"");
-        W10_V(value);
-        W10_L("\"");
+        W_L(" src=\"");
+        W_V(value);
+        W_L("\"");
 #endif
       }
       break;
@@ -2256,14 +2256,21 @@ s_chtml10_start_img_tag(void *pdoc, Node *node)
         /*--------------------------------------------------------------------*/
         /* CHTML 4.0                                                          */
         /*--------------------------------------------------------------------*/
-        if (value && (STRCASEEQ('t','T',"top",   value) || 
-                      STRCASEEQ('m','M',"middle",value) || 
-                      STRCASEEQ('b','B',"bottom",value) || 
-                      STRCASEEQ('l','L',"left",  value) ||
-                      STRCASEEQ('r','R',"right", value))) {
-          W10_L(" align=\"");
-          W10_V(value);
-          W10_L("\"");
+        if (value) {
+          if (STRCASEEQ('t','T',"top",   value) ||
+              STRCASEEQ('m','M',"middle",value) ||
+              STRCASEEQ('b','B',"bottom",value) ||
+              STRCASEEQ('l','L',"left",  value) ||
+              STRCASEEQ('r','R',"right", value)) {
+            W_L(" align=\"");
+            W_V(value);
+            W_L("\"");
+          }
+          else if (STRCASEEQ('c','C',"center",  value)) {
+            W_L(" align=\"");
+            W_L("middle");
+            W_L("\"");
+          }
         }
       }
       else if (strcasecmp(name, "alt"   ) == 0) {
@@ -2271,9 +2278,9 @@ s_chtml10_start_img_tag(void *pdoc, Node *node)
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
         if (value && value[0] != '\0') {
-          W10_L(" alt=\"");
-          W10_V(value);
-          W10_L("\"");
+          W_L(" alt=\"");
+          W_V(value);
+          W_L("\"");
         }
       }
       break;
@@ -2285,9 +2292,9 @@ s_chtml10_start_img_tag(void *pdoc, Node *node)
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
         if (value && value[0] != '\0') {
-          W10_L(" width=\"");
-          W10_V(value);
-          W10_L("\"");
+          W_L(" width=\"");
+          W_V(value);
+          W_L("\"");
         }
       }
       break;
@@ -2299,9 +2306,9 @@ s_chtml10_start_img_tag(void *pdoc, Node *node)
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
         if (value && value[0] != '\0') {
-          W10_L(" height=\"");
-          W10_V(value);
-          W10_L("\"");
+          W_L(" height=\"");
+          W_V(value);
+          W_L("\"");
         }
       }
       else
@@ -2310,9 +2317,9 @@ s_chtml10_start_img_tag(void *pdoc, Node *node)
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
         if (value && value[0] != '\0') {
-          W10_L(" hspace=\"");
-          W10_V(value);
-          W10_L("\"");
+          W_L(" hspace=\"");
+          W_V(value);
+          W_L("\"");
         }
       }
       break;
@@ -2324,9 +2331,9 @@ s_chtml10_start_img_tag(void *pdoc, Node *node)
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
         if (value && value[0] != '\0') {
-          W10_L(" vspace=\"");
-          W10_V(value);
-          W10_L("\"");
+          W_L(" vspace=\"");
+          W_V(value);
+          W_L("\"");
         }
       }
       break;
@@ -2336,7 +2343,7 @@ s_chtml10_start_img_tag(void *pdoc, Node *node)
     }
   }
 
-  W10_L(">");
+  W_L(">");
   return chtml10->out;
 }
 
@@ -2384,7 +2391,7 @@ s_chtml10_start_select_tag(void *pdoc, Node *child)
   size    = NULL;
   name    = NULL;
 
-  W10_L("<select");
+  W_L("<select");
   for (attr = qs_get_attr(doc,child);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
@@ -2427,18 +2434,18 @@ s_chtml10_start_select_tag(void *pdoc, Node *child)
   }
 
   if (size && *size != 0) {
-    W10_L(" size=\"");
-    W10_V(size);
-    W10_L("\"");
+    W_L(" size=\"");
+    W_V(size);
+    W_L("\"");
   }
 
   if (name && *name != 0) {
-    W10_L(" name=\"");
-    W10_V(name);
-    W10_L("\"");
+    W_L(" name=\"");
+    W_V(name);
+    W_L("\"");
   }
 
-  W10_L(">");
+  W_L(">");
   return chtml10->out;
 }
 
@@ -2462,7 +2469,7 @@ s_chtml10_end_select_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("</select>");
+  W_L("</select>");
   return chtml10->out;
 }
 
@@ -2492,7 +2499,7 @@ s_chtml10_start_option_tag(void *pdoc, Node *child)
   selected  = NULL;
   value     = NULL;
 
-  W10_L("<option");
+  W_L("<option");
 
   for (attr = qs_get_attr(doc,child);
        attr;
@@ -2526,16 +2533,16 @@ s_chtml10_start_option_tag(void *pdoc, Node *child)
   }
 
   if (value && *value != 0) {
-    W10_L(" value=\"");
-    W10_V(value);
-    W10_L("\"");
+    W_L(" value=\"");
+    W_V(value);
+    W_L("\"");
   }
 
   if (selected) {
-    W10_L(" selected");
+    W_L(" selected");
   }
 
-  W10_L(">");
+  W_L(">");
   return chtml10->out;
 }
 
@@ -2582,7 +2589,7 @@ s_chtml10_start_div_tag(void *pdoc, Node *child)
 
   align   = NULL;
 
-  W10_L("<div");
+  W_L("<div");
   for (attr = qs_get_attr(doc,child);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
@@ -2599,12 +2606,12 @@ s_chtml10_start_div_tag(void *pdoc, Node *child)
   }
 
   if (align) {
-    W10_L(" align=\"");
-    W10_V(align);
-    W10_L("\"");
+    W_L(" align=\"");
+    W_V(align);
+    W_L("\"");
   }
 
-  W10_L(">");
+  W_L(">");
   return chtml10->out;
 }
 
@@ -2628,7 +2635,7 @@ s_chtml10_end_div_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("</div>");
+  W_L("</div>");
   return chtml10->out;
 }
 
@@ -2656,7 +2663,7 @@ s_chtml10_chxjif_tag(void *pdoc, Node *node)
   for (child = qs_get_child_node(doc, node);
        child;
        child = qs_get_next_node(doc, child)) {
-    W10_V(child->otext);
+    W_V(child->otext);
     s_chtml10_chxjif_tag(chtml10, child);
   }
 
@@ -2684,7 +2691,7 @@ s_chtml10_start_pre_tag(void *pdoc, Node *UNUSED(node))
   r       = doc->r;
 
   chtml10->pre_flag++;
-  W10_L("<pre>");
+  W_L("<pre>");
   return chtml10->out;
 }
 
@@ -2708,7 +2715,7 @@ s_chtml10_end_pre_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("</pre>");
+  W_L("</pre>");
   chtml10->pre_flag--;
 
   return chtml10->out;
@@ -2736,7 +2743,7 @@ s_chtml10_start_p_tag(void *pdoc, Node *node)
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("<p");
+  W_L("<p");
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
@@ -2753,12 +2760,12 @@ s_chtml10_start_p_tag(void *pdoc, Node *node)
     }
   }
   if (align) {
-    W10_L(" align=\"");
-    W10_V(align);
-    W10_L("\"");
+    W_L(" align=\"");
+    W_V(align);
+    W_L("\"");
   }
 
-  W10_L(">");
+  W_L(">");
   return chtml10->out;
 }
 
@@ -2782,7 +2789,7 @@ s_chtml10_end_p_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("</p>");
+  W_L("</p>");
   return chtml10->out;
 }
 
@@ -2810,7 +2817,7 @@ s_chtml10_start_textarea_tag(void *pdoc, Node *node)
 
   chtml10->textarea_flag++;
 
-  W10_L("<textarea");
+  W_L("<textarea");
 
   for (attr = qs_get_attr(doc,node);
        attr;
@@ -2821,36 +2828,36 @@ s_chtml10_start_textarea_tag(void *pdoc, Node *node)
     case 'a':
     case 'A':
       if (strcasecmp(name, "accesskey") == 0 && value && *value != 0) {
-        W10_L(" accesskey=\"");
-        W10_V(value);
-        W10_L("\"");
+        W_L(" accesskey=\"");
+        W_V(value);
+        W_L("\"");
       }
       break;
 
     case 'n':
     case 'N':
       if (strcasecmp(name, "name") == 0 && value && *value != 0) {
-        W10_L(" name=\"");
-        W10_V(value);
-        W10_L("\"");
+        W_L(" name=\"");
+        W_V(value);
+        W_L("\"");
       }
       break;
 
     case 'r':
     case 'R':
       if (strcasecmp(name, "rows") == 0 && value && *value != 0) {
-        W10_L(" rows=\"");
-        W10_V(value);
-        W10_L("\"");
+        W_L(" rows=\"");
+        W_V(value);
+        W_L("\"");
       }
       break;
 
     case 'c':
     case 'C':
       if (strcasecmp(name, "cols") == 0 && value && *value != 0) {
-        W10_L(" cols=\"");
-        W10_V(value);
-        W10_L("\"");
+        W_L(" cols=\"");
+        W_V(value);
+        W_L("\"");
       }
       break;
     
@@ -2858,7 +2865,7 @@ s_chtml10_start_textarea_tag(void *pdoc, Node *node)
       break;
     }
   }
-  W10_L(">");
+  W_L(">");
   return chtml10->out;
 }
 
@@ -2882,7 +2889,7 @@ s_chtml10_end_textarea_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("</textarea>");
+  W_L("</textarea>");
   chtml10->textarea_flag--;
 
   return chtml10->out;
@@ -2953,7 +2960,7 @@ s_chtml10_text(void *pdoc, Node *child)
     }
   }
 
-  W10_V(tdst);
+  W_V(tdst);
   return chtml10->out;
 }
 
@@ -2973,7 +2980,7 @@ s_chtml10_start_blockquote_tag(void *pdoc, Node *UNUSED(child))
   Doc *doc;
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
-  W10_L("<blockquote>");
+  W_L("<blockquote>");
   return chtml10->out;
 }
 
@@ -2994,7 +3001,7 @@ s_chtml10_end_blockquote_tag(void *pdoc, Node *UNUSED(child))
 
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
-  W10_L("</blockquote>");
+  W_L("</blockquote>");
   return chtml10->out;
 }
 
@@ -3014,7 +3021,7 @@ s_chtml10_start_dir_tag(void *pdoc, Node *UNUSED(child))
   Doc *doc;
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
-  W10_L("<dir>");
+  W_L("<dir>");
   return chtml10->out;
 }
 
@@ -3035,7 +3042,7 @@ s_chtml10_end_dir_tag(void *pdoc, Node *UNUSED(child))
 
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
-  W10_L("</dir>");
+  W_L("</dir>");
   return chtml10->out;
 }
 
@@ -3055,7 +3062,7 @@ s_chtml10_start_dl_tag(void *pdoc, Node *UNUSED(child))
   Doc *doc;
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
-  W10_L("<dl>");
+  W_L("<dl>");
   return chtml10->out;
 }
 
@@ -3075,7 +3082,7 @@ s_chtml10_end_dl_tag(void *pdoc, Node *UNUSED(child))
   Doc *doc;
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
-  W10_L("</dl>");
+  W_L("</dl>");
   return chtml10->out;
 }
 
@@ -3095,7 +3102,7 @@ s_chtml10_start_dt_tag(void *pdoc, Node *UNUSED(child))
   Doc *doc;
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
-  W10_L("<dt>");
+  W_L("<dt>");
   return chtml10->out;
 }
 
@@ -3132,7 +3139,7 @@ s_chtml10_start_dd_tag(void *pdoc, Node *UNUSED(child))
   Doc *doc;
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
-  W10_L("<dd>");
+  W_L("<dd>");
   return chtml10->out;
 }
 
@@ -3169,7 +3176,7 @@ s_chtml10_start_menu_tag(void *pdoc, Node *UNUSED(child))
   Doc *doc;
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
-  W10_L("<menu>");
+  W_L("<menu>");
   return chtml10->out;
 }
 
@@ -3187,7 +3194,7 @@ s_chtml10_end_menu_tag(void *pdoc, Node *UNUSED(child))
 {
   chtml10_t *chtml10 = GET_CHTML10(pdoc);
   Doc *doc = chtml10->doc;
-  W10_L("</menu>");
+  W_L("</menu>");
   return chtml10->out;
 }
 
@@ -3208,7 +3215,7 @@ s_chtml10_start_plaintext_tag(void *pdoc, Node *node)
 
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
-  W10_L("<plaintext>");
+  W_L("<plaintext>");
   s_chtml10_start_plaintext_tag_inner(pdoc,node);
   return chtml10->out;
 }
@@ -3224,7 +3231,7 @@ s_chtml10_start_plaintext_tag_inner(void *pdoc, Node *node)
   for (child = qs_get_child_node(doc, node);
        child;
        child = qs_get_next_node(doc, child)) {
-    W10_V(child->otext);
+    W_V(child->otext);
     s_chtml10_start_plaintext_tag_inner(pdoc, child);
   }
   return chtml10->out;
