@@ -208,6 +208,8 @@ void test_xhtml_hr_tag_015();
 void test_xhtml_hr_tag_016();
 void test_xhtml_hr_tag_017();
 void test_xhtml_hr_tag_018();
+void test_xhtml_hr_tag_018_1();
+void test_xhtml_hr_tag_018_2();
 
 void test_xhtml_html_tag_001();
 
@@ -655,7 +657,9 @@ main()
   CU_add_test(xhtml_suite, "test <hr width> with non numeric value.",           test_xhtml_hr_tag_015);
   CU_add_test(xhtml_suite, "test <hr width> with numeric value.",               test_xhtml_hr_tag_016);
   CU_add_test(xhtml_suite, "test <hr noshade>.",                                test_xhtml_hr_tag_017);
-  CU_add_test(xhtml_suite, "test <hr color>.",                                  test_xhtml_hr_tag_018);
+  CU_add_test(xhtml_suite, "test <hr color> 1.",                                test_xhtml_hr_tag_018);
+  CU_add_test(xhtml_suite, "test <hr color> 2.",                                test_xhtml_hr_tag_018_1);
+  CU_add_test(xhtml_suite, "test <hr color> 3.",                                test_xhtml_hr_tag_018_2);
 
   /*=========================================================================*/
   /* <html>                                                                  */
@@ -5443,6 +5447,64 @@ void test_xhtml_hr_tag_017()
 void test_xhtml_hr_tag_018() 
 {
 #define  TEST_STRING "<hr width=\"10\" color=\"#ff0000\">"
+#define  RESULT_STRING "<hr width=\"10\" color=\"#ff0000\" />"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_hr_tag_018_1() 
+{
+#define  TEST_STRING "<hr width=\"10\" color=\"\">"
+#define  RESULT_STRING "<hr width=\"10\" />"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_hr_tag_018_2() 
+{
+#define  TEST_STRING "<hr width=\"10\" color>"
 #define  RESULT_STRING "<hr width=\"10\" />"
   char  *ret;
   char  *tmp;
