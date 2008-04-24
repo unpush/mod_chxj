@@ -94,6 +94,11 @@ void test_jxhtml_center_tag_001();
 
 void test_jxhtml_dir_tag_001();
 void test_jxhtml_dir_tag_002();
+void test_jxhtml_dir_tag_003();
+void test_jxhtml_dir_tag_004();
+void test_jxhtml_dir_tag_005();
+void test_jxhtml_dir_tag_006();
+void test_jxhtml_dir_tag_007();
 
 void test_jxhtml_dl_tag_001();
 
@@ -543,6 +548,11 @@ main()
   /*=========================================================================*/
   CU_add_test(jxhtml_suite, "test <dir>.",                                       test_jxhtml_dir_tag_001);
   CU_add_test(jxhtml_suite, "test <dir> with no <li>.",                          test_jxhtml_dir_tag_002);
+  CU_add_test(jxhtml_suite, "test <dir type> 1",                                 test_jxhtml_dir_tag_003);
+  CU_add_test(jxhtml_suite, "test <dir type> 2",                                 test_jxhtml_dir_tag_004);
+  CU_add_test(jxhtml_suite, "test <dir type> 3",                                 test_jxhtml_dir_tag_005);
+  CU_add_test(jxhtml_suite, "test <dir type> 4",                                 test_jxhtml_dir_tag_006);
+  CU_add_test(jxhtml_suite, "test <dir type> 5",                                 test_jxhtml_dir_tag_007);
   /*=========================================================================*/
   /* <DL>                                                                    */
   /*=========================================================================*/
@@ -2538,6 +2548,156 @@ void test_jxhtml_dir_tag_001()
 void test_jxhtml_dir_tag_002()
 {
 #define  TEST_STRING "<dir></dir>"
+#define  RESULT_STRING "<dir></dir>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_jxhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_jxhtml_dir_tag_003()
+{
+#define  TEST_STRING "<dir type=\"disc\"></dir>"
+#define  RESULT_STRING "<dir type=\"disc\"></dir>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_jxhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_jxhtml_dir_tag_004()
+{
+#define  TEST_STRING "<dir type=\"circle\"></dir>"
+#define  RESULT_STRING "<dir type=\"circle\"></dir>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_jxhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_jxhtml_dir_tag_005()
+{
+#define  TEST_STRING "<dir type=\"square\"></dir>"
+#define  RESULT_STRING "<dir type=\"square\"></dir>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_jxhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_jxhtml_dir_tag_006()
+{
+#define  TEST_STRING "<dir type=\"\"></dir>"
+#define  RESULT_STRING "<dir></dir>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_jxhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_jxhtml_dir_tag_007()
+{
+#define  TEST_STRING "<dir type></dir>"
 #define  RESULT_STRING "<dir></dir>"
   char  *ret;
   char  *tmp;
