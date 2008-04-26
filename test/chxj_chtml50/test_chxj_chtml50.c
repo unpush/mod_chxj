@@ -949,6 +949,14 @@ main()
   CU_add_test(chtml50_suite, "test <font> 3." ,                                   test_chtml50_font_tag_003);
   CU_add_test(chtml50_suite, "test <font> 4." ,                                   test_chtml50_font_tag_004);
   CU_add_test(chtml50_suite, "test <font> 5." ,                                   test_chtml50_font_tag_005);
+  CU_add_test(chtml50_suite, "test <font> 5-1." ,                                 test_chtml50_font_tag_005_2);
+  CU_add_test(chtml50_suite, "test <font> 5-2." ,                                 test_chtml50_font_tag_005_3);
+  CU_add_test(chtml50_suite, "test <font> 5-3." ,                                 test_chtml50_font_tag_005_4);
+  CU_add_test(chtml50_suite, "test <font> 5-4." ,                                 test_chtml50_font_tag_005_5);
+  CU_add_test(chtml50_suite, "test <font> 5-5." ,                                 test_chtml50_font_tag_005_6);
+  CU_add_test(chtml50_suite, "test <font> 5-6." ,                                 test_chtml50_font_tag_005_7);
+  CU_add_test(chtml50_suite, "test <font> 5-7." ,                                 test_chtml50_font_tag_005_8);
+  CU_add_test(chtml50_suite, "test <font> 5-8." ,                                 test_chtml50_font_tag_005_9);
   CU_add_test(chtml50_suite, "test <font> 6." ,                                   test_chtml50_font_tag_006);
   CU_add_test(chtml50_suite, "test <font> 7." ,                                   test_chtml50_font_tag_007);
   /* aend */
@@ -12703,7 +12711,7 @@ void test_chtml50_font_tag_005_3()
 void test_chtml50_font_tag_005_4() 
 {
 #define  TEST_STRING "<font size=\"4\">aaa</font>"
-#define  RESULT_STRING "<font size=\"5\">aaa</font>"
+#define  RESULT_STRING "<font size=\"4\">aaa</font>"
   char  *ret;
   char  *tmp;
   device_table spec;

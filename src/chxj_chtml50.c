@@ -1237,11 +1237,13 @@ s_chtml50_start_font_tag(void *pdoc, Node *node)
       W_V(value);
       W_L("\"");
     }
-    else if (STRCASEEQ('s','S',"size", name)) {
+    else if (STRCASEEQ('s','S',"size", name) && value && *value) {
       /*----------------------------------------------------------------------*/
       /* CHTML 5.0                                                            */
       /*----------------------------------------------------------------------*/
-      /* ignore */
+      W_L(" size=\"");
+      W_V(value);
+      W_L("\"");
     }
   }
   W_L(">");
