@@ -459,6 +459,9 @@ void test_chtml40_marquee_tag_015();
 void test_chtml40_marquee_tag_016();
 void test_chtml40_marquee_tag_017();
 void test_chtml40_marquee_tag_018();
+void test_chtml40_marquee_tag_019();
+void test_chtml40_marquee_tag_020();
+void test_chtml40_marquee_tag_021();
 
 void test_chtml40_meta_tag_001();
 void test_chtml40_meta_tag_002();
@@ -897,6 +900,9 @@ main()
   CU_add_test(chtml40_suite, "test <marquee> 16." ,                               test_chtml40_marquee_tag_016);
   CU_add_test(chtml40_suite, "test <marquee> 17." ,                               test_chtml40_marquee_tag_017);
   CU_add_test(chtml40_suite, "test <marquee> 18." ,                               test_chtml40_marquee_tag_018);
+  CU_add_test(chtml40_suite, "test <marquee> 19." ,                               test_chtml40_marquee_tag_019);
+  CU_add_test(chtml40_suite, "test <marquee> 20." ,                               test_chtml40_marquee_tag_020);
+  CU_add_test(chtml40_suite, "test <marquee> 21." ,                               test_chtml40_marquee_tag_021);
 
   CU_add_test(chtml40_suite, "test <meta> 1." ,                                   test_chtml40_meta_tag_001);
   CU_add_test(chtml40_suite, "test <meta> 2." ,                                   test_chtml40_meta_tag_002);
@@ -12041,6 +12047,90 @@ void test_chtml40_marquee_tag_018()
 {
 #define  TEST_STRING "<marquee loop=\"1\">ﾊﾝｶｸ</marquee>"
 #define  RESULT_STRING "<marquee loop=\"1\">ﾊﾝｶｸ</marquee>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_chtml40(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml40_marquee_tag_019() 
+{
+#define  TEST_STRING "<marquee bgcolor=\"#ff0000\">ﾊﾝｶｸ</marquee>"
+#define  RESULT_STRING "<marquee>ﾊﾝｶｸ</marquee>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_chtml40(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml40_marquee_tag_020() 
+{
+#define  TEST_STRING "<marquee bgcolor=\"\">ﾊﾝｶｸ</marquee>"
+#define  RESULT_STRING "<marquee>ﾊﾝｶｸ</marquee>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_chtml40(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml40_marquee_tag_021() 
+{
+#define  TEST_STRING "<marquee bgcolor>ﾊﾝｶｸ</marquee>"
+#define  RESULT_STRING "<marquee>ﾊﾝｶｸ</marquee>"
   char  *ret;
   char  *tmp;
   device_table spec;
