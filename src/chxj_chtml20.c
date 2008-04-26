@@ -1340,7 +1340,7 @@ s_chtml20_start_font_tag(void *pdoc, Node *node)
     switch(*name) {
     case 'c':
     case 'C':
-      if (strcasecmp(name, "color") == 0) {
+      if (strcasecmp(name, "color") == 0 && value && *value) {
         W_L(" color=\"");
         W_V(value);
         W_L("\"");
