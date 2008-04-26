@@ -2250,10 +2250,12 @@ s_chtml40_start_li_tag(void *pdoc, Node *node)
        attr = qs_get_next_attr(doc,attr)) {
     char *name = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
-    if (STRCASEEQ('t','T',"type",name) && value && (*value == '1' || *value == 'a' || *value == 'A')) {
-      W_L(" type=\"");
-      W_V(value);
-      W_L("\"");
+    if (STRCASEEQ('t','T',"type",name)) {
+      if (value && (*value == '1' || *value == 'a' || *value == 'A' || STRCASEEQ('d','D',"disc",value) || STRCASEEQ('s','S',"square",value) || STRCASEEQ('c','C',"circle",value))) {
+        W_L(" type=\"");
+        W_V(value);
+        W_L("\"");
+      }
     }
     else if (STRCASEEQ('v','V',"value", name) && value && *value) {
       W_L(" value=\"");
