@@ -419,6 +419,7 @@ void test_chtml30_ul_tag_002();
 void test_chtml30_ul_tag_003();
 void test_chtml30_ul_tag_004();
 void test_chtml30_ul_tag_005();
+void test_chtml30_ul_tag_006();
 
 void test_chtml30_blink_tag_001();
 void test_chtml30_blink_tag_002();
@@ -841,6 +842,7 @@ main()
   CU_add_test(chtml30_suite, "test <ul> 3." ,                                     test_chtml30_ul_tag_003);
   CU_add_test(chtml30_suite, "test <ul> 4." ,                                     test_chtml30_ul_tag_004);
   CU_add_test(chtml30_suite, "test <ul> 5." ,                                     test_chtml30_ul_tag_005);
+  CU_add_test(chtml30_suite, "test <ul> 6." ,                                     test_chtml30_ul_tag_006);
 
   CU_add_test(chtml30_suite, "test <blink> 1." ,                                  test_chtml30_blink_tag_001);
   CU_add_test(chtml30_suite, "test <blink> 2." ,                                  test_chtml30_blink_tag_002);
@@ -10760,6 +10762,34 @@ void test_chtml30_ul_tag_004()
 void test_chtml30_ul_tag_005() 
 {
 #define  TEST_STRING "<ul abc><li>abc</ul>"
+#define  RESULT_STRING "<ul><li>abc</ul>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_chtml30(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml30_ul_tag_006() 
+{
+#define  TEST_STRING "<ul type=\"disc\"><li>abc</ul>"
 #define  RESULT_STRING "<ul><li>abc</ul>"
   char  *ret;
   char  *tmp;
