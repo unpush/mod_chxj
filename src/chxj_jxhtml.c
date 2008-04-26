@@ -3389,6 +3389,11 @@ s_jxhtml_start_marquee_tag(void *pdoc, Node *node)
     else if (STRCASEEQ('l','L',"loop",name)) {
       /* ignore */
     }
+    else if (STRCASEEQ('b','B',"bgcolor",name) && value && *value) {
+      W_L(" bgcolor=\"");
+      W_V(value);
+      W_L("\"");
+    }
   }
   W_L(">");
   return jxhtml->out;
