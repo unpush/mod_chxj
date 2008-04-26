@@ -430,6 +430,12 @@ void test_xhtml_ul_tag_002();
 void test_xhtml_ul_tag_003();
 void test_xhtml_ul_tag_004();
 void test_xhtml_ul_tag_005();
+void test_xhtml_ul_tag_006();
+void test_xhtml_ul_tag_007();
+void test_xhtml_ul_tag_008();
+void test_xhtml_ul_tag_009();
+void test_xhtml_ul_tag_010();
+void test_xhtml_ul_tag_011();
 
 void test_xhtml_blink_tag_001();
 void test_xhtml_blink_tag_002();
@@ -918,13 +924,11 @@ main()
   CU_add_test(xhtml_suite, "test <textarea> 24." ,                              test_xhtml_textarea_tag_024);
   CU_add_test(xhtml_suite, "test <textarea> 25." ,                              test_xhtml_textarea_tag_025);
   CU_add_test(xhtml_suite, "test <textarea> 26." ,                              test_xhtml_textarea_tag_026);
-
   /*=========================================================================*/
   /* <title>                                                                 */
   /*=========================================================================*/
   CU_add_test(xhtml_suite, "test <title> 1." ,                                  test_xhtml_title_tag_001);
   CU_add_test(xhtml_suite, "test <title> 2." ,                                  test_xhtml_title_tag_002);
-
   /*=========================================================================*/
   /* <ul>                                                                    */
   /*=========================================================================*/
@@ -933,7 +937,12 @@ main()
   CU_add_test(xhtml_suite, "test <ul> 3." ,                                     test_xhtml_ul_tag_003);
   CU_add_test(xhtml_suite, "test <ul> 4." ,                                     test_xhtml_ul_tag_004);
   CU_add_test(xhtml_suite, "test <ul> 5." ,                                     test_xhtml_ul_tag_005);
-
+  CU_add_test(xhtml_suite, "test <ul> 6." ,                                     test_xhtml_ul_tag_006);
+  CU_add_test(xhtml_suite, "test <ul> 7." ,                                     test_xhtml_ul_tag_007);
+  CU_add_test(xhtml_suite, "test <ul> 8." ,                                     test_xhtml_ul_tag_008);
+  CU_add_test(xhtml_suite, "test <ul> 9." ,                                     test_xhtml_ul_tag_009);
+  CU_add_test(xhtml_suite, "test <ul> 10." ,                                    test_xhtml_ul_tag_010);
+  CU_add_test(xhtml_suite, "test <ul> 11." ,                                    test_xhtml_ul_tag_011);
   /*=========================================================================*/
   /* <blink>                                                                 */
   /*=========================================================================*/
@@ -941,7 +950,6 @@ main()
   CU_add_test(xhtml_suite, "test <blink> 2." ,                                  test_xhtml_blink_tag_002);
   CU_add_test(xhtml_suite, "test <blink> 3." ,                                  test_xhtml_blink_tag_003);
   CU_add_test(xhtml_suite, "test <blink> 4." ,                                  test_xhtml_blink_tag_004);
-
   /*=========================================================================*/
   /* <marquee>                                                               */
   /*=========================================================================*/
@@ -11546,6 +11554,180 @@ void test_xhtml_ul_tag_004()
 void test_xhtml_ul_tag_005() 
 {
 #define  TEST_STRING "<ul abc><li>abc</ul>"
+#define  RESULT_STRING "<ul><li>abc</li></ul>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_ul_tag_006() 
+{
+#define  TEST_STRING "<ul type=\"disc\"><li>abc</ul>"
+#define  RESULT_STRING "<ul type=\"disc\"><li>abc</li></ul>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_ul_tag_007() 
+{
+#define  TEST_STRING "<ul type=\"circle\"><li>abc</ul>"
+#define  RESULT_STRING "<ul type=\"circle\"><li>abc</li></ul>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_ul_tag_008() 
+{
+#define  TEST_STRING "<ul type=\"square\"><li>abc</ul>"
+#define  RESULT_STRING "<ul type=\"square\"><li>abc</li></ul>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_ul_tag_009() 
+{
+#define  TEST_STRING "<ul type=\"unknown\"><li>abc</ul>"
+#define  RESULT_STRING "<ul><li>abc</li></ul>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_ul_tag_010() 
+{
+#define  TEST_STRING "<ul type=\"\"><li>abc</ul>"
+#define  RESULT_STRING "<ul><li>abc</li></ul>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_ul_tag_011() 
+{
+#define  TEST_STRING "<ul type><li>abc</ul>"
 #define  RESULT_STRING "<ul><li>abc</li></ul>"
   char  *ret;
   char  *tmp;
