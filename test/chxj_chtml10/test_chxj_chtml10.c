@@ -410,6 +410,8 @@ void test_chtml10_marquee_tag_017();
 void test_chtml10_marquee_tag_018(); 
 void test_chtml10_marquee_tag_019(); 
 
+void test_chtml10_font_tag_001(); 
+void test_chtml10_font_tag_002(); 
 /* pend */
 
 int
@@ -785,6 +787,9 @@ main()
   CU_add_test(chtml10_suite, "test <marquee> 17." ,                               test_chtml10_marquee_tag_017); 
   CU_add_test(chtml10_suite, "test <marquee> 18." ,                               test_chtml10_marquee_tag_018); 
   CU_add_test(chtml10_suite, "test <marquee> 19." ,                               test_chtml10_marquee_tag_019); 
+
+  CU_add_test(chtml10_suite, "test <font> 1." ,                                   test_chtml10_font_tag_001); 
+  CU_add_test(chtml10_suite, "test <font> 2." ,                                   test_chtml10_font_tag_002); 
   /* aend */
 
   CU_basic_run_tests();
@@ -10255,6 +10260,65 @@ void test_chtml10_marquee_tag_018()
 void test_chtml10_marquee_tag_019() 
 {
 #define  TEST_STRING "<marquee bgcolor=\"#ff0000\">ﾊﾝｶｸ</marquee>"
+#define  RESULT_STRING "ﾊﾝｶｸ"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+/*===========================================================================*/
+/* font                                                                      */
+/*===========================================================================*/
+void test_chtml10_font_tag_001() 
+{
+#define  TEST_STRING "<font>ﾊﾝｶｸ</font>"
+#define  RESULT_STRING "ﾊﾝｶｸ"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_chtml10(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml10_font_tag_002() 
+{
+#define  TEST_STRING "<font size=\"123\">ﾊﾝｶｸ</font>"
 #define  RESULT_STRING "ﾊﾝｶｸ"
   char  *ret;
   char  *tmp;
