@@ -3145,6 +3145,13 @@ s_xhtml_1_0_start_marquee_tag(void *pdoc, Node *node)
         W_L("\"");
       }
     }
+    else if (STRCASEEQ('b','B',"bgcolor",name)) {
+      if (value && *value) {
+        W_L(" bgcolor=\"");
+        W_V(value);
+        W_L("\"");
+      }
+    }
   }
   W_L(">");
   return xhtml->out;
