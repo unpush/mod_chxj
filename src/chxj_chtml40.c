@@ -2004,7 +2004,7 @@ s_chtml40_start_ul_tag(void *pdoc, Node *node)
 {
   chtml40_t   *chtml40 = GET_CHTML40(pdoc);
   Doc         *doc     = chtml40->doc;
-  Attr    *attr;
+  Attr        *attr;
   W_L("<ul");
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */

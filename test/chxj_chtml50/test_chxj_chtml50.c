@@ -430,6 +430,12 @@ void test_chtml50_ul_tag_002();
 void test_chtml50_ul_tag_003();
 void test_chtml50_ul_tag_004();
 void test_chtml50_ul_tag_005();
+void test_chtml50_ul_tag_006();
+void test_chtml50_ul_tag_007();
+void test_chtml50_ul_tag_008();
+void test_chtml50_ul_tag_009();
+void test_chtml50_ul_tag_010();
+void test_chtml50_ul_tag_011();
 
 void test_chtml50_blink_tag_001();
 void test_chtml50_blink_tag_002();
@@ -863,6 +869,12 @@ main()
   CU_add_test(chtml50_suite, "test <ul> 3." ,                                     test_chtml50_ul_tag_003);
   CU_add_test(chtml50_suite, "test <ul> 4." ,                                     test_chtml50_ul_tag_004);
   CU_add_test(chtml50_suite, "test <ul> 5." ,                                     test_chtml50_ul_tag_005);
+  CU_add_test(chtml50_suite, "test <ul> 6." ,                                     test_chtml50_ul_tag_006);
+  CU_add_test(chtml50_suite, "test <ul> 7." ,                                     test_chtml50_ul_tag_007);
+  CU_add_test(chtml50_suite, "test <ul> 8." ,                                     test_chtml50_ul_tag_008);
+  CU_add_test(chtml50_suite, "test <ul> 9." ,                                     test_chtml50_ul_tag_009);
+  CU_add_test(chtml50_suite, "test <ul> 10." ,                                    test_chtml50_ul_tag_010);
+  CU_add_test(chtml50_suite, "test <ul> 11." ,                                    test_chtml50_ul_tag_011);
 
   CU_add_test(chtml50_suite, "test <blink> 1." ,                                  test_chtml50_blink_tag_001);
   CU_add_test(chtml50_suite, "test <blink> 2." ,                                  test_chtml50_blink_tag_002);
