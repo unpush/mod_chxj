@@ -314,6 +314,9 @@ void test_jhtml_li_tag_010();
 void test_jhtml_li_tag_011();
 void test_jhtml_li_tag_012();
 void test_jhtml_li_tag_013();
+void test_jhtml_li_tag_014();
+void test_jhtml_li_tag_015();
+void test_jhtml_li_tag_016();
 
 void test_jhtml_menu_tag_001();
 void test_jhtml_menu_tag_002();
@@ -819,6 +822,9 @@ main()
   CU_add_test(jhtml_suite, "test <li> type attribute 7." ,                      test_jhtml_li_tag_011);
   CU_add_test(jhtml_suite, "test <li> type attribute 8." ,                      test_jhtml_li_tag_012);
   CU_add_test(jhtml_suite, "test <li> type attribute 9." ,                      test_jhtml_li_tag_013);
+  CU_add_test(jhtml_suite, "test <li> type attribute 10." ,                     test_jhtml_li_tag_014);
+  CU_add_test(jhtml_suite, "test <li> type attribute 11." ,                     test_jhtml_li_tag_015);
+  CU_add_test(jhtml_suite, "test <li> type attribute 12." ,                     test_jhtml_li_tag_016);
   /*=========================================================================*/
   /* <MENU>                                                                  */
   /*=========================================================================*/
@@ -8713,6 +8719,96 @@ void test_jhtml_li_tag_013()
 {
 #define  TEST_STRING "<li value=\"1\">ﾊﾝｶｸ</li>"
 #define  RESULT_STRING "<li value=\"1\">ﾊﾝｶｸ</li>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_jhtml_li_tag_014() 
+{
+#define  TEST_STRING "<li type=\"disc\">ﾊﾝｶｸ</li>"
+#define  RESULT_STRING "<li>ﾊﾝｶｸ</li>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_jhtml_li_tag_015() 
+{
+#define  TEST_STRING "<li type=\"circle\">ﾊﾝｶｸ</li>"
+#define  RESULT_STRING "<li>ﾊﾝｶｸ</li>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_jhtml_li_tag_016() 
+{
+#define  TEST_STRING "<li type=\"square\">ﾊﾝｶｸ</li>"
+#define  RESULT_STRING "<li>ﾊﾝｶｸ</li>"
   char  *ret;
   char  *tmp;
   device_table spec;
