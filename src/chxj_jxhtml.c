@@ -1262,16 +1262,17 @@ s_jxhtml_end_tr_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_jxhtml_start_font_tag(void *pdoc, Node *node) 
 {
-  jxhtml_t       *jxhtml;
+  jxhtml_t      *jxhtml;
   Doc           *doc;
   request_rec   *r;
   Attr          *attr;
+  char          *color = NULL;
+  char          *size  = NULL;
 
   jxhtml = GET_JXHTML(pdoc);
   doc   = jxhtml->doc;
   r     = doc->r;
 
-  W_L("<font");
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
   /*--------------------------------------------------------------------------*/
@@ -1281,18 +1282,36 @@ s_jxhtml_start_font_tag(void *pdoc, Node *node)
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('c','C',"color",name) && value && *value) {
-      W_L(" color=\"");
-      W_V(value);
-      W_L("\"");
+      color = apr_pstrdup(doc->buf.pool, value);
     }
-    else if (STRCASEEQ('s','S',"size",name)) {
+    else if (STRCASEEQ('s','S',"size",name) && value && *value) {
       /*----------------------------------------------------------------------*/
       /* CHTML 5.0                                                            */
       /*----------------------------------------------------------------------*/
-      /* ignore */
+      size = apr_pstrdup(doc->buf.pool, value);
     }
   }
-  W_L(">");
+  if (color) {
+    W_L("<font color=\"");
+    W_V(color);
+    W_L("\">");
+    jxhtml->font_flag++;
+  }
+  if (size) {
+    jxhtml->font_size_flag++;
+    switch(*size) {
+    case '1': W_L("<span style=\"font-size: xx-small\">"); break;
+    case '2': W_L("<span style=\"font-size: x-small\">");  break;
+    case '3': W_L("<span style=\"font-size: small\">");    break;
+    case '4': W_L("<span style=\"font-size: medium\">");   break;
+    case '5': W_L("<span style=\"font-size: large\">");    break;
+    case '6': W_L("<span style=\"font-size: x-large\">");  break;
+    case '7': W_L("<span style=\"font-size: xx-large\">"); break;
+    default:
+      jxhtml->font_size_flag--;
+      break;
+    }
+  }
   return jxhtml->out;
 }
 
@@ -1316,7 +1335,14 @@ s_jxhtml_end_font_tag(void *pdoc, Node *UNUSED(child))
   doc   = jxhtml->doc;
   r     = jxhtml->doc->r;
 
-  W_L("</font>");
+  if (jxhtml->font_size_flag) {
+    W_L("</span>");  
+    jxhtml->font_size_flag--;
+  }
+  if (jxhtml->font_flag) {
+    W_L("</font>");
+    jxhtml->font_flag--;
+  }
   return jxhtml->out;
 }
 
