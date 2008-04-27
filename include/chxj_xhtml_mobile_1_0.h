@@ -30,6 +30,8 @@ struct xhtml_t {
     int                 out_len;
     int                 pre_flag;
     int                 textarea_flag;
+    int                 font_color_flag;
+    int                 font_size_flag;
 
     device_table        *spec;
     mod_chxj_config     *conf;

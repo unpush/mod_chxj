@@ -1184,8 +1184,9 @@ s_xhtml_1_0_start_font_tag(void *pdoc, Node *node)
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc     *doc   = xhtml->doc;
   Attr    *attr;
+  char    *size = NULL;
+  char    *color = NULL;
 
-  W_L("<font");
   /*=========================================================================*/
   /* Get Attributes                                                          */
   /*=========================================================================*/
@@ -1195,17 +1196,33 @@ s_xhtml_1_0_start_font_tag(void *pdoc, Node *node)
     char *name = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('c','C',"color",name) && value && *value) {
-      W_L(" color=\"");
-      W_V(value);
-      W_L("\"");
+      color = apr_pstrdup(doc->buf.pool, value);
     }
     else if (STRCASEEQ('s','S',"size",name) && value && *value) {
-      W_L(" size=\"");
-      W_V(value);
-      W_L("\"");
+      size = apr_pstrdup(doc->buf.pool, value);
     }
   }
-  W_L(">");
+  if (color) {
+    W_L("<font color=\"");
+    W_V(color);
+    W_L("\">");
+    xhtml->font_color_flag++;
+  }
+  if (size) {
+    xhtml->font_size_flag++;
+    switch(*size) {
+    case '1': W_L("<span style=\"font-size: xx-small\">"); break;
+    case '2': W_L("<span style=\"font-size: x-small\">");  break;
+    case '3': W_L("<span style=\"font-size: small\">");    break;
+    case '4': W_L("<span style=\"font-size: medium\">");   break;
+    case '5': W_L("<span style=\"font-size: large\">");    break;
+    case '6': W_L("<span style=\"font-size: x-large\">");  break;
+    case '7': W_L("<span style=\"font-size: xx-large\">"); break;
+    default:
+      WRN(doc->r, "invlalid font size. [%s] != (1|2|3|4|5|6|7)", size);
+      xhtml->font_size_flag--;
+    }
+  }
   return xhtml->out;
 }
 
@@ -1224,7 +1241,14 @@ s_xhtml_1_0_end_font_tag(void *pdoc, Node *UNUSED(child))
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc     *doc   = xhtml->doc;
 
-  W_L("</font>");
+  if (xhtml->font_size_flag) {
+    W_L("</span>");
+    xhtml->font_size_flag--;
+  }
+  if (xhtml->font_color_flag) {
+    W_L("</font>");
+    xhtml->font_color_flag--;
+  }
   return xhtml->out;
 }
 

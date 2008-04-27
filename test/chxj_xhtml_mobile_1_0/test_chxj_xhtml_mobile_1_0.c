@@ -12973,7 +12973,7 @@ void test_xhtml_meta_tag_009()
 void test_xhtml_font_tag_001() 
 {
 #define  TEST_STRING "<font>"
-#define  RESULT_STRING "<font></font>"
+#define  RESULT_STRING "\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -13002,7 +13002,7 @@ void test_xhtml_font_tag_001()
 void test_xhtml_font_tag_002() 
 {
 #define  TEST_STRING "<font>あああ</font>"
-#define  RESULT_STRING "<font>あああ</font>"
+#define  RESULT_STRING "あああ"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -13031,7 +13031,7 @@ void test_xhtml_font_tag_002()
 void test_xhtml_font_tag_003() 
 {
 #define  TEST_STRING "<font>ｱｱｱ</font>"
-#define  RESULT_STRING "<font>ｱｱｱ</font>"
+#define  RESULT_STRING "ｱｱｱ"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -13060,7 +13060,7 @@ void test_xhtml_font_tag_003()
 void test_xhtml_font_tag_004() 
 {
 #define  TEST_STRING "<font color>ｱｱｱ</font>"
-#define  RESULT_STRING "<font>ｱｱｱ</font>"
+#define  RESULT_STRING "ｱｱｱ"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -13089,7 +13089,7 @@ void test_xhtml_font_tag_004()
 void test_xhtml_font_tag_005() 
 {
 #define  TEST_STRING "<font color=\"\">ｱｱｱ</font>"
-#define  RESULT_STRING "<font>ｱｱｱ</font>"
+#define  RESULT_STRING "ｱｱｱ"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -13351,7 +13351,7 @@ void test_xhtml_font_tag_013()
 void test_xhtml_font_tag_014() 
 {
 #define  TEST_STRING "<font size=\"0\">ｱｱｱ</font>"
-#define  RESULT_STRING "<font>ｱｱｱ</font>"
+#define  RESULT_STRING "ｱｱｱ"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -13380,7 +13380,7 @@ void test_xhtml_font_tag_014()
 void test_xhtml_font_tag_015() 
 {
 #define  TEST_STRING "<font size=\"8\">ｱｱｱ</font>"
-#define  RESULT_STRING "<font>ｱｱｱ</font>"
+#define  RESULT_STRING "ｱｱｱ"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -13409,7 +13409,7 @@ void test_xhtml_font_tag_015()
 void test_xhtml_font_tag_016() 
 {
 #define  TEST_STRING "<font size=\"8\">ｱｱｱ</font>"
-#define  RESULT_STRING "<font>ｱｱｱ</font>"
+#define  RESULT_STRING "ｱｱｱ"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -13467,7 +13467,7 @@ void test_xhtml_font_tag_017()
 void test_xhtml_font_tag_018() 
 {
 #define  TEST_STRING "<font size=\"\">ｱｱｱ</font>"
-#define  RESULT_STRING "<font>ｱｱｱ</font>"
+#define  RESULT_STRING "ｱｱｱ"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -13496,7 +13496,7 @@ void test_xhtml_font_tag_018()
 void test_xhtml_font_tag_019() 
 {
 #define  TEST_STRING "<font size>ｱｱｱ</font>"
-#define  RESULT_STRING "<font>ｱｱｱ</font>"
+#define  RESULT_STRING "ｱｱｱ"
   char  *ret;
   char  *tmp;
   device_table spec;
