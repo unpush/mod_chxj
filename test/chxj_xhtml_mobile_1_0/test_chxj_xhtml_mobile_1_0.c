@@ -486,6 +486,19 @@ void test_xhtml_font_tag_003();
 void test_xhtml_font_tag_004();
 void test_xhtml_font_tag_005();
 void test_xhtml_font_tag_006();
+void test_xhtml_font_tag_007();
+void test_xhtml_font_tag_008();
+void test_xhtml_font_tag_009();
+void test_xhtml_font_tag_010();
+void test_xhtml_font_tag_011();
+void test_xhtml_font_tag_012();
+void test_xhtml_font_tag_013();
+void test_xhtml_font_tag_014();
+void test_xhtml_font_tag_015();
+void test_xhtml_font_tag_016();
+void test_xhtml_font_tag_017();
+void test_xhtml_font_tag_018();
+void test_xhtml_font_tag_019();
 
 void test_xhtml_param_tag_001();
 /* pend */
@@ -1012,6 +1025,19 @@ main()
   CU_add_test(xhtml_suite, "test <font> 4." ,                                   test_xhtml_font_tag_004);
   CU_add_test(xhtml_suite, "test <font> 5." ,                                   test_xhtml_font_tag_005);
   CU_add_test(xhtml_suite, "test <font> 6." ,                                   test_xhtml_font_tag_006);
+  CU_add_test(xhtml_suite, "test <font> 7." ,                                   test_xhtml_font_tag_007);
+  CU_add_test(xhtml_suite, "test <font> 8." ,                                   test_xhtml_font_tag_008);
+  CU_add_test(xhtml_suite, "test <font> 9." ,                                   test_xhtml_font_tag_009);
+  CU_add_test(xhtml_suite, "test <font> 10." ,                                  test_xhtml_font_tag_010);
+  CU_add_test(xhtml_suite, "test <font> 11." ,                                  test_xhtml_font_tag_011);
+  CU_add_test(xhtml_suite, "test <font> 12." ,                                  test_xhtml_font_tag_012);
+  CU_add_test(xhtml_suite, "test <font> 13." ,                                  test_xhtml_font_tag_013);
+  CU_add_test(xhtml_suite, "test <font> 14." ,                                  test_xhtml_font_tag_014);
+  CU_add_test(xhtml_suite, "test <font> 15." ,                                  test_xhtml_font_tag_015);
+  CU_add_test(xhtml_suite, "test <font> 16." ,                                  test_xhtml_font_tag_016);
+  CU_add_test(xhtml_suite, "test <font> 17." ,                                  test_xhtml_font_tag_017);
+  CU_add_test(xhtml_suite, "test <font> 18." ,                                  test_xhtml_font_tag_018);
+  CU_add_test(xhtml_suite, "test <font> 19." ,                                  test_xhtml_font_tag_019);
 
   /*=========================================================================*/
   /* <param>                                                                 */
@@ -13118,6 +13144,387 @@ void test_xhtml_font_tag_006()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+/*** font size */
+void test_xhtml_font_tag_007() 
+{
+#define  TEST_STRING "<font size=\"1\">ｱｱｱ</font>"
+#define  RESULT_STRING "<span style=\"font-size: xx-small\">ｱｱｱ</span>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_008() 
+{
+#define  TEST_STRING "<font size=\"2\">ｱｱｱ</font>"
+#define  RESULT_STRING "<span style=\"font-size: x-small\">ｱｱｱ</span>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_009() 
+{
+#define  TEST_STRING "<font size=\"3\">ｱｱｱ</font>"
+#define  RESULT_STRING "<span style=\"font-size: small\">ｱｱｱ</span>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_010() 
+{
+#define  TEST_STRING "<font size=\"4\">ｱｱｱ</font>"
+#define  RESULT_STRING "<span style=\"font-size: medium\">ｱｱｱ</span>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_011() 
+{
+#define  TEST_STRING "<font size=\"5\">ｱｱｱ</font>"
+#define  RESULT_STRING "<span style=\"font-size: large\">ｱｱｱ</span>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_012() 
+{
+#define  TEST_STRING "<font size=\"6\">ｱｱｱ</font>"
+#define  RESULT_STRING "<span style=\"font-size: x-large\">ｱｱｱ</span>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_013() 
+{
+#define  TEST_STRING "<font size=\"7\">ｱｱｱ</font>"
+#define  RESULT_STRING "<span style=\"font-size: xx-large\">ｱｱｱ</span>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_014() 
+{
+#define  TEST_STRING "<font size=\"0\">ｱｱｱ</font>"
+#define  RESULT_STRING "<font>ｱｱｱ</font>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_015() 
+{
+#define  TEST_STRING "<font size=\"8\">ｱｱｱ</font>"
+#define  RESULT_STRING "<font>ｱｱｱ</font>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_016() 
+{
+#define  TEST_STRING "<font size=\"8\">ｱｱｱ</font>"
+#define  RESULT_STRING "<font>ｱｱｱ</font>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_017() 
+{
+#define  TEST_STRING "<font size=\"1\" color=\"#ff0000\">ｱｱｱ</font>"
+#define  RESULT_STRING "<font color=\"#ff0000\"><span style=\"font-size: xx-small\">ｱｱｱ</span></font>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_018() 
+{
+#define  TEST_STRING "<font size=\"\">ｱｱｱ</font>"
+#define  RESULT_STRING "<font>ｱｱｱ</font>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_019() 
+{
+#define  TEST_STRING "<font size>ｱｱｱ</font>"
+#define  RESULT_STRING "<font>ｱｱｱ</font>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+/*============================================================================*/
+/* <param>                                                                    */
+/*============================================================================*/
 void test_xhtml_param_tag_001() 
 {
 #define  TEST_STRING "<param>aaa</param>"
