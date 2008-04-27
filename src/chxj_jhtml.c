@@ -1263,12 +1263,12 @@ s_jhtml_start_font_tag(void *pdoc, Node *node)
   Doc           *doc;
   request_rec   *r;
   Attr          *attr;
+  char          *color = NULL;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
   r     = doc->r;
 
-  W_L("<font");
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
   /*--------------------------------------------------------------------------*/
@@ -1278,9 +1278,8 @@ s_jhtml_start_font_tag(void *pdoc, Node *node)
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('c','C',"color",name) && value && *value) {
-      W_L(" color=\"");
-      W_V(value);
-      W_L("\"");
+      color = apr_pstrdup(doc->buf.pool, value);
+      break;
     }
     else if (STRCASEEQ('s','S',"size",name)) {
       /*----------------------------------------------------------------------*/
@@ -1289,7 +1288,12 @@ s_jhtml_start_font_tag(void *pdoc, Node *node)
       /* ignore */
     }
   }
-  W_L(">");
+  if (color) {
+    W_L("<font color=\"");
+    W_V(color);
+    W_L("\">");
+    jhtml->font_flag++;
+  }
   return jhtml->out;
 }
 
@@ -1313,7 +1317,10 @@ s_jhtml_end_font_tag(void *pdoc, Node *UNUSED(child))
   doc   = jhtml->doc;
   r     = jhtml->doc->r;
 
-  W_L("</font>");
+  if (jhtml->font_flag) {
+    W_L("</font>");
+    jhtml->font_flag--;
+  }
   return jhtml->out;
 }
 
