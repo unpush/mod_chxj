@@ -1230,24 +1230,23 @@ s_chtml30_start_font_tag(void *pdoc, Node *node)
   chtml30_t     *chtml30;
   Doc           *doc;
   request_rec   *r;
+  char          *color = NULL;
 
   chtml30 = GET_CHTML30(pdoc);
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W_L("<font");
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
   /*--------------------------------------------------------------------------*/
   for (attr = qs_get_attr(doc,node);
-       attr; 
+       attr && color == NULL; 
        attr = qs_get_next_attr(doc,attr)) {
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('c','C',"color", name) && value && *value) {
-      W_L(" color=\"");
-      W_V(value);
-      W_L("\"");
+      color = apr_pstrdup(doc->buf.pool, value);
+      break;
     }
     else if (STRCASEEQ('s','S',"size", name)) {
       /*----------------------------------------------------------------------*/
@@ -1256,7 +1255,12 @@ s_chtml30_start_font_tag(void *pdoc, Node *node)
       /* ignore */
     }
   }
-  W_L(">");
+  if (color) {
+    W_L("<font color=\"");
+    W_V(color);
+    W_L("\">");
+    chtml30->font_flag++;
+  }
   return chtml30->out;
 }
 
@@ -1280,7 +1284,10 @@ s_chtml30_end_font_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml30->doc;
   r       = doc->r;
 
-  W_L("</font>");
+  if (chtml30->font_flag) {
+    W_L("</font>");
+    chtml30->font_flag--;
+  }
   W_NLCODE();
 
   return chtml30->out;

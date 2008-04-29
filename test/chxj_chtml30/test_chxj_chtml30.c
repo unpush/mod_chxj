@@ -472,6 +472,8 @@ void test_chtml30_font_tag_004();
 void test_chtml30_font_tag_005();
 void test_chtml30_font_tag_006();
 void test_chtml30_font_tag_007();
+void test_chtml30_font_tag_008();
+void test_chtml30_font_tag_009();
 /* pend */
 
 int
@@ -911,6 +913,8 @@ main()
   CU_add_test(chtml30_suite, "test <font> 5." ,                                   test_chtml30_font_tag_005);
   CU_add_test(chtml30_suite, "test <font> 6." ,                                   test_chtml30_font_tag_006);
   CU_add_test(chtml30_suite, "test <font> 7." ,                                   test_chtml30_font_tag_007);
+  CU_add_test(chtml30_suite, "test <font> 8." ,                                   test_chtml30_font_tag_008);
+  CU_add_test(chtml30_suite, "test <font> 9." ,                                   test_chtml30_font_tag_009);
   /* aend */
 
   CU_basic_run_tests();
@@ -11984,7 +11988,7 @@ void test_chtml30_param_tag_001()
 void test_chtml30_font_tag_001() 
 {
 #define  TEST_STRING "<font>aaa</font>"
-#define  RESULT_STRING "<font>aaa</font>"
+#define  RESULT_STRING "aaa"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -12040,7 +12044,7 @@ void test_chtml30_font_tag_002()
 void test_chtml30_font_tag_003() 
 {
 #define  TEST_STRING "<font color=\"\">aaa</font>"
-#define  RESULT_STRING "<font>aaa</font>"
+#define  RESULT_STRING "aaa"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -12068,7 +12072,7 @@ void test_chtml30_font_tag_003()
 void test_chtml30_font_tag_004() 
 {
 #define  TEST_STRING "<font color>aaa</font>"
-#define  RESULT_STRING "<font>aaa</font>"
+#define  RESULT_STRING "aaa"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -12096,7 +12100,7 @@ void test_chtml30_font_tag_004()
 void test_chtml30_font_tag_005() 
 {
 #define  TEST_STRING "<font size=\"10\">aaa</font>"
-#define  RESULT_STRING "<font>aaa</font>"
+#define  RESULT_STRING "aaa"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -12124,7 +12128,7 @@ void test_chtml30_font_tag_005()
 void test_chtml30_font_tag_006() 
 {
 #define  TEST_STRING "<font size=\"\">aaa</font>"
-#define  RESULT_STRING "<font>aaa</font>"
+#define  RESULT_STRING "aaa"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -12152,7 +12156,63 @@ void test_chtml30_font_tag_006()
 void test_chtml30_font_tag_007() 
 {
 #define  TEST_STRING "<font size>aaa</font>"
-#define  RESULT_STRING "<font>aaa</font>"
+#define  RESULT_STRING "aaa"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_chtml30(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml30_font_tag_008() 
+{
+#define  TEST_STRING "<font size=\"-1\">aaa</font>"
+#define  RESULT_STRING "aaa"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_chtml30(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml30_font_tag_009() 
+{
+#define  TEST_STRING "<font size=\"+1\">aaa</font>"
+#define  RESULT_STRING "aaa"
   char  *ret;
   char  *tmp;
   device_table spec;
