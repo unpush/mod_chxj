@@ -605,7 +605,7 @@ s_jxhtml_start_html_tag(void *pdoc, Node *UNUSED(node))
   /*--------------------------------------------------------------------------*/
   /* start HTML tag                                                           */
   /*--------------------------------------------------------------------------*/
-  W_L("<html version=\"1.0\">");
+  W_L("<html>");
 
   DBG(r, "end s_jxhtml_start_html_tag()");
 
@@ -2540,7 +2540,7 @@ s_jxhtml_end_b_tag(void* pdoc, Node* UNUSED(child))
   jxhtml_t*      jxhtml = GET_JXHTML(pdoc);
   Doc*          doc   = jxhtml->doc;
 
-  W_L("</b>\r\n");
+  W_L("</b>");
   return jxhtml->out;
 }
 

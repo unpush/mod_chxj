@@ -1302,7 +1302,7 @@ s_chtml20_end_tr_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
-  W_L("<br>\r\n");
+  W_L("<br>");
   return chtml20->out;
 }
 

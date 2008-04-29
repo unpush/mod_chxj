@@ -654,12 +654,12 @@ s_xhtml_1_0_start_html_tag(void *pdoc, Node *node)
   /*--------------------------------------------------------------------------*/
   /* Add XML Declare                                                          */
   /*--------------------------------------------------------------------------*/
-  W_L("<?xml version=\"1.0\" encoding=\"Windows-31J\"?>\r\n");
+  W_L("<?xml version=\"1.0\" encoding=\"Windows-31J\"?>");
   /*--------------------------------------------------------------------------*/
   /* Add DocType                                                              */
   /*--------------------------------------------------------------------------*/
-  W_L("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML Basic 1.0//EN\"\r\n");
-  W_L(" \"http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd\">\r\n");
+  W_L("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML Basic 1.0//EN\"");
+  W_L(" \"http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd\">");
   /*--------------------------------------------------------------------------*/
   /* start HTML tag                                                           */
   /*--------------------------------------------------------------------------*/
@@ -681,7 +681,7 @@ s_xhtml_1_0_start_html_tag(void *pdoc, Node *node)
       W_L(" version=\"-//OPENWAVE//DTD XHTML Mobile 1.0//EN\"");
     }
   }
-  W_L(">\r\n");
+  W_L(">");
   return xhtml->out;
 }
 
@@ -699,7 +699,7 @@ s_xhtml_1_0_end_html_tag(void *pdoc, Node *UNUSED(child))
 {
   xhtml_t       *xhtml = GET_XHTML(pdoc);
   Doc           *doc   = xhtml->doc;
-  W_L("</html>\r\n");
+  W_L("</html>");
   return xhtml->out;
 }
 
@@ -763,7 +763,7 @@ s_xhtml_1_0_start_meta_tag(void *pdoc, Node *node)
       }
     }
   }
-  W_L(" />\r\n");
+  W_L(" />");
   return xhtml->out;
 }
 
@@ -799,7 +799,7 @@ s_xhtml_1_0_start_head_tag(void *pdoc, Node *UNUSED(node))
   xhtml_t       *xhtml = GET_XHTML(pdoc);
   Doc           *doc   = xhtml->doc;
 
-  W_L("<head>\r\n");
+  W_L("<head>");
   return xhtml->out;
 }
 
@@ -818,7 +818,7 @@ s_xhtml_1_0_end_head_tag(void *pdoc, Node *UNUSED(child))
   xhtml_t       *xhtml = GET_XHTML(pdoc);
   Doc           *doc   = xhtml->doc;
 
-  W_L("</head>\r\n");
+  W_L("</head>");
   return xhtml->out;
 }
 
@@ -856,7 +856,7 @@ s_xhtml_1_0_end_title_tag(void *pdoc, Node *UNUSED(child))
   xhtml_t       *xhtml = GET_XHTML(pdoc);
   Doc           *doc   = xhtml->doc;
 
-  W_L("</title>\r\n");
+  W_L("</title>");
   return xhtml->out;
 }
 
@@ -892,7 +892,7 @@ s_xhtml_1_0_start_base_tag(void *pdoc, Node *node)
       break;
     }
   }
-  W_L(" />\r\n");
+  W_L(" />");
   return xhtml->out;
 }
 
@@ -960,7 +960,7 @@ s_xhtml_1_0_start_body_tag(void *pdoc, Node *node)
       /* ignore */
     }
   }
-  W_L(">\r\n");
+  W_L(">");
   return xhtml->out;
 }
 
@@ -979,7 +979,7 @@ s_xhtml_1_0_end_body_tag(void *pdoc, Node *UNUSED(child))
   xhtml_t       *xhtml = GET_XHTML(pdoc);
   Doc           *doc   = xhtml->doc;
 
-  W_L("</body>\r\n");
+  W_L("</body>");
   return xhtml->out;
 }
 
@@ -1112,7 +1112,7 @@ s_xhtml_1_0_start_br_tag(void *pdoc, Node *node)
       }
     }
   }
-  W_L(" />\r\n");
+  W_L(" />");
   return xhtml->out;
 }
 
@@ -1148,7 +1148,7 @@ s_xhtml_1_0_start_tr_tag(void *pdoc, Node *UNUSED(node))
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc     *doc   = xhtml->doc;
 
-  W_L("<br />\r\n");
+  W_L("<br />");
   return xhtml->out;
 }
 
@@ -2444,7 +2444,7 @@ s_xhtml_1_0_start_select_tag(void *pdoc, Node *child)
     /* "true" is *NOT* W3C. it is specification of WAP2.0 for EZWEB */
     W_L(" multiple=\"true\"");
   }
-  W_L(">\r\n");
+  W_L(">");
   return xhtml->out;
 }
 
@@ -2463,7 +2463,7 @@ s_xhtml_1_0_end_select_tag(void *pdoc, Node *UNUSED(child))
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc     *doc   = xhtml->doc;
 
-  W_L("</select>\r\n");
+  W_L("</select>");
   return xhtml->out;
 }
 
@@ -2528,7 +2528,7 @@ s_xhtml_1_0_end_option_tag(void *pdoc, Node *UNUSED(child))
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc     *doc   = xhtml->doc;
 
-  W_L("</option>\r\n");
+  W_L("</option>");
   return xhtml->out;
 }
 
@@ -2587,7 +2587,7 @@ s_xhtml_1_0_end_div_tag(void *pdoc, Node *UNUSED(child))
 {
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc     *doc   = xhtml->doc;
-  W_L("</div>\r\n");
+  W_L("</div>");
   return xhtml->out;
 }
 
@@ -2625,7 +2625,7 @@ s_xhtml_1_0_end_b_tag(void *pdoc, Node *UNUSED(child))
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc     *doc   = xhtml->doc;
 
-  W_L("</div>\n");
+  W_L("</div>");
   return xhtml->out;
 }
 
@@ -2704,7 +2704,7 @@ s_xhtml_1_0_start_textarea_tag(void *pdoc, Node *node)
       W_L("\"");
     }
   }
-  W_L(">\r\n");
+  W_L(">");
   return xhtml->out;
 }
 
@@ -2723,7 +2723,7 @@ s_xhtml_1_0_end_textarea_tag(void *pdoc, Node *UNUSED(child))
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc     *doc   = xhtml->doc;
 
-  W_L("</textarea>\r\n");
+  W_L("</textarea>");
   xhtml->textarea_flag--;
 
   return xhtml->out;

@@ -1227,7 +1227,7 @@ s_jhtml_start_tr_tag(void *pdoc, Node *UNUSED(node))
   doc   = jhtml->doc;
   r     = doc->r;
 
-  W_L("<br>\r\n");
+  W_L("<br>");
   return jhtml->out;
 }
 
@@ -2493,7 +2493,7 @@ s_jhtml_end_b_tag(void* pdoc, Node* UNUSED(child))
   jhtml_t*      jhtml = GET_JHTML(pdoc);
   Doc*          doc   = jhtml->doc;
 
-  W_L("</b>\r\n");
+  W_L("</b>");
   return jhtml->out;
 }
 
