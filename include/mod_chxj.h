@@ -295,6 +295,27 @@ typedef enum {
   COOKIE_STORE_TYPE_MEMCACHE = 3, 
 } cookie_store_type_t;
 
+/* new line type */
+#define CHXJ_NEW_LINE_TYPE_CRLF         "crlf"
+#define CHXJ_NEW_LINE_TYPE_LF           "lf"
+#define CHXJ_NEW_LINE_TYPE_CR           "cr"
+#define CHXJ_NEW_LINE_TYPE_NONE         "none"
+typedef enum {
+  NLTYPE_NIL  = 0,
+  NLTYPE_CRLF = 1,
+  NLTYPE_LF   = 2,
+  NLTYPE_CR   = 3,
+  NLTYPE_NONE = 4,
+} chxj_new_line_type_t;
+#define IS_NLTYPE_CRLF(X)   ((X)->new_line_type == NLTYPE_CRLF)
+#define IS_NLTYPE_LF(X)     ((X)->new_line_type == NLTYPE_LF)
+#define IS_NLTYPE_CR(X)     ((X)->new_line_type == NLTYPE_CR)
+#define IS_NLTYPE_NONE(X)   ((X)->new_line_type == NLTYPE_NONE)
+#define TO_NLCODE(X)        (IS_NLTYPE_CRLF(X) ? "\r\n" : \
+                             IS_NLTYPE_LF(X)   ? "\n"   : \
+                             IS_NLTYPE_CR(X)   ? "\r"   : \
+                             IS_NLTYPE_NONE(X) ? ""     : "\r\n")
+
 struct mod_chxj_config {
   int                   image;
 
@@ -324,6 +345,8 @@ struct mod_chxj_config {
 #if defined(USE_MEMCACHE_COOKIE)
   memcache_t            memcache;
 #endif
+
+  chxj_new_line_type_t  new_line_type;
 };
 
 #define IS_COOKIE_STORE_DBM(X)      ((X) == COOKIE_STORE_TYPE_DBM)

@@ -976,7 +976,7 @@ s_jxhtml_start_body_tag(void *pdoc, Node *node)
       /* ignore */
     }
   }
-  W_L(">");
+  W_L("><div>");
   return jxhtml->out;
 }
 
@@ -1000,7 +1000,7 @@ s_jxhtml_end_body_tag(void *pdoc, Node *UNUSED(child))
   doc   = jxhtml->doc;
   r     = doc->r;
 
-  W_L("</body>");
+  W_L("</div></body>");
   return jxhtml->out;
 }
 

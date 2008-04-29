@@ -2315,6 +2315,35 @@ cmd_set_cookie_store_type(
   return NULL;
 }
 
+static const char *
+cmd_set_new_line_type(
+  cmd_parms   *UNUSED(cmd), 
+  void        *mconfig, 
+  const char  *arg)
+{
+  mod_chxj_config  *dconf;
+  if (strlen(arg) > 255)
+    return "mod_chxj: ChxjNewLineType is too long.";
+
+  dconf = (mod_chxj_config *)mconfig;
+
+  if (strcasecmp(CHXJ_NEW_LINE_TYPE_CRLF, arg) == 0) {
+    dconf->new_line_type = NLTYPE_CRLF;
+  }
+  else if (strcasecmp(CHXJ_NEW_LINE_TYPE_LF, arg) == 0) {
+    dconf->new_line_type = NLTYPE_LF;
+  }
+  else if (strcasecmp(CHXJ_NEW_LINE_TYPE_CR, arg) == 0) {
+    dconf->new_line_type = NLTYPE_CR;
+  }
+  else if (strcasecmp(CHXJ_NEW_LINE_TYPE_NONE, arg) == 0) {
+    dconf->new_line_type = NLTYPE_NONE;
+  }
+  else {
+    return "mod_chxj: invalid value (ChxjNewLineType)";
+  }
+  return NULL;
+}
 
 
 static const command_rec cmds[] = {
@@ -2448,6 +2477,12 @@ static const command_rec cmds[] = {
     OR_ALL,
     "The Memcached port used by saving Cookie"),
 #endif
+  AP_INIT_TAKE1(
+    "ChxjNewLineType",
+    cmd_set_new_line_type,
+    NULL,
+    OR_ALL,
+    "HTML new line type (NONE|CRLF|LF|CR). default is CRLF"),
   {NULL}
 };
 

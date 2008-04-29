@@ -28,6 +28,8 @@
 #define W_V(X)          do { chtml10->out = (X) ? BUFFERED_WRITE_VALUE(chtml10->out, &doc->buf, (X))  \
                                                   : BUFFERED_WRITE_LITERAL(chtml10->out, &doc->buf, ""); } while(0)
 
+#define W_NLCODE()     do { char *nlcode = TO_NLCODE(chtml10->conf); W_V(nlcode); } while (0); 
+
 static char *s_chtml10_start_html_tag     (void *pdoc, Node *node);
 static char *s_chtml10_end_html_tag       (void *pdoc, Node *node);
 static char *s_chtml10_start_meta_tag     (void *pdoc, Node *node);
@@ -585,6 +587,7 @@ s_chtml10_start_html_tag(void *pdoc, Node *UNUSED(node))
   /* start HTML tag                                                           */
   /*--------------------------------------------------------------------------*/
   W_L("<html>");
+  W_NLCODE();
 
   return chtml10->out;
 }
@@ -611,6 +614,7 @@ s_chtml10_end_html_tag(void *pdoc, Node *UNUSED(child))
   r       = doc->r;
 
   W_L("</html>");
+  W_NLCODE();
 
   return chtml10->out;
 }
@@ -672,6 +676,7 @@ s_chtml10_start_head_tag(void *pdoc, Node *UNUSED(node))
   r       = doc->r;
 
   W_L("<head>");
+  W_NLCODE();
 
   return chtml10->out;
 }
@@ -697,6 +702,7 @@ s_chtml10_end_head_tag(void *pdoc, Node *UNUSED(child))
   r       = doc->r;
 
   W_L("</head>");
+  W_NLCODE();
 
   return chtml10->out;
 }
@@ -722,6 +728,7 @@ s_chtml10_start_ol_tag(void *pdoc, Node *UNUSED(node))
   r       = doc->r;
 
   W_L("<ol>");
+  W_NLCODE();
 
   return chtml10->out;
 }
@@ -747,6 +754,7 @@ s_chtml10_end_ol_tag(void *pdoc, Node *UNUSED(child))
   r       = doc->r;
 
   W_L("</ol>");
+  W_NLCODE();
 
   return chtml10->out;
 }
@@ -772,6 +780,7 @@ s_chtml10_start_ul_tag(void *pdoc, Node *UNUSED(node))
   r          = doc->r;
 
   W_L("<ul>");
+  W_NLCODE();
 
   return chtml10->out;
 }
@@ -797,6 +806,7 @@ s_chtml10_end_ul_tag(void *pdoc, Node *UNUSED(child))
   r       = doc->r;
 
   W_L("</ul>");
+  W_NLCODE();
 
   return chtml10->out;
 }
@@ -904,6 +914,7 @@ s_chtml10_end_h1_tag(void *pdoc, Node *UNUSED(child))
   r       = doc->r;
 
   W_L("</h1>");
+  W_NLCODE();
 
   return chtml10->out;
 }
@@ -968,6 +979,7 @@ s_chtml10_end_h2_tag(void *pdoc, Node *UNUSED(child))
   r       = doc->r;
 
   W_L("</h2>");
+  W_NLCODE();
 
   return chtml10->out;
 }
@@ -1034,6 +1046,7 @@ s_chtml10_end_h3_tag(void *pdoc, Node *UNUSED(child))
   r       = doc->r;
 
   W_L("</h3>");
+  W_NLCODE();
 
   return chtml10->out;
 }
@@ -1096,6 +1109,7 @@ s_chtml10_end_h4_tag(void *pdoc, Node *UNUSED(child))
   doc      = chtml10->doc;
 
   W_L("</h4>");
+  W_NLCODE();
 
   return chtml10->out;
 }
@@ -1160,6 +1174,7 @@ s_chtml10_end_h5_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml10->doc;
 
   W_L("</h5>");
+  W_NLCODE();
 
   return chtml10->out;
 }
@@ -1222,6 +1237,7 @@ s_chtml10_end_h6_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml10->doc;
 
   W_L("</h6>");
+  W_NLCODE();
 
   return chtml10->out;
 }
@@ -1268,6 +1284,7 @@ s_chtml10_end_title_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml10->doc;
 
   W_L("</title>");
+  W_NLCODE();
 
   return chtml10->out;
 }
@@ -1308,6 +1325,7 @@ s_chtml10_start_base_tag(void *pdoc, Node *node)
   }
 
   W_L(">");
+  W_NLCODE();
 
   return chtml10->out;
 }
@@ -1413,6 +1431,7 @@ s_chtml10_start_body_tag(void *pdoc, Node *node)
   }
 
   W_L(">");
+  W_NLCODE();
 
   return chtml10->out;
 }
@@ -1436,6 +1455,7 @@ s_chtml10_end_body_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml10->doc;
 
   W_L("</body>");
+  W_NLCODE();
 
   return chtml10->out;
 }
@@ -1628,6 +1648,7 @@ s_chtml10_end_a_tag(void *pdoc, Node *UNUSED(child))
   r       = doc->r;
 
   W_L("</a>");
+  W_NLCODE();
   return chtml10->out;
 }
 
@@ -1671,6 +1692,7 @@ s_chtml10_start_br_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
+  W_NLCODE();
   return chtml10->out;
 }
 
@@ -1729,6 +1751,7 @@ s_chtml10_end_tr_tag(void *pdoc, Node *UNUSED(child))
   r       = doc->r;
 
   W_L("<br>");
+  W_NLCODE();
 
   return chtml10->out;
 }
@@ -1846,6 +1869,7 @@ s_chtml10_start_form_tag(void *pdoc, Node *node)
   }
 
   W_L(">");
+  W_NLCODE();
 
   return chtml10->out;
 }
@@ -1871,6 +1895,7 @@ s_chtml10_end_form_tag(void *pdoc, Node *UNUSED(child))
   r       = doc->r;
 
   W_L("</form>");
+  W_NLCODE();
 
   return chtml10->out;
 }
@@ -1986,6 +2011,7 @@ s_chtml10_start_input_tag(void *pdoc, Node *node)
   }
 
   W_L(">");
+  W_NLCODE();
   return chtml10->out;
 }
 
@@ -2052,6 +2078,7 @@ s_chtml10_end_center_tag(void *pdoc, Node *UNUSED(child))
   r       = doc->r;
 
   W_L("</center>");
+  W_NLCODE();
 
   return chtml10->out;
 }
@@ -2152,6 +2179,7 @@ s_chtml10_start_hr_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
+  W_NLCODE();
   return chtml10->out;
 }
 
@@ -2344,6 +2372,7 @@ s_chtml10_start_img_tag(void *pdoc, Node *node)
   }
 
   W_L(">");
+  W_NLCODE();
   return chtml10->out;
 }
 
@@ -2446,6 +2475,7 @@ s_chtml10_start_select_tag(void *pdoc, Node *child)
   }
 
   W_L(">");
+  W_NLCODE();
   return chtml10->out;
 }
 
@@ -2470,6 +2500,7 @@ s_chtml10_end_select_tag(void *pdoc, Node *UNUSED(child))
   r       = doc->r;
 
   W_L("</select>");
+  W_NLCODE();
   return chtml10->out;
 }
 
@@ -2559,8 +2590,10 @@ static char *
 s_chtml10_end_option_tag(void *pdoc, Node *UNUSED(child))
 {
   chtml10_t *chtml10 = GET_CHTML10(pdoc);
+  Doc       *doc     = chtml10->doc;
 
   /* Don't close */
+  W_NLCODE();
 
   return chtml10->out;
 }
@@ -2612,6 +2645,7 @@ s_chtml10_start_div_tag(void *pdoc, Node *child)
   }
 
   W_L(">");
+  W_NLCODE();
   return chtml10->out;
 }
 
@@ -2636,6 +2670,7 @@ s_chtml10_end_div_tag(void *pdoc, Node *UNUSED(child))
   r       = doc->r;
 
   W_L("</div>");
+  W_NLCODE();
   return chtml10->out;
 }
 
@@ -2692,6 +2727,7 @@ s_chtml10_start_pre_tag(void *pdoc, Node *UNUSED(node))
 
   chtml10->pre_flag++;
   W_L("<pre>");
+  W_NLCODE();
   return chtml10->out;
 }
 
@@ -2716,6 +2752,7 @@ s_chtml10_end_pre_tag(void *pdoc, Node *UNUSED(child))
   r       = doc->r;
 
   W_L("</pre>");
+  W_NLCODE();
   chtml10->pre_flag--;
 
   return chtml10->out;
@@ -2766,6 +2803,7 @@ s_chtml10_start_p_tag(void *pdoc, Node *node)
   }
 
   W_L(">");
+  W_NLCODE();
   return chtml10->out;
 }
 
@@ -2790,6 +2828,7 @@ s_chtml10_end_p_tag(void *pdoc, Node *UNUSED(child))
   r       = doc->r;
 
   W_L("</p>");
+  W_NLCODE();
   return chtml10->out;
 }
 
@@ -2866,6 +2905,7 @@ s_chtml10_start_textarea_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
+  W_NLCODE();
   return chtml10->out;
 }
 
@@ -2890,6 +2930,7 @@ s_chtml10_end_textarea_tag(void *pdoc, Node *UNUSED(child))
   r       = doc->r;
 
   W_L("</textarea>");
+  W_NLCODE();
   chtml10->textarea_flag--;
 
   return chtml10->out;
@@ -2981,6 +3022,7 @@ s_chtml10_start_blockquote_tag(void *pdoc, Node *UNUSED(child))
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
   W_L("<blockquote>");
+  W_NLCODE();
   return chtml10->out;
 }
 
@@ -3002,6 +3044,7 @@ s_chtml10_end_blockquote_tag(void *pdoc, Node *UNUSED(child))
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
   W_L("</blockquote>");
+  W_NLCODE();
   return chtml10->out;
 }
 
@@ -3022,6 +3065,7 @@ s_chtml10_start_dir_tag(void *pdoc, Node *UNUSED(child))
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
   W_L("<dir>");
+  W_NLCODE();
   return chtml10->out;
 }
 
@@ -3043,6 +3087,7 @@ s_chtml10_end_dir_tag(void *pdoc, Node *UNUSED(child))
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
   W_L("</dir>");
+  W_NLCODE();
   return chtml10->out;
 }
 
@@ -3083,6 +3128,7 @@ s_chtml10_end_dl_tag(void *pdoc, Node *UNUSED(child))
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
   W_L("</dl>");
+  W_NLCODE();
   return chtml10->out;
 }
 
@@ -3118,8 +3164,10 @@ s_chtml10_start_dt_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml10_end_dt_tag(void *pdoc, Node *UNUSED(child))
 {
-  chtml10_t *chtml10;
-  chtml10 = GET_CHTML10(pdoc);
+  chtml10_t *chtml10 = GET_CHTML10(pdoc);
+  Doc       *doc     = chtml10->doc;
+  
+  W_NLCODE();
   return chtml10->out;
 }
 
@@ -3155,8 +3203,9 @@ s_chtml10_start_dd_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml10_end_dd_tag(void *pdoc, Node *UNUSED(child))
 {
-  chtml10_t *chtml10;
-  chtml10 = GET_CHTML10(pdoc);
+  chtml10_t *chtml10 = GET_CHTML10(pdoc);
+  Doc       *doc     = chtml10->doc;
+  W_NLCODE();
   return chtml10->out;
 }
 
@@ -3177,6 +3226,7 @@ s_chtml10_start_menu_tag(void *pdoc, Node *UNUSED(child))
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
   W_L("<menu>");
+  W_NLCODE();
   return chtml10->out;
 }
 
@@ -3195,6 +3245,7 @@ s_chtml10_end_menu_tag(void *pdoc, Node *UNUSED(child))
   chtml10_t *chtml10 = GET_CHTML10(pdoc);
   Doc *doc = chtml10->doc;
   W_L("</menu>");
+  W_NLCODE();
   return chtml10->out;
 }
 
