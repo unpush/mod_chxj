@@ -1323,9 +1323,41 @@ s_jxhtml_start_font_tag(void *pdoc, Node *node)
     case '5': W_L("<span style=\"font-size: large\">");    break;
     case '6': W_L("<span style=\"font-size: x-large\">");  break;
     case '7': W_L("<span style=\"font-size: xx-large\">"); break;
-    default:
+    case '-':
+      if (*(size + 1) == '1') {
+        W_L("<span style=\"font-size: small\">");
+        break;
+      }
+      if (*(size + 1) == '2') {
+        W_L("<span style=\"font-size: x-small\">");
+        break;
+      }
+      if (*(size + 1) == '3') {
+        W_L("<span style=\"font-size: xx-small\">");
+        break;
+      }
       jxhtml->font_size_flag--;
       break;
+
+    case '+':
+      if (*(size + 1) == '1') {
+        W_L("<span style=\"font-size: large\">");
+        break;
+      }
+      if (*(size + 1) == '2') {
+        W_L("<span style=\"font-size: x-large\">");
+        break;
+      }
+      if (*(size + 1) == '3') {
+        W_L("<span style=\"font-size: xx-large\">");
+        break;
+      }
+      jxhtml->font_size_flag--;
+      break;
+
+    default:
+      WRN(doc->r, "invlalid font size. [%s] != (1|2|3|4|5|6|7|+1|+2|+3|-1|-2|-3)", size);
+      jxhtml->font_size_flag--;
     }
   }
   return jxhtml->out;
