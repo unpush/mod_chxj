@@ -33,6 +33,7 @@ struct ctml20_t {
     int                 out_len;
     int                 pre_flag;
     int                 textarea_flag;
+    int                 font_flag;
 
     device_table        *spec;
     mod_chxj_config     *conf;

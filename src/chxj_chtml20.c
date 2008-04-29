@@ -1348,18 +1348,18 @@ s_chtml20_start_font_tag(void *pdoc, Node *node)
   Doc         *doc;
   request_rec *r;
   Attr        *attr;
+  char        *color = NULL;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
   r       = doc->r;
 
 
-  W_L("<font");
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
   /*--------------------------------------------------------------------------*/
   for (attr = qs_get_attr(doc,node);
-       attr; 
+       attr && color == NULL;
        attr = qs_get_next_attr(doc,attr)) {
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
@@ -1367,9 +1367,7 @@ s_chtml20_start_font_tag(void *pdoc, Node *node)
     case 'c':
     case 'C':
       if (strcasecmp(name, "color") == 0 && value && *value) {
-        W_L(" color=\"");
-        W_V(value);
-        W_L("\"");
+        color = apr_pstrdup(doc->buf.pool, value);
       }
       break;
 
@@ -1387,7 +1385,12 @@ s_chtml20_start_font_tag(void *pdoc, Node *node)
       break;
     }
   }
-  W_L(">");
+  if (color) {
+    W_L("<font color=\"");
+    W_V(color);
+    W_L("\">");
+    chtml20->font_flag++;
+  }
   return chtml20->out;
 }
 
@@ -1411,7 +1414,10 @@ s_chtml20_end_font_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
   r       = doc->r;
 
-  W_L("</font>");
+  if (chtml20->font_flag) {
+    W_L("</font>");
+    chtml20->font_flag--;
+  }
   return chtml20->out;
 }
 
