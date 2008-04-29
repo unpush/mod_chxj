@@ -1559,7 +1559,7 @@ s_jxhtml_start_input_tag(void *pdoc, Node *node)
   }
 
   if (checked) {
-    W_L(" checked");
+    W_L(" checked=\"checked\"");
   }
   W_L(" />");
   return jxhtml->out;
