@@ -1236,35 +1236,77 @@ s_chtml50_start_font_tag(void *pdoc, Node *node)
   chtml50_t     *chtml50;
   Doc           *doc;
   request_rec   *r;
+  char          *color = NULL;
+  char          *size = NULL;
 
   chtml50 = GET_CHTML50(pdoc);
   doc     = chtml50->doc;
   r       = doc->r;
 
-  W_L("<font");
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
   /*--------------------------------------------------------------------------*/
   for (attr = qs_get_attr(doc,node);
-       attr; 
+       attr && (color == NULL || size == NULL); 
        attr = qs_get_next_attr(doc,attr)) {
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('c','C',"color", name) && value && *value) {
-      W_L(" color=\"");
-      W_V(value);
-      W_L("\"");
+      color = apr_pstrdup(doc->buf.pool, value);
     }
     else if (STRCASEEQ('s','S',"size", name) && value && *value) {
       /*----------------------------------------------------------------------*/
       /* CHTML 5.0                                                            */
       /*----------------------------------------------------------------------*/
-      W_L(" size=\"");
-      W_V(value);
+      size = apr_pstrdup(doc->buf.pool, value);
+      switch (*size) {
+      case '1':
+      case '2':
+      case '3':
+      case '4':
+      case '5':
+      case '6':
+      case '7':
+        if (*(size + 1) == 0) {
+          break;
+        }
+        size = NULL;
+        break;
+
+      case '+':
+      case '-':
+        {
+          char ch = *(size + 1);
+          if (ch == '1' || ch == '2' || ch == '3') {
+            if (*(size + 2) == 0) {
+              break;
+            }
+          }
+        }
+        size = NULL;
+        break;
+
+      default:
+        size = NULL;
+      }
+    }
+    if (color && size) break;
+  }
+  if (color || size) {
+    W_L("<font");
+    if (color) {
+      W_L(" color=\"");
+      W_V(color);
       W_L("\"");
     }
+    if (size) {
+      W_L(" size=\"");
+      W_V(size);
+      W_L("\"");
+    }
+    W_L(">");
+    chtml50->font_flag++;
   }
-  W_L(">");
   return chtml50->out;
 }
 
@@ -1288,8 +1330,11 @@ s_chtml50_end_font_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml50->doc;
   r       = doc->r;
 
-  W_L("</font>");
-  W_NLCODE();
+  if (chtml50->font_flag) {
+    W_L("</font>");
+    W_NLCODE();
+    chtml50->font_flag--;
+  }
 
   return chtml50->out;
 }

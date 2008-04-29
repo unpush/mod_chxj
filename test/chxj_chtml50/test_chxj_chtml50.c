@@ -12516,7 +12516,7 @@ void test_chtml50_param_tag_001()
 void test_chtml50_font_tag_001() 
 {
 #define  TEST_STRING "<font>aaa</font>"
-#define  RESULT_STRING "<font>aaa</font>"
+#define  RESULT_STRING "aaa"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -12572,7 +12572,7 @@ void test_chtml50_font_tag_002()
 void test_chtml50_font_tag_003() 
 {
 #define  TEST_STRING "<font color=\"\">aaa</font>"
-#define  RESULT_STRING "<font>aaa</font>"
+#define  RESULT_STRING "aaa"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -12600,7 +12600,7 @@ void test_chtml50_font_tag_003()
 void test_chtml50_font_tag_004() 
 {
 #define  TEST_STRING "<font color>aaa</font>"
-#define  RESULT_STRING "<font>aaa</font>"
+#define  RESULT_STRING "aaa"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -12880,7 +12880,7 @@ void test_chtml50_font_tag_005_9()
 void test_chtml50_font_tag_006() 
 {
 #define  TEST_STRING "<font size=\"\">aaa</font>"
-#define  RESULT_STRING "<font>aaa</font>"
+#define  RESULT_STRING "aaa"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -12908,7 +12908,203 @@ void test_chtml50_font_tag_006()
 void test_chtml50_font_tag_007() 
 {
 #define  TEST_STRING "<font size>aaa</font>"
-#define  RESULT_STRING "<font>aaa</font>"
+#define  RESULT_STRING "aaa"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_chtml50(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml50_font_tag_008() 
+{
+#define  TEST_STRING "<font size=\"-1\">aaa</font>"
+#define  RESULT_STRING "<font size=\"-1\">aaa</font>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_chtml50(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml50_font_tag_009() 
+{
+#define  TEST_STRING "<font size=\"-2\">aaa</font>"
+#define  RESULT_STRING "<font size=\"-2\">aaa</font>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_chtml50(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml50_font_tag_010() 
+{
+#define  TEST_STRING "<font size=\"-3\">aaa</font>"
+#define  RESULT_STRING "<font size=\"-3\">aaa</font>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_chtml50(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml50_font_tag_011() 
+{
+#define  TEST_STRING "<font size=\"+1\">aaa</font>"
+#define  RESULT_STRING "<font size=\"+1\">aaa</font>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_chtml50(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml50_font_tag_012() 
+{
+#define  TEST_STRING "<font size=\"+2\">aaa</font>"
+#define  RESULT_STRING "<font size=\"+2\">aaa</font>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_chtml50(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml50_font_tag_013() 
+{
+#define  TEST_STRING "<font size=\"+3\">aaa</font>"
+#define  RESULT_STRING "<font size=\"+3\">aaa</font>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_chtml50(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chtml50_font_tag_014() 
+{
+#define  TEST_STRING "<font size=\"8\">aaa</font>"
+#define  RESULT_STRING "aaa"
   char  *ret;
   char  *tmp;
   device_table spec;
