@@ -30,6 +30,7 @@
 #define W_L(X)          do { chtml20->out = BUFFERED_WRITE_LITERAL(chtml20->out, &doc->buf, (X)); } while(0)
 #define W_V(X)          do { chtml20->out = (X) ? BUFFERED_WRITE_VALUE(chtml20->out, &doc->buf, (X))  \
                                                   : BUFFERED_WRITE_LITERAL(chtml20->out, &doc->buf, ""); } while(0)
+#define W_NLCODE()     do { char *nlcode = TO_NLCODE(chtml20->conf); W_V(nlcode); } while (0);
 
 static char *s_chtml20_start_html_tag    (void *pdoc, Node *node);
 static char *s_chtml20_end_html_tag      (void *pdoc, Node *node);
@@ -582,6 +583,7 @@ s_chtml20_start_html_tag(void *pdoc, Node *UNUSED(node))
   /* start HTML tag                                                           */
   /*--------------------------------------------------------------------------*/
   W_L("<html>");
+  W_NLCODE();
   return chtml20->out;
 }
 
@@ -606,6 +608,7 @@ s_chtml20_end_html_tag(void *pdoc, Node *UNUSED(child))
   r       = doc->r;
 
   W_L("</html>");
+  W_NLCODE();
   return chtml20->out;
 }
 
@@ -707,6 +710,8 @@ s_chtml20_start_meta_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
+  W_NLCODE();
+
   return chtml20->out;
 }
 
@@ -746,6 +751,8 @@ s_chtml20_start_head_tag(void *pdoc, Node *UNUSED(node))
   doc     = chtml20->doc;
 
   W_L("<head>");
+  W_NLCODE();
+
   return chtml20->out;
 }
 
@@ -770,6 +777,8 @@ s_chtml20_end_head_tag(void *pdoc, Node *UNUSED(child))
   r       = doc->r;
 
   W_L("</head>");
+  W_NLCODE();
+
   return chtml20->out;
 }
 
@@ -794,6 +803,8 @@ s_chtml20_start_title_tag(void *pdoc, Node *UNUSED(node))
   r       = doc->r;
 
   W_L("<title>");
+  W_NLCODE();
+
   return chtml20->out;
 }
 
@@ -818,6 +829,8 @@ s_chtml20_end_title_tag(void *pdoc, Node *UNUSED(child))
   r       = doc->r;
 
   W_L("</title>");
+  W_NLCODE();
+
   return chtml20->out;
 }
 
@@ -858,6 +871,8 @@ s_chtml20_start_base_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
+  W_NLCODE();
+
   return chtml20->out;
 }
 
@@ -976,6 +991,8 @@ s_chtml20_start_body_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
+  W_NLCODE();
+
   return chtml20->out;
 }
 
@@ -1000,6 +1017,8 @@ s_chtml20_end_body_tag(void *pdoc, Node *UNUSED(child))
   r       = doc->r;
 
   W_L("</body>");
+  W_NLCODE();
+
   return chtml20->out;
 }
 
@@ -1191,6 +1210,8 @@ s_chtml20_end_a_tag(void *pdoc, Node *UNUSED(child))
   r       = doc->r;
 
   W_L("</a>");
+  W_NLCODE();
+
   return chtml20->out;
 }
 
@@ -1233,6 +1254,8 @@ s_chtml20_start_br_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
+  W_NLCODE();
+
   return chtml20->out;
 }
 
@@ -1303,6 +1326,8 @@ s_chtml20_end_tr_tag(void *pdoc, Node *UNUSED(child))
   r       = doc->r;
 
   W_L("<br>");
+  W_NLCODE();
+
   return chtml20->out;
 }
 
@@ -1462,6 +1487,8 @@ s_chtml20_start_form_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
+  W_NLCODE();
+
   return chtml20->out;
 }
 
@@ -1486,6 +1513,8 @@ s_chtml20_end_form_tag(void *pdoc, Node *UNUSED(child))
   r       = doc->r;
 
   W_L("</form>");
+  W_NLCODE();
+
   return chtml20->out;
 }
 
@@ -1595,6 +1624,8 @@ s_chtml20_start_input_tag(void *pdoc, Node *node)
     W_L(" checked");
   }
   W_L(">");
+  W_NLCODE();
+
   return chtml20->out;
 }
 
@@ -1666,6 +1697,8 @@ s_chtml20_end_center_tag(void *pdoc, Node *UNUSED(child))
   r       = doc->r;
 
   W_L("</center>");
+  W_NLCODE();
+
   return chtml20->out;
 }
 
@@ -1690,6 +1723,8 @@ s_chtml20_start_ul_tag(void *pdoc, Node *UNUSED(node))
   r       = doc->r;
 
   W_L("<ul>");
+  W_NLCODE();
+
   return chtml20->out;
 }
 
@@ -1714,6 +1749,8 @@ s_chtml20_end_ul_tag(void *pdoc, Node *UNUSED(child))
   r       = doc->r;
 
   W_L("</ul>");
+  W_NLCODE();
+
   return chtml20->out;
 }
 
@@ -1759,6 +1796,8 @@ s_chtml20_start_ol_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
+  W_NLCODE();
+
   return chtml20->out;
 }
 
@@ -1783,6 +1822,8 @@ s_chtml20_end_ol_tag(void *pdoc, Node *UNUSED(child))
   r       = doc->r;
 
   W_L("</ol>");
+  W_NLCODE();
+
   return chtml20->out;
 }
 
@@ -1943,6 +1984,7 @@ s_chtml20_start_hr_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
+  W_NLCODE();
   return chtml20->out;
 }
 
@@ -2119,6 +2161,7 @@ s_chtml20_start_img_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
+  W_NLCODE();
   return chtml20->out;
 }
 
@@ -2219,6 +2262,7 @@ s_chtml20_start_select_tag(void *pdoc, Node *child)
     W_L(" multiple");
   }
   W_L(">");
+  W_NLCODE();
   return chtml20->out;
 }
 
@@ -2241,6 +2285,7 @@ s_chtml20_end_select_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
 
   W_L("</select>");
+  W_NLCODE();
   return chtml20->out;
 }
 
@@ -2396,6 +2441,7 @@ s_chtml20_end_div_tag(void *pdoc, Node *UNUSED(child))
   Doc         *doc     = chtml20->doc;
 
   W_L("</div>");
+  W_NLCODE();
   return chtml20->out;
 }
 
@@ -2458,6 +2504,7 @@ s_chtml20_end_h1_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml20->doc;
 
   W_L("</h1>");
+  W_NLCODE();
   return chtml20->out;
 }
 
@@ -2517,6 +2564,7 @@ s_chtml20_end_h2_tag(void *pdoc, Node *UNUSED(child))
   Doc         *doc     = chtml20->doc;
 
   W_L("</h2>");
+  W_NLCODE();
 
   return chtml20->out;
 }
@@ -2577,6 +2625,7 @@ s_chtml20_end_h3_tag(void *pdoc, Node *UNUSED(child))
   Doc         *doc     = chtml20->doc;
 
   W_L("</h3>");
+  W_NLCODE();
   return chtml20->out;
 }
 
@@ -2636,6 +2685,7 @@ s_chtml20_end_h4_tag(void *pdoc, Node *UNUSED(child))
   Doc         *doc     = chtml20->doc;
 
   W_L("</h4>");
+  W_NLCODE();
   return chtml20->out;
 }
 
@@ -2695,6 +2745,7 @@ s_chtml20_end_h5_tag(void *pdoc, Node *UNUSED(child))
   Doc         *doc     = chtml20->doc;
 
   W_L("</h5>");
+  W_NLCODE();
   return chtml20->out;
 }
 
@@ -2754,6 +2805,7 @@ s_chtml20_end_h6_tag(void *pdoc, Node *UNUSED(child))
   Doc         *doc     = chtml20->doc;
 
   W_L("</h6>");
+  W_NLCODE();
   return chtml20->out;
 }
 
@@ -2774,6 +2826,7 @@ s_chtml20_start_pre_tag(void *pdoc, Node *UNUSED(node))
 
   chtml20->pre_flag++;
   W_L("<pre>");
+  W_NLCODE();
   return chtml20->out;
 }
 
@@ -2793,6 +2846,7 @@ s_chtml20_end_pre_tag(void *pdoc, Node *UNUSED(child))
   Doc         *doc     = chtml20->doc;
 
   W_L("</pre>");
+  W_NLCODE();
   chtml20->pre_flag--;
 
   return chtml20->out;
@@ -2842,6 +2896,7 @@ s_chtml20_start_p_tag(void *pdoc, Node *node)
     W_L("\"");
   }
   W_L(">");
+  W_NLCODE();
   return chtml20->out;
 }
 
@@ -2866,6 +2921,7 @@ s_chtml20_end_p_tag(void *pdoc, Node *UNUSED(child))
   r       = doc->r;
 
   W_L("</p>");
+  W_NLCODE();
   return chtml20->out;
 }
 
@@ -2972,6 +3028,7 @@ s_chtml20_start_textarea_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
+  W_NLCODE();
   return chtml20->out;
 }
 
@@ -2991,6 +3048,7 @@ s_chtml20_end_textarea_tag(void *pdoc, Node *UNUSED(child))
   Doc         *doc     = chtml20->doc;
 
   W_L("</textarea>");
+  W_NLCODE();
   chtml20->textarea_flag--;
 
   return chtml20->out;
@@ -3076,6 +3134,7 @@ s_chtml20_start_blockquote_tag(void *pdoc, Node *UNUSED(child))
   chtml20_t *chtml20 = GET_CHTML20(pdoc);
   Doc       *doc     = chtml20->doc;
   W_L("<blockquote>");
+  W_NLCODE();
   return chtml20->out;
 }
 
@@ -3094,6 +3153,7 @@ s_chtml20_end_blockquote_tag(void *pdoc, Node *UNUSED(child))
   chtml20_t *chtml20 = GET_CHTML20(pdoc);
   Doc       *doc     = chtml20->doc;
   W_L("</blockquote>");
+  W_NLCODE();
   return chtml20->out;
 }
 
@@ -3112,6 +3172,7 @@ s_chtml20_start_dir_tag(void *pdoc, Node *UNUSED(child))
   chtml20_t *chtml20 = GET_CHTML20(pdoc);
   Doc       *doc     = chtml20->doc;
   W_L("<dir>");
+  W_NLCODE();
   return chtml20->out;
 }
 
@@ -3131,6 +3192,7 @@ s_chtml20_end_dir_tag(void *pdoc, Node *UNUSED(child))
   Doc       *doc     = chtml20->doc;
 
   W_L("</dir>");
+  W_NLCODE();
   return chtml20->out;
 }
 
@@ -3149,6 +3211,7 @@ s_chtml20_start_dl_tag(void *pdoc, Node *UNUSED(child))
   chtml20_t *chtml20 = GET_CHTML20(pdoc);
   Doc       *doc     = chtml20->doc;
   W_L("<dl>");
+  W_NLCODE();
   return chtml20->out;
 }
 
@@ -3167,6 +3230,7 @@ s_chtml20_end_dl_tag(void *pdoc, Node *UNUSED(child))
   chtml20_t *chtml20 = GET_CHTML20(pdoc);
   Doc       *doc     = chtml20->doc;
   W_L("</dl>");
+  W_NLCODE();
   return chtml20->out;
 }
 
@@ -3256,6 +3320,7 @@ s_chtml20_start_menu_tag(void *pdoc, Node *UNUSED(child))
   Doc       *doc     = chtml20->doc;
 
   W_L("<menu>");
+  W_NLCODE();
   return chtml20->out;
 }
 
@@ -3275,6 +3340,7 @@ s_chtml20_end_menu_tag(void *pdoc, Node *UNUSED(child))
   Doc       *doc = chtml20->doc;
 
   W_L("</menu>");
+  W_NLCODE();
   return chtml20->out;
 }
 
@@ -3362,6 +3428,7 @@ s_chtml20_end_blink_tag(void *pdoc, Node *UNUSED(child))
   chtml20_t *chtml20 = GET_CHTML20(pdoc);
   Doc       *doc = chtml20->doc;
   W_L("</blink>");
+  W_NLCODE();
   return chtml20->out;
 }
 
@@ -3430,6 +3497,7 @@ s_chtml20_end_marquee_tag(void *pdoc, Node *UNUSED(child))
   chtml20_t *chtml20 = GET_CHTML20(pdoc);
   Doc       *doc = chtml20->doc;
   W_L("</marquee>");
+  W_NLCODE();
   return chtml20->out;
 }
 /*
