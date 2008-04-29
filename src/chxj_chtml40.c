@@ -1236,24 +1236,23 @@ s_chtml40_start_font_tag(void *pdoc, Node *node)
   chtml40_t     *chtml40;
   Doc           *doc;
   request_rec   *r;
+  char          *color = NULL;
 
   chtml40 = GET_CHTML40(pdoc);
   doc     = chtml40->doc;
   r       = doc->r;
 
-  W_L("<font");
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
   /*--------------------------------------------------------------------------*/
   for (attr = qs_get_attr(doc,node);
-       attr; 
+       attr && color == NULL; 
        attr = qs_get_next_attr(doc,attr)) {
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('c','C',"color", name) && value && *value) {
-      W_L(" color=\"");
-      W_V(value);
-      W_L("\"");
+      color = apr_pstrdup(doc->buf.pool, value);
+      break;
     }
     else if (STRCASEEQ('s','S',"size", name)) {
       /*----------------------------------------------------------------------*/
@@ -1262,7 +1261,12 @@ s_chtml40_start_font_tag(void *pdoc, Node *node)
       /* ignore */
     }
   }
-  W_L(">");
+  if (color) {
+    W_L("<font color=\"");
+    W_V(color);
+    W_L("\">");
+    chtml40->font_flag++;
+  }
   return chtml40->out;
 }
 
@@ -1286,8 +1290,11 @@ s_chtml40_end_font_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml40->doc;
   r       = doc->r;
 
-  W_L("</font>");
-  W_NLCODE();
+  if (chtml40->font_flag) {
+    W_L("</font>");
+    W_NLCODE();
+    chtml40->font_flag--;
+  }
 
   return chtml40->out;
 }
