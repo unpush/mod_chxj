@@ -499,6 +499,14 @@ void test_xhtml_font_tag_016();
 void test_xhtml_font_tag_017();
 void test_xhtml_font_tag_018();
 void test_xhtml_font_tag_019();
+void test_xhtml_font_tag_020();
+void test_xhtml_font_tag_021();
+void test_xhtml_font_tag_022();
+void test_xhtml_font_tag_023();
+void test_xhtml_font_tag_024();
+void test_xhtml_font_tag_025();
+void test_xhtml_font_tag_026();
+void test_xhtml_font_tag_027();
 
 void test_xhtml_param_tag_001();
 /* pend */
@@ -1038,6 +1046,14 @@ main()
   CU_add_test(xhtml_suite, "test <font> 17." ,                                  test_xhtml_font_tag_017);
   CU_add_test(xhtml_suite, "test <font> 18." ,                                  test_xhtml_font_tag_018);
   CU_add_test(xhtml_suite, "test <font> 19." ,                                  test_xhtml_font_tag_019);
+  CU_add_test(xhtml_suite, "test <font> 20." ,                                  test_xhtml_font_tag_020);
+  CU_add_test(xhtml_suite, "test <font> 21." ,                                  test_xhtml_font_tag_021);
+  CU_add_test(xhtml_suite, "test <font> 22." ,                                  test_xhtml_font_tag_022);
+  CU_add_test(xhtml_suite, "test <font> 23." ,                                  test_xhtml_font_tag_023);
+  CU_add_test(xhtml_suite, "test <font> 24." ,                                  test_xhtml_font_tag_024);
+  CU_add_test(xhtml_suite, "test <font> 25." ,                                  test_xhtml_font_tag_025);
+  CU_add_test(xhtml_suite, "test <font> 26." ,                                  test_xhtml_font_tag_026);
+  CU_add_test(xhtml_suite, "test <font> 27." ,                                  test_xhtml_font_tag_027);
 
   /*=========================================================================*/
   /* <param>                                                                 */
@@ -1095,6 +1111,7 @@ void * test_get_module_config(const ap_conf_vector_t *cv, const module *m)
 {
   static mod_chxj_config cfg;
   memset(&cfg, 0, sizeof(mod_chxj_config));
+  cfg.new_line_type = NLTYPE_NONE;
   return &cfg;
 }
 
@@ -1186,20 +1203,20 @@ void test_xhtml_002()
   APR_TERM;
 #undef TEST_STRING
 }
-#define  XHTML_HEADER "<?xml version=\"1.0\" encoding=\"Windows-31J\"?>\r\n" \
-                      "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML Basic 1.0//EN\"\r\n" \
-                      " \"http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd\">\r\n" 
+#define  XHTML_HEADER "<?xml version=\"1.0\" encoding=\"Windows-31J\"?>" \
+                      "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML Basic 1.0//EN\"" \
+                      " \"http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd\">" 
 
 void test_xhtml_comment_tag_001() 
 {
 #define  TEST_STRING "<html><!--</html><body>--><head></head><body></body></html>"
 #define  RESULT_STRING XHTML_HEADER \
-                       "<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n" \
-                       "<head>\r\n" \
-                       "</head>\r\n" \
-                       "<body>\r\n" \
-                       "</body>\r\n" \
-                       "</html>\r\n"
+                       "<html xmlns=\"http://www.w3.org/1999/xhtml\">" \
+                       "<head>" \
+                       "</head>" \
+                       "<body>" \
+                       "</body>" \
+                       "</html>"
   char  *ret;
   device_table spec;
   chxjconvrule_entry entry;
@@ -1598,7 +1615,7 @@ void test_xhtml_a_tag_accesskey_attribute_003()
 void test_xhtml_base_tag_001() 
 {
 #define  TEST_STRING "<base>"
-#define  RESULT_STRING "<base />\r\n"
+#define  RESULT_STRING "<base />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1627,7 +1644,7 @@ void test_xhtml_base_tag_001()
 void test_xhtml_base_tag_href_attribute_001() 
 {
 #define  TEST_STRING "<base href>"
-#define  RESULT_STRING "<base href=\"\" />\r\n"
+#define  RESULT_STRING "<base href=\"\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1656,7 +1673,7 @@ void test_xhtml_base_tag_href_attribute_001()
 void test_xhtml_base_tag_href_attribute_002() 
 {
 #define  TEST_STRING "<base href=\"\">"
-#define  RESULT_STRING "<base href=\"\" />\r\n"
+#define  RESULT_STRING "<base href=\"\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1685,7 +1702,7 @@ void test_xhtml_base_tag_href_attribute_002()
 void test_xhtml_base_tag_href_attribute_003() 
 {
 #define  TEST_STRING "<base href=\"http://www.google.co.jp/\">"
-#define  RESULT_STRING "<base href=\"http://www.google.co.jp/\" />\r\n"
+#define  RESULT_STRING "<base href=\"http://www.google.co.jp/\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1865,7 +1882,7 @@ void test_xhtml_blockquote_tag_004()
 void test_xhtml_body_tag_001() 
 {
 #define  TEST_STRING "<body></body>"
-#define  RESULT_STRING "<body>\r\n</body>\r\n"
+#define  RESULT_STRING "<body></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1894,7 +1911,7 @@ void test_xhtml_body_tag_001()
 void test_xhtml_body_tag_002() 
 {
 #define  TEST_STRING "<body bgcolor></body>"
-#define  RESULT_STRING "<body>\r\n</body>\r\n"
+#define  RESULT_STRING "<body></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1923,7 +1940,7 @@ void test_xhtml_body_tag_002()
 void test_xhtml_body_tag_003() 
 {
 #define  TEST_STRING "<body bgcolor=\"\"></body>"
-#define  RESULT_STRING "<body>\r\n</body>\r\n"
+#define  RESULT_STRING "<body></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1952,7 +1969,7 @@ void test_xhtml_body_tag_003()
 void test_xhtml_body_tag_004() 
 {
 #define  TEST_STRING "<body bgcolor=\"#ff0000\"></body>"
-#define  RESULT_STRING "<body bgcolor=\"#ff0000\">\r\n</body>\r\n"
+#define  RESULT_STRING "<body bgcolor=\"#ff0000\"></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1981,7 +1998,7 @@ void test_xhtml_body_tag_004()
 void test_xhtml_body_tag_005() 
 {
 #define  TEST_STRING "<body text></body>"
-#define  RESULT_STRING "<body>\r\n</body>\r\n"
+#define  RESULT_STRING "<body></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2010,7 +2027,7 @@ void test_xhtml_body_tag_005()
 void test_xhtml_body_tag_006() 
 {
 #define  TEST_STRING "<body text=\"\"></body>"
-#define  RESULT_STRING "<body>\r\n</body>\r\n"
+#define  RESULT_STRING "<body></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2039,7 +2056,7 @@ void test_xhtml_body_tag_006()
 void test_xhtml_body_tag_007() 
 {
 #define  TEST_STRING "<body text=\"#ff0000\"></body>"
-#define  RESULT_STRING "<body text=\"#ff0000\">\r\n</body>\r\n"
+#define  RESULT_STRING "<body text=\"#ff0000\"></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2068,7 +2085,7 @@ void test_xhtml_body_tag_007()
 void test_xhtml_body_tag_008() 
 {
 #define  TEST_STRING "<body link></body>"
-#define  RESULT_STRING "<body>\r\n</body>\r\n"
+#define  RESULT_STRING "<body></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2097,7 +2114,7 @@ void test_xhtml_body_tag_008()
 void test_xhtml_body_tag_009() 
 {
 #define  TEST_STRING "<body link=\"\"></body>"
-#define  RESULT_STRING "<body>\r\n</body>\r\n"
+#define  RESULT_STRING "<body></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2126,7 +2143,7 @@ void test_xhtml_body_tag_009()
 void test_xhtml_body_tag_010() 
 {
 #define  TEST_STRING "<body link=\"#ff0000\"></body>"
-#define  RESULT_STRING "<body link=\"#ff0000\">\r\n</body>\r\n"
+#define  RESULT_STRING "<body link=\"#ff0000\"></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2155,7 +2172,7 @@ void test_xhtml_body_tag_010()
 void test_xhtml_body_tag_011() 
 {
 #define  TEST_STRING "<body vlink></body>"
-#define  RESULT_STRING "<body>\r\n</body>\r\n"
+#define  RESULT_STRING "<body></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2184,7 +2201,7 @@ void test_xhtml_body_tag_011()
 void test_xhtml_body_tag_012() 
 {
 #define  TEST_STRING "<body vlink=\"\"></body>"
-#define  RESULT_STRING "<body>\r\n</body>\r\n"
+#define  RESULT_STRING "<body></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2213,7 +2230,7 @@ void test_xhtml_body_tag_012()
 void test_xhtml_body_tag_013() 
 {
 #define  TEST_STRING "<body vlink=\"#ff0000\"></body>"
-#define  RESULT_STRING "<body>\r\n</body>\r\n"
+#define  RESULT_STRING "<body></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2242,7 +2259,7 @@ void test_xhtml_body_tag_013()
 void test_xhtml_body_tag_014() 
 {
 #define  TEST_STRING "<body alink=\"#FF0000\"></body>"
-#define  RESULT_STRING "<body>\r\n</body>\r\n"
+#define  RESULT_STRING "<body></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2271,7 +2288,7 @@ void test_xhtml_body_tag_014()
 void test_xhtml_body_tag_015() 
 {
 #define  TEST_STRING "<body boyoyon=\"#FF0000\"></body>"
-#define  RESULT_STRING "<body>\r\n</body>\r\n"
+#define  RESULT_STRING "<body></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2303,7 +2320,7 @@ void test_xhtml_body_tag_015()
 void test_xhtml_br_tag_001() 
 {
 #define  TEST_STRING "<br>"
-#define  RESULT_STRING "<br />\r\n"
+#define  RESULT_STRING "<br />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2332,7 +2349,7 @@ void test_xhtml_br_tag_001()
 void test_xhtml_br_tag_002() 
 {
 #define  TEST_STRING "<br clear=\"left\">"
-#define  RESULT_STRING "<br clear=\"left\" />\r\n"
+#define  RESULT_STRING "<br clear=\"left\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2361,7 +2378,7 @@ void test_xhtml_br_tag_002()
 void test_xhtml_br_tag_003() 
 {
 #define  TEST_STRING "<br clear=\"right\">"
-#define  RESULT_STRING "<br clear=\"right\" />\r\n"
+#define  RESULT_STRING "<br clear=\"right\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2390,7 +2407,7 @@ void test_xhtml_br_tag_003()
 void test_xhtml_br_tag_004() 
 {
 #define  TEST_STRING "<br clear=\"all\">"
-#define  RESULT_STRING "<br clear=\"all\" />\r\n"
+#define  RESULT_STRING "<br clear=\"all\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2419,7 +2436,7 @@ void test_xhtml_br_tag_004()
 void test_xhtml_br_tag_005() 
 {
 #define  TEST_STRING "<br clear=\"\">"
-#define  RESULT_STRING "<br />\r\n"
+#define  RESULT_STRING "<br />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2448,7 +2465,7 @@ void test_xhtml_br_tag_005()
 void test_xhtml_br_tag_006() 
 {
 #define  TEST_STRING "<br clear>"
-#define  RESULT_STRING "<br />\r\n"
+#define  RESULT_STRING "<br />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2477,7 +2494,7 @@ void test_xhtml_br_tag_006()
 void test_xhtml_br_tag_007() 
 {
 #define  TEST_STRING "<br clear=\"abc\">"
-#define  RESULT_STRING "<br />\r\n"
+#define  RESULT_STRING "<br />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2902,7 +2919,7 @@ void test_xhtml_dd_tag_002()
 void test_xhtml_div_tag_001() 
 {
 #define  TEST_STRING "<div></div>"
-#define  RESULT_STRING "<div></div>\r\n"
+#define  RESULT_STRING "<div></div>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2931,7 +2948,7 @@ void test_xhtml_div_tag_001()
 void test_xhtml_div_tag_002() 
 {
 #define  TEST_STRING "<div align=\"left\"></div>"
-#define  RESULT_STRING "<div align=\"left\"></div>\r\n"
+#define  RESULT_STRING "<div align=\"left\"></div>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2960,7 +2977,7 @@ void test_xhtml_div_tag_002()
 void test_xhtml_div_tag_003() 
 {
 #define  TEST_STRING "<div align=\"right\"></div>"
-#define  RESULT_STRING "<div align=\"right\"></div>\r\n"
+#define  RESULT_STRING "<div align=\"right\"></div>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2989,7 +3006,7 @@ void test_xhtml_div_tag_003()
 void test_xhtml_div_tag_004() 
 {
 #define  TEST_STRING "<div align=\"center\"></div>"
-#define  RESULT_STRING "<div align=\"center\"></div>\r\n"
+#define  RESULT_STRING "<div align=\"center\"></div>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -3018,7 +3035,7 @@ void test_xhtml_div_tag_004()
 void test_xhtml_div_tag_005() 
 {
 #define  TEST_STRING "<div align=\"\"></div>"
-#define  RESULT_STRING "<div></div>\r\n"
+#define  RESULT_STRING "<div></div>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -3047,7 +3064,7 @@ void test_xhtml_div_tag_005()
 void test_xhtml_div_tag_006() 
 {
 #define  TEST_STRING "<div align=\"abc\"></div>"
-#define  RESULT_STRING "<div></div>\r\n"
+#define  RESULT_STRING "<div></div>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -3076,7 +3093,7 @@ void test_xhtml_div_tag_006()
 void test_xhtml_div_tag_007() 
 {
 #define  TEST_STRING "<div style=\"aaa\"></div>"
-#define  RESULT_STRING "<div></div>\r\n"
+#define  RESULT_STRING "<div></div>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -3372,7 +3389,7 @@ void test_xhtml_form_tag_009()
 void test_xhtml_head_tag_001()
 {
 #define  TEST_STRING "<head></head>"
-#define  RESULT_STRING "<head>\r\n</head>\r\n"
+#define  RESULT_STRING "<head></head>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -3401,7 +3418,7 @@ void test_xhtml_head_tag_001()
 void test_xhtml_head_tag_002()
 {
 #define  TEST_STRING "<head><title>あああ</title></head>"
-#define  RESULT_STRING "<head>\r\n<title>あああ</title>\r\n</head>\r\n"
+#define  RESULT_STRING "<head><title>あああ</title></head>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -5759,8 +5776,8 @@ void test_xhtml_html_tag_001()
 {
 #define  TEST_STRING "<html></html>"
 #define  RESULT_STRING XHTML_HEADER \
-                       "<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n" \
-                       "</html>\r\n"
+                       "<html xmlns=\"http://www.w3.org/1999/xhtml\">" \
+                       "</html>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9721,7 +9738,7 @@ void test_xhtml_ol_tag_018()
 void test_xhtml_option_tag_001() 
 {
 #define  TEST_STRING "<option></option>"
-#define  RESULT_STRING "<option></option>\r\n"
+#define  RESULT_STRING "<option></option>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9750,7 +9767,7 @@ void test_xhtml_option_tag_001()
 void test_xhtml_option_tag_002() 
 {
 #define  TEST_STRING "<option value></option>"
-#define  RESULT_STRING "<option></option>\r\n"
+#define  RESULT_STRING "<option></option>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9779,7 +9796,7 @@ void test_xhtml_option_tag_002()
 void test_xhtml_option_tag_003() 
 {
 #define  TEST_STRING "<option value=\"\"></option>"
-#define  RESULT_STRING "<option></option>\r\n"
+#define  RESULT_STRING "<option></option>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9808,7 +9825,7 @@ void test_xhtml_option_tag_003()
 void test_xhtml_option_tag_004() 
 {
 #define  TEST_STRING "<option value=\"a\"></option>"
-#define  RESULT_STRING "<option value=\"a\"></option>\r\n"
+#define  RESULT_STRING "<option value=\"a\"></option>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9837,7 +9854,7 @@ void test_xhtml_option_tag_004()
 void test_xhtml_option_tag_005() 
 {
 #define  TEST_STRING "<option value=\"亀\"></option>"
-#define  RESULT_STRING "<option value=\"亀\"></option>\r\n"
+#define  RESULT_STRING "<option value=\"亀\"></option>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9866,7 +9883,7 @@ void test_xhtml_option_tag_005()
 void test_xhtml_option_tag_006() 
 {
 #define  TEST_STRING "<option value=\"ﾊﾝｶｸ\"></option>"
-#define  RESULT_STRING "<option value=\"ﾊﾝｶｸ\"></option>\r\n"
+#define  RESULT_STRING "<option value=\"ﾊﾝｶｸ\"></option>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9895,7 +9912,7 @@ void test_xhtml_option_tag_006()
 void test_xhtml_option_tag_007() 
 {
 #define  TEST_STRING "<option selected></option>"
-#define  RESULT_STRING "<option selected=\"selected\"></option>\r\n"
+#define  RESULT_STRING "<option selected=\"selected\"></option>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10429,7 +10446,7 @@ void test_xhtml_pre_tag_005()
 void test_xhtml_select_tag_001() 
 {
 #define  TEST_STRING "<select></select>"
-#define  RESULT_STRING "<select>\r\n</select>\r\n"
+#define  RESULT_STRING "<select></select>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10458,7 +10475,7 @@ void test_xhtml_select_tag_001()
 void test_xhtml_select_tag_002() 
 {
 #define  TEST_STRING "<select>あああ</select>"
-#define  RESULT_STRING "<select>\r\nあああ</select>\r\n"
+#define  RESULT_STRING "<select>あああ</select>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10487,7 +10504,7 @@ void test_xhtml_select_tag_002()
 void test_xhtml_select_tag_003() 
 {
 #define  TEST_STRING "<select name></select>"
-#define  RESULT_STRING "<select>\r\n</select>\r\n"
+#define  RESULT_STRING "<select></select>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10516,7 +10533,7 @@ void test_xhtml_select_tag_003()
 void test_xhtml_select_tag_004() 
 {
 #define  TEST_STRING "<select name=\"\"></select>"
-#define  RESULT_STRING "<select>\r\n</select>\r\n"
+#define  RESULT_STRING "<select></select>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10545,7 +10562,7 @@ void test_xhtml_select_tag_004()
 void test_xhtml_select_tag_005() 
 {
 #define  TEST_STRING "<select name=\"abc\"></select>"
-#define  RESULT_STRING "<select name=\"abc\">\r\n</select>\r\n"
+#define  RESULT_STRING "<select name=\"abc\"></select>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10574,7 +10591,7 @@ void test_xhtml_select_tag_005()
 void test_xhtml_select_tag_006() 
 {
 #define  TEST_STRING "<select name=\"あああ\"></select>"
-#define  RESULT_STRING "<select name=\"あああ\">\r\n</select>\r\n"
+#define  RESULT_STRING "<select name=\"あああ\"></select>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10603,7 +10620,7 @@ void test_xhtml_select_tag_006()
 void test_xhtml_select_tag_007() 
 {
 #define  TEST_STRING "<select name=\"ﾊﾝｶｸ\"></select>"
-#define  RESULT_STRING "<select name=\"ﾊﾝｶｸ\">\r\n</select>\r\n"
+#define  RESULT_STRING "<select name=\"ﾊﾝｶｸ\"></select>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10632,7 +10649,7 @@ void test_xhtml_select_tag_007()
 void test_xhtml_select_tag_008() 
 {
 #define  TEST_STRING "<select size></select>"
-#define  RESULT_STRING "<select>\r\n</select>\r\n"
+#define  RESULT_STRING "<select></select>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10661,7 +10678,7 @@ void test_xhtml_select_tag_008()
 void test_xhtml_select_tag_009() 
 {
 #define  TEST_STRING "<select size=\"\"></select>"
-#define  RESULT_STRING "<select>\r\n</select>\r\n"
+#define  RESULT_STRING "<select></select>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10690,7 +10707,7 @@ void test_xhtml_select_tag_009()
 void test_xhtml_select_tag_010() 
 {
 #define  TEST_STRING "<select size=\"abc\"></select>"
-#define  RESULT_STRING "<select size=\"abc\">\r\n</select>\r\n"
+#define  RESULT_STRING "<select size=\"abc\"></select>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10719,7 +10736,7 @@ void test_xhtml_select_tag_010()
 void test_xhtml_select_tag_011() 
 {
 #define  TEST_STRING "<select size=\"11\"></select>"
-#define  RESULT_STRING "<select size=\"11\">\r\n</select>\r\n"
+#define  RESULT_STRING "<select size=\"11\"></select>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10748,7 +10765,7 @@ void test_xhtml_select_tag_011()
 void test_xhtml_select_tag_012() 
 {
 #define  TEST_STRING "<select multiple></select>"
-#define  RESULT_STRING "<select multiple=\"true\">\r\n</select>\r\n"
+#define  RESULT_STRING "<select multiple=\"true\"></select>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10777,7 +10794,7 @@ void test_xhtml_select_tag_012()
 void test_xhtml_select_tag_013() 
 {
 #define  TEST_STRING "<select multiple=\"\"></select>"
-#define  RESULT_STRING "<select multiple=\"true\">\r\n</select>\r\n"
+#define  RESULT_STRING "<select multiple=\"true\"></select>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10806,7 +10823,7 @@ void test_xhtml_select_tag_013()
 void test_xhtml_select_tag_014() 
 {
 #define  TEST_STRING "<select multiple=\"abc\"></select>"
-#define  RESULT_STRING "<select multiple=\"true\">\r\n</select>\r\n"
+#define  RESULT_STRING "<select multiple=\"true\"></select>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10838,7 +10855,7 @@ void test_xhtml_select_tag_014()
 void test_xhtml_textarea_tag_001() 
 {
 #define  TEST_STRING "<textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10867,7 +10884,7 @@ void test_xhtml_textarea_tag_001()
 void test_xhtml_textarea_tag_002() 
 {
 #define  TEST_STRING "<textarea></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10896,7 +10913,7 @@ void test_xhtml_textarea_tag_002()
 void test_xhtml_textarea_tag_003() 
 {
 #define  TEST_STRING "<textarea>あああ</textarea>"
-#define  RESULT_STRING "<textarea>\r\nあああ</textarea>\r\n"
+#define  RESULT_STRING "<textarea>あああ</textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10925,7 +10942,7 @@ void test_xhtml_textarea_tag_003()
 void test_xhtml_textarea_tag_004() 
 {
 #define  TEST_STRING "<textarea>あああ\nいいい</textarea>"
-#define  RESULT_STRING "<textarea>\r\nあああ\nいいい</textarea>\r\n"
+#define  RESULT_STRING "<textarea>あああ\nいいい</textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10953,8 +10970,8 @@ void test_xhtml_textarea_tag_004()
 }
 void test_xhtml_textarea_tag_005() 
 {
-#define  TEST_STRING "<textarea>あああ\r\nいいい</textarea>"
-#define  RESULT_STRING "<textarea>\r\nあああ\r\nいいい</textarea>\r\n"
+#define  TEST_STRING "<textarea>あああいいい</textarea>"
+#define  RESULT_STRING "<textarea>あああいいい</textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10982,8 +10999,8 @@ void test_xhtml_textarea_tag_005()
 }
 void test_xhtml_textarea_tag_006() 
 {
-#define  TEST_STRING "<textarea>あああ\r\nいいい\n</textarea>"
-#define  RESULT_STRING "<textarea>\r\nあああ\r\nいいい\n</textarea>\r\n"
+#define  TEST_STRING "<textarea>あああいいい\n</textarea>"
+#define  RESULT_STRING "<textarea>あああいいい\n</textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11011,8 +11028,8 @@ void test_xhtml_textarea_tag_006()
 }
 void test_xhtml_textarea_tag_007() 
 {
-#define  TEST_STRING "<textarea>あああ\r\nいいい\r\n</textarea>"
-#define  RESULT_STRING "<textarea>\r\nあああ\r\nいいい\r\n</textarea>\r\n"
+#define  TEST_STRING "<textarea>あああいいい</textarea>"
+#define  RESULT_STRING "<textarea>あああいいい</textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11041,7 +11058,7 @@ void test_xhtml_textarea_tag_007()
 void test_xhtml_textarea_tag_008() 
 {
 #define  TEST_STRING "<textarea name></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11070,7 +11087,7 @@ void test_xhtml_textarea_tag_008()
 void test_xhtml_textarea_tag_009() 
 {
 #define  TEST_STRING "<textarea name=\"\"></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11099,7 +11116,7 @@ void test_xhtml_textarea_tag_009()
 void test_xhtml_textarea_tag_010() 
 {
 #define  TEST_STRING "<textarea name=\"aaa\"></textarea>"
-#define  RESULT_STRING "<textarea name=\"aaa\">\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea name=\"aaa\"></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11128,7 +11145,7 @@ void test_xhtml_textarea_tag_010()
 void test_xhtml_textarea_tag_011() 
 {
 #define  TEST_STRING "<textarea rows></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11157,7 +11174,7 @@ void test_xhtml_textarea_tag_011()
 void test_xhtml_textarea_tag_012() 
 {
 #define  TEST_STRING "<textarea rows=\"\"></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11186,7 +11203,7 @@ void test_xhtml_textarea_tag_012()
 void test_xhtml_textarea_tag_013() 
 {
 #define  TEST_STRING "<textarea rows=\"abc\"></textarea>"
-#define  RESULT_STRING "<textarea rows=\"abc\">\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea rows=\"abc\"></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11215,7 +11232,7 @@ void test_xhtml_textarea_tag_013()
 void test_xhtml_textarea_tag_014() 
 {
 #define  TEST_STRING "<textarea cols></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11244,7 +11261,7 @@ void test_xhtml_textarea_tag_014()
 void test_xhtml_textarea_tag_015() 
 {
 #define  TEST_STRING "<textarea cols=\"\"></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11273,7 +11290,7 @@ void test_xhtml_textarea_tag_015()
 void test_xhtml_textarea_tag_016() 
 {
 #define  TEST_STRING "<textarea cols=\"123\"></textarea>"
-#define  RESULT_STRING "<textarea cols=\"123\">\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea cols=\"123\"></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11302,7 +11319,7 @@ void test_xhtml_textarea_tag_016()
 void test_xhtml_textarea_tag_017() 
 {
 #define  TEST_STRING "<textarea accesskey></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11331,7 +11348,7 @@ void test_xhtml_textarea_tag_017()
 void test_xhtml_textarea_tag_018() 
 {
 #define  TEST_STRING "<textarea accesskey=\"\"></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11360,7 +11377,7 @@ void test_xhtml_textarea_tag_018()
 void test_xhtml_textarea_tag_019() 
 {
 #define  TEST_STRING "<textarea accesskey=\"10\"></textarea>"
-#define  RESULT_STRING "<textarea accesskey=\"10\">\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea accesskey=\"10\"></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11389,7 +11406,7 @@ void test_xhtml_textarea_tag_019()
 void test_xhtml_textarea_tag_020() 
 {
 #define  TEST_STRING "<textarea istyle></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11418,7 +11435,7 @@ void test_xhtml_textarea_tag_020()
 void test_xhtml_textarea_tag_021() 
 {
 #define  TEST_STRING "<textarea istyle=\"\"></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11447,7 +11464,7 @@ void test_xhtml_textarea_tag_021()
 void test_xhtml_textarea_tag_022() 
 {
 #define  TEST_STRING "<textarea istyle=\"1\"></textarea>"
-#define  RESULT_STRING "<textarea FORMAT=\"*M\">\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea FORMAT=\"*M\"></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11476,7 +11493,7 @@ void test_xhtml_textarea_tag_022()
 void test_xhtml_textarea_tag_023() 
 {
 #define  TEST_STRING "<textarea istyle=\"2\"></textarea>"
-#define  RESULT_STRING "<textarea FORMAT=\"*M\">\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea FORMAT=\"*M\"></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11505,7 +11522,7 @@ void test_xhtml_textarea_tag_023()
 void test_xhtml_textarea_tag_024() 
 {
 #define  TEST_STRING "<textarea istyle=\"3\"></textarea>"
-#define  RESULT_STRING "<textarea FORMAT=\"*m\">\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea FORMAT=\"*m\"></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11534,7 +11551,7 @@ void test_xhtml_textarea_tag_024()
 void test_xhtml_textarea_tag_025() 
 {
 #define  TEST_STRING "<textarea istyle=\"4\"></textarea>"
-#define  RESULT_STRING "<textarea FORMAT=\"*N\">\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea FORMAT=\"*N\"></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11563,7 +11580,7 @@ void test_xhtml_textarea_tag_025()
 void test_xhtml_textarea_tag_026() 
 {
 #define  TEST_STRING "<textarea istyle=\"a\"></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11595,7 +11612,7 @@ void test_xhtml_textarea_tag_026()
 void test_xhtml_title_tag_001()
 {
 #define  TEST_STRING "<title></title>"
-#define  RESULT_STRING "<title></title>\r\n"
+#define  RESULT_STRING "<title></title>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11624,7 +11641,7 @@ void test_xhtml_title_tag_001()
 void test_xhtml_title_tag_002()
 {
 #define  TEST_STRING "<title>あああ</title>"
-#define  RESULT_STRING "<title>あああ</title>\r\n"
+#define  RESULT_STRING "<title>あああ</title>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -12709,7 +12726,7 @@ void test_xhtml_marquee_tag_021()
 void test_xhtml_meta_tag_001() 
 {
 #define  TEST_STRING "<meta>"
-#define  RESULT_STRING "<meta />\r\n"
+#define  RESULT_STRING "<meta />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -12738,7 +12755,7 @@ void test_xhtml_meta_tag_001()
 void test_xhtml_meta_tag_002() 
 {
 #define  TEST_STRING "<meta http-equiv>"
-#define  RESULT_STRING "<meta />\r\n"
+#define  RESULT_STRING "<meta />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -12767,7 +12784,7 @@ void test_xhtml_meta_tag_002()
 void test_xhtml_meta_tag_003() 
 {
 #define  TEST_STRING "<meta http-equiv=\"\">"
-#define  RESULT_STRING "<meta />\r\n"
+#define  RESULT_STRING "<meta />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -12796,7 +12813,7 @@ void test_xhtml_meta_tag_003()
 void test_xhtml_meta_tag_004() 
 {
 #define  TEST_STRING "<meta http-equiv=\"content-type\">"
-#define  RESULT_STRING "<meta http-equiv=\"content-type\" />\r\n"
+#define  RESULT_STRING "<meta http-equiv=\"content-type\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -12825,7 +12842,7 @@ void test_xhtml_meta_tag_004()
 void test_xhtml_meta_tag_005() 
 {
 #define  TEST_STRING "<meta http-equiv=\"abc\">"
-#define  RESULT_STRING "<meta http-equiv=\"abc\" />\r\n"
+#define  RESULT_STRING "<meta http-equiv=\"abc\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -12854,7 +12871,7 @@ void test_xhtml_meta_tag_005()
 void test_xhtml_meta_tag_006() 
 {
 #define  TEST_STRING "<meta content>"
-#define  RESULT_STRING "<meta />\r\n"
+#define  RESULT_STRING "<meta />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -12883,7 +12900,7 @@ void test_xhtml_meta_tag_006()
 void test_xhtml_meta_tag_007() 
 {
 #define  TEST_STRING "<meta content=\"\">"
-#define  RESULT_STRING "<meta />\r\n"
+#define  RESULT_STRING "<meta />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -12912,7 +12929,7 @@ void test_xhtml_meta_tag_007()
 void test_xhtml_meta_tag_008() 
 {
 #define  TEST_STRING "<meta http-equiv=\"Content-Type\" content=\"text/html\">"
-#define  RESULT_STRING "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=Windows-31J\" />\r\n"
+#define  RESULT_STRING "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=Windows-31J\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -12941,7 +12958,7 @@ void test_xhtml_meta_tag_008()
 void test_xhtml_meta_tag_009() 
 {
 #define  TEST_STRING "<meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml\">"
-#define  RESULT_STRING "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=Windows-31J\" />\r\n"
+#define  RESULT_STRING "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=Windows-31J\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -13496,6 +13513,238 @@ void test_xhtml_font_tag_018()
 void test_xhtml_font_tag_019() 
 {
 #define  TEST_STRING "<font size>ｱｱｱ</font>"
+#define  RESULT_STRING "ｱｱｱ"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_020() 
+{
+#define  TEST_STRING "<font size=\"-1\">ｱｱｱ</font>"
+#define  RESULT_STRING "<span style=\"font-size: small\">ｱｱｱ</span>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_021() 
+{
+#define  TEST_STRING "<font size=\"-2\">ｱｱｱ</font>"
+#define  RESULT_STRING "<span style=\"font-size: x-small\">ｱｱｱ</span>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_022() 
+{
+#define  TEST_STRING "<font size=\"-3\">ｱｱｱ</font>"
+#define  RESULT_STRING "<span style=\"font-size: xx-small\">ｱｱｱ</span>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_023() 
+{
+#define  TEST_STRING "<font size=\"-4\">ｱｱｱ</font>"
+#define  RESULT_STRING "ｱｱｱ"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_024() 
+{
+#define  TEST_STRING "<font size=\"+1\">ｱｱｱ</font>"
+#define  RESULT_STRING "<span style=\"font-size: large\">ｱｱｱ</span>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_025() 
+{
+#define  TEST_STRING "<font size=\"+2\">ｱｱｱ</font>"
+#define  RESULT_STRING "<span style=\"font-size: x-large\">ｱｱｱ</span>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_026() 
+{
+#define  TEST_STRING "<font size=\"+3\">ｱｱｱ</font>"
+#define  RESULT_STRING "<span style=\"font-size: xx-large\">ｱｱｱ</span>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_027() 
+{
+#define  TEST_STRING "<font size=\"+4\">ｱｱｱ</font>"
 #define  RESULT_STRING "ｱｱｱ"
   char  *ret;
   char  *tmp;
