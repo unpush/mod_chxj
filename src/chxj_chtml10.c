@@ -28,7 +28,7 @@
 #define W_V(X)          do { chtml10->out = (X) ? BUFFERED_WRITE_VALUE(chtml10->out, &doc->buf, (X))  \
                                                   : BUFFERED_WRITE_LITERAL(chtml10->out, &doc->buf, ""); } while(0)
 
-#define W_NLCODE()     do { char *nlcode = TO_NLCODE(chtml10->conf); W_V(nlcode); } while (0); 
+#define W_NLCODE()     do { char *nlcode = TO_NLCODE(chtml10->conf); W_V(nlcode); } while (0)
 
 static char *s_chtml10_start_html_tag     (void *pdoc, Node *node);
 static char *s_chtml10_end_html_tag       (void *pdoc, Node *node);
