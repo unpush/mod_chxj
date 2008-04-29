@@ -983,6 +983,7 @@ void * test_get_module_config(const ap_conf_vector_t *cv, const module *m)
 {
   static mod_chxj_config cfg;
   memset(&cfg, 0, sizeof(mod_chxj_config));
+  cfg.new_line_type = NLTYPE_NONE;
   return &cfg;
 }
 

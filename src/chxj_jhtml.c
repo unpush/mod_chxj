@@ -30,6 +30,7 @@
 #define W_L(X)          do { jhtml->out = BUFFERED_WRITE_LITERAL(jhtml->out, &doc->buf, (X)); } while(0)
 #define W_V(X)          do { jhtml->out = (X) ? BUFFERED_WRITE_VALUE(jhtml->out, &doc->buf, (X))  \
                                               : BUFFERED_WRITE_LITERAL(jhtml->out, &doc->buf, ""); } while(0)
+#undef W_NLCODE
 #define W_NLCODE()     do { char *nlcode = TO_NLCODE(jhtml->conf); W_V(nlcode); } while (0)
 
 static char *s_jhtml_start_html_tag     (void *pdoc, Node *node);

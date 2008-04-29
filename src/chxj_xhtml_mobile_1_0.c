@@ -30,6 +30,7 @@
 #define W_L(X)          do { xhtml->out = BUFFERED_WRITE_LITERAL(xhtml->out, &doc->buf, (X)); } while(0)
 #define W_V(X)          do { xhtml->out = (X) ? BUFFERED_WRITE_VALUE(xhtml->out, &doc->buf, (X))  \
                                                : BUFFERED_WRITE_LITERAL(xhtml->out, &doc->buf, ""); } while(0)
+#undef W_NLCODE
 #define W_NLCODE()     do { char *nlcode = TO_NLCODE(xhtml->conf); W_V(nlcode); } while (0)
 
 static char *s_xhtml_1_0_start_html_tag   (void *pdoc, Node *node);

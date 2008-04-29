@@ -24,10 +24,13 @@
 #include "chxj_buffered_write.h"
 
 #define GET_CHTML10(X) ((chtml10_t *)(X))
+#undef W_L
+#undef W_V
 #define W_L(X)          do { chtml10->out = BUFFERED_WRITE_LITERAL(chtml10->out, &doc->buf, (X)); } while(0)
 #define W_V(X)          do { chtml10->out = (X) ? BUFFERED_WRITE_VALUE(chtml10->out, &doc->buf, (X))  \
                                                   : BUFFERED_WRITE_LITERAL(chtml10->out, &doc->buf, ""); } while(0)
 
+#undef W_NLCODE
 #define W_NLCODE()     do { char *nlcode = TO_NLCODE(chtml10->conf); W_V(nlcode); } while (0)
 
 static char *s_chtml10_start_html_tag     (void *pdoc, Node *node);

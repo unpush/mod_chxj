@@ -1093,6 +1093,7 @@ void * test_get_module_config(const ap_conf_vector_t *cv, const module *m)
 {
   static mod_chxj_config cfg;
   memset(&cfg, 0, sizeof(mod_chxj_config));
+  cfg.new_line_type = NLTYPE_NONE;
   return &cfg;
 }
 
@@ -1194,7 +1195,7 @@ void test_jxhtml_002()
 void test_jxhtml_comment_tag_001() 
 {
 #define  TEST_STRING "<html><!--</html><body>--><head></head><body></body></html>"
-#define  RESULT_STRING "<?xml version='1.0' encoding='Shift_JIS' ?><!DOCTYPE html PUBLIC \"-//J-PHONE//DTD XHTML Basic 1.0 Plus//EN\" \"html-basic10-plus.dtd\"><html version=\"1.0\"><head></head><body></body></html>"
+#define  RESULT_STRING "<?xml version='1.0' encoding='Shift_JIS' ?><!DOCTYPE html PUBLIC \"-//J-PHONE//DTD XHTML Basic 1.0 Plus//EN\" \"html-basic10-plus.dtd\"><html><head></head><body><div></div></body></html>"
   char  *ret;
   device_table spec;
   chxjconvrule_entry entry;
@@ -1876,7 +1877,7 @@ void test_jxhtml_blockquote_tag_004()
 void test_jxhtml_body_tag_001() 
 {
 #define  TEST_STRING "<body></body>"
-#define  RESULT_STRING "<body></body>"
+#define  RESULT_STRING "<body><div></div></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1906,7 +1907,7 @@ void test_jxhtml_body_tag_001()
 void test_jxhtml_body_tag_002() 
 {
 #define  TEST_STRING   "<body bgcolor>"
-#define  RESULT_STRING "<body></body>"
+#define  RESULT_STRING "<body><div></div></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1936,7 +1937,7 @@ void test_jxhtml_body_tag_002()
 void test_jxhtml_body_tag_003() 
 {
 #define  TEST_STRING "<body bgcolor=\"\"></body>"
-#define  RESULT_STRING "<body></body>"
+#define  RESULT_STRING "<body><div></div></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1966,7 +1967,7 @@ void test_jxhtml_body_tag_003()
 void test_jxhtml_body_tag_004() 
 {
 #define  TEST_STRING "<body bgcolor=\"#ff0000\"></body>"
-#define  RESULT_STRING "<body bgcolor=\"#ff0000\"></body>"
+#define  RESULT_STRING "<body bgcolor=\"#ff0000\"><div></div></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1996,7 +1997,7 @@ void test_jxhtml_body_tag_004()
 void test_jxhtml_body_tag_005() 
 {
 #define  TEST_STRING "<body text></body>"
-#define  RESULT_STRING "<body></body>"
+#define  RESULT_STRING "<body><div></div></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2026,7 +2027,7 @@ void test_jxhtml_body_tag_005()
 void test_jxhtml_body_tag_006() 
 {
 #define  TEST_STRING "<body text=\"\"></body>"
-#define  RESULT_STRING "<body></body>"
+#define  RESULT_STRING "<body><div></div></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2056,7 +2057,7 @@ void test_jxhtml_body_tag_006()
 void test_jxhtml_body_tag_007() 
 {
 #define  TEST_STRING "<body text=\"#ff0000\"></body>"
-#define  RESULT_STRING "<body text=\"#ff0000\"></body>"
+#define  RESULT_STRING "<body text=\"#ff0000\"><div></div></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2086,7 +2087,7 @@ void test_jxhtml_body_tag_007()
 void test_jxhtml_body_tag_008() 
 {
 #define  TEST_STRING "<body link></body>"
-#define  RESULT_STRING "<body></body>"
+#define  RESULT_STRING "<body><div></div></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2116,7 +2117,7 @@ void test_jxhtml_body_tag_008()
 void test_jxhtml_body_tag_009() 
 {
 #define  TEST_STRING "<body link=\"\"></body>"
-#define  RESULT_STRING "<body></body>"
+#define  RESULT_STRING "<body><div></div></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2146,7 +2147,7 @@ void test_jxhtml_body_tag_009()
 void test_jxhtml_body_tag_010() 
 {
 #define  TEST_STRING   "<body link=\"#ff0000\"></body>"
-#define  RESULT_STRING "<body link=\"#ff0000\"></body>"
+#define  RESULT_STRING "<body link=\"#ff0000\"><div></div></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2176,7 +2177,7 @@ void test_jxhtml_body_tag_010()
 void test_jxhtml_body_tag_011() 
 {
 #define  TEST_STRING   "<body vlink></body>"
-#define  RESULT_STRING "<body></body>"
+#define  RESULT_STRING "<body><div></div></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2206,7 +2207,7 @@ void test_jxhtml_body_tag_011()
 void test_jxhtml_body_tag_012() 
 {
 #define  TEST_STRING   "<body vlink=\"\"></body>"
-#define  RESULT_STRING "<body></body>"
+#define  RESULT_STRING "<body><div></div></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2236,7 +2237,7 @@ void test_jxhtml_body_tag_012()
 void test_jxhtml_body_tag_013() 
 {
 #define  TEST_STRING   "<body vlink=\"#ff0000\"></body>"
-#define  RESULT_STRING "<body></body>"
+#define  RESULT_STRING "<body><div></div></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2267,7 +2268,7 @@ void test_jxhtml_body_tag_013()
 void test_jxhtml_body_tag_014() 
 {
 #define  TEST_STRING   "<body alink=\"#FF0000\"></body>"
-#define  RESULT_STRING "<body></body>"
+#define  RESULT_STRING "<body><div></div></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2297,7 +2298,7 @@ void test_jxhtml_body_tag_014()
 void test_jxhtml_body_tag_015() 
 {
 #define  TEST_STRING "<body boyoyon=\"#FF0000\"></body>"
-#define  RESULT_STRING "<body></body>"
+#define  RESULT_STRING "<body><div></div></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -5918,7 +5919,7 @@ void test_jxhtml_hr_tag_018_2()
 void test_jxhtml_html_tag_001()
 {
 #define  TEST_STRING "<html><head></head><body></body></html>"
-#define  RESULT_STRING "<?xml version='1.0' encoding='Shift_JIS' ?><!DOCTYPE html PUBLIC \"-//J-PHONE//DTD XHTML Basic 1.0 Plus//EN\" \"html-basic10-plus.dtd\"><html version=\"1.0\"><head></head><body></body></html>"
+#define  RESULT_STRING "<?xml version='1.0' encoding='Shift_JIS' ?><!DOCTYPE html PUBLIC \"-//J-PHONE//DTD XHTML Basic 1.0 Plus//EN\" \"html-basic10-plus.dtd\"><html><head></head><body><div></div></body></html>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -7964,7 +7965,7 @@ void test_jxhtml_input_tag_029()
 void test_jxhtml_input_tag_030() 
 {
 #define  TEST_STRING "<input checked>"
-#define  RESULT_STRING "<input checked />"
+#define  RESULT_STRING "<input checked=\"checked\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
