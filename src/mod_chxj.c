@@ -1408,6 +1408,7 @@ chxj_merge_per_dir_config(apr_pool_t *p, void *basev, void *addv)
   mrg->image_cache_limit  = 0;
   mrg->emoji            = NULL;
   mrg->emoji_tail       = NULL;
+  mrg->new_line_type    = NLTYPE_NIL;
 
   mrg->dir = apr_pstrdup(p, add->dir);
 
@@ -1609,6 +1610,15 @@ chxj_merge_per_dir_config(apr_pool_t *p, void *basev, void *addv)
   }
   else {
     mrg->cookie_lazy_mode = 0;
+  }
+  if (add->new_line_type) {
+    mrg->new_line_type = add->new_line_type;
+  }
+  else if (base->new_line_type) {
+    mrg->new_line_type = base->new_line_type;
+  }
+  else {
+    mrg->new_line_type = NLTYPE_NIL;
   }
   return mrg;
 }
