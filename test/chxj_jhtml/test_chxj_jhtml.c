@@ -470,6 +470,7 @@ void test_jhtml_font_tag_006();
 void test_jhtml_font_tag_007();
 void test_jhtml_font_tag_008();
 void test_jhtml_font_tag_009();
+void test_jhtml_font_tag_010();
 
 void test_jhtml_param_tag_001();
 /* pend */
@@ -1023,6 +1024,7 @@ main()
   CU_add_test(jhtml_suite, "test <font> 7." ,                                   test_jhtml_font_tag_007);
   CU_add_test(jhtml_suite, "test <font> 8." ,                                   test_jhtml_font_tag_008);
   CU_add_test(jhtml_suite, "test <font> 9." ,                                   test_jhtml_font_tag_009);
+  CU_add_test(jhtml_suite, "test <font> 10." ,                                  test_jhtml_font_tag_010);
   /*=========================================================================*/
   /* <param>                                                                 */
   /*=========================================================================*/
@@ -13031,6 +13033,39 @@ void test_jhtml_font_tag_009()
 #undef TEST_STRING
 #undef RESULT_STRING
 }
+void test_jhtml_font_tag_010() 
+{
+#define  TEST_STRING "<font size=\"+1\">ｱｱｱ</font>"
+#define  RESULT_STRING "ｱｱｱ"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_jhtml(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+/*===========================================================================*/
+/* param                                                                     */
+/*===========================================================================*/
 void test_jhtml_param_tag_001() 
 {
 #define  TEST_STRING "<param>aaa</param>"
