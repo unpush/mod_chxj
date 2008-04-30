@@ -44,14 +44,19 @@ chxj_chk_numeric(const char *s)
 int
 chxj_atoi(const char *s)
 {
-  int len = strlen(s);
+  int len;
   int ii;
   int result;
   int mflag = 0;
+  int break_flag = 0;
+
+  if (! s) return 0;
 
   result = 0;
 
-  for (ii=0; ii < len; ii++) {
+  len = strlen(s);
+
+  for (ii=0; ii < len && break_flag == 0; ii++) {
     result *= 10;
     switch(s[ii]) {
     case '0': result += 0; break; 
@@ -65,12 +70,26 @@ chxj_atoi(const char *s)
     case '8': result += 8; break;
     case '9': result += 9; break;
     case '-': 
-      if (ii == 0)
-        mflag = 1;
+      result /= 10;
+      if (ii != 0) {
+        break_flag = 1;
+        break;
+      }
+      mflag = 1;
       break;
 
-    default: break;
+    case '+':
+      result /= 10;
+      if (ii != 0) {
+        break_flag = 1;
+        break;
+      }
+      break;
 
+    default: 
+      break_flag = 1;
+      result /= 10;
+      break;
     }
   }
 
