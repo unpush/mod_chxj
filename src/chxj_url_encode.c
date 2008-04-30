@@ -80,7 +80,7 @@ chxj_url_decode(apr_pool_t *pool, const char *src)
   int   jj;
 
 
-  if (!src) return NULL;
+  if (!src) return apr_pstrdup(pool, "\0");
 
   len = strlen(src);
   dst = apr_palloc(pool, len+1);
