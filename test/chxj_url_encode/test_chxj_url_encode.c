@@ -45,6 +45,11 @@ void test_chxj_url_encode_023();
 /*===========================================================================*/
 void test_chxj_url_decode_001();
 void test_chxj_url_decode_002();
+void test_chxj_url_decode_003();
+void test_chxj_url_decode_004();
+void test_chxj_url_decode_005();
+void test_chxj_url_decode_006();
+void test_chxj_url_decode_007();
 /* pend */
 
 int
@@ -84,6 +89,11 @@ main()
   /*=========================================================================*/
   CU_add_test(str_util_suite, "chxj_url_decode 001",                                  test_chxj_url_decode_001);
   CU_add_test(str_util_suite, "chxj_url_decode 002",                                  test_chxj_url_decode_002);
+  CU_add_test(str_util_suite, "chxj_url_decode 003",                                  test_chxj_url_decode_003);
+  CU_add_test(str_util_suite, "chxj_url_decode 004",                                  test_chxj_url_decode_004);
+  CU_add_test(str_util_suite, "chxj_url_decode 005",                                  test_chxj_url_decode_005);
+  CU_add_test(str_util_suite, "chxj_url_decode 006",                                  test_chxj_url_decode_006);
+  CU_add_test(str_util_suite, "chxj_url_decode 007",                                  test_chxj_url_decode_007);
   /* aend */
 
   CU_basic_run_tests();
@@ -549,6 +559,86 @@ void test_chxj_url_decode_002()
 {
 #define  TEST_STRING   "+"
 #define  RESULT_STRING " "
+  char *ret;
+  APR_INIT;
+
+  ret = chxj_url_decode(p, TEST_STRING);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
+  CU_ASSERT(strcmp(ret, RESULT_STRING) == 0);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chxj_url_decode_003()
+{
+#define  TEST_STRING   "abcdefghijklmnopqrstuvwxyz"
+#define  RESULT_STRING "abcdefghijklmnopqrstuvwxyz"
+  char *ret;
+  APR_INIT;
+
+  ret = chxj_url_decode(p, TEST_STRING);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
+  CU_ASSERT(strcmp(ret, RESULT_STRING) == 0);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chxj_url_decode_004()
+{
+#define  TEST_STRING   "%00"
+#define  RESULT_STRING "\0"
+  char *ret;
+  APR_INIT;
+
+  ret = chxj_url_decode(p, TEST_STRING);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
+  CU_ASSERT(strcmp(ret, RESULT_STRING) == 0);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chxj_url_decode_005()
+{
+#define  TEST_STRING   "%11"
+#define  RESULT_STRING "\x11"
+  char *ret;
+  APR_INIT;
+
+  ret = chxj_url_decode(p, TEST_STRING);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
+  CU_ASSERT(strcmp(ret, RESULT_STRING) == 0);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chxj_url_decode_006()
+{
+#define  TEST_STRING   "%1111"
+#define  RESULT_STRING "\x11" "11"
+  char *ret;
+  APR_INIT;
+
+  ret = chxj_url_decode(p, TEST_STRING);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
+  CU_ASSERT(strcmp(ret, RESULT_STRING) == 0);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chxj_url_decode_007()
+{
+#define  TEST_STRING   "ab%1111"
+#define  RESULT_STRING "ab\x11" "11"
   char *ret;
   APR_INIT;
 
