@@ -80,6 +80,9 @@ void test_chxj_starts_with_007();
 void test_chxj_starts_with_008();
 void test_chxj_starts_with_009();
 void test_chxj_starts_with_010();
+void test_chxj_starts_with_011();
+void test_chxj_starts_with_012();
+void test_chxj_starts_with_013();
 /* pend */
 
 int
@@ -155,6 +158,9 @@ main()
   CU_add_test(str_util_suite, "chxj_starts_with 008",                                  test_chxj_starts_with_008);
   CU_add_test(str_util_suite, "chxj_starts_with 009",                                  test_chxj_starts_with_009);
   CU_add_test(str_util_suite, "chxj_starts_with 010",                                  test_chxj_starts_with_010);
+  CU_add_test(str_util_suite, "chxj_starts_with 011",                                  test_chxj_starts_with_011);
+  CU_add_test(str_util_suite, "chxj_starts_with 012",                                  test_chxj_starts_with_012);
+  CU_add_test(str_util_suite, "chxj_starts_with 013",                                  test_chxj_starts_with_013);
   /* aend */
 
   CU_basic_run_tests();
@@ -961,6 +967,54 @@ void test_chxj_starts_with_009()
 void test_chxj_starts_with_010()
 {
 #define TEST_STRING "abc123"
+#define TEST_WORD   NULL
+#define EXPECT      0
+  int ret;
+  APR_INIT;
+  ret = chxj_starts_with(TEST_STRING, TEST_WORD);
+  fprintf(stderr, "actual:[%d]\n", ret);
+  fprintf(stderr, "expect:[%d]\n", EXPECT);
+  CU_ASSERT(ret == EXPECT);
+  APR_TERM;
+#undef TEST_STRING
+#undef TEST_WORD
+#undef EXPECT
+}
+void test_chxj_starts_with_011()
+{
+#define TEST_STRING "a"
+#define TEST_WORD   "a"
+#define EXPECT      1
+  int ret;
+  APR_INIT;
+  ret = chxj_starts_with(TEST_STRING, TEST_WORD);
+  fprintf(stderr, "actual:[%d]\n", ret);
+  fprintf(stderr, "expect:[%d]\n", EXPECT);
+  CU_ASSERT(ret == EXPECT);
+  APR_TERM;
+#undef TEST_STRING
+#undef TEST_WORD
+#undef EXPECT
+}
+void test_chxj_starts_with_012()
+{
+#define TEST_STRING "a"
+#define TEST_WORD   ""
+#define EXPECT      0
+  int ret;
+  APR_INIT;
+  ret = chxj_starts_with(TEST_STRING, TEST_WORD);
+  fprintf(stderr, "actual:[%d]\n", ret);
+  fprintf(stderr, "expect:[%d]\n", EXPECT);
+  CU_ASSERT(ret == EXPECT);
+  APR_TERM;
+#undef TEST_STRING
+#undef TEST_WORD
+#undef EXPECT
+}
+void test_chxj_starts_with_013()
+{
+#define TEST_STRING "a"
 #define TEST_WORD   NULL
 #define EXPECT      0
   int ret;
