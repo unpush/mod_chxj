@@ -54,6 +54,19 @@ void test_chxj_atoi_016();
 void test_chxj_atoi_017();
 void test_chxj_atoi_018();
 void test_chxj_atoi_019();
+/*===========================================================================*/
+/* chxj_strcasenrcmp()                                                       */
+/*===========================================================================*/
+void test_chxj_strcasenrcmp_001();
+void test_chxj_strcasenrcmp_002();
+void test_chxj_strcasenrcmp_003();
+void test_chxj_strcasenrcmp_004();
+void test_chxj_strcasenrcmp_005();
+void test_chxj_strcasenrcmp_006();
+void test_chxj_strcasenrcmp_007();
+void test_chxj_strcasenrcmp_008();
+void test_chxj_strcasenrcmp_009();
+void test_chxj_strcasenrcmp_010();
 /* pend */
 
 int
@@ -103,6 +116,19 @@ main()
   CU_add_test(str_util_suite, "chxj_atoi 017",                                         test_chxj_atoi_017);
   CU_add_test(str_util_suite, "chxj_atoi 018",                                         test_chxj_atoi_018);
   CU_add_test(str_util_suite, "chxj_atoi 019",                                         test_chxj_atoi_019);
+  /*=========================================================================*/
+  /* chxj_strcasenrcmp()                                                     */
+  /*=========================================================================*/
+  CU_add_test(str_util_suite, "chxj_strcasenrcmp 001",                                 test_chxj_strcasenrcmp_001);
+  CU_add_test(str_util_suite, "chxj_strcasenrcmp 002",                                 test_chxj_strcasenrcmp_002);
+  CU_add_test(str_util_suite, "chxj_strcasenrcmp 003",                                 test_chxj_strcasenrcmp_003);
+  CU_add_test(str_util_suite, "chxj_strcasenrcmp 004",                                 test_chxj_strcasenrcmp_004);
+  CU_add_test(str_util_suite, "chxj_strcasenrcmp 005",                                 test_chxj_strcasenrcmp_005);
+  CU_add_test(str_util_suite, "chxj_strcasenrcmp 006",                                 test_chxj_strcasenrcmp_006);
+  CU_add_test(str_util_suite, "chxj_strcasenrcmp 007",                                 test_chxj_strcasenrcmp_007);
+  CU_add_test(str_util_suite, "chxj_strcasenrcmp 008",                                 test_chxj_strcasenrcmp_008);
+  CU_add_test(str_util_suite, "chxj_strcasenrcmp 009",                                 test_chxj_strcasenrcmp_009);
+  CU_add_test(str_util_suite, "chxj_strcasenrcmp 010",                                 test_chxj_strcasenrcmp_010);
   /* aend */
 
   CU_basic_run_tests();
@@ -599,6 +625,189 @@ void test_chxj_atoi_019()
   ret = chxj_atoi(TEST_STRING);
   
   CU_ASSERT(ret == 1);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+/*===========================================================================*/
+/* chxj_strcasenrcmp()                                                       */
+/*===========================================================================*/
+#if 0
+int
+chxj_strcasenrcmp(apr_pool_t *p, const char *s1, const char *s2, int n)
+{
+    register int s1_len;
+    register int s2_len;
+    char *ss1;
+    char *ss2;
+    register char *ss1p;
+    register char *ss2p;
+
+    s1_len = strlen(s1) - 1;
+    s2_len = strlen(s2) - 1;
+
+    ss1 = (char *)apr_palloc(p, s1_len + 2);
+    if (!ss1) {
+      return -1;
+    }
+    ss2 = (char *)apr_palloc(p, s2_len + 2);
+    if (!ss2) {
+      return -1;
+    }
+
+    strcpy(&ss1[1], s1);
+    strcpy(&ss2[1], s2);
+    ss1[0] = 0;
+    ss2[0] = 0;
+    ss1p = &ss1[s1_len+1];
+    ss2p = &ss2[s2_len+1];
+
+    for (;*ss1p && *ss2p && *ss1p == *ss2p && n - 1 > 0; ss1p--, ss2p--, n--);
+
+    return (int)(*ss1p - *ss2p);
+}
+#endif
+void test_chxj_strcasenrcmp_001()
+{
+#define  TEST_STRING "abc123"
+  int ret;
+  APR_INIT;
+
+  ret = chxj_strcasenrcmp(p, TEST_STRING, "23", 2); 
+  
+  CU_ASSERT(ret == 0);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_chxj_strcasenrcmp_002()
+{
+#define  TEST_STRING "abc123"
+  int ret;
+  APR_INIT;
+
+  ret = chxj_strcasenrcmp(p, TEST_STRING, "23", 1); 
+  
+  CU_ASSERT(ret == 0);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_chxj_strcasenrcmp_003()
+{
+#define  TEST_STRING "abc123"
+  int ret;
+  APR_INIT;
+
+  ret = chxj_strcasenrcmp(p, TEST_STRING, "23", 0); 
+  
+  CU_ASSERT(ret == 0);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_chxj_strcasenrcmp_004()
+{
+#define  TEST_STRING "abc123"
+  int ret;
+  APR_INIT;
+
+  ret = chxj_strcasenrcmp(p, TEST_STRING, "", 1); 
+  
+  fprintf(stderr, "actual:[%d]\n", ret);
+  fprintf(stderr, "expect:[%d]\n", 0x33);
+  CU_ASSERT(ret == 0x33);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_chxj_strcasenrcmp_005()
+{
+#define  TEST_STRING "abc123"
+  int ret;
+  APR_INIT;
+
+  ret = chxj_strcasenrcmp(p, NULL, "", 1); 
+  
+  fprintf(stderr, "actual:[%d]\n", ret);
+  fprintf(stderr, "expect:[%d]\n", 0x0);
+  CU_ASSERT(ret == 0x0);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_chxj_strcasenrcmp_006()
+{
+#define  TEST_STRING "abc123"
+  int ret;
+  APR_INIT;
+
+  ret = chxj_strcasenrcmp(p, "", NULL, 1); 
+  
+  fprintf(stderr, "actual:[%d]\n", ret);
+  fprintf(stderr, "expect:[%d]\n", 0x0);
+  CU_ASSERT(ret == 0x0);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_chxj_strcasenrcmp_007()
+{
+#define  TEST_STRING "abc123"
+  int ret;
+  APR_INIT;
+
+  ret = chxj_strcasenrcmp(p, NULL, NULL, 1); 
+  
+  fprintf(stderr, "actual:[%d]\n", ret);
+  fprintf(stderr, "expect:[%d]\n", 0x0);
+  CU_ASSERT(ret == 0x0);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_chxj_strcasenrcmp_008()
+{
+#define  TEST_STRING "abc123"
+  int ret;
+  APR_INIT;
+
+  ret = chxj_strcasenrcmp(p, TEST_STRING, NULL, 1); 
+  
+  fprintf(stderr, "actual:[%d]\n", ret);
+  fprintf(stderr, "expect:[%d]\n", 0x33);
+  CU_ASSERT(ret == 0x33);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_chxj_strcasenrcmp_009()
+{
+#define  TEST_STRING "abc123"
+  int ret;
+  APR_INIT;
+
+  ret = chxj_strcasenrcmp(p, NULL, TEST_STRING, 1); 
+  
+  fprintf(stderr, "actual:[%d]\n", ret);
+  fprintf(stderr, "expect:[%d]\n", -0x33);
+  CU_ASSERT(ret == -0x33);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_chxj_strcasenrcmp_010()
+{
+#define  TEST_STRING1 "abc123"
+#define  TEST_STRING2 "abc123"
+  int ret;
+  APR_INIT;
+
+  ret = chxj_strcasenrcmp(p, TEST_STRING1, TEST_STRING2, sizeof(TEST_STRING1)-1); 
+  
+  fprintf(stderr, "actual:[%d]\n", ret);
+  fprintf(stderr, "expect:[%d]\n", 0);
+  CU_ASSERT(ret == 0);
 
   APR_TERM;
 #undef TEST_STRING

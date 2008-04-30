@@ -109,8 +109,18 @@ chxj_strcasenrcmp(apr_pool_t *p, const char *s1, const char *s2, int n)
     register char *ss1p;
     register char *ss2p;
 
-    s1_len = strlen(s1) - 1;
-    s2_len = strlen(s2) - 1;
+    if (! s1) {
+      s1_len = 0;
+    }
+    else {
+      s1_len = strlen(s1) - 1;
+    }
+    if (! s2) {
+      s2_len = 0;
+    }
+    else {
+      s2_len = strlen(s2) - 1;
+    }
 
     ss1 = (char *)apr_palloc(p, s1_len + 2);
     if (!ss1) {
@@ -121,15 +131,18 @@ chxj_strcasenrcmp(apr_pool_t *p, const char *s1, const char *s2, int n)
       return -1;
     }
 
-    strcpy(&ss1[1], s1);
-    strcpy(&ss2[1], s2);
-    ss1[0] = 0;
-    ss2[0] = 0;
+    ss1[1] = ss1[0] = 0;
+    ss2[1] = ss2[0] = 0;
+    if (s1) {
+      strcpy(&ss1[1], s1);
+    }
+    if (s2) {
+      strcpy(&ss2[1], s2);
+    }
     ss1p = &ss1[s1_len+1];
     ss2p = &ss2[s2_len+1];
 
     for (;*ss1p && *ss2p && *ss1p == *ss2p && n - 1 > 0; ss1p--, ss2p--, n--);
-
     return (int)(*ss1p - *ss2p);
 }
 
