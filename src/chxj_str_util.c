@@ -21,13 +21,14 @@ chxj_chk_numeric(const char *s)
 {
   int len = strlen(s);
   int ii;
+  if (len == 0) return -1; /* NG(not numeric) */
 
   for (ii=0; ii<len; ii++) {
     if (ii == 0 && (s[ii] < '0' || s[ii] > '9') && s[ii] != '-') {
-      return -1; /* NG */
+      return -1; /* NG(not numeric) */
     }
     if (ii != 0 && (s[ii] < '0' || s[ii] > '9')) {
-      return -1; /* NG */
+      return -1; /* NG(not numeric) */
     }
   }
 
