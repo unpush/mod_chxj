@@ -40,7 +40,6 @@ void test_chxj_url_encode_020();
 void test_chxj_url_encode_021();
 void test_chxj_url_encode_022();
 void test_chxj_url_encode_023();
-void test_chxj_url_encode_024();
 /* pend */
 
 int
@@ -75,7 +74,6 @@ main()
   CU_add_test(str_util_suite, "chxj_url_encode 021",                                  test_chxj_url_encode_021);
   CU_add_test(str_util_suite, "chxj_url_encode 022",                                  test_chxj_url_encode_022);
   CU_add_test(str_util_suite, "chxj_url_encode 023",                                  test_chxj_url_encode_023);
-  CU_add_test(str_util_suite, "chxj_url_encode 024",                                  test_chxj_url_encode_024);
   /* aend */
 
   CU_basic_run_tests();
@@ -520,24 +518,6 @@ void test_chxj_url_encode_023()
   fprintf(stderr, "actual:[%s]\n", ret);
   fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(strcmp(ret, RESULT_STRING) == 0);
-
-  APR_TERM;
-#undef TEST_STRING
-#undef RESULT_STRING
-}
-void test_chxj_url_encode_024()
-{
-#define  TEST_STRING   "改正租税特別措置法の衆院での再可決をめぐり、民主党議員が３０日、国会内の衆院議長応接室を封鎖して、河野洋平衆院議長の本会議場入場"
-#define  RESULT_STRING ""
-  char *ret;
-  APR_INIT;
-
-  ret = chxj_url_encode(p, TEST_STRING);
-  fprintf(stderr, "actual:[%s]\n", ret);
-  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
-#if 0
-  CU_ASSERT(strcmp(ret, RESULT_STRING) == 0);
-#endif
 
   APR_TERM;
 #undef TEST_STRING

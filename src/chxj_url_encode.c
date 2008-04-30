@@ -40,10 +40,9 @@ char *
 chxj_url_encode(apr_pool_t *pool, const char *src)
 {
   char *dst;
-  char *sp = (char *)src;
-  unsigned char tmp;
+  register char *sp = (char *)src;
   int len;
-  int pos;
+  register int pos;
 
   if (! src) return apr_pstrdup(pool, "\0");
 
