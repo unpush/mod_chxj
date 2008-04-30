@@ -1471,7 +1471,7 @@ s_jxhtml_start_form_tag(void *pdoc, Node *node)
     char *vv = apr_psprintf(doc->buf.pool, "%s<input type='hidden' name='%s' value='%s' />",
                             jxhtml->out, 
                             CHXJ_COOKIE_PARAM,
-                            chxj_url_decode(r, jxhtml->cookie->cookie_id));
+                            chxj_url_decode(doc->buf.pool, jxhtml->cookie->cookie_id));
     W_V(vv);
     W_NLCODE();
   }

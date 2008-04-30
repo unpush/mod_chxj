@@ -243,10 +243,10 @@ chxj_encoding_parameter(request_rec *r, const char *value)
     key = apr_strtok(pair, "=", &vstat);
     val = apr_strtok(NULL, "=", &vstat);
     if (val) {
-      val = chxj_url_decode(r, val);
+      val = chxj_url_decode(r->pool, val);
       len = (apr_size_t)strlen(val);
       val = chxj_encoding(r, val, &len);
-      val = chxj_url_encode(r, val);
+      val = chxj_url_encode(r->pool, val);
       if (strlen(param) == 0) {
         param = apr_pstrcat(r->pool, param, key, "=", val, NULL);
       }

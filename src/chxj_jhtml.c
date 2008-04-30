@@ -1413,7 +1413,7 @@ s_jhtml_start_form_tag(void *pdoc, Node *node)
     char *vv = apr_psprintf(doc->buf.pool, "%s<input type='hidden' name='%s' value='%s'>",
                             jhtml->out, 
                             CHXJ_COOKIE_PARAM,
-                            chxj_url_decode(r, jhtml->cookie->cookie_id));
+                            chxj_url_decode(doc->buf.pool, jhtml->cookie->cookie_id));
     W_V(vv);
   }
   W_NLCODE();

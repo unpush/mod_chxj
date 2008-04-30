@@ -403,11 +403,11 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry *entryp)
         char *dvalue;
 
         dlen   = strlen(value);
-        value = chxj_url_decode(r, value);
+        value = chxj_url_decode(r->pool, value);
         DBG(r, "************ before encoding[%s]", value);
 
         dvalue = chxj_rencoding(r, value, &dlen);
-        dvalue = chxj_url_encode(r, dvalue);
+        dvalue = chxj_url_encode(r->pool, dvalue);
 
         DBG(r, "************ after encoding[%s]", dvalue);
 
@@ -527,11 +527,11 @@ chxj_input_convert(
         char       *dvalue;
 
         dlen   = strlen(value);
-        value = chxj_url_decode(r, value);
+        value = chxj_url_decode(r->pool, value);
         DBG(r, "************ before encoding[%s]", value);
 
         dvalue = chxj_rencoding(r, value, &dlen);
-        dvalue = chxj_url_encode(r,dvalue);
+        dvalue = chxj_url_encode(r->pool,dvalue);
 
         DBG(r, "************ after encoding[%s]", dvalue);
 
@@ -560,11 +560,11 @@ chxj_input_convert(
         char       *dvalue;
 
         dlen   = strlen(value);
-        value = chxj_url_decode(r, value);
+        value = chxj_url_decode(r->pool, value);
         DBG(r, "************ before encoding[%s]", value);
 
         dvalue = chxj_rencoding(r, value, &dlen);
-        dvalue = chxj_url_encode(r,dvalue);
+        dvalue = chxj_url_encode(r->pool,dvalue);
 
         DBG(r, "************ after encoding[%s]", dvalue);
 

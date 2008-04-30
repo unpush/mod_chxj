@@ -82,7 +82,7 @@ alloc_cookie_id(request_rec *r)
 
   DBG(r, "cookie_id=[%s]", cookie_id);
 
-  cookie_id = chxj_url_encode(r,cookie_id);
+  cookie_id = chxj_url_encode(r->pool,cookie_id);
 
   DBG(r, "cookie_id=[%s]", cookie_id);
   return cookie_id;

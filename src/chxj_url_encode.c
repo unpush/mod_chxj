@@ -37,13 +37,13 @@ s_hex_value(char c)
 }
 
 char *
-chxj_url_encode(request_rec *r, const char *src)
+chxj_url_encode(apr_pool_t *pool, const char *src)
 {
   char *dst;
   char *sp = (char *)src;
   unsigned char tmp;
 
-  dst = apr_palloc(r->pool, 1);
+  dst = apr_palloc(pool, 1);
   dst[0] = 0;
 
   if (!src) return dst;
@@ -52,21 +52,21 @@ chxj_url_encode(request_rec *r, const char *src)
   while(*sp) {
 
     if (IS_ALPHA_UPPER(*sp) ||  IS_ALPHA_LOWER(*sp) ||  IS_DIGIT(*sp)) {
-      dst = apr_psprintf(r->pool, "%s%c", dst, *sp);
+      dst = apr_psprintf(pool, "%s%c", dst, *sp);
       sp++;
       continue;
     }
 
     if (*sp == ' ') {
-      dst = apr_pstrcat(r->pool, dst, "+", NULL);
+      dst = apr_pstrcat(pool, dst, "+", NULL);
       sp++;
       continue;
     }
 
     tmp = (*sp >> 4) & 0x0f;
-    dst = apr_psprintf(r->pool, "%s%%%c", dst, TO_HEXSTRING(tmp));
+    dst = apr_psprintf(pool, "%s%%%c", dst, TO_HEXSTRING(tmp));
     tmp = *sp & 0x0f;
-    dst = apr_psprintf(r->pool, "%s%c", dst,   TO_HEXSTRING(tmp));
+    dst = apr_psprintf(pool, "%s%c", dst,   TO_HEXSTRING(tmp));
 
     sp++;
   }
@@ -76,7 +76,7 @@ chxj_url_encode(request_rec *r, const char *src)
 
 
 char *
-chxj_url_decode(request_rec *r, const char *src)
+chxj_url_decode(apr_pool_t *pool, const char *src)
 {
   char  *dst;
   int   len; 
@@ -87,7 +87,7 @@ chxj_url_decode(request_rec *r, const char *src)
   if (!src) return NULL;
 
   len = strlen(src);
-  dst = apr_palloc(r->pool, len+1);
+  dst = apr_palloc(pool, len+1);
   memset(dst, 0, len+1);
 
   for (jj=0,ii=0; src[ii] != '\0' && ii < len; ii++) {
