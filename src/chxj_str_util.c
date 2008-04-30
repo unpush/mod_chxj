@@ -19,8 +19,12 @@
 int
 chxj_chk_numeric(const char *s)
 {
-  int len = strlen(s);
+  int len;
   int ii;
+
+  if (! s) return -1; /* NG(not numeric) */
+
+  len = strlen(s);
   if (len == 0) return -1; /* NG(not numeric) */
 
   for (ii=0; ii<len; ii++) {
