@@ -150,8 +150,14 @@ chxj_strcasenrcmp(apr_pool_t *p, const char *s1, const char *s2, int n)
 int
 chxj_starts_with(const char *str, const char *word)
 {
-  int len = strlen(word);
-  return strncasecmp(str, word, len) == 0;
+  int len;
+  char *w = (char *)word;
+  char *s = (char *)str;
+  if (! w) w = "";
+  if (! s) s = "";
+  len = strlen(w);
+  if (len == 0) len = 1;
+  return strncasecmp(s, w, len) == 0;
 }
 /*
  * vim:ts=2 et

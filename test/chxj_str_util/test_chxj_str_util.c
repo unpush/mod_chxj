@@ -67,6 +67,19 @@ void test_chxj_strcasenrcmp_007();
 void test_chxj_strcasenrcmp_008();
 void test_chxj_strcasenrcmp_009();
 void test_chxj_strcasenrcmp_010();
+/*===========================================================================*/
+/* chxj_starts_with()                                                        */
+/*===========================================================================*/
+void test_chxj_starts_with_001();
+void test_chxj_starts_with_002();
+void test_chxj_starts_with_003();
+void test_chxj_starts_with_004();
+void test_chxj_starts_with_005();
+void test_chxj_starts_with_006();
+void test_chxj_starts_with_007();
+void test_chxj_starts_with_008();
+void test_chxj_starts_with_009();
+void test_chxj_starts_with_010();
 /* pend */
 
 int
@@ -129,6 +142,19 @@ main()
   CU_add_test(str_util_suite, "chxj_strcasenrcmp 008",                                 test_chxj_strcasenrcmp_008);
   CU_add_test(str_util_suite, "chxj_strcasenrcmp 009",                                 test_chxj_strcasenrcmp_009);
   CU_add_test(str_util_suite, "chxj_strcasenrcmp 010",                                 test_chxj_strcasenrcmp_010);
+  /*=========================================================================*/
+  /* chxj_starts_with()                                                      */
+  /*=========================================================================*/
+  CU_add_test(str_util_suite, "chxj_starts_with 001",                                  test_chxj_starts_with_001);
+  CU_add_test(str_util_suite, "chxj_starts_with 002",                                  test_chxj_starts_with_002);
+  CU_add_test(str_util_suite, "chxj_starts_with 003",                                  test_chxj_starts_with_003);
+  CU_add_test(str_util_suite, "chxj_starts_with 004",                                  test_chxj_starts_with_004);
+  CU_add_test(str_util_suite, "chxj_starts_with 005",                                  test_chxj_starts_with_005);
+  CU_add_test(str_util_suite, "chxj_starts_with 006",                                  test_chxj_starts_with_006);
+  CU_add_test(str_util_suite, "chxj_starts_with 007",                                  test_chxj_starts_with_007);
+  CU_add_test(str_util_suite, "chxj_starts_with 008",                                  test_chxj_starts_with_008);
+  CU_add_test(str_util_suite, "chxj_starts_with 009",                                  test_chxj_starts_with_009);
+  CU_add_test(str_util_suite, "chxj_starts_with 010",                                  test_chxj_starts_with_010);
   /* aend */
 
   CU_basic_run_tests();
@@ -632,41 +658,6 @@ void test_chxj_atoi_019()
 /*===========================================================================*/
 /* chxj_strcasenrcmp()                                                       */
 /*===========================================================================*/
-#if 0
-int
-chxj_strcasenrcmp(apr_pool_t *p, const char *s1, const char *s2, int n)
-{
-    register int s1_len;
-    register int s2_len;
-    char *ss1;
-    char *ss2;
-    register char *ss1p;
-    register char *ss2p;
-
-    s1_len = strlen(s1) - 1;
-    s2_len = strlen(s2) - 1;
-
-    ss1 = (char *)apr_palloc(p, s1_len + 2);
-    if (!ss1) {
-      return -1;
-    }
-    ss2 = (char *)apr_palloc(p, s2_len + 2);
-    if (!ss2) {
-      return -1;
-    }
-
-    strcpy(&ss1[1], s1);
-    strcpy(&ss2[1], s2);
-    ss1[0] = 0;
-    ss2[0] = 0;
-    ss1p = &ss1[s1_len+1];
-    ss2p = &ss2[s2_len+1];
-
-    for (;*ss1p && *ss2p && *ss1p == *ss2p && n - 1 > 0; ss1p--, ss2p--, n--);
-
-    return (int)(*ss1p - *ss2p);
-}
-#endif
 void test_chxj_strcasenrcmp_001()
 {
 #define  TEST_STRING "abc123"
@@ -811,6 +802,177 @@ void test_chxj_strcasenrcmp_010()
 
   APR_TERM;
 #undef TEST_STRING
+}
+/*===========================================================================*/
+/* chxj_starts_with()                                                        */
+/*===========================================================================*/
+#if 0
+int
+chxj_starts_with(const char *str, const char *word)
+{
+  int len = strlen(word);
+  return strncasecmp(str, word, len) == 0;
+}
+#endif
+void test_chxj_starts_with_001()
+{
+#define TEST_STRING "abc123"
+#define TEST_WORD   "abc"
+#define EXPECT      1
+  int ret;
+  APR_INIT;
+  ret = chxj_starts_with(TEST_STRING, TEST_WORD);
+  fprintf(stderr, "actual:[%d]\n", ret);
+  fprintf(stderr, "expect:[%d]\n", EXPECT);
+  CU_ASSERT(ret == EXPECT);
+  APR_TERM;
+#undef TEST_STRING
+#undef TEST_WORD
+#undef EXPECT
+}
+void test_chxj_starts_with_002()
+{
+#define TEST_STRING "abc123"
+#define TEST_WORD   "bbc"
+#define EXPECT      0
+  int ret;
+  APR_INIT;
+  ret = chxj_starts_with(TEST_STRING, TEST_WORD);
+  fprintf(stderr, "actual:[%d]\n", ret);
+  fprintf(stderr, "expect:[%d]\n", EXPECT);
+  CU_ASSERT(ret == EXPECT);
+  APR_TERM;
+#undef TEST_STRING
+#undef TEST_WORD
+#undef EXPECT
+}
+void test_chxj_starts_with_003()
+{
+#define TEST_STRING "abc123"
+#define TEST_WORD   "abc123"
+#define EXPECT      1
+  int ret;
+  APR_INIT;
+  ret = chxj_starts_with(TEST_STRING, TEST_WORD);
+  fprintf(stderr, "actual:[%d]\n", ret);
+  fprintf(stderr, "expect:[%d]\n", EXPECT);
+  CU_ASSERT(ret == EXPECT);
+  APR_TERM;
+#undef TEST_STRING
+#undef TEST_WORD
+#undef EXPECT
+}
+void test_chxj_starts_with_004()
+{
+#define TEST_STRING "abc123"
+#define TEST_WORD   "abc1234"
+#define EXPECT      0
+  int ret;
+  APR_INIT;
+  ret = chxj_starts_with(TEST_STRING, TEST_WORD);
+  fprintf(stderr, "actual:[%d]\n", ret);
+  fprintf(stderr, "expect:[%d]\n", EXPECT);
+  CU_ASSERT(ret == EXPECT);
+  APR_TERM;
+#undef TEST_STRING
+#undef TEST_WORD
+#undef EXPECT
+}
+void test_chxj_starts_with_005()
+{
+#define TEST_STRING "abc123"
+#define TEST_WORD   "123abc"
+#define EXPECT      0
+  int ret;
+  APR_INIT;
+  ret = chxj_starts_with(TEST_STRING, TEST_WORD);
+  fprintf(stderr, "actual:[%d]\n", ret);
+  fprintf(stderr, "expect:[%d]\n", EXPECT);
+  CU_ASSERT(ret == EXPECT);
+  APR_TERM;
+#undef TEST_STRING
+#undef TEST_WORD
+#undef EXPECT
+}
+void test_chxj_starts_with_006()
+{
+#define TEST_STRING ""
+#define TEST_WORD   ""
+#define EXPECT      1
+  int ret;
+  APR_INIT;
+  ret = chxj_starts_with(TEST_STRING, TEST_WORD);
+  fprintf(stderr, "actual:[%d]\n", ret);
+  fprintf(stderr, "expect:[%d]\n", EXPECT);
+  CU_ASSERT(ret == EXPECT);
+  APR_TERM;
+#undef TEST_STRING
+#undef TEST_WORD
+#undef EXPECT
+}
+void test_chxj_starts_with_007()
+{
+#define TEST_STRING "abc"
+#define TEST_WORD   ""
+#define EXPECT      0
+  int ret;
+  APR_INIT;
+  ret = chxj_starts_with(TEST_STRING, TEST_WORD);
+  fprintf(stderr, "actual:[%d]\n", ret);
+  fprintf(stderr, "expect:[%d]\n", EXPECT);
+  CU_ASSERT(ret == EXPECT);
+  APR_TERM;
+#undef TEST_STRING
+#undef TEST_WORD
+#undef EXPECT
+}
+void test_chxj_starts_with_008()
+{
+#define TEST_STRING ""
+#define TEST_WORD   "abc"
+#define EXPECT      0
+  int ret;
+  APR_INIT;
+  ret = chxj_starts_with(TEST_STRING, TEST_WORD);
+  fprintf(stderr, "actual:[%d]\n", ret);
+  fprintf(stderr, "expect:[%d]\n", EXPECT);
+  CU_ASSERT(ret == EXPECT);
+  APR_TERM;
+#undef TEST_STRING
+#undef TEST_WORD
+#undef EXPECT
+}
+void test_chxj_starts_with_009()
+{
+#define TEST_STRING NULL
+#define TEST_WORD   "abc"
+#define EXPECT      0
+  int ret;
+  APR_INIT;
+  ret = chxj_starts_with(TEST_STRING, TEST_WORD);
+  fprintf(stderr, "actual:[%d]\n", ret);
+  fprintf(stderr, "expect:[%d]\n", EXPECT);
+  CU_ASSERT(ret == EXPECT);
+  APR_TERM;
+#undef TEST_STRING
+#undef TEST_WORD
+#undef EXPECT
+}
+void test_chxj_starts_with_010()
+{
+#define TEST_STRING "abc123"
+#define TEST_WORD   NULL
+#define EXPECT      0
+  int ret;
+  APR_INIT;
+  ret = chxj_starts_with(TEST_STRING, TEST_WORD);
+  fprintf(stderr, "actual:[%d]\n", ret);
+  fprintf(stderr, "expect:[%d]\n", EXPECT);
+  CU_ASSERT(ret == EXPECT);
+  APR_TERM;
+#undef TEST_STRING
+#undef TEST_WORD
+#undef EXPECT
 }
 /*
  * vim:ts=2 et
