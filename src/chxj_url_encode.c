@@ -42,35 +42,32 @@ chxj_url_encode(apr_pool_t *pool, const char *src)
   char *dst;
   char *sp = (char *)src;
   unsigned char tmp;
+  int len;
+  int pos;
 
-  dst = apr_palloc(pool, 1);
-  dst[0] = 0;
+  if (! src) return apr_pstrdup(pool, "\0");
 
-  if (!src) return dst;
-
+  len = strlen(src) * 3 + 1;
+  dst = apr_palloc(pool, len);
+  memset(dst, 0, len);
+  pos = 0;
 
   while(*sp) {
-
-    if (IS_ALPHA_UPPER(*sp) ||  IS_ALPHA_LOWER(*sp) ||  IS_DIGIT(*sp)) {
-      dst = apr_psprintf(pool, "%s%c", dst, *sp);
-      sp++;
+    if (IS_ALPHA_UPPER(*sp) || IS_ALPHA_LOWER(*sp) || IS_DIGIT(*sp)) {
+      dst[pos++] = *sp++;
       continue;
     }
-
     if (*sp == ' ') {
-      dst = apr_pstrcat(pool, dst, "+", NULL);
+      dst[pos++] = '+';
       sp++;
       continue;
     }
 
-    tmp = (*sp >> 4) & 0x0f;
-    dst = apr_psprintf(pool, "%s%%%c", dst, TO_HEXSTRING(tmp));
-    tmp = *sp & 0x0f;
-    dst = apr_psprintf(pool, "%s%c", dst,   TO_HEXSTRING(tmp));
-
+    dst[pos++] = '%';
+    dst[pos++] = TO_HEXSTRING((*sp >> 4) & 0x0f);
+    dst[pos++] = TO_HEXSTRING((*sp & 0x0f));
     sp++;
   }
-  
   return dst;
 }
 
