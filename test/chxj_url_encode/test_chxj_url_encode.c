@@ -40,6 +40,11 @@ void test_chxj_url_encode_020();
 void test_chxj_url_encode_021();
 void test_chxj_url_encode_022();
 void test_chxj_url_encode_023();
+/*===========================================================================*/
+/* chxj_url_decode()                                                         */
+/*===========================================================================*/
+void test_chxj_url_decode_001();
+void test_chxj_url_decode_002();
 /* pend */
 
 int
@@ -74,6 +79,11 @@ main()
   CU_add_test(str_util_suite, "chxj_url_encode 021",                                  test_chxj_url_encode_021);
   CU_add_test(str_util_suite, "chxj_url_encode 022",                                  test_chxj_url_encode_022);
   CU_add_test(str_util_suite, "chxj_url_encode 023",                                  test_chxj_url_encode_023);
+  /*=========================================================================*/
+  /* chxj_url_decode()                                                       */
+  /*=========================================================================*/
+  CU_add_test(str_util_suite, "chxj_url_decode 001",                                  test_chxj_url_decode_001);
+  CU_add_test(str_util_suite, "chxj_url_decode 002",                                  test_chxj_url_decode_002);
   /* aend */
 
   CU_basic_run_tests();
@@ -116,45 +126,6 @@ main()
 /*===========================================================================*/
 /* chxj_url_encode()                                                         */
 /*===========================================================================*/
-#if 0
-char *
-chxj_url_encode(apr_pool_t *pool, const char *src)
-{
-  char *dst;
-  char *sp = (char *)src;
-  unsigned char tmp;
-
-  dst = apr_palloc(pool, 1);
-  dst[0] = 0;
-
-  if (!src) return dst;
-
-
-  while(*sp) {
-
-    if (IS_ALPHA_UPPER(*sp) ||  IS_ALPHA_LOWER(*sp) ||  IS_DIGIT(*sp)) {
-      dst = apr_psprintf(pool, "%s%c", dst, *sp);
-      sp++;
-      continue;
-    }
-
-    if (*sp == ' ') {
-      dst = apr_pstrcat(pool, dst, "+", NULL);
-      sp++;
-      continue;
-    }
-
-    tmp = (*sp >> 4) & 0x0f;
-    dst = apr_psprintf(pool, "%s%%%c", dst, TO_HEXSTRING(tmp));
-    tmp = *sp & 0x0f;
-    dst = apr_psprintf(pool, "%s%c", dst,   TO_HEXSTRING(tmp));
-
-    sp++;
-  }
-
-  return dst;
-}
-#endif
 void test_chxj_url_encode_001()
 {
 #define  TEST_STRING   "abcdefghijklmnopqrstuvwxyz"
@@ -515,6 +486,73 @@ void test_chxj_url_encode_023()
   APR_INIT;
 
   ret = chxj_url_encode(p, TEST_STRING);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
+  CU_ASSERT(strcmp(ret, RESULT_STRING) == 0);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+
+/*===========================================================================*/
+/* chxj_url_decode()                                                         */
+/*===========================================================================*/
+#if 0
+char *
+chxj_url_decode(apr_pool_t *pool, const char *src)
+{
+  char  *dst;
+  int   len;
+  int   ii;
+  int   jj;
+
+
+  if (!src) return NULL;
+
+  len = strlen(src);
+  dst = apr_palloc(pool, len+1);
+  memset(dst, 0, len+1);
+
+  for (jj=0,ii=0; src[ii] != '\0' && ii < len; ii++) {
+    if (src[ii] == '%') {
+      if (ii + 2 <= len && IS_HEXCHAR(src[ii+1]) && IS_HEXCHAR(src[ii+2])) {
+        dst[jj++] = s_hex_value(src[ii+1]) * 16 + s_hex_value(src[ii+2]);
+        ii+=2;
+      }
+    }
+    else {
+      dst[jj++] = src[ii];
+    }
+  }
+
+  return dst;
+}
+#endif
+void test_chxj_url_decode_001()
+{
+#define  TEST_STRING   "%FF"
+#define  RESULT_STRING "\xff"
+  char *ret;
+  APR_INIT;
+
+  ret = chxj_url_decode(p, TEST_STRING);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
+  CU_ASSERT(strcmp(ret, RESULT_STRING) == 0);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_chxj_url_decode_002()
+{
+#define  TEST_STRING   "+"
+#define  RESULT_STRING " "
+  char *ret;
+  APR_INIT;
+
+  ret = chxj_url_decode(p, TEST_STRING);
   fprintf(stderr, "actual:[%s]\n", ret);
   fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   CU_ASSERT(strcmp(ret, RESULT_STRING) == 0);
