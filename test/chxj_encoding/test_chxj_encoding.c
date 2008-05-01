@@ -52,6 +52,19 @@ void test_chxj_rencoding_002();
 void test_chxj_rencoding_003();
 void test_chxj_rencoding_004();
 void test_chxj_rencoding_005();
+/*===========================================================================*/
+/* chxj_encoding_parameter()                                                 */
+/*===========================================================================*/
+void test_chxj_encoding_parameter_001();
+void test_chxj_encoding_parameter_002();
+void test_chxj_encoding_parameter_003();
+void test_chxj_encoding_parameter_004();
+void test_chxj_encoding_parameter_005();
+void test_chxj_encoding_parameter_006();
+void test_chxj_encoding_parameter_007();
+void test_chxj_encoding_parameter_008();
+void test_chxj_encoding_parameter_009();
+void test_chxj_encoding_parameter_010();
 /* pend */
 
 void test_log_rerror(const char *file, int line, int level, apr_status_t status, const request_rec *r, const char *fmt, ...)
@@ -138,6 +151,19 @@ main()
   CU_add_test(str_util_suite, "chxj_rencoding() 003",                              test_chxj_rencoding_003);
   CU_add_test(str_util_suite, "chxj_rencoding() 004",                              test_chxj_rencoding_004);
   CU_add_test(str_util_suite, "chxj_rencoding() 005",                              test_chxj_rencoding_005);
+  /*=========================================================================*/
+  /* chxj_encoding_parameter()                                               */
+  /*=========================================================================*/
+  CU_add_test(str_util_suite, "chxj_encoding_parameter() 001",                     test_chxj_encoding_parameter_001);
+  CU_add_test(str_util_suite, "chxj_encoding_parameter() 002",                     test_chxj_encoding_parameter_002);
+  CU_add_test(str_util_suite, "chxj_encoding_parameter() 003",                     test_chxj_encoding_parameter_003);
+  CU_add_test(str_util_suite, "chxj_encoding_parameter() 004",                     test_chxj_encoding_parameter_004);
+  CU_add_test(str_util_suite, "chxj_encoding_parameter() 005",                     test_chxj_encoding_parameter_005);
+  CU_add_test(str_util_suite, "chxj_encoding_parameter() 006",                     test_chxj_encoding_parameter_006);
+  CU_add_test(str_util_suite, "chxj_encoding_parameter() 007",                     test_chxj_encoding_parameter_007);
+  CU_add_test(str_util_suite, "chxj_encoding_parameter() 008",                     test_chxj_encoding_parameter_008);
+  CU_add_test(str_util_suite, "chxj_encoding_parameter() 009",                     test_chxj_encoding_parameter_009);
+  CU_add_test(str_util_suite, "chxj_encoding_parameter() 010",                     test_chxj_encoding_parameter_010);
   /* aend */
 
   CU_basic_run_tests();
@@ -376,6 +402,209 @@ void test_chxj_rencoding_005()
   fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
   fprintf(stderr, "len:[%d]\n", len);
   CU_ASSERT(len == 12);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+/*===========================================================================*/
+/* chxj_encoding_parameter()                                                 */
+/*===========================================================================*/
+void test_chxj_encoding_parameter_001()
+{
+#define TEST_STRING "aaa?あいうえお=かきくけこ"
+#define RESULT_STRING "aaa?%82%A0%82%A2%82%A4%82%A6%82%A8=%82%A9%82%AB%82%AD%82%AF%82%B1"
+  char *ret;
+  APR_INIT;
+  apr_size_t len;
+
+  len = sizeof(TEST_STRING)-1;
+  ret = chxj_encoding_parameter(&r, TEST_STRING);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
+  fprintf(stderr, "len:[%d]\n", len);
+  CU_ASSERT(strcmp(ret,RESULT_STRING) == 0);
+  CU_ASSERT(len == 35);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+void test_chxj_encoding_parameter_002()
+{
+#define TEST_STRING "aaa?abcあいうabc=かきくけこ"
+#define RESULT_STRING "aaa?abc%82%A0%82%A2%82%A4abc=%82%A9%82%AB%82%AD%82%AF%82%B1"
+  char *ret;
+  APR_INIT;
+  apr_size_t len;
+
+  len = sizeof(TEST_STRING)-1;
+  ret = chxj_encoding_parameter(&r, TEST_STRING);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
+  fprintf(stderr, "len:[%d]\n", len);
+  CU_ASSERT(strcmp(ret,RESULT_STRING) == 0);
+  CU_ASSERT(len == 35);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+void test_chxj_encoding_parameter_003()
+{
+#define TEST_STRING "aaa?abc=かきくけこ"
+#define RESULT_STRING "aaa?abc=%82%A9%82%AB%82%AD%82%AF%82%B1"
+  char *ret;
+  APR_INIT;
+  apr_size_t len;
+
+  len = sizeof(TEST_STRING)-1;
+  ret = chxj_encoding_parameter(&r, TEST_STRING);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
+  fprintf(stderr, "len:[%d]\n", len);
+  CU_ASSERT(strcmp(ret,RESULT_STRING) == 0);
+  CU_ASSERT(len == 23);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+void test_chxj_encoding_parameter_004()
+{
+#define TEST_STRING "aaa?あいうえお=abcかきくけこabc"
+#define RESULT_STRING "aaa?%82%A0%82%A2%82%A4%82%A6%82%A8=abc%82%A9%82%AB%82%AD%82%AF%82%B1abc"
+  char *ret;
+  APR_INIT;
+  apr_size_t len;
+
+  len = sizeof(TEST_STRING)-1;
+  ret = chxj_encoding_parameter(&r, TEST_STRING);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
+  fprintf(stderr, "len:[%d]\n", len);
+  CU_ASSERT(strcmp(ret,RESULT_STRING) == 0);
+  CU_ASSERT(len == 41);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+void test_chxj_encoding_parameter_005()
+{
+#define TEST_STRING "aaa?あいうえお=abc"
+#define RESULT_STRING "aaa?%82%A0%82%A2%82%A4%82%A6%82%A8=abc"
+  char *ret;
+  APR_INIT;
+  apr_size_t len;
+
+  len = sizeof(TEST_STRING)-1;
+  ret = chxj_encoding_parameter(&r, TEST_STRING);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
+  fprintf(stderr, "len:[%d]\n", len);
+  CU_ASSERT(strcmp(ret,RESULT_STRING) == 0);
+  CU_ASSERT(len == 23);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+void test_chxj_encoding_parameter_006()
+{
+#define TEST_STRING "aaa?=abc"
+#define RESULT_STRING "aaa?=abc"
+  char *ret;
+  APR_INIT;
+  apr_size_t len;
+
+  len = sizeof(TEST_STRING)-1;
+  ret = chxj_encoding_parameter(&r, TEST_STRING);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
+  fprintf(stderr, "len:[%d]\n", len);
+  CU_ASSERT(strcmp(ret,RESULT_STRING) == 0);
+  CU_ASSERT(len == 8);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+void test_chxj_encoding_parameter_007()
+{
+#define TEST_STRING "aaa? =abc"
+#define RESULT_STRING "aaa?+=abc"
+  char *ret;
+  APR_INIT;
+  apr_size_t len;
+
+  len = sizeof(TEST_STRING)-1;
+  ret = chxj_encoding_parameter(&r, TEST_STRING);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
+  fprintf(stderr, "len:[%d]\n", len);
+  CU_ASSERT(strcmp(ret,RESULT_STRING) == 0);
+  CU_ASSERT(len == 9);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+void test_chxj_encoding_parameter_008()
+{
+#define TEST_STRING "aaa?a="
+#define RESULT_STRING "aaa?a="
+  char *ret;
+  APR_INIT;
+  apr_size_t len;
+
+  len = sizeof(TEST_STRING)-1;
+  ret = chxj_encoding_parameter(&r, TEST_STRING);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
+  fprintf(stderr, "len:[%d]\n", len);
+  CU_ASSERT(strcmp(ret,RESULT_STRING) == 0);
+  CU_ASSERT(len == 6);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+void test_chxj_encoding_parameter_009()
+{
+#define TEST_STRING "aaa?a= "
+#define RESULT_STRING "aaa?a=+"
+  char *ret;
+  APR_INIT;
+  apr_size_t len;
+
+  len = sizeof(TEST_STRING)-1;
+  ret = chxj_encoding_parameter(&r, TEST_STRING);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
+  fprintf(stderr, "len:[%d]\n", len);
+  CU_ASSERT(strcmp(ret,RESULT_STRING) == 0);
+  CU_ASSERT(len == 7);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+void test_chxj_encoding_parameter_010()
+{
+#define TEST_STRING "aaa?a"
+#define RESULT_STRING "aaa?a"
+  char *ret;
+  APR_INIT;
+  apr_size_t len;
+
+  len = sizeof(TEST_STRING)-1;
+  ret = chxj_encoding_parameter(&r, TEST_STRING);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
+  fprintf(stderr, "len:[%d]\n", len);
+  CU_ASSERT(strcmp(ret,RESULT_STRING) == 0);
+  CU_ASSERT(len == 5);
 
   APR_TERM;
 #undef RESULT_STRING

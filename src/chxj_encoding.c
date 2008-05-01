@@ -239,6 +239,7 @@ chxj_encoding_parameter(request_rec *r, const char *value)
 
   for (;;) {
     apr_size_t len;
+    char *sep_pos;
 
     use_amp_flag = 0;
 
@@ -249,8 +250,24 @@ chxj_encoding_parameter(request_rec *r, const char *value)
       pair += 4;
       use_amp_flag = 1;
     }
-    key = apr_strtok(pair, "=", &vstat);
-    val = apr_strtok(NULL, "=", &vstat);
+    sep_pos = strchr(pair, '=');
+    if (pair == sep_pos) {
+      key = apr_pstrdup(r->pool, "");
+    }
+    else {
+      key = apr_strtok(pair, "=", &vstat);
+      pair = NULL;
+    }
+    if (key) {
+      key = chxj_url_decode(r->pool, key);
+      len = (apr_size_t)strlen(key);
+      key = chxj_encoding(r, key, &len);
+      key = chxj_url_encode(r->pool, key);
+    }
+    val = apr_strtok(pair, "=", &vstat);
+    if (! val && sep_pos) {
+      val = apr_pstrdup(r->pool, "");
+    }
     if (val) {
       val = chxj_url_decode(r->pool, val);
       len = (apr_size_t)strlen(val);
