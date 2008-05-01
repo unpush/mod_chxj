@@ -26,6 +26,8 @@ qs_ignore_sp(Doc *UNUSED(doc), const char *s, int len)
   int ii;
   char *sp;
 
+  if (! s) return 0;
+  if (len <= 0) return 0;
   sp = (char *)s;
 
   for(ii=0;
