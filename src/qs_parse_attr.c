@@ -31,7 +31,8 @@ qs_parse_attr(Doc *doc, const char *s, int len, int *pos)
   char  *name;
   char  *value;
   Attr  *attr;
-  int   use_quote;
+  int   use_quote_sq;
+  int   use_quote_dq;
   int   backslash;
 
   if (! doc) {
@@ -43,7 +44,9 @@ qs_parse_attr(Doc *doc, const char *s, int len, int *pos)
     return NULL;
   }
   if (! s) return NULL;
-  use_quote = 0;
+
+  use_quote_sq = 0;
+  use_quote_dq = 0;
   backslash = 0;
 
   QX_LOGGER_DEBUG("start qs_parse_attr()");
@@ -109,8 +112,13 @@ qs_parse_attr(Doc *doc, const char *s, int len, int *pos)
         backslash = 1;
         break;
       }
-      if (s[ii] == '\'' || s[ii] == '"') {
-        use_quote = 1;
+      if (s[ii] == '\'') {
+        use_quote_sq = 1;
+        ii++;
+        break;
+      }
+      if (s[ii] == '"') {
+        use_quote_dq = 1;
         ii++;
         break;
       }
@@ -136,7 +144,7 @@ qs_parse_attr(Doc *doc, const char *s, int len, int *pos)
         continue;
 
       if (is_white_space(s[ii])) {
-        if (! use_quote) 
+        if (! use_quote_sq && ! use_quote_dq) 
           break;
       }
 
@@ -145,10 +153,10 @@ qs_parse_attr(Doc *doc, const char *s, int len, int *pos)
         continue;
       }
 
-      if (s[ii] == '"') 
+      if (s[ii] == '"' && use_quote_dq) 
         break;
 
-      if (s[ii] == '\'') 
+      if (s[ii] == '\'' && use_quote_sq) 
         break;
     }
     size = ii - start_pos;

@@ -30,6 +30,9 @@ void test_qs_parse_attr_005();
 void test_qs_parse_attr_006();
 void test_qs_parse_attr_007();
 void test_qs_parse_attr_008();
+void test_qs_parse_attr_009();
+void test_qs_parse_attr_010();
+void test_qs_parse_attr_011();
 /* pend */
 
 void test_log_rerror(const char *file, int line, int level, apr_status_t status, const request_rec *r, const char *fmt, ...)
@@ -68,6 +71,9 @@ main()
   CU_add_test(str_util_suite, "qs_parse_attr() 006",                               test_qs_parse_attr_006);
   CU_add_test(str_util_suite, "qs_parse_attr() 007",                               test_qs_parse_attr_007);
   CU_add_test(str_util_suite, "qs_parse_attr() 008",                               test_qs_parse_attr_008);
+  CU_add_test(str_util_suite, "qs_parse_attr() 009",                               test_qs_parse_attr_009);
+  CU_add_test(str_util_suite, "qs_parse_attr() 010",                               test_qs_parse_attr_010);
+  CU_add_test(str_util_suite, "qs_parse_attr() 011",                               test_qs_parse_attr_011);
   /* aend */
 
   CU_basic_run_tests();
@@ -121,10 +127,12 @@ qs_parse_attr(Doc *doc, const char *s, int len, int *pos)
   char  *name;
   char  *value;
   Attr  *attr;
-  int   use_quote;
+  int   use_quote_sq;
+  int   use_quote_dq;
   int   backslash;
 
-  use_quote = 0;
+  use_quote_sq = 0;
+  use_quote_dq = 0;
   backslash = 0;
 
   QX_LOGGER_DEBUG("start qs_parse_attr()");
@@ -190,8 +198,13 @@ qs_parse_attr(Doc *doc, const char *s, int len, int *pos)
         backslash = 1;
         break;
       }
-      if (s[ii] == '\'' || s[ii] == '"') {
-        use_quote = 1;
+      if (s[ii] == '\'') {
+        use_quote_sq = 1;
+        ii++;
+        break;
+      }
+      if (s[ii] == '"') {
+        use_quote_dq = 1;
         ii++;
         break;
       }
@@ -217,7 +230,7 @@ qs_parse_attr(Doc *doc, const char *s, int len, int *pos)
         continue;
 
       if (is_white_space(s[ii])) {
-        if (! use_quote) 
+        if (! use_quote_sq && ! use_quote_dq) 
           break;
       }
 
@@ -226,10 +239,10 @@ qs_parse_attr(Doc *doc, const char *s, int len, int *pos)
         continue;
       }
 
-      if (s[ii] == '"') 
+      if (s[ii] == '"' && use_quote_dq)
         break;
 
-      if (s[ii] == '\'') 
+      if (s[ii] == '\'' && use_quote_sq) 
         break;
     }
     size = ii - start_pos;
@@ -366,6 +379,54 @@ void test_qs_parse_attr_008()
   CU_ASSERT(strcmp(ret->name, "abc") == 0);
   CU_ASSERT(strcmp(ret->value, "") == 0);
   CU_ASSERT(pos == 4);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_qs_parse_attr_009()
+{
+#define TEST_STRING "abc='aaa\\'bbb'"
+  Attr *ret;
+  int  pos;
+  APR_INIT;
+
+  ret = qs_parse_attr(&doc,TEST_STRING, sizeof(TEST_STRING)-1, &pos);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(ret->name, "abc") == 0);
+  CU_ASSERT(strcmp(ret->value, "aaa\\'bbb") == 0);
+  CU_ASSERT(pos == 13);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_qs_parse_attr_010()
+{
+#define TEST_STRING "abc=\"aaa'bbb\""
+  Attr *ret;
+  int  pos;
+  APR_INIT;
+
+  ret = qs_parse_attr(&doc,TEST_STRING, sizeof(TEST_STRING)-1, &pos);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(ret->name, "abc") == 0);
+  CU_ASSERT(strcmp(ret->value, "aaa'bbb") == 0);
+  CU_ASSERT(pos == 12);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_qs_parse_attr_011()
+{
+#define TEST_STRING "abc='aaa\"bbb'"
+  Attr *ret;
+  int  pos;
+  APR_INIT;
+
+  ret = qs_parse_attr(&doc,TEST_STRING, sizeof(TEST_STRING)-1, &pos);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(ret->name, "abc") == 0);
+  CU_ASSERT(strcmp(ret->value, "aaa\"bbb") == 0);
+  CU_ASSERT(pos == 12);
 
   APR_TERM;
 #undef TEST_STRING
