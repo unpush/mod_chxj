@@ -34,6 +34,15 @@ qs_parse_attr(Doc *doc, const char *s, int len, int *pos)
   int   use_quote;
   int   backslash;
 
+  if (! doc) {
+    QX_LOGGER_FATAL("runtime exception: qs_parse_attr(): doc is null");
+    return NULL;
+  }
+  if (! doc->pool) {
+    QX_LOGGER_FATAL("runtime exception: qs_parse_attr(): doc->pool is null");
+    return NULL;
+  }
+  if (! s) return NULL;
   use_quote = 0;
   backslash = 0;
 
