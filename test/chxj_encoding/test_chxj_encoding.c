@@ -44,6 +44,14 @@ void test_chxj_encoding_002();
 void test_chxj_encoding_003();
 void test_chxj_encoding_004();
 void test_chxj_encoding_005();
+/*===========================================================================*/
+/* chxj_rencoding()                                                          */
+/*===========================================================================*/
+void test_chxj_rencoding_001();
+void test_chxj_rencoding_002();
+void test_chxj_rencoding_003();
+void test_chxj_rencoding_004();
+void test_chxj_rencoding_005();
 /* pend */
 
 void test_log_rerror(const char *file, int line, int level, apr_status_t status, const request_rec *r, const char *fmt, ...)
@@ -122,6 +130,14 @@ main()
   CU_add_test(str_util_suite, "chxj_encoding() 003",                               test_chxj_encoding_003);
   CU_add_test(str_util_suite, "chxj_encoding() 004",                               test_chxj_encoding_004);
   CU_add_test(str_util_suite, "chxj_encoding() 005",                               test_chxj_encoding_005);
+  /*=========================================================================*/
+  /* chxj_rencoding()                                                        */
+  /*=========================================================================*/
+  CU_add_test(str_util_suite, "chxj_rencoding() 001",                              test_chxj_rencoding_001);
+  CU_add_test(str_util_suite, "chxj_rencoding() 002",                              test_chxj_rencoding_002);
+  CU_add_test(str_util_suite, "chxj_rencoding() 003",                              test_chxj_rencoding_003);
+  CU_add_test(str_util_suite, "chxj_rencoding() 004",                              test_chxj_rencoding_004);
+  CU_add_test(str_util_suite, "chxj_rencoding() 005",                              test_chxj_rencoding_005);
   /* aend */
 
   CU_basic_run_tests();
@@ -258,6 +274,108 @@ void test_chxj_encoding_005()
   fprintf(stderr, "len:[%d]\n", len);
   CU_ASSERT(strcmp(ret, RESULT_STRING) == 0);
   CU_ASSERT(len == 0);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+/*===========================================================================*/
+/* chxj_rencoding()                                                          */
+/*===========================================================================*/
+void test_chxj_rencoding_001()
+{
+#define TEST_STRING "\x82\xa0\x82\xa2\x82\xa4\x82\xa6\x82\xa8"
+#define RESULT_STRING "あいうえお"
+  char *ret;
+  APR_INIT;
+  apr_size_t len;
+
+  len = sizeof(TEST_STRING)-1;
+  ret = chxj_rencoding(&r, TEST_STRING, &len);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
+  fprintf(stderr, "len:[%d]\n", len);
+  CU_ASSERT(strcmp(ret, RESULT_STRING) == 0);
+  CU_ASSERT(len == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+void test_chxj_rencoding_002()
+{
+#define TEST_STRING ""
+#define RESULT_STRING ""
+  char *ret;
+  APR_INIT;
+  apr_size_t len;
+
+  len = sizeof(TEST_STRING)-1;
+  ret = chxj_rencoding(&r, TEST_STRING, &len);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
+  fprintf(stderr, "len:[%d]\n", len);
+  CU_ASSERT(strcmp(ret, RESULT_STRING) == 0);
+  CU_ASSERT(len == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+void test_chxj_rencoding_003()
+{
+#define TEST_STRING NULL
+#define RESULT_STRING ""
+  char *ret;
+  APR_INIT;
+  apr_size_t len;
+
+  len = 0;
+  ret = chxj_rencoding(&r, TEST_STRING, &len);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
+  fprintf(stderr, "len:[%d]\n", len);
+  CU_ASSERT(strcmp(ret, RESULT_STRING) == 0);
+  CU_ASSERT(len == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+void test_chxj_rencoding_004()
+{
+#define TEST_STRING NULL
+#define RESULT_STRING ""
+  char *ret;
+  APR_INIT;
+  apr_size_t len;
+
+  len = -1;
+  ret = chxj_rencoding(&r, TEST_STRING, &len);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
+  fprintf(stderr, "len:[%d]\n", len);
+  CU_ASSERT(strcmp(ret, RESULT_STRING) == 0);
+  CU_ASSERT(len == -1);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+void test_chxj_rencoding_005()
+{
+#define TEST_STRING "あいうえお"
+#define RESULT_STRING ""
+  char *ret;
+  APR_INIT;
+  apr_size_t len;
+
+  len = sizeof(TEST_STRING)-1;
+  ret = chxj_rencoding(&r, TEST_STRING, &len);
+  fprintf(stderr, "actual:[%s]\n", ret);
+  fprintf(stderr, "expect:[%s]\n", RESULT_STRING);
+  fprintf(stderr, "len:[%d]\n", len);
+  CU_ASSERT(len == 12);
 
   APR_TERM;
 #undef RESULT_STRING

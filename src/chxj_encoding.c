@@ -47,7 +47,7 @@ chxj_encoding(request_rec *r, const char *src, apr_size_t *len)
   }
   if ((int)*len < 0) {
     ERR(r, "runtime exception: chxj_encoding(): invalid string size.[%d]", (int)*len);
-    return (char *)src;
+    return (char *)apr_pstrdup(r->pool, "");
   }
 
   entryp = chxj_apply_convrule(r, dconf->convrules);
@@ -127,6 +127,11 @@ chxj_rencoding(request_rec *r, const char *src, apr_size_t *len)
   chxjconvrule_entry  *entryp;
 
   DBG(r,"start chxj_rencoding()");
+
+  if ((int)*len < 0) {
+    ERR(r, "runtime exception: chxj_rencoding(): invalid string size.[%d]", (int)*len);
+    return (char *)apr_pstrdup(r->pool, "");
+  }
 
   dconf = chxj_get_module_config(r->per_dir_config, &chxj_module);
   if (! dconf) {
