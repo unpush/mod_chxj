@@ -45,6 +45,9 @@ qs_ignore_sp_and_quote(Doc *UNUSED(doc), const char *s, int len)
   int   ii;
   char  *sp = (char *)s;
 
+  if (! s) return 0;
+  if (len <= 0) return 0;
+
   for(ii=0;
       *sp && (is_white_space(*sp) || is_quote(*sp)) && ii<len;
       ii++, sp++)

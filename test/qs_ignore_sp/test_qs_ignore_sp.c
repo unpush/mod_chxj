@@ -31,6 +31,19 @@ void test_qs_ignore_sp_006();
 void test_qs_ignore_sp_007();
 void test_qs_ignore_sp_008();
 void test_qs_ignore_sp_009();
+/*===========================================================================*/
+/* qs_ignore_sp_and_quote()                                                  */
+/*===========================================================================*/
+void test_qs_ignore_sp_and_quote_001();
+void test_qs_ignore_sp_and_quote_002();
+void test_qs_ignore_sp_and_quote_003();
+void test_qs_ignore_sp_and_quote_004();
+void test_qs_ignore_sp_and_quote_005();
+void test_qs_ignore_sp_and_quote_006();
+void test_qs_ignore_sp_and_quote_007();
+void test_qs_ignore_sp_and_quote_008();
+void test_qs_ignore_sp_and_quote_009();
+void test_qs_ignore_sp_and_quote_010();
 /* pend */
 
 void test_log_rerror(const char *file, int line, int level, apr_status_t status, const request_rec *r, const char *fmt, ...)
@@ -70,6 +83,19 @@ main()
   CU_add_test(str_util_suite, "qs_ignore_sp() 007",                               test_qs_ignore_sp_007);
   CU_add_test(str_util_suite, "qs_ignore_sp() 008",                               test_qs_ignore_sp_008);
   CU_add_test(str_util_suite, "qs_ignore_sp() 009",                               test_qs_ignore_sp_009);
+  /*=========================================================================*/
+  /* qs_ignore_sp_and_quote()                                                */
+  /*=========================================================================*/
+  CU_add_test(str_util_suite, "qs_ignore_sp_and_quote() 001",                     test_qs_ignore_sp_and_quote_001);
+  CU_add_test(str_util_suite, "qs_ignore_sp_and_quote() 002",                     test_qs_ignore_sp_and_quote_002);
+  CU_add_test(str_util_suite, "qs_ignore_sp_and_quote() 003",                     test_qs_ignore_sp_and_quote_003);
+  CU_add_test(str_util_suite, "qs_ignore_sp_and_quote() 004",                     test_qs_ignore_sp_and_quote_004);
+  CU_add_test(str_util_suite, "qs_ignore_sp_and_quote() 005",                     test_qs_ignore_sp_and_quote_005);
+  CU_add_test(str_util_suite, "qs_ignore_sp_and_quote() 006",                     test_qs_ignore_sp_and_quote_006);
+  CU_add_test(str_util_suite, "qs_ignore_sp_and_quote() 007",                     test_qs_ignore_sp_and_quote_007);
+  CU_add_test(str_util_suite, "qs_ignore_sp_and_quote() 008",                     test_qs_ignore_sp_and_quote_008);
+  CU_add_test(str_util_suite, "qs_ignore_sp_and_quote() 009",                     test_qs_ignore_sp_and_quote_009);
+  CU_add_test(str_util_suite, "qs_ignore_sp_and_quote() 010",                     test_qs_ignore_sp_and_quote_010);
   /* aend */
 
   CU_basic_run_tests();
@@ -232,6 +258,144 @@ void test_qs_ignore_sp_009()
   APR_INIT;
 
   ret = qs_ignore_sp(&doc, TEST_STRING, 0);
+  CU_ASSERT(ret == 0);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+/*===========================================================================*/
+/* qs_ignore_sp_and_quote()                                                  */
+/*===========================================================================*/
+#if 0
+int
+qs_ignore_sp_and_quote(Doc *UNUSED(doc), const char *s, int len)
+{
+  int   ii;
+  char  *sp = (char *)s;
+
+  for(ii=0;
+      *sp && (is_white_space(*sp) || is_quote(*sp)) && ii<len;
+      ii++, sp++)
+        ;
+
+  return (sp - s);
+}
+#endif
+void test_qs_ignore_sp_and_quote_001()
+{
+#define TEST_STRING "abc"
+  int ret;
+  APR_INIT;
+
+  ret = qs_ignore_sp_and_quote(&doc, TEST_STRING, sizeof(TEST_STRING)-1);
+  CU_ASSERT(ret == 0);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_qs_ignore_sp_and_quote_002()
+{
+#define TEST_STRING " abc"
+  int ret;
+  APR_INIT;
+
+  ret = qs_ignore_sp_and_quote(&doc, TEST_STRING, sizeof(TEST_STRING)-1);
+  CU_ASSERT(ret == 1);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_qs_ignore_sp_and_quote_003()
+{
+#define TEST_STRING "  abc"
+  int ret;
+  APR_INIT;
+
+  ret = qs_ignore_sp_and_quote(&doc, TEST_STRING, sizeof(TEST_STRING)-1);
+  CU_ASSERT(ret == 2);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_qs_ignore_sp_and_quote_004()
+{
+#define TEST_STRING "\n\r\tabc"
+  int ret;
+  APR_INIT;
+
+  ret = qs_ignore_sp_and_quote(&doc, TEST_STRING, sizeof(TEST_STRING)-1);
+  CU_ASSERT(ret == 3);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_qs_ignore_sp_and_quote_005()
+{
+#define TEST_STRING ""
+  int ret;
+  APR_INIT;
+
+  ret = qs_ignore_sp_and_quote(&doc, TEST_STRING, sizeof(TEST_STRING)-1);
+  CU_ASSERT(ret == 0);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_qs_ignore_sp_and_quote_006()
+{
+#define TEST_STRING "   "
+  int ret;
+  APR_INIT;
+
+  ret = qs_ignore_sp_and_quote(&doc, TEST_STRING, sizeof(TEST_STRING)-1);
+  CU_ASSERT(ret == 3);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_qs_ignore_sp_and_quote_007()
+{
+#define TEST_STRING " \"  "
+  int ret;
+  APR_INIT;
+
+  ret = qs_ignore_sp_and_quote(&doc, TEST_STRING, sizeof(TEST_STRING)-1);
+  CU_ASSERT(ret == 4);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_qs_ignore_sp_and_quote_008()
+{
+#define TEST_STRING " '  "
+  int ret;
+  APR_INIT;
+
+  ret = qs_ignore_sp_and_quote(&doc, TEST_STRING, sizeof(TEST_STRING)-1);
+  CU_ASSERT(ret == 4);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_qs_ignore_sp_and_quote_009()
+{
+#define TEST_STRING NULL
+  int ret;
+  APR_INIT;
+
+  ret = qs_ignore_sp_and_quote(&doc, TEST_STRING, 0);
+  CU_ASSERT(ret == 0);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_qs_ignore_sp_and_quote_010()
+{
+#define TEST_STRING "abc"
+  int ret;
+  APR_INIT;
+
+  ret = qs_ignore_sp_and_quote(&doc, TEST_STRING, -1);
   CU_ASSERT(ret == 0);
 
   APR_TERM;
