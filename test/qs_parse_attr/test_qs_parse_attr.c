@@ -33,6 +33,12 @@ void test_qs_parse_attr_008();
 void test_qs_parse_attr_009();
 void test_qs_parse_attr_010();
 void test_qs_parse_attr_011();
+/*===========================================================================*/
+/* qs_new_attr()                                                             */
+/*===========================================================================*/
+void test_qs_new_attr_001();
+void test_qs_new_attr_002();
+void test_qs_new_attr_003();
 /* pend */
 
 void test_log_rerror(const char *file, int line, int level, apr_status_t status, const request_rec *r, const char *fmt, ...)
@@ -74,6 +80,12 @@ main()
   CU_add_test(str_util_suite, "qs_parse_attr() 009",                               test_qs_parse_attr_009);
   CU_add_test(str_util_suite, "qs_parse_attr() 010",                               test_qs_parse_attr_010);
   CU_add_test(str_util_suite, "qs_parse_attr() 011",                               test_qs_parse_attr_011);
+  /*=========================================================================*/
+  /* qs_new_attr()                                                           */
+  /*=========================================================================*/
+  CU_add_test(str_util_suite, "qs_new_attr() 001",                                 test_qs_new_attr_001);
+  CU_add_test(str_util_suite, "qs_new_attr() 002",                                 test_qs_new_attr_002);
+  CU_add_test(str_util_suite, "qs_new_attr() 003",                                 test_qs_new_attr_003);
   /* aend */
 
   CU_basic_run_tests();
@@ -280,6 +292,71 @@ void test_qs_parse_attr_011()
 
   APR_TERM;
 #undef TEST_STRING
+}
+/*===========================================================================*/
+/* qs_new_attr()                                                             */
+/*===========================================================================*/
+#if 0
+Attr *
+qs_new_attr(Doc *doc)
+{
+  Attr *attr;
+
+  if (!doc) {
+    QX_LOGGER_FATAL("runtime exception: qs_new_attr(): doc is null");
+    return NULL;
+  }
+  if (!doc->pool) {
+    QX_LOGGER_FATAL("runtime exception: qs_new_attr(): doc->pool is null");
+    return NULL;
+  }
+
+  attr = (Attr *)apr_palloc(doc->pool,sizeof(Attr));
+  if (attr == NULL) {
+    QX_LOGGER_FATAL("Out Of Memory");
+    return NULL;
+  }
+
+  attr->next   = NULL;
+  attr->parent = NULL;
+  attr->name   = NULL;
+  attr->value  = NULL;
+
+  return attr;
+}
+#endif
+void test_qs_new_attr_001()
+{
+  Attr *ret;
+  APR_INIT;
+
+  ret = qs_new_attr(&doc);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(ret->parent == NULL);
+  CU_ASSERT(ret->next == NULL);
+  CU_ASSERT(ret->name == NULL);
+  CU_ASSERT(ret->value == NULL);
+
+  APR_TERM;
+}
+void test_qs_new_attr_002()
+{
+  Attr *ret;
+  APR_INIT;
+
+  doc.pool = NULL;
+  ret = qs_new_attr(&doc);
+  CU_ASSERT(ret == NULL);
+  APR_TERM;
+}
+void test_qs_new_attr_003()
+{
+  Attr *ret;
+  APR_INIT;
+
+  ret = qs_new_attr(NULL);
+  CU_ASSERT(ret == NULL);
+  APR_TERM;
 }
 /*
  * vim:ts=2 et
