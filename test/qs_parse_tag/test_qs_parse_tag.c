@@ -34,6 +34,15 @@ void test_qs_add_attr_003();
 void test_qs_add_attr_004();
 void test_qs_add_attr_005();
 void test_qs_add_attr_006();
+/*===========================================================================*/
+/* qs_parse_tag()                                                            */
+/*===========================================================================*/
+void test_qs_parse_tag_001();
+void test_qs_parse_tag_002();
+void test_qs_parse_tag_003();
+void test_qs_parse_tag_004();
+void test_qs_parse_tag_005();
+void test_qs_parse_tag_006();
 /* pend */
 
 void test_log_rerror(const char *file, int line, int level, apr_status_t status, const request_rec *r, const char *fmt, ...)
@@ -76,6 +85,15 @@ main()
   CU_add_test(str_util_suite, "qs_add_attr() 004",                                 test_qs_add_attr_004);
   CU_add_test(str_util_suite, "qs_add_attr() 005",                                 test_qs_add_attr_005);
   CU_add_test(str_util_suite, "qs_add_attr() 006",                                 test_qs_add_attr_006);
+  /*=========================================================================*/
+  /* qs_parse_tag()                                                          */
+  /*=========================================================================*/
+  CU_add_test(str_util_suite, "qs_parse_tag() 001",                                test_qs_parse_tag_001);
+  CU_add_test(str_util_suite, "qs_parse_tag() 002",                                test_qs_parse_tag_002);
+  CU_add_test(str_util_suite, "qs_parse_tag() 003",                                test_qs_parse_tag_003);
+  CU_add_test(str_util_suite, "qs_parse_tag() 004",                                test_qs_parse_tag_004);
+  CU_add_test(str_util_suite, "qs_parse_tag() 005",                                test_qs_parse_tag_005);
+  CU_add_test(str_util_suite, "qs_parse_tag() 006",                                test_qs_parse_tag_006);
   /* aend */
 
   CU_basic_run_tests();
@@ -159,31 +177,6 @@ void test_qs_new_tag_003()
 /*===========================================================================*/
 /* qs_new_tag()                                                              */
 /*===========================================================================*/
-#if 0
-Node *
-qs_add_attr(Doc *doc, Node *node, Attr *attr)
-{
-  if (node == NULL) {
-    QX_LOGGER_FATAL("runtime exception: qs_add_attr(): node is null");
-    return NULL;
-  }
-
-  attr->parent = node;
-  attr->next   = NULL;
-
-  if (node->attr == NULL) {
-    node->attr      = attr;
-    node->attr_tail = attr;
-
-    return node;
-  }
-
-  node->attr_tail->next = attr;
-  node->attr_tail       = attr;
-
-  return node;
-}
-#endif
 void test_qs_add_attr_001()
 {
   Node *node;
@@ -291,7 +284,6 @@ void test_qs_add_attr_005()
 {
   Node *node;
   Node *ret;
-  Attr *attr;
   APR_INIT;
 
   node = qs_new_tag(&doc);
@@ -315,6 +307,166 @@ void test_qs_add_attr_006()
   CU_ASSERT(ret == NULL);
 
   APR_TERM;
+}
+/*===========================================================================*/
+/* qs_parse_tag()                                                            */
+/*===========================================================================*/
+#if 0
+Node *
+qs_parse_tag(Doc *doc, const char *s, int len) 
+{
+  Node   *node;
+  char   *tag_name;
+  char   *sp;
+  char   *sv_s;
+  int    ll;
+  int    next_point;
+
+  sv_s = sp = (char *)s;
+  ll         = len;
+  next_point = 0;
+
+  QX_LOGGER_DEBUG("start parse_tag()");
+
+
+  /* 
+   * s[0] == '<' && s[len] == '>' 
+   */
+  tag_name = (char *)s_get_tag_name(doc, ++s, --ll);
+
+  node = (Node *)qs_new_tag(doc);
+  if (! node) {
+    QX_LOGGER_DEBUG("runtime exception: qs_parse_tag(): Out of memory.");
+    return NULL;
+  }
+  node->name = tag_name;
+  node->otext = apr_palloc(doc->pool,len+2);
+  memset(node->otext, 0, len+2);
+  memcpy(node->otext, sp, len+1);
+
+  QX_LOGGER_DEBUG(tag_name);
+
+  ll -= (strlen(tag_name));
+  QX_LOGGER_DEBUG_INT("ll",ll);
+  sp += (strlen(tag_name)+1);
+  for (;;) {
+    Attr *attr = qs_parse_attr(doc,sp, ll, &next_point);
+    if (attr == NULL) {
+      QX_LOGGER_DEBUG("End of QS_PARSE_ATTR()");
+      break;
+    }
+    QX_LOGGER_DEBUG(attr->name);
+    QX_LOGGER_DEBUG(attr->value);
+    sp += next_point;
+    ll -= next_point;
+    QX_LOGGER_DEBUG_INT(sp, ll);
+    node = (Node *)qs_add_attr(doc,node, attr);
+  }
+
+  if (sv_s[len-1] == '/') {
+    node->closed_by_itself = 1;
+  }
+  else {
+    node->closed_by_itself = 0;
+  }
+  QX_LOGGER_DEBUG("end parse_tag()");
+
+  return node;
+}
+#endif
+void test_qs_parse_tag_001()
+{
+  Node *ret;
+  APR_INIT;
+
+  ret = qs_parse_tag(NULL, "", 0);
+  CU_ASSERT(ret == NULL);
+
+  APR_TERM;
+}
+void test_qs_parse_tag_002()
+{
+#define TEST_STRING "<abc def=\"abc\">"
+  Node *ret;
+  APR_INIT;
+
+  ret = qs_parse_tag(&doc, TEST_STRING, sizeof(TEST_STRING)-2);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(ret->name, "abc") == 0);
+  CU_ASSERT(ret->attr != NULL);
+  CU_ASSERT(strcmp(ret->attr->name, "def") == 0);
+  CU_ASSERT(strcmp(ret->attr->value, "abc") == 0);
+  CU_ASSERT(ret->attr_tail == ret->attr);
+  CU_ASSERT(ret->attr->next == NULL);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_qs_parse_tag_003()
+{
+#define TEST_STRING "<abc def=\"abc\" aaa=\"111\">"
+  Node *ret;
+  APR_INIT;
+
+  ret = qs_parse_tag(&doc, TEST_STRING, sizeof(TEST_STRING)-2);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(ret->name, "abc") == 0);
+  CU_ASSERT(ret->attr != NULL);
+  CU_ASSERT(strcmp(ret->attr->name, "def") == 0);
+  CU_ASSERT(strcmp(ret->attr->value, "abc") == 0);
+  CU_ASSERT(strcmp(ret->attr->next->name, "aaa") == 0);
+  CU_ASSERT(strcmp(ret->attr->next->value, "111") == 0);
+  CU_ASSERT(ret->attr_tail != ret->attr);
+  CU_ASSERT(ret->attr_tail == ret->attr->next);
+  CU_ASSERT(ret->attr_tail->next == NULL);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_qs_parse_tag_004()
+{
+#define TEST_STRING "<abc />"
+  Node *ret;
+  APR_INIT;
+
+  ret = qs_parse_tag(&doc, TEST_STRING, sizeof(TEST_STRING)-2);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(ret->name, "abc") == 0);
+  CU_ASSERT(ret->closed_by_itself != 0);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_qs_parse_tag_005()
+{
+#define TEST_STRING "<abc/>"
+  Node *ret;
+  APR_INIT;
+
+  ret = qs_parse_tag(&doc, TEST_STRING, sizeof(TEST_STRING)-2);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(ret->name, "abc/") == 0);
+  CU_ASSERT(ret->closed_by_itself == 1);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_qs_parse_tag_006()
+{
+#define TEST_STRING "<abc def=\"   abc   \">"
+  Node *ret;
+  APR_INIT;
+
+  ret = qs_parse_tag(&doc, TEST_STRING, sizeof(TEST_STRING)-2);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(ret->name, "abc") == 0);
+  CU_ASSERT(ret->attr != NULL);
+  CU_ASSERT(strcmp(ret->attr->name, "def") == 0);
+  CU_ASSERT(strcmp(ret->attr->value, "   abc   ") ==0);
+  CU_ASSERT(ret->closed_by_itself == 0);
+
+  APR_TERM;
+#undef TEST_STRING
 }
 /*
  * vim:ts=2 et

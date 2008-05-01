@@ -34,6 +34,11 @@ qs_parse_tag(Doc *doc, const char *s, int len)
   int    ll;
   int    next_point;
 
+  if (! doc) {
+    QX_LOGGER_FATAL("runtime exception: qs_parse_tag(): doc is null");
+    return NULL;
+  }
+
   sv_s = sp = (char *)s;
   ll         = len;
   next_point = 0;
