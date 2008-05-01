@@ -31,6 +31,9 @@ void test_qs_new_tag_003();
 void test_qs_add_attr_001();
 void test_qs_add_attr_002();
 void test_qs_add_attr_003();
+void test_qs_add_attr_004();
+void test_qs_add_attr_005();
+void test_qs_add_attr_006();
 /* pend */
 
 void test_log_rerror(const char *file, int line, int level, apr_status_t status, const request_rec *r, const char *fmt, ...)
@@ -70,6 +73,9 @@ main()
   CU_add_test(str_util_suite, "qs_add_attr() 001",                                 test_qs_add_attr_001);
   CU_add_test(str_util_suite, "qs_add_attr() 002",                                 test_qs_add_attr_002);
   CU_add_test(str_util_suite, "qs_add_attr() 003",                                 test_qs_add_attr_003);
+  CU_add_test(str_util_suite, "qs_add_attr() 004",                                 test_qs_add_attr_004);
+  CU_add_test(str_util_suite, "qs_add_attr() 005",                                 test_qs_add_attr_005);
+  CU_add_test(str_util_suite, "qs_add_attr() 006",                                 test_qs_add_attr_006);
   /* aend */
 
   CU_basic_run_tests();
@@ -245,6 +251,68 @@ void test_qs_add_attr_003()
   CU_ASSERT(ret->attr->parent == node);
   CU_ASSERT(ret->attr->next->parent == node);
   CU_ASSERT(ret->attr->next->next->parent == node);
+
+  APR_TERM;
+}
+void test_qs_add_attr_004()
+{
+  Node *node;
+  Node *ret;
+  Attr *attr1;
+  Attr *attr2;
+  Attr *attr3;
+  Attr *attr4;
+  APR_INIT;
+
+  node = qs_new_tag(&doc);
+  attr1 = qs_new_attr(&doc);
+  attr2 = qs_new_attr(&doc);
+  attr3 = qs_new_attr(&doc);
+  attr4 = qs_new_attr(&doc);
+  ret = qs_add_attr(&doc, node, attr1);
+  ret = qs_add_attr(&doc, node, attr2);
+  ret = qs_add_attr(&doc, node, attr3);
+  ret = qs_add_attr(&doc, node, attr4);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(ret == node);
+  CU_ASSERT(ret->attr == attr1);
+  CU_ASSERT(ret->attr->next == attr2);
+  CU_ASSERT(ret->attr->next->next == attr3);
+  CU_ASSERT(ret->attr->next->next->next == attr4);
+  CU_ASSERT(ret->attr_tail  == attr4);
+  CU_ASSERT(ret->attr->parent == node);
+  CU_ASSERT(ret->attr->next->parent == node);
+  CU_ASSERT(ret->attr->next->next->parent == node);
+  CU_ASSERT(ret->attr->next->next->next->parent == node);
+
+  APR_TERM;
+}
+void test_qs_add_attr_005()
+{
+  Node *node;
+  Node *ret;
+  Attr *attr;
+  APR_INIT;
+
+  node = qs_new_tag(&doc);
+  ret = qs_add_attr(&doc, node, NULL);
+  CU_ASSERT(ret == node);
+  CU_ASSERT(ret->attr == NULL);
+  CU_ASSERT(ret->attr_tail == NULL);
+
+  APR_TERM;
+}
+void test_qs_add_attr_006()
+{
+  Node *node;
+  Node *ret;
+  Attr *attr;
+  APR_INIT;
+
+  node = qs_new_tag(&doc);
+  attr = qs_new_attr(&doc);
+  ret = qs_add_attr(&doc, NULL, attr);
+  CU_ASSERT(ret == NULL);
 
   APR_TERM;
 }

@@ -160,6 +160,9 @@ qs_add_attr(Doc *doc, Node *node, Attr *attr)
     QX_LOGGER_FATAL("runtime exception: qs_add_attr(): node is null");
     return NULL;
   }
+  if (! attr) {
+    return node;
+  }
 
   attr->parent = node;
   attr->next   = NULL;
