@@ -35,18 +35,18 @@
 #define QX_LOGGER_DEBUG_INT(x,y)  qs_log_int(doc,QX_LOG_DEBUG,QX_LOGMARK,(x),(y))
 
 extern void qs_log(
-  Doc*          doc,
+  Doc           *doc,
   int           log_level,
-  const char*   f, 
+  const char    *f, 
   int           l,
-  char*         msg);
+  char          *msg);
 
 extern void qs_log_int(
-  Doc*          doc,
+  Doc           *doc,
   int           log_level,
-  const char*   f, 
+  const char    *f, 
   int           l, 
-  char*         msg,
+  char          *msg,
   int           val);
 
 #ifdef UNUSED

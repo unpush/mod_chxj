@@ -79,11 +79,12 @@ qs_log(Doc *doc, int log_level,const char *f, int l, char *msg)
     }
     while(0);
 #endif
-    if (doc->r) {
+    if (doc && doc->r) {
       chxj_log_rerror(f,l, APLOG_CRIT, 0, doc->r, msg);
     }
-    qs_all_free(doc, QX_LOGMARK);
-    _exit(0);
+    else {
+      fprintf(stderr, "%s\n", msg);
+    }
   }
 }
 

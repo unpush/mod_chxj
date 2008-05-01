@@ -100,8 +100,11 @@ qs_parse_string(Doc *doc, const char *src, int srclen)
 
     if ((unsigned char)'<' == src[ii]) {
       int endpoint = s_cut_tag(&src[ii], srclen - ii);
-      Node *node   = NULL;
-      node = qs_parse_tag(doc, &src[ii], endpoint);
+      Node *node   = qs_parse_tag(doc, &src[ii], endpoint);
+      if (! node) {
+        QX_LOGGER_FATAL("runtime exception: qs_parse_string(): Out of memory.");
+        return doc->root_node;
+      }
       ii += endpoint;
 
       if (node->name[0] != '?') break; 
@@ -193,8 +196,11 @@ qs_parse_string(Doc *doc, const char *src, int srclen)
     }
     if ((unsigned char)'<' == src[ii]) {
       int endpoint = s_cut_tag(&src[ii], srclen - ii);
-      Node *node   = NULL;
-      node = qs_parse_tag(doc, &src[ii], endpoint);
+      Node *node   = qs_parse_tag(doc, &src[ii], endpoint);
+      if (! node) {
+        QX_LOGGER_FATAL("runtime exception: qs_parse_string(): Out of memory.");
+        return doc->root_node;
+      }
       node->line = nl_cnt;
 
       ii += endpoint;
@@ -290,6 +296,10 @@ qs_parse_string(Doc *doc, const char *src, int srclen)
       /* TEXT */
       int endpoint = s_cut_text(&src[ii], srclen - ii, script_flag);
       Node *node = qs_new_tag(doc);
+      if (! node) {
+        QX_LOGGER_DEBUG("runtime exception: qs_parse_string(): Out of memory");        
+        return doc->root_node;
+      }
       node->value = (char *)apr_palloc(doc->pool,endpoint+1);
       node->name  = (char *)apr_palloc(doc->pool,4+1);
       node->otext = (char *)apr_palloc(doc->pool,endpoint+1);

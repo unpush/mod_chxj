@@ -169,10 +169,19 @@ qs_new_attr(Doc *doc)
 {
   Attr *attr;
 
-  attr = (Attr *)apr_palloc(doc->pool,sizeof(Attr));
+  if (!doc) {
+    QX_LOGGER_FATAL("runtime exception: qs_new_attr(): doc is null");
+    return NULL;
+  }
+  if (!doc->pool) {
+    QX_LOGGER_FATAL("runtime exception: qs_new_attr(): doc->pool is null");
+    return NULL;
+  }
 
+  attr = (Attr *)apr_palloc(doc->pool,sizeof(Attr));
   if (attr == NULL) {
     QX_LOGGER_FATAL("Out Of Memory");
+    return NULL;
   }
 
   attr->next   = NULL;
