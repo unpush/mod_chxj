@@ -45,11 +45,15 @@ chxj_encoding(request_rec *r, const char *src, apr_size_t *len)
     DBG(r,"none encoding.");
     return (char*)src;
   }
+  if ((int)*len < 0) {
+    ERR(r, "runtime exception: chxj_encoding(): invalid string size.[%d]", (int)*len);
+    return (char *)src;
+  }
 
   entryp = chxj_apply_convrule(r, dconf->convrules);
   if (entryp->encoding == NULL) {
     DBG(r,"none encoding.");
-    return (char*)src;
+    return (char *)src;
   }
 
   if (STRCASEEQ('n','N',"none", entryp->encoding)) {
@@ -59,8 +63,8 @@ chxj_encoding(request_rec *r, const char *src, apr_size_t *len)
   ilen = *len;
   ibuf = apr_palloc(r->pool, ilen+1);
   if (ibuf == NULL) {
-    DBG(r,"end   chxj_encoding()");
-    return (char*)src;
+    ERR(r, "runtime exception: chxj_encoding(): Out of memory.");
+    return (char *)src;
   }
   memset(ibuf, 0, ilen+1);
   memcpy(ibuf, src, ilen);
