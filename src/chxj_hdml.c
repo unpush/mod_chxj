@@ -1477,7 +1477,7 @@ s_hdml_do_input_text_tag(hdml_t *hdml, Node *tag)
   is   = NULL;
   val  = NULL;
   fmt  = NULL;
-  nm = qs_get_name_attr(doc, tag, r);
+  nm = qs_get_name_attr(doc, tag, r->pool);
   if (! nm) {
     nm = qs_alloc_zero_byte_string(r->pool);
   }
@@ -1491,7 +1491,7 @@ s_hdml_do_input_text_tag(hdml_t *hdml, Node *tag)
 
   mlen = qs_get_maxlength_attr  (doc, tag, r);
   is   = qs_get_istyle_attr     (doc, tag, r);
-  val  = qs_get_value_attr      (doc, tag, doc->buf.pool);
+  val  = qs_get_value_attr      (doc, tag, r->pool);
 
   fmt  = qs_conv_istyle_to_format(r, is);
   DBG(r,"qs_conv_istyle_to_format end");
@@ -1584,7 +1584,7 @@ s_hdml_do_input_password_tag(hdml_t *hdml, Node *tag)
   val  = NULL;
   fmt  = NULL;
 
-  nm = qs_get_name_attr(doc, tag, r);
+  nm = qs_get_name_attr(doc, tag, r->pool);
   if (! nm) {
     nm = qs_alloc_zero_byte_string(r->pool);
   }
@@ -1597,7 +1597,7 @@ s_hdml_do_input_password_tag(hdml_t *hdml, Node *tag)
                           hdml->var_cnt[hdml->pure_form_cnt]));
 
   mlen = qs_get_maxlength_attr  (doc, tag, r);
-  val  = qs_get_value_attr      (doc, tag, doc->buf.pool);
+  val  = qs_get_value_attr      (doc, tag, r->pool);
   /*--------------------------------------------------------------------------*/
   /* Default is a figure input.                                               */
   /*--------------------------------------------------------------------------*/
@@ -1660,8 +1660,8 @@ s_hdml_do_input_submit_tag(hdml_t *hdml, Node *tag)
   /*--------------------------------------------------------------------------*/
   /* get name and value attribute                                             */
   /*--------------------------------------------------------------------------*/
-  nm  = qs_get_name_attr  (doc, tag, r);
-  val = qs_get_value_attr (doc, tag, doc->buf.pool);
+  nm  = qs_get_name_attr  (doc, tag, r->pool);
+  val = qs_get_value_attr (doc, tag, r->pool);
 
   if (nm && val) {
     s_output_to_hdml_out(hdml, 
@@ -1706,8 +1706,8 @@ s_hdml_do_input_reset_tag(hdml_t *hdml, Node *tag)
   /*--------------------------------------------------------------------------*/
   /* get name and value attribute                                             */
   /*--------------------------------------------------------------------------*/
-  nm  = qs_get_name_attr  (doc, tag, r);
-  val = qs_get_value_attr (doc, tag, doc->buf.pool);
+  nm  = qs_get_name_attr  (doc, tag, r->pool);
+  val = qs_get_value_attr (doc, tag, r->pool);
   if (val) {
     s_output_to_hdml_out(hdml, val);
   }
@@ -1733,8 +1733,8 @@ s_hdml_do_input_hidden_tag(hdml_t *hdml, Node *tag)
   /*--------------------------------------------------------------------------*/
   /* get name and value attribute                                             */
   /*--------------------------------------------------------------------------*/
-  nm  = qs_get_name_attr  (doc, tag, r);
-  val = qs_get_value_attr (doc, tag, doc->buf.pool);
+  nm  = qs_get_name_attr  (doc, tag, r->pool);
+  val = qs_get_value_attr (doc, tag, r->pool);
   if (nm && val) {
     s_output_to_postdata(hdml, 
                     apr_psprintf(r->pool, 
@@ -1768,8 +1768,8 @@ s_hdml_do_input_radio_tag(hdml_t *hdml, Node *tag)
   /*--------------------------------------------------------------------------*/
   /* get name and value attribute                                             */
   /*--------------------------------------------------------------------------*/
-  nm  = qs_get_name_attr  (doc, tag, r);
-  val = qs_get_value_attr (doc, tag, doc->buf.pool);
+  nm  = qs_get_name_attr  (doc, tag, r->pool);
+  val = qs_get_value_attr (doc, tag, r->pool);
   /*--------------------------------------------------------------------------*/
   /* The same name is searched out from the list made beforehand.             */
   /*--------------------------------------------------------------------------*/
@@ -1947,8 +1947,8 @@ s_hdml_do_input_checkbox_tag(hdml_t *hdml, Node *tag)
   /* The value of the name attribute and the value attribute is acquired      */
   /* respectively.                                                            */
   /*--------------------------------------------------------------------------*/
-  val = qs_get_value_attr(doc, tag, doc->buf.pool);
-  nm  = qs_get_name_attr(doc, tag, r);
+  val = qs_get_value_attr(doc, tag, r->pool);
+  nm  = qs_get_name_attr(doc, tag, r->pool);
 
   if (! val) {
     val    = qs_alloc_zero_byte_string(r->pool);
@@ -2462,7 +2462,7 @@ s_hdml_start_option_tag(void *pdoc, Node *node)
   hdml->card_cnt++;
 
   hdml->option_flag = 1;
-  val = qs_get_value_attr(doc, node, doc->buf.pool);
+  val = qs_get_value_attr(doc, node, r->pool);
 
   /*--------------------------------------------------------------------------*/
   /* The child node of the object tag node acquires the value in assumption   */
@@ -2684,7 +2684,7 @@ s_hdml_count_radio_tag(hdml_t *hdml, Node *node)
 
     DBG(r,"found input tag");
 
-    type = qs_get_type_attr(doc, child, doc->buf.pool);
+    type = qs_get_type_attr(doc, child, r->pool);
     if (!type) {
       ERR(r, "Oops! The input tag without the type attribute has been found.Please give a type.");
       continue;
@@ -2695,8 +2695,8 @@ s_hdml_count_radio_tag(hdml_t *hdml, Node *node)
 
     DBG(r, "found type=radio");
 
-    rname  = qs_get_name_attr (doc, child, r);
-    rvalue = qs_get_value_attr(doc, child, doc->buf.pool);
+    rname  = qs_get_name_attr (doc, child, r->pool);
+    rvalue = qs_get_value_attr(doc, child, r->pool);
 
     if (!rname) {
       /*----------------------------------------------------------------------*/
@@ -2756,7 +2756,7 @@ s_hdml_count_radio_tag(hdml_t *hdml, Node *node)
     /*------------------------------------------------------------------------*/
     /* Now let's be the checked attribute or scan.                            */
     /*------------------------------------------------------------------------*/
-    chkd = qs_get_checked_attr(hdml->doc, child, hdml->doc->buf.pool);
+    chkd = qs_get_checked_attr(hdml->doc, child, r->pool);
     if (chkd) {
       DBG(r,apr_psprintf(r->pool,
                               "The tag scanned now had the checked "
@@ -3348,7 +3348,7 @@ s_hdml_start_textarea_tag(void *pdoc, Node *node)
   is   = NULL;
   val  = NULL;
   fmt  = NULL;
-  nm = qs_get_name_attr(doc, node, r);
+  nm = qs_get_name_attr(doc, node, r->pool);
   if (! nm) {
     nm = qs_alloc_zero_byte_string(r->pool);
   }

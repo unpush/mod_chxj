@@ -1416,9 +1416,9 @@ s_chtml40_start_input_tag(void *pdoc, Node *node)
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
   /*--------------------------------------------------------------------------*/
-  type       = qs_get_type_attr(doc, node,doc->buf.pool);
-  name       = qs_get_name_attr(doc, node, r);
-  value      = qs_get_value_attr(doc,node,doc->buf.pool);
+  type       = qs_get_type_attr(doc, node, doc->buf.pool);
+  name       = qs_get_name_attr(doc, node, doc->buf.pool);
+  value      = qs_get_value_attr(doc,node, doc->buf.pool);
   istyle     = qs_get_istyle_attr(doc,node,r);
   max_length = qs_get_maxlength_attr(doc,node,r);
   checked    = qs_get_checked_attr(doc,node,doc->buf.pool);

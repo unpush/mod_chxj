@@ -68,6 +68,15 @@ void test_qs_get_selected_value_002();
 void test_qs_get_selected_value_003();
 void test_qs_get_selected_value_004();
 void test_qs_get_selected_value_005();
+/*===========================================================================*/
+/* qs_get_name_attr()                                                        */
+/*===========================================================================*/
+void test_qs_get_name_attr_001();
+void test_qs_get_name_attr_002();
+void test_qs_get_name_attr_003();
+void test_qs_get_name_attr_004();
+void test_qs_get_name_attr_005();
+void test_qs_get_name_attr_006();
 /* pend */
 
 void test_log_rerror(const char *file, int line, int level, apr_status_t status, const request_rec *r, const char *fmt, ...)
@@ -143,6 +152,15 @@ main()
   CU_add_test(str_util_suite, "qs_get_selected_value() 003",                           test_qs_get_selected_value_003);
   CU_add_test(str_util_suite, "qs_get_selected_value() 004",                           test_qs_get_selected_value_004);
   CU_add_test(str_util_suite, "qs_get_selected_value() 005",                           test_qs_get_selected_value_005);
+  /*=========================================================================*/
+  /* qs_get_name_attr()                                                      */
+  /*=========================================================================*/
+  CU_add_test(str_util_suite, "qs_get_name_attr() 001",                                test_qs_get_name_attr_001);
+  CU_add_test(str_util_suite, "qs_get_name_attr() 002",                                test_qs_get_name_attr_002);
+  CU_add_test(str_util_suite, "qs_get_name_attr() 003",                                test_qs_get_name_attr_003);
+  CU_add_test(str_util_suite, "qs_get_name_attr() 004",                                test_qs_get_name_attr_004);
+  CU_add_test(str_util_suite, "qs_get_name_attr() 005",                                test_qs_get_name_attr_005);
+  CU_add_test(str_util_suite, "qs_get_name_attr() 006",                                test_qs_get_name_attr_006);
   /* aend */
 
   CU_basic_run_tests();
@@ -617,6 +635,110 @@ void test_qs_get_selected_value_005()
   node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
   ret = qs_get_selected_value(&doc, node, p);
   CU_ASSERT(ret == RESULT_STRING);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+/*===========================================================================*/
+/* qs_get_name_attr()                                                        */
+/*===========================================================================*/
+void test_qs_get_name_attr_001()
+{
+#define TEST_STRING "<input name=\"a\">"
+#define RESULT_STRING "a"
+  Node *node;
+  char *ret;
+  APR_INIT;
+ 
+  node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
+  ret = qs_get_name_attr(&doc, node->child, p);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(ret, RESULT_STRING) == 0);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+void test_qs_get_name_attr_002()
+{
+#define TEST_STRING "<input name='b'>"
+#define RESULT_STRING "b"
+  Node *node;
+  char *ret;
+  APR_INIT;
+ 
+  node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
+  ret = qs_get_name_attr(&doc, node->child, p);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(ret, RESULT_STRING) == 0);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+void test_qs_get_name_attr_003()
+{
+#define TEST_STRING "<input name=''>"
+#define RESULT_STRING ""
+  Node *node;
+  char *ret;
+  APR_INIT;
+ 
+  node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
+  ret = qs_get_name_attr(&doc, node->child, p);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(ret, RESULT_STRING) == 0);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+void test_qs_get_name_attr_004()
+{
+#define TEST_STRING "<input name>"
+#define RESULT_STRING ""
+  Node *node;
+  char *ret;
+  APR_INIT;
+ 
+  node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
+  ret = qs_get_name_attr(&doc, node->child, p);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(ret, RESULT_STRING) == 0);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+void test_qs_get_name_attr_005()
+{
+#define TEST_STRING "<input name='あい\"う\"えお'>"
+#define RESULT_STRING "あい\"う\"えお"
+  Node *node;
+  char *ret;
+  APR_INIT;
+ 
+  node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
+  ret = qs_get_name_attr(&doc, node->child, p);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(ret, RESULT_STRING) == 0);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+void test_qs_get_name_attr_006()
+{
+#define TEST_STRING "<input>"
+#define RESULT_STRING ""
+  Node *node;
+  char *ret;
+  APR_INIT;
+ 
+  node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
+  ret = qs_get_name_attr(&doc, node->child, p);
+  CU_ASSERT(ret == NULL);
 
   APR_TERM;
 #undef RESULT_STRING

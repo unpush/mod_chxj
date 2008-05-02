@@ -281,18 +281,18 @@ qs_get_selected_value(Doc *doc, Node *node, apr_pool_t *pool)
 
 
 /**
- * The value of the SIZE attribute is acquired.
+ * The value of the NAME attribute is acquired.
  *
  * @param doc  [i] The pointer to the Doc structure at the output
  *                 destination is specified.
  * @param tag  [i] The tag node to want to acquire the SIZE attribute
  *                 is specified.
- * @param r    [i] To use POOL, the pointer to request_rec is specified.
- * @return The value of the SIZE attribute is returned. NULL is
+ * @param pool [i] To use POOL.
+ * @return The value of the NAME attribute is returned. NULL is
  *         returned when not is.
  */
 char *
-qs_get_name_attr(Doc *doc, Node *tag, request_rec *r)
+qs_get_name_attr(Doc *doc, Node *tag, apr_pool_t *pool)
 {
   Attr *attr;
   for (attr = qs_get_attr(doc,tag); 
@@ -301,7 +301,7 @@ qs_get_name_attr(Doc *doc, Node *tag, request_rec *r)
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('n','N',"name",name)) {
-      return apr_pstrdup(r->pool, value);
+      return apr_pstrdup(pool, (value ? value : ""));
     }
   }
   return NULL;
