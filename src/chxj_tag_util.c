@@ -28,7 +28,7 @@
  *         is returned. NULL is returned when not found.
  */
 char *
-qs_get_value_attr(Doc *doc, Node *node, request_rec *r)
+qs_get_value_attr(Doc *doc, Node *node, apr_pool_t *pool)
 {
   Attr *attr;
 
@@ -44,7 +44,7 @@ qs_get_value_attr(Doc *doc, Node *node, request_rec *r)
       /*----------------------------------------------------------------------*/
       /* The VALUE attribute was found.                                       */
       /*----------------------------------------------------------------------*/
-      return apr_pstrdup(r->pool, value);
+      return apr_pstrdup(pool, value);
     }
   }
   /*--------------------------------------------------------------------------*/
@@ -255,7 +255,7 @@ qs_get_selected_value(Doc *doc, Node *node, request_rec *r)
           /*------------------------------------------------------------------*/
           /* SELECTED Value Found                                             */
           /*------------------------------------------------------------------*/
-          return qs_get_value_attr(doc, child, r);
+          return qs_get_value_attr(doc, child, doc->buf.pool);
         }
       }
     }
