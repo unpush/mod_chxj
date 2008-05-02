@@ -28,6 +28,7 @@ extern char *qs_get_value_attr  (Doc *doc, Node *tag, apr_pool_t *pool);
 extern char *qs_get_checked_attr(Doc *doc, Node *tag, apr_pool_t *pool);
 extern char *qs_get_type_attr   (Doc *doc, Node *tag, apr_pool_t *pool);
 extern char *qs_get_selected_value_text(Doc *doc, Node *node, apr_pool_t *pool);
+extern char *qs_get_selected_value(Doc *doc, Node *node, apr_pool_t *pool);
 
 extern char* qs_get_name_attr(
   Doc*         doc,
@@ -60,10 +61,6 @@ extern int qs_is_checked_checkbox_attr(
   request_rec* r);
 
 
-extern char* qs_get_selected_value(
-  Doc*         doc, 
-  Node*        node,
-  request_rec* r);
 
 
 

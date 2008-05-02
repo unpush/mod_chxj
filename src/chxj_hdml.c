@@ -2385,7 +2385,7 @@ s_hdml_start_select_tag(void *pdoc, Node *node)
                               value,
                               s_get_form_no(r, hdml),
                               hdml->var_cnt[hdml->pure_form_cnt]));
-      selval = qs_get_selected_value(doc, node, r);
+      selval = qs_get_selected_value(doc, node, r->pool);
       if (! selval) {
         DBG(r, "selected value not found");
         selval = qs_alloc_zero_byte_string(r->pool);

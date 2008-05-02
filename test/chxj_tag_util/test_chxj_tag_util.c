@@ -60,6 +60,14 @@ void test_qs_get_selected_value_text_002();
 void test_qs_get_selected_value_text_003();
 void test_qs_get_selected_value_text_004();
 void test_qs_get_selected_value_text_005();
+/*===========================================================================*/
+/* qs_get_selected_value()                                                   */
+/*===========================================================================*/
+void test_qs_get_selected_value_001();
+void test_qs_get_selected_value_002();
+void test_qs_get_selected_value_003();
+void test_qs_get_selected_value_004();
+void test_qs_get_selected_value_005();
 /* pend */
 
 void test_log_rerror(const char *file, int line, int level, apr_status_t status, const request_rec *r, const char *fmt, ...)
@@ -127,6 +135,14 @@ main()
   CU_add_test(str_util_suite, "qs_get_selected_value_text() 003",                      test_qs_get_selected_value_text_003);
   CU_add_test(str_util_suite, "qs_get_selected_value_text() 004",                      test_qs_get_selected_value_text_004);
   CU_add_test(str_util_suite, "qs_get_selected_value_text() 005",                      test_qs_get_selected_value_text_005);
+  /*=========================================================================*/
+  /* qs_get_selected_value()                                                 */
+  /*=========================================================================*/
+  CU_add_test(str_util_suite, "qs_get_selected_value() 001",                           test_qs_get_selected_value_001);
+  CU_add_test(str_util_suite, "qs_get_selected_value() 002",                           test_qs_get_selected_value_002);
+  CU_add_test(str_util_suite, "qs_get_selected_value() 003",                           test_qs_get_selected_value_003);
+  CU_add_test(str_util_suite, "qs_get_selected_value() 004",                           test_qs_get_selected_value_004);
+  CU_add_test(str_util_suite, "qs_get_selected_value() 005",                           test_qs_get_selected_value_005);
   /* aend */
 
   CU_basic_run_tests();
@@ -145,6 +161,7 @@ main()
     apr_pool_create(&p, NULL); \
     memset(&doc, 0, sizeof(Doc)); \
     doc.pool = p; \
+    doc.buf.pool = p; \
   } \
   while (0)
 
@@ -513,6 +530,92 @@ void test_qs_get_selected_value_text_005()
  
   node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
   ret = qs_get_selected_value_text(&doc, node, p);
+  CU_ASSERT(ret == RESULT_STRING);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+/*===========================================================================*/
+/* qs_get_selected_value()                                                   */
+/*===========================================================================*/
+void test_qs_get_selected_value_001()
+{
+#define TEST_STRING "<select><option value='1' selected>a</option><option value='2'>b</option></select>"
+#define RESULT_STRING "1"
+  Node *node;
+  char *ret;
+  APR_INIT;
+ 
+  node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
+  ret = qs_get_selected_value(&doc, node, p);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(ret, RESULT_STRING) == 0);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+void test_qs_get_selected_value_002()
+{
+#define TEST_STRING "<select><option value='1'>a</option><option value='2' selected>b</option></select>"
+#define RESULT_STRING "2"
+  Node *node;
+  char *ret;
+  APR_INIT;
+ 
+  node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
+  ret = qs_get_selected_value(&doc, node, p);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(ret, RESULT_STRING) == 0);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+void test_qs_get_selected_value_003()
+{
+#define TEST_STRING "<select><option value='1' selected></option></select>"
+#define RESULT_STRING "1"
+  Node *node;
+  char *ret;
+  APR_INIT;
+ 
+  node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
+  ret = qs_get_selected_value(&doc, node, p);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(ret, RESULT_STRING) == 0);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+void test_qs_get_selected_value_004()
+{
+#define TEST_STRING "<select><option value='1'><option value='2'></option></select>"
+#define RESULT_STRING NULL
+  Node *node;
+  char *ret;
+  APR_INIT;
+ 
+  node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
+  ret = qs_get_selected_value(&doc, node, p);
+  CU_ASSERT(ret == RESULT_STRING);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+void test_qs_get_selected_value_005()
+{
+#define TEST_STRING "<select></select>"
+#define RESULT_STRING NULL
+  Node *node;
+  char *ret;
+  APR_INIT;
+ 
+  node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
+  ret = qs_get_selected_value(&doc, node, p);
   CU_ASSERT(ret == RESULT_STRING);
 
   APR_TERM;

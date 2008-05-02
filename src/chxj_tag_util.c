@@ -236,12 +236,12 @@ qs_get_selected_value_text(Doc *doc, Node *node, apr_pool_t *pool)
  * @param doc    [i]  The pointer to the Doc structure to be scanned is 
  *                    specified. 
  * @param node   [i]  The SELECT tag node is specified.
- * @param r    [i] To use POOL, the pointer to request_rec is specified.
+ * @param pool   [i] To use POOL.
  * @return The value of tag that maintains the SELECTED attribute is 
  *         returned. NULL is returned when not found. 
  */
 char *
-qs_get_selected_value(Doc *doc, Node *node, request_rec *r)
+qs_get_selected_value(Doc *doc, Node *node, apr_pool_t *pool)
 {
   Node *child;
   char *result    = NULL;
@@ -268,7 +268,7 @@ qs_get_selected_value(Doc *doc, Node *node, request_rec *r)
       }
     }
 
-    if ((result = qs_get_selected_value(doc, child, r)) != NULL) {
+    if ((result = qs_get_selected_value(doc, child, pool)) != NULL) {
       return result;
     }
   }
