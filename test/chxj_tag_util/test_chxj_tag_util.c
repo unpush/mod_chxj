@@ -32,6 +32,12 @@ void test_qs_get_value_attr_003();
 void test_qs_get_checked_attr_001();
 void test_qs_get_checked_attr_002();
 void test_qs_get_checked_attr_003();
+/*===========================================================================*/
+/* qs_get_type_attr()                                                        */
+/*===========================================================================*/
+void test_qs_get_type_attr_001();
+void test_qs_get_type_attr_002();
+void test_qs_get_type_attr_003();
 /* pend */
 
 void test_log_rerror(const char *file, int line, int level, apr_status_t status, const request_rec *r, const char *fmt, ...)
@@ -71,6 +77,12 @@ main()
   CU_add_test(str_util_suite, "qs_get_checked_attr() 001",                             test_qs_get_checked_attr_001);
   CU_add_test(str_util_suite, "qs_get_checked_attr() 002",                             test_qs_get_checked_attr_002);
   CU_add_test(str_util_suite, "qs_get_checked_attr() 003",                             test_qs_get_checked_attr_003);
+  /*=========================================================================*/
+  /* qs_get_type_attr()                                                      */
+  /*=========================================================================*/
+  CU_add_test(str_util_suite, "qs_get_type_attr() 001",                                test_qs_get_type_attr_001);
+  CU_add_test(str_util_suite, "qs_get_type_attr() 002",                                test_qs_get_type_attr_002);
+  CU_add_test(str_util_suite, "qs_get_type_attr() 003",                                test_qs_get_type_attr_003);
   /* aend */
 
   CU_basic_run_tests();
@@ -206,6 +218,56 @@ void test_qs_get_checked_attr_003()
   attr->value = apr_pstrdup(p, "");
   qs_add_attr(&doc,node,attr);
   ret = qs_get_checked_attr(&doc,node,p);
+  CU_ASSERT(ret == NULL);
+
+  APR_TERM;
+}
+/*===========================================================================*/
+/* qs_get_type_attr()                                                        */
+/*===========================================================================*/
+void test_qs_get_type_attr_001()
+{
+  Node *node;
+  char *ret;
+  APR_INIT;
+
+  node = qs_new_tag(&doc);
+  ret = qs_get_type_attr(&doc,node,p);
+  CU_ASSERT(ret == NULL);
+
+  APR_TERM;
+}
+void test_qs_get_type_attr_002()
+{
+  Node *node;
+  Attr *attr;
+  char *ret;
+  APR_INIT;
+
+  node = qs_new_tag(&doc);
+  attr = qs_new_attr(&doc);
+  attr->name = apr_pstrdup(p, "type");
+  attr->value = apr_pstrdup(p, "hidden");
+  qs_add_attr(&doc,node,attr);
+  ret = qs_get_type_attr(&doc,node,p);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(ret, "hidden") == 0);
+
+  APR_TERM;
+}
+void test_qs_get_type_attr_003()
+{
+  Node *node;
+  Attr *attr;
+  char *ret;
+  APR_INIT;
+
+  node = qs_new_tag(&doc);
+  attr = qs_new_attr(&doc);
+  attr->name = apr_pstrdup(p, "typed");
+  attr->value = apr_pstrdup(p, "");
+  qs_add_attr(&doc,node,attr);
+  ret = qs_get_type_attr(&doc,node,p);
   CU_ASSERT(ret == NULL);
 
   APR_TERM;

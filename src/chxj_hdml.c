@@ -2684,7 +2684,7 @@ s_hdml_count_radio_tag(hdml_t *hdml, Node *node)
 
     DBG(r,"found input tag");
 
-    type = qs_get_type_attr(doc, child, r);
+    type = qs_get_type_attr(doc, child, doc->buf.pool);
     if (!type) {
       ERR(r, "Oops! The input tag without the type attribute has been found.Please give a type.");
       continue;

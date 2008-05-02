@@ -1537,7 +1537,7 @@ s_jxhtml_start_input_tag(void *pdoc, Node *node)
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
   /*--------------------------------------------------------------------------*/
-  type       = qs_get_type_attr(doc, node, r);
+  type       = qs_get_type_attr(doc, node, doc->buf.pool);
   name       = qs_get_name_attr(doc, node, r);
   value      = qs_get_value_attr(doc,node, doc->buf.pool);
   istyle     = qs_get_istyle_attr(doc,node,r);

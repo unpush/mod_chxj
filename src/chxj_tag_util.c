@@ -100,7 +100,7 @@ qs_get_checked_attr(Doc *doc, Node *tag, apr_pool_t *UNUSED(pool))
  *         not found.
  */
 char *
-qs_get_type_attr(Doc *doc, Node *tag, request_rec *r)
+qs_get_type_attr(Doc *doc, Node *tag, apr_pool_t *pool)
 {
   Attr *attr;
   /*--------------------------------------------------------------------------*/
@@ -115,7 +115,7 @@ qs_get_type_attr(Doc *doc, Node *tag, request_rec *r)
       /*----------------------------------------------------------------------*/
       /* The VALUE attribute was found.                                       */
       /*----------------------------------------------------------------------*/
-      return apr_pstrdup(r->pool, value);
+      return apr_pstrdup(pool, value);
     }
   }
   /*--------------------------------------------------------------------------*/
