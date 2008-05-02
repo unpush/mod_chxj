@@ -1490,7 +1490,7 @@ s_hdml_do_input_text_tag(hdml_t *hdml, Node *tag)
                                     hdml->var_cnt[hdml->pure_form_cnt]));
 
   mlen = qs_get_maxlength_attr  (doc, tag, r);
-  is   = qs_get_istyle_attr     (doc, tag, r);
+  is   = qs_get_istyle_attr     (doc, tag, r->pool);
   val  = qs_get_value_attr      (doc, tag, r->pool);
 
   fmt  = qs_conv_istyle_to_format(r, is);
@@ -3361,7 +3361,7 @@ s_hdml_start_textarea_tag(void *pdoc, Node *node)
                                     hdml->var_cnt[hdml->pure_form_cnt]));
 
   mlen = qs_get_maxlength_attr  (doc, node, r);
-  is   = qs_get_istyle_attr     (doc, node, r);
+  is   = qs_get_istyle_attr     (doc, node, r->pool);
   val  = s_hdml_inner_textarea_tag_get_value(hdml, node);
 
   fmt  = qs_conv_istyle_to_format(r, is);

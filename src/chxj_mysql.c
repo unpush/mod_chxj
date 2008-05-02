@@ -414,7 +414,7 @@ chxj_mysql_insert_or_update_cookie(request_rec *r, mod_chxj_config *m, const cha
   char *cid = ap_escape_logitem(r->pool, cookie_id);
   char *cdt = ap_escape_logitem(r->pool, data);
 
-  DBG(r, "start chxj_mysql_insert_or_update_cookie()");
+  DBG(r, "start chxj_mysql_insert_or_update_cookie() data:[%s]", data);
   do {
     if (!chxj_open_mysql_handle(r, m)) {
       ERR(r, "failed chxj_open_mysql_handle()");
@@ -596,6 +596,7 @@ chxj_mysql_load_cookie(request_rec *r, mod_chxj_config *m, const char *cookie_id
     }
     len = atoi(data[1]);
     retval = (char *) apr_palloc(r->pool, len + 1);
+    memset(retval, 0, len + 1);
     memcpy(retval, data[0], len);
   }
   if (result) mysql_free_result(result);
