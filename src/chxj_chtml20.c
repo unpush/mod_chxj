@@ -1564,7 +1564,7 @@ s_chtml20_start_input_tag(void *pdoc, Node *node)
   istyle     = qs_get_istyle_attr(doc,node,r);
   max_length = qs_get_maxlength_attr(doc,node,r);
   checked    = qs_get_checked_attr(doc,node,doc->buf.pool);
-  accesskey  = qs_get_accesskey_attr(doc, node, r);
+  accesskey  = qs_get_accesskey_attr(doc, node, doc->buf.pool);
   size       = qs_get_size_attr(doc, node, doc->buf.pool);
 
   if (type) {
