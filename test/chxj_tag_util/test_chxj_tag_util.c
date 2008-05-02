@@ -21,11 +21,17 @@
 
 
 /*===========================================================================*/
-/* qs_new_tag();                                                             */
+/* qs_get_value_attr();                                                      */
 /*===========================================================================*/
 void test_qs_get_value_attr_001();
 void test_qs_get_value_attr_002();
 void test_qs_get_value_attr_003();
+/*===========================================================================*/
+/* qs_get_checked_attr()                                                     */
+/*===========================================================================*/
+void test_qs_get_checked_attr_001();
+void test_qs_get_checked_attr_002();
+void test_qs_get_checked_attr_003();
 /* pend */
 
 void test_log_rerror(const char *file, int line, int level, apr_status_t status, const request_rec *r, const char *fmt, ...)
@@ -54,11 +60,17 @@ main()
   CU_initialize_registry();
   str_util_suite = CU_add_suite("test chxj_tag_util.c", NULL, NULL);
   /*=========================================================================*/
-  /* qs_new_tag()                                                            */
+  /* qs_get_value_attr()                                                     */
   /*=========================================================================*/
   CU_add_test(str_util_suite, "qs_get_value_attr() 001",                               test_qs_get_value_attr_001);
   CU_add_test(str_util_suite, "qs_get_value_attr() 002",                               test_qs_get_value_attr_002);
   CU_add_test(str_util_suite, "qs_get_value_attr() 003",                               test_qs_get_value_attr_003);
+  /*=========================================================================*/
+  /* qs_get_checked_attr()                                                   */
+  /*=========================================================================*/
+  CU_add_test(str_util_suite, "qs_get_checked_attr() 001",                             test_qs_get_checked_attr_001);
+  CU_add_test(str_util_suite, "qs_get_checked_attr() 002",                             test_qs_get_checked_attr_002);
+  CU_add_test(str_util_suite, "qs_get_checked_attr() 003",                             test_qs_get_checked_attr_003);
   /* aend */
 
   CU_basic_run_tests();
@@ -101,10 +113,6 @@ main()
 /*===========================================================================*/
 /* qs_get_value_attr()                                                       */
 /*===========================================================================*/
-#if 0
-char *
-qs_get_value_attr(Doc *doc, Node *node, request_rec *r)
-#endif
 void test_qs_get_value_attr_001()
 {
   Node *node;
@@ -116,7 +124,6 @@ void test_qs_get_value_attr_001()
   CU_ASSERT(ret == NULL);
 
   APR_TERM;
-#undef TEST_STRING
 }
 void test_qs_get_value_attr_002()
 {
@@ -135,7 +142,6 @@ void test_qs_get_value_attr_002()
   CU_ASSERT(strcmp(ret, "atai") == 0);
 
   APR_TERM;
-#undef TEST_STRING
 }
 void test_qs_get_value_attr_003()
 {
@@ -153,7 +159,56 @@ void test_qs_get_value_attr_003()
   CU_ASSERT(ret == NULL);
 
   APR_TERM;
-#undef TEST_STRING
+}
+/*===========================================================================*/
+/* qs_get_checked_attr()                                                     */
+/*===========================================================================*/
+void test_qs_get_checked_attr_001()
+{
+  Node *node;
+  char *ret;
+  APR_INIT;
+
+  node = qs_new_tag(&doc);
+  ret = qs_get_checked_attr(&doc,node,p);
+  CU_ASSERT(ret == NULL);
+
+  APR_TERM;
+}
+void test_qs_get_checked_attr_002()
+{
+  Node *node;
+  Attr *attr;
+  char *ret;
+  APR_INIT;
+
+  node = qs_new_tag(&doc);
+  attr = qs_new_attr(&doc);
+  attr->name = apr_pstrdup(p, "checked");
+  attr->value = apr_pstrdup(p, "");
+  qs_add_attr(&doc,node,attr);
+  ret = qs_get_checked_attr(&doc,node,p);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(ret, "checked") == 0);
+
+  APR_TERM;
+}
+void test_qs_get_checked_attr_003()
+{
+  Node *node;
+  Attr *attr;
+  char *ret;
+  APR_INIT;
+
+  node = qs_new_tag(&doc);
+  attr = qs_new_attr(&doc);
+  attr->name = apr_pstrdup(p, "checkedd");
+  attr->value = apr_pstrdup(p, "");
+  qs_add_attr(&doc,node,attr);
+  ret = qs_get_checked_attr(&doc,node,p);
+  CU_ASSERT(ret == NULL);
+
+  APR_TERM;
 }
 /*
  * vim:ts=2 et

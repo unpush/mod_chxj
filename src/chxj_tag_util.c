@@ -65,7 +65,7 @@ qs_get_value_attr(Doc *doc, Node *node, apr_pool_t *pool)
  *         not found.
  */
 char *
-qs_get_checked_attr(Doc *doc, Node *tag, request_rec *UNUSED(r))
+qs_get_checked_attr(Doc *doc, Node *tag, apr_pool_t *UNUSED(pool))
 {
   Attr *attr;
   /*--------------------------------------------------------------------------*/

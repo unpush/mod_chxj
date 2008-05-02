@@ -2756,7 +2756,7 @@ s_hdml_count_radio_tag(hdml_t *hdml, Node *node)
     /*------------------------------------------------------------------------*/
     /* Now let's be the checked attribute or scan.                            */
     /*------------------------------------------------------------------------*/
-    chkd = qs_get_checked_attr(hdml->doc, child, hdml->doc->r);
+    chkd = qs_get_checked_attr(hdml->doc, child, hdml->doc->buf.pool);
     if (chkd) {
       DBG(r,apr_psprintf(r->pool,
                               "The tag scanned now had the checked "
