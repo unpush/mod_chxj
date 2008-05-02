@@ -43,6 +43,23 @@ void test_qs_get_type_attr_003();
 /*===========================================================================*/
 void test_qs_alloc_zero_byte_string_001();
 void test_qs_alloc_zero_byte_string_002();
+/*===========================================================================*/
+/* qs_trim_string()                                                          */
+/*===========================================================================*/
+void test_qs_trim_string_001();
+void test_qs_trim_string_002();
+void test_qs_trim_string_003();
+void test_qs_trim_string_004();
+void test_qs_trim_string_005();
+void test_qs_trim_string_006();
+/*===========================================================================*/
+/* qs_get_selected_value_text()                                              */
+/*===========================================================================*/
+void test_qs_get_selected_value_text_001();
+void test_qs_get_selected_value_text_002();
+void test_qs_get_selected_value_text_003();
+void test_qs_get_selected_value_text_004();
+void test_qs_get_selected_value_text_005();
 /* pend */
 
 void test_log_rerror(const char *file, int line, int level, apr_status_t status, const request_rec *r, const char *fmt, ...)
@@ -93,6 +110,23 @@ main()
   /*=========================================================================*/
   CU_add_test(str_util_suite, "qs_alloc_zero_byte_string() 001",                       test_qs_alloc_zero_byte_string_001);
   CU_add_test(str_util_suite, "qs_alloc_zero_byte_string() 002",                       test_qs_alloc_zero_byte_string_002);
+  /*=========================================================================*/
+  /* qs_trim_string()                                                        */
+  /*=========================================================================*/
+  CU_add_test(str_util_suite, "qs_trim_string() 001",                                  test_qs_trim_string_001);
+  CU_add_test(str_util_suite, "qs_trim_string() 002",                                  test_qs_trim_string_002);
+  CU_add_test(str_util_suite, "qs_trim_string() 003",                                  test_qs_trim_string_003);
+  CU_add_test(str_util_suite, "qs_trim_string() 004",                                  test_qs_trim_string_004);
+  CU_add_test(str_util_suite, "qs_trim_string() 005",                                  test_qs_trim_string_005);
+  CU_add_test(str_util_suite, "qs_trim_string() 006",                                  test_qs_trim_string_006);
+  /*=========================================================================*/
+  /* qs_get_selected_value_text()                                            */
+  /*=========================================================================*/
+  CU_add_test(str_util_suite, "qs_get_selected_value_text() 001",                      test_qs_get_selected_value_text_001);
+  CU_add_test(str_util_suite, "qs_get_selected_value_text() 002",                      test_qs_get_selected_value_text_002);
+  CU_add_test(str_util_suite, "qs_get_selected_value_text() 003",                      test_qs_get_selected_value_text_003);
+  CU_add_test(str_util_suite, "qs_get_selected_value_text() 004",                      test_qs_get_selected_value_text_004);
+  CU_add_test(str_util_suite, "qs_get_selected_value_text() 005",                      test_qs_get_selected_value_text_005);
   /* aend */
 
   CU_basic_run_tests();
@@ -285,15 +319,6 @@ void test_qs_get_type_attr_003()
 /*===========================================================================*/
 /* qs_alloc_zero_byte_string()                                               */
 /*===========================================================================*/
-#if 0
-qs_alloc_zero_byte_string(apr_pool_t *pool)
-{
-  char *tgt = apr_palloc(pool, 1);
-  tgt[0] = '\0';
-
-  return tgt;
-}
-#endif
 void test_qs_alloc_zero_byte_string_001()
 {
   char *ret;
@@ -301,6 +326,7 @@ void test_qs_alloc_zero_byte_string_001()
 
   ret = qs_alloc_zero_byte_string(p);
   CU_ASSERT(ret != NULL);
+  CU_ASSERT(ret[0] == 0);
 
   APR_TERM;
 }
@@ -313,6 +339,185 @@ void test_qs_alloc_zero_byte_string_002()
   CU_ASSERT(ret == NULL);
 
   APR_TERM;
+}
+/*===========================================================================*/
+/* qs_trim_string()                                                          */
+/*===========================================================================*/
+void test_qs_trim_string_001()
+{
+#define TEST_STRING " a "
+#define RESULT_STRING "a"
+  char *ret;
+  APR_INIT;
+
+  ret = qs_trim_string(p, TEST_STRING);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(ret, RESULT_STRING) == 0);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+void test_qs_trim_string_002()
+{
+#define TEST_STRING "\na\n"
+#define RESULT_STRING "a"
+  char *ret;
+  APR_INIT;
+
+  ret = qs_trim_string(p, TEST_STRING);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(ret, RESULT_STRING) == 0);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+void test_qs_trim_string_003()
+{
+#define TEST_STRING "\ra\r"
+#define RESULT_STRING "a"
+  char *ret;
+  APR_INIT;
+
+  ret = qs_trim_string(p, TEST_STRING);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(ret, RESULT_STRING) == 0);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+void test_qs_trim_string_004()
+{
+#define TEST_STRING "\ta\t"
+#define RESULT_STRING "a"
+  char *ret;
+  APR_INIT;
+
+  ret = qs_trim_string(p, TEST_STRING);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(ret, RESULT_STRING) == 0);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+void test_qs_trim_string_005()
+{
+#define TEST_STRING "   "
+#define RESULT_STRING ""
+  char *ret;
+  APR_INIT;
+
+  ret = qs_trim_string(p, TEST_STRING);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(ret, RESULT_STRING) == 0);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+void test_qs_trim_string_006()
+{
+#define TEST_STRING " a a "
+#define RESULT_STRING "a a"
+  char *ret;
+  APR_INIT;
+
+  ret = qs_trim_string(p, TEST_STRING);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(ret, RESULT_STRING) == 0);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+/*===========================================================================*/
+/* qs_get_selected_value_text()                                              */
+/*===========================================================================*/
+void test_qs_get_selected_value_text_001()
+{
+#define TEST_STRING "<select><option value='1' selected>a</option><option value='2'>b</option></select>"
+#define RESULT_STRING "a"
+  Node *node;
+  char *ret;
+  APR_INIT;
+ 
+  node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
+  ret = qs_get_selected_value_text(&doc, node, p);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(ret, RESULT_STRING) == 0);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+void test_qs_get_selected_value_text_002()
+{
+#define TEST_STRING "<select><option value='1'>a</option><option value='2' selected>b</option></select>"
+#define RESULT_STRING "b"
+  Node *node;
+  char *ret;
+  APR_INIT;
+ 
+  node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
+  ret = qs_get_selected_value_text(&doc, node, p);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(ret, RESULT_STRING) == 0);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+void test_qs_get_selected_value_text_003()
+{
+#define TEST_STRING "<select><option value='1' selected></option></select>"
+#define RESULT_STRING ""
+  Node *node;
+  char *ret;
+  APR_INIT;
+ 
+  node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
+  ret = qs_get_selected_value_text(&doc, node, p);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(ret, RESULT_STRING) == 0);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+void test_qs_get_selected_value_text_004()
+{
+#define TEST_STRING "<select><option value='1'><option value='2'></option></select>"
+#define RESULT_STRING NULL
+  Node *node;
+  char *ret;
+  APR_INIT;
+ 
+  node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
+  ret = qs_get_selected_value_text(&doc, node, p);
+  CU_ASSERT(ret == RESULT_STRING);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+void test_qs_get_selected_value_text_005()
+{
+#define TEST_STRING "<select></select>"
+#define RESULT_STRING NULL
+  Node *node;
+  char *ret;
+  APR_INIT;
+ 
+  node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
+  ret = qs_get_selected_value_text(&doc, node, p);
+  CU_ASSERT(ret == RESULT_STRING);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
 }
 /*
  * vim:ts=2 et

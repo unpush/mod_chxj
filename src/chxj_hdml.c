@@ -2393,7 +2393,7 @@ s_hdml_start_select_tag(void *pdoc, Node *node)
       else {
         DBG(r, "selected value found[%s]" , selval);
       }
-      selvaltxt = qs_get_selected_value_text(doc, node, r);
+      selvaltxt = qs_get_selected_value_text(doc, node, r->pool);
       if (!selvaltxt)
         selvaltxt = qs_alloc_zero_byte_string(r->pool);
 

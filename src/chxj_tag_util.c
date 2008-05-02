@@ -16,6 +16,7 @@
  */
 #include "chxj_tag_util.h"
 
+
 /**
  * The value of the VALUE attribute that the object tag node maintains is
  * acquired.
@@ -23,7 +24,7 @@
  * @param doc  [i] The pointer to the Doc structure to be scanned is
  *                 specified.
  * @param node [i] The tag node to be scanned is specified.
- * @param r    [i] To use POOL, the pointer to request_rec is specified.
+ * @param pool [i] To use POOL.
  * @return The value of the VALUE attribute that the object tag node maintains
  *         is returned. NULL is returned when not found.
  */
@@ -60,7 +61,7 @@ qs_get_value_attr(Doc *doc, Node *node, apr_pool_t *pool)
  * @param doc  [i] The pointer to the Doc structure to be scanned is
  *                 specified.
  * @param tag  [i] The tag node to be scanned is specified.
- * @param r    [i] To use POOL, the pointer to request_rec is specified.
+ * @param pool [i] To use POOL(unused).
  * @return The value of the checked tag is returned. NULL is returned when
  *         not found.
  */
@@ -171,6 +172,7 @@ qs_trim_string(apr_pool_t *p, char *s)
   return ss;
 }
 
+
 /**
  * The value of child TEXT of tag that maintains the SELECTED attribute is 
  * returned. 
@@ -178,12 +180,12 @@ qs_trim_string(apr_pool_t *p, char *s)
  * @param Doc  [i] The pointer to the Doc structure to be scanned is 
  *                 specified. 
  * @param node [i] The tag node to be scanned is specified.
- * @param r    [i] To use POOL, the pointer to request_rec is specified.
+ * @param pool [i] To use POOL.
  * @reutrn  The value of child TEXT of tag that maintains the SELECTED 
  *          attribute is returned. NULL is returned when not found. 
  */
 char *
-qs_get_selected_value_text(Doc *doc, Node *node, request_rec *r)
+qs_get_selected_value_text(Doc *doc, Node *node, apr_pool_t *pool)
 {
   Node *child;
   Node *selchild;
@@ -202,22 +204,21 @@ qs_get_selected_value_text(Doc *doc, Node *node, request_rec *r)
            attr != NULL; 
            attr = qs_get_next_attr(doc,attr)) {
         char *name2  = qs_get_attr_name(doc,attr);
-        DBG(r, "qs_get_selected_value name::[%s]" , name2);
         if (STRCASEEQ('s','S',"selected",name2)) {
           /*------------------------------------------------------------------*/
           /* SELECTED Value Found                                             */
           /*------------------------------------------------------------------*/
           selchild = qs_get_child_node(doc, child);
           if (! selchild) {
-            DBG(r,"found selected tag but null node" );
-            return NULL;
+            /* void value */
+            return apr_pstrdup(pool, "");
           }
           return qs_get_node_value(doc, selchild);
         }
       }
     }
 
-    if ((result = qs_get_selected_value_text(doc, child, r)) != NULL) {
+    if ((result = qs_get_selected_value_text(doc, child, pool)) != NULL) {
       return result;
     }
   }
