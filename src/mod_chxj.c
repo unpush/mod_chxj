@@ -351,7 +351,7 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry *entryp)
   }
   urilen = strlen(r->args);
 
-  result = qs_alloc_zero_byte_string(r);
+  result = qs_alloc_zero_byte_string(r->pool);
 
   buff_pre = apr_pstrdup(r->pool, r->args);
 
@@ -482,7 +482,7 @@ chxj_input_convert(
   s        = apr_pstrdup(r->pool, *src);
   buff_pre = apr_pstrdup(r->pool, *src);
 
-  result = qs_alloc_zero_byte_string(r);
+  result = qs_alloc_zero_byte_string(r->pool);
 
   DBG(r, "BEFORE input convert source = [%s]", s);
 
@@ -1012,7 +1012,7 @@ chxj_input_filter(ap_filter_t         *f,
 
   DBG(r, "start of chxj_input_filter()");
 
-  data_brigade = qs_alloc_zero_byte_string(r);
+  data_brigade = qs_alloc_zero_byte_string(r->pool);
 
 
   ibb = apr_brigade_create(r->pool, c->bucket_alloc);

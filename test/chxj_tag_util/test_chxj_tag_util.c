@@ -38,6 +38,11 @@ void test_qs_get_checked_attr_003();
 void test_qs_get_type_attr_001();
 void test_qs_get_type_attr_002();
 void test_qs_get_type_attr_003();
+/*===========================================================================*/
+/* qs_alloc_zero_byte_string()                                               */
+/*===========================================================================*/
+void test_qs_alloc_zero_byte_string_001();
+void test_qs_alloc_zero_byte_string_002();
 /* pend */
 
 void test_log_rerror(const char *file, int line, int level, apr_status_t status, const request_rec *r, const char *fmt, ...)
@@ -83,6 +88,11 @@ main()
   CU_add_test(str_util_suite, "qs_get_type_attr() 001",                                test_qs_get_type_attr_001);
   CU_add_test(str_util_suite, "qs_get_type_attr() 002",                                test_qs_get_type_attr_002);
   CU_add_test(str_util_suite, "qs_get_type_attr() 003",                                test_qs_get_type_attr_003);
+  /*=========================================================================*/
+  /* qs_alloc_zero_byte_string()                                             */
+  /*=========================================================================*/
+  CU_add_test(str_util_suite, "qs_alloc_zero_byte_string() 001",                       test_qs_alloc_zero_byte_string_001);
+  CU_add_test(str_util_suite, "qs_alloc_zero_byte_string() 002",                       test_qs_alloc_zero_byte_string_002);
   /* aend */
 
   CU_basic_run_tests();
@@ -268,6 +278,38 @@ void test_qs_get_type_attr_003()
   attr->value = apr_pstrdup(p, "");
   qs_add_attr(&doc,node,attr);
   ret = qs_get_type_attr(&doc,node,p);
+  CU_ASSERT(ret == NULL);
+
+  APR_TERM;
+}
+/*===========================================================================*/
+/* qs_alloc_zero_byte_string()                                               */
+/*===========================================================================*/
+#if 0
+qs_alloc_zero_byte_string(apr_pool_t *pool)
+{
+  char *tgt = apr_palloc(pool, 1);
+  tgt[0] = '\0';
+
+  return tgt;
+}
+#endif
+void test_qs_alloc_zero_byte_string_001()
+{
+  char *ret;
+  APR_INIT;
+
+  ret = qs_alloc_zero_byte_string(p);
+  CU_ASSERT(ret != NULL);
+
+  APR_TERM;
+}
+void test_qs_alloc_zero_byte_string_002()
+{
+  char *ret;
+  APR_INIT;
+
+  ret = qs_alloc_zero_byte_string(NULL);
   CU_ASSERT(ret == NULL);
 
   APR_TERM;

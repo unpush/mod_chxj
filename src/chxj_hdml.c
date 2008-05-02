@@ -532,14 +532,14 @@ s_init_hdml(hdml_t *hdml, Doc *doc, request_rec *r, device_table *spec)
   /*--------------------------------------------------------------------------*/
   memset(hdml, 0, sizeof(hdml_t));
   hdml->doc      = doc;
-  hdml->card     = qs_alloc_zero_byte_string(r);
+  hdml->card     = qs_alloc_zero_byte_string(r->pool);
   hdml->spec     = spec;
   hdml->conf     = chxj_get_module_config(r->per_dir_config, &chxj_module);
   hdml->doc->parse_mode = PARSE_MODE_CHTML;
 
   for (ii=0; ii<MAX_FORM_COUNT; ii++) {
     hdml->var_cnt[ii]     = 0;
-    hdml->postdata[ii]    = qs_alloc_zero_byte_string(r);
+    hdml->postdata[ii]    = qs_alloc_zero_byte_string(r->pool);
   }
 
   for (ii=0; ii<MAX_RADIO_COUNT; ii++) {
@@ -554,12 +554,12 @@ s_init_hdml(hdml_t *hdml, Doc *doc, request_rec *r, device_table *spec)
   for (ii=0; ii<MAX_SUBMIT_BUTTON_COUNT; ii++) 
     hdml->submit_button[ii] = NULL;
 
-  hdml->init_vars      = qs_alloc_zero_byte_string(r);
+  hdml->init_vars      = qs_alloc_zero_byte_string(r->pool);
 
   doc->r               = r;
 
   hdml->form_cnt = apr_time_now();
-  hdml->out = qs_alloc_zero_byte_string(r);
+  hdml->out = qs_alloc_zero_byte_string(r->pool);
 }
 
 
@@ -1479,7 +1479,7 @@ s_hdml_do_input_text_tag(hdml_t *hdml, Node *tag)
   fmt  = NULL;
   nm = qs_get_name_attr(doc, tag, r);
   if (! nm) {
-    nm = qs_alloc_zero_byte_string(r);
+    nm = qs_alloc_zero_byte_string(r->pool);
   }
 
   s_output_to_postdata(hdml, 
@@ -1586,7 +1586,7 @@ s_hdml_do_input_password_tag(hdml_t *hdml, Node *tag)
 
   nm = qs_get_name_attr(doc, tag, r);
   if (! nm) {
-    nm = qs_alloc_zero_byte_string(r);
+    nm = qs_alloc_zero_byte_string(r->pool);
   }
 
   s_output_to_postdata(hdml, 
@@ -1951,11 +1951,11 @@ s_hdml_do_input_checkbox_tag(hdml_t *hdml, Node *tag)
   nm  = qs_get_name_attr(doc, tag, r);
 
   if (! val) {
-    val    = qs_alloc_zero_byte_string(r);
+    val    = qs_alloc_zero_byte_string(r->pool);
   }
 
   if (! nm) {
-    nm   = qs_alloc_zero_byte_string(r);
+    nm   = qs_alloc_zero_byte_string(r->pool);
   }
 
   s_output_to_hdml_out(hdml, apr_psprintf(r->pool, 
@@ -2388,14 +2388,14 @@ s_hdml_start_select_tag(void *pdoc, Node *node)
       selval = qs_get_selected_value(doc, node, r);
       if (! selval) {
         DBG(r, "selected value not found");
-        selval = qs_alloc_zero_byte_string(r);
+        selval = qs_alloc_zero_byte_string(r->pool);
       }
       else {
         DBG(r, "selected value found[%s]" , selval);
       }
       selvaltxt = qs_get_selected_value_text(doc, node, r);
       if (!selvaltxt)
-        selvaltxt = qs_alloc_zero_byte_string(r);
+        selvaltxt = qs_alloc_zero_byte_string(r->pool);
 
       DBG(r, "selvaltxt:[%s]" ,selvaltxt);
 
@@ -3350,7 +3350,7 @@ s_hdml_start_textarea_tag(void *pdoc, Node *node)
   fmt  = NULL;
   nm = qs_get_name_attr(doc, node, r);
   if (! nm) {
-    nm = qs_alloc_zero_byte_string(r);
+    nm = qs_alloc_zero_byte_string(r->pool);
   }
 
   s_output_to_postdata(hdml, 

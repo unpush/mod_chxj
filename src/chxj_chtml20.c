@@ -499,7 +499,7 @@ s_init_chtml20(chtml20_t *chtml20, Doc *doc, request_rec *r, device_table *spec)
   doc->r        = r;
   chtml20->doc  = doc;
   chtml20->spec = spec;
-  chtml20->out  = qs_alloc_zero_byte_string(r);
+  chtml20->out  = qs_alloc_zero_byte_string(r->pool);
   chtml20->conf = chxj_get_module_config(r->per_dir_config, &chxj_module);
 
   chtml20->doc->parse_mode = PARSE_MODE_CHTML;
@@ -3087,7 +3087,7 @@ s_chtml20_text_tag(void *pdoc, Node *child)
   tmp = apr_palloc(r->pool, qs_get_node_size(doc,child)+1);
   memset(tmp, 0, qs_get_node_size(doc,child)+1);
   
-  tdst     = qs_alloc_zero_byte_string(r);
+  tdst     = qs_alloc_zero_byte_string(doc->buf.pool);
   memset(one_byte, 0, sizeof(one_byte));
   tdst_len = 0;
   

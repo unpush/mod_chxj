@@ -506,7 +506,7 @@ s_init_jhtml(jhtml_t *jhtml, Doc *doc, request_rec *r, device_table *spec)
   doc->r      = r;
   jhtml->doc  = doc;
   jhtml->spec = spec;
-  jhtml->out  = qs_alloc_zero_byte_string(r);
+  jhtml->out  = qs_alloc_zero_byte_string(r->pool);
   jhtml->conf = chxj_get_module_config(r->per_dir_config, &chxj_module);
   jhtml->doc->parse_mode = PARSE_MODE_CHTML;
 }
@@ -2557,7 +2557,7 @@ s_jhtml_text_tag(void* pdoc, Node* child)
   tmp = apr_palloc(r->pool, qs_get_node_size(doc,child)+1);
   memset(tmp, 0, qs_get_node_size(doc,child)+1);
 
-  tdst     = qs_alloc_zero_byte_string(r);
+  tdst     = qs_alloc_zero_byte_string(r->pool);
   memset(one_byte, 0, sizeof(one_byte));
   tdst_len = 0;
 

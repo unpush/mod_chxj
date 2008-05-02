@@ -504,7 +504,7 @@ s_init_chtml10(
   doc->r      = r;
   chtml10->doc  = doc;
   chtml10->spec = spec;
-  chtml10->out  = qs_alloc_zero_byte_string(r);
+  chtml10->out  = qs_alloc_zero_byte_string(r->pool);
   chtml10->conf = chxj_get_module_config(r->per_dir_config, &chxj_module);
   chtml10->doc->parse_mode = PARSE_MODE_CHTML;
 }
@@ -2965,7 +2965,7 @@ s_chtml10_text(void *pdoc, Node *child)
   tmp = apr_palloc(r->pool, qs_get_node_size(doc,child)+1);
   memset(tmp, 0, qs_get_node_size(doc,child)+1);
   
-  tdst     = qs_alloc_zero_byte_string(r);
+  tdst     = qs_alloc_zero_byte_string(doc->buf.pool);
   memset(one_byte, 0, sizeof(one_byte));
   tdst_len = 0;
   

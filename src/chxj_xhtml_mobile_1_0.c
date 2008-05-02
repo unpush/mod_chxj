@@ -497,7 +497,7 @@ s_init_xhtml(xhtml_t *xhtml, Doc *doc, request_rec *r, device_table *spec)
   doc->r      = r;
   xhtml->doc  = doc;
   xhtml->spec = spec;
-  xhtml->out  = qs_alloc_zero_byte_string(r);
+  xhtml->out  = qs_alloc_zero_byte_string(r->pool);
   xhtml->conf = chxj_get_module_config(r->per_dir_config, &chxj_module);
   xhtml->doc->parse_mode = PARSE_MODE_CHTML;
 }
@@ -2836,7 +2836,7 @@ s_xhtml_1_0_text_tag(void *pdoc, Node *child)
   tmp = apr_palloc(r->pool, qs_get_node_size(doc,child)+1);
   memset(tmp, 0, qs_get_node_size(doc,child)+1);
   
-  tdst     = qs_alloc_zero_byte_string(r);
+  tdst     = qs_alloc_zero_byte_string(doc->buf.pool);
   memset(one_byte, 0, sizeof(one_byte));
   tdst_len = 0;
   

@@ -124,20 +124,27 @@ qs_get_type_attr(Doc *doc, Node *tag, apr_pool_t *pool)
   return NULL;
 }
 
+
 /**
  * The character string area in 0 bytes is allocated.
  *
- * @param r    [i]   To use POOL, the pointer to request_rec is specified.
+ * @param pool    [i]   To use POOL.
  * @return The allocated 0 byte character string is returned.
  */
 char *
-qs_alloc_zero_byte_string(request_rec *r)
+qs_alloc_zero_byte_string(apr_pool_t *pool)
 {
-  char *tgt = apr_palloc(r->pool, 1);
+  char *tgt;
+
+  if (! pool) {
+    return NULL;
+  }
+  tgt = apr_palloc(pool, 1);
   tgt[0] = '\0';
 
   return tgt;
 }
+
 
 /**
  * A consecutive head and the last WHITESPACE are removed.

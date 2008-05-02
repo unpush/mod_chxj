@@ -501,7 +501,7 @@ s_init_chtml40(chtml40_t *chtml40, Doc *doc, request_rec *r, device_table *spec)
   doc->r        = r;
   chtml40->doc  = doc;
   chtml40->spec = spec;
-  chtml40->out  = qs_alloc_zero_byte_string(r);
+  chtml40->out  = qs_alloc_zero_byte_string(r->pool);
   chtml40->conf = chxj_get_module_config(r->per_dir_config, &chxj_module);
   chtml40->doc->parse_mode = PARSE_MODE_CHTML;
 }
@@ -2833,7 +2833,7 @@ s_chtml40_text_tag(void *pdoc, Node *child)
   tmp = apr_palloc(r->pool, qs_get_node_size(doc,child)+1);
   memset(tmp, 0, qs_get_node_size(doc,child)+1);
   
-  tdst     = qs_alloc_zero_byte_string(r);
+  tdst     = qs_alloc_zero_byte_string(doc->buf.pool);
   memset(one_byte, 0, sizeof(one_byte));
   tdst_len = 0;
   
