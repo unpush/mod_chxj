@@ -141,6 +141,22 @@ void test_chxj_chxjif_is_mine_015();
 void test_chxj_chxjif_is_mine_016();
 void test_chxj_chxjif_is_mine_017();
 void test_chxj_chxjif_is_mine_018();
+void test_chxj_chxjif_is_mine_019();
+void test_chxj_chxjif_is_mine_020();
+void test_chxj_chxjif_is_mine_021();
+void test_chxj_chxjif_is_mine_022();
+/* lang=hdml */
+void test_chxj_chxjif_is_mine_023();
+void test_chxj_chxjif_is_mine_024();
+void test_chxj_chxjif_is_mine_025();
+void test_chxj_chxjif_is_mine_026();
+void test_chxj_chxjif_is_mine_027();
+void test_chxj_chxjif_is_mine_028();
+void test_chxj_chxjif_is_mine_029();
+void test_chxj_chxjif_is_mine_030();
+void test_chxj_chxjif_is_mine_031();
+void test_chxj_chxjif_is_mine_032();
+void test_chxj_chxjif_is_mine_033();
 /* pend */
 
 void test_log_rerror(const char *file, int line, int level, apr_status_t status, const request_rec *r, const char *fmt, ...)
@@ -290,6 +306,22 @@ main()
   CU_add_test(str_util_suite, "chxj_chxjif_is_mine() 016",                             test_chxj_chxjif_is_mine_016);
   CU_add_test(str_util_suite, "chxj_chxjif_is_mine() 017",                             test_chxj_chxjif_is_mine_017);
   CU_add_test(str_util_suite, "chxj_chxjif_is_mine() 018",                             test_chxj_chxjif_is_mine_018);
+  CU_add_test(str_util_suite, "chxj_chxjif_is_mine() 019",                             test_chxj_chxjif_is_mine_019);
+  CU_add_test(str_util_suite, "chxj_chxjif_is_mine() 020",                             test_chxj_chxjif_is_mine_020);
+  CU_add_test(str_util_suite, "chxj_chxjif_is_mine() 021",                             test_chxj_chxjif_is_mine_021);
+  CU_add_test(str_util_suite, "chxj_chxjif_is_mine() 022",                             test_chxj_chxjif_is_mine_022);
+  /* lang=hdml */
+  CU_add_test(str_util_suite, "chxj_chxjif_is_mine() 023",                             test_chxj_chxjif_is_mine_023);
+  CU_add_test(str_util_suite, "chxj_chxjif_is_mine() 024",                             test_chxj_chxjif_is_mine_024);
+  CU_add_test(str_util_suite, "chxj_chxjif_is_mine() 025",                             test_chxj_chxjif_is_mine_025);
+  CU_add_test(str_util_suite, "chxj_chxjif_is_mine() 026",                             test_chxj_chxjif_is_mine_026);
+  CU_add_test(str_util_suite, "chxj_chxjif_is_mine() 027",                             test_chxj_chxjif_is_mine_027);
+  CU_add_test(str_util_suite, "chxj_chxjif_is_mine() 028",                             test_chxj_chxjif_is_mine_028);
+  CU_add_test(str_util_suite, "chxj_chxjif_is_mine() 029",                             test_chxj_chxjif_is_mine_029);
+  CU_add_test(str_util_suite, "chxj_chxjif_is_mine() 030",                             test_chxj_chxjif_is_mine_030);
+  CU_add_test(str_util_suite, "chxj_chxjif_is_mine() 031",                             test_chxj_chxjif_is_mine_031);
+  CU_add_test(str_util_suite, "chxj_chxjif_is_mine() 032",                             test_chxj_chxjif_is_mine_032);
+  CU_add_test(str_util_suite, "chxj_chxjif_is_mine() 033",                             test_chxj_chxjif_is_mine_033);
   /* aend */
 
   CU_basic_run_tests();
@@ -1524,7 +1556,9 @@ void test_chxj_chxjif_is_mine_011()
   APR_TERM;
 #undef TEST_STRING
 }
+/*==============*/
 /* lang="chtml" */
+/*==============*/
 void test_chxj_chxjif_is_mine_012()
 {
 #define TEST_STRING "<chxj:if lang=\"chtml\"></chxj:if>"
@@ -1636,6 +1670,264 @@ void test_chxj_chxjif_is_mine_018()
   APR_INIT;
  
   spec.html_spec_type = CHXJ_SPEC_Chtml_7_0;
+
+  node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
+  ret = chxj_chxjif_is_mine(&spec, &doc, node->child);
+  CU_ASSERT(ret == 0);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_chxj_chxjif_is_mine_019()
+{
+#define TEST_STRING "<chxj:if lang=\"chtml\"></chxj:if>"
+  Node *node;
+  int ret;
+  device_table spec;
+  APR_INIT;
+ 
+  spec.html_spec_type = CHXJ_SPEC_XHtml_Mobile_1_0;
+
+  node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
+  ret = chxj_chxjif_is_mine(&spec, &doc, node->child);
+  CU_ASSERT(ret == 0);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_chxj_chxjif_is_mine_020()
+{
+#define TEST_STRING "<chxj:if lang=\"chtml\"></chxj:if>"
+  Node *node;
+  int ret;
+  device_table spec;
+  APR_INIT;
+ 
+  spec.html_spec_type = CHXJ_SPEC_Hdml;
+
+  node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
+  ret = chxj_chxjif_is_mine(&spec, &doc, node->child);
+  CU_ASSERT(ret == 0);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_chxj_chxjif_is_mine_021()
+{
+#define TEST_STRING "<chxj:if lang=\"chtml\"></chxj:if>"
+  Node *node;
+  int ret;
+  device_table spec;
+  APR_INIT;
+ 
+  spec.html_spec_type = CHXJ_SPEC_Jhtml;
+
+  node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
+  ret = chxj_chxjif_is_mine(&spec, &doc, node->child);
+  CU_ASSERT(ret == 0);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_chxj_chxjif_is_mine_022()
+{
+#define TEST_STRING "<chxj:if lang=\"chtml\"></chxj:if>"
+  Node *node;
+  int ret;
+  device_table spec;
+  APR_INIT;
+ 
+  spec.html_spec_type = CHXJ_SPEC_Jxhtml;
+
+  node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
+  ret = chxj_chxjif_is_mine(&spec, &doc, node->child);
+  CU_ASSERT(ret == 0);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+/*==============*/
+/* lang="hdml"  */
+/*==============*/
+void test_chxj_chxjif_is_mine_023()
+{
+#define TEST_STRING "<chxj:if lang=\"hdml\"></chxj:if>"
+  Node *node;
+  int ret;
+  device_table spec;
+  APR_INIT;
+ 
+  spec.html_spec_type = CHXJ_SPEC_Chtml_1_0;
+
+  node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
+  ret = chxj_chxjif_is_mine(&spec, &doc, node->child);
+  CU_ASSERT(ret == 0);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_chxj_chxjif_is_mine_024()
+{
+#define TEST_STRING "<chxj:if lang=\"hdml\"></chxj:if>"
+  Node *node;
+  int ret;
+  device_table spec;
+  APR_INIT;
+ 
+  spec.html_spec_type = CHXJ_SPEC_Chtml_2_0;
+
+  node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
+  ret = chxj_chxjif_is_mine(&spec, &doc, node->child);
+  CU_ASSERT(ret == 0);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_chxj_chxjif_is_mine_025()
+{
+#define TEST_STRING "<chxj:if lang=\"hdml\"></chxj:if>"
+  Node *node;
+  int ret;
+  device_table spec;
+  APR_INIT;
+ 
+  spec.html_spec_type = CHXJ_SPEC_Chtml_3_0;
+
+  node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
+  ret = chxj_chxjif_is_mine(&spec, &doc, node->child);
+  CU_ASSERT(ret == 0);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_chxj_chxjif_is_mine_026()
+{
+#define TEST_STRING "<chxj:if lang=\"hdml\"></chxj:if>"
+  Node *node;
+  int ret;
+  device_table spec;
+  APR_INIT;
+ 
+  spec.html_spec_type = CHXJ_SPEC_Chtml_4_0;
+
+  node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
+  ret = chxj_chxjif_is_mine(&spec, &doc, node->child);
+  CU_ASSERT(ret == 0);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_chxj_chxjif_is_mine_027()
+{
+#define TEST_STRING "<chxj:if lang=\"hdml\"></chxj:if>"
+  Node *node;
+  int ret;
+  device_table spec;
+  APR_INIT;
+ 
+  spec.html_spec_type = CHXJ_SPEC_Chtml_5_0;
+
+  node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
+  ret = chxj_chxjif_is_mine(&spec, &doc, node->child);
+  CU_ASSERT(ret == 0);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_chxj_chxjif_is_mine_028()
+{
+#define TEST_STRING "<chxj:if lang=\"hdml\"></chxj:if>"
+  Node *node;
+  int ret;
+  device_table spec;
+  APR_INIT;
+ 
+  spec.html_spec_type = CHXJ_SPEC_Chtml_6_0;
+
+  node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
+  ret = chxj_chxjif_is_mine(&spec, &doc, node->child);
+  CU_ASSERT(ret == 0);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_chxj_chxjif_is_mine_029()
+{
+#define TEST_STRING "<chxj:if lang=\"hdml\"></chxj:if>"
+  Node *node;
+  int ret;
+  device_table spec;
+  APR_INIT;
+ 
+  spec.html_spec_type = CHXJ_SPEC_Chtml_7_0;
+
+  node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
+  ret = chxj_chxjif_is_mine(&spec, &doc, node->child);
+  CU_ASSERT(ret == 0);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_chxj_chxjif_is_mine_030()
+{
+#define TEST_STRING "<chxj:if lang=\"hdml\"></chxj:if>"
+  Node *node;
+  int ret;
+  device_table spec;
+  APR_INIT;
+ 
+  spec.html_spec_type = CHXJ_SPEC_XHtml_Mobile_1_0;
+
+  node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
+  ret = chxj_chxjif_is_mine(&spec, &doc, node->child);
+  CU_ASSERT(ret == 0);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_chxj_chxjif_is_mine_031()
+{
+#define TEST_STRING "<chxj:if lang=\"hdml\"></chxj:if>"
+  Node *node;
+  int ret;
+  device_table spec;
+  APR_INIT;
+ 
+  spec.html_spec_type = CHXJ_SPEC_Hdml;
+
+  node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
+  ret = chxj_chxjif_is_mine(&spec, &doc, node->child);
+  CU_ASSERT(ret == 1);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_chxj_chxjif_is_mine_032()
+{
+#define TEST_STRING "<chxj:if lang=\"hdml\"></chxj:if>"
+  Node *node;
+  int ret;
+  device_table spec;
+  APR_INIT;
+ 
+  spec.html_spec_type = CHXJ_SPEC_Jhtml;
+
+  node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
+  ret = chxj_chxjif_is_mine(&spec, &doc, node->child);
+  CU_ASSERT(ret == 0);
+
+  APR_TERM;
+#undef TEST_STRING
+}
+void test_chxj_chxjif_is_mine_033()
+{
+#define TEST_STRING "<chxj:if lang=\"hdml\"></chxj:if>"
+  Node *node;
+  int ret;
+  device_table spec;
+  APR_INIT;
+ 
+  spec.html_spec_type = CHXJ_SPEC_Jxhtml;
 
   node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
   ret = chxj_chxjif_is_mine(&spec, &doc, node->child);
