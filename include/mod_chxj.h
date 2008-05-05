@@ -409,8 +409,10 @@ module AP_MODULE_DECLARE_DATA chxj_module;
 
 #define DBG(X,args...)  chxj_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(request_rec*)(X),##args)
 #define SDBG(X,Y)       chxj_log_error(APLOG_MARK,APLOG_DEBUG,0,(X),(Y))
+#define PDBG(X,args...) chxj_log_perror(APLOG_MARK,APLOG_DEBUG,0,(apr_pool_t *)(X),##args)
 #define ERR(X,args...)  chxj_log_rerror(APLOG_MARK,APLOG_ERR,0,(X), ##args)
 #define SERR(X,Y)       chxj_log_error(APLOG_MARK,APLOG_ERR,0,(X),(Y))
+#define PERR(X,args...) chxj_log_perror(APLOG_MARK,APLOG_ERR,0,(apr_pool_t *)(X),##args)
 #define WRN(rec,format,args...)  chxj_log_rerror(APLOG_MARK,APLOG_WARNING,0,(rec),(format), ##args)
 
 extern tag_handlers chxj_tag_handlers[];

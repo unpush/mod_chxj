@@ -20,6 +20,7 @@
 
 #if defined(CHXJ_TEST)
 #  define chxj_log_rerror test_log_rerror
+#  define chxj_log_perror test_log_perror
 #  define chxj_log_error test_log_error
 #  define chxj_run_http_scheme test_run_http_scheme
 #  include "apr.h"
@@ -76,6 +77,7 @@ typedef struct test_request_rec {
 
 extern void test_log_error(const char *file, int line, int level, apr_status_t status, const request_rec *r, const char *fmt, ...);
 extern void test_log_rerror(const char *file, int line, int level, apr_status_t status, const request_rec *r, const char *fmt, ...);
+extern void test_log_perror(const char *file, int line, int level, apr_status_t status, apr_pool_t *p, const char *fmt, ...);
 extern const char *test_run_http_scheme(request_rec *r);
 extern char *test_os_escape_path(apr_pool_t *p, const char *path, int partial);
 extern void test_set_content_type(request_rec *r, const char *ct);
@@ -101,6 +103,7 @@ extern char *test_ap_escape_html(apr_pool_t *p, const char *s);
 #  endif
 #  define chxj_log_rerror ap_log_rerror
 #  define chxj_log_error ap_log_error
+#  define chxj_log_perror ap_log_perror
 #  define chxj_run_http_scheme chxj_apache_run_http_scheme
 #endif
 
