@@ -522,12 +522,12 @@ chxj_chxjif_is_mine(device_table *spec, Doc *doc, Node *tag)
  *                 destination is specified.
  * @param tag  [i] The tag node to want to acquire the DESTLANG attribute
  *                 is specified.
- * @param r    [i] To use POOL, the pointer to request_rec is specified.
+ * @param r    [i] To use POOL.
  * @return The value of the DESTLANG attribute is returned. NULL is
  *         returned when not is.
  */
 char *
-qs_get_destlang_attr(Doc *doc, Node *tag, request_rec *r)
+qs_get_destlang_attr(Doc *doc, Node *tag, apr_pool_t *pool)
 {
   Attr  *attr;
   for (attr = qs_get_attr(doc,tag);
@@ -536,7 +536,7 @@ qs_get_destlang_attr(Doc *doc, Node *tag, request_rec *r)
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('d','D',"destlang",name)) {
-      return apr_pstrdup(r->pool, value);
+      return apr_pstrdup(pool, value);
     }
   }
 

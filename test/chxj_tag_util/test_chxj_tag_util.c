@@ -193,6 +193,13 @@ void test_chxj_chxjif_is_mine_068();
 void test_chxj_chxjif_is_mine_069();
 void test_chxj_chxjif_is_mine_070();
 void test_chxj_chxjif_is_mine_071();
+/*==============================================================*/
+/* qs_get_destlang_attr(Doc *doc, Node *tag, apr_pool_t *pool); */
+/*==============================================================*/
+void test_qs_get_destlang_attr_001();
+void test_qs_get_destlang_attr_002();
+void test_qs_get_destlang_attr_003();
+void test_qs_get_destlang_attr_004();
 /* pend */
 
 void test_log_rerror(const char *file, int line, int level, apr_status_t status, const request_rec *r, const char *fmt, ...)
@@ -394,6 +401,13 @@ main()
   CU_add_test(str_util_suite, "chxj_chxjif_is_mine() 069",                             test_chxj_chxjif_is_mine_069);
   CU_add_test(str_util_suite, "chxj_chxjif_is_mine() 070",                             test_chxj_chxjif_is_mine_070);
   CU_add_test(str_util_suite, "chxj_chxjif_is_mine() 071",                             test_chxj_chxjif_is_mine_071);
+  /*==============================================================*/
+  /* qs_get_destlang_attr(Doc *doc, Node *tag, apr_pool_t *pool); */
+  /*==============================================================*/
+  CU_add_test(str_util_suite, "qs_get_destlang_attr() 001",                            test_qs_get_destlang_attr_001);
+  CU_add_test(str_util_suite, "qs_get_destlang_attr() 002",                            test_qs_get_destlang_attr_002);
+  CU_add_test(str_util_suite, "qs_get_destlang_attr() 003",                            test_qs_get_destlang_attr_003);
+  CU_add_test(str_util_suite, "qs_get_destlang_attr() 004",                            test_qs_get_destlang_attr_004);
   /* aend */
 
   CU_basic_run_tests();
@@ -2576,6 +2590,76 @@ void test_chxj_chxjif_is_mine_071()
   CU_ASSERT(ret == 1);
 
   APR_TERM;
+#undef TEST_STRING
+}
+/*==============================================================*/
+/* qs_get_destlang_attr(Doc *doc, Node *tag, apr_pool_t *pool); */
+/*==============================================================*/
+void test_qs_get_destlang_attr_001()
+{
+#define TEST_STRING "<input destlang>"
+#define RESULT_STRING ""
+  Node *node;
+  char *ret;
+  APR_INIT;
+ 
+  node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
+  ret = qs_get_destlang_attr(&doc, node->child, p);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(ret, RESULT_STRING) == 0);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+void test_qs_get_destlang_attr_002()
+{
+#define TEST_STRING "<input>"
+#define RESULT_STRING ""
+  Node *node;
+  char *ret;
+  APR_INIT;
+ 
+  node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
+  ret = qs_get_destlang_attr(&doc, node->child, p);
+  CU_ASSERT(ret == NULL);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+void test_qs_get_destlang_attr_003()
+{
+#define TEST_STRING "<input destlang=\"\">"
+#define RESULT_STRING ""
+  Node *node;
+  char *ret;
+  APR_INIT;
+ 
+  node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
+  ret = qs_get_destlang_attr(&doc, node->child, p);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(ret, RESULT_STRING) == 0);
+
+  APR_TERM;
+#undef RESULT_STRING
+#undef TEST_STRING
+}
+void test_qs_get_destlang_attr_004()
+{
+#define TEST_STRING "<input destlang=\"abc\">"
+#define RESULT_STRING "abc"
+  Node *node;
+  char *ret;
+  APR_INIT;
+ 
+  node = qs_parse_string(&doc, TEST_STRING, sizeof(TEST_STRING)); 
+  ret = qs_get_destlang_attr(&doc, node->child, p);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(ret, RESULT_STRING) == 0);
+
+  APR_TERM;
+#undef RESULT_STRING
 #undef TEST_STRING
 }
 /*
