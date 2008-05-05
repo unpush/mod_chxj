@@ -1489,7 +1489,7 @@ s_hdml_do_input_text_tag(hdml_t *hdml, Node *tag)
                                     s_get_form_no(r, hdml),
                                     hdml->var_cnt[hdml->pure_form_cnt]));
 
-  mlen = qs_get_maxlength_attr  (doc, tag, r);
+  mlen = qs_get_maxlength_attr  (doc, tag, r->pool);
   is   = qs_get_istyle_attr     (doc, tag, r->pool);
   val  = qs_get_value_attr      (doc, tag, r->pool);
 
@@ -1596,7 +1596,7 @@ s_hdml_do_input_password_tag(hdml_t *hdml, Node *tag)
                           s_get_form_no(r, hdml),
                           hdml->var_cnt[hdml->pure_form_cnt]));
 
-  mlen = qs_get_maxlength_attr  (doc, tag, r);
+  mlen = qs_get_maxlength_attr  (doc, tag, r->pool);
   val  = qs_get_value_attr      (doc, tag, r->pool);
   /*--------------------------------------------------------------------------*/
   /* Default is a figure input.                                               */
@@ -3360,7 +3360,7 @@ s_hdml_start_textarea_tag(void *pdoc, Node *node)
                                     s_get_form_no(r, hdml),
                                     hdml->var_cnt[hdml->pure_form_cnt]));
 
-  mlen = qs_get_maxlength_attr  (doc, node, r);
+  mlen = qs_get_maxlength_attr  (doc, node, r->pool);
   is   = qs_get_istyle_attr     (doc, node, r->pool);
   val  = s_hdml_inner_textarea_tag_get_value(hdml, node);
 

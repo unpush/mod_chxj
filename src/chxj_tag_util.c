@@ -405,7 +405,7 @@ qs_get_istyle_attr(Doc *doc, Node *tag, apr_pool_t *pool)
  *         returned when not is.
  */
 char *
-qs_get_maxlength_attr(Doc *doc, Node *tag, request_rec *r)
+qs_get_maxlength_attr(Doc *doc, Node *tag, apr_pool_t *pool)
 {
   Attr *attr;
   for (attr = qs_get_attr(doc,tag);
@@ -414,7 +414,7 @@ qs_get_maxlength_attr(Doc *doc, Node *tag, request_rec *r)
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('m','M',"maxlength",name)) {
-      return apr_pstrdup(r->pool, value);
+      return apr_pstrdup(pool, value);
     }
   }
   return NULL;
