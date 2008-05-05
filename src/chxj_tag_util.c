@@ -400,7 +400,7 @@ qs_get_istyle_attr(Doc *doc, Node *tag, apr_pool_t *pool)
  *                 destination is specified.
  * @param tag  [i] The tag node to want to acquire the MAXLENGTH attribute
  *                 is specified.
- * @param r    [i] To use POOL, the pointer to request_rec is specified.
+ * @param pool [i] To use POOL.
  * @return The value of the MAXLENGTH attribute is returned. NULL is
  *         returned when not is.
  */
@@ -428,11 +428,11 @@ qs_get_maxlength_attr(Doc *doc, Node *tag, apr_pool_t *pool)
  *                 destination is specified.
  * @param tag  [i] The tag node to want to acquire the CHECKBOX attribute
  *                 is specified.
- * @param r    [i] To use POOL, the pointer to request_rec is specified.
+ * @param pool [i] To use POOL.
  * @return 1 is returned when it is CHECKED and, additionally, 0 is returned. 
  */
 int
-qs_is_checked_checkbox_attr(Doc *doc, Node *tag, request_rec *UNUSED(r))
+qs_is_checked_checkbox_attr(Doc *doc, Node *tag, apr_pool_t *UNUSED(pool))
 {
   Attr *attr;
   for (attr = qs_get_attr(doc,tag);

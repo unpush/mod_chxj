@@ -1941,7 +1941,7 @@ s_hdml_do_input_checkbox_tag(hdml_t *hdml, Node *tag)
   /*--------------------------------------------------------------------------*/
   /* It is examined whether it is CHECKED.                                    */
   /*--------------------------------------------------------------------------*/
-  chk = qs_is_checked_checkbox_attr(doc, tag, r);
+  chk = qs_is_checked_checkbox_attr(doc, tag, r->pool);
 
   /*--------------------------------------------------------------------------*/
   /* The value of the name attribute and the value attribute is acquired      */
