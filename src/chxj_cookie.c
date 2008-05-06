@@ -817,7 +817,6 @@ chxj_delete_cookie(request_rec *r, const char *cookie_id)
     done_proc = 1;
   }
 #endif
-
 #if defined(USE_MEMCACHE_COOKIE)
   if (IS_COOKIE_STORE_MEMCACHE(dconf->cookie_store_type)) {
     if (! chxj_delete_cookie_memcache(r, dconf, cookie_id)) {
@@ -948,7 +947,7 @@ chxj_cookie_expire_gc(request_rec *r)
 #if defined(USE_MYSQL_COOKIE)
   if (IS_COOKIE_STORE_MYSQL(dconf->cookie_store_type)) {
     if (! chxj_cookie_expire_gc_mysql(r, dconf)) {
-      ERR(r, "failed: chxj_cookie_expire_gc_mysql()");
+      ERR(r, "%s:%d end chxj_cookie_expire_gc(): failed: chxj_cookie_expire_gc_mysql()", APLOG_MARK);
       return;
     }
     done_proc = 1;
@@ -957,7 +956,7 @@ chxj_cookie_expire_gc(request_rec *r)
 #if defined(USE_MEMCACHE_COOKIE)
   if (IS_COOKIE_STORE_MEMCACHE(dconf->cookie_store_type)) {
     if (! chxj_cookie_expire_gc_memcache(r, dconf)) {
-      ERR(r, "failed: chxj_cookie_expire_gc_memcache()");
+      ERR(r, "%s:%d end chxj_cookie_expire_gc(): failed: chxj_cookie_expire_gc_memcache()", APLOG_MARK);
       return;
     }
     done_proc = 1;
@@ -965,7 +964,7 @@ chxj_cookie_expire_gc(request_rec *r)
 #endif
   if (!done_proc) {
     if (! chxj_cookie_expire_gc_dbm(r, dconf)) {
-      ERR(r, "failed: chxj_cookie_expire_gc_dbm()");
+      ERR(r, "%s:%d end chxj_cookie_expire_gc(): failed: chxj_cookie_expire_gc_dbm()", APLOG_MARK);
       return;
     }
   }
@@ -997,7 +996,7 @@ chxj_cookie_lock(request_rec *r)
 #if defined(USE_MYSQL_COOKIE)
   if (IS_COOKIE_STORE_MYSQL(dconf->cookie_store_type)) {
     if (! chxj_cookie_lock_mysql(r, dconf)) {
-      ERR(r, "failed: chxj_cookie_lock_mysql()");
+      ERR(r, "%s:%d end chxj_cookie_lock(): failed: chxj_cookie_lock_mysql()", APLOG_MARK);
       return 0;
     }
     done_proc = 1;
@@ -1006,7 +1005,7 @@ chxj_cookie_lock(request_rec *r)
 #if defined(USE_MEMCACHE_COOKIE)
   if (IS_COOKIE_STORE_MEMCACHE(dconf->cookie_store_type)) {
     if (! chxj_cookie_lock_memcache(r, dconf)) {
-      ERR(r, "failed: chxj_cookie_lock_memcache()");
+      ERR(r, "%s:%d end chxj_cookie_lock(): failed: chxj_cookie_lock_memcache()", APLOG_MARK);
       return 0;
     }
     done_proc = 1;
@@ -1014,7 +1013,7 @@ chxj_cookie_lock(request_rec *r)
 #endif
   if (!done_proc) {
     if (! chxj_cookie_lock_dbm(r, dconf)) {
-      ERR(r, "failed: chxj_cookie_lock_dbm()");
+      ERR(r, "%s:%d end chxj_cookie_lock(): failed: chxj_cookie_lock_dbm()", APLOG_MARK);
       return 0;
     }
   }

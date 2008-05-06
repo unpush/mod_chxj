@@ -35,7 +35,7 @@
 #include <errmsg.h>
 
 
-#define CHXJ_MYSQL_RECONNECT_WAIT_TIME (1)
+#define CHXJ_MYSQL_RECONNECT_WAIT_TIME (5000)
 #define CHXJ_MYSQL_RECONNECT_COUNT (3)
 
 typedef struct {
@@ -161,6 +161,7 @@ chxj_mysql_exist_cookie_table(request_rec *r, mod_chxj_config *m)
   MYSQL_RES *result;
   char query[MAX_STRING_LEN];
   int retry_count = 0;
+  apr_interval_time_t wait_time = CHXJ_MYSQL_RECONNECT_WAIT_TIME;
 
   apr_snprintf(query, sizeof(query)-1, "desc %s", m->mysql.tablename);
   DBG(r, "start chxj_mysql_exist_cookie_table() query:[%s]", query);
@@ -178,7 +179,7 @@ chxj_mysql_exist_cookie_table(request_rec *r, mod_chxj_config *m)
           ERR(r, "%s:%d MySQL ERROR: %s: %s(retry over)", APLOG_MARK, mysql_error(connection.handle), r->uri);
           return 0;
         }
-        sleep(CHXJ_MYSQL_RECONNECT_WAIT_TIME);
+        apr_sleep(wait_time);
         continue;
       }
       WRN(r, "%s:%d MySQL WARN: %s: %s", APLOG_MARK, mysql_error(connection.handle), r->uri);
@@ -202,6 +203,7 @@ chxj_mysql_exist_cookie_table_expire(request_rec *r, mod_chxj_config *m)
   MYSQL_RES *result;
   char query[MAX_STRING_LEN];
   int retry_count = 0;
+  apr_interval_time_t wait_time = CHXJ_MYSQL_RECONNECT_WAIT_TIME;
 
   apr_snprintf(query, sizeof(query)-1, "desc %s_expire", m->mysql.tablename);
 
@@ -221,7 +223,7 @@ chxj_mysql_exist_cookie_table_expire(request_rec *r, mod_chxj_config *m)
           ERR(r, "%s:%d MySQL ERROR: %s: %s(retry over)", APLOG_MARK, mysql_error(connection.handle), r->uri);
           return 0;
         }
-        sleep(CHXJ_MYSQL_RECONNECT_WAIT_TIME);
+        apr_sleep(wait_time);
         continue;
       }
       WRN(r, "%s:%d MySQL WARN: %s: %s", APLOG_MARK, mysql_error(connection.handle), r->uri);
@@ -244,6 +246,7 @@ chxj_mysql_create_cookie_table(request_rec *r, mod_chxj_config *m)
   MYSQL_RES *result;
   char query[MAX_STRING_LEN];
   int retry_count = 0;
+  apr_interval_time_t wait_time = CHXJ_MYSQL_RECONNECT_WAIT_TIME;
 
   apr_snprintf(query, sizeof(query)-1, "CREATE TABLE %s  (cookie_id VARCHAR(%d) NOT NULL, data TEXT, PRIMARY KEY(cookie_id)) TYPE=InnoDB;",
     m->mysql.tablename,
@@ -263,7 +266,7 @@ chxj_mysql_create_cookie_table(request_rec *r, mod_chxj_config *m)
           ERR(r, "%s:%d MySQL ERROR: %s: %s(retry over)", APLOG_MARK, mysql_error(connection.handle), r->uri);
           return 0;
         }
-        sleep(CHXJ_MYSQL_RECONNECT_WAIT_TIME);
+        apr_sleep(wait_time);
         continue;
       }
       WRN(r, "%s:%d MySQL WARN: %s: %s", APLOG_MARK, mysql_error(connection.handle), r->uri);
@@ -286,6 +289,7 @@ chxj_mysql_create_cookie_expire_table(request_rec *r, mod_chxj_config *m)
   MYSQL_RES *result;
   char query[MAX_STRING_LEN];
   int retry_count = 0;
+  apr_interval_time_t wait_time = CHXJ_MYSQL_RECONNECT_WAIT_TIME;
 
   apr_snprintf(query, sizeof(query)-1, "CREATE TABLE %s_expire  (cookie_id VARCHAR(%d) NOT NULL, created_at DATETIME, PRIMARY KEY(cookie_id)) TYPE=InnoDB;",
     m->mysql.tablename,
@@ -307,7 +311,7 @@ chxj_mysql_create_cookie_expire_table(request_rec *r, mod_chxj_config *m)
           ERR(r, "%s:%d MySQL ERROR: %s: %s(retry over)", APLOG_MARK, mysql_error(connection.handle), r->uri);
           return 0;
         }
-        sleep(CHXJ_MYSQL_RECONNECT_WAIT_TIME);
+        apr_sleep(wait_time);
         continue;
       }
       WRN(r, "%s:%d MySQL WARN: %s: %s", APLOG_MARK, mysql_error(connection.handle), r->uri);
@@ -334,6 +338,7 @@ chxj_mysql_get_cookie_from_cookie_id(request_rec *r, mod_chxj_config *m, const c
   apr_size_t clen = strlen(cookie_id);
   char *sql_safe_cookie_id = apr_palloc(r->pool, clen*2+1);
   int retry_count = 0;
+  apr_interval_time_t wait_time = CHXJ_MYSQL_RECONNECT_WAIT_TIME;
 
   mysql_escape_string(sql_safe_cookie_id,cookie_id,clen);
 
@@ -353,7 +358,7 @@ chxj_mysql_get_cookie_from_cookie_id(request_rec *r, mod_chxj_config *m, const c
           ERR(r, "%s:%d MySQL ERROR: %s: %s(retry over)", APLOG_MARK, mysql_error(connection.handle), r->uri);
           return 0;
         }
-        sleep(CHXJ_MYSQL_RECONNECT_WAIT_TIME);
+        apr_sleep(wait_time);
         continue;
       }
       WRN(r, "%s:%d MySQL WARN: %s: %s", APLOG_MARK, mysql_error(connection.handle), r->uri);
@@ -393,6 +398,7 @@ chxj_mysql_get_cookie_expire_from_cookie_id(request_rec *r, mod_chxj_config *m, 
   char *retval = NULL;
   char *sql_safe_cookie_id = apr_palloc(r->pool, clen*2+1);
   int retry_count = 0;
+  apr_interval_time_t wait_time = CHXJ_MYSQL_RECONNECT_WAIT_TIME;
 
   mysql_escape_string(sql_safe_cookie_id,cookie_id,clen);
 
@@ -415,7 +421,7 @@ chxj_mysql_get_cookie_expire_from_cookie_id(request_rec *r, mod_chxj_config *m, 
           ERR(r, "%s:%d MySQL ERROR: %s: %s(retry over)", APLOG_MARK, mysql_error(connection.handle), r->uri);
           return 0;
         }
-        sleep(CHXJ_MYSQL_RECONNECT_WAIT_TIME);
+        apr_sleep(wait_time);
         continue;
       }
       WRN(r, "%s:%d MySQL WARN: %s: %s", APLOG_MARK, mysql_error(connection.handle), r->uri);
@@ -452,6 +458,7 @@ chxj_mysql_insert_or_update_cookie(request_rec *r, mod_chxj_config *m, const cha
   char *cid = ap_escape_logitem(r->pool, cookie_id);
   char *cdt = ap_escape_logitem(r->pool, data);
   int retry_count = 0;
+  apr_interval_time_t wait_time = CHXJ_MYSQL_RECONNECT_WAIT_TIME;
 
   DBG(r, "start chxj_mysql_insert_or_update_cookie() data:[%s]", data);
   do {
@@ -470,7 +477,7 @@ chxj_mysql_insert_or_update_cookie(request_rec *r, mod_chxj_config *m, const cha
           ERR(r, "%s:%d MySQL ERROR: %s: %s(retry over)", APLOG_MARK, mysql_error(connection.handle), r->uri);
           return 0;
         }
-        sleep(CHXJ_MYSQL_RECONNECT_WAIT_TIME);
+        apr_sleep(wait_time);
         continue;
       }
       ERR(r, "%s:%d MySQL WARN: %s: %s", APLOG_MARK, mysql_error(connection.handle), r->uri);
@@ -520,6 +527,7 @@ chxj_mysql_insert_or_update_cookie_expire(request_rec *r, mod_chxj_config *m, co
   char query[MAX_STRING_LEN];
   char *cid = ap_escape_logitem(r->pool, cookie_id);
   int retry_count = 0;
+  apr_interval_time_t wait_time = CHXJ_MYSQL_RECONNECT_WAIT_TIME;
 
   DBG(r, "start chxj_mysql_insert_or_update_cookie_expire()");
 
@@ -539,7 +547,7 @@ chxj_mysql_insert_or_update_cookie_expire(request_rec *r, mod_chxj_config *m, co
           ERR(r, "%s:%d MySQL ERROR: %s: %s(retry over)", APLOG_MARK, mysql_error(connection.handle), r->uri);
           return 0;
         }
-        sleep(CHXJ_MYSQL_RECONNECT_WAIT_TIME);
+        apr_sleep(wait_time);
         continue;
       }
       ERR(r, "%s:%d MySQL WARN: %s: %s", APLOG_MARK,mysql_error(connection.handle), r->uri);
@@ -612,6 +620,7 @@ chxj_mysql_load_cookie(request_rec *r, mod_chxj_config *m, const char *cookie_id
   char *retval = NULL;
   char *sql_safe_cookie_id = apr_palloc(r->pool, clen*2+1);
   int retry_count = 0;
+  apr_interval_time_t wait_time = CHXJ_MYSQL_RECONNECT_WAIT_TIME;
   
   mysql_escape_string(sql_safe_cookie_id,cookie_id,clen);
 
@@ -633,7 +642,7 @@ chxj_mysql_load_cookie(request_rec *r, mod_chxj_config *m, const char *cookie_id
           ERR(r, "%s:%d MySQL ERROR: %s: %s(retry over)", APLOG_MARK, mysql_error(connection.handle), r->uri);
           return NULL;
         }
-        sleep(CHXJ_MYSQL_RECONNECT_WAIT_TIME);
+        apr_sleep(wait_time);
         continue;
       }
       WRN(r, "%s:%d MySQL WARN: %s: %s", APLOG_MARK, mysql_error(connection.handle), r->uri);
@@ -673,6 +682,7 @@ chxj_mysql_load_cookie_expire(request_rec *r, mod_chxj_config *m, const char *co
   apr_size_t clen = strlen(cookie_id);
   char *sql_safe_cookie_id = apr_palloc(r->pool, clen*2+1);
   int retry_count = 0;
+  apr_interval_time_t wait_time = CHXJ_MYSQL_RECONNECT_WAIT_TIME;
 
   mysql_escape_string(sql_safe_cookie_id,cookie_id,clen);
 
@@ -698,7 +708,7 @@ chxj_mysql_load_cookie_expire(request_rec *r, mod_chxj_config *m, const char *co
           ERR(r, "%s:%d MySQL ERROR: %s: %s(retry over)", APLOG_MARK,mysql_error(connection.handle), r->uri);
           return 0;
         }
-        sleep(CHXJ_MYSQL_RECONNECT_WAIT_TIME);
+        apr_sleep(wait_time);
         continue;
       }
       WRN(r, "%s:%d MySQL WARN: %s: %s", APLOG_MARK, mysql_error(connection.handle), r->uri);
@@ -733,6 +743,7 @@ chxj_mysql_delete_cookie(request_rec *r, mod_chxj_config *m, const char *cookie_
   char query[MAX_STRING_LEN];
   char *cid = ap_escape_logitem(r->pool, cookie_id);
   int retry_count = 0;
+  apr_interval_time_t wait_time = CHXJ_MYSQL_RECONNECT_WAIT_TIME;
 
   DBG(r, "start chxj_mysql_delete_cookie() cookie_id:[%s]", cookie_id);
 
@@ -752,7 +763,7 @@ chxj_mysql_delete_cookie(request_rec *r, mod_chxj_config *m, const char *cookie_
           ERR(r, "%s:%d MySQL ERROR: %s: %s(retry over)", APLOG_MARK,mysql_error(connection.handle), r->uri);
           return 0;
         }
-        sleep(CHXJ_MYSQL_RECONNECT_WAIT_TIME);
+        apr_sleep(wait_time);
         continue;
       }
       ERR(r, "%s:%d MySQL WARN: %s: %s", APLOG_MARK, mysql_error(connection.handle), r->uri);
@@ -797,6 +808,7 @@ chxj_mysql_delete_cookie_expire(request_rec *r, mod_chxj_config *m, const char *
   char query[MAX_STRING_LEN];
   char *cid = ap_escape_logitem(r->pool, cookie_id);
   int retry_count = 0;
+  apr_interval_time_t wait_time = CHXJ_MYSQL_RECONNECT_WAIT_TIME;
 
   DBG(r, "start chxj_mysql_delete_cookie_expire() cookie_id:[%s]", cookie_id);
 
@@ -816,7 +828,7 @@ chxj_mysql_delete_cookie_expire(request_rec *r, mod_chxj_config *m, const char *
           ERR(r, "%s:%d MySQL ERROR: %s: %s(retry over)", APLOG_MARK,mysql_error(connection.handle), r->uri);
           return 0;
         }
-        sleep(CHXJ_MYSQL_RECONNECT_WAIT_TIME);
+        apr_sleep(wait_time);
         continue;
       }
       ERR(r, "%s:%d MySQL WARN: %s: %s", APLOG_MARK,mysql_error(connection.handle), r->uri);
@@ -860,6 +872,7 @@ chxj_mysql_get_timeout_localtime(request_rec *r, mod_chxj_config *m)
   char query[MAX_STRING_LEN];
   char *retval = NULL;
   int retry_count = 0;
+  apr_interval_time_t wait_time = CHXJ_MYSQL_RECONNECT_WAIT_TIME;
 
   DBG(r, "start chxj_mysql_get_timeout_localtime()");
   do {
@@ -879,7 +892,7 @@ chxj_mysql_get_timeout_localtime(request_rec *r, mod_chxj_config *m)
           ERR(r, "%s:%d MySQL ERROR: %s: %s(retry over)", APLOG_MARK, mysql_error(connection.handle), r->uri);
           return 0;
         }
-        sleep(CHXJ_MYSQL_RECONNECT_WAIT_TIME);
+        apr_sleep(wait_time);
         continue;
       }
       ERR(r, "%s:%d MySQL WARN: %s: %s", APLOG_MARK, mysql_error(connection.handle), r->uri);
@@ -913,6 +926,8 @@ chxj_mysql_delete_expired_cookie(request_rec *r, mod_chxj_config *m)
   char query[MAX_STRING_LEN];
   char *timeout;
   int retry_count = 0;
+  apr_interval_time_t wait_time = CHXJ_MYSQL_RECONNECT_WAIT_TIME;
+
   DBG(r, "start chxj_mysql_delete_expired_cookie()");
 
   do {
@@ -931,7 +946,7 @@ chxj_mysql_delete_expired_cookie(request_rec *r, mod_chxj_config *m)
           ERR(r, "%s:%d MySQL ERROR: %s: %s(retry over)", APLOG_MARK,mysql_error(connection.handle), r->uri);
           return 0;
         }
-        sleep(CHXJ_MYSQL_RECONNECT_WAIT_TIME);
+        apr_sleep(wait_time);
         continue;
       }
       ERR(r, "%s:%d MySQL ERROR: %s: %s", APLOG_MARK,mysql_error(connection.handle), r->uri);
