@@ -776,7 +776,7 @@ chxj_node_convert(
         if (chxj_chxjif_is_mine(spec, doc, child)) {
           char* parse_attr;
 
-          parse_attr = qs_get_parse_attr(doc, child, r);
+          parse_attr = qs_get_parse_attr(doc, child, r->pool);
 
           if (parse_attr && strcasecmp(parse_attr, "true") == 0) {
             chxj_node_convert(spec, r, pdoc, doc, child, indent+1);

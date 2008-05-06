@@ -522,7 +522,7 @@ chxj_chxjif_is_mine(device_table *spec, Doc *doc, Node *tag)
  *                 destination is specified.
  * @param tag  [i] The tag node to want to acquire the DESTLANG attribute
  *                 is specified.
- * @param r    [i] To use POOL.
+ * @param pool [i] To use POOL.
  * @return The value of the DESTLANG attribute is returned. NULL is
  *         returned when not is.
  */
@@ -550,12 +550,12 @@ qs_get_destlang_attr(Doc *doc, Node *tag, apr_pool_t *pool)
  * @param doc  [i] The pointer to the Doc structure to be scanned is
  *                 specified.
  * @param tag  [i] The tag node to be scanned is specified.
- * @param r    [i] To use POOL, the pointer to request_rec is specified.
+ * @param pool [i] To use POOL.
  * @return The value of the PARSE attribute is returned. NULL is returned when
  *         not found.
  */
 char *
-qs_get_parse_attr(Doc *doc, Node *tag, request_rec *r)
+qs_get_parse_attr(Doc *doc, Node *tag, apr_pool_t *pool)
 {
   Attr *attr;
   /*--------------------------------------------------------------------------*/
@@ -570,7 +570,7 @@ qs_get_parse_attr(Doc *doc, Node *tag, request_rec *r)
       /*----------------------------------------------------------------------*/
       /* The VALUE attribute was found.                                       */
       /*----------------------------------------------------------------------*/
-      return apr_pstrdup(r->pool, value);
+      return apr_pstrdup(pool, value);
     }
   }
 
