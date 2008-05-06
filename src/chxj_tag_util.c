@@ -514,6 +514,7 @@ chxj_chxjif_is_mine(device_table *spec, Doc *doc, Node *tag)
   return 0;
 }
 
+
 /**
  * The value of the DESTLANG attribute is acquired from the tag node of the
  * object.

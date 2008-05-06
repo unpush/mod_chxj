@@ -70,6 +70,7 @@ chxj_close_mysql_handle()
   if (connection.handle) {
     mysql_close(connection.handle);
     connection.handle = NULL;
+{FILE *fp=fopen("/tmp/erer.log","a");fprintf(fp,"%s:%d mysql_close()\n",__FILE__,__LINE__);fclose(fp);}
   }
 }
 
@@ -81,9 +82,10 @@ chxj_open_mysql_handle(request_rec *r, mod_chxj_config *m)
 
   if (connection.handle && connection.reconnect == 0) {
     if ((!m->mysql.host || (strcasecmp(m->mysql.host, "localhost") == 0)) && connection.host[0] == '\0'
-        &&  (!m->mysql.username || (strcmp(m->mysql.username, connection.username) == 0))) {
+        &&  (m->mysql.username && strcmp(m->mysql.username, connection.username) == 0)) {
 
       if (m->mysql.database && strcmp(m->mysql.database, connection.database) == 0) {
+        DBG(r, "already connected");
         return 1;
       }
       else {
@@ -93,18 +95,18 @@ chxj_open_mysql_handle(request_rec *r, mod_chxj_config *m)
         }
         else {
           strcpy (connection.database, m->mysql.database);
+          DBG(r, "already connected. new database:[%s]", m->mysql.database);
           return 1;
         }
       }
     }
-    else {
-      chxj_close_mysql_handle();
-    }
   }
 
+  chxj_close_mysql_handle();
   connection.handle = mysql_init(&mysql_conn);
   if (! connection.handle) {
     ERR(r, "MySQL ERROR: %s", mysql_error(&mysql_conn));
+    return 0;
   }
 
   if (!m->mysql.host || strcmp(m->mysql.host,"localhost") == 0) {
@@ -125,10 +127,7 @@ chxj_open_mysql_handle(request_rec *r, mod_chxj_config *m)
     return 0;
   }
 
-  if (!m->mysql.keep_alive) {
-    apr_pool_cleanup_register(r->pool, (void *)NULL, _mysql_cleanup, _mysql_cleanup_child);
-  }
-
+  apr_pool_cleanup_register(r->pool, (void *)NULL, _mysql_cleanup, _mysql_cleanup_child);
   if (m->mysql.username) {
     strcpy(connection.username, m->mysql.username);
   }
