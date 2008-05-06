@@ -50,6 +50,7 @@ static int valid_expires(request_rec *r, const char *value);
 static int valid_secure(request_rec *r, const char *value);
 static int check_valid_cookie_attribute(request_rec *r, const char *pair);
 
+apr_proc_mutex_t *global_cookie_mutex;
 
 static char *
 alloc_cookie_id(request_rec *r)
@@ -234,7 +235,7 @@ chxj_save_cookie(request_rec *r)
     cookie->cookie_id = apr_pstrdup(r->pool, old_cookie_id);
   }
   else {
-    DBG(r, "NO LAZY COOKIE save");
+    DBG(r, "NO LAZY COOKIE save. old_cookie_id:[%s] LAZY:[%d]", old_cookie_id,IS_COOKIE_LAZY(dconf));
     cookie->cookie_id = alloc_cookie_id(r);
   }
 
@@ -243,7 +244,8 @@ chxj_save_cookie(request_rec *r)
 #if defined(USE_MYSQL_COOKIE)
     if (IS_COOKIE_STORE_MYSQL(dconf->cookie_store_type)) {
       if (! chxj_save_cookie_mysql(r, dconf, cookie->cookie_id, store_string)) {
-        ERR(r, "faild: chxj_save_cookie_mysql() cookie_id:[%s]", cookie->cookie_id);
+        ERR(r, "%s:%d faild: chxj_save_cookie_mysql() cookie_id:[%s]", APLOG_MARK,cookie->cookie_id);
+        cookie = NULL;
         goto on_error;
       }
       done_proc = 1;
@@ -252,7 +254,8 @@ chxj_save_cookie(request_rec *r)
 #if defined(USE_MEMCACHE_COOKIE)
     if (IS_COOKIE_STORE_MEMCACHE(dconf->cookie_store_type)) {
       if (! chxj_save_cookie_memcache(r, dconf, cookie->cookie_id, store_string)) {
-        ERR(r, "failed: chxj_save_cookie_memcache() cookie_id:[%s]", cookie->cookie_id);
+        ERR(r, "%s:%d failed: chxj_save_cookie_memcache() cookie_id:[%s]", APLOG_MARK, cookie->cookie_id);
+        cookie = NULL;
         goto on_error;
       }
       done_proc = 1;
@@ -260,21 +263,23 @@ chxj_save_cookie(request_rec *r)
 #endif
     if (IS_COOKIE_STORE_DBM(dconf->cookie_store_type) || ! done_proc) {
       if (! chxj_save_cookie_dbm(r, dconf, cookie->cookie_id, store_string)) {
-        ERR(r, "failed: chxj_save_cookie_dbm() cookie_id:[%s]", cookie->cookie_id);
+        ERR(r, "%s:%d failed: chxj_save_cookie_dbm() cookie_id:[%s]", APLOG_MARK, cookie->cookie_id);
+        cookie = NULL;
         goto on_error;
       }
     }
   }
 
-
-  chxj_save_cookie_expire(r, cookie);
-
-
+  if (cookie) {
+    chxj_save_cookie_expire(r, cookie);
+  }
 
 on_error:
   DBG(r, "end chxj_save_cookie()");
   return cookie;
 }
+
+
 
 /*
  *
@@ -428,7 +433,7 @@ chxj_load_cookie(request_rec *r, char *cookie_id)
 #if defined(USE_MYSQL_COOKIE)
     if (IS_COOKIE_STORE_MYSQL(dconf->cookie_store_type)) {
       if (! (load_string = chxj_load_cookie_mysql(r, dconf, cookie->cookie_id))) {
-        ERR(r, "failed: chxj_load_cookie_mysql() cookie_id:[%s]", cookie_id);
+        ERR(r, "%s:%d failed: chxj_load_cookie_mysql() cookie_id:[%s]", APLOG_MARK, cookie_id);
         goto on_error0;
       }
       done_proc = 1;
@@ -437,7 +442,7 @@ chxj_load_cookie(request_rec *r, char *cookie_id)
 #if defined(USE_MEMCACHE_COOKIE)
     if (IS_COOKIE_STORE_MEMCACHE(dconf->cookie_store_type)) {
       if (! (load_string = chxj_load_cookie_memcache(r, dconf, cookie->cookie_id))) {
-        ERR(r, "failed: chxj_load_cookie_memcache() cookie_id:[%s]", cookie_id);
+        ERR(r, "%s:%d failed: chxj_load_cookie_memcache() cookie_id:[%s]", APLOG_MARK,cookie_id);
         goto on_error0;
       }
       done_proc = 1;
@@ -445,7 +450,7 @@ chxj_load_cookie(request_rec *r, char *cookie_id)
 #endif
     if (!done_proc || IS_COOKIE_STORE_DBM(dconf->cookie_store_type)) {
       if (! (load_string = chxj_load_cookie_dbm(r, dconf, cookie->cookie_id))) {
-        ERR(r, "failed: chxj_load_cookie_dbm() cookie_id:[%s]", cookie_id);
+        ERR(r, "%s:%d failed: chxj_load_cookie_dbm() cookie_id:[%s]", APLOG_MARK,cookie_id);
         goto on_error0;
       }
     }
@@ -972,6 +977,99 @@ chxj_parse_cookie_expires(const char *s)
 {
   if (!s) return (apr_time_t)0;
   return apr_date_parse_rfc(s);
+}
+
+
+int
+chxj_cookie_lock(request_rec *r)
+{
+  mod_chxj_config *dconf;
+  apr_status_t rv;
+  int done_proc = 0;
+
+  DBG(r, "start chxj_cookie_lock()");
+  if ((rv = apr_proc_mutex_lock(global_cookie_mutex)) != APR_SUCCESS) {
+    char errstr[255];
+    ERR(r, "%s:%d apr_proc_mutex_lock failure.(%d:%s)", APLOG_MARK, rv, apr_strerror(rv, errstr, 255));
+    return 0;
+  }
+  dconf = chxj_get_module_config(r->per_dir_config, &chxj_module);
+#if defined(USE_MYSQL_COOKIE)
+  if (IS_COOKIE_STORE_MYSQL(dconf->cookie_store_type)) {
+    if (! chxj_cookie_lock_mysql(r, dconf)) {
+      ERR(r, "failed: chxj_cookie_lock_mysql()");
+      return 0;
+    }
+    done_proc = 1;
+  } 
+#endif
+#if defined(USE_MEMCACHE_COOKIE)
+  if (IS_COOKIE_STORE_MEMCACHE(dconf->cookie_store_type)) {
+    if (! chxj_cookie_lock_memcache(r, dconf)) {
+      ERR(r, "failed: chxj_cookie_lock_memcache()");
+      return 0;
+    }
+    done_proc = 1;
+  } 
+#endif
+  if (!done_proc) {
+    if (! chxj_cookie_lock_dbm(r, dconf)) {
+      ERR(r, "failed: chxj_cookie_lock_dbm()");
+      return 0;
+    }
+  }
+  DBG(r, "end   chxj_cookie_lock()");
+  return 1;
+}
+
+
+int
+chxj_cookie_unlock(request_rec *r)
+{
+  mod_chxj_config *dconf;
+  int done_proc = 0;
+  apr_status_t rv;
+  int rtn = 1;
+
+  DBG(r, "start chxj_cookie_unlock()");
+
+  dconf = chxj_get_module_config(r->per_dir_config, &chxj_module);
+#if defined(USE_MYSQL_COOKIE)
+  if (IS_COOKIE_STORE_MYSQL(dconf->cookie_store_type)) {
+    if (! chxj_cookie_unlock_mysql(r, dconf)) {
+      ERR(r, "failed: chxj_cookie_unlock_mysql()");
+      rtn = 0;
+      goto end_chxj_cookie_unlock;
+    }
+    done_proc = 1;
+  } 
+#endif
+#if defined(USE_MEMCACHE_COOKIE)
+  if (IS_COOKIE_STORE_MEMCACHE(dconf->cookie_store_type)) {
+    if (! chxj_cookie_unlock_memcache(r, dconf)) {
+      ERR(r, "failed: chxj_cookie_unlock_memcache()");
+      rtn = 0;
+      goto end_chxj_cookie_unlock;
+    }
+    done_proc = 1;
+  } 
+#endif
+  if (!done_proc) {
+    if (! chxj_cookie_unlock_dbm(r, dconf)) {
+      ERR(r, "failed: chxj_cookie_unlock_dbm()");
+      rtn = 0;
+      goto end_chxj_cookie_unlock;
+    }
+  }
+end_chxj_cookie_unlock:
+  if ((rv = apr_proc_mutex_unlock(global_cookie_mutex)) != APR_SUCCESS) {
+    char errstr[255];
+    ERR(r, "%s:%d apr_proc_mutex_unlock failure.(%d:%s)", APLOG_MARK, rv, apr_strerror(rv, errstr, 255));
+    return 0;
+  }
+  DBG(r, "end   chxj_cookie_unlock()");
+
+  return rtn;
 }
 /*
  * vim:ts=2 et

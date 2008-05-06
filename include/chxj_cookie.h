@@ -33,11 +33,14 @@
 #define COOKIE_EXPIRE_DB_LOCK_NAME      "cookie.expire.db.lock"
 
 #define REFERER_COOKIE_KEY              "CHXJ_REFER"
+#define CHXJ_COOKIE_PROC_MUTEX_FILE     "/tmp/chxj_cookie_mutex.lock"
 
 /* 
  * default cookie timeout is 30 minute
  */
 #define DEFAULT_COOKIE_TIMEOUT          (1800)
+
+extern apr_proc_mutex_t *global_cookie_mutex;
 
 
 typedef struct cookie_t cookie_t;
@@ -113,6 +116,8 @@ extern cookie_t* chxj_update_cookie(
   cookie_t*    old_cookie);
 
 extern apr_time_t chxj_parse_cookie_expires(const char *s);
+extern int chxj_cookie_lock(request_rec *r);
+extern int chxj_cookie_unlock(request_rec *r);
 #endif
 /*
  * vim:ts=2 et

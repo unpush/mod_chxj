@@ -439,11 +439,13 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry *entryp)
     if (strcasecmp(name, CHXJ_COOKIE_PARAM) == 0) {
       DBG(r, "found cookie parameter[%s]", value);
       DBG(r, "call start chxj_load_cookie()");
+      chxj_cookie_lock(r);
       cookie = chxj_load_cookie(r, value);
       DBG(r, "call end   chxj_load_cookie()");
       if (! no_update_flag && cookie) {
         chxj_update_cookie(r, cookie);
       }
+      chxj_cookie_unlock(r);
     }
   }
   r->args = result;
@@ -699,8 +701,10 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
         case CHXJ_SPEC_Chtml_7_0:
         case CHXJ_SPEC_Jhtml:
         case CHXJ_SPEC_Jxhtml:
+          chxj_cookie_lock(r);
           cookie = chxj_save_cookie(r);
           s_add_cookie_id_if_has_location_header(r, cookie);
+          chxj_cookie_unlock(r);
           break;
         default:
           break;
@@ -776,6 +780,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
         ctx = (mod_chxj_ctx *)f->ctx;
 
         DBG(r, "content_type=[%s]", r->content_type);
+        chxj_cookie_lock(r);
 
         if (spec->html_spec_type != CHXJ_SPEC_UNKNOWN 
             && r->content_type 
@@ -791,19 +796,12 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
             memset(tmp, 0, ctx->len + 1);
             memcpy(tmp, ctx->buffer, ctx->len);
 
-#if 0
-            DBG(r, "input data=[%s] len=[%d]", tmp, ctx->len);
-#endif
-
             ctx->buffer = chxj_convert(r, 
                                        (const char **)&tmp, 
                                        (apr_size_t *)&ctx->len,
                                        spec,
                                        user_agent, &cookie);
 
-#if 0
-            DBG(r, "output data=[%.*s]", ctx->len,ctx->buffer);
-#endif
           }
           else {
             ctx->buffer = apr_psprintf(r->pool, "\n");
@@ -855,6 +853,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
             sts = chxj_qrcode_create_image_data(&qrcode, &ctx->buffer, &ctx->len);
             if (sts != OK) {
               ERR(r, "qrcode create failed.");
+              chxj_cookie_unlock(r);
               return sts;
             }
             r->content_type = apr_psprintf(r->pool, "image/jpeg");
@@ -897,9 +896,13 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
         if (ctx->len > 0) {
           DBG(r, "call pass_data_to_filter()");
           s_add_cookie_id_if_has_location_header(r, cookie);
+          chxj_cookie_unlock(r);
           rv = pass_data_to_filter(f, 
                                    (const char *)ctx->buffer, 
                                    (apr_size_t)ctx->len);
+        }
+        else {
+          chxj_cookie_unlock(r);
         }
         f->ctx = NULL;
 
@@ -923,11 +926,13 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
           case CHXJ_SPEC_Chtml_7_0:
           case CHXJ_SPEC_Jhtml:
           case CHXJ_SPEC_Jxhtml:
+            chxj_cookie_lock(r);
             cookie = chxj_save_cookie(r);
             /*
              * Location Header Check to add cookie parameter.
              */
             s_add_cookie_id_if_has_location_header(r, cookie);
+            chxj_cookie_unlock(r);
             break;
 
           default:
@@ -1188,6 +1193,7 @@ chxj_init_module(apr_pool_t *p,
                  server_rec *s)
 {
   void *user_data;
+  apr_status_t rv;
 
   SDBG(s, "start chxj_init_module()");
 
@@ -1209,7 +1215,11 @@ chxj_init_module(apr_pool_t *p,
 
   ap_add_version_component(p, CHXJ_VERSION_PREFIX CHXJ_VERSION);
 
-
+  if ((rv = apr_proc_mutex_create(&global_cookie_mutex, NULL,  APR_LOCK_FCNTL, s->process->pool)) != APR_SUCCESS) {
+    char errstr[255];
+    SERR(s, "%s:%d end chxj_init_module(). mutex create failure.(%d:%s)",APLOG_MARK, rv,apr_strerror(rv,errstr,255));
+    return HTTP_INTERNAL_SERVER_ERROR;
+  }
 #if 0
   conf = (mod_chxj_global_config *)ap_get_module_config(s->module_config, 
                                                         &chxj_module);
@@ -1237,9 +1247,12 @@ chxj_init_module(apr_pool_t *p,
 static void 
 chxj_child_init(apr_pool_t *UNUSED(p), server_rec *s)
 {
-
+  apr_status_t rv;
   SDBG(s, "start chxj_child_init()");
-
+  if ((rv = apr_proc_mutex_child_init(&global_cookie_mutex, NULL, s->process->pool)) != APR_SUCCESS) {
+    char errstr[255];
+    SERR(s, "%s:%d ERROR end chxj_init_module(). mutex create failure.(%d:%s)", APLOG_MARK, rv,apr_strerror(rv,errstr,255));
+  }
   SDBG(s, "end   chxj_child_init()");
 }
 

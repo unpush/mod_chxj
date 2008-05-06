@@ -660,6 +660,20 @@ chxj_cookie_expire_gc_dbm(request_rec *r, mod_chxj_config *m)
   DBG(r, "end   chxj_cookie_expire_gc_dbm()");
   return CHXJ_TRUE;
 }
+
+
+int
+chxj_cookie_lock_dbm(request_rec *UNUSED(r), mod_chxj_config *UNUSED(m))
+{
+  return 1;  /* allways true */
+}
+
+
+int
+chxj_cookie_unlock_dbm(request_rec *UNUSED(r), mod_chxj_config *UNUSED(m))
+{
+  return 1; /* allways true */
+}
 /*
  * vim:ts=2 et
  */
