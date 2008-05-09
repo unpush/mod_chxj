@@ -93,25 +93,25 @@ dnl
 dnl SAVE COOKIE to memcached Mode
 dnl
 dnl ==================================================
-AC_ARG_ENABLE(memcache-cookie, [  --enable-memcache-cookie Please specify it when you save Cookie in memcached. ])
-AC_ARG_WITH(apr-memcache-header,   [  --with-apr-memcache-header Path of "apr_memcache.h"])
-AC_ARG_WITH(apr-memcache-lib-dir,   [  --with-apr-memcache-lib-dir Path of "libapr_memcache.so"])
+AC_ARG_ENABLE(memcache-cookie,   [  --enable-memcache-cookie Please specify it when you save Cookie in memcached. ])
+AC_ARG_WITH(memcached-header,    [  --with-memcached-header Path of "memcached.h"])
+AC_ARG_WITH(memcached-lib-dir,   [  --with-memcached-lib-dir Path of "libmemcached.so"])
 if test "x$enable_memcache_cookie" = "xyes" ; then
   dnl ======================================
   dnl use MEMCACHE COOKIE
   dnl ======================================
-  if test "x$with_apr_memcache_header" = "x" -o "x$with_apr_memcache_header" = "xyes" ; then
+  if test "x${with_memcached_header}" = "x" -o "x${with_memcached_header}" = "xyes" ; then
     AC_MSG_ERROR([
-Please specify the --with-apr-memcache-header And, please specify the place of the "apr_memcache.h" header file directory. 
+Please specify the --with-memcached-header And, please specify the place of the "memcached.h" header file directory. 
 ])
   fi
-  if test "x$with_apr_memcache_lib_dir" = "x" -o "x$with_apr_memcache_lib_dir" = "xyes" ; then
+  if test "x${with_memcached_lib_dir}" = "x" -o "x${with_memcached_lib_dir}" = "xyes" ; then
     AC_MSG_ERROR([
-Please specify the --with-apr-memcache-lib-dir And, please specify the place of apr-memcache library directory. 
+Please specify the --with-memcached-lib-dir And, please specify the place of libmemcached library directory. 
 ])
   fi
-  MEMCACHE_COOKIE_DEFS="-DUSE_MEMCACHE_COOKIE -I${with_apr_memcache_header}"
-  MEMCACHE_COOKIE_LIBS="-L${with_apr_memcache_lib_dir} -lapr_memcache"
+  MEMCACHE_COOKIE_DEFS="-DUSE_MEMCACHE_COOKIE -I${with_memcached_header} "
+  MEMCACHE_COOKIE_LIBS="-L${with_memcached_lib_dir} -lmemcached "
 else
   dnl ======================================
   dnl no use MEMCACHE COOKIE
@@ -240,7 +240,7 @@ LIBS="${LIBS} `${WAND_CONFIG} --ldflags` `${WAND_CONFIG} --libs | sed -e s/-ldps
 LIBS="${LIBS} `${APR_CONFIG} --ldflags` `${APR_CONFIG} --libs` "
 LIBS="${LIBS} `${APU_CONFIG} --ldflags` `${APU_CONFIG} --libs` "
 LIBS="${LIBS} ${MYSQL_COOKIE_LIBS}"
-LIBS="${LIBS} ${MEMCACHE_COOKIE_LIBS}"
+LIBS="${LIBS} ${MEMCACHE_COOKIE_LIBS} -lmemcache"
 CFLAGS="${CFLAGS} `${WAND_CONFIG} --cppflags` `${WAND_CONFIG} --cflags`"
 CFLAGS="${CFLAGS} `${APR_CONFIG} --includes` `${APR_CONFIG} --cflags` `${APR_CONFIG} --cppflags`"
 CFLAGS="${CFLAGS} `${APU_CONFIG} --includes`"

@@ -1508,8 +1508,8 @@ Optional Packages:
   --with-apr-config=ARG  Path of apr-config program file.
   --with-apu-config=ARG  Path of apu-config program file.
   --with-pcre-config=ARG  Path of pcre-config program file.
-  --with-apr-memcache-header Path of "apr_memcache.h"
-  --with-apr-memcache-lib-dir Path of "libapr_memcache.so"
+  --with-memcached-header Path of "memcached.h"
+  --with-memcached-lib-dir Path of "libmemcached.so"
   --with-mysql-header=ARG  Path of "mysql.h"
   --with-mysql-lib-dir=ARG Path of libmysqlclient
 
@@ -19441,38 +19441,38 @@ if test "${enable_memcache_cookie+set}" = set; then
 fi
 
 
-# Check whether --with-apr-memcache-header was given.
-if test "${with_apr_memcache_header+set}" = set; then
-  withval=$with_apr_memcache_header;
+# Check whether --with-memcached-header was given.
+if test "${with_memcached_header+set}" = set; then
+  withval=$with_memcached_header;
 fi
 
 
-# Check whether --with-apr-memcache-lib-dir was given.
-if test "${with_apr_memcache_lib_dir+set}" = set; then
-  withval=$with_apr_memcache_lib_dir;
+# Check whether --with-memcached-lib-dir was given.
+if test "${with_memcached_lib_dir+set}" = set; then
+  withval=$with_memcached_lib_dir;
 fi
 
 if test "x$enable_memcache_cookie" = "xyes" ; then
-        if test "x$with_apr_memcache_header" = "x" -o "x$with_apr_memcache_header" = "xyes" ; then
+        if test "x${with_memcached_header}" = "x" -o "x${with_memcached_header}" = "xyes" ; then
     { { echo "$as_me:$LINENO: error:
-Please specify the --with-apr-memcache-header And, please specify the place of the \"apr_memcache.h\" header file directory.
+Please specify the --with-memcached-header And, please specify the place of the \"memcached.h\" header file directory.
 " >&5
 echo "$as_me: error:
-Please specify the --with-apr-memcache-header And, please specify the place of the \"apr_memcache.h\" header file directory.
+Please specify the --with-memcached-header And, please specify the place of the \"memcached.h\" header file directory.
 " >&2;}
    { (exit 1); exit 1; }; }
   fi
-  if test "x$with_apr_memcache_lib_dir" = "x" -o "x$with_apr_memcache_lib_dir" = "xyes" ; then
+  if test "x${with_memcached_lib_dir}" = "x" -o "x${with_memcached_lib_dir}" = "xyes" ; then
     { { echo "$as_me:$LINENO: error:
-Please specify the --with-apr-memcache-lib-dir And, please specify the place of apr-memcache library directory.
+Please specify the --with-memcached-lib-dir And, please specify the place of libmemcached library directory.
 " >&5
 echo "$as_me: error:
-Please specify the --with-apr-memcache-lib-dir And, please specify the place of apr-memcache library directory.
+Please specify the --with-memcached-lib-dir And, please specify the place of libmemcached library directory.
 " >&2;}
    { (exit 1); exit 1; }; }
   fi
-  MEMCACHE_COOKIE_DEFS="-DUSE_MEMCACHE_COOKIE -I${with_apr_memcache_header}"
-  MEMCACHE_COOKIE_LIBS="-L${with_apr_memcache_lib_dir} -lapr_memcache"
+  MEMCACHE_COOKIE_DEFS="-DUSE_MEMCACHE_COOKIE -I${with_memcached_header} "
+  MEMCACHE_COOKIE_LIBS="-L${with_memcached_lib_dir} -lmemcached "
 else
         MEMCACHE_COOKIE_DEFS=""
   MEMCACHE_COOKIE_LIBS=""
@@ -19942,7 +19942,7 @@ LIBS="${LIBS} `${WAND_CONFIG} --ldflags` `${WAND_CONFIG} --libs | sed -e s/-ldps
 LIBS="${LIBS} `${APR_CONFIG} --ldflags` `${APR_CONFIG} --libs` "
 LIBS="${LIBS} `${APU_CONFIG} --ldflags` `${APU_CONFIG} --libs` "
 LIBS="${LIBS} ${MYSQL_COOKIE_LIBS}"
-LIBS="${LIBS} ${MEMCACHE_COOKIE_LIBS}"
+LIBS="${LIBS} ${MEMCACHE_COOKIE_LIBS} -lmemcache"
 CFLAGS="${CFLAGS} `${WAND_CONFIG} --cppflags` `${WAND_CONFIG} --cflags`"
 CFLAGS="${CFLAGS} `${APR_CONFIG} --includes` `${APR_CONFIG} --cflags` `${APR_CONFIG} --cppflags`"
 CFLAGS="${CFLAGS} `${APU_CONFIG} --includes`"

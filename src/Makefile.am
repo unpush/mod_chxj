@@ -54,7 +54,7 @@ clean:
 	rm -f mod_chxj.so
 
 install: make_so
-	@@APXS@ -i -n "chxj" @PACKAGE_NAME@.so
+	@@APXS@ -i -n "chxj" @PACKAGE_NAME@.so 
 
 activate: make_so
 	@@APXS@ -i -a -n "chxj" @PACKAGE_NAME@.so

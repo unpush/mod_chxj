@@ -20,7 +20,6 @@
 
 #include "mod_chxj.h"
 #include "apr.h"
-#include "apr_memcache.h"
 
 #define DEFAULT_MEMCACHE_HOST "localhost"
 
@@ -31,7 +30,7 @@ typedef struct {
 
 
 extern int chxj_memcache_init(request_rec *r, mod_chxj_config *m);
-extern int chxj_memcache_and_memcache_server_create(request_rec *r, mod_chxj_config *m, apr_memcache_server_t **memcache_server, apr_memcache_t **memcache);
+extern int chxj_memcache_and_memcache_server_create(request_rec *r, mod_chxj_config *m);
 extern int chxj_memcache_set_cookie(request_rec *r, mod_chxj_config *m, const char *cookie_id, const char *store_string);
 extern char *chxj_memcache_get_cookie(request_rec *r, mod_chxj_config *m, const char *cookie_id);
 extern int chxj_memcache_delete_cookie(request_rec *r, mod_chxj_config *m, const char *cookie_id);
