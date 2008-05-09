@@ -94,6 +94,7 @@ dnl SAVE COOKIE to memcached Mode
 dnl
 dnl ==================================================
 AC_ARG_ENABLE(memcache-cookie,   [  --enable-memcache-cookie Please specify it when you save Cookie in memcached. ])
+AC_ARG_ENABLE(memcached-static,  [  --enable-memcached-static use static link. ])
 AC_ARG_WITH(memcached-header,    [  --with-memcached-header Path of "memcached.h"])
 AC_ARG_WITH(memcached-lib-dir,   [  --with-memcached-lib-dir Path of "libmemcached.so"])
 if test "x$enable_memcache_cookie" = "xyes" ; then
@@ -110,8 +111,13 @@ Please specify the --with-memcached-header And, please specify the place of the 
 Please specify the --with-memcached-lib-dir And, please specify the place of libmemcached library directory. 
 ])
   fi
-  MEMCACHE_COOKIE_DEFS="-DUSE_MEMCACHE_COOKIE -I${with_memcached_header} "
-  MEMCACHE_COOKIE_LIBS="-L${with_memcached_lib_dir} -lmemcached "
+  if test "x$enable_memcached_static" = "xyes" ; then
+    MEMCACHE_COOKIE_DEFS="-DUSE_MEMCACHE_COOKIE -I${with_memcached_header} "
+    MEMCACHE_COOKIE_LIBS=" ${with_memcached_lib_dir}/libmemcached.a "
+  else
+    MEMCACHE_COOKIE_DEFS="-DUSE_MEMCACHE_COOKIE -I${with_memcached_header} "
+    MEMCACHE_COOKIE_LIBS="-L${with_memcached_lib_dir} -lmemcached "
+  fi
 else
   dnl ======================================
   dnl no use MEMCACHE COOKIE
@@ -240,7 +246,7 @@ LIBS="${LIBS} `${WAND_CONFIG} --ldflags` `${WAND_CONFIG} --libs | sed -e s/-ldps
 LIBS="${LIBS} `${APR_CONFIG} --ldflags` `${APR_CONFIG} --libs` "
 LIBS="${LIBS} `${APU_CONFIG} --ldflags` `${APU_CONFIG} --libs` "
 LIBS="${LIBS} ${MYSQL_COOKIE_LIBS}"
-LIBS="${LIBS} ${MEMCACHE_COOKIE_LIBS} -lmemcache"
+LIBS="${LIBS} ${MEMCACHE_COOKIE_LIBS} "
 CFLAGS="${CFLAGS} `${WAND_CONFIG} --cppflags` `${WAND_CONFIG} --cflags`"
 CFLAGS="${CFLAGS} `${APR_CONFIG} --includes` `${APR_CONFIG} --cflags` `${APR_CONFIG} --cppflags`"
 CFLAGS="${CFLAGS} `${APU_CONFIG} --includes`"
