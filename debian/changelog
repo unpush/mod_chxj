@@ -1,3 +1,24 @@
+libapache2-mod-chxj (0.12.0-1) unstable; urgency=low
+
+  * Fixed bug.
+    - '+' has not been converted into ' '.
+    - A double quart and a single quart were able to be used for the attribute value. 
+    - When the request parameter name is Japanese, the parameter name is a bug that doesn't convert the character-code. 
+    - The bug that the result area has not been initialized while processing the cookie loading of the COOKIE MYSQL function
+    - In the COOKIE MYSQL function, the connection to MYSQL was not occasionally closed. 
+  * Added Features.
+    - Added alink attribute for body tag.
+    - Added vlink attribute for body tag.
+    - Added dir attribute for dir tag.
+    - Added size attribute for font tag.
+    - Added color attribute for hr tag.
+    - Added bgcolor attribute for marquee tag.
+    - Added type attribute for ul tag.
+    - Added lang="jxhtml" attribute value for chxj:if tag.
+  * Revoked apr_memcache and used libmemcached.
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Sat, 10 May 2008 17:08:48 +0900
+
 libapache2-mod-chxj (0.11.1-1) unstable; urgency=low
 
   * Fixed bug. 
