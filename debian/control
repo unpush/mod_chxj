@@ -1,7 +1,7 @@
 Source: libapache2-mod-chxj
 Priority: optional
 Maintainer: Atsushi Konno <konn@users.sourceforge.jp>
-Build-Depends: debhelper (>= 5.0.42), autotools-dev, apache2-mpm-prefork (>=2.2.3), libapr1 (>=1.2.7), libaprutil1 (>=1.2.7), libmagick9-dev (>=6.2.4.5-0.6), libmysqlclient15-dev (>=5.0.32)
+Build-Depends: debhelper (>= 5.0.42), autotools-dev, apache2 (>=2.2.3), apache2-mpm-prefork (>=2.2.3), libapr1 (>=1.2.7), libaprutil1 (>=1.2.7), libmagick9-dev (>=6.2.4.5-0.6), libmysqlclient15-dev (>=5.0.32)
 Standards-Version: 3.6.2
 Section: libs
 
