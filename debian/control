@@ -16,6 +16,6 @@ Description: CHTML to HDML,XHTML,JHTML convert module.
 Package: libapache2-mod-chxj
 Section: libs
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, apache2 (>= 2.2.3-4), apache2-mpm-prefork (>= 2.2.3-4), apache2-threaded-dev (>= 2.2.3-4), apache2-utils (>= 2.2.3-4), apache2.2-common (>= 2.2.3-4), libapr1 (>= 1.2.7), libaprutil1 (>= 1.2.7), libmagick9-dev (>= 6.2.4.5-0.6), libmysqlclient15-dev (>= 5.0.32)
 Description: CHTML to HDML,XHTML,JHTML convert module.
   The contents conversion middleware for domestic main carrying (three careers) is made as a module for Apache2.2. UserAgent is seen when contents made with CHTML are output and it converts it into HDML, XHTML, and JHTML (The image : to JPG, GIF, JPG, GIF from PNG, and PNG and BMP). With QR code generation function. 
