@@ -475,7 +475,7 @@ chxj_convert_chtml10(
   chxj_dump_out("[dst] CHTML -> CHTML1.0", dst, *dstlen);
 #endif
 
-  DBG(r, "end   chxj_convert_chtml10() cookie_id=[%s] time=[%lld]", (cookie) ? cookie->cookie_id : "", apr_time_now() - t);
+  DBG(r, "end   chxj_convert_chtml10() cookie_id=[%s] time=[%" APR_TIME_T_FMT "]", (cookie) ? cookie->cookie_id : "", apr_time_now() - t);
 
   return dst;
 }
