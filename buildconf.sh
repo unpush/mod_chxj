@@ -1,6 +1,6 @@
 #!/bin/sh
 # autogen.sh - generates configure using the autotools
-# $Id: buildconf.sh 1836 2008-02-07 17:41:30Z konn $
+# $Id$
 #export WANT_AUTOCONF=2.5
 #libtoolize --force --copy
 rm -f ./aclocal.m4
