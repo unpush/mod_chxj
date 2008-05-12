@@ -154,8 +154,8 @@ qs_alloc_zero_byte_string(apr_pool_t *pool)
  * @param s    [i]   The character string that should be removed is specified.
  * @return The character string that has been removed is returned.
  */
-char*
-qs_trim_string(apr_pool_t *p, char* s)
+char *
+qs_trim_string(apr_pool_t *p, char *s)
 {
   char *ss = apr_pstrdup(p, s);
   int len = strlen(s);
@@ -203,15 +203,8 @@ qs_get_selected_value_text(Doc *doc, Node *node, apr_pool_t *pool)
       for (attr =  qs_get_attr(doc,child); 
            attr != NULL; 
            attr = qs_get_next_attr(doc,attr)) {
-<<<<<<< HEAD:src/chxj_tag_util.c
-        char *name  = qs_get_attr_name(doc,attr);
-        DBG(r, "qs_get_selected_value name::[%s]" , name);
-
-        if ((*name == 's'|| *name == 'S') && strcasecmp(name, "selected") == 0) {
-=======
         char *name2  = qs_get_attr_name(doc,attr);
         if (STRCASEEQ('s','S',"selected",name2)) {
->>>>>>>   * updated new trunk.:src/chxj_tag_util.c
           /*------------------------------------------------------------------*/
           /* SELECTED Value Found                                             */
           /*------------------------------------------------------------------*/
@@ -439,11 +432,7 @@ qs_get_maxlength_attr(Doc *doc, Node *tag, apr_pool_t *pool)
  * @return 1 is returned when it is CHECKED and, additionally, 0 is returned. 
  */
 int
-<<<<<<< HEAD:src/chxj_tag_util.c
-qs_is_checked_checkbox_attr(Doc* doc, Node* tag, request_rec* UNUSED(r))
-=======
 qs_is_checked_checkbox_attr(Doc *doc, Node *tag, apr_pool_t *UNUSED(pool))
->>>>>>>   * updated new trunk.:src/chxj_tag_util.c
 {
   Attr *attr;
   for (attr = qs_get_attr(doc,tag);

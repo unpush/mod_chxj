@@ -305,10 +305,6 @@ chxj_update_cookie(request_rec *r, cookie_t *old_cookie)
   cookie = (cookie_t *)apr_palloc(r->pool, sizeof(cookie_t));
   cookie->cookie_id = NULL;
 
-<<<<<<< HEAD:src/chxj_cookie.c
-
-=======
->>>>>>>   * updated new trunk.:src/chxj_cookie.c
   dconf = chxj_get_module_config(r->per_dir_config, &chxj_module);
   entryp = chxj_apply_convrule(r, dconf->convrules);
   if (! entryp) {

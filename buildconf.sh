@@ -7,10 +7,6 @@ rm -f ./aclocal.m4
 rm -f ./Makefile
 rm -f ./Makefile.in
 rm -f ./configure
-<<<<<<< HEAD:buildconf.sh
-#libtoolize --force --copy
-=======
->>>>>>>   * updated new trunk.:buildconf.sh
 rm -f ./config.guess
 rm -f ./config.log
 rm -f ./config.sub

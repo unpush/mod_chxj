@@ -96,22 +96,6 @@ static char *s_chtml30_chxjif_tag         (void *pdoc, Node *node);
 static char *s_chtml30_text_tag           (void *pdoc, Node *node);
 static char *s_chtml30_start_blockquote_tag(void *pdoc, Node *node);
 static char *s_chtml30_end_blockquote_tag  (void *pdoc, Node *node);
-<<<<<<< HEAD:src/chxj_chtml30.c
-static char *s_chtml30_start_dir_tag(void *pdoc, Node *node);
-static char *s_chtml30_end_dir_tag  (void *pdoc, Node *node);
-static char *s_chtml30_start_dl_tag(void *pdoc, Node *node);
-static char *s_chtml30_end_dl_tag  (void *pdoc, Node *node);
-static char *s_chtml30_start_dt_tag(void *pdoc, Node *node);
-static char *s_chtml30_end_dt_tag  (void *pdoc, Node *node);
-static char *s_chtml30_start_dd_tag(void *pdoc, Node *node);
-static char *s_chtml30_end_dd_tag  (void *pdoc, Node *node);
-static char *s_chtml30_start_marquee_tag(void *pdoc, Node *node);
-static char *s_chtml30_end_marquee_tag  (void *pdoc, Node *node);
-static char *s_chtml30_start_blink_tag  (void *pdoc, Node *node);
-static char *s_chtml30_end_blink_tag    (void *pdoc, Node *node);
-static char *s_chtml30_start_menu_tag   (void *pdoc, Node *node);
-static char *s_chtml30_end_menu_tag     (void *pdoc, Node *node);
-=======
 static char *s_chtml30_start_dir_tag      (void *pdoc, Node *node);
 static char *s_chtml30_end_dir_tag        (void *pdoc, Node *node);
 static char *s_chtml30_start_dl_tag       (void *pdoc, Node *node);
@@ -126,7 +110,6 @@ static char *s_chtml30_start_blink_tag    (void *pdoc, Node *node);
 static char *s_chtml30_end_blink_tag      (void *pdoc, Node *node);
 static char *s_chtml30_start_menu_tag     (void *pdoc, Node *node);
 static char *s_chtml30_end_menu_tag       (void *pdoc, Node *node);
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
 static char *s_chtml30_start_plaintext_tag       (void *pdoc, Node *node);
 static char *s_chtml30_start_plaintext_tag_inner (void *pdoc, Node *node);
 static char *s_chtml30_end_plaintext_tag         (void *pdoc, Node *node);
@@ -430,11 +413,7 @@ chxj_convert_chtml30(
   chtml30_t chtml30;
   Doc       doc;
 
-<<<<<<< HEAD:src/chxj_chtml30.c
-  DBG(r, "start chxj_exchange_chtml30()");
-=======
   DBG(r, "start chxj_convert_chtml30()");
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
 
   /*--------------------------------------------------------------------------*/
   /* If qrcode xml                                                            */
@@ -443,11 +422,7 @@ chxj_convert_chtml30(
   dst = chxj_qr_code_blob_handler(r, src, (size_t*)dstlen);
   if (dst) {
     DBG(r,"i found qrcode xml");
-<<<<<<< HEAD:src/chxj_chtml30.c
-    DBG(r, "end chxj_exchange_chtml30()");
-=======
     DBG(r, "end chxj_convert_chtml30()");
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
     return dst;
   }
   DBG(r,"not found qrcode xml");
@@ -502,11 +477,7 @@ chxj_convert_chtml30(
   chxj_dump_out("[src] CHTML -> CHTML3.0", dst, *dstlen);
 #endif
 
-<<<<<<< HEAD:src/chxj_chtml30.c
-  DBG(r, "end chxj_exchange_chtml30()");
-=======
   DBG(r, "end chxj_convert_chtml30()");
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   return dst;
 }
 
@@ -530,11 +501,7 @@ s_init_chtml30(chtml30_t *chtml30, Doc *doc, request_rec *r, device_table *spec)
   doc->r        = r;
   chtml30->doc  = doc;
   chtml30->spec = spec;
-<<<<<<< HEAD:src/chxj_chtml30.c
-  chtml30->out  = qs_alloc_zero_byte_string(r);
-=======
   chtml30->out  = qs_alloc_zero_byte_string(r->pool);
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   chtml30->conf = chxj_get_module_config(r->per_dir_config, &chxj_module);
   chtml30->doc->parse_mode = PARSE_MODE_CHTML;
 }
@@ -614,11 +581,8 @@ s_chtml30_start_html_tag(void *pdoc, Node *UNUSED(node))
   /* start HTML tag                                                           */
   /*--------------------------------------------------------------------------*/
   W_L("<html>");
-<<<<<<< HEAD:src/chxj_chtml30.c
-=======
   W_NLCODE();
 
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   return chtml30->out;
 }
 
@@ -640,10 +604,6 @@ s_chtml30_end_html_tag(void *pdoc, Node *UNUSED(child))
   W_L("</html>");
   W_NLCODE();
 
-<<<<<<< HEAD:src/chxj_chtml30.c
-  W_L("</html>");
-=======
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   return chtml30->out;
 }
 
@@ -784,10 +744,6 @@ s_chtml30_start_head_tag(void* pdoc, Node* UNUSED(node))
   W_L("<head>");
   W_NLCODE();
 
-<<<<<<< HEAD:src/chxj_chtml30.c
-  W_L("<head>");
-=======
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   return chtml30->out;
 }
 
@@ -809,11 +765,6 @@ s_chtml30_end_head_tag(void *pdoc, Node *UNUSED(node))
   W_L("</head>");
   W_NLCODE();
 
-<<<<<<< HEAD:src/chxj_chtml30.c
-  W_L("</head>");
-
-=======
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   return chtml30->out;
 }
 
@@ -856,11 +807,6 @@ s_chtml30_end_title_tag(void *pdoc, Node *UNUSED(child))
   W_L("</title>");
   W_NLCODE();
 
-<<<<<<< HEAD:src/chxj_chtml30.c
-  W_L("</title>");
-
-=======
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   return chtml30->out;
 }
 
@@ -901,10 +847,7 @@ s_chtml30_start_base_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-<<<<<<< HEAD:src/chxj_chtml30.c
-=======
   W_NLCODE();
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   return chtml30->out;
 }
 
@@ -993,10 +936,7 @@ s_chtml30_start_body_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-<<<<<<< HEAD:src/chxj_chtml30.c
-=======
   W_NLCODE();
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   return chtml30->out;
 }
 
@@ -1019,10 +959,7 @@ s_chtml30_end_body_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml30->doc;
 
   W_L("</body>");
-<<<<<<< HEAD:src/chxj_chtml30.c
-=======
   W_NLCODE();
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
 
   return chtml30->out;
 }
@@ -1055,18 +992,8 @@ s_chtml30_start_a_tag(void *pdoc, Node *node)
   for (attr = qs_get_attr(doc,node);
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
-<<<<<<< HEAD:src/chxj_chtml30.c
-
-    char *name;
-    char *value;
-
-    name  = qs_get_attr_name(doc,attr);
-    value = qs_get_attr_value(doc,attr);
-
-=======
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
     if (STRCASEEQ('n','N',"name", name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML1.0                                                             */
@@ -1170,8 +1097,8 @@ s_chtml30_start_a_tag(void *pdoc, Node *node)
  * @param node   [i]   The A tag node is specified.
  * @return The conversion result is returned.
  */
-static char*
-s_chtml30_end_a_tag(void* pdoc, Node* UNUSED(child)) 
+static char *
+s_chtml30_end_a_tag(void *pdoc, Node *UNUSED(child)) 
 {
   chtml30_t   *chtml30;
   Doc         *doc;
@@ -1197,17 +1124,10 @@ s_chtml30_end_a_tag(void* pdoc, Node* UNUSED(child))
 static char *
 s_chtml30_start_br_tag(void *pdoc, Node *node)
 {
-<<<<<<< HEAD:src/chxj_chtml30.c
-  chtml30_t     *chtml30;
-  Doc           *doc;
-  request_rec   *r;
-  Attr          *attr;
-=======
   chtml30_t   *chtml30;
   Doc         *doc;
   request_rec *r;
   Attr        *attr;
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
 
   chtml30 = GET_CHTML30(pdoc);
   doc     = chtml30->doc;
@@ -1219,17 +1139,8 @@ s_chtml30_start_br_tag(void *pdoc, Node *node)
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-<<<<<<< HEAD:src/chxj_chtml30.c
-    char *name;
-    char *value;
-
-    name  = qs_get_attr_name(doc,attr);
-    value = qs_get_attr_value(doc,attr);
-
-=======
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
     if (STRCASEEQ('c','C',"clear",name)) {
       if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('a','A',"all",value))) {
         W_L(" clear=\"");
@@ -1239,10 +1150,7 @@ s_chtml30_start_br_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-<<<<<<< HEAD:src/chxj_chtml30.c
-=======
   W_NLCODE();
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   return chtml30->out;
 }
 
@@ -1259,10 +1167,7 @@ static char *
 s_chtml30_end_br_tag(void *pdoc, Node *UNUSED(child)) 
 {
   chtml30_t *chtml30 = GET_CHTML30(pdoc);
-<<<<<<< HEAD:src/chxj_chtml30.c
-=======
 
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   return chtml30->out;
 }
 
@@ -1304,10 +1209,7 @@ s_chtml30_end_tr_tag(void *pdoc, Node *UNUSED(child))
   r       = doc->r;
 
   W_L("<br>");
-<<<<<<< HEAD:src/chxj_chtml30.c
-=======
   W_NLCODE();
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
 
   return chtml30->out;
 }
@@ -1343,14 +1245,8 @@ s_chtml30_start_font_tag(void *pdoc, Node *node)
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('c','C',"color", name) && value && *value) {
-<<<<<<< HEAD:src/chxj_chtml30.c
-      W_L(" color=\"");
-      W_V(value);
-      W_L("\"");
-=======
       color = apr_pstrdup(doc->buf.pool, value);
       break;
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
     }
     else if (STRCASEEQ('s','S',"size", name)) {
       /*----------------------------------------------------------------------*/
@@ -1513,16 +1409,6 @@ s_chtml30_start_input_tag(void *pdoc, Node *node)
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
   /*--------------------------------------------------------------------------*/
-<<<<<<< HEAD:src/chxj_chtml30.c
-  type       = qs_get_type_attr(doc, node, r);
-  name       = qs_get_name_attr(doc, node, r);
-  value      = qs_get_value_attr(doc,node,r);
-  istyle     = qs_get_istyle_attr(doc,node,r);
-  max_length = qs_get_maxlength_attr(doc,node,r);
-  checked    = qs_get_checked_attr(doc,node,r);
-  accesskey  = qs_get_accesskey_attr(doc, node, r);
-  size       = qs_get_size_attr(doc, node, r);
-=======
   type       = qs_get_type_attr(doc, node, doc->buf.pool);
   name       = qs_get_name_attr(doc, node, doc->buf.pool);
   value      = qs_get_value_attr(doc,node,doc->buf.pool);
@@ -1531,7 +1417,6 @@ s_chtml30_start_input_tag(void *pdoc, Node *node)
   checked    = qs_get_checked_attr(doc,node,doc->buf.pool);
   accesskey  = qs_get_accesskey_attr(doc, node, doc->buf.pool);
   size       = qs_get_size_attr(doc, node, doc->buf.pool);
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
 
   if (type) {
     type = qs_trim_string(doc->buf.pool, type);
@@ -1598,10 +1483,7 @@ s_chtml30_start_input_tag(void *pdoc, Node *node)
     W_L(" checked");
   }
   W_L(">");
-<<<<<<< HEAD:src/chxj_chtml30.c
-=======
   W_NLCODE();
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   return chtml30->out;
 }
 
@@ -1696,13 +1578,8 @@ s_chtml30_start_hr_tag(void *pdoc, Node *node)
   for (attr = qs_get_attr(doc,node);
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
-<<<<<<< HEAD:src/chxj_chtml30.c
-    char* name = qs_get_attr_name(doc,attr);
-    char* value = qs_get_attr_value(doc,attr);
-=======
     char *name = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
     if (STRCASEEQ('a','A',"align", name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
@@ -1747,11 +1624,8 @@ s_chtml30_start_hr_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-<<<<<<< HEAD:src/chxj_chtml30.c
-=======
   W_NLCODE();
 
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   return chtml30->out;
 }
 
@@ -1808,10 +1682,6 @@ s_chtml30_start_img_tag(void *pdoc, Node *node)
        attr = qs_get_next_attr(doc,attr)) {
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
-<<<<<<< HEAD:src/chxj_chtml30.c
-
-=======
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
     if (STRCASEEQ('s','S',"src", name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
@@ -1850,16 +1720,6 @@ s_chtml30_start_img_tag(void *pdoc, Node *node)
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
-<<<<<<< HEAD:src/chxj_chtml30.c
-      if (value && (STRCASEEQ('t','T',"top",   value) ||
-                    STRCASEEQ('m','M',"middle",value) ||
-                    STRCASEEQ('b','B',"bottom",value) ||
-                    STRCASEEQ('l','L',"left",  value) ||
-                    STRCASEEQ('r','R',"right", value))) {
-        W_L(" align=\"");
-        W_V(value);
-        W_L("\"");
-=======
       if (value) {
         if (STRCASEEQ('t','T',"top",   value) ||
             STRCASEEQ('m','M',"middle",value) ||
@@ -1875,7 +1735,6 @@ s_chtml30_start_img_tag(void *pdoc, Node *node)
           W_L("middle");
           W_L("\"");
         }
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
       }
     }
     else if (STRCASEEQ('w','W',"width", name) && value && *value) {
@@ -1960,19 +1819,11 @@ s_chtml30_end_img_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml30_start_select_tag(void *pdoc, Node *child)
 {
-<<<<<<< HEAD:src/chxj_chtml30.c
-  chtml30_t   *chtml30 = GET_CHTML30(pdoc);
-  Doc         *doc     = chtml30->doc;
-  char        *size    = NULL;
-  char        *name    = NULL;
-  char        *multiple    = NULL;
-=======
   chtml30_t   *chtml30  = GET_CHTML30(pdoc);
   Doc         *doc      = chtml30->doc;
   char        *size     = NULL;
   char        *name     = NULL;
   char        *multiple = NULL;
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   Attr        *attr;
 
   W_L("<select");
@@ -2014,10 +1865,7 @@ s_chtml30_start_select_tag(void *pdoc, Node *child)
     W_L(" multiple");
   }
   W_L(">");
-<<<<<<< HEAD:src/chxj_chtml30.c
-=======
   W_NLCODE();
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   return chtml30->out;
 }
 
@@ -2033,26 +1881,11 @@ s_chtml30_start_select_tag(void *pdoc, Node *child)
 static char *
 s_chtml30_end_select_tag(void *pdoc, Node *UNUSED(child))
 {
-<<<<<<< HEAD:src/chxj_chtml30.c
-  chtml30_t     *chtml30;
-  Doc           *doc;
-  request_rec   *r;
-=======
   chtml30_t    *chtml30 = GET_CHTML30(pdoc);
   Doc          *doc   = chtml30->doc;
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
 
-<<<<<<< HEAD:src/chxj_chtml30.c
-  chtml30 = GET_CHTML30(pdoc);
-  doc   = chtml30->doc;
-  r     = doc->r;
-=======
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   W_L("</select>");
-<<<<<<< HEAD:src/chxj_chtml30.c
-=======
   W_NLCODE();
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   return chtml30->out;
 }
 
@@ -2160,10 +1993,6 @@ s_chtml30_start_div_tag(void *pdoc, Node *child)
        attr = qs_get_next_attr(doc,attr)) {
     char *nm  = qs_get_attr_name(doc,attr);
     char *val = qs_get_attr_value(doc,attr);
-<<<<<<< HEAD:src/chxj_chtml30.c
-
-=======
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
     if (STRCASEEQ('a','A',"align", nm)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0 (W3C version 3.2)                                          */
@@ -2201,11 +2030,6 @@ s_chtml30_end_div_tag(void *pdoc, Node *UNUSED(node))
   W_L("</div>");
   W_NLCODE();
 
-<<<<<<< HEAD:src/chxj_chtml30.c
-  W_L("</div>");
-
-=======
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   return chtml30->out;
 }
 
@@ -2339,10 +2163,7 @@ s_chtml30_start_p_tag(void *pdoc, Node *node)
     W_L("\"");
   }
   W_L(">");
-<<<<<<< HEAD:src/chxj_chtml30.c
-=======
   W_NLCODE();
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   return chtml30->out;
 }
 
@@ -2412,11 +2233,8 @@ s_chtml30_start_ol_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-<<<<<<< HEAD:src/chxj_chtml30.c
-=======
   W_NLCODE();
 
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   return chtml30->out;
 }
 
@@ -2453,20 +2271,9 @@ s_chtml30_end_ol_tag(void *pdoc, Node *UNUSED(node))
 static char *
 s_chtml30_start_li_tag(void *pdoc, Node *node) 
 {
-<<<<<<< HEAD:src/chxj_chtml30.c
-  chtml30_t     *chtml30;
-  Doc           *doc;
-  request_rec   *r;
-  Attr          *attr;
-
-  chtml30 = GET_CHTML30(pdoc);
-  doc     = chtml30->doc;
-  r       = doc->r;
-=======
   chtml30_t   *chtml30 = GET_CHTML30(pdoc);
   Doc         *doc     = chtml30->doc;
   Attr        *attr;
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
 
   W_L("<li");
   /*--------------------------------------------------------------------------*/
@@ -2489,10 +2296,6 @@ s_chtml30_start_li_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-<<<<<<< HEAD:src/chxj_chtml30.c
-
-=======
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   return chtml30->out;
 }
 
@@ -2509,10 +2312,7 @@ static char *
 s_chtml30_end_li_tag(void *pdoc, Node *UNUSED(child)) 
 {
   chtml30_t *chtml30 = GET_CHTML30(pdoc);
-<<<<<<< HEAD:src/chxj_chtml30.c
-=======
 
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   return chtml30->out;
 }
 
@@ -2576,10 +2376,7 @@ s_chtml30_end_h1_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml30->doc;
 
   W_L("</h1>");
-<<<<<<< HEAD:src/chxj_chtml30.c
-=======
   W_NLCODE();
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
 
   return chtml30->out;
 }
@@ -2609,15 +2406,8 @@ s_chtml30_start_h2_tag(void *pdoc, Node *node)
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-<<<<<<< HEAD:src/chxj_chtml30.c
-    char* name;
-    char* value;
-    name  = qs_get_attr_name(doc,attr);
-    value = qs_get_attr_value(doc,attr);
-=======
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
     if (STRCASEEQ('a','A',"align", name)) {
       if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('c','C',"center",value))) {
         W_L(" align=\"");
@@ -2649,11 +2439,6 @@ s_chtml30_end_h2_tag(void *pdoc, Node *UNUSED(child))
   W_L("</h2>");
   W_NLCODE();
 
-<<<<<<< HEAD:src/chxj_chtml30.c
-  W_L("</h2>");
-
-=======
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   return chtml30->out;
 }
 
@@ -2669,17 +2454,10 @@ s_chtml30_end_h2_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml30_start_h3_tag(void *pdoc, Node *node)
 {
-<<<<<<< HEAD:src/chxj_chtml30.c
-  chtml30_t     *chtml30;
-  Doc           *doc;
-  request_rec   *r;
-  Attr          *attr;
-=======
   chtml30_t   *chtml30;
   Doc         *doc;
   request_rec *r;
   Attr        *attr;
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
 
   chtml30 = GET_CHTML30(pdoc);
   doc     = chtml30->doc;
@@ -2689,15 +2467,8 @@ s_chtml30_start_h3_tag(void *pdoc, Node *node)
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-<<<<<<< HEAD:src/chxj_chtml30.c
-    char* name;
-    char* value;
-    name  = qs_get_attr_name(doc,attr);
-    value = qs_get_attr_value(doc,attr);
-=======
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
     if (STRCASEEQ('a','A',"align", name)) {
       if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('c','C',"center",value))) {
         W_L(" align=\"");
@@ -2730,11 +2501,6 @@ s_chtml30_end_h3_tag(void *pdoc, Node *UNUSED(child))
   W_L("</h3>");
   W_NLCODE();
 
-<<<<<<< HEAD:src/chxj_chtml30.c
-  W_L("</h3>");
-
-=======
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   return chtml30->out;
 }
 
@@ -2750,17 +2516,10 @@ s_chtml30_end_h3_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml30_start_h4_tag(void *pdoc, Node *node)
 {
-<<<<<<< HEAD:src/chxj_chtml30.c
-  chtml30_t     *chtml30;
-  Doc           *doc;
-  request_rec   *r;
-  Attr          *attr;
-=======
   chtml30_t   *chtml30;
   Doc         *doc;
   request_rec *r;
   Attr        *attr;
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
 
   chtml30 = GET_CHTML30(pdoc);
   doc     = chtml30->doc;
@@ -2770,15 +2529,8 @@ s_chtml30_start_h4_tag(void *pdoc, Node *node)
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-<<<<<<< HEAD:src/chxj_chtml30.c
-    char* name;
-    char* value;
-    name  = qs_get_attr_name(doc,attr);
-    value = qs_get_attr_value(doc,attr);
-=======
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
     if (STRCASEEQ('a','A',"align", name)) {
       if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('c','C',"center",value))) {
         W_L(" align=\"");
@@ -2810,11 +2562,6 @@ s_chtml30_end_h4_tag(void *pdoc, Node *UNUSED(child))
   W_L("</h4>");
   W_NLCODE();
 
-<<<<<<< HEAD:src/chxj_chtml30.c
-  W_L("</h4>");
-
-=======
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   return chtml30->out;
 }
 
@@ -2843,15 +2590,8 @@ s_chtml30_start_h5_tag(void *pdoc, Node *node)
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-<<<<<<< HEAD:src/chxj_chtml30.c
-    char *name;
-    char *value;
-    name  = qs_get_attr_name(doc,attr);
-    value = qs_get_attr_value(doc,attr);
-=======
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
     if (STRCASEEQ('a','A',"align", name)) {
       if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('c','C',"center",value))) {
         W_L(" align=\"");
@@ -2883,11 +2623,6 @@ s_chtml30_end_h5_tag(void *pdoc, Node *UNUSED(child))
   W_L("</h5>");
   W_NLCODE();
 
-<<<<<<< HEAD:src/chxj_chtml30.c
-  W_L("</h5>");
-
-=======
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   return chtml30->out;
 }
 
@@ -2903,17 +2638,10 @@ s_chtml30_end_h5_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml30_start_h6_tag(void *pdoc, Node *node)
 {
-<<<<<<< HEAD:src/chxj_chtml30.c
-  chtml30_t     *chtml30;
-  Doc           *doc;
-  request_rec   *r;
-  Attr          *attr;
-=======
   chtml30_t   *chtml30;
   Doc         *doc;
   request_rec *r;
   Attr        *attr;
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
 
   chtml30 = GET_CHTML30(pdoc);
   doc     = chtml30->doc;
@@ -2923,15 +2651,8 @@ s_chtml30_start_h6_tag(void *pdoc, Node *node)
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-<<<<<<< HEAD:src/chxj_chtml30.c
-    char *name;
-    char *value;
-    name  = qs_get_attr_name(doc,attr);
-    value = qs_get_attr_value(doc,attr);
-=======
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
     if (STRCASEEQ('a','A',"align", name)) {
       if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value) || STRCASEEQ('c','C',"center",value))) {
         W_L(" align=\"");
@@ -2963,10 +2684,6 @@ s_chtml30_end_h6_tag(void *pdoc, Node *UNUSED(child))
   W_L("</h6>");
   W_NLCODE();
 
-<<<<<<< HEAD:src/chxj_chtml30.c
-  W_L("</h6>");
-=======
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   return chtml30->out;
 }
 
@@ -3025,16 +2742,8 @@ s_chtml30_start_textarea_tag(void *pdoc, Node *node)
       W_L("\"");
     }
   }
-<<<<<<< HEAD:src/chxj_chtml30.c
-
-=======
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   W_L(">");
-<<<<<<< HEAD:src/chxj_chtml30.c
-
-=======
   W_NLCODE();
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   return chtml30->out;
 }
 
@@ -3054,10 +2763,7 @@ s_chtml30_end_textarea_tag(void *pdoc, Node *UNUSED(child))
   Doc       *doc     = chtml30->doc;
 
   W_L("</textarea>");
-<<<<<<< HEAD:src/chxj_chtml30.c
-=======
   W_NLCODE();
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   chtml30->textarea_flag--;
 
   return chtml30->out;
@@ -3147,15 +2853,12 @@ s_chtml30_text_tag(void *pdoc, Node *child)
     }
   }
   W_V(tdst);
-
   return chtml30->out;
 }
 
 
 /**
  * It is a handler who processes the BLOCKQUOTE tag.
-<<<<<<< HEAD:src/chxj_chtml30.c
-=======
  *
  * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
@@ -3232,93 +2935,6 @@ s_chtml30_end_dir_tag(void *pdoc, Node *UNUSED(child))
 
 /**
  * It is a handler who processes the DL tag.
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
- *
- * @param pdoc  [i/o] The pointer to the CHTML structure at the output
- *                     destination is specified.
- * @param node   [i]   The BLOCKQUOTE tag node is specified.
- * @return The conversion result is returned.
- */
-static char *
-s_chtml30_start_blockquote_tag(void *pdoc, Node *UNUSED(child))
-{
-<<<<<<< HEAD:src/chxj_chtml30.c
-  chtml30_t *chtml30;
-  Doc *doc;
-  chtml30 = GET_CHTML30(pdoc);
-  doc     = chtml30->doc;
-  W_L("<blockquote>");
-  return chtml30->out;
-}
-
-
-/**
- * It is a handler who processes the BLOCKQUOTE tag.
- *
- * @param pdoc  [i/o] The pointer to the CHTML structure at the output
- *                     destination is specified.
- * @param node   [i]   The BLOCKQUOTE tag node is specified.
- * @return The conversion result is returned.
- */
-static char *
-s_chtml30_end_blockquote_tag(void *pdoc, Node *UNUSED(child))
-{
-  chtml30_t *chtml30;
-  Doc *doc;
-
-  chtml30 = GET_CHTML30(pdoc);
-  doc     = chtml30->doc;
-  W_L("</blockquote>");
-  return chtml30->out;
-}
-
-
-/**
- * It is a handler who processes the DIR tag.
- *
- * @param pdoc  [i/o] The pointer to the CHTML structure at the output
- *                     destination is specified.
- * @param node   [i]   The DIR tag node is specified.
- * @return The conversion result is returned.
- */
-static char *
-s_chtml30_start_dir_tag(void *pdoc, Node *UNUSED(child))
-{
-=======
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
-  chtml30_t *chtml30 = GET_CHTML30(pdoc);
-<<<<<<< HEAD:src/chxj_chtml30.c
-  Doc *doc = chtml30->doc;
-  W_L("<dir>");
-  return chtml30->out;
-}
-
-
-/**
- * It is a handler who processes the DIR tag.
- *
- * @param pdoc  [i/o] The pointer to the CHTML structure at the output
- *                     destination is specified.
- * @param node   [i]   The DIR tag node is specified.
- * @return The conversion result is returned.
- */
-static char *
-s_chtml30_end_dir_tag(void *pdoc, Node *UNUSED(child))
-{
-  chtml30_t *chtml30 = GET_CHTML30(pdoc);
-  Doc *doc = chtml30->doc;
-  W_L("</dir>");
-=======
-  Doc       *doc     = chtml30->doc;
-  W_L("<dl>");
-  W_NLCODE();
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
-  return chtml30->out;
-}
-
-
-/**
- * It is a handler who processes the DL tag.
  *
  * @param pdoc  [i/o] The pointer to the CHTML structure at the output
  *                     destination is specified.
@@ -3329,9 +2945,9 @@ static char *
 s_chtml30_start_dl_tag(void *pdoc, Node *UNUSED(child))
 {
   chtml30_t *chtml30 = GET_CHTML30(pdoc);
-<<<<<<< HEAD:src/chxj_chtml30.c
-  Doc *doc = chtml30->doc;
+  Doc       *doc     = chtml30->doc;
   W_L("<dl>");
+  W_NLCODE();
   return chtml30->out;
 }
 
@@ -3348,15 +2964,9 @@ static char *
 s_chtml30_end_dl_tag(void *pdoc, Node *UNUSED(child))
 {
   chtml30_t *chtml30 = GET_CHTML30(pdoc);
-  Doc *doc = chtml30->doc;
-=======
   Doc       *doc     = chtml30->doc;
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   W_L("</dl>");
-<<<<<<< HEAD:src/chxj_chtml30.c
-=======
   W_NLCODE();
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   return chtml30->out;
 }
 
@@ -3372,15 +2982,8 @@ s_chtml30_end_dl_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml30_start_dt_tag(void *pdoc, Node *UNUSED(child))
 {
-<<<<<<< HEAD:src/chxj_chtml30.c
-  chtml30_t *chtml30;
-  Doc *doc;
-  chtml30 = GET_CHTML30(pdoc);
-  doc     = chtml30->doc;
-=======
   chtml30_t *chtml30 = GET_CHTML30(pdoc);
   Doc       *doc     = chtml30->doc;
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   W_L("<dt>");
   return chtml30->out;
 }
@@ -3397,13 +3000,8 @@ s_chtml30_start_dt_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml30_end_dt_tag(void *pdoc, Node *UNUSED(child))
 {
-<<<<<<< HEAD:src/chxj_chtml30.c
-  chtml30_t *chtml30;
-  chtml30 = GET_CHTML30(pdoc);
-=======
   chtml30_t *chtml30 = GET_CHTML30(pdoc);
 
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   return chtml30->out;
 }
 
@@ -3420,12 +3018,8 @@ static char *
 s_chtml30_start_dd_tag(void *pdoc, Node *UNUSED(child))
 {
   chtml30_t *chtml30 = GET_CHTML30(pdoc);
-<<<<<<< HEAD:src/chxj_chtml30.c
-  Doc *doc = chtml30->doc;
-=======
   Doc       *doc     = chtml30->doc;
 
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   W_L("<dd>");
 
   return chtml30->out;
@@ -3444,181 +3038,10 @@ static char *
 s_chtml30_end_dd_tag(void *pdoc, Node *UNUSED(child))
 {
   chtml30_t *chtml30 = GET_CHTML30(pdoc);
-<<<<<<< HEAD:src/chxj_chtml30.c
+
   return chtml30->out;
 }
 
-
-/**
- * It is a handler who processes the MARQUEE tag.
- *
- * @param pdoc  [i/o] The pointer to the CHTML structure at the output
- *                     destination is specified.
- * @param node   [i]   The MARQUEE tag node is specified.
- * @return The conversion result is returned.
- */
-static char *
-s_chtml30_start_marquee_tag(void *pdoc, Node *node)
-{
-  chtml30_t *chtml30 = GET_CHTML30(pdoc);
-  Doc *doc = chtml30->doc;
-  Attr *attr;
-  W_L("<marquee");
-  /*--------------------------------------------------------------------------*/
-  /* Get Attributes                                                           */
-  /*--------------------------------------------------------------------------*/
-  for (attr = qs_get_attr(doc,node);
-       attr;
-       attr = qs_get_next_attr(doc,attr)) {
-    char *name   = qs_get_attr_name(doc,attr);
-    char *value  = qs_get_attr_value(doc,attr);
-    if (STRCASEEQ('d','D',"direction", name)) {
-      if (value && (STRCASEEQ('l','L',"left",value) || STRCASEEQ('r','R',"right",value))) {
-        W_L(" direction=\"");
-        W_V(value);
-        W_L("\"");
-      }
-    }
-    else if (STRCASEEQ('b','B',"behavior",name)) {
-      if (value && (STRCASEEQ('s','S',"scroll",value) || STRCASEEQ('s','S',"slide",value) || STRCASEEQ('a','A',"alternate",value))) {
-        W_L(" behavior=\""); 
-        W_V(value);
-        W_L("\"");
-      }
-    }
-    else if (STRCASEEQ('l','L',"loop",name)) {
-      if (value && *value) {
-        W_L(" loop=\"");
-        W_V(value);
-        W_L("\"");
-      }
-    }
-  }
-  W_L(">");
-  return chtml30->out;
-}
-
-
-/**
- * It is a handler who processes the MARQUEE tag.
- *
- * @param pdoc  [i/o] The pointer to the CHTML structure at the output
- *                     destination is specified.
- * @param node   [i]   The MARQUEE tag node is specified.
- * @return The conversion result is returned.
- */
-static char *
-s_chtml30_end_marquee_tag(void *pdoc, Node *UNUSED(child))
-{
-  chtml30_t *chtml30 = GET_CHTML30(pdoc);
-  Doc *doc = chtml30->doc;
-  W_L("</marquee>");
-  return chtml30->out;
-}
-
-
-/**
- * It is a handler who processes the BLINK tag.
- *
- * @param pdoc  [i/o] The pointer to the CHTML structure at the output
- *                     destination is specified.
- * @param node   [i]   The BLINK tag node is specified.
- * @return The conversion result is returned.
- */
-static char *
-s_chtml30_start_blink_tag(void *pdoc, Node *UNUSED(child))
-{
-  chtml30_t *chtml30 = GET_CHTML30(pdoc);
-  Doc *doc = chtml30->doc;
-  W_L("<blink>");
-  return chtml30->out;
-}
-
-
-/**
- * It is a handler who processes the BLINK tag.
- *
- * @param pdoc  [i/o] The pointer to the CHTML structure at the output
- *                     destination is specified.
- * @param node   [i]   The BLINK tag node is specified.
- * @return The conversion result is returned.
- */
-static char *
-s_chtml30_end_blink_tag(void *pdoc, Node *UNUSED(child))
-{
-  chtml30_t *chtml30 = GET_CHTML30(pdoc);
-  Doc *doc = chtml30->doc;
-  W_L("</blink>");
-  return chtml30->out;
-}
-=======
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
-
-<<<<<<< HEAD:src/chxj_chtml30.c
-
-/**
- * It is a handler who processes the MENU tag.
- *
- * @param pdoc  [i/o] The pointer to the CHTML structure at the output
- *                     destination is specified.
- * @param node   [i]   The MENU tag node is specified.
- * @return The conversion result is returned.
- */
-static char *
-s_chtml30_start_menu_tag(void *pdoc, Node *UNUSED(child))
-{
-  chtml30_t *chtml30;
-  Doc *doc;
-  chtml30 = GET_CHTML30(pdoc);
-  doc     = chtml30->doc;
-  W_L("<menu>");
-=======
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
-  return chtml30->out;
-}
-<<<<<<< HEAD:src/chxj_chtml30.c
-
-
-/**
- * It is a handler who processes the MENU tag.
- *
- * @param pdoc  [i/o] The pointer to the CHTML structure at the output
- *                     destination is specified.
- * @param node   [i]   The MENU tag node is specified.
- * @return The conversion result is returned.
- */
-static char *
-s_chtml30_end_menu_tag(void *pdoc, Node *UNUSED(child))
-{
-  chtml30_t *chtml30 = GET_CHTML30(pdoc);
-  Doc *doc = chtml30->doc;
-  W_L("</menu>");
-  return chtml30->out;
-}
-
-
-/**
- * It is a handler who processes the PLAINTEXT tag.
- *
- * @param pdoc  [i/o] The pointer to the CHTML structure at the output
- *                     destination is specified.
- * @param node   [i]   The PLAINTEXT tag node is specified.
- * @return The conversion result is returned.
- */
-static char *
-s_chtml30_start_plaintext_tag(void *pdoc, Node *node)
-{
-  chtml30_t *chtml30;
-  Doc *doc;
-=======
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
-
-<<<<<<< HEAD:src/chxj_chtml30.c
-  chtml30 = GET_CHTML30(pdoc);
-  doc     = chtml30->doc;
-  W_L("<plaintext>");
-  s_chtml30_start_plaintext_tag_inner(pdoc,node);
-=======
 
 /**
  * It is a handler who processes the MARQUEE tag.
@@ -3666,12 +3089,9 @@ s_chtml30_start_marquee_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   return chtml30->out;
 }
 
-<<<<<<< HEAD:src/chxj_chtml30.c
-=======
 
 /**
  * It is a handler who processes the MARQUEE tag.
@@ -3681,39 +3101,18 @@ s_chtml30_start_marquee_tag(void *pdoc, Node *node)
  * @param node   [i]   The MARQUEE tag node is specified.
  * @return The conversion result is returned.
  */
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
 static char *
-<<<<<<< HEAD:src/chxj_chtml30.c
-s_chtml30_start_plaintext_tag_inner(void *pdoc, Node *node)
-=======
 s_chtml30_end_marquee_tag(void *pdoc, Node *UNUSED(child))
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
 {
-<<<<<<< HEAD:src/chxj_chtml30.c
-  chtml30_t *chtml30;
-  Doc *doc;
-  Node *child;
-  chtml30 = GET_CHTML30(pdoc);
-  doc     = chtml30->doc;
-  for (child = qs_get_child_node(doc, node);
-       child;
-       child = qs_get_next_node(doc, child)) {
-    W_V(child->otext);
-    s_chtml30_start_plaintext_tag_inner(pdoc, child);
-  }
-=======
   chtml30_t *chtml30 = GET_CHTML30(pdoc);
   Doc       *doc = chtml30->doc;
   W_L("</marquee>");
   W_NLCODE();
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
   return chtml30->out;
 }
 
 
 /**
-<<<<<<< HEAD:src/chxj_chtml30.c
-=======
  * It is a handler who processes the BLINK tag.
  *
  * @param pdoc  [i/o] The pointer to the CHTML structure at the output
@@ -3823,7 +3222,6 @@ s_chtml30_start_plaintext_tag_inner(void *pdoc, Node *node)
 
 
 /**
->>>>>>>   * updated new trunk.:src/chxj_chtml30.c
  * It is a handler who processes the PLAINTEXT tag.
  *
  * @param pdoc  [i/o] The pointer to the CHTML structure at the output

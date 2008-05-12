@@ -437,18 +437,10 @@ do
   fi
 
   if test -n "$dir_arg"; then
-<<<<<<< HEAD:install-sh
-    $doit $mkdircmd "$dst" \
-      && { test -z "$chowncmd" || $doit $chowncmd "$dst"; } \
-      && { test -z "$chgrpcmd" || $doit $chgrpcmd "$dst"; } \
-      && { test -z "$stripcmd" || $doit $stripcmd "$dst"; } \
-      && { test -z "$chmodcmd" || $doit $chmodcmd "$dst"; }
-=======
     { test -z "$chowncmd" || $doit $chowncmd "$dst"; } &&
     { test -z "$chgrpcmd" || $doit $chgrpcmd "$dst"; } &&
     { test "$obsolete_mkdir_used$chowncmd$chgrpcmd" = false ||
       test -z "$chmodcmd" || $doit $chmodcmd $mode "$dst"; } || exit 1
->>>>>>>   * updated new trunk.:install-sh
   else
 
     # Make a couple of temp file names in the proper directory.

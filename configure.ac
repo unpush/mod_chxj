@@ -1,10 +1,6 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
-<<<<<<< HEAD:configure.ac
-AC_INIT([mod_chxj],[1.0.0-1])
-=======
 AC_INIT([mod_chxj],[0.12.0-1])
->>>>>>>   * updated new trunk.:configure.ac
 AC_PREREQ(2.59)
 AC_CONFIG_SRCDIR([src/mod_chxj.c])
 AC_CANONICAL_TARGET
@@ -15,27 +11,16 @@ AM_CONFIG_HEADER(include/config.h)
 # Checks for programs.
 AC_PROG_CC
 AC_PROG_INSTALL
-<<<<<<< HEAD:configure.ac
-=======
 
 
->>>>>>>   * updated new trunk.:configure.ac
 AM_PROG_LIBTOOL
-<<<<<<< HEAD:configure.ac
-AC_LANG(C)
-=======
->>>>>>>   * updated new trunk.:configure.ac
 AC_SUBST(LIBTOOL_DEPS)
 
 
 # Checks for libraries.
 AC_CHECK_LIB([apr-1],  [main])
 
-<<<<<<< HEAD:configure.ac
-AC_ARG_WITH(apache-header, [  --with-apache-header=ARG The directory with the header file of apache2.x is specified. ]) 
-=======
 AC_ARG_WITH(apache-header, [  --with-apache-header=ARG The directory with the header file of apache2.0 is specified. ]) 
->>>>>>>   * updated new trunk.:configure.ac
 if test "x$with_apache_header" = "xyes"; then
     AC_MSG_ERROR([
 Please specify the --with-apache-header option. And, please specify the place of the header file. 
@@ -246,10 +231,7 @@ if test "x$with_apu_config" != "x" ; then
   APU_CONFIG=$with_apu_config
 fi
 
-<<<<<<< HEAD:configure.ac
-=======
 
->>>>>>>   * updated new trunk.:configure.ac
 case $host_os in
   freebsd*)
     CFLAGS="${CFLAGS} -I/usr/local/include "
@@ -259,11 +241,6 @@ esac
 if test "x${with_apache_header}" = "x" ; then
   with_apache_header=`${APXS} -q includedir`
 fi
-<<<<<<< HEAD:configure.ac
-
-
-=======
->>>>>>>   * updated new trunk.:configure.ac
 
 LIBS="${LIBS} `${WAND_CONFIG} --ldflags` `${WAND_CONFIG} --libs | sed -e s/-ldpstk//` "
 LIBS="${LIBS} `${APR_CONFIG} --ldflags` `${APR_CONFIG} --libs` "

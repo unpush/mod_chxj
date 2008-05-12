@@ -18,10 +18,13 @@
 #include "chxj_chtml10.c"
 #include "chxj_chtml20.c"
 #include "chxj_chtml30.c"
+#include "chxj_chtml40.c"
+#include "chxj_chtml50.c"
 #include "chxj_jhtml.c"
+#include "chxj_jxhtml.c"
 #include "chxj_hdml.c"
 #include "chxj_xhtml_mobile_1_0.c"
-#include "chxj_node_exchange.c"
+#include "chxj_node_convert.c"
 #include "chxj_tag_util.c"
 #include "chxj_encoding.c"
 #include "chxj_cookie.c"
@@ -91,6 +94,11 @@ void test_xhtml_center_tag_001();
 
 void test_xhtml_dir_tag_001();
 void test_xhtml_dir_tag_002();
+void test_xhtml_dir_tag_003();
+void test_xhtml_dir_tag_004();
+void test_xhtml_dir_tag_005();
+void test_xhtml_dir_tag_006();
+void test_xhtml_dir_tag_007();
 
 void test_xhtml_dl_tag_001();
 
@@ -205,6 +213,8 @@ void test_xhtml_hr_tag_015();
 void test_xhtml_hr_tag_016();
 void test_xhtml_hr_tag_017();
 void test_xhtml_hr_tag_018();
+void test_xhtml_hr_tag_018_1();
+void test_xhtml_hr_tag_018_2();
 
 void test_xhtml_html_tag_001();
 
@@ -221,6 +231,7 @@ void test_xhtml_img_tag_010();
 void test_xhtml_img_tag_011();
 void test_xhtml_img_tag_012();
 void test_xhtml_img_tag_013();
+void test_xhtml_img_tag_013_1();
 void test_xhtml_img_tag_014();
 void test_xhtml_img_tag_015();
 void test_xhtml_img_tag_016();
@@ -309,12 +320,24 @@ void test_xhtml_li_tag_010();
 void test_xhtml_li_tag_011();
 void test_xhtml_li_tag_012();
 void test_xhtml_li_tag_013();
+void test_xhtml_li_tag_014();
+void test_xhtml_li_tag_015();
+void test_xhtml_li_tag_016();
+void test_xhtml_li_tag_017();
+void test_xhtml_li_tag_018();
+void test_xhtml_li_tag_019();
 
 void test_xhtml_menu_tag_001();
 void test_xhtml_menu_tag_002();
 void test_xhtml_menu_tag_003();
 void test_xhtml_menu_tag_004();
 void test_xhtml_menu_tag_005();
+void test_xhtml_menu_tag_006();
+void test_xhtml_menu_tag_007();
+void test_xhtml_menu_tag_008();
+void test_xhtml_menu_tag_009();
+void test_xhtml_menu_tag_010();
+void test_xhtml_menu_tag_011();
 
 void test_xhtml_ol_tag_001();
 void test_xhtml_ol_tag_002();
@@ -413,6 +436,12 @@ void test_xhtml_ul_tag_002();
 void test_xhtml_ul_tag_003();
 void test_xhtml_ul_tag_004();
 void test_xhtml_ul_tag_005();
+void test_xhtml_ul_tag_006();
+void test_xhtml_ul_tag_007();
+void test_xhtml_ul_tag_008();
+void test_xhtml_ul_tag_009();
+void test_xhtml_ul_tag_010();
+void test_xhtml_ul_tag_011();
 
 void test_xhtml_blink_tag_001();
 void test_xhtml_blink_tag_002();
@@ -437,6 +466,9 @@ void test_xhtml_marquee_tag_015();
 void test_xhtml_marquee_tag_016();
 void test_xhtml_marquee_tag_017();
 void test_xhtml_marquee_tag_018();
+void test_xhtml_marquee_tag_019();
+void test_xhtml_marquee_tag_020();
+void test_xhtml_marquee_tag_021();
 
 void test_xhtml_meta_tag_001();
 void test_xhtml_meta_tag_002();
@@ -454,6 +486,29 @@ void test_xhtml_font_tag_003();
 void test_xhtml_font_tag_004();
 void test_xhtml_font_tag_005();
 void test_xhtml_font_tag_006();
+void test_xhtml_font_tag_007();
+void test_xhtml_font_tag_008();
+void test_xhtml_font_tag_009();
+void test_xhtml_font_tag_010();
+void test_xhtml_font_tag_011();
+void test_xhtml_font_tag_012();
+void test_xhtml_font_tag_013();
+void test_xhtml_font_tag_014();
+void test_xhtml_font_tag_015();
+void test_xhtml_font_tag_016();
+void test_xhtml_font_tag_017();
+void test_xhtml_font_tag_018();
+void test_xhtml_font_tag_019();
+void test_xhtml_font_tag_020();
+void test_xhtml_font_tag_021();
+void test_xhtml_font_tag_022();
+void test_xhtml_font_tag_023();
+void test_xhtml_font_tag_024();
+void test_xhtml_font_tag_025();
+void test_xhtml_font_tag_026();
+void test_xhtml_font_tag_027();
+
+void test_xhtml_param_tag_001();
 /* pend */
 
 int
@@ -461,7 +516,7 @@ main()
 {
   CU_pSuite xhtml_suite;
   CU_initialize_registry();
-  xhtml_suite = CU_add_suite("test chxj_exchange_xhtml_mobile_1_0()", NULL, NULL);
+  xhtml_suite = CU_add_suite("test chxj_convert_xhtml_mobile_1_0()", NULL, NULL);
 
   CU_add_test(xhtml_suite, "test void src1",                                    test_xhtml_001);
   CU_add_test(xhtml_suite, "test void src2",                                    test_xhtml_002);
@@ -520,6 +575,11 @@ main()
 
   CU_add_test(xhtml_suite, "test <dir>.",                                       test_xhtml_dir_tag_001);
   CU_add_test(xhtml_suite, "test <dir> with no <li>.",                          test_xhtml_dir_tag_002);
+  CU_add_test(xhtml_suite, "test <dir type> 1.",                                test_xhtml_dir_tag_003);
+  CU_add_test(xhtml_suite, "test <dir type> 2.",                                test_xhtml_dir_tag_004);
+  CU_add_test(xhtml_suite, "test <dir type> 3.",                                test_xhtml_dir_tag_005);
+  CU_add_test(xhtml_suite, "test <dir type> 4.",                                test_xhtml_dir_tag_006);
+  CU_add_test(xhtml_suite, "test <dir type> 5.",                                test_xhtml_dir_tag_007);
 
   CU_add_test(xhtml_suite, "test <dl>.",                                        test_xhtml_dl_tag_001);
 
@@ -650,7 +710,9 @@ main()
   CU_add_test(xhtml_suite, "test <hr width> with non numeric value.",           test_xhtml_hr_tag_015);
   CU_add_test(xhtml_suite, "test <hr width> with numeric value.",               test_xhtml_hr_tag_016);
   CU_add_test(xhtml_suite, "test <hr noshade>.",                                test_xhtml_hr_tag_017);
-  CU_add_test(xhtml_suite, "test <hr color>.",                                  test_xhtml_hr_tag_018);
+  CU_add_test(xhtml_suite, "test <hr color> 1.",                                test_xhtml_hr_tag_018);
+  CU_add_test(xhtml_suite, "test <hr color> 2.",                                test_xhtml_hr_tag_018_1);
+  CU_add_test(xhtml_suite, "test <hr color> 3.",                                test_xhtml_hr_tag_018_2);
 
   /*=========================================================================*/
   /* <html>                                                                  */
@@ -673,6 +735,7 @@ main()
   CU_add_test(xhtml_suite, "test <img align> with value(bottom)." ,             test_xhtml_img_tag_011);
   CU_add_test(xhtml_suite, "test <img align> with value(left)." ,               test_xhtml_img_tag_012);
   CU_add_test(xhtml_suite, "test <img align> with value(right)." ,              test_xhtml_img_tag_013);
+  CU_add_test(xhtml_suite, "test <img align> with value(center)." ,             test_xhtml_img_tag_013_1);
   CU_add_test(xhtml_suite, "test <img align> with value(unkown)." ,             test_xhtml_img_tag_014);
   CU_add_test(xhtml_suite, "test <img width> with no value." ,                  test_xhtml_img_tag_015);
   CU_add_test(xhtml_suite, "test <img width> with void value." ,                test_xhtml_img_tag_016);
@@ -767,6 +830,12 @@ main()
   CU_add_test(xhtml_suite, "test <li> type attribute 7." ,                      test_xhtml_li_tag_011);
   CU_add_test(xhtml_suite, "test <li> type attribute 8." ,                      test_xhtml_li_tag_012);
   CU_add_test(xhtml_suite, "test <li> type attribute 9." ,                      test_xhtml_li_tag_013);
+  CU_add_test(xhtml_suite, "test <li> type attribute 10." ,                     test_xhtml_li_tag_014);
+  CU_add_test(xhtml_suite, "test <li> type attribute 11." ,                     test_xhtml_li_tag_015);
+  CU_add_test(xhtml_suite, "test <li> type attribute 12." ,                     test_xhtml_li_tag_016);
+  CU_add_test(xhtml_suite, "test <li> type attribute 13." ,                     test_xhtml_li_tag_017);
+  CU_add_test(xhtml_suite, "test <li> type attribute 14." ,                     test_xhtml_li_tag_018);
+  CU_add_test(xhtml_suite, "test <li> type attribute 15." ,                     test_xhtml_li_tag_019);
 
   /*=========================================================================*/
   /* <menu>                                                                  */
@@ -776,7 +845,12 @@ main()
   CU_add_test(xhtml_suite, "test <menu> 3." ,                                   test_xhtml_menu_tag_003);
   CU_add_test(xhtml_suite, "test <menu> 4." ,                                   test_xhtml_menu_tag_004);
   CU_add_test(xhtml_suite, "test <menu> 5." ,                                   test_xhtml_menu_tag_005);
-
+  CU_add_test(xhtml_suite, "test <menu> 6." ,                                   test_xhtml_menu_tag_006);
+  CU_add_test(xhtml_suite, "test <menu> 7." ,                                   test_xhtml_menu_tag_007);
+  CU_add_test(xhtml_suite, "test <menu> 8." ,                                   test_xhtml_menu_tag_008);
+  CU_add_test(xhtml_suite, "test <menu> 9." ,                                   test_xhtml_menu_tag_009);
+  CU_add_test(xhtml_suite, "test <menu> 10." ,                                  test_xhtml_menu_tag_010);
+  CU_add_test(xhtml_suite, "test <menu> 11." ,                                  test_xhtml_menu_tag_011);
   /*=========================================================================*/
   /* <ol>                                                                    */
   /*=========================================================================*/
@@ -886,13 +960,11 @@ main()
   CU_add_test(xhtml_suite, "test <textarea> 24." ,                              test_xhtml_textarea_tag_024);
   CU_add_test(xhtml_suite, "test <textarea> 25." ,                              test_xhtml_textarea_tag_025);
   CU_add_test(xhtml_suite, "test <textarea> 26." ,                              test_xhtml_textarea_tag_026);
-
   /*=========================================================================*/
   /* <title>                                                                 */
   /*=========================================================================*/
   CU_add_test(xhtml_suite, "test <title> 1." ,                                  test_xhtml_title_tag_001);
   CU_add_test(xhtml_suite, "test <title> 2." ,                                  test_xhtml_title_tag_002);
-
   /*=========================================================================*/
   /* <ul>                                                                    */
   /*=========================================================================*/
@@ -901,7 +973,12 @@ main()
   CU_add_test(xhtml_suite, "test <ul> 3." ,                                     test_xhtml_ul_tag_003);
   CU_add_test(xhtml_suite, "test <ul> 4." ,                                     test_xhtml_ul_tag_004);
   CU_add_test(xhtml_suite, "test <ul> 5." ,                                     test_xhtml_ul_tag_005);
-
+  CU_add_test(xhtml_suite, "test <ul> 6." ,                                     test_xhtml_ul_tag_006);
+  CU_add_test(xhtml_suite, "test <ul> 7." ,                                     test_xhtml_ul_tag_007);
+  CU_add_test(xhtml_suite, "test <ul> 8." ,                                     test_xhtml_ul_tag_008);
+  CU_add_test(xhtml_suite, "test <ul> 9." ,                                     test_xhtml_ul_tag_009);
+  CU_add_test(xhtml_suite, "test <ul> 10." ,                                    test_xhtml_ul_tag_010);
+  CU_add_test(xhtml_suite, "test <ul> 11." ,                                    test_xhtml_ul_tag_011);
   /*=========================================================================*/
   /* <blink>                                                                 */
   /*=========================================================================*/
@@ -909,7 +986,6 @@ main()
   CU_add_test(xhtml_suite, "test <blink> 2." ,                                  test_xhtml_blink_tag_002);
   CU_add_test(xhtml_suite, "test <blink> 3." ,                                  test_xhtml_blink_tag_003);
   CU_add_test(xhtml_suite, "test <blink> 4." ,                                  test_xhtml_blink_tag_004);
-
   /*=========================================================================*/
   /* <marquee>                                                               */
   /*=========================================================================*/
@@ -931,6 +1007,9 @@ main()
   CU_add_test(xhtml_suite, "test <marquee> 16." ,                               test_xhtml_marquee_tag_016);
   CU_add_test(xhtml_suite, "test <marquee> 17." ,                               test_xhtml_marquee_tag_017);
   CU_add_test(xhtml_suite, "test <marquee> 18." ,                               test_xhtml_marquee_tag_018);
+  CU_add_test(xhtml_suite, "test <marquee> 19." ,                               test_xhtml_marquee_tag_019);
+  CU_add_test(xhtml_suite, "test <marquee> 20." ,                               test_xhtml_marquee_tag_020);
+  CU_add_test(xhtml_suite, "test <marquee> 21." ,                               test_xhtml_marquee_tag_021);
 
   /*=========================================================================*/
   /* <meta>                                                                  */
@@ -954,6 +1033,32 @@ main()
   CU_add_test(xhtml_suite, "test <font> 4." ,                                   test_xhtml_font_tag_004);
   CU_add_test(xhtml_suite, "test <font> 5." ,                                   test_xhtml_font_tag_005);
   CU_add_test(xhtml_suite, "test <font> 6." ,                                   test_xhtml_font_tag_006);
+  CU_add_test(xhtml_suite, "test <font> 7." ,                                   test_xhtml_font_tag_007);
+  CU_add_test(xhtml_suite, "test <font> 8." ,                                   test_xhtml_font_tag_008);
+  CU_add_test(xhtml_suite, "test <font> 9." ,                                   test_xhtml_font_tag_009);
+  CU_add_test(xhtml_suite, "test <font> 10." ,                                  test_xhtml_font_tag_010);
+  CU_add_test(xhtml_suite, "test <font> 11." ,                                  test_xhtml_font_tag_011);
+  CU_add_test(xhtml_suite, "test <font> 12." ,                                  test_xhtml_font_tag_012);
+  CU_add_test(xhtml_suite, "test <font> 13." ,                                  test_xhtml_font_tag_013);
+  CU_add_test(xhtml_suite, "test <font> 14." ,                                  test_xhtml_font_tag_014);
+  CU_add_test(xhtml_suite, "test <font> 15." ,                                  test_xhtml_font_tag_015);
+  CU_add_test(xhtml_suite, "test <font> 16." ,                                  test_xhtml_font_tag_016);
+  CU_add_test(xhtml_suite, "test <font> 17." ,                                  test_xhtml_font_tag_017);
+  CU_add_test(xhtml_suite, "test <font> 18." ,                                  test_xhtml_font_tag_018);
+  CU_add_test(xhtml_suite, "test <font> 19." ,                                  test_xhtml_font_tag_019);
+  CU_add_test(xhtml_suite, "test <font> 20." ,                                  test_xhtml_font_tag_020);
+  CU_add_test(xhtml_suite, "test <font> 21." ,                                  test_xhtml_font_tag_021);
+  CU_add_test(xhtml_suite, "test <font> 22." ,                                  test_xhtml_font_tag_022);
+  CU_add_test(xhtml_suite, "test <font> 23." ,                                  test_xhtml_font_tag_023);
+  CU_add_test(xhtml_suite, "test <font> 24." ,                                  test_xhtml_font_tag_024);
+  CU_add_test(xhtml_suite, "test <font> 25." ,                                  test_xhtml_font_tag_025);
+  CU_add_test(xhtml_suite, "test <font> 26." ,                                  test_xhtml_font_tag_026);
+  CU_add_test(xhtml_suite, "test <font> 27." ,                                  test_xhtml_font_tag_027);
+
+  /*=========================================================================*/
+  /* <param>                                                                 */
+  /*=========================================================================*/
+  CU_add_test(xhtml_suite, "test <param> 1." ,                                  test_xhtml_param_tag_001);
   /* aend */
 
   CU_basic_run_tests();
@@ -1006,6 +1111,7 @@ void * test_get_module_config(const ap_conf_vector_t *cv, const module *m)
 {
   static mod_chxj_config cfg;
   memset(&cfg, 0, sizeof(mod_chxj_config));
+  cfg.new_line_type = NLTYPE_NONE;
   return &cfg;
 }
 
@@ -1067,7 +1173,7 @@ void test_xhtml_001()
 
   SPEC_INIT(spec);
 
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, TEST_STRING, sizeof(TEST_STRING)-1, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, TEST_STRING, sizeof(TEST_STRING)-1, &destlen, &entry, &cookie);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp("\n", ret) == 0);
   CU_ASSERT(destlen == 1);
@@ -1089,7 +1195,7 @@ void test_xhtml_002()
 
   SPEC_INIT(spec);
 
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, TEST_STRING, sizeof(TEST_STRING)-1, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, TEST_STRING, sizeof(TEST_STRING)-1, &destlen, &entry, &cookie);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp("\n", ret) == 0);
   CU_ASSERT(destlen == 1);
@@ -1097,20 +1203,20 @@ void test_xhtml_002()
   APR_TERM;
 #undef TEST_STRING
 }
-#define  XHTML_HEADER "<?xml version=\"1.0\" encoding=\"Windows-31J\"?>\r\n" \
-                      "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML Basic 1.0//EN\"\r\n" \
-                      " \"http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd\">\r\n" 
+#define  XHTML_HEADER "<?xml version=\"1.0\" encoding=\"Windows-31J\"?>" \
+                      "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML Basic 1.0//EN\"" \
+                      " \"http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd\">" 
 
 void test_xhtml_comment_tag_001() 
 {
 #define  TEST_STRING "<html><!--</html><body>--><head></head><body></body></html>"
 #define  RESULT_STRING XHTML_HEADER \
-                       "<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n" \
-                       "<head>\r\n" \
-                       "</head>\r\n" \
-                       "<body>\r\n" \
-                       "</body>\r\n" \
-                       "</html>\r\n"
+                       "<html xmlns=\"http://www.w3.org/1999/xhtml\">" \
+                       "<head>" \
+                       "</head>" \
+                       "<body>" \
+                       "</body>" \
+                       "</html>"
   char  *ret;
   device_table spec;
   chxjconvrule_entry entry;
@@ -1122,7 +1228,7 @@ void test_xhtml_comment_tag_001()
 
   SPEC_INIT(spec);
 
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, TEST_STRING, sizeof(TEST_STRING)-1, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, TEST_STRING, sizeof(TEST_STRING)-1, &destlen, &entry, &cookie);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
   CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
@@ -1149,7 +1255,7 @@ void test_xhtml_a_tag_name_attribute_001()
 
   SPEC_INIT(spec);
 
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, TEST_STRING, sizeof(TEST_STRING)-1, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, TEST_STRING, sizeof(TEST_STRING)-1, &destlen, &entry, &cookie);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
@@ -1174,7 +1280,7 @@ void test_xhtml_a_tag_name_attribute_002()
 
   SPEC_INIT(spec);
 
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, TEST_STRING, sizeof(TEST_STRING)-1, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, TEST_STRING, sizeof(TEST_STRING)-1, &destlen, &entry, &cookie);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
@@ -1202,7 +1308,7 @@ void test_xhtml_a_tag_name_attribute_003()
 
   destlen = sizeof(TEST_STRING)-1;
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -1231,7 +1337,7 @@ void test_xhtml_a_tag_name_attribute_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -1260,7 +1366,7 @@ void test_xhtml_a_tag_href_attribute_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -1289,7 +1395,7 @@ void test_xhtml_a_tag_href_attribute_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -1318,7 +1424,7 @@ void test_xhtml_a_tag_href_attribute_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -1347,7 +1453,7 @@ void test_xhtml_a_tag_href_attribute_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -1376,7 +1482,7 @@ void test_xhtml_a_tag_href_attribute_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -1405,7 +1511,7 @@ void test_xhtml_a_tag_href_attribute_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, NULL);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, NULL);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -1434,7 +1540,7 @@ void test_xhtml_a_tag_accesskey_attribute_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -1463,7 +1569,7 @@ void test_xhtml_a_tag_accesskey_attribute_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -1492,7 +1598,7 @@ void test_xhtml_a_tag_accesskey_attribute_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -1509,7 +1615,7 @@ void test_xhtml_a_tag_accesskey_attribute_003()
 void test_xhtml_base_tag_001() 
 {
 #define  TEST_STRING "<base>"
-#define  RESULT_STRING "<base />\r\n"
+#define  RESULT_STRING "<base />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1524,7 +1630,7 @@ void test_xhtml_base_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -1538,7 +1644,7 @@ void test_xhtml_base_tag_001()
 void test_xhtml_base_tag_href_attribute_001() 
 {
 #define  TEST_STRING "<base href>"
-#define  RESULT_STRING "<base href=\"\" />\r\n"
+#define  RESULT_STRING "<base href=\"\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1553,7 +1659,7 @@ void test_xhtml_base_tag_href_attribute_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -1567,7 +1673,7 @@ void test_xhtml_base_tag_href_attribute_001()
 void test_xhtml_base_tag_href_attribute_002() 
 {
 #define  TEST_STRING "<base href=\"\">"
-#define  RESULT_STRING "<base href=\"\" />\r\n"
+#define  RESULT_STRING "<base href=\"\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1582,7 +1688,7 @@ void test_xhtml_base_tag_href_attribute_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -1596,7 +1702,7 @@ void test_xhtml_base_tag_href_attribute_002()
 void test_xhtml_base_tag_href_attribute_003() 
 {
 #define  TEST_STRING "<base href=\"http://www.google.co.jp/\">"
-#define  RESULT_STRING "<base href=\"http://www.google.co.jp/\" />\r\n"
+#define  RESULT_STRING "<base href=\"http://www.google.co.jp/\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1611,7 +1717,7 @@ void test_xhtml_base_tag_href_attribute_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -1640,7 +1746,7 @@ void test_xhtml_base_tag_href_attribute_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -1672,7 +1778,7 @@ void test_xhtml_blockquote_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -1701,7 +1807,7 @@ void test_xhtml_blockquote_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -1730,7 +1836,7 @@ void test_xhtml_blockquote_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -1759,7 +1865,7 @@ void test_xhtml_blockquote_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -1776,7 +1882,7 @@ void test_xhtml_blockquote_tag_004()
 void test_xhtml_body_tag_001() 
 {
 #define  TEST_STRING "<body></body>"
-#define  RESULT_STRING "<body>\r\n</body>\r\n"
+#define  RESULT_STRING "<body></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1791,7 +1897,7 @@ void test_xhtml_body_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -1805,7 +1911,7 @@ void test_xhtml_body_tag_001()
 void test_xhtml_body_tag_002() 
 {
 #define  TEST_STRING "<body bgcolor></body>"
-#define  RESULT_STRING "<body>\r\n</body>\r\n"
+#define  RESULT_STRING "<body></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1820,7 +1926,7 @@ void test_xhtml_body_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -1834,7 +1940,7 @@ void test_xhtml_body_tag_002()
 void test_xhtml_body_tag_003() 
 {
 #define  TEST_STRING "<body bgcolor=\"\"></body>"
-#define  RESULT_STRING "<body>\r\n</body>\r\n"
+#define  RESULT_STRING "<body></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1849,7 +1955,7 @@ void test_xhtml_body_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -1863,7 +1969,7 @@ void test_xhtml_body_tag_003()
 void test_xhtml_body_tag_004() 
 {
 #define  TEST_STRING "<body bgcolor=\"#ff0000\"></body>"
-#define  RESULT_STRING "<body bgcolor=\"#ff0000\">\r\n</body>\r\n"
+#define  RESULT_STRING "<body bgcolor=\"#ff0000\"></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1878,7 +1984,7 @@ void test_xhtml_body_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -1892,7 +1998,7 @@ void test_xhtml_body_tag_004()
 void test_xhtml_body_tag_005() 
 {
 #define  TEST_STRING "<body text></body>"
-#define  RESULT_STRING "<body>\r\n</body>\r\n"
+#define  RESULT_STRING "<body></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1907,7 +2013,7 @@ void test_xhtml_body_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -1921,7 +2027,7 @@ void test_xhtml_body_tag_005()
 void test_xhtml_body_tag_006() 
 {
 #define  TEST_STRING "<body text=\"\"></body>"
-#define  RESULT_STRING "<body>\r\n</body>\r\n"
+#define  RESULT_STRING "<body></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1936,7 +2042,7 @@ void test_xhtml_body_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -1950,7 +2056,7 @@ void test_xhtml_body_tag_006()
 void test_xhtml_body_tag_007() 
 {
 #define  TEST_STRING "<body text=\"#ff0000\"></body>"
-#define  RESULT_STRING "<body text=\"#ff0000\">\r\n</body>\r\n"
+#define  RESULT_STRING "<body text=\"#ff0000\"></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1965,7 +2071,7 @@ void test_xhtml_body_tag_007()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -1979,7 +2085,7 @@ void test_xhtml_body_tag_007()
 void test_xhtml_body_tag_008() 
 {
 #define  TEST_STRING "<body link></body>"
-#define  RESULT_STRING "<body>\r\n</body>\r\n"
+#define  RESULT_STRING "<body></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -1994,7 +2100,7 @@ void test_xhtml_body_tag_008()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -2008,7 +2114,7 @@ void test_xhtml_body_tag_008()
 void test_xhtml_body_tag_009() 
 {
 #define  TEST_STRING "<body link=\"\"></body>"
-#define  RESULT_STRING "<body>\r\n</body>\r\n"
+#define  RESULT_STRING "<body></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2023,7 +2129,7 @@ void test_xhtml_body_tag_009()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -2037,7 +2143,7 @@ void test_xhtml_body_tag_009()
 void test_xhtml_body_tag_010() 
 {
 #define  TEST_STRING "<body link=\"#ff0000\"></body>"
-#define  RESULT_STRING "<body link=\"#ff0000\">\r\n</body>\r\n"
+#define  RESULT_STRING "<body link=\"#ff0000\"></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2052,7 +2158,7 @@ void test_xhtml_body_tag_010()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -2066,7 +2172,7 @@ void test_xhtml_body_tag_010()
 void test_xhtml_body_tag_011() 
 {
 #define  TEST_STRING "<body vlink></body>"
-#define  RESULT_STRING "<body>\r\n</body>\r\n"
+#define  RESULT_STRING "<body></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2081,7 +2187,7 @@ void test_xhtml_body_tag_011()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -2095,7 +2201,7 @@ void test_xhtml_body_tag_011()
 void test_xhtml_body_tag_012() 
 {
 #define  TEST_STRING "<body vlink=\"\"></body>"
-#define  RESULT_STRING "<body>\r\n</body>\r\n"
+#define  RESULT_STRING "<body></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2110,7 +2216,7 @@ void test_xhtml_body_tag_012()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -2124,7 +2230,7 @@ void test_xhtml_body_tag_012()
 void test_xhtml_body_tag_013() 
 {
 #define  TEST_STRING "<body vlink=\"#ff0000\"></body>"
-#define  RESULT_STRING "<body>\r\n</body>\r\n"
+#define  RESULT_STRING "<body></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2139,7 +2245,7 @@ void test_xhtml_body_tag_013()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -2153,7 +2259,7 @@ void test_xhtml_body_tag_013()
 void test_xhtml_body_tag_014() 
 {
 #define  TEST_STRING "<body alink=\"#FF0000\"></body>"
-#define  RESULT_STRING "<body>\r\n</body>\r\n"
+#define  RESULT_STRING "<body></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2168,7 +2274,7 @@ void test_xhtml_body_tag_014()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -2182,7 +2288,7 @@ void test_xhtml_body_tag_014()
 void test_xhtml_body_tag_015() 
 {
 #define  TEST_STRING "<body boyoyon=\"#FF0000\"></body>"
-#define  RESULT_STRING "<body>\r\n</body>\r\n"
+#define  RESULT_STRING "<body></body>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2197,7 +2303,7 @@ void test_xhtml_body_tag_015()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -2214,7 +2320,7 @@ void test_xhtml_body_tag_015()
 void test_xhtml_br_tag_001() 
 {
 #define  TEST_STRING "<br>"
-#define  RESULT_STRING "<br />\r\n"
+#define  RESULT_STRING "<br />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2229,7 +2335,7 @@ void test_xhtml_br_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -2243,7 +2349,7 @@ void test_xhtml_br_tag_001()
 void test_xhtml_br_tag_002() 
 {
 #define  TEST_STRING "<br clear=\"left\">"
-#define  RESULT_STRING "<br clear=\"left\" />\r\n"
+#define  RESULT_STRING "<br clear=\"left\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2258,7 +2364,7 @@ void test_xhtml_br_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -2272,7 +2378,7 @@ void test_xhtml_br_tag_002()
 void test_xhtml_br_tag_003() 
 {
 #define  TEST_STRING "<br clear=\"right\">"
-#define  RESULT_STRING "<br clear=\"right\" />\r\n"
+#define  RESULT_STRING "<br clear=\"right\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2287,7 +2393,7 @@ void test_xhtml_br_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -2301,7 +2407,7 @@ void test_xhtml_br_tag_003()
 void test_xhtml_br_tag_004() 
 {
 #define  TEST_STRING "<br clear=\"all\">"
-#define  RESULT_STRING "<br clear=\"all\" />\r\n"
+#define  RESULT_STRING "<br clear=\"all\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2316,7 +2422,7 @@ void test_xhtml_br_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -2330,7 +2436,7 @@ void test_xhtml_br_tag_004()
 void test_xhtml_br_tag_005() 
 {
 #define  TEST_STRING "<br clear=\"\">"
-#define  RESULT_STRING "<br />\r\n"
+#define  RESULT_STRING "<br />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2345,7 +2451,7 @@ void test_xhtml_br_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -2359,7 +2465,7 @@ void test_xhtml_br_tag_005()
 void test_xhtml_br_tag_006() 
 {
 #define  TEST_STRING "<br clear>"
-#define  RESULT_STRING "<br />\r\n"
+#define  RESULT_STRING "<br />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2374,7 +2480,7 @@ void test_xhtml_br_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -2388,7 +2494,7 @@ void test_xhtml_br_tag_006()
 void test_xhtml_br_tag_007() 
 {
 #define  TEST_STRING "<br clear=\"abc\">"
-#define  RESULT_STRING "<br />\r\n"
+#define  RESULT_STRING "<br />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2403,7 +2509,7 @@ void test_xhtml_br_tag_007()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -2435,7 +2541,7 @@ void test_xhtml_center_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -2467,7 +2573,7 @@ void test_xhtml_dir_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -2496,7 +2602,153 @@ void test_xhtml_dir_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+/* 'disc'|'circle'|'square' */
+void test_xhtml_dir_tag_003()
+{
+#define  TEST_STRING "<dir type=\"disc\"></dir>"
+#define  RESULT_STRING "<dir type=\"disc\"></dir>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_dir_tag_004()
+{
+#define  TEST_STRING "<dir type=\"circle\"></dir>"
+#define  RESULT_STRING "<dir type=\"circle\"></dir>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_dir_tag_005()
+{
+#define  TEST_STRING "<dir type=\"square\"></dir>"
+#define  RESULT_STRING "<dir type=\"square\"></dir>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_dir_tag_006()
+{
+#define  TEST_STRING "<dir type=\"\"></dir>"
+#define  RESULT_STRING "<dir></dir>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_dir_tag_007()
+{
+#define  TEST_STRING "<dir type></dir>"
+#define  RESULT_STRING "<dir></dir>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -2528,7 +2780,7 @@ void test_xhtml_dl_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -2560,7 +2812,7 @@ void test_xhtml_dt_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -2589,7 +2841,7 @@ void test_xhtml_dt_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -2621,7 +2873,7 @@ void test_xhtml_dd_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -2650,7 +2902,7 @@ void test_xhtml_dd_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -2667,7 +2919,7 @@ void test_xhtml_dd_tag_002()
 void test_xhtml_div_tag_001() 
 {
 #define  TEST_STRING "<div></div>"
-#define  RESULT_STRING "<div></div>\r\n"
+#define  RESULT_STRING "<div></div>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2682,7 +2934,7 @@ void test_xhtml_div_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -2696,7 +2948,7 @@ void test_xhtml_div_tag_001()
 void test_xhtml_div_tag_002() 
 {
 #define  TEST_STRING "<div align=\"left\"></div>"
-#define  RESULT_STRING "<div align=\"left\"></div>\r\n"
+#define  RESULT_STRING "<div align=\"left\"></div>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2711,7 +2963,7 @@ void test_xhtml_div_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -2725,7 +2977,7 @@ void test_xhtml_div_tag_002()
 void test_xhtml_div_tag_003() 
 {
 #define  TEST_STRING "<div align=\"right\"></div>"
-#define  RESULT_STRING "<div align=\"right\"></div>\r\n"
+#define  RESULT_STRING "<div align=\"right\"></div>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2740,7 +2992,7 @@ void test_xhtml_div_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -2754,7 +3006,7 @@ void test_xhtml_div_tag_003()
 void test_xhtml_div_tag_004() 
 {
 #define  TEST_STRING "<div align=\"center\"></div>"
-#define  RESULT_STRING "<div align=\"center\"></div>\r\n"
+#define  RESULT_STRING "<div align=\"center\"></div>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2769,7 +3021,7 @@ void test_xhtml_div_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -2783,7 +3035,7 @@ void test_xhtml_div_tag_004()
 void test_xhtml_div_tag_005() 
 {
 #define  TEST_STRING "<div align=\"\"></div>"
-#define  RESULT_STRING "<div></div>\r\n"
+#define  RESULT_STRING "<div></div>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2798,7 +3050,7 @@ void test_xhtml_div_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -2812,7 +3064,7 @@ void test_xhtml_div_tag_005()
 void test_xhtml_div_tag_006() 
 {
 #define  TEST_STRING "<div align=\"abc\"></div>"
-#define  RESULT_STRING "<div></div>\r\n"
+#define  RESULT_STRING "<div></div>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2827,7 +3079,7 @@ void test_xhtml_div_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -2841,7 +3093,7 @@ void test_xhtml_div_tag_006()
 void test_xhtml_div_tag_007() 
 {
 #define  TEST_STRING "<div style=\"aaa\"></div>"
-#define  RESULT_STRING "<div></div>\r\n"
+#define  RESULT_STRING "<div></div>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -2856,7 +3108,7 @@ void test_xhtml_div_tag_007()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -2888,7 +3140,7 @@ void test_xhtml_form_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -2917,7 +3169,7 @@ void test_xhtml_form_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -2946,7 +3198,7 @@ void test_xhtml_form_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -2975,7 +3227,7 @@ void test_xhtml_form_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3004,7 +3256,7 @@ void test_xhtml_form_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3033,7 +3285,7 @@ void test_xhtml_form_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3062,7 +3314,7 @@ void test_xhtml_form_tag_007()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, NULL);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, NULL);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3091,7 +3343,7 @@ void test_xhtml_form_tag_008()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3120,7 +3372,7 @@ void test_xhtml_form_tag_009()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3137,7 +3389,7 @@ void test_xhtml_form_tag_009()
 void test_xhtml_head_tag_001()
 {
 #define  TEST_STRING "<head></head>"
-#define  RESULT_STRING "<head>\r\n</head>\r\n"
+#define  RESULT_STRING "<head></head>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -3152,7 +3404,7 @@ void test_xhtml_head_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3166,7 +3418,7 @@ void test_xhtml_head_tag_001()
 void test_xhtml_head_tag_002()
 {
 #define  TEST_STRING "<head><title>あああ</title></head>"
-#define  RESULT_STRING "<head>\r\n<title>あああ</title>\r\n</head>\r\n"
+#define  RESULT_STRING "<head><title>あああ</title></head>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -3181,7 +3433,7 @@ void test_xhtml_head_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3213,7 +3465,7 @@ void test_xhtml_h1_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3242,7 +3494,7 @@ void test_xhtml_h1_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3271,7 +3523,7 @@ void test_xhtml_h1_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3300,7 +3552,7 @@ void test_xhtml_h1_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3329,7 +3581,7 @@ void test_xhtml_h1_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3358,7 +3610,7 @@ void test_xhtml_h1_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3387,7 +3639,7 @@ void test_xhtml_h1_tag_007()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3416,7 +3668,7 @@ void test_xhtml_h1_tag_008()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3445,7 +3697,7 @@ void test_xhtml_h1_tag_009()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3474,7 +3726,7 @@ void test_xhtml_h1_tag_010()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3503,7 +3755,7 @@ void test_xhtml_h2_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3532,7 +3784,7 @@ void test_xhtml_h2_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3561,7 +3813,7 @@ void test_xhtml_h2_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3590,7 +3842,7 @@ void test_xhtml_h2_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3619,7 +3871,7 @@ void test_xhtml_h2_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3648,7 +3900,7 @@ void test_xhtml_h2_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3677,7 +3929,7 @@ void test_xhtml_h2_tag_007()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3706,7 +3958,7 @@ void test_xhtml_h2_tag_008()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3735,7 +3987,7 @@ void test_xhtml_h2_tag_009()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3764,7 +4016,7 @@ void test_xhtml_h2_tag_010()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3793,7 +4045,7 @@ void test_xhtml_h3_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3822,7 +4074,7 @@ void test_xhtml_h3_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3851,7 +4103,7 @@ void test_xhtml_h3_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3880,7 +4132,7 @@ void test_xhtml_h3_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3909,7 +4161,7 @@ void test_xhtml_h3_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3938,7 +4190,7 @@ void test_xhtml_h3_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3967,7 +4219,7 @@ void test_xhtml_h3_tag_007()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -3996,7 +4248,7 @@ void test_xhtml_h3_tag_008()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4025,7 +4277,7 @@ void test_xhtml_h3_tag_009()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4054,7 +4306,7 @@ void test_xhtml_h3_tag_010()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4083,7 +4335,7 @@ void test_xhtml_h4_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4112,7 +4364,7 @@ void test_xhtml_h4_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4141,7 +4393,7 @@ void test_xhtml_h4_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4170,7 +4422,7 @@ void test_xhtml_h4_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4199,7 +4451,7 @@ void test_xhtml_h4_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4228,7 +4480,7 @@ void test_xhtml_h4_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4257,7 +4509,7 @@ void test_xhtml_h4_tag_007()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4286,7 +4538,7 @@ void test_xhtml_h4_tag_008()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4315,7 +4567,7 @@ void test_xhtml_h4_tag_009()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4344,7 +4596,7 @@ void test_xhtml_h4_tag_010()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4373,7 +4625,7 @@ void test_xhtml_h5_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4402,7 +4654,7 @@ void test_xhtml_h5_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4431,7 +4683,7 @@ void test_xhtml_h5_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4460,7 +4712,7 @@ void test_xhtml_h5_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4489,7 +4741,7 @@ void test_xhtml_h5_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4518,7 +4770,7 @@ void test_xhtml_h5_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4547,7 +4799,7 @@ void test_xhtml_h5_tag_007()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4576,7 +4828,7 @@ void test_xhtml_h5_tag_008()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4605,7 +4857,7 @@ void test_xhtml_h5_tag_009()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4634,7 +4886,7 @@ void test_xhtml_h5_tag_010()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4663,7 +4915,7 @@ void test_xhtml_h6_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4692,7 +4944,7 @@ void test_xhtml_h6_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4721,7 +4973,7 @@ void test_xhtml_h6_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4750,7 +5002,7 @@ void test_xhtml_h6_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4779,7 +5031,7 @@ void test_xhtml_h6_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4808,7 +5060,7 @@ void test_xhtml_h6_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4837,7 +5089,7 @@ void test_xhtml_h6_tag_007()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4866,7 +5118,7 @@ void test_xhtml_h6_tag_008()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4895,7 +5147,7 @@ void test_xhtml_h6_tag_009()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4924,7 +5176,7 @@ void test_xhtml_h6_tag_010()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4956,7 +5208,7 @@ void test_xhtml_hr_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -4985,7 +5237,7 @@ void test_xhtml_hr_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5014,7 +5266,7 @@ void test_xhtml_hr_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5043,7 +5295,7 @@ void test_xhtml_hr_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5072,7 +5324,7 @@ void test_xhtml_hr_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
@@ -5100,7 +5352,7 @@ void test_xhtml_hr_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5129,7 +5381,7 @@ void test_xhtml_hr_tag_007()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5158,7 +5410,7 @@ void test_xhtml_hr_tag_008()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5187,7 +5439,7 @@ void test_xhtml_hr_tag_009()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5216,7 +5468,7 @@ void test_xhtml_hr_tag_010()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5245,7 +5497,7 @@ void test_xhtml_hr_tag_011()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5274,7 +5526,7 @@ void test_xhtml_hr_tag_012()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5303,7 +5555,7 @@ void test_xhtml_hr_tag_013()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5332,7 +5584,7 @@ void test_xhtml_hr_tag_014()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5361,7 +5613,7 @@ void test_xhtml_hr_tag_015()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5390,7 +5642,7 @@ void test_xhtml_hr_tag_016()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5419,7 +5671,7 @@ void test_xhtml_hr_tag_017()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5433,6 +5685,35 @@ void test_xhtml_hr_tag_017()
 void test_xhtml_hr_tag_018() 
 {
 #define  TEST_STRING "<hr width=\"10\" color=\"#ff0000\">"
+#define  RESULT_STRING "<hr width=\"10\" color=\"#ff0000\" />"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_hr_tag_018_1() 
+{
+#define  TEST_STRING "<hr width=\"10\" color=\"\">"
 #define  RESULT_STRING "<hr width=\"10\" />"
   char  *ret;
   char  *tmp;
@@ -5448,7 +5729,36 @@ void test_xhtml_hr_tag_018()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_hr_tag_018_2() 
+{
+#define  TEST_STRING "<hr width=\"10\" color>"
+#define  RESULT_STRING "<hr width=\"10\" />"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5466,8 +5776,8 @@ void test_xhtml_html_tag_001()
 {
 #define  TEST_STRING "<html></html>"
 #define  RESULT_STRING XHTML_HEADER \
-                       "<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n" \
-                       "</html>\r\n"
+                       "<html xmlns=\"http://www.w3.org/1999/xhtml\">" \
+                       "</html>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -5482,7 +5792,7 @@ void test_xhtml_html_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5514,7 +5824,7 @@ void test_xhtml_img_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5543,7 +5853,7 @@ void test_xhtml_img_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5572,7 +5882,7 @@ void test_xhtml_img_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5601,7 +5911,7 @@ void test_xhtml_img_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5630,7 +5940,7 @@ void test_xhtml_img_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5659,7 +5969,7 @@ void test_xhtml_img_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
@@ -5687,7 +5997,7 @@ void test_xhtml_img_tag_007()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5716,7 +6026,7 @@ void test_xhtml_img_tag_008()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5745,7 +6055,7 @@ void test_xhtml_img_tag_009()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5774,7 +6084,7 @@ void test_xhtml_img_tag_010()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5803,7 +6113,7 @@ void test_xhtml_img_tag_011()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5832,7 +6142,7 @@ void test_xhtml_img_tag_012()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5861,7 +6171,36 @@ void test_xhtml_img_tag_013()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_img_tag_013_1() 
+{
+#define  TEST_STRING "<img align=\"center\">"
+#define  RESULT_STRING "<img align=\"middle\" />"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5890,7 +6229,7 @@ void test_xhtml_img_tag_014()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5919,7 +6258,7 @@ void test_xhtml_img_tag_015()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5948,7 +6287,7 @@ void test_xhtml_img_tag_016()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -5977,7 +6316,7 @@ void test_xhtml_img_tag_017()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6006,7 +6345,7 @@ void test_xhtml_img_tag_018()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6035,7 +6374,7 @@ void test_xhtml_img_tag_019()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6064,7 +6403,7 @@ void test_xhtml_img_tag_020()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6093,7 +6432,7 @@ void test_xhtml_img_tag_021()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6122,7 +6461,7 @@ void test_xhtml_img_tag_022()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6151,7 +6490,7 @@ void test_xhtml_img_tag_023()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6180,7 +6519,7 @@ void test_xhtml_img_tag_024()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6209,7 +6548,7 @@ void test_xhtml_img_tag_025()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6238,7 +6577,7 @@ void test_xhtml_img_tag_026()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6267,7 +6606,7 @@ void test_xhtml_img_tag_027()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6296,7 +6635,7 @@ void test_xhtml_img_tag_028()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6325,7 +6664,7 @@ void test_xhtml_img_tag_029()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6354,7 +6693,7 @@ void test_xhtml_img_tag_030()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6383,7 +6722,7 @@ void test_xhtml_img_tag_031()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6412,7 +6751,7 @@ void test_xhtml_img_tag_032()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6441,7 +6780,7 @@ void test_xhtml_img_tag_033()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6470,7 +6809,7 @@ void test_xhtml_img_tag_034()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6499,7 +6838,7 @@ void test_xhtml_img_tag_035()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6528,7 +6867,7 @@ void test_xhtml_img_tag_036()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6557,7 +6896,7 @@ void test_xhtml_img_tag_037()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6589,7 +6928,7 @@ void test_xhtml_input_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6618,7 +6957,7 @@ void test_xhtml_input_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6647,7 +6986,7 @@ void test_xhtml_input_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6676,7 +7015,7 @@ void test_xhtml_input_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6706,7 +7045,7 @@ void test_xhtml_input_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6736,7 +7075,7 @@ void test_xhtml_input_tag_005_1()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6765,7 +7104,7 @@ void test_xhtml_input_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6794,7 +7133,7 @@ void test_xhtml_input_tag_007()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6823,7 +7162,7 @@ void test_xhtml_input_tag_008()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6852,7 +7191,7 @@ void test_xhtml_input_tag_009()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6881,7 +7220,7 @@ void test_xhtml_input_tag_010()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6910,7 +7249,7 @@ void test_xhtml_input_tag_011()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6939,7 +7278,7 @@ void test_xhtml_input_tag_012()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6968,7 +7307,7 @@ void test_xhtml_input_tag_013()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -6997,7 +7336,7 @@ void test_xhtml_input_tag_014()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -7026,7 +7365,7 @@ void test_xhtml_input_tag_015()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -7055,7 +7394,7 @@ void test_xhtml_input_tag_016()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -7084,7 +7423,7 @@ void test_xhtml_input_tag_017()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -7113,7 +7452,7 @@ void test_xhtml_input_tag_018()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -7142,7 +7481,7 @@ void test_xhtml_input_tag_019()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -7171,7 +7510,7 @@ void test_xhtml_input_tag_020()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -7200,7 +7539,7 @@ void test_xhtml_input_tag_021()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -7229,7 +7568,7 @@ void test_xhtml_input_tag_022()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -7258,7 +7597,7 @@ void test_xhtml_input_tag_023()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -7287,7 +7626,7 @@ void test_xhtml_input_tag_024()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -7316,7 +7655,7 @@ void test_xhtml_input_tag_025()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -7345,7 +7684,7 @@ void test_xhtml_input_tag_026()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -7374,7 +7713,7 @@ void test_xhtml_input_tag_027()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -7403,7 +7742,7 @@ void test_xhtml_input_tag_028()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -7432,7 +7771,7 @@ void test_xhtml_input_tag_029()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -7461,7 +7800,7 @@ void test_xhtml_input_tag_030()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -7490,7 +7829,7 @@ void test_xhtml_input_tag_031()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -7519,7 +7858,7 @@ void test_xhtml_input_tag_032()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -7548,7 +7887,7 @@ void test_xhtml_input_tag_033()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -7577,7 +7916,7 @@ void test_xhtml_input_tag_034()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -7606,7 +7945,7 @@ void test_xhtml_input_tag_035()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -7635,7 +7974,7 @@ void test_xhtml_input_tag_036()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -7664,7 +8003,7 @@ void test_xhtml_input_tag_037()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -7693,7 +8032,7 @@ void test_xhtml_input_tag_037_1()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -7722,7 +8061,7 @@ void test_xhtml_input_tag_038()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -7751,7 +8090,7 @@ void test_xhtml_input_tag_039()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -7780,7 +8119,7 @@ void test_xhtml_input_tag_040()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -7809,7 +8148,7 @@ void test_xhtml_input_tag_041()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -7838,7 +8177,7 @@ void test_xhtml_input_tag_042()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -7867,7 +8206,7 @@ void test_xhtml_input_tag_043()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -7896,7 +8235,7 @@ void test_xhtml_input_tag_044()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -7925,7 +8264,7 @@ void test_xhtml_input_tag_045()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -7954,7 +8293,7 @@ void test_xhtml_input_tag_046()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -7983,7 +8322,7 @@ void test_xhtml_input_tag_047()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -8015,7 +8354,7 @@ void test_xhtml_li_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -8044,7 +8383,7 @@ void test_xhtml_li_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
@@ -8072,7 +8411,7 @@ void test_xhtml_li_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -8101,7 +8440,7 @@ void test_xhtml_li_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -8130,7 +8469,7 @@ void test_xhtml_li_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -8159,7 +8498,7 @@ void test_xhtml_li_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -8188,7 +8527,7 @@ void test_xhtml_li_tag_007()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -8217,7 +8556,7 @@ void test_xhtml_li_tag_008()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -8246,7 +8585,7 @@ void test_xhtml_li_tag_009()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -8275,7 +8614,7 @@ void test_xhtml_li_tag_010()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -8304,7 +8643,7 @@ void test_xhtml_li_tag_011()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -8333,7 +8672,7 @@ void test_xhtml_li_tag_012()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -8362,7 +8701,181 @@ void test_xhtml_li_tag_013()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_li_tag_014() 
+{
+#define  TEST_STRING "<li type=\"disc\">ﾊﾝｶｸ</li>"
+#define  RESULT_STRING "<li type=\"disc\">ﾊﾝｶｸ</li>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_li_tag_015() 
+{
+#define  TEST_STRING "<li type=\"circle\">ﾊﾝｶｸ</li>"
+#define  RESULT_STRING "<li type=\"circle\">ﾊﾝｶｸ</li>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_li_tag_016() 
+{
+#define  TEST_STRING "<li type=\"square\">ﾊﾝｶｸ</li>"
+#define  RESULT_STRING "<li type=\"square\">ﾊﾝｶｸ</li>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_li_tag_017() 
+{
+#define  TEST_STRING "<li type=\"unknown\">ﾊﾝｶｸ</li>"
+#define  RESULT_STRING "<li>ﾊﾝｶｸ</li>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_li_tag_018() 
+{
+#define  TEST_STRING "<li type=\"\">ﾊﾝｶｸ</li>"
+#define  RESULT_STRING "<li>ﾊﾝｶｸ</li>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_li_tag_019() 
+{
+#define  TEST_STRING "<li type>ﾊﾝｶｸ</li>"
+#define  RESULT_STRING "<li>ﾊﾝｶｸ</li>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -8394,7 +8907,7 @@ void test_xhtml_menu_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   CU_ASSERT(ret != NULL);
   CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
@@ -8422,7 +8935,7 @@ void test_xhtml_menu_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -8451,7 +8964,7 @@ void test_xhtml_menu_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -8480,7 +8993,7 @@ void test_xhtml_menu_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -8509,7 +9022,181 @@ void test_xhtml_menu_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_menu_tag_006() 
+{
+#define  TEST_STRING "<menu type=\"disc\"><li>ﾊﾝｶｸ</li><li>ﾊﾝｶｸ</li></menu>"
+#define  RESULT_STRING "<menu type=\"disc\"><li>ﾊﾝｶｸ</li><li>ﾊﾝｶｸ</li></menu>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_menu_tag_007() 
+{
+#define  TEST_STRING "<menu type=\"circle\"><li>ﾊﾝｶｸ</li><li>ﾊﾝｶｸ</li></menu>"
+#define  RESULT_STRING "<menu type=\"circle\"><li>ﾊﾝｶｸ</li><li>ﾊﾝｶｸ</li></menu>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_menu_tag_008() 
+{
+#define  TEST_STRING "<menu type=\"square\"><li>ﾊﾝｶｸ</li><li>ﾊﾝｶｸ</li></menu>"
+#define  RESULT_STRING "<menu type=\"square\"><li>ﾊﾝｶｸ</li><li>ﾊﾝｶｸ</li></menu>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_menu_tag_009() 
+{
+#define  TEST_STRING "<menu type=\"unknown\"><li>ﾊﾝｶｸ</li><li>ﾊﾝｶｸ</li></menu>"
+#define  RESULT_STRING "<menu><li>ﾊﾝｶｸ</li><li>ﾊﾝｶｸ</li></menu>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_menu_tag_010() 
+{
+#define  TEST_STRING "<menu type=\"\"><li>ﾊﾝｶｸ</li><li>ﾊﾝｶｸ</li></menu>"
+#define  RESULT_STRING "<menu><li>ﾊﾝｶｸ</li><li>ﾊﾝｶｸ</li></menu>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_menu_tag_011() 
+{
+#define  TEST_STRING "<menu type><li>ﾊﾝｶｸ</li><li>ﾊﾝｶｸ</li></menu>"
+#define  RESULT_STRING "<menu><li>ﾊﾝｶｸ</li><li>ﾊﾝｶｸ</li></menu>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -8541,7 +9228,7 @@ void test_xhtml_ol_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -8570,7 +9257,7 @@ void test_xhtml_ol_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -8599,7 +9286,7 @@ void test_xhtml_ol_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -8628,7 +9315,7 @@ void test_xhtml_ol_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -8657,7 +9344,7 @@ void test_xhtml_ol_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -8686,7 +9373,7 @@ void test_xhtml_ol_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -8715,7 +9402,7 @@ void test_xhtml_ol_tag_007()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -8744,7 +9431,7 @@ void test_xhtml_ol_tag_008()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -8773,7 +9460,7 @@ void test_xhtml_ol_tag_009()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -8802,7 +9489,7 @@ void test_xhtml_ol_tag_010()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -8831,7 +9518,7 @@ void test_xhtml_ol_tag_011()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -8860,7 +9547,7 @@ void test_xhtml_ol_tag_012()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -8889,7 +9576,7 @@ void test_xhtml_ol_tag_013()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -8918,7 +9605,7 @@ void test_xhtml_ol_tag_014()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -8947,7 +9634,7 @@ void test_xhtml_ol_tag_015()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -8976,7 +9663,7 @@ void test_xhtml_ol_tag_016()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9005,7 +9692,7 @@ void test_xhtml_ol_tag_017()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9034,7 +9721,7 @@ void test_xhtml_ol_tag_018()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9051,7 +9738,7 @@ void test_xhtml_ol_tag_018()
 void test_xhtml_option_tag_001() 
 {
 #define  TEST_STRING "<option></option>"
-#define  RESULT_STRING "<option></option>\r\n"
+#define  RESULT_STRING "<option></option>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9066,7 +9753,7 @@ void test_xhtml_option_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9080,7 +9767,7 @@ void test_xhtml_option_tag_001()
 void test_xhtml_option_tag_002() 
 {
 #define  TEST_STRING "<option value></option>"
-#define  RESULT_STRING "<option></option>\r\n"
+#define  RESULT_STRING "<option></option>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9095,7 +9782,7 @@ void test_xhtml_option_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9109,7 +9796,7 @@ void test_xhtml_option_tag_002()
 void test_xhtml_option_tag_003() 
 {
 #define  TEST_STRING "<option value=\"\"></option>"
-#define  RESULT_STRING "<option></option>\r\n"
+#define  RESULT_STRING "<option></option>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9124,7 +9811,7 @@ void test_xhtml_option_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9138,7 +9825,7 @@ void test_xhtml_option_tag_003()
 void test_xhtml_option_tag_004() 
 {
 #define  TEST_STRING "<option value=\"a\"></option>"
-#define  RESULT_STRING "<option value=\"a\"></option>\r\n"
+#define  RESULT_STRING "<option value=\"a\"></option>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9153,7 +9840,7 @@ void test_xhtml_option_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9167,7 +9854,7 @@ void test_xhtml_option_tag_004()
 void test_xhtml_option_tag_005() 
 {
 #define  TEST_STRING "<option value=\"亀\"></option>"
-#define  RESULT_STRING "<option value=\"亀\"></option>\r\n"
+#define  RESULT_STRING "<option value=\"亀\"></option>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9182,7 +9869,7 @@ void test_xhtml_option_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9196,7 +9883,7 @@ void test_xhtml_option_tag_005()
 void test_xhtml_option_tag_006() 
 {
 #define  TEST_STRING "<option value=\"ﾊﾝｶｸ\"></option>"
-#define  RESULT_STRING "<option value=\"ﾊﾝｶｸ\"></option>\r\n"
+#define  RESULT_STRING "<option value=\"ﾊﾝｶｸ\"></option>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9211,7 +9898,7 @@ void test_xhtml_option_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9225,7 +9912,7 @@ void test_xhtml_option_tag_006()
 void test_xhtml_option_tag_007() 
 {
 #define  TEST_STRING "<option selected></option>"
-#define  RESULT_STRING "<option selected=\"selected\"></option>\r\n"
+#define  RESULT_STRING "<option selected=\"selected\"></option>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9240,7 +9927,7 @@ void test_xhtml_option_tag_007()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9272,7 +9959,7 @@ void test_xhtml_p_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9301,7 +9988,7 @@ void test_xhtml_p_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9330,7 +10017,7 @@ void test_xhtml_p_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9359,7 +10046,7 @@ void test_xhtml_p_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9388,7 +10075,7 @@ void test_xhtml_p_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9417,7 +10104,7 @@ void test_xhtml_p_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9446,7 +10133,7 @@ void test_xhtml_p_tag_007()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9475,7 +10162,7 @@ void test_xhtml_p_tag_008()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9507,7 +10194,7 @@ void test_xhtml_plaintext_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9536,7 +10223,7 @@ void test_xhtml_plaintext_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9565,7 +10252,7 @@ void test_xhtml_plaintext_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9594,7 +10281,7 @@ void test_xhtml_plaintext_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9626,7 +10313,7 @@ void test_xhtml_pre_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9655,7 +10342,7 @@ void test_xhtml_pre_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9684,7 +10371,7 @@ void test_xhtml_pre_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9713,7 +10400,7 @@ void test_xhtml_pre_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9742,7 +10429,7 @@ void test_xhtml_pre_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9759,7 +10446,7 @@ void test_xhtml_pre_tag_005()
 void test_xhtml_select_tag_001() 
 {
 #define  TEST_STRING "<select></select>"
-#define  RESULT_STRING "<select>\r\n</select>\r\n"
+#define  RESULT_STRING "<select></select>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9774,7 +10461,7 @@ void test_xhtml_select_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9788,7 +10475,7 @@ void test_xhtml_select_tag_001()
 void test_xhtml_select_tag_002() 
 {
 #define  TEST_STRING "<select>あああ</select>"
-#define  RESULT_STRING "<select>\r\nあああ</select>\r\n"
+#define  RESULT_STRING "<select>あああ</select>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9803,7 +10490,7 @@ void test_xhtml_select_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9817,7 +10504,7 @@ void test_xhtml_select_tag_002()
 void test_xhtml_select_tag_003() 
 {
 #define  TEST_STRING "<select name></select>"
-#define  RESULT_STRING "<select>\r\n</select>\r\n"
+#define  RESULT_STRING "<select></select>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9832,7 +10519,7 @@ void test_xhtml_select_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9846,7 +10533,7 @@ void test_xhtml_select_tag_003()
 void test_xhtml_select_tag_004() 
 {
 #define  TEST_STRING "<select name=\"\"></select>"
-#define  RESULT_STRING "<select>\r\n</select>\r\n"
+#define  RESULT_STRING "<select></select>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9861,7 +10548,7 @@ void test_xhtml_select_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9875,7 +10562,7 @@ void test_xhtml_select_tag_004()
 void test_xhtml_select_tag_005() 
 {
 #define  TEST_STRING "<select name=\"abc\"></select>"
-#define  RESULT_STRING "<select name=\"abc\">\r\n</select>\r\n"
+#define  RESULT_STRING "<select name=\"abc\"></select>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9890,7 +10577,7 @@ void test_xhtml_select_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9904,7 +10591,7 @@ void test_xhtml_select_tag_005()
 void test_xhtml_select_tag_006() 
 {
 #define  TEST_STRING "<select name=\"あああ\"></select>"
-#define  RESULT_STRING "<select name=\"あああ\">\r\n</select>\r\n"
+#define  RESULT_STRING "<select name=\"あああ\"></select>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9919,7 +10606,7 @@ void test_xhtml_select_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9933,7 +10620,7 @@ void test_xhtml_select_tag_006()
 void test_xhtml_select_tag_007() 
 {
 #define  TEST_STRING "<select name=\"ﾊﾝｶｸ\"></select>"
-#define  RESULT_STRING "<select name=\"ﾊﾝｶｸ\">\r\n</select>\r\n"
+#define  RESULT_STRING "<select name=\"ﾊﾝｶｸ\"></select>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9948,7 +10635,7 @@ void test_xhtml_select_tag_007()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9962,7 +10649,7 @@ void test_xhtml_select_tag_007()
 void test_xhtml_select_tag_008() 
 {
 #define  TEST_STRING "<select size></select>"
-#define  RESULT_STRING "<select>\r\n</select>\r\n"
+#define  RESULT_STRING "<select></select>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -9977,7 +10664,7 @@ void test_xhtml_select_tag_008()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -9991,7 +10678,7 @@ void test_xhtml_select_tag_008()
 void test_xhtml_select_tag_009() 
 {
 #define  TEST_STRING "<select size=\"\"></select>"
-#define  RESULT_STRING "<select>\r\n</select>\r\n"
+#define  RESULT_STRING "<select></select>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10006,7 +10693,7 @@ void test_xhtml_select_tag_009()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -10020,7 +10707,7 @@ void test_xhtml_select_tag_009()
 void test_xhtml_select_tag_010() 
 {
 #define  TEST_STRING "<select size=\"abc\"></select>"
-#define  RESULT_STRING "<select size=\"abc\">\r\n</select>\r\n"
+#define  RESULT_STRING "<select size=\"abc\"></select>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10035,7 +10722,7 @@ void test_xhtml_select_tag_010()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -10049,7 +10736,7 @@ void test_xhtml_select_tag_010()
 void test_xhtml_select_tag_011() 
 {
 #define  TEST_STRING "<select size=\"11\"></select>"
-#define  RESULT_STRING "<select size=\"11\">\r\n</select>\r\n"
+#define  RESULT_STRING "<select size=\"11\"></select>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10064,7 +10751,7 @@ void test_xhtml_select_tag_011()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -10078,7 +10765,7 @@ void test_xhtml_select_tag_011()
 void test_xhtml_select_tag_012() 
 {
 #define  TEST_STRING "<select multiple></select>"
-#define  RESULT_STRING "<select multiple=\"true\">\r\n</select>\r\n"
+#define  RESULT_STRING "<select multiple=\"true\"></select>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10093,7 +10780,7 @@ void test_xhtml_select_tag_012()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -10107,7 +10794,7 @@ void test_xhtml_select_tag_012()
 void test_xhtml_select_tag_013() 
 {
 #define  TEST_STRING "<select multiple=\"\"></select>"
-#define  RESULT_STRING "<select multiple=\"true\">\r\n</select>\r\n"
+#define  RESULT_STRING "<select multiple=\"true\"></select>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10122,7 +10809,7 @@ void test_xhtml_select_tag_013()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -10136,7 +10823,7 @@ void test_xhtml_select_tag_013()
 void test_xhtml_select_tag_014() 
 {
 #define  TEST_STRING "<select multiple=\"abc\"></select>"
-#define  RESULT_STRING "<select multiple=\"true\">\r\n</select>\r\n"
+#define  RESULT_STRING "<select multiple=\"true\"></select>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10151,7 +10838,7 @@ void test_xhtml_select_tag_014()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -10168,7 +10855,7 @@ void test_xhtml_select_tag_014()
 void test_xhtml_textarea_tag_001() 
 {
 #define  TEST_STRING "<textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10183,7 +10870,7 @@ void test_xhtml_textarea_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -10197,7 +10884,7 @@ void test_xhtml_textarea_tag_001()
 void test_xhtml_textarea_tag_002() 
 {
 #define  TEST_STRING "<textarea></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10212,7 +10899,7 @@ void test_xhtml_textarea_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -10226,7 +10913,7 @@ void test_xhtml_textarea_tag_002()
 void test_xhtml_textarea_tag_003() 
 {
 #define  TEST_STRING "<textarea>あああ</textarea>"
-#define  RESULT_STRING "<textarea>\r\nあああ</textarea>\r\n"
+#define  RESULT_STRING "<textarea>あああ</textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10241,7 +10928,7 @@ void test_xhtml_textarea_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -10255,7 +10942,7 @@ void test_xhtml_textarea_tag_003()
 void test_xhtml_textarea_tag_004() 
 {
 #define  TEST_STRING "<textarea>あああ\nいいい</textarea>"
-#define  RESULT_STRING "<textarea>\r\nあああ\nいいい</textarea>\r\n"
+#define  RESULT_STRING "<textarea>あああ\nいいい</textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10270,7 +10957,7 @@ void test_xhtml_textarea_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -10283,8 +10970,8 @@ void test_xhtml_textarea_tag_004()
 }
 void test_xhtml_textarea_tag_005() 
 {
-#define  TEST_STRING "<textarea>あああ\r\nいいい</textarea>"
-#define  RESULT_STRING "<textarea>\r\nあああ\r\nいいい</textarea>\r\n"
+#define  TEST_STRING "<textarea>あああいいい</textarea>"
+#define  RESULT_STRING "<textarea>あああいいい</textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10299,7 +10986,7 @@ void test_xhtml_textarea_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -10312,8 +10999,8 @@ void test_xhtml_textarea_tag_005()
 }
 void test_xhtml_textarea_tag_006() 
 {
-#define  TEST_STRING "<textarea>あああ\r\nいいい\n</textarea>"
-#define  RESULT_STRING "<textarea>\r\nあああ\r\nいいい\n</textarea>\r\n"
+#define  TEST_STRING "<textarea>あああいいい\n</textarea>"
+#define  RESULT_STRING "<textarea>あああいいい\n</textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10328,7 +11015,7 @@ void test_xhtml_textarea_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -10341,8 +11028,8 @@ void test_xhtml_textarea_tag_006()
 }
 void test_xhtml_textarea_tag_007() 
 {
-#define  TEST_STRING "<textarea>あああ\r\nいいい\r\n</textarea>"
-#define  RESULT_STRING "<textarea>\r\nあああ\r\nいいい\r\n</textarea>\r\n"
+#define  TEST_STRING "<textarea>あああいいい</textarea>"
+#define  RESULT_STRING "<textarea>あああいいい</textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10357,7 +11044,7 @@ void test_xhtml_textarea_tag_007()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -10371,7 +11058,7 @@ void test_xhtml_textarea_tag_007()
 void test_xhtml_textarea_tag_008() 
 {
 #define  TEST_STRING "<textarea name></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10386,7 +11073,7 @@ void test_xhtml_textarea_tag_008()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -10400,7 +11087,7 @@ void test_xhtml_textarea_tag_008()
 void test_xhtml_textarea_tag_009() 
 {
 #define  TEST_STRING "<textarea name=\"\"></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10415,7 +11102,7 @@ void test_xhtml_textarea_tag_009()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -10429,7 +11116,7 @@ void test_xhtml_textarea_tag_009()
 void test_xhtml_textarea_tag_010() 
 {
 #define  TEST_STRING "<textarea name=\"aaa\"></textarea>"
-#define  RESULT_STRING "<textarea name=\"aaa\">\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea name=\"aaa\"></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10444,7 +11131,7 @@ void test_xhtml_textarea_tag_010()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -10458,7 +11145,7 @@ void test_xhtml_textarea_tag_010()
 void test_xhtml_textarea_tag_011() 
 {
 #define  TEST_STRING "<textarea rows></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10473,7 +11160,7 @@ void test_xhtml_textarea_tag_011()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -10487,7 +11174,7 @@ void test_xhtml_textarea_tag_011()
 void test_xhtml_textarea_tag_012() 
 {
 #define  TEST_STRING "<textarea rows=\"\"></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10502,7 +11189,7 @@ void test_xhtml_textarea_tag_012()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -10516,7 +11203,7 @@ void test_xhtml_textarea_tag_012()
 void test_xhtml_textarea_tag_013() 
 {
 #define  TEST_STRING "<textarea rows=\"abc\"></textarea>"
-#define  RESULT_STRING "<textarea rows=\"abc\">\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea rows=\"abc\"></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10531,7 +11218,7 @@ void test_xhtml_textarea_tag_013()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -10545,7 +11232,7 @@ void test_xhtml_textarea_tag_013()
 void test_xhtml_textarea_tag_014() 
 {
 #define  TEST_STRING "<textarea cols></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10560,7 +11247,7 @@ void test_xhtml_textarea_tag_014()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -10574,7 +11261,7 @@ void test_xhtml_textarea_tag_014()
 void test_xhtml_textarea_tag_015() 
 {
 #define  TEST_STRING "<textarea cols=\"\"></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10589,7 +11276,7 @@ void test_xhtml_textarea_tag_015()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -10603,7 +11290,7 @@ void test_xhtml_textarea_tag_015()
 void test_xhtml_textarea_tag_016() 
 {
 #define  TEST_STRING "<textarea cols=\"123\"></textarea>"
-#define  RESULT_STRING "<textarea cols=\"123\">\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea cols=\"123\"></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10618,7 +11305,7 @@ void test_xhtml_textarea_tag_016()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -10632,7 +11319,7 @@ void test_xhtml_textarea_tag_016()
 void test_xhtml_textarea_tag_017() 
 {
 #define  TEST_STRING "<textarea accesskey></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10647,7 +11334,7 @@ void test_xhtml_textarea_tag_017()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -10661,7 +11348,7 @@ void test_xhtml_textarea_tag_017()
 void test_xhtml_textarea_tag_018() 
 {
 #define  TEST_STRING "<textarea accesskey=\"\"></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10676,7 +11363,7 @@ void test_xhtml_textarea_tag_018()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -10690,7 +11377,7 @@ void test_xhtml_textarea_tag_018()
 void test_xhtml_textarea_tag_019() 
 {
 #define  TEST_STRING "<textarea accesskey=\"10\"></textarea>"
-#define  RESULT_STRING "<textarea accesskey=\"10\">\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea accesskey=\"10\"></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10705,7 +11392,7 @@ void test_xhtml_textarea_tag_019()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -10719,7 +11406,7 @@ void test_xhtml_textarea_tag_019()
 void test_xhtml_textarea_tag_020() 
 {
 #define  TEST_STRING "<textarea istyle></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10734,7 +11421,7 @@ void test_xhtml_textarea_tag_020()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -10748,7 +11435,7 @@ void test_xhtml_textarea_tag_020()
 void test_xhtml_textarea_tag_021() 
 {
 #define  TEST_STRING "<textarea istyle=\"\"></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10763,7 +11450,7 @@ void test_xhtml_textarea_tag_021()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -10777,7 +11464,7 @@ void test_xhtml_textarea_tag_021()
 void test_xhtml_textarea_tag_022() 
 {
 #define  TEST_STRING "<textarea istyle=\"1\"></textarea>"
-#define  RESULT_STRING "<textarea FORMAT=\"*M\">\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea FORMAT=\"*M\"></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10792,7 +11479,7 @@ void test_xhtml_textarea_tag_022()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -10806,7 +11493,7 @@ void test_xhtml_textarea_tag_022()
 void test_xhtml_textarea_tag_023() 
 {
 #define  TEST_STRING "<textarea istyle=\"2\"></textarea>"
-#define  RESULT_STRING "<textarea FORMAT=\"*M\">\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea FORMAT=\"*M\"></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10821,7 +11508,7 @@ void test_xhtml_textarea_tag_023()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -10835,7 +11522,7 @@ void test_xhtml_textarea_tag_023()
 void test_xhtml_textarea_tag_024() 
 {
 #define  TEST_STRING "<textarea istyle=\"3\"></textarea>"
-#define  RESULT_STRING "<textarea FORMAT=\"*m\">\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea FORMAT=\"*m\"></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10850,7 +11537,7 @@ void test_xhtml_textarea_tag_024()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -10864,7 +11551,7 @@ void test_xhtml_textarea_tag_024()
 void test_xhtml_textarea_tag_025() 
 {
 #define  TEST_STRING "<textarea istyle=\"4\"></textarea>"
-#define  RESULT_STRING "<textarea FORMAT=\"*N\">\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea FORMAT=\"*N\"></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10879,7 +11566,7 @@ void test_xhtml_textarea_tag_025()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -10893,7 +11580,7 @@ void test_xhtml_textarea_tag_025()
 void test_xhtml_textarea_tag_026() 
 {
 #define  TEST_STRING "<textarea istyle=\"a\"></textarea>"
-#define  RESULT_STRING "<textarea>\r\n</textarea>\r\n"
+#define  RESULT_STRING "<textarea></textarea>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10908,7 +11595,7 @@ void test_xhtml_textarea_tag_026()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -10925,7 +11612,7 @@ void test_xhtml_textarea_tag_026()
 void test_xhtml_title_tag_001()
 {
 #define  TEST_STRING "<title></title>"
-#define  RESULT_STRING "<title></title>\r\n"
+#define  RESULT_STRING "<title></title>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10940,7 +11627,7 @@ void test_xhtml_title_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -10954,7 +11641,7 @@ void test_xhtml_title_tag_001()
 void test_xhtml_title_tag_002()
 {
 #define  TEST_STRING "<title>あああ</title>"
-#define  RESULT_STRING "<title>あああ</title>\r\n"
+#define  RESULT_STRING "<title>あああ</title>"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -10969,7 +11656,7 @@ void test_xhtml_title_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -11001,7 +11688,7 @@ void test_xhtml_ul_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -11030,7 +11717,7 @@ void test_xhtml_ul_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -11059,7 +11746,7 @@ void test_xhtml_ul_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -11088,7 +11775,7 @@ void test_xhtml_ul_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -11117,7 +11804,181 @@ void test_xhtml_ul_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_ul_tag_006() 
+{
+#define  TEST_STRING "<ul type=\"disc\"><li>abc</ul>"
+#define  RESULT_STRING "<ul type=\"disc\"><li>abc</li></ul>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_ul_tag_007() 
+{
+#define  TEST_STRING "<ul type=\"circle\"><li>abc</ul>"
+#define  RESULT_STRING "<ul type=\"circle\"><li>abc</li></ul>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_ul_tag_008() 
+{
+#define  TEST_STRING "<ul type=\"square\"><li>abc</ul>"
+#define  RESULT_STRING "<ul type=\"square\"><li>abc</li></ul>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_ul_tag_009() 
+{
+#define  TEST_STRING "<ul type=\"unknown\"><li>abc</ul>"
+#define  RESULT_STRING "<ul><li>abc</li></ul>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_ul_tag_010() 
+{
+#define  TEST_STRING "<ul type=\"\"><li>abc</ul>"
+#define  RESULT_STRING "<ul><li>abc</li></ul>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_ul_tag_011() 
+{
+#define  TEST_STRING "<ul type><li>abc</ul>"
+#define  RESULT_STRING "<ul><li>abc</li></ul>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -11149,7 +12010,7 @@ void test_xhtml_blink_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -11178,7 +12039,7 @@ void test_xhtml_blink_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -11207,7 +12068,7 @@ void test_xhtml_blink_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -11236,7 +12097,7 @@ void test_xhtml_blink_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -11268,7 +12129,7 @@ void test_xhtml_marquee_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -11297,7 +12158,7 @@ void test_xhtml_marquee_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -11326,7 +12187,7 @@ void test_xhtml_marquee_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -11355,7 +12216,7 @@ void test_xhtml_marquee_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -11384,7 +12245,7 @@ void test_xhtml_marquee_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -11413,7 +12274,7 @@ void test_xhtml_marquee_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -11442,7 +12303,7 @@ void test_xhtml_marquee_tag_007()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -11471,7 +12332,7 @@ void test_xhtml_marquee_tag_008()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -11500,7 +12361,7 @@ void test_xhtml_marquee_tag_009()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -11529,7 +12390,7 @@ void test_xhtml_marquee_tag_010()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -11558,7 +12419,7 @@ void test_xhtml_marquee_tag_011()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -11587,7 +12448,7 @@ void test_xhtml_marquee_tag_012()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -11616,7 +12477,7 @@ void test_xhtml_marquee_tag_013()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -11645,7 +12506,7 @@ void test_xhtml_marquee_tag_014()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -11674,7 +12535,7 @@ void test_xhtml_marquee_tag_015()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -11703,7 +12564,7 @@ void test_xhtml_marquee_tag_016()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -11732,7 +12593,7 @@ void test_xhtml_marquee_tag_017()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -11761,7 +12622,94 @@ void test_xhtml_marquee_tag_018()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_marquee_tag_019() 
+{
+#define  TEST_STRING "<marquee bgcolor=\"#ff0000\">ﾊﾝｶｸ</marquee>"
+#define  RESULT_STRING "<marquee bgcolor=\"#ff0000\">ﾊﾝｶｸ</marquee>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_marquee_tag_020() 
+{
+#define  TEST_STRING "<marquee bgcolor=\"\">ﾊﾝｶｸ</marquee>"
+#define  RESULT_STRING "<marquee>ﾊﾝｶｸ</marquee>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_marquee_tag_021() 
+{
+#define  TEST_STRING "<marquee bgcolor>ﾊﾝｶｸ</marquee>"
+#define  RESULT_STRING "<marquee>ﾊﾝｶｸ</marquee>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -11778,7 +12726,7 @@ void test_xhtml_marquee_tag_018()
 void test_xhtml_meta_tag_001() 
 {
 #define  TEST_STRING "<meta>"
-#define  RESULT_STRING "<meta />\r\n"
+#define  RESULT_STRING "<meta />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11793,7 +12741,7 @@ void test_xhtml_meta_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -11807,7 +12755,7 @@ void test_xhtml_meta_tag_001()
 void test_xhtml_meta_tag_002() 
 {
 #define  TEST_STRING "<meta http-equiv>"
-#define  RESULT_STRING "<meta />\r\n"
+#define  RESULT_STRING "<meta />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11822,7 +12770,7 @@ void test_xhtml_meta_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -11836,7 +12784,7 @@ void test_xhtml_meta_tag_002()
 void test_xhtml_meta_tag_003() 
 {
 #define  TEST_STRING "<meta http-equiv=\"\">"
-#define  RESULT_STRING "<meta />\r\n"
+#define  RESULT_STRING "<meta />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11851,7 +12799,7 @@ void test_xhtml_meta_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -11865,7 +12813,7 @@ void test_xhtml_meta_tag_003()
 void test_xhtml_meta_tag_004() 
 {
 #define  TEST_STRING "<meta http-equiv=\"content-type\">"
-#define  RESULT_STRING "<meta http-equiv=\"content-type\" />\r\n"
+#define  RESULT_STRING "<meta http-equiv=\"content-type\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11880,7 +12828,7 @@ void test_xhtml_meta_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -11894,7 +12842,7 @@ void test_xhtml_meta_tag_004()
 void test_xhtml_meta_tag_005() 
 {
 #define  TEST_STRING "<meta http-equiv=\"abc\">"
-#define  RESULT_STRING "<meta http-equiv=\"abc\" />\r\n"
+#define  RESULT_STRING "<meta http-equiv=\"abc\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11909,7 +12857,7 @@ void test_xhtml_meta_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -11923,7 +12871,7 @@ void test_xhtml_meta_tag_005()
 void test_xhtml_meta_tag_006() 
 {
 #define  TEST_STRING "<meta content>"
-#define  RESULT_STRING "<meta />\r\n"
+#define  RESULT_STRING "<meta />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11938,7 +12886,7 @@ void test_xhtml_meta_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -11952,7 +12900,7 @@ void test_xhtml_meta_tag_006()
 void test_xhtml_meta_tag_007() 
 {
 #define  TEST_STRING "<meta content=\"\">"
-#define  RESULT_STRING "<meta />\r\n"
+#define  RESULT_STRING "<meta />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11967,7 +12915,7 @@ void test_xhtml_meta_tag_007()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -11981,7 +12929,7 @@ void test_xhtml_meta_tag_007()
 void test_xhtml_meta_tag_008() 
 {
 #define  TEST_STRING "<meta http-equiv=\"Content-Type\" content=\"text/html\">"
-#define  RESULT_STRING "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=Windows-31J\" />\r\n"
+#define  RESULT_STRING "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=Windows-31J\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -11996,7 +12944,7 @@ void test_xhtml_meta_tag_008()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -12010,7 +12958,7 @@ void test_xhtml_meta_tag_008()
 void test_xhtml_meta_tag_009() 
 {
 #define  TEST_STRING "<meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml\">"
-#define  RESULT_STRING "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=Windows-31J\" />\r\n"
+#define  RESULT_STRING "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=Windows-31J\" />"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -12025,7 +12973,7 @@ void test_xhtml_meta_tag_009()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -12042,7 +12990,7 @@ void test_xhtml_meta_tag_009()
 void test_xhtml_font_tag_001() 
 {
 #define  TEST_STRING "<font>"
-#define  RESULT_STRING "<font></font>"
+#define  RESULT_STRING "\n"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -12057,7 +13005,7 @@ void test_xhtml_font_tag_001()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -12071,7 +13019,7 @@ void test_xhtml_font_tag_001()
 void test_xhtml_font_tag_002() 
 {
 #define  TEST_STRING "<font>あああ</font>"
-#define  RESULT_STRING "<font>あああ</font>"
+#define  RESULT_STRING "あああ"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -12086,7 +13034,7 @@ void test_xhtml_font_tag_002()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -12100,7 +13048,7 @@ void test_xhtml_font_tag_002()
 void test_xhtml_font_tag_003() 
 {
 #define  TEST_STRING "<font>ｱｱｱ</font>"
-#define  RESULT_STRING "<font>ｱｱｱ</font>"
+#define  RESULT_STRING "ｱｱｱ"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -12115,7 +13063,7 @@ void test_xhtml_font_tag_003()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -12129,7 +13077,7 @@ void test_xhtml_font_tag_003()
 void test_xhtml_font_tag_004() 
 {
 #define  TEST_STRING "<font color>ｱｱｱ</font>"
-#define  RESULT_STRING "<font>ｱｱｱ</font>"
+#define  RESULT_STRING "ｱｱｱ"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -12144,7 +13092,7 @@ void test_xhtml_font_tag_004()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -12158,7 +13106,7 @@ void test_xhtml_font_tag_004()
 void test_xhtml_font_tag_005() 
 {
 #define  TEST_STRING "<font color=\"\">ｱｱｱ</font>"
-#define  RESULT_STRING "<font>ｱｱｱ</font>"
+#define  RESULT_STRING "ｱｱｱ"
   char  *ret;
   char  *tmp;
   device_table spec;
@@ -12173,7 +13121,7 @@ void test_xhtml_font_tag_005()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);
@@ -12202,7 +13150,649 @@ void test_xhtml_font_tag_006()
   destlen = sizeof(TEST_STRING)-1;
 
   tmp = chxj_encoding(&r, TEST_STRING, &destlen);
-  ret = chxj_exchange_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+/*** font size */
+void test_xhtml_font_tag_007() 
+{
+#define  TEST_STRING "<font size=\"1\">ｱｱｱ</font>"
+#define  RESULT_STRING "<span style=\"font-size: xx-small\">ｱｱｱ</span>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_008() 
+{
+#define  TEST_STRING "<font size=\"2\">ｱｱｱ</font>"
+#define  RESULT_STRING "<span style=\"font-size: x-small\">ｱｱｱ</span>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_009() 
+{
+#define  TEST_STRING "<font size=\"3\">ｱｱｱ</font>"
+#define  RESULT_STRING "<span style=\"font-size: small\">ｱｱｱ</span>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_010() 
+{
+#define  TEST_STRING "<font size=\"4\">ｱｱｱ</font>"
+#define  RESULT_STRING "<span style=\"font-size: medium\">ｱｱｱ</span>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_011() 
+{
+#define  TEST_STRING "<font size=\"5\">ｱｱｱ</font>"
+#define  RESULT_STRING "<span style=\"font-size: large\">ｱｱｱ</span>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_012() 
+{
+#define  TEST_STRING "<font size=\"6\">ｱｱｱ</font>"
+#define  RESULT_STRING "<span style=\"font-size: x-large\">ｱｱｱ</span>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_013() 
+{
+#define  TEST_STRING "<font size=\"7\">ｱｱｱ</font>"
+#define  RESULT_STRING "<span style=\"font-size: xx-large\">ｱｱｱ</span>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_014() 
+{
+#define  TEST_STRING "<font size=\"0\">ｱｱｱ</font>"
+#define  RESULT_STRING "ｱｱｱ"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_015() 
+{
+#define  TEST_STRING "<font size=\"8\">ｱｱｱ</font>"
+#define  RESULT_STRING "ｱｱｱ"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_016() 
+{
+#define  TEST_STRING "<font size=\"8\">ｱｱｱ</font>"
+#define  RESULT_STRING "ｱｱｱ"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_017() 
+{
+#define  TEST_STRING "<font size=\"1\" color=\"#ff0000\">ｱｱｱ</font>"
+#define  RESULT_STRING "<font color=\"#ff0000\"><span style=\"font-size: xx-small\">ｱｱｱ</span></font>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_018() 
+{
+#define  TEST_STRING "<font size=\"\">ｱｱｱ</font>"
+#define  RESULT_STRING "ｱｱｱ"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_019() 
+{
+#define  TEST_STRING "<font size>ｱｱｱ</font>"
+#define  RESULT_STRING "ｱｱｱ"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_020() 
+{
+#define  TEST_STRING "<font size=\"-1\">ｱｱｱ</font>"
+#define  RESULT_STRING "<span style=\"font-size: small\">ｱｱｱ</span>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_021() 
+{
+#define  TEST_STRING "<font size=\"-2\">ｱｱｱ</font>"
+#define  RESULT_STRING "<span style=\"font-size: x-small\">ｱｱｱ</span>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_022() 
+{
+#define  TEST_STRING "<font size=\"-3\">ｱｱｱ</font>"
+#define  RESULT_STRING "<span style=\"font-size: xx-small\">ｱｱｱ</span>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_023() 
+{
+#define  TEST_STRING "<font size=\"-4\">ｱｱｱ</font>"
+#define  RESULT_STRING "ｱｱｱ"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_024() 
+{
+#define  TEST_STRING "<font size=\"+1\">ｱｱｱ</font>"
+#define  RESULT_STRING "<span style=\"font-size: large\">ｱｱｱ</span>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_025() 
+{
+#define  TEST_STRING "<font size=\"+2\">ｱｱｱ</font>"
+#define  RESULT_STRING "<span style=\"font-size: x-large\">ｱｱｱ</span>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_026() 
+{
+#define  TEST_STRING "<font size=\"+3\">ｱｱｱ</font>"
+#define  RESULT_STRING "<span style=\"font-size: xx-large\">ｱｱｱ</span>"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+void test_xhtml_font_tag_027() 
+{
+#define  TEST_STRING "<font size=\"+4\">ｱｱｱ</font>"
+#define  RESULT_STRING "ｱｱｱ"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
+  ret = chxj_rencoding(&r, ret, &destlen);
+  fprintf(stderr, "ret=[%s]",ret);
+  CU_ASSERT(ret != NULL);
+  CU_ASSERT(strcmp(RESULT_STRING, ret) == 0);
+  CU_ASSERT(destlen == sizeof(RESULT_STRING)-1);
+
+  APR_TERM;
+#undef TEST_STRING
+#undef RESULT_STRING
+}
+/*============================================================================*/
+/* <param>                                                                    */
+/*============================================================================*/
+void test_xhtml_param_tag_001() 
+{
+#define  TEST_STRING "<param>aaa</param>"
+#define  RESULT_STRING "\n"
+  char  *ret;
+  char  *tmp;
+  device_table spec;
+  chxjconvrule_entry entry;
+  cookie_t cookie;
+  apr_size_t destlen;
+  APR_INIT;
+
+  COOKIE_INIT(cookie);
+
+  SPEC_INIT(spec);
+  destlen = sizeof(TEST_STRING)-1;
+
+  tmp = chxj_encoding(&r, TEST_STRING, &destlen);
+  ret = chxj_convert_xhtml_mobile_1_0(&r, &spec, tmp, destlen, &destlen, &entry, &cookie);
   ret = chxj_rencoding(&r, ret, &destlen);
   fprintf(stderr, "ret=[%s]",ret);
   CU_ASSERT(ret != NULL);

@@ -37,11 +37,8 @@ chxj_encoding(request_rec *r, const char *src, apr_size_t *len)
   chxjconvrule_entry  *entryp;
 
 
-<<<<<<< HEAD:src/chxj_encoding.c
-=======
   DBG(r,"start chxj_encoding()");
 
->>>>>>>   * updated new trunk.:src/chxj_encoding.c
   dconf = chxj_get_module_config(r->per_dir_config, &chxj_module);
 
   if (dconf == NULL) {
@@ -82,83 +79,6 @@ chxj_encoding(request_rec *r, const char *src, apr_size_t *len)
 
   memset(obuf, 0, olen);
   cd = iconv_open("CP932", entryp->encoding);
-<<<<<<< HEAD:src/chxj_encoding.c
-  if (cd == (iconv_t)-1) {
-    if (EINVAL == errno) {
-      ERR(r, "The conversion from %s to %s is not supported by the implementation.", entryp->encoding, "CP932");
-    }
-    else {
-      ERR(r, "iconv open failed. from:[%s] to:[%s] errno:[%d]", entryp->encoding, "CP932", errno);
-    }
-    DBG(r,"end   chxj_encoding()");
-    return ibuf;
-  }
-  *len = strlen(rtn);
-  DBG(r,"end   chxj_convert_encoding() len=[%d] obuf=[%.*s]", (int)*len, (int)*len, rtn);
-  return rtn;
-}
-
-
-static char *
-do_encoding(
-  request_rec *r,
-  char **ibuf,
-  apr_size_t *ilenp,
-  char **obuf,
-  apr_size_t *olenp,
-  const char *from_code,
-  const char *to_code)
-{
-  iconv_t cd;
-  size_t  result;
-  apr_size_t ilen;
-  apr_size_t olen;
-  char *spos = *obuf;
-  char *fp, *tp;
-
-  DBG(r,"start do_encoding() from:[%s] --> to:[%s]", from_code, to_code);
-  if (   (IS_SJIS_STRING(from_code)  && IS_SJIS_STRING(to_code))
-      || (IS_EUCJP_STRING(from_code) && IS_EUCJP_STRING(to_code))
-      || (IS_UTF8_STRING(from_code)  && IS_UTF8_STRING(to_code))) {
-    memcpy(*obuf, *ibuf, *ilenp);
-    return *obuf;
-  }
-
-  ilen = *ilenp;
-  olen = *olenp;
-
-  if (IS_EUCJP_STRING(from_code)) {
-    fp = apr_pstrdup(r->pool, "EUCJP-WIN");
-  }
-  else if (IS_SJIS_STRING(from_code)) {
-    fp = apr_pstrdup(r->pool, "CP932");
-  }
-  else if (IS_UTF8_STRING(from_code)) {
-    fp = apr_pstrdup(r->pool, "UTF-8");
-  }
-  else {
-    fp = apr_pstrdup(r->pool, "CP932");
-  }
-
-  if (IS_EUCJP_STRING(to_code)) {
-    tp = apr_pstrdup(r->pool, "EUCJP-WIN");
-  }
-  else if (IS_SJIS_STRING(to_code)) {
-    tp = apr_pstrdup(r->pool, "CP932");
-  }
-  else if (IS_UTF8_STRING(to_code)) {
-    tp = apr_pstrdup(r->pool, "UTF-8");
-  }
-  else {
-    tp = apr_pstrdup(r->pool, "CP932");
-  }
-
-
-  memset(*obuf, 0, olen);
-  cd = (iconv_t)-1;
-  cd = iconv_open(tp, fp);
-=======
->>>>>>>   * updated new trunk.:src/chxj_encoding.c
   if (cd == (iconv_t)-1) {
     if (EINVAL == errno) {
       ERR(r, "The conversion from %s to %s is not supported by the implementation.", entryp->encoding, "CP932");

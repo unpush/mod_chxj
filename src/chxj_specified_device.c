@@ -92,10 +92,7 @@ chxj_specified_device(request_rec *r, const char *user_agent)
       continue;
     }
 
-<<<<<<< HEAD:src/chxj_specified_device.c
-=======
     /* DBG(r, "pattern is [%s]", dtl->pattern); */
->>>>>>>   * updated new trunk.:src/chxj_specified_device.c
     if (! dtl->regexp) {
       DBG(r,"compile failed.");
       return returnType;

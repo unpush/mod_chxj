@@ -34,14 +34,11 @@ qs_parse_tag(Doc *doc, const char *s, int len)
   int    ll;
   int    next_point;
 
-<<<<<<< HEAD:src/qs_parse_tag.c
-=======
   if (! doc) {
     QX_LOGGER_FATAL("runtime exception: qs_parse_tag(): doc is null");
     return NULL;
   }
 
->>>>>>>   * updated new trunk.:src/qs_parse_tag.c
   sv_s = sp = (char *)s;
   ll         = len;
   next_point = 0;
@@ -86,13 +83,6 @@ qs_parse_tag(Doc *doc, const char *s, int len)
   if (sv_s[len-1] == '/') {
     node->closed_by_itself = 1;
   }
-<<<<<<< HEAD:src/qs_parse_tag.c
-
-  if (sv_s[len-1] == '/') {
-    node->closed_by_itself = 1;
-  }
-=======
->>>>>>>   * updated new trunk.:src/qs_parse_tag.c
   else {
     node->closed_by_itself = 0;
   }

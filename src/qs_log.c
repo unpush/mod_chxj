@@ -21,10 +21,7 @@
 #include "chxj_apache.h"
 
 
-<<<<<<< HEAD:src/qs_log.c
-=======
 
->>>>>>>   * updated new trunk.:src/qs_log.c
 
 
 void
@@ -82,18 +79,11 @@ qs_log(Doc *doc, int log_level,const char *f, int l, char *msg)
     }
     while(0);
 #endif
-<<<<<<< HEAD:src/qs_log.c
-    if (doc->r) {
-=======
     if (doc && doc->r) {
->>>>>>>   * updated new trunk.:src/qs_log.c
       chxj_log_rerror(f,l, APLOG_CRIT, 0, doc->r, msg);
-<<<<<<< HEAD:src/qs_log.c
-=======
     }
     else {
       fprintf(stderr, "%s\n", msg);
->>>>>>>   * updated new trunk.:src/qs_log.c
     }
   }
 }

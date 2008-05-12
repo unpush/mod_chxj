@@ -165,11 +165,7 @@ qs_parse_string(Doc *doc, const char *src, int srclen)
     char *sv_osrc;
     olen = srclen * 4 + 1;
     sv_osrc = osrc =(char *)apr_palloc(doc->pool, olen);
-<<<<<<< HEAD:src/qs_parse_string.c
-    memset((char*)osrc, 0, olen);
-=======
     memset((char *)osrc, 0, olen);
->>>>>>>   * updated new trunk.:src/qs_parse_string.c
     if ((cd = iconv_open("CP932", encoding)) != (iconv_t) -1) {
       ilen = srclen;
       ibuf = apr_palloc(doc->pool, ilen+1);
@@ -200,16 +196,11 @@ qs_parse_string(Doc *doc, const char *src, int srclen)
     }
     if ((unsigned char)'<' == src[ii]) {
       int endpoint = s_cut_tag(&src[ii], srclen - ii);
-<<<<<<< HEAD:src/qs_parse_string.c
-      Node *node   = NULL;
-      node = qs_parse_tag(doc, &src[ii], endpoint);
-=======
       Node *node   = qs_parse_tag(doc, &src[ii], endpoint);
       if (! node) {
         QX_LOGGER_FATAL("runtime exception: qs_parse_string(): Out of memory.");
         return doc->root_node;
       }
->>>>>>>   * updated new trunk.:src/qs_parse_string.c
       node->line = nl_cnt;
 
       ii += endpoint;
@@ -260,11 +251,7 @@ qs_parse_string(Doc *doc, const char *src, int srclen)
       }
 
       if (doc->parse_mode == PARSE_MODE_CHTML && STRCASEEQ('c','C',"chxj:if", node->name)) {
-<<<<<<< HEAD:src/qs_parse_string.c
-        Attr* parse_attr;
-=======
         Attr *parse_attr;
->>>>>>>   * updated new trunk.:src/qs_parse_string.c
         doc->parse_mode = PARSE_MODE_NO_PARSE;
         doc->now_parent_node = node;
         for(parse_attr = node->attr;
@@ -309,11 +296,6 @@ qs_parse_string(Doc *doc, const char *src, int srclen)
       /* TEXT */
       int endpoint = s_cut_text(&src[ii], srclen - ii, script_flag);
       Node *node = qs_new_tag(doc);
-<<<<<<< HEAD:src/qs_parse_string.c
-      node->value = (char*)apr_palloc(doc->pool,endpoint+1);
-      node->name  = (char*)apr_palloc(doc->pool,4+1);
-      node->otext = (char*)apr_palloc(doc->pool,endpoint+1);
-=======
       if (! node) {
         QX_LOGGER_DEBUG("runtime exception: qs_parse_string(): Out of memory");        
         return doc->root_node;
@@ -321,7 +303,6 @@ qs_parse_string(Doc *doc, const char *src, int srclen)
       node->value = (char *)apr_palloc(doc->pool,endpoint+1);
       node->name  = (char *)apr_palloc(doc->pool,4+1);
       node->otext = (char *)apr_palloc(doc->pool,endpoint+1);
->>>>>>>   * updated new trunk.:src/qs_parse_string.c
       node->size  = endpoint;
       node->line  = nl_cnt;
       memset(node->value, 0, endpoint+1);
@@ -534,11 +515,7 @@ s_cut_text(const char *s, int len, int script)
 Node *
 qs_init_root_node(Doc *doc) 
 {
-<<<<<<< HEAD:src/qs_parse_string.c
-  doc->root_node = (Node*)apr_palloc(doc->pool,sizeof(struct Node));
-=======
   doc->root_node = (Node *)apr_palloc(doc->pool,sizeof(struct Node));
->>>>>>>   * updated new trunk.:src/qs_parse_string.c
   if (doc->root_node == NULL) {
     QX_LOGGER_FATAL("Out Of Memory");
   }
@@ -548,11 +525,7 @@ qs_init_root_node(Doc *doc)
   doc->root_node->child  = NULL;
   doc->root_node->attr   = NULL;
 
-<<<<<<< HEAD:src/qs_parse_string.c
-  doc->root_node->name   = (char*)apr_palloc(doc->pool, 5);
-=======
   doc->root_node->name   = (char *)apr_palloc(doc->pool, 5);
->>>>>>>   * updated new trunk.:src/qs_parse_string.c
   if (doc->root_node->name == NULL) {
     QX_LOGGER_FATAL("Out Of Memory");
   }

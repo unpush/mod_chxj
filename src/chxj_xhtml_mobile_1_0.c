@@ -30,11 +30,8 @@
 #define W_L(X)          do { xhtml->out = BUFFERED_WRITE_LITERAL(xhtml->out, &doc->buf, (X)); } while(0)
 #define W_V(X)          do { xhtml->out = (X) ? BUFFERED_WRITE_VALUE(xhtml->out, &doc->buf, (X))  \
                                                : BUFFERED_WRITE_LITERAL(xhtml->out, &doc->buf, ""); } while(0)
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-=======
 #undef W_NLCODE
 #define W_NLCODE()     do { char *nlcode = TO_NLCODE(xhtml->conf); W_V(nlcode); } while (0)
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
 
 static char *s_xhtml_1_0_start_html_tag   (void *pdoc, Node *node);
 static char *s_xhtml_1_0_end_html_tag     (void *pdoc, Node *node);
@@ -424,11 +421,7 @@ chxj_convert_xhtml_mobile_1_0(
   *dstlen = srclen;
   dst = chxj_qr_code_blob_handler(r, src, (size_t*)dstlen);
   if (dst != NULL) {
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-    DBG(r,"end chxj_exchange_xhtml_mobile_1_0() (found qrcode.xml)");
-=======
     DBG(r,"end chxj_convert_xhtml_mobile_1_0() (found qrcode.xml)");
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
     return dst;
   }
 
@@ -504,11 +497,7 @@ s_init_xhtml(xhtml_t *xhtml, Doc *doc, request_rec *r, device_table *spec)
   doc->r      = r;
   xhtml->doc  = doc;
   xhtml->spec = spec;
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-  xhtml->out  = qs_alloc_zero_byte_string(r);
-=======
   xhtml->out  = qs_alloc_zero_byte_string(r->pool);
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
   xhtml->conf = chxj_get_module_config(r->per_dir_config, &chxj_module);
   xhtml->doc->parse_mode = PARSE_MODE_CHTML;
 }
@@ -1141,13 +1130,9 @@ s_xhtml_1_0_start_br_tag(void *pdoc, Node *node)
       }
     }
   }
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-  W_L(" />\r\n");
-=======
   W_L(" />");
   W_NLCODE();
 
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
   return xhtml->out;
 }
 
@@ -1183,13 +1168,9 @@ s_xhtml_1_0_start_tr_tag(void *pdoc, Node *UNUSED(node))
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc     *doc   = xhtml->doc;
 
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-  W_L("<br />\r\n");
-=======
   W_L("<br />");
   W_NLCODE();
 
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
   return xhtml->out;
 }
 
@@ -1225,16 +1206,9 @@ s_xhtml_1_0_start_font_tag(void *pdoc, Node *node)
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc     *doc   = xhtml->doc;
   Attr    *attr;
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-=======
   char    *size = NULL;
   char    *color = NULL;
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
 
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-  W_L("<font");
-=======
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
   /*=========================================================================*/
   /* Get Attributes                                                          */
   /*=========================================================================*/
@@ -1244,20 +1218,9 @@ s_xhtml_1_0_start_font_tag(void *pdoc, Node *node)
     char *name = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('c','C',"color",name) && value && *value) {
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-      W_L(" color=\"");
-      W_V(value);
-      W_L("\"");
-=======
       color = apr_pstrdup(doc->buf.pool, value);
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
     }
     else if (STRCASEEQ('s','S',"size",name) && value && *value) {
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-      W_L(" size=\"");
-      W_V(value);
-      W_L("\"");
-=======
       size = apr_pstrdup(doc->buf.pool, value);
     }
   }
@@ -1312,7 +1275,6 @@ s_xhtml_1_0_start_font_tag(void *pdoc, Node *node)
     default:
       WRN(doc->r, "invlalid font size. [%s] != (1|2|3|4|5|6|7|+1|+2|+3|-1|-2|-3)", size);
       xhtml->font_size_flag--;
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
     }
   }
   return xhtml->out;
@@ -1333,9 +1295,6 @@ s_xhtml_1_0_end_font_tag(void *pdoc, Node *UNUSED(child))
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc     *doc   = xhtml->doc;
 
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-  W_L("</font>");
-=======
   if (xhtml->font_size_flag) {
     W_L("</span>");
     xhtml->font_size_flag--;
@@ -1345,7 +1304,6 @@ s_xhtml_1_0_end_font_tag(void *pdoc, Node *UNUSED(child))
     W_NLCODE();
     xhtml->font_color_flag--;
   }
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
   return xhtml->out;
 }
 
@@ -1497,10 +1455,7 @@ s_xhtml_1_0_start_input_tag(void *pdoc, Node *node)
           break;
         }
       }
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-=======
 
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
       if (strcmp(max_length, "0")) {
         char *vv = apr_psprintf(r->pool, " FORMAT=\"%d%s\"", atoi(max_length), fmt);
         W_V(vv);
@@ -1662,28 +1617,17 @@ s_xhtml_1_0_start_hr_tag(void *pdoc, Node *node)
       /*----------------------------------------------------------------------*/
       /* ignore */
     }
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-    else if (STRCASEEQ('c','C',"color", name)) {
-=======
     else if (STRCASEEQ('c','C',"color", name) && value && *value) {
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
       /*----------------------------------------------------------------------*/
       /* CHTML 4.0                                                            */
       /*----------------------------------------------------------------------*/
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-      /* ignore */
-=======
       W_L(" color=\"");
       W_V(value);
       W_L("\"");
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
     }
   }
   W_L(" />");
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-=======
   W_NLCODE();
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
   return xhtml->out;
 }
 
@@ -1786,10 +1730,7 @@ s_xhtml_1_0_start_p_tag(void *pdoc, Node *node)
     W_L("\"");
   }
   W_L(">");
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-=======
   W_NLCODE();
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
   return xhtml->out;
 }
 
@@ -1827,10 +1768,6 @@ s_xhtml_1_0_start_ul_tag(void *pdoc, Node *node)
 {
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc     *doc   = xhtml->doc;
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-
-  W_L("<ul>");
-=======
   Attr    *attr;
   W_L("<ul");
   /*--------------------------------------------------------------------------*/
@@ -1851,7 +1788,6 @@ s_xhtml_1_0_start_ul_tag(void *pdoc, Node *node)
   }
   W_L(">");
   W_NLCODE();
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
   return xhtml->out;
 }
 
@@ -2326,10 +2262,7 @@ s_xhtml_1_0_start_ol_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-=======
   W_NLCODE();
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
   return xhtml->out;
 }
 
@@ -2347,10 +2280,7 @@ s_xhtml_1_0_end_ol_tag(void *pdoc, Node *UNUSED(child))
 {
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc     *doc   = xhtml->doc;
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-=======
 
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
   W_L("</ol>");
   W_NLCODE();
   return xhtml->out;
@@ -2379,25 +2309,14 @@ s_xhtml_1_0_start_li_tag(void *pdoc, Node *node)
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-    char *name = qs_get_attr_name(doc,attr);
-=======
     char *name  = qs_get_attr_name(doc,attr);
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
     char *value = qs_get_attr_value(doc,attr);
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-    if (STRCASEEQ('t','T',"type",name) && value && (*value == '1' || *value == 'a' || *value == 'A')) {
-      W_L(" type=\"");
-      W_V(value);
-      W_L("\"");
-=======
     if (STRCASEEQ('t','T',"type",name)) {
       if (value && (*value == '1' || *value == 'a' || *value == 'A' || STRCASEEQ('d','D',"disc",value) || STRCASEEQ('c','C',"circle",value) || STRCASEEQ('s','S',"square",value))) {
         W_L(" type=\"");
         W_V(value);
         W_L("\"");
       }
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
     }
     else if (STRCASEEQ('v','V',"value", name) && value && *value) {
       W_L(" value=\"");
@@ -2480,16 +2399,6 @@ s_xhtml_1_0_start_img_tag(void *pdoc, Node *node)
     }
     else 
     if (STRCASEEQ('a','A',"align",name)) {
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-      if (value && (STRCASEEQ('t','T',"top",   value) ||
-                    STRCASEEQ('m','M',"middle",value) ||
-                    STRCASEEQ('b','B',"bottom",value) ||
-                    STRCASEEQ('l','L',"left",  value) ||
-                    STRCASEEQ('r','R',"right", value))) {
-        W_L(" align=\"");
-        W_V(value);
-        W_L("\"");
-=======
       if (value) {
         if (STRCASEEQ('t','T',"top",   value) ||
             STRCASEEQ('m','M',"middle",value) ||
@@ -2505,7 +2414,6 @@ s_xhtml_1_0_start_img_tag(void *pdoc, Node *node)
           W_L("middle");
           W_L("\"");
         }
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
       }
     }
     else if (STRCASEEQ('a','A',"alt",name) && value && *value) {
@@ -2535,10 +2443,7 @@ s_xhtml_1_0_start_img_tag(void *pdoc, Node *node)
     }
   }
   W_L(" />");
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-=======
   W_NLCODE();
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
   return xhtml->out;
 }
 
@@ -2577,10 +2482,7 @@ s_xhtml_1_0_start_select_tag(void *pdoc, Node *child)
   char    *name     = NULL;
   char    *multiple = NULL;
   Attr    *attr;
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-=======
 
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
 
   W_L("<select");
   for (attr = qs_get_attr(doc,child);
@@ -2621,12 +2523,8 @@ s_xhtml_1_0_start_select_tag(void *pdoc, Node *child)
     /* "true" is *NOT* W3C. it is specification of WAP2.0 for EZWEB */
     W_L(" multiple=\"true\"");
   }
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-  W_L(">\r\n");
-=======
   W_L(">");
   W_NLCODE();
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
   return xhtml->out;
 }
 
@@ -2645,12 +2543,8 @@ s_xhtml_1_0_end_select_tag(void *pdoc, Node *UNUSED(child))
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc     *doc   = xhtml->doc;
 
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-  W_L("</select>\r\n");
-=======
   W_L("</select>");
   W_NLCODE();
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
   return xhtml->out;
 }
 
@@ -2715,12 +2609,8 @@ s_xhtml_1_0_end_option_tag(void *pdoc, Node *UNUSED(child))
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc     *doc   = xhtml->doc;
 
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-  W_L("</option>\r\n");
-=======
   W_L("</option>");
   W_NLCODE();
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
   return xhtml->out;
 }
 
@@ -2780,12 +2670,8 @@ s_xhtml_1_0_end_div_tag(void *pdoc, Node *UNUSED(child))
 {
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc     *doc   = xhtml->doc;
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-  W_L("</div>\r\n");
-=======
   W_L("</div>");
   W_NLCODE();
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
   return xhtml->out;
 }
 
@@ -2823,12 +2709,8 @@ s_xhtml_1_0_end_b_tag(void *pdoc, Node *UNUSED(child))
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc     *doc   = xhtml->doc;
 
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-  W_L("</div>\n");
-=======
   W_L("</div>");
   W_NLCODE();
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
   return xhtml->out;
 }
 
@@ -2926,12 +2808,8 @@ s_xhtml_1_0_end_textarea_tag(void *pdoc, Node *UNUSED(child))
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc     *doc   = xhtml->doc;
 
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-  W_L("</textarea>\r\n");
-=======
   W_L("</textarea>");
   W_NLCODE();
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
   xhtml->textarea_flag--;
 
   return xhtml->out;
@@ -3010,10 +2888,7 @@ s_xhtml_1_0_start_blockquote_tag(void *pdoc, Node *UNUSED(child))
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc     *doc   = xhtml->doc;
   W_L("<blockquote>");
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-=======
   W_NLCODE();
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
   return xhtml->out;
 }
 
@@ -3032,10 +2907,7 @@ s_xhtml_1_0_end_blockquote_tag(void *pdoc, Node *UNUSED(child))
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc     *doc   = xhtml->doc;
   W_L("</blockquote>");
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-=======
   W_NLCODE();
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
   return xhtml->out;
 }
 
@@ -3049,17 +2921,10 @@ s_xhtml_1_0_end_blockquote_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-s_xhtml_1_0_start_dir_tag(void *pdoc, Node *UNUSED(child))
-=======
 s_xhtml_1_0_start_dir_tag(void *pdoc, Node *node)
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
 {
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc     *doc = xhtml->doc;
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-  W_L("<dir>");
-=======
   Attr      *attr;
   W_L("<dir");
   for (attr = qs_get_attr(doc,node);
@@ -3077,7 +2942,6 @@ s_xhtml_1_0_start_dir_tag(void *pdoc, Node *node)
   }
   W_L(">");
   W_NLCODE();
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
   return xhtml->out;
 }
 
@@ -3096,10 +2960,7 @@ s_xhtml_1_0_end_dir_tag(void *pdoc, Node *UNUSED(child))
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc     *doc = xhtml->doc;
   W_L("</dir>");
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-=======
   W_NLCODE();
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
   return xhtml->out;
 }
 
@@ -3137,10 +2998,7 @@ s_xhtml_1_0_end_dl_tag(void *pdoc, Node *UNUSED(child))
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc *doc = xhtml->doc;
   W_L("</dl>");
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-=======
   W_NLCODE();
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
   return xhtml->out;
 }
 
@@ -3226,19 +3084,8 @@ s_xhtml_1_0_end_dd_tag(void *pdoc, Node *UNUSED(child))
  * @return The conversion result is returned.
  */
 static char *
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-s_xhtml_1_0_start_menu_tag(void *pdoc, Node *UNUSED(child))
-=======
 s_xhtml_1_0_start_menu_tag(void *pdoc, Node *node)
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
 {
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-  xhtml_t *xhtml;
-  Doc *doc;
-  xhtml = GET_XHTML(pdoc);
-  doc     = xhtml->doc;
-  W_L("<menu>");
-=======
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc     *doc   = xhtml->doc;
   Attr    *attr;
@@ -3261,7 +3108,6 @@ s_xhtml_1_0_start_menu_tag(void *pdoc, Node *node)
   }
   W_L(">");
   W_NLCODE();
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
   return xhtml->out;
 }
 
@@ -3280,10 +3126,7 @@ s_xhtml_1_0_end_menu_tag(void *pdoc, Node *UNUSED(child))
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc *doc = xhtml->doc;
   W_L("</menu>");
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-=======
   W_NLCODE();
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
   return xhtml->out;
 }
 
@@ -3372,10 +3215,7 @@ s_xhtml_1_0_end_blink_tag(void *pdoc, Node *UNUSED(child))
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc     *doc = xhtml->doc;
   W_L("</blink>");
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-=======
   W_NLCODE();
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
   return xhtml->out;
 }
 
@@ -3424,8 +3264,6 @@ s_xhtml_1_0_start_marquee_tag(void *pdoc, Node *node)
         W_L("\"");
       }
     }
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-=======
     else if (STRCASEEQ('b','B',"bgcolor",name)) {
       if (value && *value) {
         W_L(" bgcolor=\"");
@@ -3433,7 +3271,6 @@ s_xhtml_1_0_start_marquee_tag(void *pdoc, Node *node)
         W_L("\"");
       }
     }
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
   }
   W_L(">");
   return xhtml->out;
@@ -3454,10 +3291,7 @@ s_xhtml_1_0_end_marquee_tag(void *pdoc, Node *UNUSED(child))
   xhtml_t *xhtml = GET_XHTML(pdoc);
   Doc     *doc = xhtml->doc;
   W_L("</marquee>");
-<<<<<<< HEAD:src/chxj_xhtml_mobile_1_0.c
-=======
   W_NLCODE();
->>>>>>>   * updated new trunk.:src/chxj_xhtml_mobile_1_0.c
   return xhtml->out;
 }
 /*
