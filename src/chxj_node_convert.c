@@ -35,19 +35,19 @@ tag_handlers chxj_tag_handlers[] = {
   },
   {
     .type    = CHXJ_SPEC_Chtml_4_0,
-    .handler = chtml30_handler,
+    .handler = chtml40_handler,
   },
   {
     .type    = CHXJ_SPEC_Chtml_5_0,
-    .handler = chtml30_handler,
+    .handler = chtml50_handler,
   },
   {
     .type    = CHXJ_SPEC_Chtml_6_0,
-    .handler = chtml30_handler,
+    .handler = chtml50_handler,
   },
   {
     .type    = CHXJ_SPEC_Chtml_7_0,
-    .handler = chtml30_handler,
+    .handler = chtml50_handler,
   },
   {
     .type    = CHXJ_SPEC_XHtml_Mobile_1_0,
@@ -60,6 +60,10 @@ tag_handlers chxj_tag_handlers[] = {
   {
     .type    = CHXJ_SPEC_Jhtml,
     .handler = jhtml_handler,
+  },
+  {
+    .type    = CHXJ_SPEC_Jxhtml,
+    .handler = jxhtml_handler,
   },
   {
     .type    = CHXJ_SPEC_HTML,
@@ -102,11 +106,7 @@ chxj_node_convert(
   for (child = qs_get_child_node(doc,node);
        child;
        child = qs_get_next_node(doc,child)) {
-
-    char *name;
-
-    name = qs_get_node_name(doc,child);
-
+    char *name = qs_get_node_name(doc,child);
     switch(*name) {
     case 'h':
     case 'H':
@@ -225,7 +225,11 @@ chxj_node_convert(
           handlers[tagH6].end_tag_handler(pdoc, child);
       }
       else {
+<<<<<<< HEAD:src/chxj_node_convert.c
         chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+=======
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
+>>>>>>>   * updated new trunk.:src/chxj_node_convert.c
       }
       break;
 
@@ -266,8 +270,21 @@ chxj_node_convert(
         if (handlers[tagPLAINTEXT].end_tag_handler)
           handlers[tagPLAINTEXT].end_tag_handler(pdoc, child);
       }
+<<<<<<< HEAD:src/chxj_node_convert.c
+=======
+      /*----------------------------------------------------------------------*/
+      /* <PARAM>                                                              */
+      /*----------------------------------------------------------------------*/
+      else if (strcasecmp(name, "param") == 0) {
+        /* ignore param tag block. */
+      }
+>>>>>>>   * updated new trunk.:src/chxj_node_convert.c
       else {
+<<<<<<< HEAD:src/chxj_node_convert.c
         chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+=======
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
+>>>>>>>   * updated new trunk.:src/chxj_node_convert.c
       }
       break;
 
@@ -286,7 +303,11 @@ chxj_node_convert(
           handlers[tagNOBR].end_tag_handler(pdoc, child);
       }
       else {
+<<<<<<< HEAD:src/chxj_node_convert.c
         chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+=======
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
+>>>>>>>   * updated new trunk.:src/chxj_node_convert.c
       }
       break;
 
@@ -305,7 +326,11 @@ chxj_node_convert(
           handlers[tagUL].end_tag_handler(pdoc, child);
       }
       else {
+<<<<<<< HEAD:src/chxj_node_convert.c
         chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+=======
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
+>>>>>>>   * updated new trunk.:src/chxj_node_convert.c
       }
       break;
 
@@ -350,7 +375,11 @@ chxj_node_convert(
           handlers[tagLABEL].end_tag_handler(pdoc, child);
       }
       else {
+<<<<<<< HEAD:src/chxj_node_convert.c
         chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+=======
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
+>>>>>>>   * updated new trunk.:src/chxj_node_convert.c
       }
       
       break;
@@ -390,7 +419,11 @@ chxj_node_convert(
         /* ignore object block */
       }
       else {
+<<<<<<< HEAD:src/chxj_node_convert.c
         chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+=======
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
+>>>>>>>   * updated new trunk.:src/chxj_node_convert.c
       }
 
       break;
@@ -416,7 +449,11 @@ chxj_node_convert(
         if (handlers[tagMENU].start_tag_handler) 
           handlers[tagMENU].start_tag_handler(pdoc, child);
 
+<<<<<<< HEAD:src/chxj_node_convert.c
         chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+=======
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
+>>>>>>>   * updated new trunk.:src/chxj_node_convert.c
 
         if (handlers[tagMENU].end_tag_handler)
           handlers[tagMENU].end_tag_handler(pdoc, child);
@@ -428,13 +465,21 @@ chxj_node_convert(
         if (handlers[tagMARQUEE].start_tag_handler) 
           handlers[tagMARQUEE].start_tag_handler(pdoc, child);
 
+<<<<<<< HEAD:src/chxj_node_convert.c
         chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+=======
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
+>>>>>>>   * updated new trunk.:src/chxj_node_convert.c
 
         if (handlers[tagMARQUEE].end_tag_handler)
           handlers[tagMARQUEE].end_tag_handler(pdoc, child);
       }
       else {
+<<<<<<< HEAD:src/chxj_node_convert.c
         chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+=======
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
+>>>>>>>   * updated new trunk.:src/chxj_node_convert.c
       }
       break;
 
@@ -497,7 +542,11 @@ chxj_node_convert(
         if (handlers[tagBLOCKQUOTE].start_tag_handler) 
           handlers[tagBLOCKQUOTE].start_tag_handler(pdoc, child);
 
+<<<<<<< HEAD:src/chxj_node_convert.c
         chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+=======
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
+>>>>>>>   * updated new trunk.:src/chxj_node_convert.c
 
         if (handlers[tagBLOCKQUOTE].end_tag_handler)
           handlers[tagBLOCKQUOTE].end_tag_handler(pdoc, child);
@@ -509,13 +558,21 @@ chxj_node_convert(
         if (handlers[tagBLINK].start_tag_handler) 
           handlers[tagBLINK].start_tag_handler(pdoc, child);
 
+<<<<<<< HEAD:src/chxj_node_convert.c
         chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+=======
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
+>>>>>>>   * updated new trunk.:src/chxj_node_convert.c
 
         if (handlers[tagBLINK].end_tag_handler)
           handlers[tagBLINK].end_tag_handler(pdoc, child);
       }
       else {
+<<<<<<< HEAD:src/chxj_node_convert.c
         chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+=======
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
+>>>>>>>   * updated new trunk.:src/chxj_node_convert.c
       }
       break;
 
@@ -534,7 +591,11 @@ chxj_node_convert(
           handlers[tagA].end_tag_handler(pdoc, child);
       }
       else {
+<<<<<<< HEAD:src/chxj_node_convert.c
         chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+=======
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
+>>>>>>>   * updated new trunk.:src/chxj_node_convert.c
       }
       break;
 
@@ -579,7 +640,11 @@ chxj_node_convert(
           handlers[tagFIELDSET].end_tag_handler(pdoc, child);
       }
       else {
+<<<<<<< HEAD:src/chxj_node_convert.c
         chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+=======
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
+>>>>>>>   * updated new trunk.:src/chxj_node_convert.c
       }
       break;
 
@@ -611,7 +676,11 @@ chxj_node_convert(
           handlers[tagIMG].end_tag_handler(pdoc, child);
       }
       else {
+<<<<<<< HEAD:src/chxj_node_convert.c
         chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+=======
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
+>>>>>>>   * updated new trunk.:src/chxj_node_convert.c
       }
       break;
 
@@ -636,6 +705,10 @@ chxj_node_convert(
       if (strcasecmp(name, "style") == 0) {
         if (handlers[tagSTYLE].start_tag_handler) 
           handlers[tagSTYLE].start_tag_handler(pdoc, child);
+#if 0
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
+#endif
+
         if (handlers[tagSTYLE].end_tag_handler)
           handlers[tagSTYLE].end_tag_handler(pdoc, child);
       }
@@ -673,7 +746,11 @@ chxj_node_convert(
         /* ignore script block */
       }
       else {
+<<<<<<< HEAD:src/chxj_node_convert.c
         chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+=======
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
+>>>>>>>   * updated new trunk.:src/chxj_node_convert.c
       }
       break;
   
@@ -740,7 +817,11 @@ chxj_node_convert(
           handlers[tagDD].end_tag_handler(pdoc, child);
       }
       else {
+<<<<<<< HEAD:src/chxj_node_convert.c
         chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+=======
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
+>>>>>>>   * updated new trunk.:src/chxj_node_convert.c
       }
       break;
 
@@ -766,7 +847,7 @@ chxj_node_convert(
         if (chxj_chxjif_is_mine(spec, doc, child)) {
           char* parse_attr;
 
-          parse_attr = qs_get_parse_attr(doc, child, r);
+          parse_attr = qs_get_parse_attr(doc, child, r->pool);
 
           if (parse_attr && strcasecmp(parse_attr, "true") == 0) {
             chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
@@ -778,7 +859,11 @@ chxj_node_convert(
         }
       }
       else {
+<<<<<<< HEAD:src/chxj_node_convert.c
         chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+=======
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
+>>>>>>>   * updated new trunk.:src/chxj_node_convert.c
       }
       break;
 
@@ -883,7 +968,11 @@ chxj_node_convert(
           handlers[tagTEXT].start_tag_handler(pdoc, child);
       }
       else {
+<<<<<<< HEAD:src/chxj_node_convert.c
         chxj_node_exchange(spec, r, pdoc, doc, child, indent+1);
+=======
+        chxj_node_convert(spec, r, pdoc, doc, child, indent+1);
+>>>>>>>   * updated new trunk.:src/chxj_node_convert.c
       }
       break;
 

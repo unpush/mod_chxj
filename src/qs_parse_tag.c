@@ -15,13 +15,13 @@
  * limitations under the License.
  */
 #include <stdio.h>
-#include "mod_chxj.h"
 #include "qs_parse_string.h"
 #include "qs_log.h"
 #include "qs_parse_attr.h"
 #include "qs_parse_tag.h"
 
 static char *s_get_tag_name(Doc *doc, const char *s, int len) ; 
+
 
 
 Node *
@@ -34,36 +34,65 @@ qs_parse_tag(Doc *doc, const char *s, int len)
   int    ll;
   int    next_point;
 
+<<<<<<< HEAD:src/qs_parse_tag.c
+=======
+  if (! doc) {
+    QX_LOGGER_FATAL("runtime exception: qs_parse_tag(): doc is null");
+    return NULL;
+  }
+
+>>>>>>>   * updated new trunk.:src/qs_parse_tag.c
   sv_s = sp = (char *)s;
   ll         = len;
   next_point = 0;
+
+  QX_LOGGER_DEBUG("start parse_tag()");
+
 
   /* 
    * s[0] == '<' && s[len] == '>' 
    */
   tag_name = (char *)s_get_tag_name(doc, ++s, --ll);
 
-  node = (Node*)qs_new_tag(doc);
+  node = (Node *)qs_new_tag(doc);
+  if (! node) {
+    QX_LOGGER_DEBUG("runtime exception: qs_parse_tag(): Out of memory.");
+    return NULL;
+  }
   node->name = tag_name;
   node->otext = apr_palloc(doc->pool,len+2);
   memset(node->otext, 0, len+2);
   memcpy(node->otext, sp, len+1);
 
+  QX_LOGGER_DEBUG(tag_name);
+
   ll -= (strlen(tag_name));
+  QX_LOGGER_DEBUG_INT("ll",ll);
   sp += (strlen(tag_name)+1);
   for (;;) {
     Attr *attr = qs_parse_attr(doc,sp, ll, &next_point);
     if (attr == NULL) {
+      QX_LOGGER_DEBUG("End of QS_PARSE_ATTR()");
       break;
     }
+    QX_LOGGER_DEBUG(attr->name);
+    QX_LOGGER_DEBUG(attr->value);
     sp += next_point;
     ll -= next_point;
-    node = (Node*)qs_add_attr(doc,node, attr);
+    QX_LOGGER_DEBUG_INT(sp, ll);
+    node = (Node *)qs_add_attr(doc,node, attr);
   }
 
   if (sv_s[len-1] == '/') {
     node->closed_by_itself = 1;
   }
+<<<<<<< HEAD:src/qs_parse_tag.c
+
+  if (sv_s[len-1] == '/') {
+    node->closed_by_itself = 1;
+  }
+=======
+>>>>>>>   * updated new trunk.:src/qs_parse_tag.c
   else {
     node->closed_by_itself = 0;
   }
@@ -73,7 +102,9 @@ qs_parse_tag(Doc *doc, const char *s, int len)
 }
 
 
-static char *
+
+
+static char * 
 s_get_tag_name(Doc *doc, const char *s, int len)  
 {
   int ii;
@@ -96,7 +127,7 @@ s_get_tag_name(Doc *doc, const char *s, int len)
 
   size = ii-sp;
 
-  return_value = (char*)apr_palloc(doc->pool, size+1);
+  return_value = (char *)apr_palloc(doc->pool, size+1);
 
   memset(return_value, 0, size+1);
   memcpy(return_value, &s[sp], size);
@@ -106,10 +137,22 @@ s_get_tag_name(Doc *doc, const char *s, int len)
 }
 
 
+
 Node *
 qs_new_tag(Doc *doc) 
 {
-  Node *node      = (Node *)apr_palloc(doc->pool, sizeof(Node));
+  Node *node;
+
+  if (! doc) {
+    QX_LOGGER_FATAL("runtime exception: qs_new_tag(): doc is NULL");
+    return NULL;
+  }
+  if (! doc->pool) {
+    QX_LOGGER_FATAL("runtime exception: qs_new_tag(): doc->pool is NULL");
+    return NULL;
+  }
+
+  node = (Node *)apr_palloc(doc->pool, sizeof(Node));
   node->next      = NULL;
   node->parent    = NULL;
   node->child     = NULL;
@@ -123,11 +166,18 @@ qs_new_tag(Doc *doc)
 }
 
 
+
+
 Node *
 qs_add_attr(Doc *doc, Node *node, Attr *attr) 
 {
-  if (node == NULL)
-    QX_LOGGER_FATAL("qs_add_attr() node is null");
+  if (node == NULL) {
+    QX_LOGGER_FATAL("runtime exception: qs_add_attr(): node is null");
+    return NULL;
+  }
+  if (! attr) {
+    return node;
+  }
 
   attr->parent = node;
   attr->next   = NULL;

@@ -1,3 +1,35 @@
+<<<<<<< HEAD:debian/changelog
+=======
+libapache2-mod-chxj (0.12.0-1) unstable; urgency=low
+
+  * Fixed bug.
+    - '+' has not been converted into ' '.
+    - A double quart and a single quart were able to be used for the attribute value. 
+    - When the request parameter name is Japanese, the parameter name is a bug that doesn't convert the character-code. 
+    - The bug that the result area has not been initialized while processing the cookie loading of the COOKIE MYSQL function
+    - In the COOKIE MYSQL function, the connection to MYSQL was not occasionally closed. 
+  * Added Features.
+    - Added alink attribute for body tag.
+    - Added vlink attribute for body tag.
+    - Added dir attribute for dir tag.
+    - Added size attribute for font tag.
+    - Added color attribute for hr tag.
+    - Added bgcolor attribute for marquee tag.
+    - Added type attribute for ul tag.
+    - Added lang="jxhtml" attribute value for chxj:if tag.
+  * Revoked apr_memcache and used libmemcached.
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Sat, 10 May 2008 17:08:48 +0900
+
+libapache2-mod-chxj (0.11.1-1) unstable; urgency=low
+
+  * Fixed bug. 
+    - ``Off'' did not work by the ChxjImageEngine directive. 
+      (Reported by R. thanks!)
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Thu, 24 Apr 2008 19:54:14 +0900
+
+>>>>>>>   * updated new trunk.:debian/changelog
 libapache2-mod-chxj (0.11.0-1) unstable; urgency=low
 
   * Fixed bug.
@@ -178,8 +210,36 @@ libapache2-mod-chxj (0.9.0-1) unstable; urgency=low
  -- Atsushi Konno <konn@users.sourceforge.jp>  Mon, 24 Mar 2008 00:57:55 +0900
 
 libapache2-mod-chxj (0.8.7-1) unstable; urgency=low
+<<<<<<< HEAD:debian/changelog
+=======
 
   * Fixed Bug
+    - Using AC_FUNC_MALLOC by mistake.
+      AC_FUNC_MALLOC is neatly used because it is too good though
+      it is not necessary.
+      AC_FUNC_MALLOC reacts for CentOS due to the bug of autoconf2.59.
+    - When ap_regex.h is not found, pcre.h is used. In that case, to use
+      pcre-config.
+  * Changed Features
+    - Abolition of libiconv. use glibc/iconv.
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Mon, 17 Mar 2008 23:02:33 +0900
+
+libapache2-mod-chxj (0.8.6-1) unstable; urgency=low
+
+  * Added error messages
+    - the error message of the parsing machine of HTML.
+    - the error message when the character-code is converted.
+  * Fixed Bug
+    - forgotten that apache2.0.x doesn't have ap_regex.h. (reported by R)
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Mon, 17 Mar 2008 23:02:13 +0900
+
+libapache2-mod-chxj (0.8.5-1) unstable; urgency=low
+>>>>>>>   * updated new trunk.:debian/changelog
+
+  * Fixed Bug
+<<<<<<< HEAD:debian/changelog
     - The image conversion is not operated at the access by PC.
     - Using AC_FUNC_MALLOC by mistake.
       AC_FUNC_MALLOC is neatly used because it is too good though
@@ -205,6 +265,8 @@ libapache2-mod-chxj (0.8.6-1) unstable; urgency=low
 libapache2-mod-chxj (0.8.5-1) unstable; urgency=low
 
   * Fixed Bug
+=======
+>>>>>>>   * updated new trunk.:debian/changelog
     - when the image of non-correspondence is converted, and aborted.
   * Changed features.
     - Being able to convert the image changed only to jpeg, png, and gif. 

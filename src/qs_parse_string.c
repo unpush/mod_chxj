@@ -100,14 +100,17 @@ qs_parse_string(Doc *doc, const char *src, int srclen)
 
     if ((unsigned char)'<' == src[ii]) {
       int endpoint = s_cut_tag(&src[ii], srclen - ii);
-      Node* node   = NULL;
-      node = qs_parse_tag(doc, &src[ii], endpoint);
+      Node *node   = qs_parse_tag(doc, &src[ii], endpoint);
+      if (! node) {
+        QX_LOGGER_FATAL("runtime exception: qs_parse_string(): Out of memory.");
+        return doc->root_node;
+      }
       ii += endpoint;
 
       if (node->name[0] != '?') break; 
 
       if (strcasecmp(node->name, "?xml") == 0) {
-        Attr* parse_attr;
+        Attr *parse_attr;
         for(parse_attr = node->attr;
             parse_attr && *encoding == '\0'; 
             parse_attr = parse_attr->next) {
@@ -116,7 +119,7 @@ qs_parse_string(Doc *doc, const char *src, int srclen)
             case 'X':
             case 'x':
               if (strcasecmp(parse_attr->value, "x-sjis"   ) == 0) {
-                strcpy((char*)encoding, (char*)"NONE");
+                strcpy((char *)encoding, (char *)"NONE");
               }
               break;
 
@@ -125,7 +128,7 @@ qs_parse_string(Doc *doc, const char *src, int srclen)
               if ((strcasecmp(parse_attr->value, "Shift_JIS") == 0)
               ||  (strcasecmp(parse_attr->value, "SJIS"     ) == 0)
               ||  (strcasecmp(parse_attr->value, "Shift-JIS") == 0)) {
-                strcpy((char*)encoding, (char*)"NONE");
+                strcpy((char *)encoding, (char *)"NONE");
               }
               break;
 
@@ -134,7 +137,7 @@ qs_parse_string(Doc *doc, const char *src, int srclen)
               if ((strcasecmp(parse_attr->value, "EUC_JP") == 0)
               ||  (strcasecmp(parse_attr->value, "EUC-JP") == 0)
               ||  (strcasecmp(parse_attr->value, "EUCJP" ) == 0)) {
-                strcpy((char*)encoding, "EUC-JP");
+                strcpy((char *)encoding, "EUC-JP");
               }
               break;
 
@@ -142,12 +145,12 @@ qs_parse_string(Doc *doc, const char *src, int srclen)
             case 'U':
               if ((strcasecmp(parse_attr->value, "UTF-8") == 0)
               ||  (strcasecmp(parse_attr->value, "UTF8") == 0)) {
-                strcpy((char*)encoding, "UTF-8");
+                strcpy((char *)encoding, "UTF-8");
               }
               break;
 
             default:
-              strcpy((char*)encoding, "NONE");
+              strcpy((char *)encoding, "NONE");
               break;
             }
           }
@@ -162,7 +165,11 @@ qs_parse_string(Doc *doc, const char *src, int srclen)
     char *sv_osrc;
     olen = srclen * 4 + 1;
     sv_osrc = osrc =(char *)apr_palloc(doc->pool, olen);
+<<<<<<< HEAD:src/qs_parse_string.c
     memset((char*)osrc, 0, olen);
+=======
+    memset((char *)osrc, 0, olen);
+>>>>>>>   * updated new trunk.:src/qs_parse_string.c
     if ((cd = iconv_open("CP932", encoding)) != (iconv_t) -1) {
       ilen = srclen;
       ibuf = apr_palloc(doc->pool, ilen+1);
@@ -193,8 +200,16 @@ qs_parse_string(Doc *doc, const char *src, int srclen)
     }
     if ((unsigned char)'<' == src[ii]) {
       int endpoint = s_cut_tag(&src[ii], srclen - ii);
+<<<<<<< HEAD:src/qs_parse_string.c
       Node *node   = NULL;
       node = qs_parse_tag(doc, &src[ii], endpoint);
+=======
+      Node *node   = qs_parse_tag(doc, &src[ii], endpoint);
+      if (! node) {
+        QX_LOGGER_FATAL("runtime exception: qs_parse_string(): Out of memory.");
+        return doc->root_node;
+      }
+>>>>>>>   * updated new trunk.:src/qs_parse_string.c
       node->line = nl_cnt;
 
       ii += endpoint;
@@ -245,7 +260,11 @@ qs_parse_string(Doc *doc, const char *src, int srclen)
       }
 
       if (doc->parse_mode == PARSE_MODE_CHTML && STRCASEEQ('c','C',"chxj:if", node->name)) {
+<<<<<<< HEAD:src/qs_parse_string.c
         Attr* parse_attr;
+=======
+        Attr *parse_attr;
+>>>>>>>   * updated new trunk.:src/qs_parse_string.c
         doc->parse_mode = PARSE_MODE_NO_PARSE;
         doc->now_parent_node = node;
         for(parse_attr = node->attr;
@@ -290,9 +309,19 @@ qs_parse_string(Doc *doc, const char *src, int srclen)
       /* TEXT */
       int endpoint = s_cut_text(&src[ii], srclen - ii, script_flag);
       Node *node = qs_new_tag(doc);
+<<<<<<< HEAD:src/qs_parse_string.c
       node->value = (char*)apr_palloc(doc->pool,endpoint+1);
       node->name  = (char*)apr_palloc(doc->pool,4+1);
       node->otext = (char*)apr_palloc(doc->pool,endpoint+1);
+=======
+      if (! node) {
+        QX_LOGGER_DEBUG("runtime exception: qs_parse_string(): Out of memory");        
+        return doc->root_node;
+      }
+      node->value = (char *)apr_palloc(doc->pool,endpoint+1);
+      node->name  = (char *)apr_palloc(doc->pool,4+1);
+      node->otext = (char *)apr_palloc(doc->pool,endpoint+1);
+>>>>>>>   * updated new trunk.:src/qs_parse_string.c
       node->size  = endpoint;
       node->line  = nl_cnt;
       memset(node->value, 0, endpoint+1);
@@ -381,21 +410,21 @@ s_error_check(Doc *doc, const char *name, int line, NodeStack node_stack, NodeSt
 
 
 static void
-qs_dump_node(Doc* doc, Node* node, int indent) 
+qs_dump_node(Doc *doc, Node *node, int indent) 
 {
-  Node* p = (Node*)qs_get_child_node(doc,node);
+  Node *p = (Node *)qs_get_child_node(doc,node);
 
-  for (;p;p = (Node*)qs_get_next_node(doc,p)) {
-    Attr* attr;
-    if ((char*)qs_get_node_value(doc,p) != NULL) {
+  for (;p;p = (Node *)qs_get_next_node(doc,p)) {
+    Attr *attr;
+    if ((char *)qs_get_node_value(doc,p) != NULL) {
       DBG(doc->r,"%*.*sNode:[%s][%s]\n", indent,indent," ",
-                      (char*)qs_get_node_name(doc,p),
-                      (char*)qs_get_node_value(doc,p));
+                      (char *)qs_get_node_name(doc,p),
+                      (char *)qs_get_node_value(doc,p));
     }
     else {
       DBG(doc->r,"%*.*sNode:[%s]\n", indent,indent," ", qs_get_node_name(doc,p));
     }
-    for (attr = (Attr*)qs_get_attr(doc,p); attr; attr = (Attr*)qs_get_next_attr(doc,attr)) {
+    for (attr = (Attr *)qs_get_attr(doc,p); attr; attr = (Attr *)qs_get_next_attr(doc,attr)) {
       DBG(doc->r,"%*.*s  ATTR:[%s]\n", indent,indent," ", (char *)qs_get_attr_name(doc,attr));
       DBG(doc->r,"%*.*s  VAL :[%s]\n", indent,indent," ", (char *)qs_get_attr_value(doc,attr));
     }
@@ -406,7 +435,7 @@ qs_dump_node(Doc* doc, Node* node, int indent)
 
 
 static int
-s_cut_tag(const char* s, int len) 
+s_cut_tag(const char *s, int len) 
 {
   int lv = 0;
   int ii;
@@ -459,7 +488,7 @@ s_cut_tag(const char* s, int len)
 }
 
 static int
-s_cut_text(const char* s, int len, int script)
+s_cut_text(const char *s, int len, int script)
 {
   register int ii;
   register int sq = 0;
@@ -505,7 +534,11 @@ s_cut_text(const char* s, int len, int script)
 Node *
 qs_init_root_node(Doc *doc) 
 {
+<<<<<<< HEAD:src/qs_parse_string.c
   doc->root_node = (Node*)apr_palloc(doc->pool,sizeof(struct Node));
+=======
+  doc->root_node = (Node *)apr_palloc(doc->pool,sizeof(struct Node));
+>>>>>>>   * updated new trunk.:src/qs_parse_string.c
   if (doc->root_node == NULL) {
     QX_LOGGER_FATAL("Out Of Memory");
   }
@@ -515,7 +548,11 @@ qs_init_root_node(Doc *doc)
   doc->root_node->child  = NULL;
   doc->root_node->attr   = NULL;
 
+<<<<<<< HEAD:src/qs_parse_string.c
   doc->root_node->name   = (char*)apr_palloc(doc->pool, 5);
+=======
+  doc->root_node->name   = (char *)apr_palloc(doc->pool, 5);
+>>>>>>>   * updated new trunk.:src/qs_parse_string.c
   if (doc->root_node->name == NULL) {
     QX_LOGGER_FATAL("Out Of Memory");
   }
@@ -582,7 +619,7 @@ qs_get_child_node(Doc *UNUSED(doc), Node *node) {
 
 
 Node *
-qs_get_next_node(Doc* UNUSED(doc), Node *node) {
+qs_get_next_node(Doc *UNUSED(doc), Node *node) {
   return node->next;
 }
 
@@ -635,7 +672,7 @@ qs_get_node_size(Doc *UNUSED(doc), Node *node) {
 
 
 static void 
-qs_push_node(Doc* doc, Node *node, NodeStack stack)
+qs_push_node(Doc *doc, Node *node, NodeStack stack)
 {
   NodeStackElement elem;
   if (doc->r != NULL) {
@@ -701,7 +738,7 @@ static void
 qs_free_node_stack(Doc *doc, NodeStack stack)
 {
   if (doc->r == NULL && stack != NULL) {
-    Node* elm;
+    Node *elm;
     for (elm = qs_pop_node(doc, stack);elm; elm = qs_pop_node(doc,stack))
       ;
     if (stack->head) 

@@ -44,4 +44,6 @@ extern int chxj_delete_cookie_dbm(request_rec *r, mod_chxj_config *m, const char
 extern int chxj_save_cookie_expire_dbm(request_rec *r, mod_chxj_config *m, const char *cookie_id);
 extern int chxj_delete_cookie_expire_dbm(request_rec *r, mod_chxj_config *m, const char *cookie_id);
 extern int chxj_cookie_expire_gc_dbm(request_rec *r, mod_chxj_config *m);
+extern int chxj_cookie_lock_dbm(request_rec *r, mod_chxj_config *m);
+extern int chxj_cookie_unlock_dbm(request_rec *r, mod_chxj_config *m);
 #endif

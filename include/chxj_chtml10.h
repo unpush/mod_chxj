@@ -28,28 +28,28 @@
 typedef struct ctml10_t chtml10_t;
 
 struct ctml10_t {
-    Doc *doc;
-    char *out;
-    int out_len;
-    int pre_flag;
-    int textarea_flag;
+    Doc                 *doc;
+    char                *out;
+    int                 out_len;
+    int                 pre_flag;
+    int                 textarea_flag;
 
-    device_table *spec;
-    mod_chxj_config *conf;
-    chxjconvrule_entry *entryp;
-    cookie_t *cookie;
+    device_table        *spec;
+    mod_chxj_config     *conf;
+    chxjconvrule_entry  *entryp;
+    cookie_t            *cookie;
 };
 
 /*----------------------------------------------------------------------------*/
 /* Prototype                                                                  */
 /*----------------------------------------------------------------------------*/
 extern char *chxj_convert_chtml10(
-  request_rec        *r,
-  device_table       *spec, 
-  const char         *src, 
-  apr_size_t         srclen, 
-  apr_size_t         *dstlen, 
-  chxjconvrule_entry *entryp, 
-  cookie_t           *cookie);
+  request_rec           *r,
+  device_table          *spec, 
+  const char            *src, 
+  apr_size_t            srclen, 
+  apr_size_t            *dstlen, 
+  chxjconvrule_entry    *entryp, 
+  cookie_t              *cookie);
 
 #endif

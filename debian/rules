@@ -35,7 +35,11 @@ major=2
 
 config.status: configure
 	dh_testdir
+<<<<<<< HEAD:debian/rules
 	CFLAGS="$(CFLAGS)  " ./configure --enable-mysql-cookie --with-mysql-header=/usr/include/mysql --with-mysql-lib-dir=/usr/lib
+=======
+	CFLAGS="$(CFLAGS)  " ./configure --enable-mysql-cookie --with-mysql-header=/usr/include/mysql --with-mysql-lib-dir=/usr/lib --enable-memcache-cookie --with-memcached-header=/usr/local/include/libmemcached --with-memcached-lib-dir=/usr/local/lib --enable-memcached-static 
+>>>>>>>   * updated new trunk.:debian/rules
 
 
 

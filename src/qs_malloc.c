@@ -19,7 +19,6 @@
 #include "qs_log.h"
 #include "qs_malloc.h"
 
-
 /**
  * Init
  */
@@ -41,6 +40,9 @@ qs_init_malloc(Doc *doc)
 }
 
 
+
+
+
 void
 qs_all_free(Doc *doc, const char *UNUSED(fname), int UNUSED(line)) 
 {
@@ -51,6 +53,7 @@ qs_all_free(Doc *doc, const char *UNUSED(fname), int UNUSED(line))
     doc->do_init_flag = 0;
   }
 }
+
 
 #if HAVE_MALLOC == 0
 #undef malloc

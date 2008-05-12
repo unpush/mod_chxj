@@ -24,12 +24,12 @@
  * @param doc  [i] The pointer to the Doc structure to be scanned is
  *                 specified.
  * @param node [i] The tag node to be scanned is specified.
- * @param r    [i] To use POOL, the pointer to request_rec is specified.
+ * @param pool [i] To use POOL.
  * @return The value of the VALUE attribute that the object tag node maintains
  *         is returned. NULL is returned when not found.
  */
 char *
-qs_get_value_attr(Doc *doc, Node *node, request_rec *r)
+qs_get_value_attr(Doc *doc, Node *node, apr_pool_t *pool)
 {
   Attr *attr;
 
@@ -39,19 +39,15 @@ qs_get_value_attr(Doc *doc, Node *node, request_rec *r)
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-    char *name;
-    char *value;
-
-    name  = qs_get_attr_name(doc,attr);
-    value = qs_get_attr_value(doc,attr);
-
-    if ((*name == 'v' || *name == 'V') && strcasecmp(name, "value") == 0)
+    char *name  = qs_get_attr_name(doc,attr);
+    char *value = qs_get_attr_value(doc,attr);
+    if (STRCASEEQ('v','V',"value",name)) {
       /*----------------------------------------------------------------------*/
       /* The VALUE attribute was found.                                       */
       /*----------------------------------------------------------------------*/
-      return apr_pstrdup(r->pool, value);
+      return apr_pstrdup(pool, value);
+    }
   }
-
   /*--------------------------------------------------------------------------*/
   /* not found                                                                */
   /*--------------------------------------------------------------------------*/
@@ -65,16 +61,14 @@ qs_get_value_attr(Doc *doc, Node *node, request_rec *r)
  * @param doc  [i] The pointer to the Doc structure to be scanned is
  *                 specified.
  * @param tag  [i] The tag node to be scanned is specified.
- * @param r    [i] To use POOL, the pointer to request_rec is specified.
+ * @param pool [i] To use POOL(unused).
  * @return The value of the checked tag is returned. NULL is returned when
  *         not found.
  */
 char *
-qs_get_checked_attr(Doc *doc, Node *tag, request_rec *r)
+qs_get_checked_attr(Doc *doc, Node *tag, apr_pool_t *UNUSED(pool))
 {
   Attr *attr;
-  int  found_flag = 0;
-
   /*--------------------------------------------------------------------------*/
   /* The object tag node is scanned.                                          */
   /*--------------------------------------------------------------------------*/
@@ -82,7 +76,7 @@ qs_get_checked_attr(Doc *doc, Node *tag, request_rec *r)
        attr != NULL;
        attr = qs_get_next_attr(doc,attr)) {
     char *name  = qs_get_attr_name(doc,attr);
-    if ((*name == 'c' || *name == 'C') && strcasecmp(name, "checked") == 0) {
+    if (STRCASEEQ('c','C',"checked",name)) {
       /*----------------------------------------------------------------------*/
       /* The VALUE attribute was found.                                       */
       /*----------------------------------------------------------------------*/
@@ -107,10 +101,9 @@ qs_get_checked_attr(Doc *doc, Node *tag, request_rec *r)
  *         not found.
  */
 char *
-qs_get_type_attr(Doc *doc, Node *tag, request_rec *r)
+qs_get_type_attr(Doc *doc, Node *tag, apr_pool_t *pool)
 {
   Attr *attr;
-
   /*--------------------------------------------------------------------------*/
   /* The object tag node is scanned.                                          */
   /*--------------------------------------------------------------------------*/
@@ -119,12 +112,12 @@ qs_get_type_attr(Doc *doc, Node *tag, request_rec *r)
        attr = qs_get_next_attr(doc,attr)) {
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
-
-    if ((*name == 't' || *name == 'T') && strcasecmp(name, "type") == 0) 
+    if (STRCASEEQ('t','T',"type",name)) {
       /*----------------------------------------------------------------------*/
       /* The VALUE attribute was found.                                       */
       /*----------------------------------------------------------------------*/
-      return apr_pstrdup(r->pool, value);
+      return apr_pstrdup(pool, value);
+    }
   }
   /*--------------------------------------------------------------------------*/
   /* not found                                                                */
@@ -136,13 +129,18 @@ qs_get_type_attr(Doc *doc, Node *tag, request_rec *r)
 /**
  * The character string area in 0 bytes is allocated.
  *
- * @param r    [i]   To use POOL, the pointer to request_rec is specified.
+ * @param pool    [i]   To use POOL.
  * @return The allocated 0 byte character string is returned.
  */
 char *
-qs_alloc_zero_byte_string(request_rec *r)
+qs_alloc_zero_byte_string(apr_pool_t *pool)
 {
-  char *tgt = apr_palloc(r->pool, 1);
+  char *tgt;
+
+  if (! pool) {
+    return NULL;
+  }
+  tgt = apr_palloc(pool, 1);
   tgt[0] = '\0';
 
   return tgt;
@@ -152,7 +150,7 @@ qs_alloc_zero_byte_string(request_rec *r)
 /**
  * A consecutive head and the last WHITESPACE are removed.
  *
- * @param p    [i]   To use POOL, the pointer to request_rec is specified.
+ * @param p    [i]   To use POOL
  * @param s    [i]   The character string that should be removed is specified.
  * @return The character string that has been removed is returned.
  */
@@ -182,12 +180,12 @@ qs_trim_string(apr_pool_t *p, char* s)
  * @param Doc  [i] The pointer to the Doc structure to be scanned is 
  *                 specified. 
  * @param node [i] The tag node to be scanned is specified.
- * @param r    [i] To use POOL, the pointer to request_rec is specified.
+ * @param pool [i] To use POOL.
  * @reutrn  The value of child TEXT of tag that maintains the SELECTED 
  *          attribute is returned. NULL is returned when not found. 
  */
 char *
-qs_get_selected_value_text(Doc *doc, Node *node, request_rec *r)
+qs_get_selected_value_text(Doc *doc, Node *node, apr_pool_t *pool)
 {
   Node *child;
   Node *selchild;
@@ -197,35 +195,39 @@ qs_get_selected_value_text(Doc *doc, Node *node, request_rec *r)
        child != NULL; 
        child = qs_get_next_node(doc,child)) {
     char *name = qs_get_node_name(doc,child);
-
     /*------------------------------------------------------------------------*/
     /* <OPTION> tag                                                           */
     /*------------------------------------------------------------------------*/
-    if ((*name == 'o' || *name == 'O') && strcasecmp(name, "option") == 0) {
+    if (STRCASEEQ('o','O',"option",name)) {
       Attr *attr;
-
       for (attr =  qs_get_attr(doc,child); 
            attr != NULL; 
            attr = qs_get_next_attr(doc,attr)) {
+<<<<<<< HEAD:src/chxj_tag_util.c
         char *name  = qs_get_attr_name(doc,attr);
         DBG(r, "qs_get_selected_value name::[%s]" , name);
 
         if ((*name == 's'|| *name == 'S') && strcasecmp(name, "selected") == 0) {
+=======
+        char *name2  = qs_get_attr_name(doc,attr);
+        if (STRCASEEQ('s','S',"selected",name2)) {
+>>>>>>>   * updated new trunk.:src/chxj_tag_util.c
           /*------------------------------------------------------------------*/
           /* SELECTED Value Found                                             */
           /*------------------------------------------------------------------*/
           selchild = qs_get_child_node(doc, child);
           if (! selchild) {
-            DBG(r,"found selected tag but null node" );
-            return NULL;
+            /* void value */
+            return apr_pstrdup(pool, "");
           }
           return qs_get_node_value(doc, selchild);
         }
       }
     }
 
-    if ((result = qs_get_selected_value_text(doc, child, r)) != NULL)
+    if ((result = qs_get_selected_value_text(doc, child, pool)) != NULL) {
       return result;
+    }
   }
 
   /*--------------------------------------------------------------------------*/
@@ -241,12 +243,12 @@ qs_get_selected_value_text(Doc *doc, Node *node, request_rec *r)
  * @param doc    [i]  The pointer to the Doc structure to be scanned is 
  *                    specified. 
  * @param node   [i]  The SELECT tag node is specified.
- * @param r    [i] To use POOL, the pointer to request_rec is specified.
+ * @param pool   [i] To use POOL.
  * @return The value of tag that maintains the SELECTED attribute is 
  *         returned. NULL is returned when not found. 
  */
 char *
-qs_get_selected_value(Doc *doc, Node *node, request_rec *r)
+qs_get_selected_value(Doc *doc, Node *node, apr_pool_t *pool)
 {
   Node *child;
   char *result    = NULL;
@@ -255,31 +257,27 @@ qs_get_selected_value(Doc *doc, Node *node, request_rec *r)
        child != NULL; 
        child = qs_get_next_node(doc,child)) {
     char *name = qs_get_node_name(doc,child);
-
     /*------------------------------------------------------------------------*/
     /* <OPTION> tag                                                           */
     /*------------------------------------------------------------------------*/
-    if ((*name == 'o' || *name == 'O') && strcasecmp(name, "option") == 0) {
+    if (STRCASEEQ('o','O',"option",name)) {
       Attr *attr;
-
       for (attr = qs_get_attr(doc,child); 
            attr; 
            attr = qs_get_next_attr(doc,attr)) {
-
-        char *name  = qs_get_attr_name(doc,attr);
-
-        DBG(r, "qs_get_selected_value name::[%s]" , name);
-
-        if ((*name == 's' || *name == 'S') && strcasecmp(name, "selected") == 0)
+        char *name2  = qs_get_attr_name(doc,attr);
+        if (STRCASEEQ('s','S',"selected",name2)) {
           /*------------------------------------------------------------------*/
           /* SELECTED Value Found                                             */
           /*------------------------------------------------------------------*/
-          return qs_get_value_attr(doc, child, r);
+          return qs_get_value_attr(doc, child, doc->buf.pool);
+        }
       }
     }
 
-    if ((result = qs_get_selected_value(doc, child, r)) != NULL)
+    if ((result = qs_get_selected_value(doc, child, pool)) != NULL) {
       return result;
+    }
   }
 
   /*--------------------------------------------------------------------------*/
@@ -290,31 +288,29 @@ qs_get_selected_value(Doc *doc, Node *node, request_rec *r)
 
 
 /**
- * The value of the SIZE attribute is acquired.
+ * The value of the NAME attribute is acquired.
  *
  * @param doc  [i] The pointer to the Doc structure at the output
  *                 destination is specified.
  * @param tag  [i] The tag node to want to acquire the SIZE attribute
  *                 is specified.
- * @param r    [i] To use POOL, the pointer to request_rec is specified.
- * @return The value of the SIZE attribute is returned. NULL is
+ * @param pool [i] To use POOL.
+ * @return The value of the NAME attribute is returned. NULL is
  *         returned when not is.
  */
 char *
-qs_get_name_attr(Doc *doc, Node *tag, request_rec *r)
+qs_get_name_attr(Doc *doc, Node *tag, apr_pool_t *pool)
 {
   Attr *attr;
-
   for (attr = qs_get_attr(doc,tag); 
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
-
-    if ((*name == 'n' || *name == 'N') && strcasecmp(name, "name") == 0)
-      return apr_pstrdup(r->pool, value);
+    if (STRCASEEQ('n','N',"name",name)) {
+      return apr_pstrdup(pool, (value ? value : ""));
+    }
   }
-
   return NULL;
 }
 
@@ -326,25 +322,23 @@ qs_get_name_attr(Doc *doc, Node *tag, request_rec *r)
  *                 destination is specified.
  * @param tag  [i] The tag node to want to acquire the SIZE attribute
  *                 is specified.
- * @param r    [i] To use POOL, the pointer to request_rec is specified.
+ * @param pool [i] To use POOL.
  * @return The value of the SIZE attribute is returned. NULL is
  *         returned when not is.
  */
 char *
-qs_get_size_attr(Doc *doc, Node *tag, request_rec *r)
+qs_get_size_attr(Doc *doc, Node *tag, apr_pool_t *pool)
 {
   Attr *attr;
-
   for (attr = qs_get_attr(doc,tag); 
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
-
-    if ((*name == 's' || *name == 'S') && strcasecmp(name, "size") == 0)
-      return apr_pstrdup(r->pool, value);
+    if (STRCASEEQ('s','S',"size",name)) {
+      return apr_pstrdup(pool, (value ? value : ""));
+    }
   }
-
   return NULL;
 }
 
@@ -356,25 +350,23 @@ qs_get_size_attr(Doc *doc, Node *tag, request_rec *r)
  *                 destination is specified.
  * @param tag  [i] The tag node to want to acquire the ACCESSKEY attribute
  *                 is specified.
- * @param r    [i] To use POOL, the pointer to request_rec is specified.
+ * @param pool [i] To use POOL.
  * @return The value of the ACCESSKEY attribute is returned. NULL is
  *         returned when not is.
  */
 char *
-qs_get_accesskey_attr(Doc *doc, Node *tag, request_rec *r)
+qs_get_accesskey_attr(Doc *doc, Node *tag, apr_pool_t *pool)
 {
   Attr *attr;
-
   for (attr = qs_get_attr(doc,tag); 
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
-
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
-    if ((*name == 'a' || *name == 'A') && strcasecmp(name, "accesskey") == 0)
-      return apr_pstrdup(r->pool, value);
+    if (STRCASEEQ('a','A',"accesskey",name)) {
+      return apr_pstrdup(pool, value);
+    }
   }
-
   return NULL;
 }
 
@@ -386,26 +378,23 @@ qs_get_accesskey_attr(Doc *doc, Node *tag, request_rec *r)
  *                 destination is specified.
  * @param tag  [i] The tag node to want to acquire the ISTYLE attribute
  *                 is specified.
- * @param r    [i] To use POOL, the pointer to request_rec is specified.
+ * @param pool [i] To use POOL.
  * @return The value of the ISTYLE attribute is returned. NULL is
  *         returned when not is.
  */
 char *
-qs_get_istyle_attr(Doc *doc, Node *tag, request_rec *r)
+qs_get_istyle_attr(Doc *doc, Node *tag, apr_pool_t *pool)
 {
   Attr *attr;
-
   for (attr = qs_get_attr(doc,tag); 
        attr != NULL; 
        attr = qs_get_next_attr(doc,attr)) {
-
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
-
-    if ((*name == 'i' || *name == 'I') && strcasecmp(name, "istyle") == 0)
-      return apr_pstrdup(r->pool, value);
+    if (STRCASEEQ('i','I',"istyle",name)) {
+      return apr_pstrdup(pool, value);
+    }
   }
-
   return NULL;
 }
 
@@ -418,26 +407,23 @@ qs_get_istyle_attr(Doc *doc, Node *tag, request_rec *r)
  *                 destination is specified.
  * @param tag  [i] The tag node to want to acquire the MAXLENGTH attribute
  *                 is specified.
- * @param r    [i] To use POOL, the pointer to request_rec is specified.
+ * @param pool [i] To use POOL.
  * @return The value of the MAXLENGTH attribute is returned. NULL is
  *         returned when not is.
  */
 char *
-qs_get_maxlength_attr(Doc *doc, Node *tag, request_rec *r)
+qs_get_maxlength_attr(Doc *doc, Node *tag, apr_pool_t *pool)
 {
   Attr *attr;
-
   for (attr = qs_get_attr(doc,tag);
-       attr != NULL; 
+       attr; 
        attr = qs_get_next_attr(doc,attr)) {
-
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
-
-    if ((*name == 'm' || *name == 'M') && strcasecmp(name, "maxlength") == 0)
-      return apr_pstrdup(r->pool, value);
+    if (STRCASEEQ('m','M',"maxlength",name)) {
+      return apr_pstrdup(pool, value);
+    }
   }
-
   return NULL;
 }
 
@@ -449,23 +435,25 @@ qs_get_maxlength_attr(Doc *doc, Node *tag, request_rec *r)
  *                 destination is specified.
  * @param tag  [i] The tag node to want to acquire the CHECKBOX attribute
  *                 is specified.
- * @param r    [i] To use POOL, the pointer to request_rec is specified.
+ * @param pool [i] To use POOL.
  * @return 1 is returned when it is CHECKED and, additionally, 0 is returned. 
  */
 int
+<<<<<<< HEAD:src/chxj_tag_util.c
 qs_is_checked_checkbox_attr(Doc* doc, Node* tag, request_rec* UNUSED(r))
+=======
+qs_is_checked_checkbox_attr(Doc *doc, Node *tag, apr_pool_t *UNUSED(pool))
+>>>>>>>   * updated new trunk.:src/chxj_tag_util.c
 {
   Attr *attr;
-
   for (attr = qs_get_attr(doc,tag);
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
     char *name  = qs_get_attr_name(doc,attr);
-
-    if ((*name == 'c' || *name == 'C') && strcasecmp(name, "checked") == 0)
+    if (STRCASEEQ('c','C',"checked",name)) {
       return 1;
+    }
   }
-
   return 0;
 }
 
@@ -474,46 +462,55 @@ int
 chxj_chxjif_is_mine(device_table *spec, Doc *doc, Node *tag)
 {
   request_rec *r = doc->r;
-  Attr *attr;
+  Attr        *attr;
 
   for (attr = qs_get_attr(doc,tag);
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
-
     if ((*name == 'l' || *name == 'L') && strcasecmp(name, "lang") == 0) {
 
       DBG(r, "lang found [%s] spec [%d]", value, spec->html_spec_type);
 
-      if ((*value == 'x' || *value == 'X') && strcasecmp(value, "xhtml") == 0) {
+      if (STRCASEEQ('x','X',"xhtml",value)) {
         if (spec->html_spec_type == CHXJ_SPEC_XHtml_Mobile_1_0) {
           /* Yes , it is mine */
           return 1;
         }
       }
-      else
-      if ((*value == 'h' || *value == 'H') && strcasecmp(value, "hdml") == 0) {
+      else if (STRCASEEQ('h','H',"hdml",value)) {
         if (spec->html_spec_type == CHXJ_SPEC_Hdml) {
           /* Yes , it is mine */
           return 1;
         }
       }
-      else
-      if ((*value == 'j' || *value == 'J') && strcasecmp(value, "jhtml") == 0) {
+      else if (STRCASEEQ('j','J',"jhtml",value)) {
         if (spec->html_spec_type == CHXJ_SPEC_Jhtml) {
           /* Yes , it is mine */
           return 1;
         }
       }
-      else
-      if ((*value == 'c' || *value == 'C') && strcasecmp(value, "chtml") == 0) {
+      else if (STRCASEEQ('j','J',"jxhtml",value)) {
+        if (spec->html_spec_type == CHXJ_SPEC_Jxhtml) {
+          /* Yes , it is mine */
+          return 1;
+        }
+      }
+      else if (STRCASEEQ('c','C',"chtml",value)) {
         switch (spec->html_spec_type) {
         case CHXJ_SPEC_Chtml_1_0:
         case CHXJ_SPEC_Chtml_2_0:
         case CHXJ_SPEC_Chtml_3_0:
         case CHXJ_SPEC_Chtml_4_0:
         case CHXJ_SPEC_Chtml_5_0:
+          return 1;
+        default:
+          break;
+        }
+      }
+      else if (STRCASEEQ('c','C',"cxhtml",value)) {
+        switch (spec->html_spec_type) {
         case CHXJ_SPEC_Chtml_6_0:
         case CHXJ_SPEC_Chtml_7_0:
           return 1;
@@ -537,24 +534,22 @@ chxj_chxjif_is_mine(device_table *spec, Doc *doc, Node *tag)
  *                 destination is specified.
  * @param tag  [i] The tag node to want to acquire the DESTLANG attribute
  *                 is specified.
- * @param r    [i] To use POOL, the pointer to request_rec is specified.
+ * @param pool [i] To use POOL.
  * @return The value of the DESTLANG attribute is returned. NULL is
  *         returned when not is.
  */
 char *
-qs_get_destlang_attr(Doc *doc, Node *tag, request_rec *r)
+qs_get_destlang_attr(Doc *doc, Node *tag, apr_pool_t *pool)
 {
-  Attr *attr;
-
+  Attr  *attr;
   for (attr = qs_get_attr(doc,tag);
        attr; 
        attr = qs_get_next_attr(doc,attr)) {
-
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
-
-    if ((*name == 'd' || *name == 'D') && strcasecmp(name, "destlang") == 0)
-      return apr_pstrdup(r->pool, value);
+    if (STRCASEEQ('d','D',"destlang",name)) {
+      return apr_pstrdup(pool, value);
+    }
   }
 
   return NULL;
@@ -567,15 +562,14 @@ qs_get_destlang_attr(Doc *doc, Node *tag, request_rec *r)
  * @param doc  [i] The pointer to the Doc structure to be scanned is
  *                 specified.
  * @param tag  [i] The tag node to be scanned is specified.
- * @param r    [i] To use POOL, the pointer to request_rec is specified.
+ * @param pool [i] To use POOL.
  * @return The value of the PARSE attribute is returned. NULL is returned when
  *         not found.
  */
 char *
-qs_get_parse_attr(Doc *doc, Node *tag, request_rec *r)
+qs_get_parse_attr(Doc *doc, Node *tag, apr_pool_t *pool)
 {
   Attr *attr;
-
   /*--------------------------------------------------------------------------*/
   /* The object tag node is scanned.                                          */
   /*--------------------------------------------------------------------------*/
@@ -584,12 +578,11 @@ qs_get_parse_attr(Doc *doc, Node *tag, request_rec *r)
        attr = qs_get_next_attr(doc,attr)) {
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
-
-    if ((*name == 'p' || *name == 'P') && strcasecmp(name, "parse") == 0) {
+    if (STRCASEEQ('p','P',"parse",name)) {
       /*----------------------------------------------------------------------*/
       /* The VALUE attribute was found.                                       */
       /*----------------------------------------------------------------------*/
-      return apr_pstrdup(r->pool, value);
+      return apr_pstrdup(pool, value);
     }
   }
 
@@ -598,6 +591,7 @@ qs_get_parse_attr(Doc *doc, Node *tag, request_rec *r)
   /*--------------------------------------------------------------------------*/
   return NULL;
 }
+
 /*
  * vim:ts=2 et
  */

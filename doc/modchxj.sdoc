@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding="UTF-8" ?>
+<?xml version='1.0' encoding="EUC-JP" ?>
 
 <doc xml:lang="ja">
 <head>
@@ -6,68 +6,66 @@
   <subtitle></subtitle>
   <author>Atsushi Konno</author>
   <date>29 Mar 2005</date>
-  <date>Last modified: Sat, 23 Mar 2008 03:21:16 +0900</date>
+  <date>Last modified: @@DATE@@</date>
 </head>
 <body>
 <section title="Overview">
 
-mod_chxjはオープンソースの携帯向けコンテンツ変換Apache2.x用モジュールであり、
-CHTML（DoCoMo i-Mode用 CHTML3.0)で記述された文書や通常のHTMLで記述された文書を、アクセスに来た端末のUser-Agentヘッダを見て、それぞれの端末にあった形式に変換します。
-HTML文書に限らず、画像（jpg、gif、png）、絵文字についても、定義ファイルに従ってそれぞれのキャリアにあった絵文字に変換します。
-Cookie非対応端末、Refer非対応端末のために、Set-Cookie、CookieヘッダやRefererヘッダをシミュレートすることもできます（EXPERIMENTAL)。
+mod_chxj�ϥ����ץ󥽡����η��Ӹ�������ƥ���Ѵ�Apache2.x�ѥ⥸�塼��Ǥ��ꡢ
+CHTML��DoCoMo i-Mode�� CHTML3.0)�ǵ��Ҥ��줿ʸ����̾��HTML�ǵ��Ҥ��줿ʸ��򡢥����������褿ü����User-Agent�إå��򸫤ơ����줾���ü���ˤ��ä��������Ѵ����ޤ���
+HTMLʸ��˸¤餺��������jpg��gif��png�ˡ���ʸ���ˤĤ��Ƥ⡢����ե�����˽��äƤ��줾��Υ���ꥢ�ˤ��ä���ʸ�����Ѵ����ޤ���
+Cookie���б�ü����Refer���б�ü���Τ���ˡ�Set-Cookie��Cookie�إå���Referer�إå��򥷥ߥ�졼�Ȥ��뤳�Ȥ�Ǥ��ޤ���EXPERIMENTAL)��
 
 
 </section>
-<section title="インストール">
-<subsection title="準備">
-mod_chxjをインストールする前に、下記のものを用意する必要があります。
+<section title="���󥹥ȡ���">
+<subsection title="����">
+mod_chxj�򥤥󥹥ȡ��뤹�����ˡ������Τ�Τ��Ѱդ���ɬ�פ�����ޤ���
 <ol>
-  <li>Apache2.xのヘッダーファイル群</li>
-  <li>Apache2.x用のapxs</li>
-  <li>apr(Apache Portable Runtime)ライブラリとそのヘッダファイル郡(apu含む)</li>
-  <li>automake、autoconf、libtool1.3.X</li>
+  <li>Apache2.x�Υإå����ե����뷲</li>
+  <li>Apache2.x�Ѥ�apxs</li>
+  <li>apr(Apache Portable Runtime)�饤�֥��Ȥ��Υإå��ե����뷴(apu�ޤ�)<note>memcache����Ѥ����硢apu��0.9.7�ʹ�</note></li>
+  <li>automake��autoconf��libtool1.3.X</li>
   <li>ImageMagick(MagickWand)</li>
   <li>Linux</li>
 </ol>
 </subsection>
-<subsection title="mod_chxjの入手">
-mod_chxjは<a href="http://sourceforge.jp/projects/modchxj/">こちら</a>からダウンロードすることができます。
+<subsection title="mod_chxj������">
+mod_chxj��<a href="http://sourceforge.jp/projects/modchxj/">������</a>�������������ɤ��뤳�Ȥ��Ǥ��ޤ���
 </subsection>
-<subsection title="インストール">
-以下にmod_chxjインストール手順を示します。
+<subsection title="���󥹥ȡ���">
+�ʲ���mod_chxj���󥹥ȡ�����򼨤��ޤ���
 <ol>
-<li>Configure スクリプトを生成します(必須ではない)<program title="Configure スクリプトの生成">
+<li>Configure ������ץȤ��������ޤ�<program title="Configure ������ץȤ�����">
 $ ./buildconf.sh
 </program> 
-<note>"$"はプロンプトをあらわします。</note>
+<note>"$"�ϥץ���ץȤ򤢤�路�ޤ���</note>
 </li>
 <li>Configure
 
 <program title="Configure">
 $ ./configure
 </program>
-<note>場合によっては--with-apr-configや--with-apu-configも必要です。</note>
-<note>0.8.6以下の場合には--with-apache-headerが必須です</note>
-<note>詳細はBuildを参照</note>
+<note>���ˤ�äƤ�--with-apr-config��--with-apu-config��--with-pcre-config��ɬ�פǤ���</note>
+<note>�ܺ٤�Build�򻲾�</note>
 </li>
-<li>mod_chxj.soを生成します
+<li>mod_chxj.so���������ޤ�
 <program title="make">
 $ make
 </program>
 </li>
-<li>apacheにインストールします
+<li>apache�˥��󥹥ȡ��뤷�ޤ�
 <program title="install">
 $ make install
 </program>
 </li>
-<li>データの設置
-etcディレクトリは以下のdevice_data.xmlとemoji.xmlをApache
-からアクセスできるところに配置します。
-<note>0.9.0からemoji.xml、device_data.xmlの定義フォーマットを変更しましたのでバージョンをあわせてください</note>
+<li>�ǡ���������
+etc�ǥ��쥯�ȥ�ϰʲ���device_data.xml��emoji.xml��Apache
+���饢�������Ǥ���Ȥ��������֤��ޤ���
 
-以下、/etc/apache2/chxjディレクトリにchxj用設定ファイルを用意する場合
+�ʲ���/etc/apache2/chxj�ǥ��쥯�ȥ��chxj������ե�������Ѱդ�����
 
-<program title="データの設置">
+<program title="�ǡ���������">
 $ mkdir -p /etc/apache2/chxj
 $ cp etc/device_data.xml /etc/apache2/chxj
 $ cp etc/emoji.xml /etc/apache2/chxj
@@ -77,89 +75,87 @@ $ cp etc/emoji.xml /etc/apache2/chxj
 </subsection>
 </section>
 <section title="Build">
-mod_chxjをコンパイルするにはconfigureを行う必要があります。
-以下にconfigureのオプションを記します。
-<subsection title="メイン">
+mod_chxj�򥳥�ѥ��뤹��ˤ�configure��Ԥ�ɬ�פ�����ޤ���
+�ʲ���configure�Υ��ץ����򵭤��ޤ���
+<subsection title="�ᥤ��">
   <subsection title="--with-apache-header">
-      通常指定する必要はありません。configureでApacheのヘッダファイルの場所が検知できなかった場合や、任意のApacheヘッダファイルを使用したい場合に指定します。
+      �̾���ꤹ��ɬ�פϤ���ޤ���configure��Apache�Υإå��ե�����ξ�꤬���ΤǤ��ʤ��ä����䡢Ǥ�դ�Apache�إå��ե��������Ѥ��������˻��ꤷ�ޤ���
       <program title="--with-apache-header">
          $ ./configure --with-apache-header=/usr/include/apache2
       </program>
-      上記は/usr/include/apache2以下にApacheのヘッダファイルがある場合の例です。
+      �嵭��/usr/include/apache2�ʲ���Apache�Υإå��ե����뤬���������Ǥ���
   </subsection>
   <subsection title="--with-apxs">
-      通常指定する必要はありません。configureでapxsを検知できなかった場合や、任意のapxsプログラムを指定したい場合に指定します。
+      �̾���ꤹ��ɬ�פϤ���ޤ���configure��apxs���ΤǤ��ʤ��ä����䡢Ǥ�դ�apxs�ץ���������ꤷ�������˻��ꤷ�ޤ���
       <program title="--with-apxs">
          $ ./configure --with-apxs=/usr/local/apache2/bin/apxs2
       </program>
-      上記は/usr/local/apache2/bin/apxs2を使用するようにapxsに指定しています。
+      �嵭��/usr/local/apache2/bin/apxs2����Ѥ���褦��apxs�˻��ꤷ�Ƥ��ޤ���
   </subsection>
   <subsection title="--with-apr-config">
-      通常指定する必要はありません。
-      configureでapr-configを検知できなかった場合や、任意のapr-configプログラムを指定したい場合に指定します。
+      �̾���ꤹ��ɬ�פϤ���ޤ���
+      configure��apr-config���ΤǤ��ʤ��ä����䡢Ǥ�դ�apr-config�ץ���������ꤷ�������˻��ꤷ�ޤ���
       <program title="--with-apr-config">
          $ ./configure --with-apr-config=/usr/local/apache2/bin/apr-1-config
       </program>
-      上記は/usr/local/apache2/bin/apr-1-configを使用するように指定しています。
+      �嵭��/usr/local/apache2/bin/apr-1-config����Ѥ���褦�˻��ꤷ�Ƥ��ޤ���
   </subsection>
   <subsection title="--with-apu-config">
-      通常指定する必要はありません。
-      configureでapu-configを検知できなかった場合や、任意のapu-configプログラムを指定したい場合に指定します。
+      �̾���ꤹ��ɬ�פϤ���ޤ���
+      configure��apu-config���ΤǤ��ʤ��ä����䡢Ǥ�դ�apu-config�ץ���������ꤷ�������˻��ꤷ�ޤ���
       <program title="--with-apu-config">
          $ ./configure --with-apu-config=/usr/local/apache2/bin/apu-1-config
       </program>
-      上記は/usr/local/apache2/bin/apu-1-configを使用するように指定しています。
+      �嵭��/usr/local/apache2/bin/apu-1-config����Ѥ���褦�˻��ꤷ�Ƥ��ޤ���
   </subsection>
 </subsection>
-<subsection title="Cookieシミュレート機能でMySQLを使用する場合">
+<subsection title="Cookie���ߥ�졼�ȵ�ǽ��MySQL����Ѥ�����">
   <subsection title="--enable-mysql-cookie">
-      Cookieシミュレート機能を使用する際、保存先をデフォルトのDBMでは無く、MySQLに保存するようにします。
-      DefaultのDBMで良い場合や、Cookieシミュレート機能を使用しない場合は指定する必要はありません。
-      別途MySQLサーバを用意する必要があります。また、本オプションを指定した場合は、--with-mysql-header、--with-mysql-lib-dirも指定します。
-      これはMySQLのヘッダとライブラリが必要なことを意味します。使用するMySQLのライブラリは今のところlibmysqlclient_r.soのみです。
-      注意) --enable-memcache-cookieとの併用はできません。
+      Cookie���ߥ�졼�ȵ�ǽ����Ѥ���ݡ���¸���ǥե���Ȥ�DBM�Ǥ�̵����MySQL����¸����褦�ˤ��ޤ���
+      Default��DBM���ɤ����䡢Cookie���ߥ�졼�ȵ�ǽ����Ѥ��ʤ����ϻ��ꤹ��ɬ�פϤ���ޤ���
+      ����MySQL�����Ф��Ѱդ���ɬ�פ�����ޤ����ޤ����ܥ��ץ�������ꤷ�����ϡ�--with-mysql-header��--with-mysql-lib-dir����ꤷ�ޤ���
+      �����MySQL�Υإå��ȥ饤�֥�꤬ɬ�פʤ��Ȥ��̣���ޤ������Ѥ���MySQL�Υ饤�֥��Ϻ��ΤȤ���libmysqlclient_r.so�ΤߤǤ���
       <program title="--enable-mysql-cookie">
          $ ./configure --enable-mysql-cookie --with-mysql-header=/usr/include/mysql  --with-mysql-lib-dir=/usr/lib
       </program>
-      上記は、/usr/include/mysql以下にmysql用のヘッダがあり、/usr/lib以下にlibmysqlclient_r.soがある場合の例です。
+      �嵭�ϡ�/usr/include/mysql�ʲ���mysql�ѤΥإå������ꡢ/usr/lib�ʲ���libmysqlclient_r.so�����������Ǥ���
   </subsection>
   <subsection title="--with-mysql-header">
-      --enable-mysql-cookieを指定した場合は必須です。
-      MySQLのヘッダファイルの場所を指定します。
+      --enable-mysql-cookie����ꤷ������ɬ�ܤǤ���
+      MySQL�Υإå��ե�����ξ�����ꤷ�ޤ���
       <program title="--with-mysql-header">
          $ ./configure --enable-mysql-cookie --with-mysql-header=/usr/include/mysql  --with-mysql-lib-dir=/usr/lib
       </program>
   </subsection>
   <subsection title="--with-mysql-lib-dir">
-      --enable-mysql-cookieを指定した場合は必須です。
-      MySQLのライブラリ、libmysqlclient_r.soの設置されているディレクトリを指定します。
+      --enable-mysql-cookie����ꤷ������ɬ�ܤǤ���
+      MySQL�Υ饤�֥�ꡢlibmysqlclient_r.so�����֤���Ƥ���ǥ��쥯�ȥ����ꤷ�ޤ���
       <program title="--with-mysql-lib-dir">
          $ ./configure --enable-mysql-cookie --with-mysql-header=/usr/include/mysql  --with-mysql-lib-dir=/usr/lib
       </program>
   </subsection>
 </subsection>
-<subsection title="Cookieシミュレート機能でmemcachedを使用する場合">
+<subsection title="Cookie���ߥ�졼�ȵ�ǽ��memcached����Ѥ�����">
   <subsection title="--enable-memcache-cookie">
-      Cookieシミュレート機能を使用する際、保存先をデフォルトのDBMでは無く、memcachedに保存するようにします。
-      DefaultのDBMで良い場合や、Cookieシミュレート機能を使用しない場合は指定する必要はありません。
-      別途memcachedを用意する必要があります。また、本オプションを指定した場合は、--with-apr-memcache-header、--with-apr-memcache-lib-dirも指定します。
-      これはapr_memcacheのヘッダとライブラリが必要なことを意味します。
-      注意) --enable-mysql-cookieとの併用はできません。
+      Cookie���ߥ�졼�ȵ�ǽ����Ѥ���ݡ���¸���ǥե���Ȥ�DBM�Ǥ�̵����memcached����¸����褦�ˤ��ޤ���
+      Default��DBM���ɤ����䡢Cookie���ߥ�졼�ȵ�ǽ����Ѥ��ʤ����ϻ��ꤹ��ɬ�פϤ���ޤ���
+      ����memcached���Ѱդ���ɬ�פ�����ޤ����ޤ����ܥ��ץ�������ꤷ�����ϡ�--with-apr-memcache-header��--with-apr-memcache-lib-dir����ꤷ�ޤ���
+      �����apr_memcache�Υإå��ȥ饤�֥�꤬ɬ�פʤ��Ȥ��̣���ޤ���
       <program title="--enable-memcache-cookie">
          $ ./configure --enable-memcache-cookie --with-apr-memcache-header=/usr/include/apr-memcache0 --with-apr-memcache-lib-dir=/usr/lib
       </program>
-      上記は、/usr/include/apr_memcache0以下にapr-memcache用のヘッダがあり、/usr/lib以下にlibapr_memcache.soがある場合の例です。
+      �嵭�ϡ�/usr/include/apr_memcache0�ʲ���apr-memcache�ѤΥإå������ꡢ/usr/lib�ʲ���libapr_memcache.so�����������Ǥ���
   </subsection>
   <subsection title="--with-apr-memcache-header">
-      --enable-memcache-cookieを指定した場合は必須です。
-      apr-memcacheのヘッダファイルの場所を指定します。
+      --enable-memcache-cookie����ꤷ������ɬ�ܤǤ���
+      apr-memcache�Υإå��ե�����ξ�����ꤷ�ޤ���
       <program title="--with-apr-memcache-header">
          $ ./configure --enable-memcache-cookie --with-apr-memcache-header=/usr/include/apr_memcache0  --with-apr-memcache-lib-dir=/usr/lib
       </program>
   </subsection>
   <subsection title="--with-apr-memcache-lib-dir">
-      --enable-mysql-cookieを指定した場合は必須です。
-      apr-memcacheのライブラリ、libapr_memcache.soの設置されているディレクトリを指定します。
+      --enable-mysql-cookie����ꤷ������ɬ�ܤǤ���
+      apr-memcache�Υ饤�֥�ꡢlibapr_memcache.so�����֤���Ƥ���ǥ��쥯�ȥ����ꤷ�ޤ���
       <program title="--with-apr-memcache-lib-dir">
          $ ./configure --enable-memcache-cookie --with-apr-memcache-header=/usr/include/apr_memcache0  --with-apr-memcache-lib-dir=/usr/lib
       </program>
@@ -167,139 +163,139 @@ mod_chxjをコンパイルするにはconfigureを行う必要があります。
 </subsection>
 </section>
 <section title="Configuration">
-以下はmod_chxjが/usr/lib/apache2/modulesディレクトリ配下に設置されたものとしています
+�ʲ���mod_chxj��/usr/lib/apache2/modules�ǥ��쥯�ȥ��۲������֤��줿��ΤȤ��Ƥ��ޤ�
 
-<subsection title="htmlファイルが変換対象の場合">
+<subsection title="html�ե����뤬�Ѵ��оݤξ��">
 
-例として、Locationが"/chxj"以下のものは全て変換する場合を説明します。
+��Ȥ��ơ�Location��"/chxj"�ʲ��Τ�Τ������Ѵ���������������ޤ���
 
 <ol>
-<li>httpd.confに以下を追加します。
+<li>httpd.conf�˰ʲ����ɲä��ޤ���
 
 <program title="httpd.conf">
 #====================================================================================
-# モジュールをApache2.0にロード
+# �⥸�塼���Apache2.0�˥�����
 #====================================================================================
 LoadModule chxj_module /usr/lib/apache2/modules/mod_chxj.so
 
 #====================================================================================
-# デバイスデータファイルの設定
+# �ǥХ����ǡ����ե����������
 #====================================================================================
 ChxjLoadDeviceData  /etc/apache2/chxj/device_data.xml
 
 #====================================================================================
-# 絵文字データファイルの設定
+# ��ʸ���ǡ����ե����������
 #====================================================================================
 ChxjLoadEmojiData   /etc/apache2/chxj/emoji.xml
 
 #====================================================================================
-# 変換エンジン動作指示命令
-# ChxjConvRule ==> ディレクティブ
-# "^/chxj.+$"  ==> Perl互換のURIパターン
-# EngineOn     ==> 変換エンジンを動作させる指示
-# NONE         ==> サーバ側の文字コード。（NONEを指定した場合は文字コード変換しない)
+# �Ѵ����󥸥�ư��ؼ�̿��
+# ChxjConvRule ==> �ǥ��쥯�ƥ���
+# "^/chxj.+$"  ==> Perl�ߴ���URI�ѥ�����
+# EngineOn     ==> �Ѵ����󥸥��ư�����ؼ�
+# NONE         ==> ������¦��ʸ�������ɡ���NONE����ꤷ������ʸ���������Ѵ����ʤ�)
 #====================================================================================
 ChxjConvertRule "^/chxj.+$" "EngineOn" "NONE"
 
 </program>
 </li>
-<li>apacheの再起動。</li>
+<li>apache�κƵ�ư��</li>
 </ol>
 </subsection>
-<subsection title="php等の出力結果が変換対象の場合">
+<subsection title="php���ν��Ϸ�̤��Ѵ��оݤξ��">
 <ol>
-<li>httpd.confに以下を追加します
+<li>httpd.conf�˰ʲ����ɲä��ޤ�
 
 <program title="httpd.conf">
 #====================================================================================
-# モジュールをApache2.xにロード
+# �⥸�塼���Apache2.0�˥�����
 #====================================================================================
 LoadModule chxj_module /usr/lib/apache2/modules/mod_chxj.so
 
 #====================================================================================
-# デバイスデータの設定
+# �ǥХ����ǡ���������
 #====================================================================================
 ChxjLoadDeviceData  /etc/apache2/chxj/device_data.xml
 
 #====================================================================================
-# 絵文字データの設定
+# ��ʸ���ǡ���������
 #====================================================================================
 ChxjLoadEmojiData   /etc/apache2/chxj/emoji.xml
 
 #====================================================================================
-# 変換エンジン動作指示命令
-# ChxjConvRule ==> ディレクティブ
-# "^/chxj.+$"  ==> Perl互換のURIパターン
-# EngineOn     ==> 変換エンジンを動作させる指示。動作させたく無い場合は"EngineOff"
-# EUC-JP       ==> サーバ側の文字コード。（NONEを指定した場合は文字コード変換しない)
-#                  EUC-JPからCP932に文字コード変換します。
+# �Ѵ����󥸥�ư��ؼ�̿��
+# ChxjConvRule ==> �ǥ��쥯�ƥ���
+# "^/chxj.+$"  ==> Perl�ߴ���URI�ѥ�����
+# EngineOn     ==> �Ѵ����󥸥��ư�����ؼ���ư�������̵������"EngineOff"
+# EUC-JP       ==> ������¦��ʸ�������ɡ���NONE����ꤷ������ʸ���������Ѵ����ʤ�)
+#                  EUC-JP����CP932��ʸ���������Ѵ����ޤ���
 #====================================================================================
 ChxjConvertRule "^/chxj.+$" "EngineOn" "EUC-JP"
 
 </program>
 </li>
-<li>apacheの再起動。</li>
+<li>apache�κƵ�ư��</li>
 </ol>
 </subsection>
 
-<subsection title="xoopsを使用し、且つwordpress、bwikiを使用している場合">
+<subsection title="xoops����Ѥ������wordpress��bwiki����Ѥ��Ƥ�����">
 <ol>
-<li>httpd.confに以下を追加します
+<li>httpd.conf�˰ʲ����ɲä��ޤ�
 
 <program title="httpd.conf">
 #====================================================================================
-# モジュールをApache2.xにロード
+# �⥸�塼���Apache2.0�˥�����
 #====================================================================================
 LoadModule chxj_module /usr/lib/apache2/modules/mod_chxj.so
 
 #====================================================================================
-# デバイスデータの設定
+# �ǥХ����ǡ���������
 #====================================================================================
 ChxjLoadDeviceData  /etc/apache2/chxj/device_data.xml
 
 #====================================================================================
-# 絵文字データの設定
+# ��ʸ���ǡ���������
 #====================================================================================
 ChxjLoadEmojiData   /etc/apache2/chxj/emoji.xml
 
 #====================================================================================
-# 変換エンジン動作指示命令
+# �Ѵ����󥸥�ư��ؼ�̿��
 #====================================================================================
 #====================================================================================
-# bwikiの設定をします。bwikiではどうもxoopsヘッダの文字コードとbwiki内での携帯スキン
-# の文字コードが一致していないようなので、bwiki内で文字コードを変換させないように
-# 修正後、以下のルールを記述します。
+# bwiki������򤷤ޤ���bwiki�ǤϤɤ���xoops�إå���ʸ�������ɤ�bwiki��Ǥη��ӥ�����
+# ��ʸ�������ɤ����פ��Ƥ��ʤ��褦�ʤΤǡ�bwiki���ʸ�������ɤ��Ѵ������ʤ��褦��
+# �����塢�ʲ��Υ롼��򵭽Ҥ��ޤ���
 # 
-# ChxjConvRule           ディレクティブ
-# "^/modules/bwiki.+$"   このルールを適用したいURIパターン
-# "EngineOn"             変換エンジンを有効にします。
-# "EUC-JP"               出力時にEUC-JPからCP932に変換させます。
-# "PC"                   変換元HTMLはPCサイト用HTMLです。
-# "DoCoMo/1.0/D501i"     DoCoMo端末としてbwikiにアクセスさせます。
+# ChxjConvRule           �ǥ��쥯�ƥ���
+# "^/modules/bwiki.+$"   ���Υ롼���Ŭ�Ѥ�����URI�ѥ�����
+# "EngineOn"             �Ѵ����󥸥��ͭ���ˤ��ޤ���
+# "EUC-JP"               ���ϻ���EUC-JP����CP932���Ѵ������ޤ���
+# "PC"                   �Ѵ���HTML��PC��������HTML�Ǥ���
+# "DoCoMo/1.0/D501i"     DoCoMoü���Ȥ���bwiki�˥������������ޤ���
 #
 #====================================================================================
 ChxjConvertRule "^/modules/bwiki.+$" "EngineOn" "EUC-JP" "PC" "DoCoMo/1.0/D501i"
 
 #====================================================================================
-# wordpressの設定をします。
+# wordpress������򤷤ޤ���
 # 
-# ChxjConvRule               ディレクティブ
-# "^/modules/wordpress.+$"   このルールを適用したいURIパターン
-# "EngineOn"                 変換エンジンを有効にします。
-# "NONE"                     出力時に文字コード変換をさせません。
-# "NONE"                     変換元HTMLはPCサイト用HTMLではありません。
-# "DoCoMo/1.0/D501i"         DoCoMo端末としてwordpressにアクセスさせます。
+# ChxjConvRule               �ǥ��쥯�ƥ���
+# "^/modules/wordpress.+$"   ���Υ롼���Ŭ�Ѥ�����URI�ѥ�����
+# "EngineOn"                 �Ѵ����󥸥��ͭ���ˤ��ޤ���
+# "NONE"                     ���ϻ���ʸ���������Ѵ��򤵤��ޤ���
+# "NONE"                     �Ѵ���HTML��PC��������HTML�ǤϤ���ޤ���
+# "DoCoMo/1.0/D501i"         DoCoMoü���Ȥ���wordpress�˥������������ޤ���
 #
 #====================================================================================
 ChxjConvertRule "^/modules/wordpress/.*$"  "EngineOn"  "NONE" "PC" "DoCoMo/1.0/D501i"
 
 #====================================================================================
-# その他の設定をします。
+# ����¾������򤷤ޤ���
 # 
-# ChxjConvRule               ディレクティブ
-# "^/.+$"                    このルールを適用したいURIパターン
-# "EngineOn"                 変換エンジンを有効にします。
-# "EUC-JP"                   出力時にEUC-JPからCP932に文字コード変換をさせます。
+# ChxjConvRule               �ǥ��쥯�ƥ���
+# "^/.+$"                    ���Υ롼���Ŭ�Ѥ�����URI�ѥ�����
+# "EngineOn"                 �Ѵ����󥸥��ͭ���ˤ��ޤ���
+# "EUC-JP"                   ���ϻ���EUC-JP����CP932��ʸ���������Ѵ��򤵤��ޤ���
 #
 #====================================================================================
 ChxjConvertRule "^/.+$" "EngineOn" "EUC-JP" 
@@ -311,33 +307,32 @@ ChxjConvertRule "^/.+$" "EngineOn" "EUC-JP"
 &lt;/Location&gt;
 </program>
 </li>
-<li>apacheの再起動。</li>
+<li>apache�κƵ�ư��</li>
 </ol>
 </subsection>
 
 
 
 
-<subsection title="画像自動変換機能を使用する場合">
+<subsection title="������ư�Ѵ���ǽ����Ѥ�����">
 <ol>
-<li>httpd.confに以下を追加します。
-下記は、URIが/imgで始まる全ての画像に対して動作するようmod_chxjに指示しています。
+<li>httpd.conf�˰ʲ����ɲä��ޤ���
+�����ϡ�URI��/img�ǻϤޤ����Ƥβ������Ф���ư���褦mod_chxj�˻ؼ����Ƥ��ޤ���
 
 <program title="httpd.conf">
 &lt;Location /img&gt;
 ChxjImageEngine On
 ChxjImageCacheDir /tmp
 ChxjImageCopyright "A.Konno"
-ChxjImageCacheLimit 10485760
 &lt;/Location&gt;
 </program>
 
-上記の説明を以下に示します。
+�嵭��������ʲ��˼����ޤ���
 
 <ol>
     <li>ChxjImageEngine<br />
-      mod_chxjの画像変換ハンドラを起動するよう指示しています。
-      DefaultはOff
+      mod_chxj�β����Ѵ��ϥ�ɥ��ư����褦�ؼ����Ƥ��ޤ���
+      Default��Off
  
       <br />
       <br />
@@ -345,112 +340,111 @@ ChxjImageCacheLimit 10485760
 
 
     <li>ChxjImageCacheDir<br />
-      mod_chxj画像変換ハンドラが使用する変換後の画像をおいておくディレクトリを指定します。
-      デフォルトは/tmp。
+      mod_chxj�����Ѵ��ϥ�ɥ餬���Ѥ����Ѵ���β����򤪤��Ƥ����ǥ��쥯�ȥ����ꤷ�ޤ���
+      �ǥե���Ȥ�/tmp��
 
       <program title="ChxjImageCacheDir">
       ChxjImageCacheDir /tmp
       </program>
 
-      mod_chxjに画像変換キャッシュとして/tmpを使用するよう指示します。
+      mod_chxj�˲����Ѵ�����å���Ȥ���/tmp����Ѥ���褦�ؼ����ޤ���
       <br />
       <br />
     </li>
 
     <li>ChxjImageCacheLimit<br />
+<<<<<<< HEAD:doc/modchxj.sdoc
       mod_chxj?????Ѵ??ϥ??ɥ餬???Ѥ????Ѵ????β????򤪤??Ƥ????ǥ??쥯?ȥ??ε????̤????ꤷ?ޤ???
       ñ?̤?byte??
+=======
+      mod_chxj�����Ѵ��ϥ�ɥ餬���Ѥ����Ѵ���β����򤪤��Ƥ����ǥ��쥯�ȥ�ε����̤���ꤷ�ޤ���
+      ñ�̤�byte��
+>>>>>>>   * updated new trunk.:doc/modchxj.sdoc
 
       <program title="ChxjImageCacheLimit">
       ChxjImageCacheLimit 1024
       </program>
 
+<<<<<<< HEAD:doc/modchxj.sdoc
       mod_chxj?˲????Ѵ??????å??????祵?????Ȥ???1kbyte?Ȼ??ꡣ
       ?????ΤȤ??Ѵ????̤?1kbyte?ʾ夢???褦?ʾ????ˤ?INTERNAL_SERVER_ERROR???֤??ޤ???
        ??ʬ???ΰ??????ݤ??뤫?????������??򾮤??????Ƥ??��?????
+=======
+      mod_chxj�˲����Ѵ�����å�����祵�����Ȥ���1kbyte�Ȼ��ꡣ
+      �����ΤȤ��Ѵ���̤�1kbyte�ʾ夢��褦�ʾ��ˤ�INTERNAL_SERVER_ERROR���֤��ޤ���
+       ��ʬ���ΰ����ݤ��뤫�������������򾮤������Ƥ���������
+>>>>>>>   * updated new trunk.:doc/modchxj.sdoc
       <br />
       <br />
     </li>
+<<<<<<< HEAD:doc/modchxj.sdoc
 
+=======
+>>>>>>>   * updated new trunk.:doc/modchxj.sdoc
 
 
     <li>ChxjImageCopyright<br />
-      mod_chxjの画像変換ハンドラに、転送禁止設定を行うよう指示します。
-      パラメータとして任意の文字列をとります。
-      ChxjImageCopyrightディレクティブで指定された文字列は、それぞれのイメージの
-      コメント部に埋め込まれます。
+      mod_chxj�β����Ѵ��ϥ�ɥ�ˡ�ž���ػ������Ԥ��褦�ؼ����ޤ���
+      �ѥ�᡼���Ȥ���Ǥ�դ�ʸ�����Ȥ�ޤ���
+      ChxjImageCopyright�ǥ��쥯�ƥ��֤ǻ��ꤵ�줿ʸ����ϡ����줾��Υ��᡼����
+      ���������������ޤ�ޤ���
 
       <program title="ChxjImageCopyright">
       ChxjImageCopyright "A.Konno"
       </program>
 
-       mod_chxjに転送禁止設定を行うよう指示しています。
-       変換後イメージのコメント部分には、キャリア毎に以下の文字列を埋め込みます。
+       mod_chxj��ž���ػ������Ԥ��褦�ؼ����Ƥ��ޤ���
+       �Ѵ��奤�᡼���Υ�������ʬ�ˤϡ�����ꥢ��˰ʲ���ʸ����������ߤޤ���
 
-       <b>AU の場合</b>
+       <b>AU �ξ��</b>
        <program title="AU">
        kddi_copyright=on,A.Konno
        </program>
 
-       <b>DoCoMoの場合</b>
+       <b>DoCoMo�ξ��</b>
        <program title="DoCoMo">copy="NO",A.Konno</program>
 
-       <b>SoftBank/Vodafone</b>の場合は、レスポンスヘッダに
+       <b>SoftBank/Vodafone</b>�ξ��ϡ��쥹�ݥ󥹥إå���
 
        <program title="SoftBank/Vodafone/J-PHONE">
          x-jphone-copyright:no-transfer
        </program>
 
-       を埋め込みます。
-       <note>SoftBank/Vodafoneの場合は、リクエストＵＲＬの最後が.pnzか、.jpzで終わるようにダミーを付けなければなりません。</note>
-    </li>
-
-    <li>ChxjImageCacheLimit<br />
-      mod_chxj画像変換ハンドラが使用する変換後の画像をおいておくディレクトリの許容量を指定します。
-      単位はbyte。
-
-      <program title="ChxjImageCacheLimit">
-      ChxjImageCacheLimit 1024
-      </program>
-
-      mod_chxjに画像変換キャッシュ最大サイズとして1kbyteと指定。
-      ※このとき変換結果が1kbyte以上あるような場合にはINTERNAL_SERVER_ERRORを返します。
-       十分な領域を確保するか、画像サイズを小さくしてください。
-      <br />
-      <br />
+       �������ߤޤ���
+       <note>SoftBank/Vodafone�ξ��ϡ��ꥯ�����ȣգң̤κǸ夬.pnz����.jpz�ǽ����褦�˥��ߡ����դ��ʤ���Фʤ�ޤ���</note>
     </li>
   </ol>
   </li>
 </ol>
 </subsection>
 
-<subsection title="文字コードを変換したい場合">
+<subsection title="ʸ�������ɤ��Ѵ����������(EXPERIMENTAL)">
 <ol>
-<li>httpd.confに以下を追加します。
-下記は、URIが/chxjで始まる全てのコンテンツに対して動作するようmod_chxjに指示しています。
-サーバ側はEUC-JPであった場合の例です。mod_chxjによってSJISに変換するように指示しています。
-サーバ側がShift_JISで無い場合は、Shift_JISコードの10進参照文字列表記を記述することによって
-Shift_JISコードの絵文字2バイトコードに変換しクライアントへ返します。
+<li>httpd.conf�˰ʲ����ɲä��ޤ���
+�����ϡ�URI��/chxj�ǻϤޤ����ƤΥ���ƥ�Ĥ��Ф���ư���褦mod_chxj�˻ؼ����Ƥ��ޤ���
+������¦��EUC-JP�Ǥ��ä�������Ǥ���mod_chxj�ˤ�ä�SJIS���Ѵ�����褦�˻ؼ����Ƥ��ޤ���
+������¦��Shift_JIS��̵�����ϡ�Shift_JIS�����ɤ�10�ʻ���ʸ����ɽ���򵭽Ҥ��뤳�Ȥˤ�ä�
+Shift_JIS�����ɤγ�ʸ��2�Х��ȥ����ɤ��Ѵ������饤����Ȥ��֤��ޤ���
 
 <program title="httpd.conf">
 ChxjConvRule "^/chxj.+$" "EngineOn" "EUC-JP"
 </program>
 
-上記の説明を以下に示します。
+�嵭��������ʲ��˼����ޤ���
 
     <ol>
         <li>ChxjConvertRule<br />
-          サーバサイドの文字コードを指定します。ここに、EUC-JPと指定してあった場合は、
-          EUC-JPからCP932に変換後、クライアントに出力されます。
-          省略した場合はNONE
+          �����Х����ɤ�ʸ�������ɤ���ꤷ�ޤ��������ˡ�EUC-JP�Ȼ��ꤷ�Ƥ��ä����ϡ�
+          EUC-JP����CP932���Ѵ��塢���饤����Ȥ˽��Ϥ���ޤ���
+          ��ά��������NONE
           <ol>
-             <li>変換エンジン動作指示命令<br />
-             ChxjConvertRule ==> ディレクティブ<br />
-             "^/chxj.+$"  ==> Perl互換のURIパターン<br />
-             EngineOn     ==> 変換エンジンを動作させる指示。動作させたく無い場合は"EngineOff"<br />
-             EUC-JP       ==> サーバ側の文字コード。（NONEを指定した場合は文字コード変換しない)<br />
+             <li>�Ѵ����󥸥�ư��ؼ�̿��<br />
+             ChxjConvertRule ==> �ǥ��쥯�ƥ���<br />
+             "^/chxj.+$"  ==> Perl�ߴ���URI�ѥ�����<br />
+             EngineOn     ==> �Ѵ����󥸥��ư�����ؼ���ư�������̵������"EngineOff"<br />
+             EUC-JP       ==> ������¦��ʸ�������ɡ���NONE����ꤷ������ʸ���������Ѵ����ʤ�)<br />
 <br />
-             EUC-JPからCP932に文字コード変換します。(libiconvに依存します)<br/>
+             EUC-JP����CP932��ʸ���������Ѵ����ޤ���(glibc/iconv�˰�¸���ޤ�)<br/>
              </li>
           </ol>
      
@@ -461,72 +455,72 @@ ChxjConvRule "^/chxj.+$" "EngineOn" "EUC-JP"
 </li>
 </ol>
 </subsection>
-<subsection title="ディレクティブ">
+<subsection title="�ǥ��쥯�ƥ���">
 <ol>
   <li>ChxjLoadDeviceData<br />
-  デバイス定義ファイルを指定します。
+  �ǥХ�������ե��������ꤷ�ޤ���
   <program title="ex)">
     ChxjLoadDeviceData /etc/apache2/device.xml
   </program> 
   </li>
   <li>ChxjLoadEmojiData<br />
-  絵文字変換定義ファイルを指定します。
+  ��ʸ���Ѵ�����ե��������ꤷ�ޤ���
   <program title="ex)">
     ChxjLoadEmojiData   /etc/apache2/chxj/emoji.xml
   </program> 
   </li>
   <li>ChxjImageEngine<br />
-  画像変換エンジンを有効にします。
-  パラメータとしてOnとOffを指定できます。
-  DefaultはOffです。
+  �����Ѵ����󥸥��ͭ���ˤ��ޤ���
+  �ѥ�᡼���Ȥ���On��Off�����Ǥ��ޤ���
+  Default��Off�Ǥ���
   <program title="ex)">
     ChxjImageEngine On
   </program>
   </li>
   <li>ChxjImageCacheDir<br />
-  イメージの一時ファイル保存場所を指定します。
+  ���᡼���ΰ���ե�������¸������ꤷ�ޤ���
   <program title="ex)">
     ChxjImageCacheDir   /tmp
   </program> 
   </li>
   <li>ChxjImageCacheLimit<br />
-  イメージの一時ファイル保存許容量を指定します。
-  下記は1MByteの例。
+  ���᡼���ΰ���ե�������¸�����̤���ꤷ�ޤ���
+  ������1MByte���㡣
   <program title="ex)">
     ChxjImageCacheLimit   1048576
   </program>
   </li>
   <li>ChxjImageCopyright<br />
-  イメージに著作権情報を付与します。
+  ���᡼��������������Ϳ���ޤ���
   <program title="ex)">
     ChxjImageCopyright   "chosakuken jyoho"
   </program> 
   </li>
   <li>ChxjConvertRule<br />
-  HTML変換エンジンの適用ルールを記述します。
-  本ディレクティブを使用し、変換エンジンのOn|Offを指定します。
-  DefaultはOFFです。
-  また、ルールは記述された順番に評価し、マッチするものがあれば、その時点で対象ルールを適用します。
-  パラメータは3つ必要です。下記にパラメータを記します。
-  <table title="パラメータ">
+  HTML�Ѵ����󥸥��Ŭ�ѥ롼��򵭽Ҥ��ޤ���
+  �ܥǥ��쥯�ƥ��֤���Ѥ����Ѵ����󥸥��On|Off����ꤷ�ޤ���
+  Default��OFF�Ǥ���
+  �ޤ����롼��ϵ��Ҥ��줿���֤�ɾ�������ޥå������Τ�����С����λ������оݥ롼���Ŭ�Ѥ��ޤ���
+  �ѥ�᡼����3��ɬ�פǤ��������˥ѥ�᡼���򵭤��ޤ���
+  <table title="�ѥ�᡼��">
   <tbody>
     <tr>
-      <td>第1パラメータ</td><td>URIを評価するPerl互換の正規表現を指定します</td>
+      <td>��1�ѥ�᡼��</td><td>URI��ɾ������Perl�ߴ�������ɽ������ꤷ�ޤ�</td>
     </tr>
 
     <tr>
-      <td>第2パラメータ</td><td>HTML変換エンジンのOn|Offを指定します。Onの場合は"EngineOn"。Offの場合は"EngineOff"を指定します。"EngineOn|EngineOff"の他に"CookieOn|CookieOff"を指定することもできます。複数指定する場合は","で区切って指定します。</td>
+      <td>��2�ѥ�᡼��</td><td>HTML�Ѵ����󥸥��On|Off����ꤷ�ޤ���On�ξ���"EngineOn"��Off�ξ���"EngineOff"����ꤷ�ޤ���"EngineOn|EngineOff"��¾��"CookieOn|CookieOff"����ꤹ�뤳�Ȥ�Ǥ��ޤ���ʣ�����ꤹ�����","�Ƕ��ڤäƻ��ꤷ�ޤ���</td>
     </tr>
     <tr>
-      <td>第3パラメータ</td><td>文字コードを指定します。ここで指定した文字コードから"CP932"に変換します。指定できる文字コードはiconv -lコマンドによって確認することができます。変換しなくて良い場合はNONEを指定してください。</td>
+      <td>��3�ѥ�᡼��</td><td>ʸ�������ɤ���ꤷ�ޤ��������ǻ��ꤷ��ʸ�������ɤ���"CP932"���Ѵ����ޤ�������Ǥ���ʸ�������ɤ�iconv -l���ޥ�ɤˤ�äƳ�ǧ���뤳�Ȥ��Ǥ��ޤ����Ѵ����ʤ����ɤ�����NONE����ꤷ�Ƥ���������</td>
     </tr>
     <tr>
-      <td>第4パラメータ</td><td>省略した場合は、携帯ページからの変換を意味します。PC用ページからの変換を行う場合は"PC"を第四パラメータに指定します。</td>
+      <td>��4�ѥ�᡼��</td><td>��ά�������ϡ����ӥڡ���������Ѵ����̣���ޤ���PC�ѥڡ���������Ѵ���Ԥ�����"PC"����ͥѥ�᡼���˻��ꤷ�ޤ���</td>
     </tr>
     <tr>
-      <td>第5パラメータ</td><td>サーバサイドアプリケーションに渡すUser-Agentを指定します。
-          例えば、wordpress等のようにCHTMLを出力するアプリケーションがある場合は、"DoCoMo/1.0/N501i"等適当なUser-Agentを指定することによって、アプリケーションにCHTMLを出力するように指示することができます。
-          ここで指定したUser-AgentはHTML出力時には評価されません。</td>
+      <td>��5�ѥ�᡼��</td><td>�����Х����ɥ��ץꥱ���������Ϥ�User-Agent����ꤷ�ޤ���
+          �㤨�С�wordpress���Τ褦��CHTML����Ϥ��륢�ץꥱ������󤬤�����ϡ�"DoCoMo/1.0/N501i"��Ŭ����User-Agent����ꤹ�뤳�Ȥˤ�äơ����ץꥱ��������CHTML����Ϥ���褦�˻ؼ����뤳�Ȥ��Ǥ��ޤ���
+          �����ǻ��ꤷ��User-Agent��HTML���ϻ��ˤ�ɾ������ޤ���</td>
     </tr>
   </tbody>
   </table>
@@ -535,118 +529,117 @@ ChxjConvRule "^/chxj.+$" "EngineOn" "EUC-JP"
   </program> 
   </li>
   <li>ChxjCookieDir<br />
-    クッキー保存先をdbmにする場合（デフォルト）指定します。
-    クッキーの内容を保存するディレクトリを指定します。
-    指定しない場合は/tmpに保存されます。
+    ���å�����¸���dbm�ˤ�����ʥǥե���ȡ˻��ꤷ�ޤ���
+    ���å��������Ƥ���¸����ǥ��쥯�ȥ����ꤷ�ޤ���
+    ���ꤷ�ʤ�����/tmp����¸����ޤ���
   <program title="ex)">
     &lt;Location /&gt;
       ChxjCookieDir   /tmp
     &lt;/Location&gt;
   </program> 
-  詳細は「Cookieシミュレート機能」の項を参照ください。
+  �ܺ٤ϡ�Cookie���ߥ�졼�ȵ�ǽ�פι�򻲾Ȥ���������
   </li>
   <li>ChxjCookieTimeout<br />
-    クッキーを使用する場合に指定します。クッキーの保持期間を秒単位で指定します。
-    指定しない場合は、1800秒でクッキーデータを破棄します。
+    ���å�������Ѥ�����˻��ꤷ�ޤ������å������ݻ����֤���ñ�̤ǻ��ꤷ�ޤ���
+    ���ꤷ�ʤ����ϡ�1800�äǥ��å����ǡ������˴����ޤ���
   <program title="ex)">
     &lt;Location /&gt;
       ChxjCookieTimeout 10
     &lt;/Location&gt;
   </program> 
-  詳細は「Cookieシミュレート機能」の項を参照ください。
+  �ܺ٤ϡ�Cookie���ߥ�졼�ȵ�ǽ�פι�򻲾Ȥ���������
   </li>
-
   <li>ChxjCookieStoreType<br />
-    クッキー保存先を指定します。指定できるものは以下のとおり。
-    <table title="保存先">
+    ���å�����¸�����ꤷ�ޤ�������Ǥ����Τϰʲ��ΤȤ��ꡣ
+    <table title="��¸��">
       <thead>
         <tr>
-          <td>値</td><td>意味</td><td>指定例</td>
+          <td>��</td><td>��̣</td><td>������</td>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>"dbm"</td><td>dbmを選択します。</td><td>ChxjCookieStoreType "dbm"</td>
+          <td>"dbm"</td><td>dbm�����򤷤ޤ���</td><td>ChxjCookieStoreType "dbm"</td>
         </tr>
         <tr>
-          <td>"mysql"</td><td>mysqlを選択します。<font color="#ff0000">有効にするにはconfigure時にMYSQL COOKIE機能を有効にする必要があります</font></td><td>ChxjCookieStoreType "mysql"</td>
+          <td>"mysql"</td><td>mysql�����򤷤ޤ���<font color="#ff0000">ͭ���ˤ���ˤ�configure����MYSQL COOKIE��ǽ��ͭ���ˤ���ɬ�פ�����ޤ�</font></td><td>ChxjCookieStoreType "mysql"</td>
         </tr>
         <tr>
-          <td>"memcache"</td><td>memcacheを選択します。<font color="#FF0000">有効にするにはconfigure時にMEMCACHE COOKIE機能を有効にする必要があります</font></td><td>ChxjCookieStoreType "memcache"</td>
+          <td>"memcache"</td><td>memcache�����򤷤ޤ���<font color="#FF0000">ͭ���ˤ���ˤ�configure����MEMCACHE COOKIE��ǽ��ͭ���ˤ���ɬ�פ�����ޤ�</font></td><td>ChxjCookieStoreType "memcache"</td>
         </tr>
       </tbody>
     </table>
   </li>
   <li>ChxjCookieMysqlHost<br />
-      MySQLサーバの動作するホストを指定します。
-      <program title="ChxjCookieMysqlHostの例">
+      MySQL�����Ф�ư���ۥ��Ȥ���ꤷ�ޤ���
+      <program title="ChxjCookieMysqlHost����">
          ChxjCookieMysqlHost "localhost"
       </program>
-      詳細は「Cookieシミュレート機能」の項を参照ください。
+      �ܺ٤ϡ�Cookie���ߥ�졼�ȵ�ǽ�פι�򻲾Ȥ���������
   </li>
   <li>ChxjCookieMysqlPort<br />
-      MySQLサーバのポート番号を指定します。
-      <program title="ChxjCookieMysqlPortの例">
+      MySQL�����ФΥݡ����ֹ����ꤷ�ޤ���
+      <program title="ChxjCookieMysqlPort����">
          ChxjCookieMysqlPort 3306
       </program>
-      詳細は「Cookieシミュレート機能」の項を参照ください。
+      �ܺ٤ϡ�Cookie���ߥ�졼�ȵ�ǽ�פι�򻲾Ȥ���������
   </li>
   <li>ChxjCookieMysqlDatabase<br />
-      MySQLサーバのデータベース名を指定します。
-      <program title="ChxjCookieMysqlDatabaseの例">
+      MySQL�����ФΥǡ����١���̾����ꤷ�ޤ���
+      <program title="ChxjCookieMysqlDatabase����">
          ChxjCookieMysqlDatabase "test_db"
       </program>
-      詳細は「Cookieシミュレート機能」の項を参照ください。
+      �ܺ٤ϡ�Cookie���ߥ�졼�ȵ�ǽ�פι�򻲾Ȥ���������
   </li>
   <li>ChxjCookieMysqlUsername<br />
-      MySQLサーバに接続する際に使用するユーザ名を指定します。
-      <program title="ChxjCookieMysqlUsernameの例">
+      MySQL�����Ф���³����ݤ˻��Ѥ���桼��̾����ꤷ�ޤ���
+      <program title="ChxjCookieMysqlUsername����">
          ChxjCookieMysqlUsername "roottest"
       </program>
-      詳細は「Cookieシミュレート機能」の項を参照ください。
+      �ܺ٤ϡ�Cookie���ߥ�졼�ȵ�ǽ�פι�򻲾Ȥ���������
   </li>
   <li>ChxjCookieMysqlPassword<br />
-      MySQLサーバに接続する際に使用するパスワードを指定します。
-      <program title="ChxjCookieMysqlPasswordの例">
+      MySQL�����Ф���³����ݤ˻��Ѥ���ѥ���ɤ���ꤷ�ޤ���
+      <program title="ChxjCookieMysqlPassword����">
          ChxjCookieMysqlPassword "pwtest"
       </program>
-      詳細は「Cookieシミュレート機能」の項を参照ください。
+      �ܺ٤ϡ�Cookie���ߥ�졼�ȵ�ǽ�פι�򻲾Ȥ���������
   </li>
   <li>ChxjCookieMysqlSocketPath<br />
-      MySQLのソケットパスを指定します。
-      <program title="ChxjCookieMysqlSocketPathの例">
+      MySQL�Υ����åȥѥ�����ꤷ�ޤ���
+      <program title="ChxjCookieMysqlSocketPath����">
          ChxjCookieMysqlSocketPath  "/tmp/mysql.sock"
       </program>
-      詳細は「Cookieシミュレート機能」の項を参照ください。
+      �ܺ٤ϡ�Cookie���ߥ�졼�ȵ�ǽ�פι�򻲾Ȥ���������
   </li>
   <li>ChxjCookieMysqlCharset<br />
-      MySQLのエンコードを指定します。
-      <program title="ChxjCookieMysqlCharsetの例">
+      MySQL�Υ��󥳡��ɤ���ꤷ�ޤ���
+      <program title="ChxjCookieMysqlCharset����">
          ChxjCookieMysqlCharset  "utf8"
       </program>
-      詳細は「Cookieシミュレート機能」の項を参照ください。
+      �ܺ٤ϡ�Cookie���ߥ�졼�ȵ�ǽ�פι�򻲾Ȥ���������
   </li>
   <li>ChxjCookieMysqlTablename<br />
-      MySQLのクッキーを保存するテーブル名を指定します。
-      <program title="ChxjCookieMysqlTablenameの例">
+      MySQL�Υ��å�������¸����ơ��֥�̾����ꤷ�ޤ���
+      <program title="ChxjCookieMysqlTablename����">
          ChxjCookieMysqlTablename  "chxj_cookie"
       </program>
-      上記のように"chxj_cookie"と指定すると、実際に作成されるテーブルは、chxj_cookieとchxj_cookie_expireテーブルの2つになります。
-      詳細は「Cookieシミュレート機能」の項を参照ください。
+      �嵭�Τ褦��"chxj_cookie"�Ȼ��ꤹ��ȡ��ºݤ˺��������ơ��֥�ϡ�chxj_cookie��chxj_cookie_expire�ơ��֥��2�Ĥˤʤ�ޤ���
+      �ܺ٤ϡ�Cookie���ߥ�졼�ȵ�ǽ�פι�򻲾Ȥ���������
   </li>
   <li>ChxjCookieMemcacheHost<br />
-      memcachedの動作するホストを指定します。
-      <program title="ChxjCookieMemcacheHostの例">
+      memcached��ư���ۥ��Ȥ���ꤷ�ޤ���
+      <program title="ChxjCookieMemcacheHost����">
          ChxjCookieMemcacheHost "localhost"
       </program>
-      詳細は「Cookieシミュレート機能」の項を参照ください。
+      �ܺ٤ϡ�Cookie���ߥ�졼�ȵ�ǽ�פι�򻲾Ȥ���������
   </li>
   <li>ChxjCookieMemcachePort<br />
-      memcachedのポート番号を指定します。
-      <program title="ChxjCookieMemcachePortの例">
+      memcached�Υݡ����ֹ����ꤷ�ޤ���
+      <program title="ChxjCookieMemcachePort����">
          ChxjCookieMemcachePort 11211
       </program>
-      詳細は「Cookieシミュレート機能」の項を参照ください。
+      �ܺ٤ϡ�Cookie���ߥ�졼�ȵ�ǽ�פι�򻲾Ȥ���������
   </li>
   <li>ChxjCookieStoreType<br />
     ???å?????¸???????ꤷ?ޤ????????Ǥ??????Τϰʲ??ΤȤ??ꡣ
@@ -743,318 +736,291 @@ ChxjConvRule "^/chxj.+$" "EngineOn" "EUC-JP"
 </ol>
 </subsection>
 </section>
-<section title="対応するCHTMLタグ">
-変換可能なCHTMLタグは以下のとおりです。
+<section title="�б�����CHTML����">
+�Ѵ���ǽ�ʣãȣԣ̥ͣ����ϰʲ��ΤȤ���Ǥ���
 
-<table title="対応タグ一覧">
+<table title="�б���������">
   <thead>
     <tr>
-      <td>タグ</td>
-      <td>属性</td>
+      <td>����</td>
+      <td>°��</td>
       <td>CHTML</td>
       <td>HDML</td>
       <td>XHTML</td>
       <td>JHTML</td>
-      <td>備考</td>
+      <td>����</td>
     </tr>
   </thead>
   <tbody>
     <tr>
        <td>&lt;HTML&gt;</td>
        <td align="center"> </td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="left">属性を指定した場合は無視します</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="left">°������ꤷ������̵�뤷�ޤ�</td>
     </tr>
     <tr>
        <td>&lt;META&gt;</td>
        <td align="center">http-equiv</td>
-       <td align="center">△</td>
-       <td align="center">×</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="left">CHTML1.0、HDMLでは無視します</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="left">CHTML1.0��HDML�Ǥ�̵�뤷�ޤ�</td>
     </tr>
     <tr>
        <td> </td>
        <td align="center">content</td>
-       <td align="center">△</td>
-       <td align="center">×</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="left">CHTML1.0、HDMLでは無視します</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="left">CHTML1.0��HDML�Ǥ�̵�뤷�ޤ�</td>
     </tr>
     <tr>
        <td>&lt;HEAD&gt;</td>
        <td align="center"> </td>
-       <td align="center">○</td>
-       <td align="center">△</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="left">属性を指定した場合は無視します</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="left">°������ꤷ������̵�뤷�ޤ�</td>
     </tr>
     <tr>
        <td>&lt;TITLE&gt;</td>
        <td align="center"> </td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="left">属性を指定した場合は無視します</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="left">°������ꤷ������̵�뤷�ޤ�</td>
     </tr>
     <tr>
        <td>&lt;BASE&gt;</td>
        <td align="center"> </td>
-       <td align="center">○</td>
-       <td align="center">×</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="left">HDMLでは無視します</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="left">HDML�Ǥ�̵�뤷�ޤ�</td>
     </tr>
     <tr>
        <td>&lt;BODY&gt;</td>
        <td align="center">bgcolor</td>
-       <td align="center">△</td>
-       <td align="center">×</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="left">HDML、CHTML1.0、CHTML2.0では無視します</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="left">HDML��CHTML1.0��CHTML2.0�Ǥ�̵�뤷�ޤ�</td>
     </tr>
     <tr>
        <td> </td>
        <td align="center">text</td>
-       <td align="center">△</td>
-       <td align="center">×</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="left">HDML、CHTML1.0、CHTML2.0では無視します</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="left">HDML��CHTML1.0��CHTML2.0�Ǥ�̵�뤷�ޤ�</td>
     </tr>
     <tr>
        <td> </td>
        <td align="center">link</td>
-       <td align="center">△</td>
-       <td align="center">×</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="left">HDML、CHTML1.0、CHTML2.0では無視します</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="left">HDML��CHTML1.0��CHTML2.0�Ǥ�̵�뤷�ޤ�</td>
     </tr>
     <tr>
        <td>&lt;A&gt;</td>
        <td align="center">href</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
        <td align="left"> </td>
     </tr>
     <tr>
        <td> </td>
        <td align="center">accesskey</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
        <td align="left"> </td>
     </tr>
     <tr>
        <td>&lt;BR&gt;</td>
        <td align="center"> </td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
        <td align="left"> </td>
     </tr>
     <tr>
        <td>&lt;FONT&gt;</td>
        <td align="center">color</td>
-       <td align="center">△</td>
-       <td align="center">×</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="left">HDML,CHTML1.0では無視します</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="left">HDML,CHTML1.0�Ǥ�̵�뤷�ޤ�</td>
     </tr>
     <tr>
        <td>&lt;FORM&gt;</td>
        <td align="center">action</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
        <td align="left"> </td>
     </tr>
     <tr>
        <td> </td>
        <td align="center">method</td>
-       <td align="center">○</td>
-       <td align="center">×</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="left">HDMLでは無視します</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="left">HDML�Ǥ�̵�뤷�ޤ�</td>
     </tr>
     <tr>
        <td>&lt;INPUT&gt;</td>
        <td align="center">name</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="left"><note>SoftBankの予約クエリ名は内部で変換するので指定しても良い</note></td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="left"> </td>
     </tr>
     <tr>
        <td> </td>
        <td align="center">type</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="left">text,password,hidden,radio,checkbox,submitに対応</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="left">text,password,hidden,radio,checkbox,submit���б�</td>
     </tr>
     <tr>
        <td> </td>
        <td align="center">value</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
        <td align="left"></td>
     </tr>
     <tr>
        <td> </td>
        <td align="center">istyle</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
        <td align="left"> </td>
     </tr>
     <tr>
        <td>&lt;SELECT&gt;</td>
        <td align="center">name</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="left">  </td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="left"> </td>
     </tr>
     <tr>
        <td> </td>
        <td align="center">size</td>
-       <td align="center">○</td>
-       <td align="center">×</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="left">HDMLでは無視します</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="left">HDML�Ǥ�̵�뤷�ޤ�</td>
     </tr>
     <tr>
        <td>&lt;OPTION&gt;</td>
        <td align="center">value</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="left"><note>必ず閉じてください。そのうち対応します。</note></td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="left"><note>ɬ���Ĥ��Ƥ������������Τ����б����ޤ���</note></td>
     </tr>
     <tr>
        <td> </td>
        <td align="center">checked</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
        <td align="left"> </td>
     </tr>
     <tr>
        <td>&lt;DIV&gt;</td>
        <td align="center">align</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
        <td align="left"> </td>
     </tr>
     <tr>
        <td>&lt;HR&gt;</td>
        <td align="center"> </td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
        <td align="left"> </td>
     </tr>
     <tr>
        <td>&lt;CENTER&gt;</td>
        <td align="center"> </td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
        <td align="left"> </td>
     </tr>
     <tr>
        <td>&lt;IMG&gt;</td>
        <td align="center">src</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
        <td align="left"> </td>
-    </tr>
-    <tr>
-       <td>&lt;DL&gt;</td>
-       <td align="center">　</td>
-       <td align="center">○</td>
-       <td align="center">×</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="left"> </td>
-    </tr>
-    <tr>
-       <td>&lt;DT&gt;</td>
-       <td align="center">　</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="left"><note>必ず閉じてください。そのうち対応します。</note></td>
-    </tr>
-    <tr>
-       <td>&lt;DD&gt;</td>
-       <td align="center">　</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="left"><note>必ず閉じてください。そのうち対応します。</note></td>
     </tr>
     <tr>
        <td>&lt;CHXJ:IF&gt;</td>
        <td align="center">lang</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="center">○</td>
-       <td align="left">lang="chtml" lang="xhtml" lang="hdml" lang="jhtml"が指定できます</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="center">��</td>
+       <td align="left">lang="chtml" lang="xhtml" lang="hdml" lang="jhtml"������Ǥ��ޤ�</td>
     </tr>
   </tbody>
 
-  上記以外のタグは全て無視されます。
+  �嵭�ʳ��Υ���������̵�뤵��ޤ���
 
 </table>
 
 </section>
-<section title="独自拡張タグ">
+<section title="�ȼ���ĥ����">
 <ol>
   <li>&lt;CHXJ:IF&gt;<br />
     
-       &lt;CHXJ:IF&gt;タグと&lt;/CHXJ:IF&gt;タグではさまれたタグやテキストは、
-       変換せずに<b>そのまま</b><note>変換しませんので注意が必要です</note>出力します。必須の属性としてlangがあります。lang属性を指定することによって、
-       例えば、<b>「HDML機の場合のみ出力させる」</b>といったことを可能にします。<br />
+       &lt;CHXJ:IF&gt;������&lt;/CHXJ:IF&gt;�����ǤϤ��ޤ줿������ƥ����Ȥϡ�
+       �Ѵ�������<b>���Τޤ�</b><note>�Ѵ����ޤ���Τ����դ�ɬ�פǤ�</note>���Ϥ��ޤ���ɬ�ܤ�°���Ȥ���lang������ޤ���lang°������ꤹ�뤳�Ȥˤ�äơ�
+       �㤨�С�<b>��HDML���ξ��Τ߽��Ϥ������</b>�Ȥ��ä����Ȥ��ǽ�ˤ��ޤ���<br />
        <br />
        ex) 
-       <program title="HTML文書中にHDML機の場合のみ有効にしたいタグ、または文書がある場合">
+       <program title="HTMLʸ�����HDML���ξ��Τ�ͭ���ˤ������������ޤ���ʸ�񤬤�����">
        &lt;CHXJ:IF lang="HDML" &gt;
          &lt;NODISPLAY&gt;
            &lt;ACTION TYPE=ACCEPT TASK=GOSUB DEST='device:data/dnld?url=abc&amp;name=abc.jpg&amp;size=100&amp;disposition=devjaww&amp;title=test'&gt;
@@ -1063,17 +1029,17 @@ ChxjConvRule "^/chxj.+$" "EngineOn" "EUC-JP"
        </program><br />
 
        ex) 
-       <program title="i-Modeのみ出力したい文書がある場合">
+       <program title="i-Mode�Τ߽��Ϥ�����ʸ�񤬤�����">
        &lt;CHXJ:IF lang="chtml" &gt;
-         シークレットコードがどーのこーの。
+         ��������åȥ����ɤ��ɡ��Τ����Ρ�
        &lt;/CHXJ:IF&gt;
        </program><br />
 
-       また、lang属性は、複数指定することも可能です。<br /> 
+       �ޤ���lang°���ϡ�ʣ�����ꤹ�뤳�Ȥ��ǽ�Ǥ���<br /> 
 
-       <program title="HDML機,J-PHONE機は以下を出力します">
+       <program title="HDML��,J-PHONE���ϰʲ�����Ϥ��ޤ�">
        &lt;CHXJ:IF lang="chtml" lang="jhtml"&gt;
-       あなたの携帯は、HDML機かJ-HTML機です。
+       ���ʤ��η��Ӥϡ�HDML����J-HTML���Ǥ���
        &lt;/CHXJ:IF&gt;
        </program><br />
     
@@ -1081,606 +1047,142 @@ ChxjConvRule "^/chxj.+$" "EngineOn" "EUC-JP"
 </ol>
 </section>
 
-
-
-
-<section title="文字コードについて">
-サーバサイドコンテンツについてはShift_JIS(CP932)、EUCJP-WIN(Win外字対応のEUCJP)、UTF-8のどれかで記述することが可能です。
-Shift_JISで記述した場合は絵文字についてもShift_JISで、EUCJP-WINで記述した場合は絵文字についてもEUCJP-WINで、UTF-8で記述した場合は絵文字についてもUTF-8で
-記述します。<note>詳細は「絵文字について」の項を参照のこと</note>
-クライアントサイド（端末側）に送信する文字コードはShift_JISまたはUTF-8を指定することが可能です。<note>指定方法については「デバイス定義」の項を参照のこと。</note>
-mod_chxjによりサーバサイドコンテンツの文字コードから端末に送信する文字コードへと絵文字も含めて変換します。
-POST/GET中のデータについても端末側文字コードからサーバサイドコンテンツの文字コードへと絵文字も含めて変換します。
-
-
-<ol>
-  <li>注意: Shift_JISでサーバサイドコンテンツを記述した場合はPOST/GETデータもShift_JISでサーバサイドコンテンツに渡されます。</li>
-  <li>注意: EUCJP-WINでサーバサイドコンテンツを記述した場合はPOST/GETデータもEUCJP-WINでサーバサイドコンテンツに渡されます。</li>
-  <li>注意: UTF-8でサーバサイドコンテンツを記述した場合はPOST/GETデータもUTF-8でサーバサイドコンテンツに渡されます。</li>
-  <li>注意: 本変換機能は1.0.0以降から</li>
-</ol>
-
-サーバサイドコンテンツの文字コードはChxjConvRuleディレクティブで指定した文字コードになります。
-ChxjConvRuleにて矛盾が生じない限り、文字コードの混在も可能です。
-
-</section>
-
-
-
-
-<!-- ================================================================================ -->
-<!--                                                                                  -->
-<!-- 絵文字について                                                                   -->
-<!--                                                                                  -->
-<!-- ================================================================================ -->
-<section title="絵文字について">
-  i-Mode用の絵文字を書いておけば、アクセスしたキャリアによって、mod_chxjが対応の絵文字に自動変換します。
-  ソースに2byteのバイナリコードを直接書いても、10進参照文字列(&amp;#XXX;の形)、16進参照文字列(&amp;#xXXX;の形)で書いても、変換対象になります。
-  10進参照文字列、16進参照文字列はmod_chxjにより自動で2バイトコードに変換されます。
-  <note>コンテンツをSJISで記述する場合には絵文字もSJISで、コンテンツをEUCJP-WINで記述する場合には絵文字もEUCJP-WINで、UTF-8で記述する場合には絵文字もUTF-8で記述する必要があります</note>
-
-<subsection title="絵文字変換定義">
-絵文字の変換に関する動作を変えたい場合（例えば「ハートがあったら、ＡＵの場合はスペードに」とか、「変換定義がおかしい」といった場合）は、
-emoji.xmlファイルを直接編集することによって定義を変更することが可能です。emoji.xmlはXMLファイルとなっていますので、人によってはvi等で簡単に定義を
-変更することができるかもしれません。
-
-emoji.xmlは3つのパートに分かれています。1つ目はDoCoMo→DoCoMo/au/SoftBankの変換定義部。
-2つ目はau→DoCoMoの変換定義部。3つ目はSoftBank→DoCoMoの変換定義部。
-1つ目はサーバサイドコンテンから各キャリアの絵文字に変換する際に使用されます。
-2つ目と3つ目はPOST/GETデータの変換に使用されます。
-
+<section title="��ʸ���ˤĤ���">
+  i-Mode�Ѥγ�ʸ����񤤤Ƥ����С�����������������ꥢ�ˤ�äơ�mod_chxj���б��γ�ʸ���˼�ư�Ѵ����ޤ���
+  ��������2byte�ΥХ��ʥꥳ���ɤ�ľ�ܽ񤤤Ƥ⡢�����ʻ���ʸ����<note>�����ʻ���ʸ����ˤ��б����Ƥ��ޤ���</note>��&amp;#XXX;�η��ˤǽ񤤤Ƥ⡢�ɤ���Ǥ��Ѵ��оݤˤʤ�ޤ���
+  �����ʻ���ʸ����ǽ񤤤����ϡ�mod_chxj�ˤ�ꡢ��ư�ǣ��Х��ȥ����ɤ��Ѵ����ޤ���
+<subsection title="��ʸ���Ѵ����">
+��ʸ�����Ѵ��˴ؤ���ư����Ѥ����������㤨�С֥ϡ��Ȥ����ä��顢���դξ��ϥ��ڡ��ɤˡפȤ������Ѵ���������������פȤ��ä����ˤϡ�
+emoji.xml�ե������ľ���Խ����뤳�Ȥˤ�ä�������ѹ����뤳�Ȥ���ǽ�Ǥ���emoji.xml��XML�ե�����ȤʤäƤ��ޤ��Τǡ�vi���Ǵ�ñ�������
+�ѹ����뤳�Ȥ��Ǥ��ޤ�<note>��̩�ˤ�XML�ˤʤäƤ��ʤ��Τǡ����ܸ�ε��ҤϣӣʣɣӤǤ��ꤤ���ޤ���</note>��
 
 <br />
-<!-- ================================================================================ -->
-<!-- DoCoMo->DoCoMo/au/SoftBank変換定義                                               -->
-<!-- ================================================================================ -->
-<subsection title="DoCoMo→DoCoMo/au/SoftBank変換定義">
-以下に、emoji.xmlファイルの1つ目のパート、DoCoMo→DoCoMo/au/SoftBankの変換定義部を記します。
+�ʲ��ˡ�emoji.xml�ե�����ΰ����򵭤��ޤ���
 <program title="emoji.xml">
+&lt;?xml encoding="Shift_JIS" &gt;
+
 &lt;emoji&gt;
   &lt;set&gt;
     &lt;no&gt;1&lt;/no&gt;
     &lt;imode&gt;
-      &lt;sjis-hex&gt;f89f&lt;/sjis-hex&gt;
-      &lt;sjis-dec&gt;63647&lt;/sjis-dec&gt;
-      &lt;eucjp-hex&gt;8ffca1&lt;/eucjp-hex&gt;
-      &lt;eucjp-dec&gt;9436321&lt;/eucjp-dec&gt;
-      &lt;unicode-hex&gt;e63e&lt;/unicode-hex&gt;
-      &lt;unicode-dec&gt;58942&lt;/unicode-dec&gt;
-      &lt;utf8-hex&gt;ee98be&lt;/utf8-hex&gt;
-      &lt;utf8-dec&gt;15636670&lt;/utf-dec&gt;
-      &lt;description&gt;晴れ&lt;/description&gt;
+      &lt;hex1&gt;f8&lt;/hex1&gt;
+      &lt;hex2&gt;9f&lt;/hex2&gt;
+      &lt;string&gt;&amp;#63647;&lt;/string&gt;
+      &lt;description&gt;&lt;/description&gt;
     &lt;/imode&gt;
     &lt;ezweb&gt;
-      &lt;A&gt;
-        &lt;no&gt;44&lt;/no&gt;
-        &lt;sjis-hex&gt;f660&lt;/sjis-hex&gt;
-        &lt;sjis-dec&gt;63072&lt;/sjis-dec&gt;
-        &lt;unicode-hex&gt;e488&lt;/unicode-hex&gt;
-        &lt;unicode-dec&gt;58504&lt;/unicode-dec&gt;
-        &lt;utf8-hex&gt;eebda0&lt;/utf8-hex&gt;
-        &lt;utf8-dec&gt;15646112&lt;/utf-dec&gt;
-      &lt;/A&gt;
-      &lt;B&gt;
-        &lt;no&gt;44&lt;/no&gt;
-        &lt;sjis-hex&gt;f660&lt;/sjis-hex&gt;
-        &lt;sjis-dec&gt;63072&lt;/sjis-dec&gt;
-        &lt;unicode-hex&gt;e488&lt;/unicode-hex&gt;
-        &lt;unicode-dec&gt;58504&lt;/unicode-dec&gt;
-        &lt;utf8-hex&gt;eebda0&lt;/utf8-hex&gt;
-        &lt;utf8-dec&gt;15646112&lt;/utf-dec&gt;
-      &lt;/B&gt;
-      &lt;C&gt;
-        &lt;no&gt;44&lt;/no&gt;
-        &lt;sjis-hex&gt;f660&lt;/sjis-hex&gt;
-        &lt;sjis-dec&gt;63072&lt;/sjis-dec&gt;
-        &lt;unicode-hex&gt;e488&lt;/unicode-hex&gt;
-        &lt;unicode-dec&gt;58504&lt;/unicode-dec&gt;
-        &lt;utf8-hex&gt;eebda0&lt;/utf8-hex&gt;
-        &lt;utf8-dec&gt;15646112&lt;/utf-dec&gt;
-      &lt;/C&gt;
-      &lt;D&gt;
-        &lt;no&gt;44&lt;/no&gt;
-        &lt;sjis-hex&gt;f660&lt;/sjis-hex&gt;
-        &lt;sjis-dec&gt;63072&lt;/sjis-dec&gt;
-        &lt;unicode-hex&gt;e488&lt;/unicode-hex&gt;
-        &lt;unicode-dec&gt;58504&lt;/unicode-dec&gt;
-        &lt;utf8-hex&gt;eebda0&lt;/utf8-hex&gt;
-        &lt;utf8-dec&gt;15646112&lt;/utf-dec&gt;
-      &lt;/D&gt;
+      &lt;A&gt;44&lt;/A&gt;
+      &lt;B&gt;44&lt;/B&gt;
+      &lt;C&gt;44&lt;/C&gt;
+      &lt;D&gt;44&lt;/D&gt;
     &lt;/ezweb&gt;
-    &lt;softbank&gt;
-      &lt;no&gt;74&lt;/no&gt;
-      &lt;sjis-hex&gt;476a&lt;/sjis-hex&gt;
-      &lt;sjis-dec&gt;116572776975&lt;/sjis-dec&gt;
-      &lt;unicode-hex&gt;e04a&lt;/unicode-hex&gt;
-      &lt;unicode-dec&gt;57418&lt;/unicode-dec&gt;
-      &lt;utf8-hex&gt;ee818a&lt;/utf8-hex&gt;
-      &lt;utf8-dec&gt;15630730&lt;/utf-dec&gt;
-    &lt;/softbank&gt;
+    &lt;jphone&gt;
+      &lt;string&gt;$Gj&lt;/string&gt;
+    &lt;/jphone&gt;
   &lt;/set&gt;
-     ・
-     ・
-     ・
-     ・
-&lt;/emoji&gt;
 </program>
 
-絵文字の定義は、&lt;emoji&gt;タグから&lt;/emoji&gt;タグまでの間にあります。その中の要素を説明します。
-1つの絵文字につき、1つのセット（&lt;set&gt;タグから&lt;/set&gt;タグまで）とし、キャリア毎の絵文字を定義しています。
-合計176セットあります。
+��ʸ��������ϡ�&lt;emoji&gt;��������&lt;/emoji&gt;�����ޤǤδ֤ˤ���ޤ�������������Ǥ��������ޤ���
+���Ĥγ�ʸ���ˤĤ������ĤΥ��åȡ�&lt;set&gt;��������&lt;/set&gt;�����ޤǡˤȤ�������ꥢ��γ�ʸ����������Ƥ��ޤ���
 
 <ol>
-  <li>&lt;imode&gt;要素<br />
-まず、元となるi-Mode用の絵文字は、&lt;imode&gt;タグにはさまれた間に定義されています。
-&lt;imode&gt;要素は子にsjis、eucjp、utf8、unicodeのそれぞれ16進と10進表記データを保持します。
-sjis-hexはShift_JISコードの16進表記、sjis-decはShift_JISコードの10進表記、eucjp-hexはEUCJP-WINの16進表記、eucjp-decはEUCJP-WINの10進表記、utf8-hexはUTF-8の16進表記、utf8-decはUTF-8の10進表記、unicode-hexはUNICODEの16進表記、unicode-decはUNICODEの10進表記となります。
-サーバサイドコンテンツがSJISで記述されている場合はimode要素のsjis-hex、sjis-decを参照します。
-同様にがEUCJP-WINで記述されている場合はimode要素のeucjp-hex、eucjp-decを参照します。
-UTF-8で記述されている場合はimode要素のutf8-hex、utf8-decを参照します。<br />
-サーバサイドコンテンツのマッチするコードがimode要素の中に存在すれば、変換は同一set内のデータを使用して行われます。
+  <li>&lt;imode&gt;����<br />
+�ޤ������Ȥʤ�i-Mode�Ѥγ�ʸ���ϡ�&lt;imode&gt;�����ˤϤ��ޤ줿�֤��������Ƥ��ޤ���
+&lt;imode&gt;���Ǥϡ����Х��ȥ���������(&lt;hex1&gt;&lt;hex2&gt;)�ȡ�
+�����ʻ���ʸ��������(&lt;string&gt;)���ݻ����Ƥ��ơ����Σ��Ĥ����Ǥ��Ѵ������ͤȤ��ƻ��Ѥ��ޤ���
+�����������Ƥ���ü������i-Mode���Ǥ��ä����ǡ����ģãȣԣͣ���ˣ����ʻ���ʸ���󤬳�ʸ���Ȥ��ƽ񤫤�Ƥ�����ˤϡ�
+&lt;hex1&gt;&lt;hex2&gt;���Ǥ��������Ƥ����ͤ��ִ����ޤ���
   </li>
 <br />
 <br />
-  <li>&lt;ezweb&gt;要素<br />
-アクセスしてきた端末が、AU機であった場合、&lt;ezweb&gt;要素に定義されている値に変換します。
-&lt;ezweb&gt;要素は、&lt;A&gt;〜&lt;D&gt;要素を持っていて、それぞれAUの絵文字タイプＡ〜Ｄに対応していますので、
-もし、Ｄタイプの絵文字端末であったなら、&lt;D&gt;要素の&lt;no&gt;に定義されている値に変換します。ここで定義されている値は、
-HDML機の場合は、<b>&lt;IMG ICON="XX"&gt;</b>の"XX"の部分に当てはめられて、置換されます。
-XHTML機の場合は、<b>&lt;IMG LOCALSRC="XX"&gt;</b>の"XX"の部分に当てはめられて、置換されます。
-同要素にはsjis-hex、sjis-dec、unicode-hex、unicode-dec、utf8-hex、utf8-decが有りますが、今のところ使用していません。
+  <li>&lt;ezweb&gt;����<br />
+�����������Ƥ���ü������AU���Ǥ��ä���硢&lt;ezweb&gt;���Ǥ��������Ƥ����ͤ��Ѵ����ޤ���
+&lt;ezweb&gt;���Ǥϡ�&lt;A&gt;��&lt;D&gt;���Ǥ���äƤ��ơ����줾��AU�γ�ʸ�������ף����Ĥ��б����Ƥ��ޤ��Τǡ�
+�⤷���ĥ����פγ�ʸ��ü���Ǥ��ä��ʤ顢&lt;D&gt;���Ǥ��������Ƥ����ͤ��Ѵ����ޤ����������������Ƥ����ͤϡ�
+HDML���ξ��ϡ�<b>&lt;IMG ICON="XX"&gt;</b>��"XX"����ʬ�����ƤϤ���ơ��ִ�����ޤ���
+XHTML���ξ��ϡ�<b>&lt;IMG LOCALSRC="XX"&gt;</b>��"XX"����ʬ�����ƤϤ���ơ��ִ�����ޤ���
   </li>
 <br />
 <br />
-  <li>&lt;softbank&gt;要素<br />
-アクセスしてきた端末が、SoftBank/Vodafone/J-Phone端末であった場合、&lt;softbank&gt;要素に定義されている値に変換します。
-&lt;softbank&gt;要素は、上記要素と同様にsjis-hex、sjis-dec、unicode-hex、unicode-dec、utf8-hex、utf8-decを保持しています。
-アクセスしてきた端末にはsjisを返す場合はsjis-hex、sjis-decの値を使用します。utf8を返す場合にはutf8-hex、utf8-decでは無くunicode-hex、unicode-decを返します。
-SoftBank端末の場合は3G端末は基本的にUTF8を返すようにデバイス定義にて定義されています。UTF8で定義された場合でSoftBankの場合はUNICODEの参照文字列を返すように
-なっています。(問題回避のため)
+  <li>&lt;jphone&gt;����<br />
+�����������Ƥ���ü������SoftBank/Vodafone/J-Phoneü���Ǥ��ä���硢&lt;jphone&gt;���Ǥ��������Ƥ����ͤ��Ѵ����ޤ���
+&lt;jphone&gt;���Ǥϡ�&lt;string&gt;���Ǥ��ݻ����Ƥ��ơ��������������Ƥ����ͤ�ľ�ܻ��Ѥ��ޤ���
   </li>
 </ol><br />
-emoji.xmlに定義されていない絵文字で、変換したい絵文字がある場合には、このファイルに新たな定義を足せば、
-変換するようになります。<note>同一コード領域に割り当てる必要があるかもしれません</note>
-</subsection>
-
-
-<!-- ================================================================================ -->
-<!-- au->DoCoMo変換定義                                                               -->
-<!-- ================================================================================ -->
-<subsection title="au→DoCoMo変換定義">
-au->DoCoMo変換の定義は主にau端末からサーバサイドへのPOST/GETデータの変換に使用されます。
-定義はemoji.xmlファイルの&lt;ezweb2imode&gt;タグではさまれたところに定義してあります。
-&lt;set&gt;から&lt;/set&gt;までの間が1絵文字を表現する部分になります。
-<br />
-以下に、emoji.xmlファイルの2つ目のパート、au→DoCoMo変換定義を以下に記します。
-<program title="emoji.xml">
-&lt;ezweb2imode&gt;
-  &lt;set&gt;
-    &lt;no&gt;1&lt;/no&gt;
-    &lt;ezweb&gt;
-      &lt;sjis-hex&gt;F659&lt;/sjis-hex&gt;
-      &lt;utf8-hex&gt;eebd99&lt;/utf8-hex&gt;
-    &lt;/ezweb&gt;
-    &lt;imode&gt;
-      &lt;no&gt;220&lt;/no&gt;
-    &lt;/imode&gt;
-  &lt;/set&gt;
-   ・
-   ・
-   ・
-&lt;/ezweb2imode&gt;
-</program>
-<br />
-<ol>
-  <li>&lt;no&gt;要素<br />
-auで定義されている絵文字番号を保持します。
-  </li>
-<br />
-<br />
-  <li>&lt;ezweb&gt;要素<br />
-&lt;no&gt;で定義された絵文字番号の実際にPOST/GETされてくる値を保持します。sjis-hexは端末がShift_JISの場合のPOST/GETデータ、utf8-hexは端末がUTF-8の場合のPOST/GETデータになっています。
-POST/GETされたデータはこの要素に記述されたコードとマッチングされ、マッチした場合絵文字を特定します。
-  </li>
-<br />
-<br />
-  <li>&lt;imode&gt;要素<br />
-&lt;ezweb&gt;要素でマッチした場合に参照されるEzWeb絵文字に対応するDoCoMo絵文字番号を保持します。mod_chxjによりDoCoMo絵文字に変換する場合に使用されます。
-  </li>
-<br />
-<br />
-</ol>
-</subsection>
-
-
-<!-- ================================================================================ -->
-<!-- SoftBank->DoCoMo変換定義                                                         -->
-<!-- ================================================================================ -->
-<subsection title="SoftBank→DoCoMo変換定義">
-SoftBank-&gt;DoCoMo変換の定義は主にSoftBank端末からサーバサイドへのPOST/GETデータの変換に使用されます。
-定義はemoji.xmlファイルの&lt;softbank2imode&gt;タグではさまれたところに定義してあります。
-&lt;set&gt;から&lt;/set&gt;までの間が1絵文字を表現する部分になります。
-<br />
-以下に、emoji.xmlファイルの3つ目のパート、SoftBank→DoCoMo変換定義を以下に記します。
-<program title="emoji.xml">
-&lt;softbank2imode&gt;
-  &lt;set&gt;
-    &lt;no&gt;
-      1
-    &lt;/no&gt;
-    &lt;softbank&gt;
-      &lt;webcode&gt;
-        4721
-      &lt;/webcode&gt;
-      &lt;sjis-hex&gt;
-        f941
-      &lt;/sjis-hex&gt;
-      &lt;utf8-hex&gt;
-        ee8081
-      &lt;/utf8-hex&gt;
-    &lt;/softbank&gt;
-    &lt;imode&gt;
-      &lt;no&gt;
-        140
-      &lt;/no&gt;
-    &lt;/imode&gt;
-  &lt;/set&gt;
-   ・
-   ・
-   ・
-   ・
-&lt;/softbank2imode&gt;
-</program>
-<br />
-<ol>
-  <li>&lt;no&gt;要素<br />
-SoftBankで定義されている絵文字番号を保持します。
-  </li>
-<br />
-<br />
-  <li>&lt;softbank&gt;要素<br />
-&lt;no&gt;で定義された絵文字番号の実際にPOST/GETされてくる値を保持します。webcodeは端末がShift_JISの場合でウェブコードを送信してくる場合のPOST/GETデータ、sjis-hexは端末がShift_JISの場合のPOST/GETデータ、utf8-hexは端末がUTF-8の場合のPOST/GETデータになっています。
-POST/GETされたデータはこの要素に記述されたコードとマッチングされ、マッチした場合絵文字を特定します。
-  </li>
-<br />
-<br />
-  <li>&lt;imode&gt;要素<br />
-&lt;ezweb&gt;要素でマッチした場合に参照されるSoftBank絵文字に対応するDoCoMo絵文字番号を保持します。mod_chxjによりDoCoMo絵文字に変換する場合に使用されます。
-  </li>
-<br />
-<br />
-</ol>
-</subsection>
-
-
+emoji.xml���������Ƥ��ʤ���ʸ���ǡ��Ѵ���������ʸ����������ˤϡ����Υե�����˿����������­���С�
+�Ѵ�����褦�ˤʤ�ޤ���
 </subsection>
 </section>
 
-<br />
-<br />
 
-
-
-
-
-
-<!-- ================================================================================ -->
-<!--                                                                                  -->
-<!-- デバイス定義                                                                     -->
-<!--                                                                                  -->
-<!-- ================================================================================ -->
-<section title="デバイス定義 device_data.xml">
-mod_chxjの動作を決定付ける重要な定義です。変換対象の端末は全て、device_data.xmlファイルに定義される必要があります。
-定義されていない端末は、mod_chxjとしては、認識することができません。認識できない場合には、変換せずにそのまま出力します。ただし、Perl互換の正規表現によって定義できるため、正規表現の書き方によっては全ての機種に対応させることも可能です。
-
-<br />
-<subsection title="デバイス定義の要素">
-まず以下にデバイス定義を記します。
-<program title="device_data.xml">
-&lt;devices&gt;
-  &lt;user_agent pattern="^KDDI-([^     ]+) UP.Browser/[^   ]+ .+"&gt;
-    &lt;device&gt;
-      &lt;device_id&gt;HI21&lt;/device_id&gt;
-      &lt;device_name&gt;C3001H&lt;/device_name&gt;
-      &lt;html_spec_type&gt;XHTML_MOBILE_1_0&lt;/html_spec_type&gt;
-      &lt;width&gt;120&lt;/width&gt;
-      &lt;heigh&gt;130&lt;/heigh&gt;
-      &lt;gif&gt;true&lt;/gif&gt;
-      &lt;jpeg&gt;true&lt;/jpeg&gt;
-      &lt;png&gt;true&lt;/png&gt;
-      &lt;bmp2&gt;false&lt;/bmp2&gt;
-      &lt;bmp4&gt;false&lt;/bmp4&gt;
-      &lt;color&gt;4096&lt;/color&gt;
-      &lt;emoji_type&gt;C&lt;/emoji_type&gt;
-      &lt;wp_width&gt;120&lt;/wp_width&gt;
-      &lt;wp_heigh&gt;116&lt;/wp_heigh&gt;
-      &lt;cache&gt;9740&lt;/cache&gt;
-      &lt;dpi_width&gt;72&lt;/dpi_width&gt;
-      &lt;dpi_heigh&gt;72&lt;/dpi_heigh&gt;
-      &lt;charset&gt;SJIS&lt;/charset&gt;
-    &lt;/device&gt;
-    ・
-    ・
-    ・
-  &lt;/user_agent&gt;
-  &lt;user_agent&gt;
-    ・
-    ・
-    ・
-  &lt;/user_agent&gt;
-    ・
-    ・
-    ・
-&lt;/devices&gt;
-</program>
-デバイス定義は&lt;devices&gt;タグに囲まれた中に記述します。
-devicesタグはuser_agentタグを子に持ちます。user_agentはpattern属性を保持し、端末のUser-Agentヘッダとマッチングされます。user_agentタグのpattern属性とマッチした場合には、そのuser_agentタグの子ノードであるdevice要素を1つづつ見に行きます。user_agentタグのpattern属性は正規表現となっていて、$1がデバイス識別IDになるように定義されていますので、$1とdevice_idタグの要素をマッチングします。マッチしたdeviceを該当端末とし、mod_chxjは該当端末用の変換処理を行います。
-
-<br />
-以下に各タグについての説明を記します。
-<ol>
-  <li><b>devicesタグ</b><br />
-     全ての要素は一組のdevicesタグに囲まれます。この中に存在する要素がデバイス定義になります。
-    <br />
-    <br />
-  </li>
-  <li><b>user_agentタグ</b><br />
-    User-Agentのパターンとそのパターンにマッチするdeviceを子ノードに持ちます。<br />
-    pattern属性にはUser-AgentとマッチさせるPerl互換の正規表現を指定します<br />
-    仮に"KDDI-CA31 UP.Browser/・・・"というUser-Agentを保持する端末からのアクセスがあった場合は、
-    &lt;user_agent pattern="^KDDI-([^     ]+) UP.Browser/[^   ]+ .+"&gt;にマッチしますが、&lt;user_agent pattern="^UP.Browser/[^\-]+-([^     ]+) .+" &gt;
-    にはマッチしません。
-    よってmod_chxjは&lt;user_agent pattern="^KDDI-([^     ]+) UP.Browser/[^   ]+ .+"&gt;の子ノードを処理対象と判断します。<br />
-    pattern属性の要素である正規表現には必ず$1で後方参照できるようグルーピングが必要です。$1で後方参照する値は以下に記すdevice_idタグの値と比較されます。
-    device_idとの比較の結果、等しい値であればそのdevice_idを保持するdeviceタグが該当端末として選択されます。<br />
-    user_agentタグレベルではマッチしているもののdevice_idが期待する値を持っていない場合は、user_agentタグ中の最後のdeviceが選択されます。
-    <br />
-    <br />
-  </li>
-  <li><b>deviceタグ</b><br />
-    一台の端末を表現します。<br />
-    子ノードとして以下を保持します。<br />
-    <ol>
-      <li>device_id</li>
-      <li>device_name</li>
-      <li>html_spec_type</li>
-      <li>width</li>
-      <li>height</li>
-      <li>gif</li>
-      <li>jpeg</li>
-      <li>png</li>
-      <li>bmp2</li>
-      <li>bmp4</li>
-      <li>color</li>
-      <li>emoji_type</li>
-      <li>wp_width</li>
-      <li>wp_height</li>
-      <li>cache</li>
-      <li>dpi_width</li>
-      <li>dpi_height</li>
-      <li>charset</li>
-    </ol>
-    <br /><br />
-  </li>
-  <li><b>device_idタグ</b><br />
-    user_agentタグのpattern属性により生成された$1により後方参照される値と比較される値を保持します。通常DoCoMoであればUser-Agentの「機種名」部、
-    auであればUser-Agentの「デバイスID」部、 SoftBankであれば、User-Agentの「機種名」部を記述します。
-    <program title="例">
-      &lt;!-- DoCoMo F905iの場合 --&gt;
-      &lt;device_id&gt;F905i&lt;/device_id&gt;
-
-      &lt;!-- au W54Tの場合 --&gt;
-      &lt;device_id&gt;TS3E&lt;/device_id&gt;
-
-      &lt;!-- SoftBank 822SHの場合 --&gt;
-      &lt;device_id&gt;822SH&lt;/device_id&gt;
-    </program>
-  </li>
-  <li><b>device_nameタグ</b><br />
-    mod_chxjでは本値をデバッグログ出力時にのみ使用します、人が見てわかりやすい名前を入力しておきます。
-    device_idと混同しないように注意します。
-    <program title="au W21CAの例">
-      &lt;device_name&gt;W21CA&lt;/device_name&gt;
-    </program>
-  </li>
-  <li><b>html_spec_typeタグ</b><br />
-    端末のサポートするHTMLタイプを指定します。本タグの値によりHTML変換結果が変わります。
-    指定できる値は以下のとおりです。大文字、小文字は区別しません。
-    <table title="対応HTMLタイプ一覧">
-      <thead>
-        <tr>
-          <td>値</td>
-          <td>意味</td>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>CHTML_1_0</td>
-          <td>CHTML1.0対応機種の場合記述します。HTML変換結果はCHTML1.0になります。</td>
-        </tr>
-        <tr>
-          <td>CHTML_2_0</td>
-          <td>CHTML2.0対応機種の場合記述します。HTML変換結果はCHTML2.0になります。</td>
-        </tr>
-        <tr>
-          <td>CHTML_3_0</td>
-          <td>CHTML3.0対応機種の場合記述します。HTML変換結果はCHTML3.0になります。</td>
-        </tr>
-        <tr>
-          <td>CHTML_4_0</td>
-          <td>CHTML4.0対応機種の場合記述します。HTML変換結果はCHTML4.0になります。(0.9.0時点ではCHTML3.0と同じ)</td>
-        </tr>
-        <tr>
-          <td>CHTML_5_0</td>
-          <td>CHTML5.0対応機種の場合記述します。HTML変換結果はCHTML5.0になります。(0.9.0時点ではCHTML3.0と同じ)</td>
-        </tr>
-        <tr>
-          <td>CHTML_6_0</td>
-          <td>CHTML6.0対応機種の場合記述します。HTML変換結果はCHTML6.0になります。(0.9.0時点ではCHTML3.0と同じ)</td>
-        </tr>
-        <tr>
-          <td>CHTML_7_0</td>
-          <td>CHTML7.0対応機種の場合記述します。HTML変換結果はCHTML7.0になります。(0.9.0時点ではCHTML3.0と同じ)</td>
-        </tr>
-        <tr>
-          <td>XHTML_MOBILE_1_0</td>
-          <td>auのXHTML対応機種の場合に記述します。HTML変換結果はXHTMLになります。</td>
-        </tr>
-        <tr>
-          <td>HDML</td>
-          <td>auのHDML対応機種の場合に記述します。HTML変換結果はHDMLになります。</td>
-        </tr>
-        <tr>
-          <td>JHTML</td>
-          <td>SoftBankの端末の場合に記述します。HTML変換結果はSoftBank用HTMLになります。</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
-  <li><b>widthタグ</b><br />
-    端末の横幅を指定します。
-  </li>
-  <li><b>heightタグ</b><br />
-    端末の縦幅を指定します。
-  </li>
-  <li><b>gifタグ</b><br />
-    端末がgif画像を表示することができる場合(サポートしている場合)はtrueを指定します。表示できない(サポートしていない）場合はfalseを指定します。<note>大文字、小文字の区別なし</note>
-  </li>
-  <li><b>jpegタグ</b><br />
-    端末がjpeg画像を表示することができる場合(サポートしている場合)はtrueを指定します。表示できない(サポートしていない）場合はfalseを指定します。<note>大文字、小文字の区別なし</note>
-  </li>
-  <li><b>pngタグ</b><br />
-    端末がpng画像を表示することができる場合(サポートしている場合)はtrueを指定します。表示できない(サポートしていない）場合はfalseを指定します。<note>大文字、小文字の区別なし</note>
-  </li>
-  <li><b>bmp2タグ</b><br />
-    端末がbmp2画像を表示することができる場合(サポートしている場合)はtrueを指定します。表示できない(サポートしていない）場合はfalseを指定します。<note>大文字、小文字の区別なし</note>
-    通常はfalse。
-  </li>
-  <li><b>bmp4タグ</b><br />
-    端末がbmp4画像を表示することができる場合(サポートしている場合)はtrueを指定します。表示できない(サポートしていない）場合はfalseを指定します。<note>大文字、小文字の区別なし</note>
-    通常はfalse。
-  </li>
-  <li><b>colorタグ</b><br />
-    端末の表示可能色数。
-  </li>
-  <li><b>emoji_typeタグ</b><br />
-    auの場合に指定します。au以外の場合は指定しても意味はありません。<br />
-    設定できる値は以下のとおり。
-    <table title="emoji_typeに設定できる値">
-      <thead>
-        <tr>
-          <td>値</td>
-          <td>意味</td>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>A</td>
-          <td>図柄タイプAをサポートしている場合に指定します。</td>
-        </tr>
-        <tr>
-          <td>B</td>
-          <td>図柄タイプBをサポートしている場合に指定します。</td>
-        </tr>
-        <tr>
-          <td>C</td>
-          <td>図柄タイプCをサポートしている場合に指定します。</td>
-        </tr>
-        <tr>
-          <td>D</td>
-          <td>図柄タイプDをサポートしている場合に指定します。</td>
-        </tr>
-      </tbody>
-    </table>
-    <note>大文字、小文字の区別なし</note>
-  </li>
-  <li><b>wp_widthタグ</b><br />
-    壁紙の横幅を指定します。Mode=WPで画像生成する場合、この値が使用されます。
-  </li>
-  <li><b>wp_heightタグ</b><br />
-    壁紙の縦幅を指定します。Mode=WPで画像生成する場合、この値が使用されます。
-  </li>
-  <li><b>cacheタグ</b><br />
-    ブラウザのキャッシュサイズを指定します。
-  </li>
-  <li><b>dpi_widthタグ</b><br />
-    端末の解像度。
-  </li>
-  <li><b>dpi_heightタグ</b><br />
-    端末の解像度。
-  </li>
-  <li><b>charsetタグ(0.9.0にて追加)</b><br />
-    端末に送信する文字コードを指定します。指定できる値はSJISかUTF-8のみ。
-  </li>
-</ol>
-<br />
-</subsection>
-<br />
+<section title="�ǥХ������ device_data.xml">
+mod_chxj��ư�������դ�����פ�����Ǥ����Ѵ��оݤ�ü�������ơ�device_data.xml�ե��������������ɬ�פ�����ޤ���
+�������Ƥ��ʤ�ü���ϡ�mod_chxj�Ȥ��Ƥϡ�ǧ�����뤳�Ȥ��Ǥ��ޤ���ǧ���Ǥ��ʤ����ˤϡ��Ѵ������ˤ��Τޤ޽��Ϥ��ޤ�����������Perl�ߴ�������ɽ���ˤ�ä�����Ǥ��뤿�ᡢ����ɽ���ν����ˤ�äƤ����Ƥε�����б������뤳�Ȥ��ǽ�Ǥ���
 </section>
 
 
-<section title="イメージ画像変換機能">
-mod_chxjには、JPEG、GIF、PNG、BMPファイルを置いておくだけで、デバイス定義に従って、それぞれのキャリア対応のフォーマットに変換する機能があります。
-画像のサイズ（縦Ｘ横）も、端末の画面サイズに合わせて変換します。
-画像のサイズ（バイト数）については、デバイス定義中のキャッシュサイズを見て、その値よりも小さくなるように<b>努力</b>しますが、元の画像が
-大きすぎる場合や、複雑な画像の場合には、キャッシュサイズよりも小さくできずに表示できない場合があります。
+<section title="���᡼�������Ѵ���ǽ">
+mod_chxj�ˤϡ�JPEG��GIF��PNG��BMP�ե�������֤��Ƥ��������ǡ��ǥХ�������˽��äơ����줾��Υ���ꥢ�б��Υե����ޥåȤ��Ѵ����뵡ǽ������ޤ���
+�����Υ������ʽģز��ˤ⡢ü���β��̥������˹�碌���Ѵ����ޤ���
+�����Υ������ʥХ��ȿ��ˤˤĤ��Ƥϡ��ǥХ��������Υ���å��奵�����򸫤ơ������ͤ��⾮�����ʤ�褦��<b>����</b>���ޤ��������β�����
+�礭��������䡢ʣ���ʲ����ξ��ˤϡ�����å��奵�������⾮�����Ǥ�����ɽ���Ǥ��ʤ���礬����ޤ���
 <br />
-それぞれのタグで指定する場合には、ファイル名の拡張子（.jpgや.gif等）をはずした形で指定します。<br />
-本機能には３つのモードが存在します。そのモードを以下に記します。
+���줾��Υ����ǻ��ꤹ����ˤϡ��ե�����̾�γ�ĥ�ҡ�.jpg��.gif���ˤ�Ϥ��������ǻ��ꤷ�ޤ���<br />
+�ܵ�ǽ�ˤϣ��ĤΥ⡼�ɤ�¸�ߤ��ޤ������Υ⡼�ɤ�ʲ��˵����ޤ���
 
-<subsection title="サムネイルモード">
-  端末側画面サイズの約３分の１程度のサイズ（縦Ｘ横）に画像を縮小表示します。
-  <program title="サムネイルモード 使用例">
+<subsection title="����ͥ���⡼��">
+  ü��¦���̥���������ʬ�Σ����٤Υ������ʽģز��ˤ˲�����̾�ɽ�����ޤ���
+  <program title="����ͥ���⡼�� ������">
   &lt;IMG SRC="/img/logo?Mode=Thumbnail"&gt;
   </program>
 </subsection>
-<subsection title="壁紙モード">
-  端末側画面のサイズにマッチするサイズに拡大・縮小します。横長の画像の場合には、縦幅を合わせた後に左右をトリミングします。
-  <program title="壁紙モード 使用例">
+<subsection title="�ɻ�⡼��">
+  ü��¦���̤Υ������˥ޥå����륵�����˳��硦�̾����ޤ�����Ĺ�β����ξ��ˤϡ��������碌����˺�����ȥ�ߥ󥰤��ޤ���
+  <program title="�ɻ�⡼�� ������">
   &lt;IMG SRC="/img/logo?Mode=WP"&gt;
   </program>
 </subsection>
-<subsection title="EzGetモード">
-  壁紙ダウンロードを行いたい場合に使用します。EzGETモードは、壁紙モードで出力される画像サイズと同一サイズの画像が使用されます。
-  <program title="EzGetモード 使用例">
+<subsection title="EzGet�⡼��">
+  �ɻ����������ɤ�Ԥ��������˻��Ѥ��ޤ���EzGET�⡼�ɤϡ��ɻ�⡼�ɤǽ��Ϥ���������������Ʊ�쥵�����β��������Ѥ���ޤ���
+  <program title="EzGet�⡼�� ������">
   &lt;A HREF="/img/logo?Mode=EzGet"&gt;
   </program>
 </subsection>
-<subsection title="その他の機能">
-  モードの他に、画像サイズ（縦Ｘ横）を直接指定することも可能です。
-<b>w</b>パラメータ、<b>h</b>パラメータを使用して指定します。
+<subsection title="����¾�ε�ǽ">
+  �⡼�ɤ�¾�ˡ������������ʽģز��ˤ�ľ�ܻ��ꤹ�뤳�Ȥ��ǽ�Ǥ���
+<b>w</b>�ѥ�᡼����<b>h</b>�ѥ�᡼������Ѥ��ƻ��ꤷ�ޤ���
   <ol>
-  <li>wパラメータ<br />
-  横幅を指定します。
+  <li>w�ѥ�᡼��<br />
+  ��������ꤷ�ޤ���
   </li>
-  <li>hパラメータ<br />
-  縦幅を指定します。
+  <li>h�ѥ�᡼��<br />
+  ��������ꤷ�ޤ���
   </li>
-  <program title="w/hパラメータ 使用例">
+  <program title="w/h�ѥ�᡼�� ������">
   &lt;IMG SRC="/img/logo?w=100&amp;h=200"&gt;
   </program>
-  <li>User-Agentパラメータ（uaパラメータ）<br />
-  User-Agentを指定します。指定した場合は、リクエストヘッダ中のUser-Agentを本パラメータの値で上書きします。
-  このパラメータに"IGN"を指定した場合は、User-Agentを無視します。Thumbnailモード、壁紙モードと併用時は、
-  640x480を元に画像サイズを算出します。
+  <li>User-Agent�ѥ�᡼����ua�ѥ�᡼����<br />
+  User-Agent����ꤷ�ޤ������ꤷ�����ϡ��ꥯ�����ȥإå����User-Agent���ܥѥ�᡼�����ͤǾ�񤭤��ޤ���
+  ���Υѥ�᡼����"IGN"����ꤷ�����ϡ�User-Agent��̵�뤷�ޤ���Thumbnail�⡼�ɡ��ɻ�⡼�ɤ�ʻ�ѻ��ϡ�
+  640x480�򸵤˲����������򻻽Ф��ޤ���
   </li>
   </ol>
 </subsection>
-上記全てのモード、パラメータはＧＥＴリクエストとしてのみ使用できます。
+�嵭���ƤΥ⡼�ɡ��ѥ�᡼���ϣǣţԥꥯ�����ȤȤ��ƤΤ߻��ѤǤ��ޤ���
 </section>
 
-<section title="ＱＲコード出力機能">
-<subsection title="ＱＲコード出力ハンドラの登録">
-ＱＲコード出力機能を使用するには、ＱＲコードハンドラを登録します。
-httpd.confに以下の記述を追加します。
+<section title="�ѣҥ����ɽ��ϵ�ǽ">
+<subsection title="�ѣҥ����ɽ��ϥϥ�ɥ����Ͽ">
+�ѣҥ����ɽ��ϵ�ǽ����Ѥ���ˤϡ��ѣҥ����ɥϥ�ɥ����Ͽ���ޤ���
+httpd.conf�˰ʲ��ε��Ҥ��ɲä��ޤ���
 <program title="httpd.conf">
   AddHandler chxj-qrcode .qrc
 </program>
-なお、ハンドラを登録しないでも、出力フィルターを経由させることで、ＱＲコードを出力させることも可能です。（※ＱＲコードの動的出力を参照）
+�ʤ����ϥ�ɥ����Ͽ���ʤ��Ǥ⡢���ϥե��륿�����ͳ�����뤳�Ȥǡ��ѣҥ����ɤ���Ϥ����뤳�Ȥ��ǽ�Ǥ����ʢ��ѣҥ����ɤ�ưŪ���Ϥ򻲾ȡ�
 </subsection>
-<subsection title="ＱＲコードソースファイルの設置">
-ハンドラを登録したら、その登録した拡張子を持つファイルを用意します。
-<program title="例：a.qrc">
+<subsection title="�ѣҥ����ɥ������ե����������">
+�ϥ�ɥ����Ͽ�����顢������Ͽ������ĥ�Ҥ���ĥե�������Ѱդ��ޤ���
+<program title="�㡧a.qrc">
   &lt;?xml version=1.0 ?&gt;
   
   &lt;qrcode&gt;
@@ -1688,37 +1190,37 @@ httpd.confに以下の記述を追加します。
     &lt;level&gt;H&lt;/level&gt;
     &lt;mode&gt;8bit&lt;/mode&gt;
     &lt;size&gt;1&lt;/size&gt;
-    &lt;data&gt;テストデータです&lt;/data&gt;
+    &lt;data&gt;�ƥ��ȥǡ����Ǥ�&lt;/data&gt;
   &lt;/qrcode&gt;
 </program>
-.qrcファイルは、qrcode要素、version要素、level要素、mode要素、size要素、data要素から成り立ちます。
+.qrc�ե�����ϡ�qrcode���ǡ�version���ǡ�level���ǡ�mode���ǡ�size���ǡ�data���Ǥ�������Ω���ޤ���
 <ol>
-<li>versionタグ
-  versionタグは出力するＱＲコードの生成に利用するバージョンを指定します。
-  使用できるバージョンは、１〜４０までの４０種類です。
+<li>version����
+  version�����Ͻ��Ϥ���ѣҥ����ɤ����������Ѥ���С���������ꤷ�ޤ���
+  ���ѤǤ���С������ϡ����������ޤǤΣ�������Ǥ���
 </li>
-<li>levelタグ
-  levelタグは出力するＱＲコードの生成に利用する誤り検出レベルを指定します。
-　使用できるレベルは、L、Ｑ、Ｍ、Ｈの４つです。
+<li>level����
+  level�����Ͻ��Ϥ���ѣҥ����ɤ����������Ѥ�����긡�Х�٥����ꤷ�ޤ���
+�����ѤǤ����٥�ϡ�L���ѡ��͡��ȤΣ��ĤǤ���
 </li>
-<li>modeタグ
-  modeタグは出力するＱＲコードの生成に利用するモードを指定します。
-  使用できるモードは、NUM（数字モード）ALPHA（英数字モード）8BIT（８ビットバイトモード）KANJI（漢字モード）です。
+<li>mode����
+  mode�����Ͻ��Ϥ���ѣҥ����ɤ����������Ѥ���⡼�ɤ���ꤷ�ޤ���
+  ���ѤǤ���⡼�ɤϡ�NUM�ʿ����⡼�ɡ�ALPHA�ʱѿ����⡼�ɡ�8BIT�ʣ��ӥåȥХ��ȥ⡼�ɡ�KANJI�ʴ����⡼�ɡˤǤ���
 </li>
-<li>sizeタグ
-  sizeタグは１モジュールを何ピクセルであらわすかを指定します。
-  ０を指定した場合は、４を指定した場合と同じ動作をします。
-　使用できるサイズは、０〜２０までです。
+<li>size����
+  size�����ϣ��⥸�塼��򲿥ԥ�����Ǥ���魯������ꤷ�ޤ���
+  ������ꤷ�����ϡ�������ꤷ������Ʊ��ư��򤷤ޤ���
+�����ѤǤ��륵�����ϡ����������ޤǤǤ���
 </li>
-<li>dataタグ
-  dataタグは、ＱＲコードに出力するデータを指定します。改行した場合は、改行文字もＱＲコード内に符号化されます。
+<li>data����
+  data�����ϡ��ѣҥ����ɤ˽��Ϥ���ǡ�������ꤷ�ޤ������Ԥ������ϡ�����ʸ����ѣҥ����������沽����ޤ���
 </li>
 </ol>
 </subsection>
-<subsection title="ＱＲコードの動的出力機能">
-  プログラム等を使用し、動的にＱＲコードを出力したい場合は、上記の.qrcファイルの内容をそのままOutputFilterに通してあげればＯＫです。つまり、ChxjConvertRuleディレクティブで"EngineOn"と指定したURIが指すディレクトリに設置すれば良いということです。mod_chxj内部で、Content-Typeがtext/xmlの場合、QRCode用のファイルであるかどうかを一度読み込んで判断するので、Content-Typeには、text/xmlを設定してください。
+<subsection title="�ѣҥ����ɤ�ưŪ���ϵ�ǽ">
+  �ץ������������Ѥ���ưŪ�ˣѣҥ����ɤ���Ϥ��������ϡ��嵭��.qrc�ե���������Ƥ򤽤Τޤ�OutputFilter���̤��Ƥ�����УϣˤǤ����ĤޤꡢChxjConvertRule�ǥ��쥯�ƥ��֤�"EngineOn"�Ȼ��ꤷ��URI���ؤ��ǥ��쥯�ȥ�����֤�����ɤ��Ȥ������ȤǤ���mod_chxj�����ǡ�Content-Type��text/xml�ξ�硢QRCode�ѤΥե�����Ǥ��뤫�ɤ���������ɤ߹����Ƚ�Ǥ���Τǡ�Content-Type�ˤϡ�text/xml�����ꤷ�Ƥ���������
 
-  <program title="phpでＱＲコードを動的に出力する例">
+  <program title="php�ǣѣҥ����ɤ�ưŪ�˽��Ϥ�����">
     &lt;php
       $version = $_POST["version"];
       $level   = $_POST["level"];
@@ -1737,127 +1239,138 @@ httpd.confに以下の記述を追加します。
       echo "&lt;/qrcode&gt;\n";
     &gt;
   </program>
-  そして、上記のコードを、mod_chxj変換エンジンが処理するはずであるところに設置すれば完了です。
+  �����ơ��嵭�Υ����ɤ�mod_chxj�Ѵ����󥸥󤬽�������Ϥ��Ǥ���Ȥ��������֤���д�λ�Ǥ���
   
 </subsection>
 </section>
-<section title="Cookieシミュレート機能(EXPERIMENTAL)">
-<subsection title="Cookieシミュレート機能(EXPERIMENTAL)">
-  Cookieを受け付けない（無視する）端末のためにCookieをシミュレートします。本機能を有効にするためにはChxjConvertRuleディレクティブを使用する必要があります。ChxjConvertRuleディレクティブの第２パラメータにCookieOnを指定します。
+<section title="Cookie���ߥ�졼�ȵ�ǽ">
+<subsection title="Cookie���ߥ�졼�ȵ�ǽ">
+  Cookie������դ��ʤ���̵�뤹���ü���Τ����Cookie�򥷥ߥ�졼�Ȥ��ޤ����ܵ�ǽ��ͭ���ˤ��뤿��ˤ�ChxjConvertRule�ǥ��쥯�ƥ��֤���Ѥ���ɬ�פ�����ޤ���ChxjConvertRule�ǥ��쥯�ƥ��֤��裲�ѥ�᡼����CookieOn����ꤷ�ޤ���
   
-  <program title="Cookieシミュレート機能を有効にする例">
+  <program title="Cookie���ߥ�졼�ȵ�ǽ��ͭ���ˤ�����">
     ChxjConvertRule "^/chxj.+$" "EngineOn,CookieOn" "NONE"
   </program>
 
 </subsection>
 <subsection title="One-Time ID">
-Cookieシミュレートでは、aタグ、imgタグ、formタグのURL部にOne-Time IDを埋め込むことで実現します。
-そのため、ユーザがブラウザの戻るボタン等で戻った場合はCookieを取得できなくなります。
+Cookie���ߥ�졼�ȤǤϡ�a������img������form������URL����One-Time ID�������ळ�ȤǼ¸����ޤ���
+���Τ��ᡢ�桼�����֥饦�������ܥ���������ä�����Cookie������Ǥ��ʤ��ʤ�ޤ���
+One-Time ID����Ѥ���ɬ�פ�̵����硢�ޤ���One-Time ID����Ѥ������ʤ����ˤϡ�
+CookieLazyMode����Ѥ��뤳�Ȥ����Ʊ��ID��ȯ�Ԥ����뤳�Ȥ��Ǥ��ޤ���
 </subsection>
-<subsection title="Cookieの保存場所">
-Cookieの内容はサーバ側に保存されます。
-保存先にはdbm、memcached、mysqlが選択できます。<br />
-<font color="#ff0000">注意) memcached、mysqlを保存先に選択する場合はconfigure時にそれぞれ指定する必要があります</font><br />
-保存先の指定にはChxjCookieStoreTypeディレクティブを使用します。
-  <program title="ChxjCookieStoreTypeでDBMを指定した例">
+<subsection title="Cookie����¸���">
+Cookie�����Ƥϥ�����¦����¸����ޤ���
+��¸��ˤ�dbm��memcached��mysql������Ǥ��ޤ���<br />
+<font color="#ff0000">����) memcached��mysql����¸������򤹤����configure���ˤ��줾����ꤹ��ɬ�פ�����ޤ�</font><br />
+��¸��λ���ˤ�ChxjCookieStoreType�ǥ��쥯�ƥ��֤���Ѥ��ޤ���
+  <program title="ChxjCookieStoreType��DBM����ꤷ����">
     ChxjCookieStoreType "dbm"
   </program>
-  <program title="ChxjCookieStoreTypeでMySQLを指定した例">
+  <program title="ChxjCookieStoreType��MySQL����ꤷ����">
     ChxjCookieStoreType "mysql"
   </program>
-  <program title="ChxjCookieStoreTypeでmemcacheを指定した例">
+  <program title="ChxjCookieStoreType��memcache����ꤷ����">
     ChxjCookieStoreType "memcache"
   </program>
-  上記ChxjCookieStoreTypeが指定されない場合はdbmが選択されます。
+  �嵭ChxjCookieStoreType�����ꤵ��ʤ�����dbm�����򤵤�ޤ���
 <br />
 
-デフォルトではDBMを使用し、保存ディレクトリはChxjCookieDirディレクティブを使用することで指定することができます。指定しなかった場合は、/tmpに保存されます。
-  <program title="ChxjCookieDirの例">
+dbm����Ѥ�����ϡ�ChxjCookieDir�ǥ��쥯�ƥ��֤���ꤷ����¸�ǥ��쥯�ȥ����ꤷ�ޤ������ꤷ�ʤ��ä�����/tmp����¸����ޤ���
+
+  <program title="ChxjCookieDir����">
     ChxjCookieDir /var/abc
   </program>
 
-DBMの代わりにMySQLやmemcachedを指定することもできます。その際は、ChxjCookieDirは指定する必要はありません。
-MySQLを使用するには、configure時にMySQL COOKIE機能を有効にして、コンパイルする必要があります。<note>Buildの項参照</note>
-memcachedを使用するには、configure時にMEMCACHE COOKIE機能を有効にして、コンパイルする必要があります。<note>Buildの項参照</note>
+DBM�������MySQL��memcached����ꤹ�뤳�Ȥ�Ǥ��ޤ������κݤϡ�ChxjCookieDir�ϻ��ꤹ��ɬ�פϤ���ޤ���
+MySQL����Ѥ���ˤϡ�configure����MySQL COOKIE��ǽ��ͭ���ˤ��ơ�����ѥ��뤹��ɬ�פ�����ޤ���<note>Build�ι໲��</note>
+memcached����Ѥ���ˤϡ�configure����MEMCACHE COOKIE��ǽ��ͭ���ˤ��ơ�����ѥ��뤹��ɬ�פ�����ޤ���<note>Build�ι໲��</note>
 
-
-MySQLを使用する場合にはChxjCookieStoreTypeディレクティブのほかに、以下のディレクティブを指定する必要もあります。
+MySQL����Ѥ�����ˤ�ChxjCookieStoreType�ǥ��쥯�ƥ��֤Τۤ��ˡ��ʲ��Υǥ��쥯�ƥ��֤���ꤹ��ɬ�פ⤢��ޤ���
 <ol>
   <li>ChxjCookieMysqlHost<br />
-      MySQLサーバの動作するホストを指定します。
-      <program title="ChxjCookieMysqlHostの例">
+      MySQL�����Ф�ư���ۥ��Ȥ���ꤷ�ޤ���
+      <program title="ChxjCookieMysqlHost����">
          ChxjCookieMysqlHost "localhost"
       </program>
   </li>
   <li>ChxjCookieMysqlPort<br />
-      MySQLサーバのポート番号を指定します。
-      <program title="ChxjCookieMysqlPortの例">
+      MySQL�����ФΥݡ����ֹ����ꤷ�ޤ���
+      <program title="ChxjCookieMysqlPort����">
          ChxjCookieMysqlPort 3306
       </program>
   </li>
   <li>ChxjCookieMysqlDatabase<br />
-      MySQLサーバのデータベース名を指定します。
-      <program title="ChxjCookieMysqlDatabaseの例">
+      MySQL�����ФΥǡ����١���̾����ꤷ�ޤ���
+      <program title="ChxjCookieMysqlDatabase����">
          ChxjCookieMysqlDatabase "test_db"
       </program>
   </li>
   <li>ChxjCookieMysqlUsername<br />
-      MySQLサーバに接続する際に使用するユーザ名を指定します。
-      <program title="ChxjCookieMysqlUsernameの例">
+      MySQL�����Ф���³����ݤ˻��Ѥ���桼��̾����ꤷ�ޤ���
+      <program title="ChxjCookieMysqlUsername����">
          ChxjCookieMysqlUsername "roottest"
       </program>
   </li>
   <li>ChxjCookieMysqlPassword<br />
-      MySQLサーバに接続する際に使用するパスワードを指定します。
-      <program title="ChxjCookieMysqlPasswordの例">
+      MySQL�����Ф���³����ݤ˻��Ѥ���ѥ���ɤ���ꤷ�ޤ���
+      <program title="ChxjCookieMysqlPassword����">
          ChxjCookieMysqlPassword "pwtest"
       </program>
   </li>
   <li>ChxjCookieMysqlSocketPath<br />
-      MySQLのソケットパスを指定します。
-      <program title="ChxjCookieMysqlSocketPathの例">
+      MySQL�Υ����åȥѥ�����ꤷ�ޤ���
+      <program title="ChxjCookieMysqlSocketPath����">
          ChxjCookieMysqlSocketPath  "/tmp/mysql.sock"
       </program>
   </li>
   <li>ChxjCookieMysqlCharset<br />
-      MySQLのエンコードを指定します。
-      <program title="ChxjCookieMysqlCharsetの例">
+      MySQL�Υ��󥳡��ɤ���ꤷ�ޤ���
+      <program title="ChxjCookieMysqlCharset����">
          ChxjCookieMysqlCharset  "utf8"
       </program>
   </li>
   <li>ChxjCookieMysqlTablename<br />
-      MySQLのクッキーを保存するテーブル名を指定します。
-      <program title="ChxjCookieMysqlTablenameの例">
+      MySQL�Υ��å�������¸����ơ��֥�̾����ꤷ�ޤ���
+      <program title="ChxjCookieMysqlTablename����">
          ChxjCookieMysqlTablename  "chxj_cookie"
       </program>
-      上記のように"chxj_cookie"と指定すると、実際に作成されるテーブルは、chxj_cookieとchxj_cookie_expireテーブルの2つになります。
+      �嵭�Τ褦��"chxj_cookie"�Ȼ��ꤹ��ȡ��ºݤ˺��������ơ��֥�ϡ�chxj_cookie��chxj_cookie_expire�ơ��֥��2�Ĥˤʤ�ޤ���
   </li>
 </ol>
 
-memcachedを使用する場合にはChxjCookieStoreTypeのほかに以下のディレクティブを指定する必要もあります。
+memcached����Ѥ�����ˤ�ChxjCookieStoreType�ǥ��쥯�ƥ��֤�¾�˰ʲ��Υǥ��쥯�ƥ��֤���ꤹ��ɬ�פ⤢��ޤ���
 <ol>
   <li>ChxjCookieMemcacheHost<br />
-      memcachedの動作するホストを指定します。
-      <program title="ChxjCookieMemcacheHostの例">
+      memcached��ư���ۥ��Ȥ���ꤷ�ޤ���
+      <program title="ChxjCookieMemcacheHost����">
          ChxjCookieMemcacheHost "localhost"
       </program>
   </li>
   <li>ChxjCookieMemcachePort<br />
-      memcachedのポート番号を指定します。
-      <program title="ChxjCookieMemcachePortの例">
+      memcached�Υݡ����ֹ����ꤷ�ޤ���
+      <program title="ChxjCookieMemcachePort����">
          ChxjCookieMemcachePort 11211
       </program>
   </li>
 </ol>
 </subsection>
-<subsection title="Cookieの保持期間">
-ChxjCookieTimeoutディレクティブで保持期間を指定することができます。指定しなかった場合は1800秒でサーバに保存されているCookieは削除されます。
-  <program title="ChxjCookieTimeoutの例">
+<subsection title="Cookie���ݻ�����">
+ChxjCookieTimeout�ǥ��쥯�ƥ��֤��ݻ����֤���ꤹ�뤳�Ȥ��Ǥ��ޤ������ꤷ�ʤ��ä�����1800�äǥ����Ф���¸����Ƥ���Cookie�Ϻ������ޤ���
+  <program title="ChxjCookieTimeout����">
     &lt;Location /&gt;
       ChxjCookieTimeout 10
     &lt;/Location&gt;
   </program>
-  上記の例は、10秒でタイムアウト(サーバから削除)するように指定しています。
+  �嵭����ϡ�10�äǥ����ॢ����(�����Ф�����)����褦�˻��ꤷ�Ƥ��ޤ���
+</subsection>
+<subsection title="CookieLazyMode">
+ChxjCookieLazyMode�ǥ��쥯�ƥ��֤�"true"����ꤹ���One-Time ID����Ѥ��ʤ��褦�ˤ��뤳�Ȥ��Ǥ��ޤ���
+Cookie�Ѥ�ID�����Ʊ���ID����꿶���ޤ���
+�ʲ���CookieLazyMode����򵭤��ޤ���
+<program title="ChxjCookieLazyMode����">
+  ChxjCookieLazyMode true
+</program>
+true�ʳ�����ꤹ����̾��One-Time ID�⡼�ɤˤʤ�ޤ���
 </subsection>
 <subsection title="CookieLazyMode">
 ChxjCookieLazyMode?ǥ??쥯?ƥ??֤?"true"?????ꤹ????One-Time ID?????Ѥ??ʤ??褦?ˤ??뤳?Ȥ??Ǥ??ޤ???
@@ -1872,14 +1385,11 @@ true?ʳ??????ꤹ?????̾???One-Time ID?⡼?ɤˤʤ??ޤ???
 
 
 
-<section title="Refererシミュレート機能(EXPERIMENTAL)">
-<subsection title="Refererシミュレート機能(EXPERIMENTAL)">
-DoCoMo端末などのRefererに対応していない機種のためにRefererシミュレート機能を提供します。
-本機能は、Cookieシミュレート機能を有効にすると、自動で有効になります(将来的には変更予定)。
+<section title="Referer���ߥ�졼�ȵ�ǽ(EXPERIMENTAL)">
+<subsection title="Referer���ߥ�졼�ȵ�ǽ(EXPERIMENTAL)">
+DoCoMoü���ʤɤ�Referer���б����Ƥ��ʤ�����Τ����Referer���ߥ�졼�ȵ�ǽ���󶡤��ޤ���
+�ܵ�ǽ�ϡ�Cookie���ߥ�졼�ȵ�ǽ��ͭ���ˤ���ȡ���ư��ͭ���ˤʤ�ޤ�(����Ū�ˤ��ѹ�ͽ��)��
 </subsection>
 </section>
-
-
-
 </body>
 </doc>

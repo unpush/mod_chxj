@@ -33,6 +33,7 @@ struct chtml30_t {
     int                 out_len;
     int                 pre_flag;
     int                 textarea_flag;
+    int                 font_flag;
 
     device_table        *spec;
     mod_chxj_config     *conf;
@@ -43,7 +44,7 @@ struct chtml30_t {
 /*----------------------------------------------------------------------------*/
 /* Prototype                                                                  */
 /*----------------------------------------------------------------------------*/
-extern char* chxj_convert_chtml30(
+extern char *chxj_convert_chtml30(
   request_rec           *r,
   device_table          *spec,
   const char            *src,

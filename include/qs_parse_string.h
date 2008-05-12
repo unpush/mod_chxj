@@ -96,10 +96,10 @@
 typedef struct Attr Attr;
 
 struct Attr {
-  struct Attr *next;
-  struct Node *parent;
-  char        *name;
-  char        *value;
+  struct Attr* next;
+  struct Node* parent;
+  char *name;
+  char *value;
 };
 
 /**
@@ -108,6 +108,7 @@ struct Attr {
 typedef struct Node Node;
 
 struct Node {
+<<<<<<< HEAD:include/qs_parse_string.h
   struct Node    *next;
   struct Node    *parent;
   struct Node    *child;
@@ -119,14 +120,27 @@ struct Node {
   int            size;
   char           *otext;
   int            line;
+=======
+  struct Node   *next;
+  struct Node   *parent;
+  struct Node   *child;
+  struct Node   *child_tail;
+  struct Attr   *attr;
+  struct Attr   *attr_tail;
+  char          *name;
+  char          *value;
+  int           size;
+  char          *otext;
+  int           line;
+>>>>>>>   * updated new trunk.:include/qs_parse_string.h
   int           closed_by_itself;
 };
 
 typedef struct pointer_table_t {
   unsigned int            address;
   unsigned long           size;
-  struct pointer_table_t  *next;
-  struct pointer_table_t  *prev;
+  struct pointer_table_t *next;
+  struct pointer_table_t *prev;
 } Pointer_Table;
 
 
@@ -135,11 +149,9 @@ typedef enum chxj_parse_mode_t {
   PARSE_MODE_NO_PARSE,
 } ParseMode_t;
 
-#include "chxj_buffered_write.h"
-
 typedef struct _doc {
-  Node          *now_parent_node;
-  Node          *root_node;
+  Node *now_parent_node;
+  Node *root_node;
 
   int           do_init_flag;
   unsigned long alloc_size;
@@ -154,7 +166,13 @@ typedef struct _doc {
 
   apr_allocator_t *allocator;
   apr_pool_t      *pool;
+<<<<<<< HEAD:include/qs_parse_string.h
   buf_object      buf;
+=======
+
+  buf_object buf;
+
+>>>>>>>   * updated new trunk.:include/qs_parse_string.h
 #ifndef __NON_MOD_CHXJ__
   request_rec *r;
 #endif
@@ -167,33 +185,52 @@ extern Node *qs_init_root_node(
   Doc *doc);
 
 extern void qs_add_child_node(
-  Doc *doc, 
-  Node *);
+  Doc* doc, 
+  Node*);
 
 extern void qs_free_node(
-  Doc *doc,
-  Node *);
+  Doc* doc,
+  Node*);
 
-extern Node *qs_get_root(
-  Doc *doc);
+extern Node* qs_get_root(
+  Doc* doc) ;
 
-extern Node *qs_parse_string(
-  Doc         *doc, 
-  const char  *ss, 
+extern Node* qs_parse_string(
+  Doc*        doc, 
+  const char* ss, 
   int         len);
 
-extern char *qs_get_node_value(
-  Doc         *doc,
-  Node        *node);
+extern char* qs_get_node_value(
+  Doc*  doc,
+  Node* node);
 
+extern char* qs_get_node_name(
+  Doc*  doc, 
+  Node* node);
+
+<<<<<<< HEAD:include/qs_parse_string.h
 extern char *qs_get_node_name(Doc *doc, Node *node);
 extern int qs_get_node_size(Doc *doc, Node *node) ;
+=======
+extern int qs_get_node_size(Doc* doc, Node* node) ;
+
+>>>>>>>   * updated new trunk.:include/qs_parse_string.h
 extern Node *qs_get_child_node(Doc *doc, Node *node) ;
 extern Node *qs_get_next_node(Doc *doc, Node *node) ;
+<<<<<<< HEAD:include/qs_parse_string.h
 extern void qs_dump_node_to_file(FILE  *fp, Doc   *doc, Node  *node, int   indent);
 Attr *qs_get_attr(Doc *doc, Node *node);
 Attr *qs_get_next_attr(Doc *doc, Attr *attr);
 char *qs_get_attr_name(Doc *doc, Attr *attr);
 char *qs_get_attr_value(Doc *doc, Attr *attr);
+=======
+>>>>>>>   * updated new trunk.:include/qs_parse_string.h
 
+<<<<<<< HEAD:include/qs_parse_string.h
+=======
+Attr* qs_get_attr(Doc* doc, Node* node) ;
+Attr* qs_get_next_attr(Doc* doc, Attr* attr) ;
+char* qs_get_attr_name(Doc* doc, Attr* attr) ;
+char* qs_get_attr_value(Doc* doc, Attr* attr) ;
+>>>>>>>   * updated new trunk.:include/qs_parse_string.h
 #endif

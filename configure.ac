@@ -1,26 +1,41 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
+<<<<<<< HEAD:configure.ac
 AC_INIT([mod_chxj],[1.0.0-1])
+=======
+AC_INIT([mod_chxj],[0.12.0-1])
+>>>>>>>   * updated new trunk.:configure.ac
 AC_PREREQ(2.59)
 AC_CONFIG_SRCDIR([src/mod_chxj.c])
 AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
-AC_CONFIG_HEADERS([include/config.h])
+AM_CONFIG_HEADER(include/config.h)
 
 
 # Checks for programs.
-AC_PROG_CPP
 AC_PROG_CC
 AC_PROG_INSTALL
+<<<<<<< HEAD:configure.ac
+=======
+
+
+>>>>>>>   * updated new trunk.:configure.ac
 AM_PROG_LIBTOOL
+<<<<<<< HEAD:configure.ac
 AC_LANG(C)
+=======
+>>>>>>>   * updated new trunk.:configure.ac
 AC_SUBST(LIBTOOL_DEPS)
 
 
 # Checks for libraries.
 AC_CHECK_LIB([apr-1],  [main])
 
+<<<<<<< HEAD:configure.ac
 AC_ARG_WITH(apache-header, [  --with-apache-header=ARG The directory with the header file of apache2.x is specified. ]) 
+=======
+AC_ARG_WITH(apache-header, [  --with-apache-header=ARG The directory with the header file of apache2.0 is specified. ]) 
+>>>>>>>   * updated new trunk.:configure.ac
 if test "x$with_apache_header" = "xyes"; then
     AC_MSG_ERROR([
 Please specify the --with-apache-header option. And, please specify the place of the header file. 
@@ -93,25 +108,31 @@ dnl
 dnl SAVE COOKIE to memcached Mode
 dnl
 dnl ==================================================
-AC_ARG_ENABLE(memcache-cookie, [  --enable-memcache-cookie Please specify it when you save Cookie in memcached. ])
-AC_ARG_WITH(apr-memcache-header,   [  --with-apr-memcache-header Path of "apr_memcache.h"])
-AC_ARG_WITH(apr-memcache-lib-dir,   [  --with-apr-memcache-lib-dir Path of "libapr_memcache.so"])
+AC_ARG_ENABLE(memcache-cookie,   [  --enable-memcache-cookie Please specify it when you save Cookie in memcached. ])
+AC_ARG_ENABLE(memcached-static,  [  --enable-memcached-static use static link. ])
+AC_ARG_WITH(memcached-header,    [  --with-memcached-header Path of "memcached.h"])
+AC_ARG_WITH(memcached-lib-dir,   [  --with-memcached-lib-dir Path of "libmemcached.so"])
 if test "x$enable_memcache_cookie" = "xyes" ; then
   dnl ======================================
   dnl use MEMCACHE COOKIE
   dnl ======================================
-  if test "x$with_apr_memcache_header" = "x" -o "x$with_apr_memcache_header" = "xyes" ; then
+  if test "x${with_memcached_header}" = "x" -o "x${with_memcached_header}" = "xyes" ; then
     AC_MSG_ERROR([
-Please specify the --with-apr-memcache-header And, please specify the place of the "apr_memcache.h" header file directory. 
+Please specify the --with-memcached-header And, please specify the place of the "memcached.h" header file directory. 
 ])
   fi
-  if test "x$with_apr_memcache_lib_dir" = "x" -o "x$with_apr_memcache_lib_dir" = "xyes" ; then
+  if test "x${with_memcached_lib_dir}" = "x" -o "x${with_memcached_lib_dir}" = "xyes" ; then
     AC_MSG_ERROR([
-Please specify the --with-apr-memcache-lib-dir And, please specify the place of apr-memcache library directory. 
+Please specify the --with-memcached-lib-dir And, please specify the place of libmemcached library directory. 
 ])
   fi
-  MEMCACHE_COOKIE_DEFS="-DUSE_MEMCACHE_COOKIE -I${with_apr_memcache_header}"
-  MEMCACHE_COOKIE_LIBS="-L${with_apr_memcache_lib_dir} -lapr_memcache"
+  if test "x$enable_memcached_static" = "xyes" ; then
+    MEMCACHE_COOKIE_DEFS="-DUSE_MEMCACHE_COOKIE -I${with_memcached_header} "
+    MEMCACHE_COOKIE_LIBS=" ${with_memcached_lib_dir}/libmemcached.a "
+  else
+    MEMCACHE_COOKIE_DEFS="-DUSE_MEMCACHE_COOKIE -I${with_memcached_header} "
+    MEMCACHE_COOKIE_LIBS="-L${with_memcached_lib_dir} -lmemcached "
+  fi
 else
   dnl ======================================
   dnl no use MEMCACHE COOKIE
@@ -196,7 +217,6 @@ if test "x$WAND_CONFIG" = "xno" ; then
     AC_MSG_ERROR([wand-config not found.])
 fi
 
-
 if test "x$with_apr_config" = "x" ; then
   AC_PATH_PROG(APR_CONFIG, apr-config, no, /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
   if test "x$APR_CONFIG" = "xno" ; then
@@ -211,7 +231,6 @@ fi
 if test "x$with_apr_config" != "x" ; then
   APR_CONFIG=$with_apr_config
 fi
-
 if test "x$with_apu_config" = "x" ; then
   AC_PATH_PROG(APU_CONFIG, apu-config, no, /usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin)
   if test "x$APU_CONFIG" = "xno" ; then
@@ -227,6 +246,10 @@ if test "x$with_apu_config" != "x" ; then
   APU_CONFIG=$with_apu_config
 fi
 
+<<<<<<< HEAD:configure.ac
+=======
+
+>>>>>>>   * updated new trunk.:configure.ac
 case $host_os in
   freebsd*)
     CFLAGS="${CFLAGS} -I/usr/local/include "
@@ -236,18 +259,20 @@ esac
 if test "x${with_apache_header}" = "x" ; then
   with_apache_header=`${APXS} -q includedir`
 fi
+<<<<<<< HEAD:configure.ac
 
 
+=======
+>>>>>>>   * updated new trunk.:configure.ac
 
 LIBS="${LIBS} `${WAND_CONFIG} --ldflags` `${WAND_CONFIG} --libs | sed -e s/-ldpstk//` "
 LIBS="${LIBS} `${APR_CONFIG} --ldflags` `${APR_CONFIG} --libs` "
 LIBS="${LIBS} `${APU_CONFIG} --ldflags` `${APU_CONFIG} --libs` "
 LIBS="${LIBS} ${MYSQL_COOKIE_LIBS}"
-LIBS="${LIBS} ${MEMCACHE_COOKIE_LIBS}"
+LIBS="${LIBS} ${MEMCACHE_COOKIE_LIBS} "
 CFLAGS="${CFLAGS} `${WAND_CONFIG} --cppflags` `${WAND_CONFIG} --cflags`"
 CFLAGS="${CFLAGS} `${APR_CONFIG} --includes` `${APR_CONFIG} --cflags` `${APR_CONFIG} --cppflags`"
 CFLAGS="${CFLAGS} `${APU_CONFIG} --includes`"
-CFLAGS="${CFLAGS} -I${with_apache_header}"
 CFLAGS="${CFLAGS} ${MYSQL_COOKIE_DEFS}"
 CFLAGS="${CFLAGS} ${MEMCACHE_COOKIE_DEFS}"
 CPPFLAGS="${CPPFLAGS} `${APR_CONFIG} --includes` -I${with_apache_header}"
@@ -261,6 +286,16 @@ APR_HEADER_DIR="`${APR_CONFIG} --includes | sed -e 's/-I//g' | sed -e 's/ //g'`"
 AC_CHECK_HEADERS([apr_shm.h apr_global_mutex.h])
 AC_CHECK_HEADERS([apr.h])
 AC_CHECK_HEADERS([ap_config.h])
+#AC_CHECK_HEADERS([ap_regex.h],
+#  AC_DEFINE([HAVE_AP_REGEX_H], [], [Define to 1 if you have the <ap_regex.h> header file.]),[],
+#[[
+##ifdef HAVE_APR_H
+##include "apr.h"
+##endif
+##ifdef HAVE_AP_CONFIG_H
+##include "ap_config.h"
+##endif
+#]])
 AC_CHECK_HEADERS([ap_regex.h],use_pcre_flag="no",use_pcre_flag="yes")
 if test "x$use_pcre_flag" = "xyes" ; then
   if test "x$with_pcre_config" = "x" ; then

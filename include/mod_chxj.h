@@ -17,16 +17,10 @@
 #ifndef __MOD_CHXJ_H__
 #define __MOD_CHXJ_H__
 
-#define DEBUG_FD(format, args...) do { \
-  FILE*fp=fopen("/tmp/mod_chxj.log","a");       \
-  fprintf(fp,"%s:%d ",__FILE__,__LINE__);       \
-  fprintf(fp,format, ##args);                   \
-  fprintf(fp,"\n");                             \
-  fclose(fp);                                   \
-} while(0)
-
 #define CHXJ_TRUE    (1)
 #define CHXJ_FALSE   (0)
+
+/* #define DEBUG_FD(X,args...) {FILE*fp=fopen("/tmp/error.log", "ab");fprintf(fp, X, ##args);fflush(fp);fclose(fp);} */
 
 #ifdef UNUSED
 #elif defined(__GNUC__)
@@ -37,49 +31,6 @@
 # define UNUSED(x) x
 #endif
 
-#define STRCASEEQ(a,b,c,d) \
-  ((((a) == *(d))|| ((b) == *(d))) && strcasecmp((c),(d)) == 0)
-#define STRNCASEEQ(a,b,c,d,e) \
-  ((((a) == *(d))|| ((b) == *(d))) && strncasecmp((c),(d),(e)) == 0)
-
-#define IS_SJIS_STRING(str) \
-  (  STRCASEEQ('s','S',"sjis",           (str)) \
-  || STRCASEEQ('s','S',"shift-jis",      (str)) \
-  || STRCASEEQ('s','S',"shift_jis",      (str)) \
-  || STRCASEEQ('s','S',"shift_jisx0213", (str)) \
-  || STRCASEEQ('s','S',"sjis-open",      (str)) \
-  || STRCASEEQ('s','S',"sjis-win",       (str)) \
-  || STRCASEEQ('c','C',"cp932",          (str)) \
-  || STRCASEEQ('m','M',"ms_kanji",       (str)) \
-  || STRCASEEQ('m','M',"ms932",          (str)) \
-  || STRCASEEQ('c','C',"csshiftjis",     (str)) \
-  || STRCASEEQ('c','C',"cswindows31j",   (str)) \
-  || STRCASEEQ('w','W',"windows-31j",    (str)))
-
-#define IS_EUCJP_STRING(str) \
-  (  STRCASEEQ('e','E',"euc-jp",              (str)) \
-  || STRCASEEQ('e','E',"eucjp-win",           (str)) \
-  || STRCASEEQ('e','E',"eucjp-ms",            (str)) \
-  || STRCASEEQ('e','E',"eucjp-open",          (str)) \
-  || STRCASEEQ('e','E',"euc-jp-win",          (str)) \
-  || STRCASEEQ('c','C',"cseucpkdfmtjapanese", (str)) \
-  || STRCASEEQ('e','E',"euc-jisx0213",        (str)) \
-  || STRCASEEQ('e','E',"euc-jp-ms",           (str)) \
-  || STRCASEEQ('e','E',"cseucpkdfmtjapanese", (str)))
-
-#define IS_UTF8_STRING(str) \
-  (  STRCASEEQ('u','U',"utf8",                (str)) \
-  || STRCASEEQ('u','U',"utf-8",               (str)))
-
-#define MOD_CHXJ_INTERNAL_ENCODING      "CP932"
-
-#define GET_SPEC_CHARSET(spec) ((spec) ? (spec)->charset : "")
-#define GET_EMOJI_INDEX(conf) ((conf)->emoji_index)
-
-#define NONE  (-1)
-#define SJIS  (0)
-#define EUCJP (1)
-#define UTF8  (2)
 
 #include <string.h>
 
@@ -101,6 +52,11 @@
 #    define AP_NEED_SET_MUTEX_PERMS
 #  endif
 #endif
+
+#define STRCASEEQ(a,b,c,d) \
+  ((((a) == *(d))|| ((b) == *(d))) && strcasecmp((c),(d)) == 0)
+#define STRNCASEEQ(a,b,c,d,e) \
+  ((((a) == *(d))|| ((b) == *(d))) && strncasecmp((c),(d),(e)) == 0)
 
 #include "qs_ignore_sp.h"
 #include "qs_log.h"
@@ -203,7 +159,39 @@
 #endif
 
 
+typedef struct imode_emoji_t imode_emoji_t;
 
+struct imode_emoji_t {
+  char  hex1byte;
+  char  hex2byte;
+  char* string;
+  char *description;
+};
+
+typedef struct ezweb_emoji_t ezweb_emoji_t;
+
+struct ezweb_emoji_t {
+  char* typeA;
+  char* typeB;
+  char* typeC;
+  char* typeD;
+};
+
+typedef struct jphone_emoji_t jphone_emoji_t;
+
+struct jphone_emoji_t {
+  char* string;
+};
+
+typedef struct emoji_t emoji_t;
+
+struct emoji_t {
+  struct emoji_t*  next;
+  int              no;
+  imode_emoji_t*   imode;
+  ezweb_emoji_t*   ezweb;
+  jphone_emoji_t*  jphone;
+};
 
 typedef struct chxjconvrule_entry chxjconvrule_entry;
 
@@ -220,15 +208,15 @@ struct chxjconvrule_entry {
 typedef struct tag_handler tag_handler;
 
 struct tag_handler {
-  char *(*start_tag_handler)(void *doc, Node *node); 
-  char *(*end_tag_handler)(void *doc, Node *node); 
+  char* (*start_tag_handler)(void* doc, Node* node); 
+  char* (*end_tag_handler)(void* doc, Node* node); 
 };
 
 #include "chxj_specified_device.h"
 
 typedef struct {
   spec_type    type; 
-  tag_handler *handler;
+  tag_handler* handler;
 } tag_handlers;
 
 typedef enum {
@@ -287,10 +275,8 @@ typedef enum {
   tagMARQUEE,
 } tag_type;
 
-
 typedef struct mod_chxj_config mod_chxj_config;
 
-#include "chxj_emoji.h"
 #if defined(USE_MYSQL_COOKIE)
 #  include "chxj_mysql.h"
 #endif
@@ -306,8 +292,29 @@ typedef enum {
   COOKIE_STORE_TYPE_NONE     = 0,
   COOKIE_STORE_TYPE_DBM      = 1,
   COOKIE_STORE_TYPE_MYSQL    = 2,
-  COOKIE_STORE_TYPE_MEMCACHE = 3,
+  COOKIE_STORE_TYPE_MEMCACHE = 3, 
 } cookie_store_type_t;
+
+/* new line type */
+#define CHXJ_NEW_LINE_TYPE_CRLF         "crlf"
+#define CHXJ_NEW_LINE_TYPE_LF           "lf"
+#define CHXJ_NEW_LINE_TYPE_CR           "cr"
+#define CHXJ_NEW_LINE_TYPE_NONE         "none"
+typedef enum {
+  NLTYPE_NIL  = 0,
+  NLTYPE_CRLF = 1,
+  NLTYPE_LF   = 2,
+  NLTYPE_CR   = 3,
+  NLTYPE_NONE = 4,
+} chxj_new_line_type_t;
+#define IS_NLTYPE_CRLF(X)   ((X)->new_line_type == NLTYPE_CRLF)
+#define IS_NLTYPE_LF(X)     ((X)->new_line_type == NLTYPE_LF)
+#define IS_NLTYPE_CR(X)     ((X)->new_line_type == NLTYPE_CR)
+#define IS_NLTYPE_NONE(X)   ((X)->new_line_type == NLTYPE_NONE)
+#define TO_NLCODE(X)        (IS_NLTYPE_CRLF(X) ? "\r\n" : \
+                             IS_NLTYPE_LF(X)   ? "\n"   : \
+                             IS_NLTYPE_CR(X)   ? "\r"   : \
+                             IS_NLTYPE_NONE(X) ? ""     : "\r\n")
 
 struct mod_chxj_config {
   int                   image;
@@ -321,10 +328,6 @@ struct mod_chxj_config {
   device_table_list     *devices;
   emoji_t               *emoji;
   emoji_t               *emoji_tail;
-  ezweb2imode_t         *ezweb2imode;
-  ezweb2imode_t         *ezweb2imode_tail;
-  softbank2imode_t      *softbank2imode;
-  softbank2imode_t      *softbank2imode_tail;
   char                  *server_side_encoding;
 
   char                  *dir; /* for LOG */
@@ -333,20 +336,6 @@ struct mod_chxj_config {
 
   char                  *cookie_db_dir;
   long                  cookie_timeout;
-
-  /* Index array for Emoji retrieval */
-  emoji_t               *emoji_index[EMOJI_COUNT]; 
-  emoji_t               *emoji_index_eucjp[EMOJI_COUNT]; 
-  emoji_t               *emoji_index_sjis[EMOJI_COUNT]; 
-  emoji_t               *emoji_index_utf8[EMOJI_COUNT]; 
-
-  ezweb2imode_t         *emoji_ezweb2imode_sjis[EMOJI_EZWEB2IMODE_COUNT];
-  ezweb2imode_t         *emoji_ezweb2imode_utf8[EMOJI_EZWEB2IMODE_COUNT];
-  softbank2imode_t      *emoji_softbank2imode_webcode[EMOJI_SOFTBANK2IMODE_COUNT];
-  softbank2imode_t      *emoji_softbank2imode_sjis[EMOJI_SOFTBANK2IMODE_COUNT];
-  softbank2imode_t      *emoji_softbank2imode_utf8[EMOJI_SOFTBANK2IMODE_COUNT];
-
-
   cookie_store_type_t   cookie_store_type;
   int                   cookie_lazy_mode;
 
@@ -356,6 +345,8 @@ struct mod_chxj_config {
 #if defined(USE_MEMCACHE_COOKIE)
   memcache_t            memcache;
 #endif
+
+  chxj_new_line_type_t  new_line_type;
 };
 
 #define IS_COOKIE_STORE_DBM(X)      ((X) == COOKIE_STORE_TYPE_DBM)
@@ -366,6 +357,7 @@ struct mod_chxj_config {
 #define COOKIE_LAZY_ON                (2)
 #define COOKIE_LAZY_OFF               (1)
 #define IS_COOKIE_LAZY(X)             ((X)->cookie_lazy_mode == COOKIE_LAZY_ON)
+
 
 #define CONVRULE_ENGINE_ON_BIT        (0x00000001)
 #define CONVRULE_ENGINE_OFF_BIT       (0x00000002)
@@ -386,7 +378,7 @@ struct mod_chxj_config {
 
 
 typedef struct {
-  apr_global_mutex_t    *cookie_db_lock;
+  apr_global_mutex_t* cookie_db_lock;
 } mod_chxj_global_config;
 
 typedef struct {
@@ -397,54 +389,50 @@ typedef struct {
   apr_bucket_brigade *bb;
   apr_pool_t *pool;
 
-  char *buffer;
+  char* buffer;
 } mod_chxj_ctx;
 
 #include "chxj_tag_util.h"
 
 #define CHXJ_MOD_CONFIG_KEY   "chxj_module_key"
 
-#define CHXJ_CONTENT_LENGTH_MAX (8192)
-
 #define HTTP_USER_AGENT       "User-Agent"
-#define HTTP_CONTENT_LENGTH   "Content-Length"
 #define HTTP_HOST             "Host"
 #define CHXJ_HTTP_USER_AGENT  "CHXJ_HTTP_USER_AGENT"
-#define CHXJ_HTTP_ORIG_CONTENT_LENGTH "CHXJ_HTTP_ORIG_CONTENT_LENGTH"
-#define FORM_CONTENT_TYPE     "application/x-www-form-urlencoded"
 
 module AP_MODULE_DECLARE_DATA chxj_module;
 
-#define CHXJ_IMG_ON     (1)
-#define CHXJ_IMG_OFF    (0)
+#define CHXJ_IMG_ON     (2)
+#define CHXJ_IMG_OFF    (1)
+#define CHXJ_IMG_NONE   (0)
 
 
-#define DBG(rec,format, args...)  \
-  ap_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(request_rec*)(rec),(format), ##args)
-#define SDBG(rec,format, args...) \
-  ap_log_error(APLOG_MARK,APLOG_DEBUG,0,(rec),(format), ##args)
-#define ERR(rec,format, args...)  \
-  ap_log_rerror(APLOG_MARK,APLOG_ERR,0,(request_rec*)(rec),(format), ##args)
-#define SERR(rec,format, args...) \
-  ap_log_error(APLOG_MARK,APLOG_ERR,0,(rec),(format), ##args)
-#define WRN(rec,format, args...)  \
-  ap_log_rerror(APLOG_MARK,APLOG_WARNING,0,(rec),(format), ##args)
+#define DBG(X,args...)  chxj_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(request_rec*)(X),##args)
+#define SDBG(X,Y)       chxj_log_error(APLOG_MARK,APLOG_DEBUG,0,(X),(Y))
+#define PDBG(X,args...) chxj_log_perror(APLOG_MARK,APLOG_DEBUG,0,(apr_pool_t *)(X),##args)
+#define ERR(X,args...)  chxj_log_rerror(APLOG_MARK,APLOG_ERR,0,(X), ##args)
+#define SERR(X,args...) chxj_log_error(APLOG_MARK,APLOG_ERR,0,(X),##args)
+#define PERR(X,args...) chxj_log_perror(APLOG_MARK,APLOG_ERR,0,(apr_pool_t *)(X),##args)
+#define WRN(rec,format,args...)  chxj_log_rerror(APLOG_MARK,APLOG_WARNING,0,(rec),(format), ##args)
 
 extern tag_handlers chxj_tag_handlers[];
 extern tag_handler  chtml10_handler[];
 extern tag_handler  chtml20_handler[];
 extern tag_handler  chtml30_handler[];
+extern tag_handler  chtml40_handler[];
+extern tag_handler  chtml50_handler[];
 extern tag_handler  xhtml_handler[];
 extern tag_handler  hdml_handler[];
 extern tag_handler  jhtml_handler[];
+extern tag_handler  jxhtml_handler[];
 
-extern char *chxj_node_convert( 
+extern char* chxj_node_convert( 
   device_table *spec,
   request_rec  *r,
   void         *pdoc,
   Doc          *doc,
   Node         *node,
-  int         indent
+  int          indent
 );
 
 #define IMAGE_CACHE_LIMIT_FMT_LEN  (20)

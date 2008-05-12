@@ -19,12 +19,12 @@
 
 #include "qs_parse_string.h"
 
-extern Node *qs_parse_tag(
-  Doc          *doc, 
-  const char   *s, 
+extern Node* qs_parse_tag(
+  Doc*         doc, 
+  const char*  s, 
   int          len) ;
 
-extern Node *qs_new_tag(
+extern Node* qs_new_tag(
   Doc       *doc);
 
 extern Node *qs_add_attr(

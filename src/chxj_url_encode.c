@@ -37,56 +37,53 @@ s_hex_value(char c)
 }
 
 char *
-chxj_url_encode(request_rec *r, const char *src)
+chxj_url_encode(apr_pool_t *pool, const char *src)
 {
   char *dst;
-  char *sp = (char *)src;
-  unsigned char tmp;
+  register char *sp = (char *)src;
+  int len;
+  register int pos;
 
-  dst = apr_palloc(r->pool, 1);
-  dst[0] = 0;
+  if (! src) return apr_pstrdup(pool, "\0");
 
-  if (!src) return dst;
-
+  len = strlen(src) * 3 + 1;
+  dst = apr_palloc(pool, len);
+  memset(dst, 0, len);
+  pos = 0;
 
   while(*sp) {
-
-    if (IS_ALPHA_UPPER(*sp) ||  IS_ALPHA_LOWER(*sp) ||  IS_DIGIT(*sp)) {
-      dst = apr_psprintf(r->pool, "%s%c", dst, *sp);
-      sp++;
+    if (IS_ALPHA_UPPER(*sp) || IS_ALPHA_LOWER(*sp) || IS_DIGIT(*sp)) {
+      dst[pos++] = *sp++;
       continue;
     }
-
     if (*sp == ' ') {
-      dst = apr_pstrcat(r->pool, dst, "+", NULL);
+      dst[pos++] = '+';
       sp++;
       continue;
     }
 
-    tmp = (*sp >> 4) & 0x0f;
-    dst = apr_psprintf(r->pool, "%s%%%c", dst, TO_HEXSTRING(tmp));
-    tmp = *sp & 0x0f;
-    dst = apr_psprintf(r->pool, "%s%c", dst,   TO_HEXSTRING(tmp));
-
+    dst[pos++] = '%';
+    dst[pos++] = TO_HEXSTRING((*sp >> 4) & 0x0f);
+    dst[pos++] = TO_HEXSTRING((*sp & 0x0f));
     sp++;
   }
-  
   return dst;
 }
 
 
 char *
-chxj_url_decode(request_rec *r, const char *src)
+chxj_url_decode(apr_pool_t *pool, const char *src)
 {
   char  *dst;
   int   len; 
   int   ii;
   int   jj;
 
-  if (!src) return NULL;
+
+  if (!src) return apr_pstrdup(pool, "\0");
 
   len = strlen(src);
-  dst = apr_palloc(r->pool, len+1);
+  dst = apr_palloc(pool, len+1);
   memset(dst, 0, len+1);
 
   for (jj=0,ii=0; src[ii] != '\0' && ii < len; ii++) {
@@ -95,6 +92,9 @@ chxj_url_decode(request_rec *r, const char *src)
         dst[jj++] = s_hex_value(src[ii+1]) * 16 + s_hex_value(src[ii+2]);
         ii+=2;
       }
+    }
+    else if (src[ii] == '+') {
+      dst[jj++] = ' ';
     }
     else {
       dst[jj++] = src[ii];

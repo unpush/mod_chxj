@@ -24,11 +24,12 @@ typedef enum {
   CHXJ_SPEC_Chtml_3_0,
   CHXJ_SPEC_Chtml_4_0,
   CHXJ_SPEC_Chtml_5_0,
-  CHXJ_SPEC_Chtml_6_0,
-  CHXJ_SPEC_Chtml_7_0,
+  CHXJ_SPEC_Chtml_6_0, /* use XHTML */
+  CHXJ_SPEC_Chtml_7_0, /* use XHTML */
   CHXJ_SPEC_XHtml_Mobile_1_0,
   CHXJ_SPEC_Hdml,
   CHXJ_SPEC_Jhtml,
+  CHXJ_SPEC_Jxhtml,    /* use XHTML */
   CHXJ_SPEC_HTML,
 } spec_type;
 
@@ -38,41 +39,40 @@ typedef enum {
 #include "mod_chxj.h"
 #include "chxj_cookie.h"
 
-#define GET_HTML_SPEC_TYPE(X) ((X)->html_spec_type)
 
 typedef struct device_table_t device_table;
 
 struct device_table_t {
-  struct device_table_t *next;
-  const char            *device_id;
-  const char            *device_name;
-  spec_type             html_spec_type;
-  int                   width;
-  int                   heigh;
+  struct device_table_t* next;
+  const char*            device_id;
+  const char*            device_name;
+  spec_type              html_spec_type;
+  int                    width;
+  int                    heigh;
   /*--------------------------------------------------------------------------*/
   /* Walll Paper Size                                                         */
   /*--------------------------------------------------------------------------*/
-  int                   wp_width;
-  int                   wp_heigh;
+  int                    wp_width;
+  int                    wp_heigh;
   /*--------------------------------------------------------------------------*/
   /* Cache Size                                                               */
   /*--------------------------------------------------------------------------*/
-  int                   cache;
+  int                    cache;
   /*--------------------------------------------------------------------------*/
   /* Correspondence image format                                              */
   /* 1: It is possible to display it.                                         */
   /* 0: It is not possible to display it.                                     */
   /*--------------------------------------------------------------------------*/
-  int                   available_gif;
-  int                   available_jpeg;
-  int                   available_png;
-  int                   available_bmp2;
-  int                   available_bmp4;
+  int                    available_gif;
+  int                    available_jpeg;
+  int                    available_png;
+  int                    available_bmp2;
+  int                    available_bmp4;
   /*--------------------------------------------------------------------------*/
   /* Resolution                                                               */
   /*--------------------------------------------------------------------------*/
-  int                   dpi_width;
-  int                   dpi_heigh;
+  int                    dpi_width;
+  int                    dpi_heigh;
   /*--------------------------------------------------------------------------*/
   /* Color number type                                                        */
   /* 2       : 2        Colors                                                */
@@ -83,29 +83,26 @@ struct device_table_t {
   /* 262144  : 262144   Colors                                                */
   /* 15680000: 15680000 over colors                                           */
   /*--------------------------------------------------------------------------*/
-  int                   color;
-  char                  *emoji_type;
-  char                  *charset;
+  int                    color;
+  char*                  emoji_type;
 };
-
-#define GET_EMOJI_TYPE(spec) ((spec)->emoji_type)
 
 typedef struct device_table_list_t  device_table_list;
 
 struct device_table_list_t {
-  struct device_table_list_t *next;
+  struct device_table_list_t  *next;
 
-  char          *pattern;
-  ap_regex_t    *regexp;
-  device_table  *table;
-  device_table  *tail;
+  char                        *pattern;
+  ap_regex_t                  *regexp;
+  device_table                *table;
+  device_table                *tail;
 };
 
 typedef struct converter_t converter_t;
 
 struct converter_t {
   /* convert routine */
-  char *(*converter)(request_rec                 *r,
+  char* (*converter)(request_rec                 *r,
                      struct device_table_t       *spec,
                      const char                  *src, 
                      apr_size_t                  srclen, 
@@ -113,15 +110,15 @@ struct converter_t {
                      struct chxjconvrule_entry   *entryp,
                      cookie_t                    *cookie);
 
-  char *(*encoder)(request_rec  *r,
+  char* (*encoder)(request_rec  *r,
                    const char   *src,
                    apr_size_t   *len);
 };
 
 extern converter_t convert_routine[];
 
-extern device_table *chxj_specified_device(
-  request_rec  *r, 
-  const char   *user_agent);
+extern device_table* chxj_specified_device(
+  request_rec             *r, 
+  const char              *user_agent);
 
 #endif

@@ -39,6 +39,10 @@ struct jhtml_t {
     int                 h4_align_flag;
     int                 h5_align_flag;
     int                 h6_align_flag;
+<<<<<<< HEAD:include/chxj_jhtml.h
+=======
+    int                 font_flag;
+>>>>>>>   * updated new trunk.:include/chxj_jhtml.h
 
     device_table        *spec;
     mod_chxj_config     *conf;
@@ -50,12 +54,12 @@ struct jhtml_t {
 /* Prototype                                                                  */
 /*----------------------------------------------------------------------------*/
 extern char *chxj_convert_jhtml(
-  request_rec        *r,
-  device_table       *spec,
-  const char         *src,
-  apr_size_t         srclen,
-  apr_size_t         *dstlen,
-  chxjconvrule_entry *entryp,
-  cookie_t           *cookie);
+  request_rec               *r,
+  device_table              *spec,
+  const char                *src,
+  apr_size_t                srclen,
+  apr_size_t                *dstlen,
+  chxjconvrule_entry        *entryp,
+  cookie_t                  *cookie);
 
 #endif

@@ -414,7 +414,7 @@ chxj_delete_cookie_dbm(request_rec *r, mod_chxj_config *m, const char *cookie_id
   apr_status_t      retval;
   apr_file_t        *file;
   apr_datum_t       dbmkey;
-  apr_dbm_t*        f;
+  apr_dbm_t         *f;
 
   DBG(r, "start chxj_delete_cookie_dbm() cookie_id:[%s]", cookie_id);
   file = chxj_cookie_db_lock(r);
@@ -463,7 +463,7 @@ chxj_save_cookie_expire_dbm(request_rec *r, mod_chxj_config *m, const char *cook
   apr_file_t              *file;
   apr_datum_t             dbmkey;
   apr_datum_t             dbmval;
-  apr_dbm_t*              f;
+  apr_dbm_t               *f;
 
   DBG(r, "start chxj_save_cookie_expire_dbm() cookie_id:[%s]", cookie_id);
   file = chxj_cookie_expire_db_lock(r);
@@ -472,8 +472,6 @@ chxj_save_cookie_expire_dbm(request_rec *r, mod_chxj_config *m, const char *cook
     DBG(r, "end   chxj_save_cookie_expire_dbm() cookie_id:[%s]", cookie_id);
     return CHXJ_FALSE;
   }
-
-  DBG(r, " ");
 
   retval = apr_dbm_open_ex(&f, 
                            "default", 
@@ -531,8 +529,8 @@ chxj_delete_cookie_expire_dbm(request_rec *r, mod_chxj_config *m, const char *co
 {
   apr_status_t      retval;
   apr_datum_t       dbmkey;
-  apr_dbm_t*        f;
-  apr_file_t*       file;
+  apr_dbm_t         *f;
+  apr_file_t        *file;
 
   DBG(r, "start chxj_delete_cookie_expire_dbm() cookie_id:[%s]", cookie_id);
   file = chxj_cookie_expire_db_lock(r);
@@ -579,8 +577,8 @@ chxj_cookie_expire_gc_dbm(request_rec *r, mod_chxj_config *m)
   apr_status_t      retval;
   apr_datum_t       dbmkey;
   apr_datum_t       dbmval;
-  apr_dbm_t*        f;
-  apr_file_t*       file;
+  apr_dbm_t         *f;
+  apr_file_t        *file;
   time_t            now_time;
 
   DBG(r, "start chxj_cookie_expire_gc_dbm()");
@@ -661,6 +659,20 @@ chxj_cookie_expire_gc_dbm(request_rec *r, mod_chxj_config *m)
   chxj_cookie_expire_db_unlock(r, file);
   DBG(r, "end   chxj_cookie_expire_gc_dbm()");
   return CHXJ_TRUE;
+}
+
+
+int
+chxj_cookie_lock_dbm(request_rec *UNUSED(r), mod_chxj_config *UNUSED(m))
+{
+  return 1;  /* allways true */
+}
+
+
+int
+chxj_cookie_unlock_dbm(request_rec *UNUSED(r), mod_chxj_config *UNUSED(m))
+{
+  return 1; /* allways true */
 }
 /*
  * vim:ts=2 et

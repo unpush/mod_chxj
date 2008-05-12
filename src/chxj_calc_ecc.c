@@ -924,7 +924,7 @@ static qr_ecc_spec_t v_ecc_spec_table[] = {
  * インタリーブした結果を<code>dst</code>に設定します.
  */
 int
-chxj_calc_ecc(qr_code_t *qrcode,
+chxj_calc_ecc(qr_code_t     *qrcode,
               unsigned char *indata, 
               unsigned char *dst)
 {
@@ -953,10 +953,10 @@ chxj_calc_ecc(qr_code_t *qrcode,
   rs_total_block_count = v_ecc_spec_table[qrcode->version*4+qrcode->level].rs[0].rs_block_count +
                          v_ecc_spec_table[qrcode->version*4+qrcode->level].rs[1].rs_block_count ;
 
-  rs_block = (unsigned char**)apr_palloc(r->pool, sizeof(unsigned char*)*rs_total_block_count);
-  rs_block_rest = (int*)apr_palloc(r->pool, sizeof(int)*rs_total_block_count);
-  rs_block_size = (int*)apr_palloc(r->pool, sizeof(int)*rs_total_block_count);
-  rs_block_ecc_size = (int*)apr_palloc(r->pool, sizeof(int)*rs_total_block_count);
+  rs_block = (unsigned char **)apr_palloc(r->pool, sizeof(unsigned char*)*rs_total_block_count);
+  rs_block_rest = (int *)apr_palloc(r->pool, sizeof(int)*rs_total_block_count);
+  rs_block_size = (int *)apr_palloc(r->pool, sizeof(int)*rs_total_block_count);
+  rs_block_ecc_size = (int *)apr_palloc(r->pool, sizeof(int)*rs_total_block_count);
 
   total_size = (v_ecc_spec_table[qrcode->version*4+qrcode->level].rs[0].rs_block_count 
                * v_ecc_spec_table[qrcode->version*4+qrcode->level].rs[0].total_code_count) +
@@ -980,8 +980,8 @@ chxj_calc_ecc(qr_code_t *qrcode,
       DBG(r,"data_count[%d] ecc_count[%d]", data_count, ecc_count);
 #endif
 
-      rs_block[now_rs_num] = (unsigned char *)apr_palloc(qrcode->r->pool, data_count + ecc_count + 1);
-      tmp = (unsigned char *)apr_palloc(qrcode->r->pool, data_count + ecc_count + 1);
+      rs_block[now_rs_num] = (unsigned char*)apr_palloc(qrcode->r->pool, data_count + ecc_count + 1);
+      tmp = (unsigned char*)apr_palloc(qrcode->r->pool, data_count + ecc_count + 1);
 
       rs_block_size[now_rs_num] = rs_block_rest[now_rs_num] = data_count + ecc_count;
       rs_block_ecc_size[now_rs_num] = ecc_count;

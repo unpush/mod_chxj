@@ -21,6 +21,10 @@
 #include "chxj_apache.h"
 
 
+<<<<<<< HEAD:src/qs_log.c
+=======
+
+>>>>>>>   * updated new trunk.:src/qs_log.c
 
 
 void
@@ -31,7 +35,7 @@ qs_log(Doc *doc, int log_level,const char *f, int l, char *msg)
 #ifdef USE_LOG
 #ifdef DEBUG
     do {
-      FILE *fp = fopen("/tmp/debug.log", "a");
+      FILE* fp = fopen("/tmp/debug.log", "a");
       fprintf(fp, "DBG:[%20.20s][%10d]: - <%s>\n", f,l,msg);
       fclose(fp);
     }
@@ -52,7 +56,7 @@ qs_log(Doc *doc, int log_level,const char *f, int l, char *msg)
   case QX_LOG_WARN:
 #ifdef USE_LOG
     do {
-      FILE *fp = fopen("/tmp/debug.log", "a");
+      FILE* fp = fopen("/tmp/debug.log", "a");
       fprintf(fp, "WRN:[%20.20s][%10d]: - <%s>\n", f,l,msg);
       fclose(fp);
     }
@@ -62,7 +66,7 @@ qs_log(Doc *doc, int log_level,const char *f, int l, char *msg)
   case QX_LOG_ERROR:
 #ifdef USE_LOG
     do {
-      FILE *fp = fopen("/tmp/debug.log", "a");
+      FILE* fp = fopen("/tmp/debug.log", "a");
       fprintf(fp, "ERR:[%20.20s][%10d]: - <%s>\n", f,l,msg);
       fclose(fp);
     }
@@ -72,17 +76,25 @@ qs_log(Doc *doc, int log_level,const char *f, int l, char *msg)
   case QX_LOG_FATAL:
 #ifdef USE_LOG
     do {
-      FILE *fp = fopen("/tmp/debug.log", "a");
+      FILE* fp = fopen("/tmp/debug.log", "a");
       fprintf(fp, "FTL:[%20.20s][%10d]: - <%s>\n", f,l,msg);
       fclose(fp);
     }
     while(0);
 #endif
+<<<<<<< HEAD:src/qs_log.c
     if (doc->r) {
+=======
+    if (doc && doc->r) {
+>>>>>>>   * updated new trunk.:src/qs_log.c
       chxj_log_rerror(f,l, APLOG_CRIT, 0, doc->r, msg);
+<<<<<<< HEAD:src/qs_log.c
+=======
     }
-    qs_all_free(doc, QX_LOGMARK);
-    _exit(0);
+    else {
+      fprintf(stderr, "%s\n", msg);
+>>>>>>>   * updated new trunk.:src/qs_log.c
+    }
   }
 }
 

@@ -29,25 +29,34 @@ chxj_encoding(request_rec *r, const char *src, apr_size_t *len)
   char                *ibuf;
   char                *spos;
   
+  iconv_t             cd;
+  size_t              result;
   apr_size_t          ilen;
   apr_size_t          olen;
   mod_chxj_config     *dconf;
   chxjconvrule_entry  *entryp;
-  char                *rtn;
 
-  DBG(r,"start chxj_encoding() len=[%d] input[%.*s]", (int)*len, (int)*len, src);
 
+<<<<<<< HEAD:src/chxj_encoding.c
+=======
+  DBG(r,"start chxj_encoding()");
+
+>>>>>>>   * updated new trunk.:src/chxj_encoding.c
   dconf = chxj_get_module_config(r->per_dir_config, &chxj_module);
 
   if (dconf == NULL) {
     DBG(r,"none encoding.");
     return (char*)src;
   }
+  if ((int)*len < 0) {
+    ERR(r, "runtime exception: chxj_encoding(): invalid string size.[%d]", (int)*len);
+    return (char *)apr_pstrdup(r->pool, "");
+  }
 
   entryp = chxj_apply_convrule(r, dconf->convrules);
   if (entryp->encoding == NULL) {
     DBG(r,"none encoding.");
-    return (char*)src;
+    return (char *)src;
   }
 
   if (STRCASEEQ('n','N',"none", entryp->encoding)) {
@@ -57,8 +66,8 @@ chxj_encoding(request_rec *r, const char *src, apr_size_t *len)
   ilen = *len;
   ibuf = apr_palloc(r->pool, ilen+1);
   if (ibuf == NULL) {
-    DBG(r,"end   chxj_encoding()");
-    return (char*)src;
+    ERR(r, "runtime exception: chxj_encoding(): Out of memory.");
+    return (char *)src;
   }
   memset(ibuf, 0, ilen+1);
   memcpy(ibuf, src, ilen);
@@ -66,13 +75,14 @@ chxj_encoding(request_rec *r, const char *src, apr_size_t *len)
   olen = ilen * 4 + 1;
   spos = obuf = apr_palloc(r->pool, olen);
   if (obuf == NULL) {
-    DBG(r,"memory allocation failure. end   chxj_encoding()");
+    DBG(r,"end   chxj_encoding()");
     return ibuf;
   }
   DBG(r,"encode convert [%s] -> [%s]", entryp->encoding, "CP932");
 
   memset(obuf, 0, olen);
   cd = iconv_open("CP932", entryp->encoding);
+<<<<<<< HEAD:src/chxj_encoding.c
   if (cd == (iconv_t)-1) {
     if (EINVAL == errno) {
       ERR(r, "The conversion from %s to %s is not supported by the implementation.", entryp->encoding, "CP932");
@@ -147,17 +157,20 @@ do_encoding(
   memset(*obuf, 0, olen);
   cd = (iconv_t)-1;
   cd = iconv_open(tp, fp);
+=======
+>>>>>>>   * updated new trunk.:src/chxj_encoding.c
   if (cd == (iconv_t)-1) {
-    ERR(r, "try iconv_open failure. cd:[%d] to:[%s] from:[%s]", (int)cd, tp, fp);
-    cd = iconv_open(to_code, from_code);
-    if (cd == (iconv_t)-1) {
-      ERR(r, "iconv_open failure. cd:[%d] to:[%s] from:[%s]", (int)cd, to_code, from_code);
-      return NULL;
+    if (EINVAL == errno) {
+      ERR(r, "The conversion from %s to %s is not supported by the implementation.", entryp->encoding, "CP932");
     }
+    else {
+      ERR(r, "iconv open failed. from:[%s] to:[%s] errno:[%d]", entryp->encoding, "CP932", errno);
+    }
+    DBG(r,"end   chxj_encoding()");
+    return ibuf;
   }
   while (ilen > 0) {
-    errno = 0;
-    result = iconv(cd, ibuf, &ilen, obuf, &olen);
+    result = iconv(cd, &ibuf, &ilen, &obuf, &olen);
     if (result == (size_t)(-1)) {
       if (E2BIG == errno) {
         ERR(r, "There is not sufficient room at *outbuf.");
@@ -180,10 +193,7 @@ do_encoding(
 
 
 char *
-chxj_rencoding(
-  request_rec *r, 
-  const char  *src, 
-  apr_size_t  *len)
+chxj_rencoding(request_rec *r, const char *src, apr_size_t *len)
 {
   char                *obuf;
   char                *ibuf;
@@ -196,7 +206,12 @@ chxj_rencoding(
   mod_chxj_config     *dconf;
   chxjconvrule_entry  *entryp;
 
-  DBG(r,"start chxj_rencoding() input:[%s] len:[%d]", src, *len);
+  DBG(r,"start chxj_rencoding()");
+
+  if ((int)*len < 0) {
+    ERR(r, "runtime exception: chxj_rencoding(): invalid string size.[%d]", (int)*len);
+    return (char *)apr_pstrdup(r->pool, "");
+  }
 
   dconf = chxj_get_module_config(r->per_dir_config, &chxj_module);
   if (! dconf) {
@@ -214,16 +229,15 @@ chxj_rencoding(
 
   if (STRCASEEQ('n','N',"none", entryp->encoding)) {
     DBG(r,"none encoding.");
-    DBG(r,"end   chxj_rencoding() no convert.");
-    return (char*)apr_pstrdup(r->pool, src);
+    DBG(r,"end   chxj_rencoding()");
+    return (char*)src;
   }
 
   ilen = *len;
   ibuf = apr_palloc(r->pool, ilen+1);
   if (! ibuf) {
     DBG(r,"end   chxj_rencoding()");
-    ERR(r,"memory allocation error.");
-    return (char *)src;
+    return (char*)src;
   }
 
   memset(ibuf, 0,   ilen+1);
@@ -233,14 +247,13 @@ chxj_rencoding(
   spos = obuf = apr_palloc(r->pool, olen);
   if (! obuf) {
     DBG(r,"end   chxj_rencoding()");
-    ERR(r,"memory allocation error.");
     return ibuf;
   }
   DBG(r,"encode convert [%s] -> [%s]", "CP932", entryp->encoding);
 
   memset(obuf, 0, olen);
 
-  cd = iconv_open(entryp->encoding, MOD_CHXJ_INTERNAL_ENCODING);
+  cd = iconv_open(entryp->encoding, "CP932");
   if (cd == (iconv_t)-1) {
     if (EINVAL == errno) {
       ERR(r, "The conversion from %s to %s is not supported by the implementation.", "CP932", entryp->encoding);
@@ -306,6 +319,7 @@ chxj_encoding_parameter(request_rec *r, const char *value)
 
   for (;;) {
     apr_size_t len;
+    char *sep_pos;
 
     use_amp_flag = 0;
 
@@ -316,13 +330,29 @@ chxj_encoding_parameter(request_rec *r, const char *value)
       pair += 4;
       use_amp_flag = 1;
     }
-    key = apr_strtok(pair, "=", &vstat);
-    val = apr_strtok(NULL, "=", &vstat);
+    sep_pos = strchr(pair, '=');
+    if (pair == sep_pos) {
+      key = apr_pstrdup(r->pool, "");
+    }
+    else {
+      key = apr_strtok(pair, "=", &vstat);
+      pair = NULL;
+    }
+    if (key) {
+      key = chxj_url_decode(r->pool, key);
+      len = (apr_size_t)strlen(key);
+      key = chxj_encoding(r, key, &len);
+      key = chxj_url_encode(r->pool, key);
+    }
+    val = apr_strtok(pair, "=", &vstat);
+    if (! val && sep_pos) {
+      val = apr_pstrdup(r->pool, "");
+    }
     if (val) {
-      val = chxj_url_decode(r, val);
+      val = chxj_url_decode(r->pool, val);
       len = (apr_size_t)strlen(val);
       val = chxj_encoding(r, val, &len);
-      val = chxj_url_encode(r, val);
+      val = chxj_url_encode(r->pool, val);
       if (strlen(param) == 0) {
         param = apr_pstrcat(r->pool, param, key, "=", val, NULL);
       }

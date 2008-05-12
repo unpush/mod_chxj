@@ -20,9 +20,7 @@
 static int s_apply_rule(request_rec *r, chxjconvrule_entry *pp);
 
 chxjconvrule_entry *
-chxj_apply_convrule(
-  request_rec        *r, 
-  apr_array_header_t *convrules)
+chxj_apply_convrule(request_rec *r, apr_array_header_t *convrules)
 {
   chxjconvrule_entry *entries;
   chxjconvrule_entry *pp;
@@ -44,15 +42,19 @@ chxj_apply_convrule(
 static int
 s_apply_rule(request_rec *r, chxjconvrule_entry *pp) 
 {
-  char *uri;
-  int rtn;
+  char  *uri;
+  int   rtn;
   ap_regmatch_t regmatch[AP_MAX_REG_MATCH];
 
   uri = r->uri;
 
   DBG(r,"convert rule pattern=[%s] uri=[%s]", pp->pattern, uri);
 
+<<<<<<< HEAD:src/chxj_apply_convrule.c
   rtn = ap_regexec((const ap_regex_t*)pp->regexp, uri, AP_MAX_REG_MATCH, (ap_regmatch_t*)regmatch, 0);
+=======
+  rtn = ap_regexec((const ap_regex_t *)pp->regexp, uri, AP_MAX_REG_MATCH, (ap_regmatch_t *)regmatch, 0);
+>>>>>>>   * updated new trunk.:src/chxj_apply_convrule.c
   if (rtn == 0) {
     /* Match */
     if (pp->flags & CONVRULE_FLAG_NOTMATCH) {

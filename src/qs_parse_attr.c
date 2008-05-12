@@ -31,10 +31,22 @@ qs_parse_attr(Doc *doc, const char *s, int len, int *pos)
   char  *name;
   char  *value;
   Attr  *attr;
-  int   use_quote;
+  int   use_quote_sq;
+  int   use_quote_dq;
   int   backslash;
 
-  use_quote = 0;
+  if (! doc) {
+    QX_LOGGER_FATAL("runtime exception: qs_parse_attr(): doc is null");
+    return NULL;
+  }
+  if (! doc->pool) {
+    QX_LOGGER_FATAL("runtime exception: qs_parse_attr(): doc->pool is null");
+    return NULL;
+  }
+  if (! s) return NULL;
+
+  use_quote_sq = 0;
+  use_quote_dq = 0;
   backslash = 0;
 
   QX_LOGGER_DEBUG("start qs_parse_attr()");
@@ -63,11 +75,11 @@ qs_parse_attr(Doc *doc, const char *s, int len, int *pos)
     return NULL;
   }
 
-  name = (char*)apr_palloc(doc->pool,size+1);
+  name = (char *)apr_palloc(doc->pool,size+1);
   memset(name, 0, size+1);
   memcpy(name, &s[start_pos], size);
 
-  QX_LOGGER_DEBUG((char*)name);
+  QX_LOGGER_DEBUG((char *)name);
 
   novalue = 0;
   /* find '=' */
@@ -100,8 +112,13 @@ qs_parse_attr(Doc *doc, const char *s, int len, int *pos)
         backslash = 1;
         break;
       }
-      if (s[ii] == '\'' || s[ii] == '"') {
-        use_quote = 1;
+      if (s[ii] == '\'') {
+        use_quote_sq = 1;
+        ii++;
+        break;
+      }
+      if (s[ii] == '"') {
+        use_quote_dq = 1;
         ii++;
         break;
       }
@@ -127,7 +144,7 @@ qs_parse_attr(Doc *doc, const char *s, int len, int *pos)
         continue;
 
       if (is_white_space(s[ii])) {
-        if (! use_quote) 
+        if (! use_quote_sq && ! use_quote_dq) 
           break;
       }
 
@@ -136,10 +153,10 @@ qs_parse_attr(Doc *doc, const char *s, int len, int *pos)
         continue;
       }
 
-      if (s[ii] == '"') 
+      if (s[ii] == '"' && use_quote_dq) 
         break;
 
-      if (s[ii] == '\'') 
+      if (s[ii] == '\'' && use_quote_sq) 
         break;
     }
     size = ii - start_pos;
@@ -147,7 +164,7 @@ qs_parse_attr(Doc *doc, const char *s, int len, int *pos)
     QX_LOGGER_DEBUG_INT("size",size);
   }
 
-  value = (char*)apr_palloc(doc->pool, size+1);
+  value = (char *)apr_palloc(doc->pool, size+1);
   memset(value, 0, size+1);
   if (size != 0) 
     memcpy(value, &s[start_pos], size);
@@ -169,10 +186,19 @@ qs_new_attr(Doc *doc)
 {
   Attr *attr;
 
-  attr = (Attr *)apr_palloc(doc->pool,sizeof(Attr));
+  if (!doc) {
+    QX_LOGGER_FATAL("runtime exception: qs_new_attr(): doc is null");
+    return NULL;
+  }
+  if (!doc->pool) {
+    QX_LOGGER_FATAL("runtime exception: qs_new_attr(): doc->pool is null");
+    return NULL;
+  }
 
+  attr = (Attr *)apr_palloc(doc->pool,sizeof(Attr));
   if (attr == NULL) {
     QX_LOGGER_FATAL("Out Of Memory");
+    return NULL;
   }
 
   attr->next   = NULL;

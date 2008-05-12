@@ -21,29 +21,27 @@
 #define DEFAULT_IMAGE_CACHE_DIR "/tmp"
 
 /* default: 10MByte */
-#define DEFAULT_IMAGE_CACHE_LIMIT (10*1024*1024)    
+#define DEFAULT_IMAGE_CACHE_LIMIT (10*1024*1024)
+
+/* micro second */
+#define CACHE_RECHECK_WAIT        (200000)
+#define CACHE_RETRY_COUNT         (5)
 
 /* micro second */
 #define CACHE_RECHECK_WAIT        (200000)
 #define CACHE_RETRY_COUNT         (5)
 
 extern int chxj_img_conv_format_handler(
-  request_rec *r);
+  request_rec          *r);
 
-extern char *chxj_convert_image(
-  request_rec *r, 
-  const char  **src, 
-  apr_size_t  *len);
+extern char* chxj_convert_image(
+  request_rec          *r, 
+  const char           **src, 
+  apr_size_t           *len);
 
 extern int chxj_trans_name(
-  request_rec *r);
+  request_rec          *r);
 
-
-/* micro second */
-#define CACHE_RECHECK_WAIT        (200000)
-
-/* retry count of creating cache file */
-#define CACHE_RETRY_COUNT         (5)
 
 #endif
 /*

@@ -30,7 +30,7 @@ static void s_set_devices_data(
   Doc              *doc, 
   apr_pool_t       *p, 
   mod_chxj_config  *conf, 
-  Node             *node);
+  Node             *node) ;
 
 static void s_set_user_agent_data(
   Doc              *doc, 
@@ -39,10 +39,10 @@ static void s_set_user_agent_data(
   Node             *node);
 
 static void s_set_device_data(
-  Doc                *doc, 
-  apr_pool_t         *p, 
-  device_table_list  *dtl, 
-  Node               *node);
+  Doc               *doc, 
+  apr_pool_t        *p, 
+  device_table_list *dtl, 
+  Node              *node) ;
 
 
 /**
@@ -67,13 +67,10 @@ s_set_devices_data(Doc *doc, apr_pool_t *p, mod_chxj_config *conf, Node *node)
   for (child = qs_get_child_node(doc,node); 
        child ; 
        child = qs_get_next_node(doc,child)) {
-
-    char *name;
-
-    name = qs_get_node_name(doc,child);
-
-    if ((*name == 'd' || *name == 'D') && strcasecmp(name, "devices") == 0)
+    char *name = qs_get_node_name(doc,child);
+    if (STRCASEEQ('d','D',"devices",name)) {
       s_set_user_agent_data(doc, p, conf, child);
+    }
   }
 }
 
@@ -83,20 +80,16 @@ s_set_devices_data(Doc *doc, apr_pool_t *p, mod_chxj_config *conf, Node *node)
 static void
 s_set_user_agent_data(Doc *doc, apr_pool_t *p, mod_chxj_config *conf, Node *node) 
 {
-  Node               *child;
-  device_table_list  *t;
+  Node              *child;
+  device_table_list *t;
 
   for (child = qs_get_child_node(doc,node);
        child ;
        child = qs_get_next_node(doc,child)) {
-
-    char *name;
-
-    name = qs_get_node_name(doc,child);
-
-    if ((*name == 'u' || *name == 'U') && strcasecmp(name, "user_agent") == 0 ) {
-      Attr               *attr;
-      device_table_list  *dtl;
+    char *name = qs_get_node_name(doc,child);
+    if (STRCASEEQ('u','U',"user_agent",name)) {
+      Attr *attr;
+      device_table_list *dtl;
 
       if (! conf->devices) {
         conf->devices = apr_pcalloc(p, sizeof(device_table_list));
@@ -122,10 +115,9 @@ s_set_user_agent_data(Doc *doc, apr_pool_t *p, mod_chxj_config *conf, Node *node
       for (attr = qs_get_attr(doc,child); 
            attr ; 
            attr = qs_get_next_attr(doc,attr)) {
-
         char *attr_name = qs_get_attr_name(doc,attr);
 
-        if ((*attr_name == 'p' || *attr_name == 'P') && strcasecmp(attr_name, "pattern") == 0) {
+        if (STRCASEEQ('p','P',"pattern",attr_name)) {
             dtl->pattern = apr_pstrdup(p, qs_get_attr_value(doc,attr));
             dtl->regexp = ap_pregcomp(p, (const char *)dtl->pattern, AP_REG_EXTENDED|AP_REG_ICASE);
         }
@@ -139,7 +131,7 @@ s_set_user_agent_data(Doc *doc, apr_pool_t *p, mod_chxj_config *conf, Node *node
 static void
 s_set_device_data(Doc *doc, apr_pool_t *p, device_table_list *dtl, Node *node) 
 {
-  Node *child;
+  Node         *child;
   device_table *dt;
 
   dt = apr_pcalloc(p, sizeof(device_table));
@@ -156,13 +148,11 @@ s_set_device_data(Doc *doc, apr_pool_t *p, device_table_list *dtl, Node *node)
   dt->color          = 256;
   dt->dpi_width      = 96;
   dt->dpi_heigh      = 96;
-  dt->charset        = apr_pstrdup(p, "SJIS"); // default: SJIS
 
   for (child = qs_get_child_node(doc,node); 
        child ;
        child = qs_get_next_node(doc,child)) {
     char *name = qs_get_node_name(doc,child);
-
     switch (*name) {
     case 'd':
     case 'D':
@@ -171,21 +161,21 @@ s_set_device_data(Doc *doc, apr_pool_t *p, device_table_list *dtl, Node *node)
       }
       else
       if (strcasecmp(name, "device_id") == 0) {
-        Node *ch = qs_get_child_node(doc, child);
+        Node* ch = qs_get_child_node(doc, child);
         if (ch &&  strcasecmp(qs_get_node_name(doc,ch), "text") == 0) {
           dt->device_id = apr_pstrdup(p, qs_get_node_value(doc, ch));
         }
       }
       else
       if (strcasecmp(name, "device_name") == 0) {
-        Node *ch = qs_get_child_node(doc, child);
+        Node* ch = qs_get_child_node(doc, child);
         if (ch &&  strcasecmp(qs_get_node_name(doc,ch), "text") == 0) {
           dt->device_name = apr_pstrdup(p, qs_get_node_value(doc, ch));
         }
       }
       else
       if (strcasecmp(name, "dpi_width") == 0) {
-        Node *ch = qs_get_child_node(doc, child);
+        Node* ch = qs_get_child_node(doc, child);
         if (ch && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) {
           char *vv = qs_get_node_value(doc,ch);
           unsigned int ii;
@@ -202,7 +192,7 @@ s_set_device_data(Doc *doc, apr_pool_t *p, device_table_list *dtl, Node *node)
       }
       else
       if (strcasecmp(name, "dpi_heigh") == 0) {
-        Node *ch = qs_get_child_node(doc, child);
+        Node* ch = qs_get_child_node(doc, child);
         if (ch && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) {
           char *vv = qs_get_node_value(doc,ch);
           unsigned int ii;
@@ -226,50 +216,44 @@ s_set_device_data(Doc *doc, apr_pool_t *p, device_table_list *dtl, Node *node)
         Node *ch = qs_get_child_node(doc, child);
         if (ch &&  strcasecmp(qs_get_node_name(doc,ch), "text") == 0) {
           char *vv = qs_get_node_value(doc, ch);
-          if (strcasecmp(vv, "xhtml_mobile_1_0") == 0) {
+          if (STRCASEEQ('x','X',"xhtml_mobile_1_0",vv)) {
             dt->html_spec_type = CHXJ_SPEC_XHtml_Mobile_1_0;
           }
-          else
-          if (strcasecmp(vv, "chtml_1_0") == 0) {
+          else if (STRCASEEQ('c','C',"chtml_1_0",vv)) {
             dt->html_spec_type = CHXJ_SPEC_Chtml_1_0;
           }
-          else
-          if (strcasecmp(vv, "chtml_2_0") == 0) {
+          else if (STRCASEEQ('c','C',"chtml_2_0",vv)) {
             dt->html_spec_type = CHXJ_SPEC_Chtml_2_0;
           }
-          else
-          if (strcasecmp(vv, "chtml_3_0") == 0) {
+          else if (STRCASEEQ('c','C',"chtml_3_0",vv)) {
             dt->html_spec_type = CHXJ_SPEC_Chtml_3_0;
           }
-          else
-          if (strcasecmp(vv, "chtml_4_0") == 0) {
+          else if (STRCASEEQ('c','C',"chtml_4_0",vv)) {
             dt->html_spec_type = CHXJ_SPEC_Chtml_4_0;
           }
-          else
-          if (strcasecmp(vv, "chtml_5_0") == 0) {
+          else if (STRCASEEQ('c','C',"chtml_5_0",vv)) {
             dt->html_spec_type = CHXJ_SPEC_Chtml_5_0;
           }
-          else
-          if (strcasecmp(vv, "chtml_6_0") == 0) {
+          else if (STRCASEEQ('c','C',"chtml_6_0",vv)) {
             dt->html_spec_type = CHXJ_SPEC_Chtml_6_0;
           }
-          else
-          if (strcasecmp(vv, "chtml_7_0") == 0) {
+          else if (STRCASEEQ('c','C',"chtml_7_0",vv)) {
             dt->html_spec_type = CHXJ_SPEC_Chtml_7_0;
           }
-          else
-          if (strcasecmp(vv, "hdml") == 0) {
+          else if (STRCASEEQ('h','H',"hdml",vv)) {
             dt->html_spec_type = CHXJ_SPEC_Hdml;
           }
-          else
-          if (strcasecmp(vv, "jhtml") == 0) {
+          else if (STRCASEEQ('j','J',"jhtml",vv)) {
             dt->html_spec_type = CHXJ_SPEC_Jhtml;
+          }
+          else if (STRCASEEQ('j','J',"jxhtml",vv)) {
+            dt->html_spec_type = CHXJ_SPEC_Jxhtml;
           }
         }
       }
       else 
       if (strcasecmp(name, "heigh") == 0) {
-        Node *ch = qs_get_child_node(doc, child);
+        Node* ch = qs_get_child_node(doc, child);
         if (ch && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) {
           char *vv = qs_get_node_value(doc,ch);
           unsigned int ii;
@@ -428,7 +412,8 @@ s_set_device_data(Doc *doc, apr_pool_t *p, device_table_list *dtl, Node *node)
             dt->color = chxj_atoi(vv);
         }
       }
-      else if (strcasecmp(name, "cache") == 0) {
+      else
+      if (strcasecmp(name, "cache") == 0) {
         Node *ch = qs_get_child_node(doc, child);
         if (ch && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) {
           char *vv = qs_get_node_value(doc,ch);
@@ -443,23 +428,6 @@ s_set_device_data(Doc *doc, apr_pool_t *p, device_table_list *dtl, Node *node)
             dt->cache = atoi(qs_get_node_value(doc,ch));
           else 
             dt->cache = 0;
-        }
-      }
-      else if (strcasecmp(name, "charset") == 0) {
-        Node *ch = qs_get_child_node(doc, child);
-        if (ch && strcasecmp(qs_get_node_name(doc,ch), "text") == 0) {
-          dt->charset = apr_pstrdup(p, qs_get_node_value(doc, ch));
-          if ( !STRCASEEQ('s','S',"SJIS",      dt->charset)
-            && !STRCASEEQ('s','S',"SHIFT-JIS", dt->charset)
-            && !STRCASEEQ('s','S',"SHIFT_JIS", dt->charset)
-            && !STRCASEEQ('u','U',"UTF8",      dt->charset)
-            && !STRCASEEQ('u','U',"UTF-8",     dt->charset)) {
-            ap_log_perror(APLOG_MARK,APLOG_ERR,0,p,
-                          "Invalid charset(device_data.xml):[%s]. ==> selected SJIS",dt->charset);
-            ap_log_perror(APLOG_MARK,APLOG_ERR,0,p,
-                          "  usage: <charset>[SJIS|SHIFT-JIS|SHIFT_JIS|UTF8|UTF-8]</charset>");
-            dt->charset = apr_pstrdup(p, "SJIS");
-          }
         }
       }
       break;

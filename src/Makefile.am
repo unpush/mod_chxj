@@ -17,7 +17,10 @@ libmod_chxj_la_SOURCES = mod_chxj.c \
     chxj_chtml10.c \
     chxj_chtml20.c \
     chxj_chtml30.c  \
+    chxj_chtml40.c  \
+    chxj_chtml50.c  \
     chxj_jhtml.c \
+    chxj_jxhtml.c \
     chxj_str_util.c  \
     chxj_img_conv.c  \
     chxj_dump.c \
@@ -29,8 +32,11 @@ libmod_chxj_la_SOURCES = mod_chxj.c \
     chxj_node_convert.c \
     chxj_url_encode.c \
     chxj_preg_replace.c \
+<<<<<<< HEAD:src/Makefile.am
     chxj_emoji.c \
     chxj_jreserved_tag.c \
+=======
+>>>>>>>   * updated new trunk.:src/Makefile.am
     chxj_cookie.c \
     chxj_mysql.c \
     chxj_memcache.c \
@@ -53,7 +59,11 @@ clean:
 	rm -f mod_chxj.so
 
 install: make_so
+<<<<<<< HEAD:src/Makefile.am
 	@@APXS@ -i -n "chxj" @PACKAGE_NAME@.so
+=======
+	@@APXS@ -i -n "chxj" @PACKAGE_NAME@.so 
+>>>>>>>   * updated new trunk.:src/Makefile.am
 
 activate: make_so
 	@@APXS@ -i -a -n "chxj" @PACKAGE_NAME@.so

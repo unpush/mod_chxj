@@ -95,6 +95,10 @@ struct hdml_t {
 
   device_table     *spec;
   mod_chxj_config  *conf;
+<<<<<<< HEAD:include/chxj_hdml.h
+=======
+
+>>>>>>>   * updated new trunk.:include/chxj_hdml.h
   chxjconvrule_entry *entryp;
   cookie_t           *cookie;
 };

@@ -42,6 +42,7 @@ qs_parse_file(Doc *doc, const char *filename)
   tgt          = NULL;
   return_value = NULL;
 
+
   memset(&st, 0, sizeof(struct stat));
 
   rtn = stat(filename, &st); 
@@ -52,7 +53,7 @@ qs_parse_file(Doc *doc, const char *filename)
   if (fd == -1)
     return return_value;
 
-  tgt = (char*)mmap(0, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
+  tgt = (char *)mmap(0, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
   if (tgt == (void *)-1) {
     close(fd);
     return return_value;
