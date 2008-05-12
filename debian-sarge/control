@@ -1,0 +1,21 @@
+Source: libapache2-mod-chxj
+Priority: optional
+Maintainer: Atsushi Konno <konn@users.sourceforge.jp>
+Build-Depends: debhelper (>= 4.2.32), apache2-threaded-dev (>= 2.0.54), apache2-utils (>= 2.0.54), apache2-common (>=2.0.54), autoconf, automake,libapr0 (>= 2.0.54), libmagick6-dev (>=  6.0.6.2), libmysqlclient14-dev (>= 4.1.11a)
+Standards-Version: 3.6.2
+Section: libs
+
+Package: libapache2-mod-chxj-dev
+Section: libdevel
+Architecture: any
+Depends: libapache2-mod-chxj (= ${Source-Version})
+Description: CHTML to HDML,XHTML,JHTML convert module.
+  The contents conversion middleware for domestic main carrying (three careers) is made as a module for Apache2.2. UserAgent is seen when contents made with CHTML are output and it converts it into HDML, XHTML, and JHTML (The image : to JPG, GIF, JPG, GIF from PNG, and PNG and BMP). With QR code generation function. 
+
+
+Package: libapache2-mod-chxj
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, apache2 (>= 2.0.54), apache2-mpm-prefork (>= 2.0.54), apache2-threaded-dev (>= 2.0.54), apache2-utils (>= 2.0.54), apache2-common (>= 2.0.54), libapr0 (>= 2.0.54), libmagick6-dev (>= 6.0.6.2), libmysqlclient14-dev (>= 4.1.11a)
+Description: CHTML to HDML,XHTML,JHTML convert module.
+  The contents conversion middleware for domestic main carrying (three careers) is made as a module for Apache2.2. UserAgent is seen when contents made with CHTML are output and it converts it into HDML, XHTML, and JHTML (The image : to JPG, GIF, JPG, GIF from PNG, and PNG and BMP). With QR code generation function. 
