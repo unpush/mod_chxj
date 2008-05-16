@@ -12,9 +12,9 @@
 <section title="Overview">
 
 mod_chxj¤Ï¥ª¡¼¥×¥ó¥½¡¼¥¹¤Î·ÈÂÓ¸þ¤±¥³¥ó¥Æ¥ó¥ÄÊÑ´¹Apache2.xÍÑ¥â¥¸¥å¡¼¥ë¤Ç¤¢¤ê¡¢
-CHTML¡ÊDoCoMo i-ModeÍÑ CHTML3.0)¤Çµ­½Ò¤µ¤ì¤¿Ê¸½ñ¤äÄÌ¾ï¤ÎHTML¤Çµ­½Ò¤µ¤ì¤¿Ê¸½ñ¤ò¡¢¥¢¥¯¥»¥¹¤ËÍè¤¿Ã¼Ëö¤ÎUser-Agent¥Ø¥Ã¥À¤ò¸«¤Æ¡¢¤½¤ì¤¾¤ì¤ÎÃ¼Ëö¤Ë¤¢¤Ã¤¿·Á¼°¤ËÊÑ´¹¤·¤Þ¤¹¡£
+CHTML¡ÊDoCoMo i-ModeÍÑ CHTML5.0)¤Çµ­½Ò¤µ¤ì¤¿Ê¸½ñ¤äÄÌ¾ï¤ÎHTML¤Çµ­½Ò¤µ¤ì¤¿Ê¸½ñ¤ò¡¢¥¢¥¯¥»¥¹¤ËÍè¤¿Ã¼Ëö¤ÎUser-Agent¥Ø¥Ã¥À¤ò¸«¤Æ¡¢¤½¤ì¤¾¤ì¤ÎÃ¼Ëö¤Ë¤¢¤Ã¤¿·Á¼°¤ËÊÑ´¹¤·¤Þ¤¹¡£
 HTMLÊ¸½ñ¤Ë¸Â¤é¤º¡¢²èÁü¡Êjpg¡¢gif¡¢png¡Ë¡¢³¨Ê¸»ú¤Ë¤Ä¤¤¤Æ¤â¡¢ÄêµÁ¥Õ¥¡¥¤¥ë¤Ë½¾¤Ã¤Æ¤½¤ì¤¾¤ì¤Î¥­¥ã¥ê¥¢¤Ë¤¢¤Ã¤¿³¨Ê¸»ú¤ËÊÑ´¹¤·¤Þ¤¹¡£
-CookieÈóÂÐ±þÃ¼Ëö¡¢ReferÈóÂÐ±þÃ¼Ëö¤Î¤¿¤á¤Ë¡¢Set-Cookie¡¢Cookie¥Ø¥Ã¥À¤äReferer¥Ø¥Ã¥À¤ò¥·¥ß¥å¥ì¡¼¥È¤¹¤ë¤³¤È¤â¤Ç¤­¤Þ¤¹¡ÊEXPERIMENTAL)¡£
+CookieÈóÂÐ±þÃ¼Ëö¡¢ReferÈóÂÐ±þÃ¼Ëö¤Î¤¿¤á¤Ë¡¢Set-Cookie¡¢Cookie¥Ø¥Ã¥À¤äReferer¥Ø¥Ã¥À¤ò¥·¥ß¥å¥ì¡¼¥È¤¹¤ë¤³¤È¤â¤Ç¤­¤Þ¤¹¡£
 
 
 </section>
@@ -24,9 +24,11 @@ mod_chxj¤ò¥¤¥ó¥¹¥È¡¼¥ë¤¹¤ëÁ°¤Ë¡¢²¼µ­¤Î¤â¤Î¤òÍÑ°Õ¤¹¤ëÉ¬Í×¤¬¤¢¤ê¤Þ¤¹¡£
 <ol>
   <li>Apache2.x¤Î¥Ø¥Ã¥À¡¼¥Õ¥¡¥¤¥ë·²</li>
   <li>Apache2.xÍÑ¤Îapxs</li>
-  <li>apr(Apache Portable Runtime)¥é¥¤¥Ö¥é¥ê¤È¤½¤Î¥Ø¥Ã¥À¥Õ¥¡¥¤¥ë·´(apu´Þ¤à)<note>memcache¤ò»ÈÍÑ¤¹¤ë¾ì¹ç¡¢apu¤Ï0.9.7°Ê¹ß</note></li>
+  <li>apr(Apache Portable Runtime)¥é¥¤¥Ö¥é¥ê¤È¤½¤Î¥Ø¥Ã¥À¥Õ¥¡¥¤¥ë·´(apu´Þ¤à)</li>
   <li>automake¡¢autoconf¡¢libtool1.3.X</li>
   <li>ImageMagick(MagickWand)</li>
+  <li>memcached¤ò»ÈÍÑ¤¹¤ë¾ì¹ç¤Ë¤Ïlibmemcached 0.20°Ê¹ß</li>
+  <li>mysql¤ò»ÈÍÑ¤¹¤ë¾ì¹ç¤Ë¤Ïlibmysqlclient 4.1.11a°Ê¹ß</li>
   <li>Linux</li>
 </ol>
 </subsection>
@@ -139,25 +141,25 @@ mod_chxj¤ò¥³¥ó¥Ñ¥¤¥ë¤¹¤ë¤Ë¤Ïconfigure¤ò¹Ô¤¦É¬Í×¤¬¤¢¤ê¤Þ¤¹¡£
   <subsection title="--enable-memcache-cookie">
       Cookie¥·¥ß¥å¥ì¡¼¥Èµ¡Ç½¤ò»ÈÍÑ¤¹¤ëºÝ¡¢ÊÝÂ¸Àè¤ò¥Ç¥Õ¥©¥ë¥È¤ÎDBM¤Ç¤ÏÌµ¤¯¡¢memcached¤ËÊÝÂ¸¤¹¤ë¤è¤¦¤Ë¤·¤Þ¤¹¡£
       Default¤ÎDBM¤ÇÎÉ¤¤¾ì¹ç¤ä¡¢Cookie¥·¥ß¥å¥ì¡¼¥Èµ¡Ç½¤ò»ÈÍÑ¤·¤Ê¤¤¾ì¹ç¤Ï»ØÄê¤¹¤ëÉ¬Í×¤Ï¤¢¤ê¤Þ¤»¤ó¡£
-      ÊÌÅÓmemcached¤òÍÑ°Õ¤¹¤ëÉ¬Í×¤¬¤¢¤ê¤Þ¤¹¡£¤Þ¤¿¡¢ËÜ¥ª¥×¥·¥ç¥ó¤ò»ØÄê¤·¤¿¾ì¹ç¤Ï¡¢--with-apr-memcache-header¡¢--with-apr-memcache-lib-dir¤â»ØÄê¤·¤Þ¤¹¡£
-      ¤³¤ì¤Ïapr_memcache¤Î¥Ø¥Ã¥À¤È¥é¥¤¥Ö¥é¥ê¤¬É¬Í×¤Ê¤³¤È¤ò°ÕÌ£¤·¤Þ¤¹¡£
+      ÊÌÅÓmemcached¤òÍÑ°Õ¤¹¤ëÉ¬Í×¤¬¤¢¤ê¤Þ¤¹¡£¤Þ¤¿¡¢ËÜ¥ª¥×¥·¥ç¥ó¤ò»ØÄê¤·¤¿¾ì¹ç¤Ï¡¢--with-memcached-header¡¢--with-memcached-lib-dir¤â»ØÄê¤·¤Þ¤¹¡£
+      ¤³¤ì¤Ïlibmemcached¤Î¥Ø¥Ã¥À¤È¥é¥¤¥Ö¥é¥ê¤¬É¬Í×¤Ê¤³¤È¤ò°ÕÌ£¤·¤Þ¤¹¡£
       <program title="--enable-memcache-cookie">
-         $ ./configure --enable-memcache-cookie --with-apr-memcache-header=/usr/include/apr-memcache0 --with-apr-memcache-lib-dir=/usr/lib
+         $ ./configure --enable-memcache-cookie --with-memcached-header=/usr/include/libmemcached --with-memcached-lib-dir=/usr/lib
       </program>
-      ¾åµ­¤Ï¡¢/usr/include/apr_memcache0°Ê²¼¤Ëapr-memcacheÍÑ¤Î¥Ø¥Ã¥À¤¬¤¢¤ê¡¢/usr/lib°Ê²¼¤Ëlibapr_memcache.so¤¬¤¢¤ë¾ì¹ç¤ÎÎã¤Ç¤¹¡£
+      ¾åµ­¤Ï¡¢/usr/include/libmemcached°Ê²¼¤ËlibmemcachedÍÑ¤Î¥Ø¥Ã¥À¤¬¤¢¤ê¡¢/usr/lib°Ê²¼¤Ëlibmemcached.so¤¬¤¢¤ë¾ì¹ç¤ÎÎã¤Ç¤¹¡£
   </subsection>
-  <subsection title="--with-apr-memcache-header">
+  <subsection title="--with-memcached-header">
       --enable-memcache-cookie¤ò»ØÄê¤·¤¿¾ì¹ç¤ÏÉ¬¿Ü¤Ç¤¹¡£
-      apr-memcache¤Î¥Ø¥Ã¥À¥Õ¥¡¥¤¥ë¤Î¾ì½ê¤ò»ØÄê¤·¤Þ¤¹¡£
-      <program title="--with-apr-memcache-header">
-         $ ./configure --enable-memcache-cookie --with-apr-memcache-header=/usr/include/apr_memcache0  --with-apr-memcache-lib-dir=/usr/lib
+      libmemcached¤Î¥Ø¥Ã¥À¥Õ¥¡¥¤¥ë¤Î¾ì½ê¤ò»ØÄê¤·¤Þ¤¹¡£
+      <program title="--with-memcached-header">
+         $ ./configure --enable-memcache-cookie --with-memcached-header=/usr/include/libmemcached  --with-memcached-lib-dir=/usr/lib
       </program>
   </subsection>
-  <subsection title="--with-apr-memcache-lib-dir">
-      --enable-mysql-cookie¤ò»ØÄê¤·¤¿¾ì¹ç¤ÏÉ¬¿Ü¤Ç¤¹¡£
-      apr-memcache¤Î¥é¥¤¥Ö¥é¥ê¡¢libapr_memcache.so¤ÎÀßÃÖ¤µ¤ì¤Æ¤¤¤ë¥Ç¥£¥ì¥¯¥È¥ê¤ò»ØÄê¤·¤Þ¤¹¡£
-      <program title="--with-apr-memcache-lib-dir">
-         $ ./configure --enable-memcache-cookie --with-apr-memcache-header=/usr/include/apr_memcache0  --with-apr-memcache-lib-dir=/usr/lib
+  <subsection title="--with-memcached-lib-dir">
+      --enable-memcache-cookie¤ò»ØÄê¤·¤¿¾ì¹ç¤ÏÉ¬¿Ü¤Ç¤¹¡£
+      libmemcached¤Î¥é¥¤¥Ö¥é¥ê¡¢libmemcached.so¤ÎÀßÃÖ¤µ¤ì¤Æ¤¤¤ë¥Ç¥£¥ì¥¯¥È¥ê¤ò»ØÄê¤·¤Þ¤¹¡£
+      <program title="--with-memcached-lib-dir">
+         $ ./configure --enable-memcache-cookie --with-memcached-header=/usr/include/libmemcached  --with-memcached-lib-dir=/usr/lib
       </program>
   </subsection>
 </subsection>
@@ -174,7 +176,7 @@ mod_chxj¤ò¥³¥ó¥Ñ¥¤¥ë¤¹¤ë¤Ë¤Ïconfigure¤ò¹Ô¤¦É¬Í×¤¬¤¢¤ê¤Þ¤¹¡£
 
 <program title="httpd.conf">
 #====================================================================================
-# ¥â¥¸¥å¡¼¥ë¤òApache2.0¤Ë¥í¡¼¥É
+# ¥â¥¸¥å¡¼¥ë¤òApache2.x¤Ë¥í¡¼¥É
 #====================================================================================
 LoadModule chxj_module /usr/lib/apache2/modules/mod_chxj.so
 
@@ -208,7 +210,7 @@ ChxjConvertRule "^/chxj.+$" "EngineOn" "NONE"
 
 <program title="httpd.conf">
 #====================================================================================
-# ¥â¥¸¥å¡¼¥ë¤òApache2.0¤Ë¥í¡¼¥É
+# ¥â¥¸¥å¡¼¥ë¤òApache2.x¤Ë¥í¡¼¥É
 #====================================================================================
 LoadModule chxj_module /usr/lib/apache2/modules/mod_chxj.so
 
@@ -244,7 +246,7 @@ ChxjConvertRule "^/chxj.+$" "EngineOn" "EUC-JP"
 
 <program title="httpd.conf">
 #====================================================================================
-# ¥â¥¸¥å¡¼¥ë¤òApache2.0¤Ë¥í¡¼¥É
+# ¥â¥¸¥å¡¼¥ë¤òApache2.x¤Ë¥í¡¼¥É
 #====================================================================================
 LoadModule chxj_module /usr/lib/apache2/modules/mod_chxj.so
 
@@ -630,278 +632,111 @@ ChxjConvRule "^/chxj.+$" "EngineOn" "EUC-JP"
 </subsection>
 </section>
 <section title="ÂÐ±þ¤¹¤ëCHTML¥¿¥°">
-ÊÑ´¹²ÄÇ½¤Ê£Ã£È£Ô£Í£Ì¥¿¥°¤Ï°Ê²¼¤Î¤È¤ª¤ê¤Ç¤¹¡£
+ÊÑ´¹²ÄÇ½¤ÊCHTML¥¿¥°¤Ï°Ê²¼¤Î¤È¤ª¤ê¤Ç¤¹¡£
 
 <table title="ÂÐ±þ¥¿¥°°ìÍ÷">
   <thead>
-    <tr>
-      <td>¥¿¥°</td>
-      <td>Â°À­</td>
-      <td>CHTML</td>
-      <td>HDML</td>
-      <td>XHTML</td>
-      <td>JHTML</td>
-      <td>È÷¹Í</td>
-    </tr>
+    <tr><th>¥¿¥°              </th><th>Â°À­            </th><th>È÷¹Í</th></tr>
   </thead>
   <tbody>
-    <tr>
-       <td>&lt;HTML&gt;</td>
-       <td align="center"> </td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="left">Â°À­¤ò»ØÄê¤·¤¿¾ì¹ç¤ÏÌµ»ë¤·¤Þ¤¹</td>
-    </tr>
-    <tr>
-       <td>&lt;META&gt;</td>
-       <td align="center">http-equiv</td>
-       <td align="center">¢¤</td>
-       <td align="center">¡ß</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="left">CHTML1.0¡¢HDML¤Ç¤ÏÌµ»ë¤·¤Þ¤¹</td>
-    </tr>
-    <tr>
-       <td> </td>
-       <td align="center">content</td>
-       <td align="center">¢¤</td>
-       <td align="center">¡ß</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="left">CHTML1.0¡¢HDML¤Ç¤ÏÌµ»ë¤·¤Þ¤¹</td>
-    </tr>
-    <tr>
-       <td>&lt;HEAD&gt;</td>
-       <td align="center"> </td>
-       <td align="center">¡û</td>
-       <td align="center">¢¤</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="left">Â°À­¤ò»ØÄê¤·¤¿¾ì¹ç¤ÏÌµ»ë¤·¤Þ¤¹</td>
-    </tr>
-    <tr>
-       <td>&lt;TITLE&gt;</td>
-       <td align="center"> </td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="left">Â°À­¤ò»ØÄê¤·¤¿¾ì¹ç¤ÏÌµ»ë¤·¤Þ¤¹</td>
-    </tr>
-    <tr>
-       <td>&lt;BASE&gt;</td>
-       <td align="center"> </td>
-       <td align="center">¡û</td>
-       <td align="center">¡ß</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="left">HDML¤Ç¤ÏÌµ»ë¤·¤Þ¤¹</td>
-    </tr>
-    <tr>
-       <td>&lt;BODY&gt;</td>
-       <td align="center">bgcolor</td>
-       <td align="center">¢¤</td>
-       <td align="center">¡ß</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="left">HDML¡¢CHTML1.0¡¢CHTML2.0¤Ç¤ÏÌµ»ë¤·¤Þ¤¹</td>
-    </tr>
-    <tr>
-       <td> </td>
-       <td align="center">text</td>
-       <td align="center">¢¤</td>
-       <td align="center">¡ß</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="left">HDML¡¢CHTML1.0¡¢CHTML2.0¤Ç¤ÏÌµ»ë¤·¤Þ¤¹</td>
-    </tr>
-    <tr>
-       <td> </td>
-       <td align="center">link</td>
-       <td align="center">¢¤</td>
-       <td align="center">¡ß</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="left">HDML¡¢CHTML1.0¡¢CHTML2.0¤Ç¤ÏÌµ»ë¤·¤Þ¤¹</td>
-    </tr>
-    <tr>
-       <td>&lt;A&gt;</td>
-       <td align="center">href</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="left"> </td>
-    </tr>
-    <tr>
-       <td> </td>
-       <td align="center">accesskey</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="left"> </td>
-    </tr>
-    <tr>
-       <td>&lt;BR&gt;</td>
-       <td align="center"> </td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="left"> </td>
-    </tr>
-    <tr>
-       <td>&lt;FONT&gt;</td>
-       <td align="center">color</td>
-       <td align="center">¢¤</td>
-       <td align="center">¡ß</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="left">HDML,CHTML1.0¤Ç¤ÏÌµ»ë¤·¤Þ¤¹</td>
-    </tr>
-    <tr>
-       <td>&lt;FORM&gt;</td>
-       <td align="center">action</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="left"> </td>
-    </tr>
-    <tr>
-       <td> </td>
-       <td align="center">method</td>
-       <td align="center">¡û</td>
-       <td align="center">¡ß</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="left">HDML¤Ç¤ÏÌµ»ë¤·¤Þ¤¹</td>
-    </tr>
-    <tr>
-       <td>&lt;INPUT&gt;</td>
-       <td align="center">name</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="left"> </td>
-    </tr>
-    <tr>
-       <td> </td>
-       <td align="center">type</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="left">text,password,hidden,radio,checkbox,submit¤ËÂÐ±þ</td>
-    </tr>
-    <tr>
-       <td> </td>
-       <td align="center">value</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="left"></td>
-    </tr>
-    <tr>
-       <td> </td>
-       <td align="center">istyle</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="left"> </td>
-    </tr>
-    <tr>
-       <td>&lt;SELECT&gt;</td>
-       <td align="center">name</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="left"> </td>
-    </tr>
-    <tr>
-       <td> </td>
-       <td align="center">size</td>
-       <td align="center">¡û</td>
-       <td align="center">¡ß</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="left">HDML¤Ç¤ÏÌµ»ë¤·¤Þ¤¹</td>
-    </tr>
-    <tr>
-       <td>&lt;OPTION&gt;</td>
-       <td align="center">value</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="left"><note>É¬¤ºÊÄ¤¸¤Æ¤¯¤À¤µ¤¤¡£¤½¤Î¤¦¤ÁÂÐ±þ¤·¤Þ¤¹¡£</note></td>
-    </tr>
-    <tr>
-       <td> </td>
-       <td align="center">checked</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="left"> </td>
-    </tr>
-    <tr>
-       <td>&lt;DIV&gt;</td>
-       <td align="center">align</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="left"> </td>
-    </tr>
-    <tr>
-       <td>&lt;HR&gt;</td>
-       <td align="center"> </td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="left"> </td>
-    </tr>
-    <tr>
-       <td>&lt;CENTER&gt;</td>
-       <td align="center"> </td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="left"> </td>
-    </tr>
-    <tr>
-       <td>&lt;IMG&gt;</td>
-       <td align="center">src</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="left"> </td>
-    </tr>
-    <tr>
-       <td>&lt;CHXJ:IF&gt;</td>
-       <td align="center">lang</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="center">¡û</td>
-       <td align="left">lang="chtml" lang="xhtml" lang="hdml" lang="jhtml"¤¬»ØÄê¤Ç¤­¤Þ¤¹</td>
-    </tr>
+    <tr><td>&lt;!-- --&gt;    </td><td>                </td><td>Ìµ»ë¤·¤Þ¤¹¡£</td></tr>
+    <tr><td>&lt;A&gt;         </td><td>                </td><td> </td></tr>
+    <tr><td>                  </td><td>name            </td><td>HDML¤Ç¤ÏÌµ»ë¤·¤Þ¤¹ </td></tr>
+    <tr><td>                  </td><td>href            </td><td> </td></tr>
+    <tr><td>                  </td><td>accesskey       </td><td> </td></tr>
+    <tr><td>&lt;BASE&gt;      </td><td>                </td><td>HDML¤Ç¤ÏÌµ»ë¤·¤Þ¤¹</td></tr>
+    <tr><td>                  </td><td>href            </td><td>HDML¤Ç¤ÏÌµ»ë¤·¤Þ¤¹</td></tr>
+    <tr><td>&lt;BODY&gt;      </td><td>                </td><td>HDML¤Ç¤ÏÌµ»ë¤·¤Þ¤¹</td></tr>
+    <tr><td>                  </td><td>bgcolor         </td><td>HDML,CHTML1.0¤Ç¤ÏÌµ»ë¤·¤Þ¤¹</td></tr>
+    <tr><td>                  </td><td>text            </td><td>HDML,CHTML1.0¤Ç¤ÏÌµ»ë¤·¤Þ¤¹</td></tr>
+    <tr><td>                  </td><td>link            </td><td>HDML,CHTML1.0¤Ç¤ÏÌµ»ë¤·¤Þ¤¹</td></tr>
+    <tr><td>                  </td><td>alink           </td><td>HDML,XHTML,CHTML1.0,CHTML2.0,CHTML3.0,JHTML,JXHTML¤Ç¤ÏÌµ»ë¤·¤Þ¤¹¡£<strong>0.12.0°Ê¹ß¤ÇÂÐ±þ</strong></td></tr>
+    <tr><td>                  </td><td>vlink           </td><td>HDML,XHTML,CHTML1.0,CHTML2.0,CHTML3.0,JHTML,JXHTML¤Ç¤ÏÌµ»ë¤·¤Þ¤¹¡£<strong>0.12.0°Ê¹ß¤ÇÂÐ±þ</strong></td></tr>
+    <tr><td>&lt;BLINK&gt;     </td><td>                </td><td>HDML,CHTML1.0¤Ç¤ÏÌµ»ë¤·¤Þ¤¹¡£<strong>0.11.0°Ê¹ß¤ÇÂÐ±þ</strong></td></tr>
+    <tr><td>&lt;BLOCKQUOTE&gt;</td><td>                </td><td><strong>0.11.0°Ê¹ß¤ÇÂÐ±þ</strong>                    </td></tr>
+    <tr><td>&lt;BR&gt;        </td><td>                </td><td> </td></tr>
+    <tr><td>                  </td><td>clear           </td><td>HDML¤Ç¤ÏÌµ»ë¤·¤Þ¤¹¡£<strong>0.11.0°Ê¹ß¤ÇÂÐ±þ</strong></td></tr>
+    <tr><td>&lt;CENTER&gt;    </td><td>                </td><td> </td></tr>
+    <tr><td>&lt;DIR&gt;       </td><td>                </td><td><strong>0.11.0°Ê¹ß¤ÇÂÐ±þ</strong></td></tr>
+    <tr><td>                  </td><td>type            </td><td>HDML,CHTML1.0,CHTML2.0,CHTML3.0,JHTML¤Ç¤ÏÌµ»ë¤·¤Þ¤¹¡£<strong>0.12.0°Ê¹ß¤ÇÂÐ±þ</strong></td></tr>
+    <tr><td>&lt;DL&gt;        </td><td>                </td><td>HDML¤Ç¤ÏÌµ»ë¤·¤Þ¤¹¡£<strong>0.11.0°Ê¹ß¤ÇÂÐ±þ</strong></td></tr>
+    <tr><td>&lt;DT&gt;        </td><td>                </td><td><strong>0.11.0°Ê¹ß¤ÇÂÐ±þ</strong>¡£É¬¤º¥¿¥°¤ÏÊÄ¤¸¤Æ¤¯¤À¤µ¤¤</td></tr>
+    <tr><td>&lt;DD&gt;        </td><td>                </td><td><strong>0.11.0°Ê¹ß¤ÇÂÐ±þ</strong>¡£É¬¤º¥¿¥°¤ÏÊÄ¤¸¤Æ¤¯¤À¤µ¤¤</td></tr>
+    <tr><td>&lt;DIV&gt;       </td><td>                </td><td> </td></tr>
+    <tr><td>                  </td><td>align           </td><td> </td></tr>
+    <tr><td>&lt;FONT&gt;      </td><td>                </td><td>HDML,CHTML1.0¤Ç¤ÏÌµ»ë¤·¤Þ¤¹</td></tr>
+    <tr><td>                  </td><td>color           </td><td>HDML,CHTML1.0¤Ç¤ÏÌµ»ë¤·¤Þ¤¹</td></tr>
+    <tr><td>                  </td><td>size            </td><td><strong>0.12.0°Ê¹ß¤ÇÂÐ±þ</strong>¡£HDML,CHTML1.0,CHTML2.0,CHTML3.0,CHTML4.0¤Ç¤ÏÌµ»ë¤·¤Þ¤¹¡£</td></tr>
+    <tr><td>&lt;FORM&gt;      </td><td>                </td><td> </td></tr>
+    <tr><td>                  </td><td>action          </td><td> </td></tr>
+    <tr><td>                  </td><td>method          </td><td>HDML¤Ç¤ÏÌµ»ë¤·¤Þ¤¹ </td></tr>
+    <tr><td>&lt;Hn&gt;        </td><td>                </td><td>HDML,JHTML¤Ç¤Ïalign¤Î¤ßÍ­¸ú¡£<strong>0.11.0°Ê¹ß¤ÇÂÐ±þ</strong></td></tr>
+    <tr><td>                  </td><td>align           </td><td>HDML,JHTML¤Ç¤Ïalign¤Î¤ßÍ­¸ú¡£<strong>0.11.0°Ê¹ß¤ÇÂÐ±þ</strong></td></tr>
+    <tr><td>&lt;HR&gt;        </td><td>                </td><td> </td></tr>
+    <tr><td>                  </td><td>align           </td><td>HDML¤Ç¤ÏÌµ»ë¤·¤Þ¤¹¡£</td></tr>
+    <tr><td>                  </td><td>size            </td><td>HDML¤Ç¤ÏÌµ»ë¤·¤Þ¤¹¡£</td></tr>
+    <tr><td>                  </td><td>width           </td><td>HDML¤Ç¤ÏÌµ»ë¤·¤Þ¤¹¡£</td></tr>
+    <tr><td>                  </td><td>color           </td><td>HDML,CHTML1.0,CHTML2.0,CHTML3.0¤Ç¤ÏÌµ»ë¤·¤Þ¤¹¡£<strong>0.12.0°Ê¹ß¤ÇÂÐ±þ</strong></td></tr>
+    <tr><td>&lt;HTML&gt;      </td><td>                </td><td>Â°À­¤ò»ØÄê¤·¤¿¾ì¹ç¤ÏÌµ»ë¤µ¤ì¤Þ¤¹</td></tr>
+    <tr><td>&lt;IMG&gt;       </td><td>                </td><td> </td></tr>
+    <tr><td>                  </td><td>src             </td><td> </td></tr>
+    <tr><td>                  </td><td>align           </td><td> </td></tr>
+    <tr><td>                  </td><td>width           </td><td> </td></tr>
+    <tr><td>                  </td><td>height          </td><td> </td></tr>
+    <tr><td>                  </td><td>hspace          </td><td>JHTML¤Ç¤ÏÌµ»ë¤·¤Þ¤¹¡£ </td></tr>
+    <tr><td>                  </td><td>vspace          </td><td>JHTML¤Ç¤ÏÌµ»ë¤·¤Þ¤¹¡£ </td></tr>
+    <tr><td>                  </td><td>alt             </td><td> </td></tr>
+    <tr><td>&lt;INPUT&gt;     </td><td>                </td><td> </td></tr>
+    <tr><td>                  </td><td>name            </td><td> </td></tr>
+    <tr><td>                  </td><td>type            </td><td>text,password,hidden,radio,checkbox,submit,reset¤ËÂÐ±þ </td></tr>
+    <tr><td>                  </td><td>value           </td><td> </td></tr>
+    <tr><td>                  </td><td>istyle          </td><td> </td></tr>
+    <tr><td>                  </td><td>size            </td><td>HDML¤Ç¤ÏÌµ»ë¤·¤Þ¤¹¡£ </td></tr>
+    <tr><td>                  </td><td>maxlength       </td><td> </td></tr>
+    <tr><td>                  </td><td>checked         </td><td>HDML¤Ç¤ÏÈóÂÐ±þ¡£  </td></tr>
+    <tr><td>                  </td><td>accesskey       </td><td> </td></tr>
+    <tr><td>&lt;LI&gt;        </td><td>                </td><td> </td></tr>
+    <tr><td>                  </td><td>type            </td><td><strong>0.11.0°Ê¹ß¤ÇÂÐ±þ</strong>¡£HDML,CHTML1.0¤Ç¤ÏÌµ»ë¤·¤Þ¤¹¡£</td></tr>
+    <tr><td>                  </td><td>value           </td><td><strong>0.11.0°Ê¹ß¤ÇÂÐ±þ</strong>¡£HDML,CHTML1.0¤Ç¤ÏÌµ»ë¤·¤Þ¤¹¡£</td></tr>
+    <tr><td>&lt;MENU&gt;      </td><td>                </td><td><strong>0.11.0°Ê¹ß¤ÇÂÐ±þ</strong>¡£HDML¤Ç¤ÏÌµ»ë¤·¤Þ¤¹¡£</td></tr>
+    <tr><td>                  </td><td>type            </td><td>HDML,CHTML1.0,CHTML2.0,CHTML3.0,JHTML¤Ç¤ÏÌµ»ë¤·¤Þ¤¹¡£<strong>0.12.0°Ê¹ß¤ÇÂÐ±þ</strong></td></tr>
+    <tr><td>&lt;MARQUEE&gt;   </td><td>                </td><td><strong>0.11.0°Ê¹ß¤ÇÂÐ±þ</strong>¡£HDML,CHTML1.0,XHTML¤Ç¤ÏÌµ»ë¤·¤Þ¤¹¡£</td></tr>
+    <tr><td>                  </td><td>direction       </td><td><strong>0.11.0°Ê¹ß¤ÇÂÐ±þ</strong>¡£HDML,CHTML1.0,XHTML¤Ç¤ÏÌµ»ë¤·¤Þ¤¹¡£</td></tr>
+    <tr><td>                  </td><td>behavior        </td><td><strong>0.11.0°Ê¹ß¤ÇÂÐ±þ</strong>¡£HDML,CHTML1.0,XHTML¤Ç¤ÏÌµ»ë¤·¤Þ¤¹¡£</td></tr>
+    <tr><td>                  </td><td>loop            </td><td><strong>0.11.0°Ê¹ß¤ÇÂÐ±þ</strong>¡£HDML,CHTML1.0,XHTML,JHTML¤Ç¤ÏÌµ»ë¤·¤Þ¤¹¡£</td></tr>
+    <tr><td>                  </td><td>bgcolor         </td><td><strong>0.12.0°Ê¹ß¤ÇÂÐ±þ</strong>¡£HDML,CHTML1.0,CHTML2.0,CHTML3.0,CHTML4.0,JHTML¤Ç¤ÏÌµ»ë¤·¤Þ¤¹¡£</td></tr>
+    <tr><td>&lt;OL&gt;        </td><td>                </td><td><strong>0.11.0°Ê¹ß¤ÇÂÐ±þ</strong>¡£HDML¤Ç¤ÏÌµ»ë¤·¤Þ¤¹¡£</td></tr>
+    <tr><td>                  </td><td>type            </td><td><strong>0.11.0°Ê¹ß¤ÇÂÐ±þ</strong>¡£HDML,CHTML1.0¤Ç¤ÏÌµ»ë¤·¤Þ¤¹¡£</td></tr>
+    <tr><td>                  </td><td>start           </td><td><strong>0.11.0°Ê¹ß¤ÇÂÐ±þ</strong>¡£HDML,CHTML1.0¤Ç¤ÏÌµ»ë¤·¤Þ¤¹¡£</td></tr>
+    <tr><td>&lt;SELECT&gt;    </td><td>                </td><td> </td></tr>
+    <tr><td>                  </td><td>name            </td><td> </td></tr>
+    <tr><td>                  </td><td>size            </td><td>HDML¤Ç¤ÏÌµ»ë¤·¤Þ¤¹ </td></tr>
+    <tr><td>                  </td><td>multiple        </td><td>HDML,CHTML1.0¤Ç¤ÏÌµ»ë¤·¤Þ¤¹¡£<strong>0.11.0°Ê¹ß¤ÇÂÐ±þ</strong></td></tr>
+    <tr><td>&lt;OPTION&gt;    </td><td>                </td><td>É¬¤º¥¿¥°¤ÏÊÄ¤¸¤Æ¤¯¤À¤µ¤¤</td></tr>
+    <tr><td>                  </td><td>value           </td><td>  </td></tr>
+    <tr><td>                  </td><td>selected        </td><td>HDML¤Ç¤ÏÌµ»ë¤·¤Þ¤¹ </td></tr>
+    <tr><td>&lt;P&gt;         </td><td>                </td><td>HDML¤Ç¤Ïalign¤Î¤ßÍ­¸ú¡£ </td></tr>
+    <tr><td>                  </td><td>align           </td><td><strong>0.11.0°Ê¹ß¤ÇÂÐ±þ</strong>¡£</td></tr>
+    <tr><td>&lt;PLAINTEXT&gt; </td><td>                </td><td><strong>0.11.0°Ê¹ß¤ÇÂÐ±þ</strong>¡£</td></tr>
+    <tr><td>&lt;PRE&gt;       </td><td>                </td><td>HDML¤Ï<strong>0.11.0°Ê¹ß¤ÇÂÐ±þ</strong>¡£</td></tr>
+    <tr><td>&lt;TEXTAREA&gt;  </td><td>                </td><td> </td></tr>
+    <tr><td>                  </td><td>name            </td><td> </td></tr>
+    <tr><td>                  </td><td>rows            </td><td> </td></tr>
+    <tr><td>                  </td><td>cols            </td><td> </td></tr>
+    <tr><td>                  </td><td>accesskey       </td><td><strong>0.11.0°Ê¹ß¤ÇÂÐ±þ</strong>¡£</td></tr>
+    <tr><td>                  </td><td>istyle          </td><td><strong>0.11.0°Ê¹ß¤ÇÂÐ±þ</strong>¡£</td></tr>
+    <tr><td>&lt;META&gt;      </td><td>                </td><td>                             </td></tr>
+    <tr><td>                  </td><td>http-equiv      </td><td>CHTML1.0,HDML¤Ç¤ÏÌµ»ë¤µ¤ì¤Þ¤¹</td></tr>
+    <tr><td>                  </td><td>content         </td><td>CHTML1.0,HDML¤Ç¤ÏÌµ»ë¤µ¤ì¤Þ¤¹</td></tr>
+    <tr><td>&lt;HEAD&gt;      </td><td>                </td><td>Â°À­¤ò»ØÄê¤·¤¿¾ì¹ç¤ÏÌµ»ë¤µ¤ì¤Þ¤¹</td></tr>
+    <tr><td>&lt;TITLE&gt;     </td><td>                </td><td>Â°À­¤ò»ØÄê¤·¤¿¾ì¹ç¤ÏÌµ»ë¤µ¤ì¤Þ¤¹</td></tr>
+    <tr><td>&lt;UL&gt;        </td><td>                </td><td><strong>0.11.0°Ê¹ß¤ÇÂÐ±þ</strong>¡£</td></tr>
+    <tr><td>                  </td><td>type            </td><td>HDML,CHTML1.0,CHTML2.0,CHTML3.0,JHTML¤Ç¤ÏÌµ»ë¤·¤Þ¤¹¡£<strong>0.12.0°Ê¹ß¤ÇÂÐ±þ</strong></td></tr>
+    <tr><td>&lt;CHXJ:IF&gt;   </td><td>lang            </td><td>langÂ°À­¤Ë¤Ï&quot;chtml&quot;,&quot;xhtml&quot;,&quot;hdml&quot;,&quot;jhtml&quot;,&quot;jxhtml&quot;¤¬»ØÄê¤Ç¤­¤Þ¤¹¡£(jxhtml¤Ï<strong>0.12.0°Ê¹ß¤ÇÂÐ±þ</strong>) </td></tr>
   </tbody>
-
-  ¾åµ­°Ê³°¤Î¥¿¥°¤ÏÁ´¤ÆÌµ»ë¤µ¤ì¤Þ¤¹¡£
-
 </table>
+
+¾åµ­°Ê³°¤Î¥¿¥°¤ÏÁ´¤ÆÌµ»ë¤·¤Þ¤¹¡£
 
 </section>
 <section title="ÆÈ¼«³ÈÄ¥¥¿¥°">
@@ -942,12 +777,12 @@ ChxjConvRule "^/chxj.+$" "EngineOn" "EUC-JP"
 
 <section title="³¨Ê¸»ú¤Ë¤Ä¤¤¤Æ">
   i-ModeÍÑ¤Î³¨Ê¸»ú¤ò½ñ¤¤¤Æ¤ª¤±¤Ð¡¢¥¢¥¯¥»¥¹¤·¤¿¥­¥ã¥ê¥¢¤Ë¤è¤Ã¤Æ¡¢mod_chxj¤¬ÂÐ±þ¤Î³¨Ê¸»ú¤Ë¼«Æ°ÊÑ´¹¤·¤Þ¤¹¡£
-  ¥½¡¼¥¹¤Ë2byte¤Î¥Ð¥¤¥Ê¥ê¥³¡¼¥É¤òÄ¾ÀÜ½ñ¤¤¤Æ¤â¡¢£±£°¿Ê»²¾ÈÊ¸»úÎó<note>£±£¶¿Ê»²¾ÈÊ¸»úÎó¤Ë¤ÏÂÐ±þ¤·¤Æ¤¤¤Þ¤»¤ó</note>¡Ê&amp;#XXX;¤Î·Á¡Ë¤Ç½ñ¤¤¤Æ¤â¡¢¤É¤Á¤é¤Ç¤âÊÑ´¹ÂÐ¾Ý¤Ë¤Ê¤ê¤Þ¤¹¡£
+  ¥½¡¼¥¹¤Ë2byte¤Î¥Ð¥¤¥Ê¥ê¥³¡¼¥É¤òÄ¾ÀÜ½ñ¤¤¤Æ¤â¡¢10¿Ê»²¾ÈÊ¸»úÎó<note>16¿Ê»²¾ÈÊ¸»úÎó¤Ë¤ÏÂÐ±þ¤·¤Æ¤¤¤Þ¤»¤ó</note>¡Ê&amp;#XXX;¤Î·Á¡Ë¤Ç½ñ¤¤¤Æ¤â¡¢¤É¤Á¤é¤Ç¤âÊÑ´¹ÂÐ¾Ý¤Ë¤Ê¤ê¤Þ¤¹¡£
   £±£°¿Ê»²¾ÈÊ¸»úÎó¤Ç½ñ¤¤¤¿¾ì¹ç¤Ï¡¢mod_chxj¤Ë¤è¤ê¡¢¼«Æ°¤Ç£²¥Ð¥¤¥È¥³¡¼¥É¤ËÊÑ´¹¤·¤Þ¤¹¡£
 <subsection title="³¨Ê¸»úÊÑ´¹ÄêµÁ">
-³¨Ê¸»ú¤ÎÊÑ´¹¤Ë´Ø¤¹¤ëÆ°ºî¤òÊÑ¤¨¤¿¤¤¾ì¹ç¡ÊÎã¤¨¤Ð¡Ö¥Ï¡¼¥È¤¬¤¢¤Ã¤¿¤é¡¢£Á£Õ¤Î¾ì¹ç¤Ï¥¹¥Ú¡¼¥É¤Ë¡×¤È¤«¡¢¡ÖÊÑ´¹ÄêµÁ¤¬¤ª¤«¤·¤¤¡×¤È¤¤¤Ã¤¿¾ì¹ç¡Ë¤Ï¡¢
+³¨Ê¸»ú¤ÎÊÑ´¹¤Ë´Ø¤¹¤ëÆ°ºî¤òÊÑ¤¨¤¿¤¤¾ì¹ç¡ÊÎã¤¨¤Ð¡Ö¥Ï¡¼¥È¤¬¤¢¤Ã¤¿¤é¡¢au¤Î¾ì¹ç¤Ï¥¹¥Ú¡¼¥É¤Ë¡×¤È¤«¡¢¡ÖÊÑ´¹ÄêµÁ¤¬¤ª¤«¤·¤¤¡×¤È¤¤¤Ã¤¿¾ì¹ç¡Ë¤Ï¡¢
 emoji.xml¥Õ¥¡¥¤¥ë¤òÄ¾ÀÜÊÔ½¸¤¹¤ë¤³¤È¤Ë¤è¤Ã¤ÆÄêµÁ¤òÊÑ¹¹¤¹¤ë¤³¤È¤¬²ÄÇ½¤Ç¤¹¡£emoji.xml¤ÏXML¥Õ¥¡¥¤¥ë¤È¤Ê¤Ã¤Æ¤¤¤Þ¤¹¤Î¤Ç¡¢viÅù¤Ç´ÊÃ±¤ËÄêµÁ¤ò
-ÊÑ¹¹¤¹¤ë¤³¤È¤¬¤Ç¤­¤Þ¤¹<note>¸·Ì©¤Ë¤ÏXML¤Ë¤Ê¤Ã¤Æ¤¤¤Ê¤¤¤Î¤Ç¡¢ÆüËÜ¸ì¤Îµ­½Ò¤Ï£Ó£Ê£É£Ó¤Ç¤ª´ê¤¤¤·¤Þ¤¹¡£</note>¡£
+ÊÑ¹¹¤¹¤ë¤³¤È¤¬¤Ç¤­¤Þ¤¹¡£
 
 <br />
 °Ê²¼¤Ë¡¢emoji.xml¥Õ¥¡¥¤¥ë¤Î°ìÉô¤òµ­¤·¤Þ¤¹¡£
@@ -976,22 +811,22 @@ emoji.xml¥Õ¥¡¥¤¥ë¤òÄ¾ÀÜÊÔ½¸¤¹¤ë¤³¤È¤Ë¤è¤Ã¤ÆÄêµÁ¤òÊÑ¹¹¤¹¤ë¤³¤È¤¬²ÄÇ½¤Ç¤¹¡£emoji.x
 </program>
 
 ³¨Ê¸»ú¤ÎÄêµÁ¤Ï¡¢&lt;emoji&gt;¥¿¥°¤«¤é&lt;/emoji&gt;¥¿¥°¤Þ¤Ç¤Î´Ö¤Ë¤¢¤ê¤Þ¤¹¡£¤½¤ÎÃæ¤ÎÍ×ÁÇ¤òÀâÌÀ¤·¤Þ¤¹¡£
-£±¤Ä¤Î³¨Ê¸»ú¤Ë¤Ä¤­¡¢£±¤Ä¤Î¥»¥Ã¥È¡Ê&lt;set&gt;¥¿¥°¤«¤é&lt;/set&gt;¥¿¥°¤Þ¤Ç¡Ë¤È¤·¡¢¥­¥ã¥ê¥¢Ëè¤Î³¨Ê¸»ú¤òÄêµÁ¤·¤Æ¤¤¤Þ¤¹¡£
+1¤Ä¤Î³¨Ê¸»ú¤Ë¤Ä¤­¡¢1¤Ä¤Î¥»¥Ã¥È¡Ê&lt;set&gt;¥¿¥°¤«¤é&lt;/set&gt;¥¿¥°¤Þ¤Ç¡Ë¤È¤·¡¢¥­¥ã¥ê¥¢Ëè¤Î³¨Ê¸»ú¤òÄêµÁ¤·¤Æ¤¤¤Þ¤¹¡£
 
 <ol>
   <li>&lt;imode&gt;Í×ÁÇ<br />
 ¤Þ¤º¡¢¸µ¤È¤Ê¤ëi-ModeÍÑ¤Î³¨Ê¸»ú¤Ï¡¢&lt;imode&gt;¥¿¥°¤Ë¤Ï¤µ¤Þ¤ì¤¿´Ö¤ËÄêµÁ¤µ¤ì¤Æ¤¤¤Þ¤¹¡£
-&lt;imode&gt;Í×ÁÇ¤Ï¡¢£²¥Ð¥¤¥È¥³¡¼¥ÉÍ×ÁÇ(&lt;hex1&gt;&lt;hex2&gt;)¤È¡¢
-£±£°¿Ê»²¾ÈÊ¸»úÎóÍ×ÁÇ(&lt;string&gt;)¤òÊÝ»ý¤·¤Æ¤¤¤Æ¡¢¤³¤Î£²¤Ä¤ÎÍ×ÁÇ¤òÊÑ´¹¸µ¤ÎÃÍ¤È¤·¤Æ»ÈÍÑ¤·¤Þ¤¹¡£
-¥¢¥¯¥»¥¹¤·¤Æ¤­¤¿Ã¼Ëö¤¬¡¢i-Modeµ¡¤Ç¤¢¤Ã¤¿¾ì¹ç¤Ç¡¢¤«¤Ä£Ã£È£Ô£Í£ÌÃæ¤Ë£±£°¿Ê»²¾ÈÊ¸»úÎó¤¬³¨Ê¸»ú¤È¤·¤Æ½ñ¤«¤ì¤Æ¤¤¤ë¾ì¹ç¤Ë¤Ï¡¢
+&lt;imode&gt;Í×ÁÇ¤Ï¡¢2¥Ð¥¤¥È¥³¡¼¥ÉÍ×ÁÇ(&lt;hex1&gt;&lt;hex2&gt;)¤È¡¢
+10¿Ê»²¾ÈÊ¸»úÎóÍ×ÁÇ(&lt;string&gt;)¤òÊÝ»ý¤·¤Æ¤¤¤Æ¡¢¤³¤Î£²¤Ä¤ÎÍ×ÁÇ¤òÊÑ´¹¸µ¤ÎÃÍ¤È¤·¤Æ»ÈÍÑ¤·¤Þ¤¹¡£
+¥¢¥¯¥»¥¹¤·¤Æ¤­¤¿Ã¼Ëö¤¬¡¢i-Modeµ¡¤Ç¤¢¤Ã¤¿¾ì¹ç¤Ç¡¢¤«¤ÄCHTMLÃæ¤Ë10¿Ê»²¾ÈÊ¸»úÎó¤¬³¨Ê¸»ú¤È¤·¤Æ½ñ¤«¤ì¤Æ¤¤¤ë¾ì¹ç¤Ë¤Ï¡¢
 &lt;hex1&gt;&lt;hex2&gt;Í×ÁÇ¤ËÄêµÁ¤µ¤ì¤Æ¤¤¤ëÃÍ¤ËÃÖ´¹¤·¤Þ¤¹¡£
   </li>
 <br />
 <br />
   <li>&lt;ezweb&gt;Í×ÁÇ<br />
-¥¢¥¯¥»¥¹¤·¤Æ¤­¤¿Ã¼Ëö¤¬¡¢AUµ¡¤Ç¤¢¤Ã¤¿¾ì¹ç¡¢&lt;ezweb&gt;Í×ÁÇ¤ËÄêµÁ¤µ¤ì¤Æ¤¤¤ëÃÍ¤ËÊÑ´¹¤·¤Þ¤¹¡£
-&lt;ezweb&gt;Í×ÁÇ¤Ï¡¢&lt;A&gt;¡Á&lt;D&gt;Í×ÁÇ¤ò»ý¤Ã¤Æ¤¤¤Æ¡¢¤½¤ì¤¾¤ìAU¤Î³¨Ê¸»ú¥¿¥¤¥×£Á¡Á£Ä¤ËÂÐ±þ¤·¤Æ¤¤¤Þ¤¹¤Î¤Ç¡¢
-¤â¤·¡¢£Ä¥¿¥¤¥×¤Î³¨Ê¸»úÃ¼Ëö¤Ç¤¢¤Ã¤¿¤Ê¤é¡¢&lt;D&gt;Í×ÁÇ¤ËÄêµÁ¤µ¤ì¤Æ¤¤¤ëÃÍ¤ËÊÑ´¹¤·¤Þ¤¹¡£¤³¤³¤ÇÄêµÁ¤µ¤ì¤Æ¤¤¤ëÃÍ¤Ï¡¢
+¥¢¥¯¥»¥¹¤·¤Æ¤­¤¿Ã¼Ëö¤¬¡¢auµ¡¤Ç¤¢¤Ã¤¿¾ì¹ç¡¢&lt;ezweb&gt;Í×ÁÇ¤ËÄêµÁ¤µ¤ì¤Æ¤¤¤ëÃÍ¤ËÊÑ´¹¤·¤Þ¤¹¡£
+&lt;ezweb&gt;Í×ÁÇ¤Ï¡¢&lt;A&gt;¡Á&lt;D&gt;Í×ÁÇ¤ò»ý¤Ã¤Æ¤¤¤Æ¡¢¤½¤ì¤¾¤ìau¤Î³¨Ê¸»ú¥¿¥¤¥×A¡ÁD¤ËÂÐ±þ¤·¤Æ¤¤¤Þ¤¹¤Î¤Ç¡¢
+¤â¤·¡¢D¥¿¥¤¥×¤Î³¨Ê¸»úÃ¼Ëö¤Ç¤¢¤Ã¤¿¤Ê¤é¡¢&lt;D&gt;Í×ÁÇ¤ËÄêµÁ¤µ¤ì¤Æ¤¤¤ëÃÍ¤ËÊÑ´¹¤·¤Þ¤¹¡£¤³¤³¤ÇÄêµÁ¤µ¤ì¤Æ¤¤¤ëÃÍ¤Ï¡¢
 HDMLµ¡¤Î¾ì¹ç¤Ï¡¢<b>&lt;IMG ICON="XX"&gt;</b>¤Î"XX"¤ÎÉôÊ¬¤ËÅö¤Æ¤Ï¤á¤é¤ì¤Æ¡¢ÃÖ´¹¤µ¤ì¤Þ¤¹¡£
 XHTMLµ¡¤Î¾ì¹ç¤Ï¡¢<b>&lt;IMG LOCALSRC="XX"&gt;</b>¤Î"XX"¤ÎÉôÊ¬¤ËÅö¤Æ¤Ï¤á¤é¤ì¤Æ¡¢ÃÖ´¹¤µ¤ì¤Þ¤¹¡£
   </li>
@@ -1010,7 +845,8 @@ emoji.xml¤ËÄêµÁ¤µ¤ì¤Æ¤¤¤Ê¤¤³¨Ê¸»ú¤Ç¡¢ÊÑ´¹¤·¤¿¤¤³¨Ê¸»ú¤¬¤¢¤ë¾ì¹ç¤Ë¤Ï¡¢¤³¤Î¥Õ¥¡¥¤¥
 
 <section title="¥Ç¥Ð¥¤¥¹ÄêµÁ device_data.xml">
 mod_chxj¤ÎÆ°ºî¤ò·èÄêÉÕ¤±¤ë½ÅÍ×¤ÊÄêµÁ¤Ç¤¹¡£ÊÑ´¹ÂÐ¾Ý¤ÎÃ¼Ëö¤ÏÁ´¤Æ¡¢device_data.xml¥Õ¥¡¥¤¥ë¤ËÄêµÁ¤µ¤ì¤ëÉ¬Í×¤¬¤¢¤ê¤Þ¤¹¡£
-ÄêµÁ¤µ¤ì¤Æ¤¤¤Ê¤¤Ã¼Ëö¤Ï¡¢mod_chxj¤È¤·¤Æ¤Ï¡¢Ç§¼±¤¹¤ë¤³¤È¤¬¤Ç¤­¤Þ¤»¤ó¡£Ç§¼±¤Ç¤­¤Ê¤¤¾ì¹ç¤Ë¤Ï¡¢ÊÑ´¹¤»¤º¤Ë¤½¤Î¤Þ¤Þ½ÐÎÏ¤·¤Þ¤¹¡£¤¿¤À¤·¡¢Perl¸ß´¹¤ÎÀµµ¬É½¸½¤Ë¤è¤Ã¤ÆÄêµÁ¤Ç¤­¤ë¤¿¤á¡¢Àµµ¬É½¸½¤Î½ñ¤­Êý¤Ë¤è¤Ã¤Æ¤ÏÁ´¤Æ¤Îµ¡¼ï¤ËÂÐ±þ¤µ¤»¤ë¤³¤È¤â²ÄÇ½¤Ç¤¹¡£
+ÄêµÁ¤µ¤ì¤Æ¤¤¤Ê¤¤Ã¼Ëö¤Ï¡¢mod_chxj¤È¤·¤Æ¤Ï¡¢Ç§¼±¤¹¤ë¤³¤È¤¬¤Ç¤­¤Þ¤»¤ó¡£Ç§¼±¤Ç¤­¤Ê¤¤¾ì¹ç¤Ë¤Ï¡¢ÊÑ´¹¤»¤º¤Ë¤½¤Î¤Þ¤Þ½ÐÎÏ¤·¤Þ¤¹¡£
+¤¿¤À¤·¡¢Perl¸ß´¹¤ÎÀµµ¬É½¸½¤Ë¤è¤Ã¤ÆÄêµÁ¤Ç¤­¤ë¤¿¤á¡¢Àµµ¬É½¸½¤Î½ñ¤­Êý¤Ë¤è¤Ã¤Æ¤ÏÁ´¤Æ¤Îµ¡¼ï¤ËÂÐ±þ¤µ¤»¤ë¤³¤È¤â²ÄÇ½¤Ç¤¹¡£
 </section>
 
 
@@ -1061,19 +897,20 @@ mod_chxj¤Ë¤Ï¡¢JPEG¡¢GIF¡¢PNG¡¢BMP¥Õ¥¡¥¤¥ë¤òÃÖ¤¤¤Æ¤ª¤¯¤À¤±¤Ç¡¢¥Ç¥Ð¥¤¥¹ÄêµÁ¤Ë½¾¤Ã¤
   </li>
   </ol>
 </subsection>
-¾åµ­Á´¤Æ¤Î¥â¡¼¥É¡¢¥Ñ¥é¥á¡¼¥¿¤Ï£Ç£Å£Ô¥ê¥¯¥¨¥¹¥È¤È¤·¤Æ¤Î¤ß»ÈÍÑ¤Ç¤­¤Þ¤¹¡£
+¾åµ­Á´¤Æ¤Î¥â¡¼¥É¡¢¥Ñ¥é¥á¡¼¥¿¤ÏGET¥ê¥¯¥¨¥¹¥È¤È¤·¤Æ¤Î¤ß»ÈÍÑ¤Ç¤­¤Þ¤¹¡£
 </section>
 
-<section title="£Ñ£Ò¥³¡¼¥É½ÐÎÏµ¡Ç½">
-<subsection title="£Ñ£Ò¥³¡¼¥É½ÐÎÏ¥Ï¥ó¥É¥é¤ÎÅÐÏ¿">
-£Ñ£Ò¥³¡¼¥É½ÐÎÏµ¡Ç½¤ò»ÈÍÑ¤¹¤ë¤Ë¤Ï¡¢£Ñ£Ò¥³¡¼¥É¥Ï¥ó¥É¥é¤òÅÐÏ¿¤·¤Þ¤¹¡£
+<section title="QR¥³¡¼¥É½ÐÎÏµ¡Ç½">
+<subsection title="QR¥³¡¼¥É½ÐÎÏ¥Ï¥ó¥É¥é¤ÎÅÐÏ¿">
+QR¥³¡¼¥É½ÐÎÏµ¡Ç½¤ò»ÈÍÑ¤¹¤ë¤Ë¤Ï¡¢QR¥³¡¼¥É¥Ï¥ó¥É¥é¤òÅÐÏ¿¤·¤Þ¤¹¡£
+<note>QR¥³¡¼¥É¤Ï¡Ê³ô¡Ë¥Ç¥ó¥½¡¼¥¦¥§¡¼¥Ö¤ÎÅÐÏ¿¾¦É¸¤Ç¤¹¡£</note>
 httpd.conf¤Ë°Ê²¼¤Îµ­½Ò¤òÄÉ²Ã¤·¤Þ¤¹¡£
 <program title="httpd.conf">
   AddHandler chxj-qrcode .qrc
 </program>
-¤Ê¤ª¡¢¥Ï¥ó¥É¥é¤òÅÐÏ¿¤·¤Ê¤¤¤Ç¤â¡¢½ÐÎÏ¥Õ¥£¥ë¥¿¡¼¤ò·ÐÍ³¤µ¤»¤ë¤³¤È¤Ç¡¢£Ñ£Ò¥³¡¼¥É¤ò½ÐÎÏ¤µ¤»¤ë¤³¤È¤â²ÄÇ½¤Ç¤¹¡£¡Ê¢¨£Ñ£Ò¥³¡¼¥É¤ÎÆ°Åª½ÐÎÏ¤ò»²¾È¡Ë
+¤Ê¤ª¡¢¥Ï¥ó¥É¥é¤òÅÐÏ¿¤·¤Ê¤¤¤Ç¤â¡¢½ÐÎÏ¥Õ¥£¥ë¥¿¡¼¤ò·ÐÍ³¤µ¤»¤ë¤³¤È¤Ç¡¢QR¥³¡¼¥É¤ò½ÐÎÏ¤µ¤»¤ë¤³¤È¤â²ÄÇ½¤Ç¤¹¡£¡Ê¢¨QR¥³¡¼¥É¤ÎÆ°Åª½ÐÎÏ¤ò»²¾È¡Ë
 </subsection>
-<subsection title="£Ñ£Ò¥³¡¼¥É¥½¡¼¥¹¥Õ¥¡¥¤¥ë¤ÎÀßÃÖ">
+<subsection title="QR¥³¡¼¥É¥½¡¼¥¹¥Õ¥¡¥¤¥ë¤ÎÀßÃÖ">
 ¥Ï¥ó¥É¥é¤òÅÐÏ¿¤·¤¿¤é¡¢¤½¤ÎÅÐÏ¿¤·¤¿³ÈÄ¥»Ò¤ò»ý¤Ä¥Õ¥¡¥¤¥ë¤òÍÑ°Õ¤·¤Þ¤¹¡£
 <program title="Îã¡§a.qrc">
   &lt;?xml version=1.0 ?&gt;
@@ -1089,31 +926,31 @@ httpd.conf¤Ë°Ê²¼¤Îµ­½Ò¤òÄÉ²Ã¤·¤Þ¤¹¡£
 .qrc¥Õ¥¡¥¤¥ë¤Ï¡¢qrcodeÍ×ÁÇ¡¢versionÍ×ÁÇ¡¢levelÍ×ÁÇ¡¢modeÍ×ÁÇ¡¢sizeÍ×ÁÇ¡¢dataÍ×ÁÇ¤«¤éÀ®¤êÎ©¤Á¤Þ¤¹¡£
 <ol>
 <li>version¥¿¥°
-  version¥¿¥°¤Ï½ÐÎÏ¤¹¤ë£Ñ£Ò¥³¡¼¥É¤ÎÀ¸À®¤ËÍøÍÑ¤¹¤ë¥Ð¡¼¥¸¥ç¥ó¤ò»ØÄê¤·¤Þ¤¹¡£
-  »ÈÍÑ¤Ç¤­¤ë¥Ð¡¼¥¸¥ç¥ó¤Ï¡¢£±¡Á£´£°¤Þ¤Ç¤Î£´£°¼ïÎà¤Ç¤¹¡£
+  version¥¿¥°¤Ï½ÐÎÏ¤¹¤ëQR¥³¡¼¥É¤ÎÀ¸À®¤ËÍøÍÑ¤¹¤ë¥Ð¡¼¥¸¥ç¥ó¤ò»ØÄê¤·¤Þ¤¹¡£
+  »ÈÍÑ¤Ç¤­¤ë¥Ð¡¼¥¸¥ç¥ó¤Ï¡¢1¡Á40¤Þ¤Ç¤Î40¼ïÎà¤Ç¤¹¡£
 </li>
 <li>level¥¿¥°
-  level¥¿¥°¤Ï½ÐÎÏ¤¹¤ë£Ñ£Ò¥³¡¼¥É¤ÎÀ¸À®¤ËÍøÍÑ¤¹¤ë¸í¤ê¸¡½Ð¥ì¥Ù¥ë¤ò»ØÄê¤·¤Þ¤¹¡£
-¡¡»ÈÍÑ¤Ç¤­¤ë¥ì¥Ù¥ë¤Ï¡¢L¡¢£Ñ¡¢£Í¡¢£È¤Î£´¤Ä¤Ç¤¹¡£
+  level¥¿¥°¤Ï½ÐÎÏ¤¹¤ëQR¥³¡¼¥É¤ÎÀ¸À®¤ËÍøÍÑ¤¹¤ë¸í¤ê¸¡½Ð¥ì¥Ù¥ë¤ò»ØÄê¤·¤Þ¤¹¡£
+¡¡»ÈÍÑ¤Ç¤­¤ë¥ì¥Ù¥ë¤Ï¡¢L¡¢Q¡¢M¡¢H¤Î£´¤Ä¤Ç¤¹¡£
 </li>
 <li>mode¥¿¥°
-  mode¥¿¥°¤Ï½ÐÎÏ¤¹¤ë£Ñ£Ò¥³¡¼¥É¤ÎÀ¸À®¤ËÍøÍÑ¤¹¤ë¥â¡¼¥É¤ò»ØÄê¤·¤Þ¤¹¡£
-  »ÈÍÑ¤Ç¤­¤ë¥â¡¼¥É¤Ï¡¢NUM¡Ê¿ô»ú¥â¡¼¥É¡ËALPHA¡Ê±Ñ¿ô»ú¥â¡¼¥É¡Ë8BIT¡Ê£¸¥Ó¥Ã¥È¥Ð¥¤¥È¥â¡¼¥É¡ËKANJI¡Ê´Á»ú¥â¡¼¥É¡Ë¤Ç¤¹¡£
+  mode¥¿¥°¤Ï½ÐÎÏ¤¹¤ëQR¥³¡¼¥É¤ÎÀ¸À®¤ËÍøÍÑ¤¹¤ë¥â¡¼¥É¤ò»ØÄê¤·¤Þ¤¹¡£
+  »ÈÍÑ¤Ç¤­¤ë¥â¡¼¥É¤Ï¡¢NUM¡Ê¿ô»ú¥â¡¼¥É¡ËALPHA¡Ê±Ñ¿ô»ú¥â¡¼¥É¡Ë8BIT¡Ê8¥Ó¥Ã¥È¥Ð¥¤¥È¥â¡¼¥É¡ËKANJI¡Ê´Á»ú¥â¡¼¥É¡Ë¤Ç¤¹¡£
 </li>
 <li>size¥¿¥°
   size¥¿¥°¤Ï£±¥â¥¸¥å¡¼¥ë¤ò²¿¥Ô¥¯¥»¥ë¤Ç¤¢¤é¤ï¤¹¤«¤ò»ØÄê¤·¤Þ¤¹¡£
-  £°¤ò»ØÄê¤·¤¿¾ì¹ç¤Ï¡¢£´¤ò»ØÄê¤·¤¿¾ì¹ç¤ÈÆ±¤¸Æ°ºî¤ò¤·¤Þ¤¹¡£
-¡¡»ÈÍÑ¤Ç¤­¤ë¥µ¥¤¥º¤Ï¡¢£°¡Á£²£°¤Þ¤Ç¤Ç¤¹¡£
+  0¤ò»ØÄê¤·¤¿¾ì¹ç¤Ï¡¢4¤ò»ØÄê¤·¤¿¾ì¹ç¤ÈÆ±¤¸Æ°ºî¤ò¤·¤Þ¤¹¡£
+¡¡»ÈÍÑ¤Ç¤­¤ë¥µ¥¤¥º¤Ï¡¢0¡Á20¤Þ¤Ç¤Ç¤¹¡£
 </li>
 <li>data¥¿¥°
-  data¥¿¥°¤Ï¡¢£Ñ£Ò¥³¡¼¥É¤Ë½ÐÎÏ¤¹¤ë¥Ç¡¼¥¿¤ò»ØÄê¤·¤Þ¤¹¡£²þ¹Ô¤·¤¿¾ì¹ç¤Ï¡¢²þ¹ÔÊ¸»ú¤â£Ñ£Ò¥³¡¼¥ÉÆâ¤ËÉä¹æ²½¤µ¤ì¤Þ¤¹¡£
+  data¥¿¥°¤Ï¡¢QR¥³¡¼¥É¤Ë½ÐÎÏ¤¹¤ë¥Ç¡¼¥¿¤ò»ØÄê¤·¤Þ¤¹¡£²þ¹Ô¤·¤¿¾ì¹ç¤Ï¡¢²þ¹ÔÊ¸»ú¤âQR¥³¡¼¥ÉÆâ¤ËÉä¹æ²½¤µ¤ì¤Þ¤¹¡£
 </li>
 </ol>
 </subsection>
-<subsection title="£Ñ£Ò¥³¡¼¥É¤ÎÆ°Åª½ÐÎÏµ¡Ç½">
-  ¥×¥í¥°¥é¥àÅù¤ò»ÈÍÑ¤·¡¢Æ°Åª¤Ë£Ñ£Ò¥³¡¼¥É¤ò½ÐÎÏ¤·¤¿¤¤¾ì¹ç¤Ï¡¢¾åµ­¤Î.qrc¥Õ¥¡¥¤¥ë¤ÎÆâÍÆ¤ò¤½¤Î¤Þ¤ÞOutputFilter¤ËÄÌ¤·¤Æ¤¢¤²¤ì¤Ð£Ï£Ë¤Ç¤¹¡£¤Ä¤Þ¤ê¡¢ChxjConvertRule¥Ç¥£¥ì¥¯¥Æ¥£¥Ö¤Ç"EngineOn"¤È»ØÄê¤·¤¿URI¤¬»Ø¤¹¥Ç¥£¥ì¥¯¥È¥ê¤ËÀßÃÖ¤¹¤ì¤ÐÎÉ¤¤¤È¤¤¤¦¤³¤È¤Ç¤¹¡£mod_chxjÆâÉô¤Ç¡¢Content-Type¤¬text/xml¤Î¾ì¹ç¡¢QRCodeÍÑ¤Î¥Õ¥¡¥¤¥ë¤Ç¤¢¤ë¤«¤É¤¦¤«¤ò°ìÅÙÆÉ¤ß¹þ¤ó¤ÇÈ½ÃÇ¤¹¤ë¤Î¤Ç¡¢Content-Type¤Ë¤Ï¡¢text/xml¤òÀßÄê¤·¤Æ¤¯¤À¤µ¤¤¡£
+<subsection title="QR¥³¡¼¥É¤ÎÆ°Åª½ÐÎÏµ¡Ç½">
+  ¥×¥í¥°¥é¥àÅù¤ò»ÈÍÑ¤·¡¢Æ°Åª¤ËQR¥³¡¼¥É¤ò½ÐÎÏ¤·¤¿¤¤¾ì¹ç¤Ï¡¢¾åµ­¤Î.qrc¥Õ¥¡¥¤¥ë¤ÎÆâÍÆ¤ò¤½¤Î¤Þ¤ÞOutputFilter¤ËÄÌ¤·¤Æ¤¢¤²¤ì¤ÐOK¤Ç¤¹¡£¤Ä¤Þ¤ê¡¢ChxjConvertRule¥Ç¥£¥ì¥¯¥Æ¥£¥Ö¤Ç"EngineOn"¤È»ØÄê¤·¤¿URI¤¬»Ø¤¹¥Ç¥£¥ì¥¯¥È¥ê¤ËÀßÃÖ¤¹¤ì¤ÐÎÉ¤¤¤È¤¤¤¦¤³¤È¤Ç¤¹¡£mod_chxjÆâÉô¤Ç¡¢Content-Type¤¬text/xml¤Î¾ì¹ç¡¢QRCodeÍÑ¤Î¥Õ¥¡¥¤¥ë¤Ç¤¢¤ë¤«¤É¤¦¤«¤ò°ìÅÙÆÉ¤ß¹þ¤ó¤ÇÈ½ÃÇ¤¹¤ë¤Î¤Ç¡¢Content-Type¤Ë¤Ï¡¢text/xml¤òÀßÄê¤·¤Æ¤¯¤À¤µ¤¤¡£
 
-  <program title="php¤Ç£Ñ£Ò¥³¡¼¥É¤òÆ°Åª¤Ë½ÐÎÏ¤¹¤ëÎã">
+  <program title="php¤ÇQR¥³¡¼¥É¤òÆ°Åª¤Ë½ÐÎÏ¤¹¤ëÎã">
     &lt;php
       $version = $_POST["version"];
       $level   = $_POST["level"];
@@ -1269,10 +1106,10 @@ true°Ê³°¤ò»ØÄê¤¹¤ë¤ÈÄÌ¾ï¤ÎOne-Time ID¥â¡¼¥É¤Ë¤Ê¤ê¤Þ¤¹¡£
 
 
 
-<section title="Referer¥·¥ß¥å¥ì¡¼¥Èµ¡Ç½(EXPERIMENTAL)">
-<subsection title="Referer¥·¥ß¥å¥ì¡¼¥Èµ¡Ç½(EXPERIMENTAL)">
+<section title="Referer¥·¥ß¥å¥ì¡¼¥Èµ¡Ç½">
+<subsection title="Referer¥·¥ß¥å¥ì¡¼¥Èµ¡Ç½">
 DoCoMoÃ¼Ëö¤Ê¤É¤ÎReferer¤ËÂÐ±þ¤·¤Æ¤¤¤Ê¤¤µ¡¼ï¤Î¤¿¤á¤ËReferer¥·¥ß¥å¥ì¡¼¥Èµ¡Ç½¤òÄó¶¡¤·¤Þ¤¹¡£
-ËÜµ¡Ç½¤Ï¡¢Cookie¥·¥ß¥å¥ì¡¼¥Èµ¡Ç½¤òÍ­¸ú¤Ë¤¹¤ë¤È¡¢¼«Æ°¤ÇÍ­¸ú¤Ë¤Ê¤ê¤Þ¤¹(¾­ÍèÅª¤Ë¤ÏÊÑ¹¹Í½Äê)¡£
+ËÜµ¡Ç½¤Ï¡¢Cookie¥·¥ß¥å¥ì¡¼¥Èµ¡Ç½¤òÍ­¸ú¤Ë¤¹¤ë¤È¡¢¼«Æ°¤ÇÍ­¸ú¤Ë¤Ê¤ê¤Þ¤¹¡£
 </subsection>
 </section>
 </body>
