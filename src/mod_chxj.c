@@ -1076,9 +1076,9 @@ chxj_input_filter(ap_filter_t         *f,
     return rv;
   }
   if (!ctx) {
-    ctx = apr_palloc(r->pool, sizeof(*ctx));
+    ctx = apr_palloc(f->c->pool, sizeof(*ctx));
     memset(ctx, 0, sizeof(*ctx));
-    if ((rv = apr_pool_create(&ctx->pool, r->pool)) != APR_SUCCESS) {
+    if ((rv = apr_pool_create(&ctx->pool, f->c->pool)) != APR_SUCCESS) {
       ERR(r, "failed: new pool create. rv:[%d]", rv);
       return rv;
     }
