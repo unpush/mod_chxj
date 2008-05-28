@@ -1,3 +1,11 @@
+libapache2-mod-chxj (0.12.1-1) unstable; urgency=low
+
+  * Fixed bug.
+    - Set-Cookie is not executed at CGI.
+      (Reported by R.Komoriya. thanks!)
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Thu, 29 May 2008 03:11:16 +0900
+
 libapache2-mod-chxj (0.12.0-1) unstable; urgency=low
 
   * Fixed bug.
