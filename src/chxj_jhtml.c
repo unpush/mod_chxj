@@ -1355,8 +1355,6 @@ s_jhtml_start_form_tag(void *pdoc, Node *node)
   Doc          *doc;
   request_rec  *r;
   Attr         *attr;
-  int          dcflag = 0;
-  char         *dc = NULL;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
@@ -1375,13 +1373,10 @@ s_jhtml_start_form_tag(void *pdoc, Node *node)
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
+      value = chxj_add_cookie_parameter(r, value, jhtml->cookie);
       W_L(" action=\"");
       W_V(value);
       W_L("\"");
-      dc = chxj_add_cookie_parameter(r, value, jhtml->cookie);
-      if (strcmp(dc, value)) {
-        dcflag = 1;
-      } 
     }
     else if (STRCASEEQ('m','M',"method",name)) {
       /*----------------------------------------------------------------------*/
@@ -1400,22 +1395,6 @@ s_jhtml_start_form_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-  /*-------------------------------------------------------------------------*/
-  /* ``action=""''                                                           */
-  /*-------------------------------------------------------------------------*/
-  if (! dc) {
-    dcflag = 1;
-  }
-  /*-------------------------------------------------------------------------*/
-  /* Add cookie parameter                                                    */
-  /*-------------------------------------------------------------------------*/
-  if (jhtml->cookie && jhtml->cookie->cookie_id && dcflag == 1) {
-    char *vv = apr_psprintf(doc->buf.pool, "%s<input type='hidden' name='%s' value='%s'>",
-                            jhtml->out, 
-                            CHXJ_COOKIE_PARAM,
-                            chxj_url_decode(doc->buf.pool, jhtml->cookie->cookie_id));
-    W_V(vv);
-  }
   W_NLCODE();
   return jhtml->out;
 }
