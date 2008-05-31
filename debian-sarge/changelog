@@ -1,3 +1,11 @@
+libapache2-mod-chxj (0.12.2-1) unstable; urgency=low
+
+  * Fixed bug.
+    - Failed reading cookie for SoftBank.
+      (Reported by R.Komoriya. thanks!)
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Sun,  1 Jun 2008 02:11:33 +0900
+
 libapache2-mod-chxj (0.12.1-1) unstable; urgency=low
 
   * Fixed bug.
