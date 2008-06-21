@@ -1,3 +1,11 @@
+libapache2-mod-chxj (0.12.3-1) unstable; urgency=low
+
+  * Fixed bug.
+    - changes line in place in which it doesn't intend it.
+     (Reported by someone. thanks!)
+
+ -- Atsushi Konno <konn@sourceforge.jp>  Sat, 21 Jun 2008 18:39:14 +0900
+
 libapache2-mod-chxj (0.12.2-1) unstable; urgency=low
 
   * Fixed bug.
