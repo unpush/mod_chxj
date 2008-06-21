@@ -113,6 +113,7 @@ static char *s_chtml40_end_menu_tag       (void *pdoc, Node *node);
 static char *s_chtml40_start_plaintext_tag       (void *pdoc, Node *node);
 static char *s_chtml40_start_plaintext_tag_inner (void *pdoc, Node *node);
 static char *s_chtml40_end_plaintext_tag         (void *pdoc, Node *node);
+static char *s_chtml40_newline_mark       (void *pdoc, Node *node);
 
 static void  s_init_chtml40(chtml40_t *chtml, Doc *doc, request_rec *r, device_table *spec);
 
@@ -385,6 +386,11 @@ tag_handler chtml40_handler[] = {
     s_chtml40_start_marquee_tag,
     s_chtml40_end_marquee_tag,
   },
+  /* tagNLMARK */
+  {
+    s_chtml40_newline_mark,
+    NULL,
+  },
 };
 
 
@@ -581,7 +587,6 @@ s_chtml40_start_html_tag(void *pdoc, Node *UNUSED(node))
   /* start HTML tag                                                           */
   /*--------------------------------------------------------------------------*/
   W_L("<html>");
-  W_NLCODE();
 
   return chtml40->out;
 }
@@ -602,7 +607,6 @@ s_chtml40_end_html_tag(void *pdoc, Node *UNUSED(child))
   Doc         *doc     = chtml40->doc;
 
   W_L("</html>");
-  W_NLCODE();
   return chtml40->out;
 }
 
@@ -704,7 +708,6 @@ s_chtml40_start_meta_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-  W_NLCODE();
   return chtml40->out;
 }
 
@@ -741,7 +744,6 @@ s_chtml40_start_head_tag(void* pdoc, Node* UNUSED(node))
   Doc         *doc     = chtml40->doc;
 
   W_L("<head>");
-  W_NLCODE();
 
   return chtml40->out;
 }
@@ -762,7 +764,6 @@ s_chtml40_end_head_tag(void *pdoc, Node *UNUSED(node))
   Doc       *doc     = chtml40->doc;
 
   W_L("</head>");
-  W_NLCODE();
 
   return chtml40->out;
 }
@@ -783,7 +784,6 @@ s_chtml40_start_title_tag(void *pdoc, Node *UNUSED(node))
   Doc           *doc     = chtml40->doc;
 
   W_L("<title>");
-  W_NLCODE();
 
   return chtml40->out;
 }
@@ -804,7 +804,6 @@ s_chtml40_end_title_tag(void *pdoc, Node *UNUSED(child))
   Doc          *doc     = chtml40->doc;
 
   W_L("</title>");
-  W_NLCODE();
 
   return chtml40->out;
 }
@@ -846,7 +845,6 @@ s_chtml40_start_base_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-  W_NLCODE();
 
   return chtml40->out;
 }
@@ -940,7 +938,6 @@ s_chtml40_start_body_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-  W_NLCODE();
 
   return chtml40->out;
 }
@@ -964,7 +961,6 @@ s_chtml40_end_body_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml40->doc;
 
   W_L("</body>");
-  W_NLCODE();
 
   return chtml40->out;
 }
@@ -1112,7 +1108,6 @@ s_chtml40_end_a_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml40->doc;
 
   W_L("</a>");
-  W_NLCODE();
 
   return chtml40->out;
 }
@@ -1155,7 +1150,6 @@ s_chtml40_start_br_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-  W_NLCODE();
 
   return chtml40->out;
 }
@@ -1215,7 +1209,6 @@ s_chtml40_end_tr_tag(void *pdoc, Node *UNUSED(child))
   r       = doc->r;
 
   W_L("<br>");
-  W_NLCODE();
 
   return chtml40->out;
 }
@@ -1292,7 +1285,6 @@ s_chtml40_end_font_tag(void *pdoc, Node *UNUSED(child))
 
   if (chtml40->font_flag) {
     W_L("</font>");
-    W_NLCODE();
     chtml40->font_flag--;
   }
 
@@ -1356,7 +1348,6 @@ s_chtml40_start_form_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-  W_NLCODE();
 
   return chtml40->out;
 }
@@ -1380,7 +1371,6 @@ s_chtml40_end_form_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml40->doc;
 
   W_L("</form>");
-  W_NLCODE();
 
   return chtml40->out;
 }
@@ -1490,7 +1480,6 @@ s_chtml40_start_input_tag(void *pdoc, Node *node)
     W_L(" checked");
   }
   W_L(">");
-  W_NLCODE();
   return chtml40->out;
 }
 
@@ -1530,7 +1519,6 @@ s_chtml40_start_center_tag(void *pdoc, Node *UNUSED(node))
   doc     = chtml40->doc;
 
   W_L("<center>");
-  W_NLCODE();
 
   return chtml40->out;
 }
@@ -1554,7 +1542,6 @@ s_chtml40_end_center_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml40->doc;
 
   W_L("</center>");
-  W_NLCODE();
 
   return chtml40->out;
 }
@@ -1633,7 +1620,6 @@ s_chtml40_start_hr_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-  W_NLCODE();
   return chtml40->out;
 }
 
@@ -1781,7 +1767,6 @@ s_chtml40_start_img_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-  W_NLCODE();
   return chtml40->out;
 }
 
@@ -1860,7 +1845,6 @@ s_chtml40_start_select_tag(void *pdoc, Node *child)
     W_L(" multiple");
   }
   W_L(">");
-  W_NLCODE();
   return chtml40->out;
 }
 
@@ -1880,7 +1864,6 @@ s_chtml40_end_select_tag(void *pdoc, Node *UNUSED(child))
   Doc          *doc   = chtml40->doc;
 
   W_L("</select>");
-  W_NLCODE();
   return chtml40->out;
 }
 
@@ -2003,7 +1986,6 @@ s_chtml40_start_div_tag(void *pdoc, Node *child)
     W_L("\"");
   }
   W_L(">");
-  W_NLCODE();
   return chtml40->out;
 }
 
@@ -2023,7 +2005,6 @@ s_chtml40_end_div_tag(void *pdoc, Node *UNUSED(node))
   Doc          *doc     = chtml40->doc;
 
   W_L("</div>");
-  W_NLCODE();
 
   return chtml40->out;
 }
@@ -2061,7 +2042,6 @@ s_chtml40_start_ul_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-  W_NLCODE();
 
   return chtml40->out;
 }
@@ -2082,7 +2062,6 @@ s_chtml40_end_ul_tag(void *pdoc, Node *UNUSED(child))
   Doc           *doc     = chtml40->doc;
 
   W_L("</ul>");
-  W_NLCODE();
 
   return chtml40->out;
 }
@@ -2104,7 +2083,6 @@ s_chtml40_start_pre_tag(void *pdoc, Node *UNUSED(node))
 
   chtml40->pre_flag++;
   W_L("<pre>");
-  W_NLCODE();
 
   return chtml40->out;
 }
@@ -2125,7 +2103,6 @@ s_chtml40_end_pre_tag(void *pdoc, Node *UNUSED(child))
   Doc           *doc     = chtml40->doc;
 
   W_L("</pre>");
-  W_NLCODE();
   chtml40->pre_flag--;
 
   return chtml40->out;
@@ -2175,7 +2152,6 @@ s_chtml40_start_p_tag(void *pdoc, Node *node)
     W_L("\"");
   }
   W_L(">");
-  W_NLCODE();
   return chtml40->out;
 }
 
@@ -2198,7 +2174,6 @@ s_chtml40_end_p_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml40->doc;
 
   W_L("</p>");
-  W_NLCODE();
 
   return chtml40->out;
 }
@@ -2245,7 +2220,6 @@ s_chtml40_start_ol_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-  W_NLCODE();
 
   return chtml40->out;
 }
@@ -2266,7 +2240,6 @@ s_chtml40_end_ol_tag(void *pdoc, Node *UNUSED(node))
   Doc       *doc     = chtml40->doc;
 
   W_L("</ol>");
-  W_NLCODE();
 
   return chtml40->out;
 }
@@ -2390,7 +2363,6 @@ s_chtml40_end_h1_tag(void *pdoc, Node *UNUSED(child))
   doc     = chtml40->doc;
 
   W_L("</h1>");
-  W_NLCODE();
 
   return chtml40->out;
 }
@@ -2451,7 +2423,6 @@ s_chtml40_end_h2_tag(void *pdoc, Node *UNUSED(child))
   Doc         *doc     = chtml40->doc;
 
   W_L("</h2>");
-  W_NLCODE();
 
   return chtml40->out;
 }
@@ -2513,7 +2484,6 @@ s_chtml40_end_h3_tag(void *pdoc, Node *UNUSED(child))
   Doc       *doc   = chtml40->doc;
 
   W_L("</h3>");
-  W_NLCODE();
 
   return chtml40->out;
 }
@@ -2574,7 +2544,6 @@ s_chtml40_end_h4_tag(void *pdoc, Node *UNUSED(child))
   Doc       *doc     = chtml40->doc;
 
   W_L("</h4>");
-  W_NLCODE();
 
   return chtml40->out;
 }
@@ -2635,7 +2604,6 @@ s_chtml40_end_h5_tag(void *pdoc, Node *UNUSED(child))
   Doc       *doc     = chtml40->doc;
 
   W_L("</h5>");
-  W_NLCODE();
 
   return chtml40->out;
 }
@@ -2696,7 +2664,6 @@ s_chtml40_end_h6_tag(void *pdoc, Node *UNUSED(child))
   Doc       *doc     = chtml40->doc;
 
   W_L("</h6>");
-  W_NLCODE();
 
   return chtml40->out;
 }
@@ -2757,7 +2724,6 @@ s_chtml40_start_textarea_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-  W_NLCODE();
   return chtml40->out;
 }
 
@@ -2777,7 +2743,6 @@ s_chtml40_end_textarea_tag(void *pdoc, Node *UNUSED(child))
   Doc       *doc     = chtml40->doc;
 
   W_L("</textarea>");
-  W_NLCODE();
   chtml40->textarea_flag--;
 
   return chtml40->out;
@@ -2885,7 +2850,6 @@ s_chtml40_start_blockquote_tag(void *pdoc, Node *UNUSED(child))
   chtml40_t *chtml40 = GET_CHTML40(pdoc);
   Doc       *doc     = chtml40->doc;
   W_L("<blockquote>");
-  W_NLCODE();
   return chtml40->out;
 }
 
@@ -2904,7 +2868,6 @@ s_chtml40_end_blockquote_tag(void *pdoc, Node *UNUSED(child))
   chtml40_t *chtml40 = GET_CHTML40(pdoc);
   Doc       *doc     = chtml40->doc;
   W_L("</blockquote>");
-  W_NLCODE();
   return chtml40->out;
 }
 
@@ -2938,7 +2901,6 @@ s_chtml40_start_dir_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-  W_NLCODE();
   return chtml40->out;
 }
 
@@ -2957,7 +2919,6 @@ s_chtml40_end_dir_tag(void *pdoc, Node *UNUSED(child))
   chtml40_t *chtml40 = GET_CHTML40(pdoc);
   Doc       *doc = chtml40->doc;
   W_L("</dir>");
-  W_NLCODE();
   return chtml40->out;
 }
 
@@ -2976,7 +2937,6 @@ s_chtml40_start_dl_tag(void *pdoc, Node *UNUSED(child))
   chtml40_t *chtml40 = GET_CHTML40(pdoc);
   Doc       *doc     = chtml40->doc;
   W_L("<dl>");
-  W_NLCODE();
   return chtml40->out;
 }
 
@@ -2995,7 +2955,6 @@ s_chtml40_end_dl_tag(void *pdoc, Node *UNUSED(child))
   chtml40_t *chtml40 = GET_CHTML40(pdoc);
   Doc       *doc     = chtml40->doc;
   W_L("</dl>");
-  W_NLCODE();
   return chtml40->out;
 }
 
@@ -3136,7 +3095,6 @@ s_chtml40_end_marquee_tag(void *pdoc, Node *UNUSED(child))
   chtml40_t *chtml40 = GET_CHTML40(pdoc);
   Doc       *doc = chtml40->doc;
   W_L("</marquee>");
-  W_NLCODE();
   return chtml40->out;
 }
 
@@ -3173,7 +3131,6 @@ s_chtml40_end_blink_tag(void *pdoc, Node *UNUSED(child))
   chtml40_t *chtml40 = GET_CHTML40(pdoc);
   Doc       *doc = chtml40->doc;
   W_L("</blink>");
-  W_NLCODE();
   return chtml40->out;
 }
 
@@ -3210,7 +3167,6 @@ s_chtml40_start_menu_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-  W_NLCODE();
   return chtml40->out;
 }
 
@@ -3229,7 +3185,6 @@ s_chtml40_end_menu_tag(void *pdoc, Node *UNUSED(child))
   chtml40_t *chtml40 = GET_CHTML40(pdoc);
   Doc       *doc = chtml40->doc;
   W_L("</menu>");
-  W_NLCODE();
   return chtml40->out;
 }
 
@@ -3280,6 +3235,19 @@ static char *
 s_chtml40_end_plaintext_tag(void *pdoc, Node *UNUSED(child))
 {
   chtml40_t *chtml40 = GET_CHTML40(pdoc);
+  return chtml40->out;
+}
+
+
+/**
+ *  * It is handler who processes the New Line Code.
+ *   */
+static char *
+s_chtml40_newline_mark(void *pdoc, Node *UNUSED(node))
+{
+  chtml40_t *chtml40 = GET_CHTML40(pdoc);
+  Doc *doc = chtml40->doc;
+  W_NLCODE();
   return chtml40->out;
 }
 /*
