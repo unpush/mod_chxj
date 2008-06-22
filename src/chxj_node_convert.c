@@ -757,6 +757,14 @@ chxj_node_convert(
     case 'c':
     case 'C':
       /*----------------------------------------------------------------------*/
+      /* NL (CrLf)                                                            */
+      /*----------------------------------------------------------------------*/
+      if (strcasecmp(name, QS_PARSE_NL_MARK) == 0) {
+        if (handlers[tagNLMARK].start_tag_handler) 
+          handlers[tagNLMARK].start_tag_handler(pdoc, child);
+      }
+      else
+      /*----------------------------------------------------------------------*/
       /* <CENTER>                                                             */
       /*----------------------------------------------------------------------*/
       if (strcasecmp(name, "center") == 0) {

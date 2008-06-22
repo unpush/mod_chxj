@@ -90,6 +90,8 @@
                         &&  (strcasecmp(c, "action"     ) != 0) \
                         &&  (strcasecmp(c, "!--"      ) != 0))
 
+#define QS_PARSE_NL_MARK "CrLf"
+
 /**
  * The structure of the attribute is defined.
  */

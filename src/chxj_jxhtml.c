@@ -116,6 +116,7 @@ static char *s_jxhtml_start_blink_tag  (void *pdoc, Node *node);
 static char *s_jxhtml_end_blink_tag    (void *pdoc, Node *node);
 static char *s_jxhtml_start_marquee_tag(void *pdoc, Node *node);
 static char *s_jxhtml_end_marquee_tag  (void *pdoc, Node *node);
+static char *s_jxhtml_newline_mark       (void *pdoc, Node *node);
 
 static void  s_init_jxhtml(jxhtml_t *jxhtml, Doc *doc, request_rec *r, device_table *spec);
 
@@ -391,6 +392,11 @@ tag_handler jxhtml_handler[] = {
     s_jxhtml_start_marquee_tag,
     s_jxhtml_end_marquee_tag,
   },
+  /* tagNLMARK */
+  {
+    s_jxhtml_newline_mark,
+    NULL,
+  },
 };
 
 
@@ -610,7 +616,6 @@ s_jxhtml_start_html_tag(void *pdoc, Node *UNUSED(node))
   /* start HTML tag                                                           */
   /*--------------------------------------------------------------------------*/
   W_L("<html>");
-  W_NLCODE();
 
   DBG(r, "end s_jxhtml_start_html_tag()");
 
@@ -633,7 +638,6 @@ s_jxhtml_end_html_tag(void *pdoc, Node *UNUSED(child))
   Doc           *doc = jxhtml->doc;
 
   W_L("</html>");
-  W_NLCODE();
 
   return jxhtml->out;
 }
@@ -743,7 +747,6 @@ s_jxhtml_start_meta_tag(void *pdoc, Node *node)
     }
   }
   W_L(" />");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -785,7 +788,6 @@ s_jxhtml_start_head_tag(void *pdoc, Node *UNUSED(node))
   r     = doc->r;
 
   W_L("<head>");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -810,7 +812,6 @@ s_jxhtml_end_head_tag(void *pdoc, Node *UNUSED(child))
   r     = doc->r;
 
   W_L("</head>");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -859,7 +860,6 @@ s_jxhtml_end_title_tag(void *pdoc, Node *UNUSED(child))
   r     = doc->r;
 
   W_L("</title>");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -900,7 +900,6 @@ s_jxhtml_start_base_tag(void *pdoc, Node *node)
     }
   }
   W_L(" />");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -988,7 +987,6 @@ s_jxhtml_start_body_tag(void *pdoc, Node *node)
     }
   }
   W_L("><div>");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -1013,7 +1011,6 @@ s_jxhtml_end_body_tag(void *pdoc, Node *UNUSED(child))
   r     = doc->r;
 
   W_L("</div></body>");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -1162,7 +1159,6 @@ s_jxhtml_end_a_tag(void *pdoc, Node *UNUSED(child))
   r     = doc->r;
 
   W_L("</a>");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -1205,7 +1201,6 @@ s_jxhtml_start_br_tag(void *pdoc, Node *node)
     }
   }
   W_L(" />");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -1246,7 +1241,6 @@ s_jxhtml_start_tr_tag(void *pdoc, Node *UNUSED(node))
   r     = doc->r;
 
   W_L("<br />");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -1385,12 +1379,10 @@ s_jxhtml_end_font_tag(void *pdoc, Node *UNUSED(child))
 
   if (jxhtml->font_size_flag) {
     W_L("</span>");  
-    W_NLCODE();
     jxhtml->font_size_flag--;
   }
   if (jxhtml->font_flag) {
     W_L("</font>");
-    W_NLCODE();
     jxhtml->font_flag--;
   }
   return jxhtml->out;
@@ -1452,7 +1444,6 @@ s_jxhtml_start_form_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -1471,7 +1462,6 @@ s_jxhtml_end_form_tag(void *pdoc, Node *UNUSED(child))
   jxhtml_t *jxhtml = GET_JXHTML(pdoc);
   Doc     *doc   = jxhtml->doc;
   W_L("</form>");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -1593,7 +1583,6 @@ s_jxhtml_start_input_tag(void *pdoc, Node *node)
     W_L(" checked=\"checked\"");
   }
   W_L(" />");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -1628,7 +1617,6 @@ s_jxhtml_start_center_tag(void *pdoc, Node *UNUSED(node))
   jxhtml_t *jxhtml = GET_JXHTML(pdoc);
   Doc     *doc   = jxhtml->doc;
   W_L("<center>");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -1653,7 +1641,6 @@ s_jxhtml_end_center_tag(void *pdoc, Node *UNUSED(child))
   r     = doc->r;
 
   W_L("</center>");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -1770,7 +1757,6 @@ s_jxhtml_start_ol_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -1795,7 +1781,6 @@ s_jxhtml_end_ol_tag(void *pdoc, Node *UNUSED(child))
   r     = doc->r;
 
   W_L("</ol>");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -1843,7 +1828,6 @@ s_jxhtml_start_p_tag(void *pdoc, Node *node)
     W_L("\"");
   }
   W_L(">");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -1863,7 +1847,6 @@ s_jxhtml_end_p_tag(void *pdoc, Node *UNUSED(child))
   Doc       *doc   = jxhtml->doc;
 
   W_L("</p>");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -1884,7 +1867,6 @@ s_jxhtml_start_pre_tag(void *pdoc, Node *UNUSED(node))
 
   jxhtml->pre_flag++;
   W_L("<pre>");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -1904,7 +1886,6 @@ s_jxhtml_end_pre_tag(void *pdoc, Node *UNUSED(child))
   Doc     *doc   = jxhtml->doc;
 
   W_L("</pre>");
-  W_NLCODE();
   jxhtml->pre_flag--;
 
   return jxhtml->out;
@@ -1943,7 +1924,6 @@ s_jxhtml_start_ul_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -1963,7 +1943,6 @@ s_jxhtml_end_ul_tag(void *pdoc, Node *UNUSED(child))
   Doc     *doc   = jxhtml->doc;
 
   W_L("</ul>");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -2031,7 +2010,6 @@ s_jxhtml_start_hr_tag(void *pdoc, Node *node)
     }
   }
   W_L(" />");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -2177,7 +2155,6 @@ s_jxhtml_start_img_tag(void *pdoc, Node *node)
     W_L(" alt=\"\"");
   }
   W_L(" />");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -2255,7 +2232,6 @@ s_jxhtml_start_select_tag(void *pdoc, Node *child)
     W_L(" multiple");
   }
   W_L(">");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -2275,7 +2251,6 @@ s_jxhtml_end_select_tag(void *pdoc, Node *UNUSED(child))
   Doc     *doc   = jxhtml->doc;
 
   W_L("</select>");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -2325,7 +2300,6 @@ s_jxhtml_start_option_tag(void *pdoc, Node *child)
     W_L(" selected");
   }
   W_L(">");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -2344,7 +2318,6 @@ s_jxhtml_end_option_tag(void *pdoc, Node *UNUSED(child))
   jxhtml_t *jxhtml = GET_JXHTML(pdoc);
   Doc      *doc = jxhtml->doc;
   W_L("</option>");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -2415,7 +2388,6 @@ s_jxhtml_end_div_tag(void *pdoc, Node *UNUSED(child))
   r     = doc->r;
 
   W_L("</div>");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -2545,7 +2517,6 @@ s_jxhtml_end_textarea_tag(void *pdoc, Node *UNUSED(child))
   r     = doc->r;
 
   W_L("</textarea>");
-  W_NLCODE();
   jxhtml->textarea_flag--;
 
   return jxhtml->out;
@@ -2591,7 +2562,6 @@ s_jxhtml_end_b_tag(void* pdoc, Node* UNUSED(child))
   Doc*          doc   = jxhtml->doc;
 
   W_L("</b>");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -2676,7 +2646,6 @@ s_jxhtml_start_blockquote_tag(void *pdoc, Node *UNUSED(child))
   jxhtml_t *jxhtml = GET_JXHTML(pdoc);
   Doc     *doc   = jxhtml->doc;
   W_L("<blockquote>");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -2695,7 +2664,6 @@ s_jxhtml_end_blockquote_tag(void *pdoc, Node *UNUSED(child))
   jxhtml_t *jxhtml = GET_JXHTML(pdoc);
   Doc     *doc   = jxhtml->doc;
   W_L("</blockquote>");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -2729,7 +2697,6 @@ s_jxhtml_start_dir_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -2748,7 +2715,6 @@ s_jxhtml_end_dir_tag(void *pdoc, Node *UNUSED(child))
   jxhtml_t *jxhtml = GET_JXHTML(pdoc);
   Doc *doc = jxhtml->doc;
   W_L("</dir>");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -2767,7 +2733,6 @@ s_jxhtml_start_dl_tag(void *pdoc, Node *UNUSED(child))
   jxhtml_t *jxhtml = GET_JXHTML(pdoc);
   Doc *doc = jxhtml->doc;
   W_L("<dl>");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -2786,7 +2751,6 @@ s_jxhtml_end_dl_tag(void *pdoc, Node *UNUSED(child))
   jxhtml_t *jxhtml = GET_JXHTML(pdoc);
   Doc *doc = jxhtml->doc;
   W_L("</dl>");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -2924,7 +2888,6 @@ s_jxhtml_end_h1_tag(void *pdoc, Node *UNUSED(child))
   if (jxhtml->h1_align_flag) {
     jxhtml->h1_align_flag--;
     W_L("</div>");
-    W_NLCODE();
   }
   return jxhtml->out;
 }
@@ -2995,7 +2958,6 @@ s_jxhtml_end_h2_tag(void *pdoc, Node *UNUSED(child))
   if (jxhtml->h2_align_flag) {
     jxhtml->h2_align_flag--;
     W_L("</div>");
-    W_NLCODE();
   }
   return jxhtml->out;
 }
@@ -3068,7 +3030,6 @@ s_jxhtml_end_h3_tag(void *pdoc, Node *UNUSED(child))
   if (jxhtml->h3_align_flag) {
     jxhtml->h3_align_flag--;
     W_L("</div>");
-    W_NLCODE();
   }
   return jxhtml->out;
 }
@@ -3139,7 +3100,6 @@ s_jxhtml_end_h4_tag(void *pdoc, Node *UNUSED(child))
   if (jxhtml->h4_align_flag) {
     jxhtml->h4_align_flag--;
     W_L("</div>");
-    W_NLCODE();
   }
   return jxhtml->out;
 }
@@ -3210,7 +3170,6 @@ s_jxhtml_end_h5_tag(void *pdoc, Node *UNUSED(child))
   if (jxhtml->h5_align_flag) {
     jxhtml->h5_align_flag--;
     W_L("</div>");
-    W_NLCODE();
   }
   return jxhtml->out;
 }
@@ -3281,7 +3240,6 @@ s_jxhtml_end_h6_tag(void *pdoc, Node *UNUSED(child))
   if (jxhtml->h6_align_flag) {
     jxhtml->h6_align_flag--;
     W_L("</div>");
-    W_NLCODE();
   }
   return jxhtml->out;
 }
@@ -3319,7 +3277,6 @@ s_jxhtml_start_menu_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -3338,7 +3295,6 @@ s_jxhtml_end_menu_tag(void *pdoc, Node *UNUSED(child))
   jxhtml_t *jxhtml = GET_JXHTML(pdoc);
   Doc     *doc = jxhtml->doc;
   W_L("</menu>");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -3430,7 +3386,6 @@ s_jxhtml_end_blink_tag(void *pdoc, Node *UNUSED(child))
   jxhtml_t *jxhtml = GET_JXHTML(pdoc);
   Doc     *doc = jxhtml->doc;
   W_L("</blink>");
-  W_NLCODE();
   return jxhtml->out;
 }
 
@@ -3496,6 +3451,18 @@ s_jxhtml_end_marquee_tag(void *pdoc, Node *UNUSED(child))
   jxhtml_t *jxhtml = GET_JXHTML(pdoc);
   Doc *doc = jxhtml->doc;
   W_L("</marquee>");
+  return jxhtml->out;
+}
+
+
+/**
+ * It is handler who processes the New Line Code.
+ */
+static char *
+s_jxhtml_newline_mark(void *pdoc, Node *UNUSED(node))
+{
+  jxhtml_t *jxhtml = GET_JXHTML(pdoc);
+  Doc *doc = jxhtml->doc;
   W_NLCODE();
   return jxhtml->out;
 }
