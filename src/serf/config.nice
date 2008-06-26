@@ -1,0 +1,8 @@
+#! /bin/sh
+#
+# Created by configure
+
+"./configure" \
+"--with-apr=/usr/bin" \
+"--with-apr-util=/usr/bin" \
+"$@"
