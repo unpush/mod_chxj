@@ -139,12 +139,22 @@ chxj_headers_fixup(request_rec *r)
   chxjconvrule_entry* entryp;
   char*               user_agent;
   device_table*       spec;
+  char                *contentType;
+  char                *contentLength;
 
   DBG(r, "start chxj_headers_fixup()");
   dconf = chxj_get_module_config(r->per_dir_config, &chxj_module);
 
   user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
   spec = chxj_specified_device(r, user_agent);
+
+  contentType = (char *)apr_table_get(r->headers_in, "Content-Type");
+  if (contentType
+      && strncasecmp("multipart/form-data", contentType, 19) == 0) {
+    DBG(r, "detect multipart/form-data ==> no target");
+    DBG(r, "end chxj_headers_fixup()");
+    return DECLINED;
+  }
 
   switch(spec->html_spec_type) {
   case CHXJ_SPEC_Chtml_1_0:
@@ -158,6 +168,10 @@ chxj_headers_fixup(request_rec *r)
     entryp = chxj_apply_convrule(r, dconf->convrules);
     if (! entryp) {
       DBG(r, "end chxj_headers_fixup() no pattern");
+      return DECLINED;
+    }
+    if (!entryp || !(entryp->action & CONVRULE_ENGINE_ON_BIT)) {
+      DBG(r,"EngineOff");
       return DECLINED;
     }
   
@@ -175,8 +189,47 @@ chxj_headers_fixup(request_rec *r)
     break;
   
   default:
-    break;
+    return DECLINED;
 
+  }
+
+
+  if (r->method_number == M_POST) {
+    if (! apr_table_get(r->headers_in, "X-Chxj-Forward")) {
+        DBG(r, "set Input handler old:[%s] proxyreq:[%d] uri:[%s] filename:[%s]", r->handler, r->proxyreq, r->uri, r->filename);
+        r->proxyreq = PROXYREQ_NONE;
+        r->handler = apr_psprintf(r->pool, "chxj-input-handler");
+    }
+    else {
+      char *client_ip = (char *)apr_table_get(r->headers_in, CHXJ_HEADER_ORIG_CLIENT_IP);
+      if (client_ip) {
+        apr_sockaddr_t *address = NULL;
+        apr_status_t rv = apr_sockaddr_info_get(&address, ap_get_server_name(r), APR_UNSPEC, ap_get_server_port(r), 0, r->pool);
+        if (rv != APR_SUCCESS) {
+          char buf[256];
+          ERR(r, "%s:%d apr_sockaddr_info_get() failed: rv:[%d|%s]", APLOG_MARK, rv, apr_strerror(rv, buf, 256));
+          DBG(r, "end chxj_headers_fixup()");
+          return DECLINED;
+        }
+        char *addr;
+        if (dconf->forward_server_ip) {
+          addr = dconf->forward_server_ip;
+        }
+        else {
+          apr_sockaddr_ip_get(&addr, address);
+        }
+        DBG(r, "Client IP:[%s] vs Orig Client IP:[%s] vs Server IP:[%s]", r->connection->remote_ip, client_ip, addr);
+        if (strcmp(addr, r->connection->remote_ip) == 0) {
+          r->connection->remote_ip = apr_pstrdup(r->connection->pool, client_ip);
+        }
+        if (! apr_table_get(r->headers_in, "Content-Length")) {
+          contentLength = (char *)apr_table_get(r->headers_in, "X-Chxj-Content-Length");
+          if (contentLength) {
+            apr_table_set(r->headers_in, "Content-Length", contentLength);
+          }
+        }
+      }
+    }
   }
 
   DBG(r, "end chxj_headers_fixup()");
@@ -1127,7 +1180,6 @@ chxj_insert_filter(request_rec *r)
   mod_chxj_ctx        *ctx;
   apr_status_t        rv;
   char                *contentType;
-  char                *contentLength;
 
   DBG(r, "start chxj_insert_filter()");
 
@@ -1183,39 +1235,6 @@ chxj_insert_filter(request_rec *r)
   if (! apr_table_get(r->headers_in, "X-Chxj-Forward")) {
     ap_add_output_filter("chxj_output_filter", ctx, r, r->connection);
     DBG(r, "added Output Filter");
-    if (r->method_number == M_POST) {
-      DBG(r, "set Input handler");
-      r->handler = apr_psprintf(r->pool, "chxj-input-handler");
-    }
-  }
-  else {
-    char *client_ip = (char *)apr_table_get(r->headers_in, CHXJ_HEADER_ORIG_CLIENT_IP);
-    if (client_ip) {
-      apr_sockaddr_t *address = NULL;
-      rv = apr_sockaddr_info_get(&address, ap_get_server_name(r), APR_UNSPEC, ap_get_server_port(r), 0, r->pool);
-      if (rv != APR_SUCCESS) {
-        char buf[256];
-        ERR(r, "apr_sockaddr_info_get() failed: rv:[%d|%s]", rv, apr_strerror(rv, buf, 256));
-        return;
-      }
-      char *addr;
-      if (dconf->forward_server_ip) {
-        addr = dconf->forward_server_ip;
-      }
-      else {
-        apr_sockaddr_ip_get(&addr, address);
-      }
-      DBG(r, "Client IP:[%s] vs Orig Client IP:[%s] vs Server IP:[%s]", r->connection->remote_ip, client_ip, addr);
-      if (strcmp(addr, r->connection->remote_ip) == 0) {
-        r->connection->remote_ip = apr_pstrdup(r->connection->pool, client_ip);
-      }
-      if (! apr_table_get(r->headers_in, "Content-Length")) {
-        contentLength = (char *)apr_table_get(r->headers_in, "X-Chxj-Content-Length");
-        if (contentLength) {
-          apr_table_set(r->headers_in, "Content-Length", contentLength);
-        }
-      }
-    }
   }
 
   DBG(r, "end   chxj_insert_filter()");
@@ -1248,7 +1267,7 @@ chxj_register_hooks(apr_pool_t* UNUSED(p))
   ap_hook_handler(chxj_qr_code_handler, NULL, NULL, APR_HOOK_MIDDLE);
   ap_hook_handler(chxj_input_handler, NULL, NULL, APR_HOOK_MIDDLE);
   ap_hook_translate_name(chxj_translate_name, NULL, NULL, APR_HOOK_MIDDLE);
-  ap_hook_fixups(chxj_headers_fixup, NULL, NULL, APR_HOOK_LAST);
+  ap_hook_fixups(chxj_headers_fixup, NULL, NULL, APR_HOOK_FIRST);
 }
 
 
