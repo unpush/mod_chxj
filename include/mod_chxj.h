@@ -324,6 +324,8 @@ struct mod_chxj_config {
 #if defined(USE_MEMCACHE_COOKIE)
   memcache_t            memcache;
 #endif
+  char                  *forward_url_base;  /* use input filter */
+  char                  *forward_server_ip; /* use input filter */
 };
 
 #define IS_COOKIE_STORE_DBM(X)      ((X) == COOKIE_STORE_TYPE_DBM)

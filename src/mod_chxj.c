@@ -981,7 +981,12 @@ chxj_input_handler(request_rec *r)
   }
 
   char *url_path;
-  url_path = apr_psprintf(pool, "%s://%s:%d%s", chxj_apache_run_http_scheme(r), ap_get_server_name(r), ap_get_server_port(r), r->uri);
+  if (dconf->forward_url_base) {
+    url_path = apr_psprintf(pool, "%s%s", dconf->forward_url_base, r->uri);
+  }
+  else {
+    url_path = apr_psprintf(pool, "%s://%s:%d%s", chxj_apache_run_http_scheme(r), ap_get_server_name(r), ap_get_server_port(r), r->uri);
+  }
   if (r->args) {
     url_path = apr_pstrcat(pool, url_path, "?", r->args, NULL);
   }
@@ -1194,7 +1199,12 @@ chxj_insert_filter(request_rec *r)
         return;
       }
       char *addr;
-      apr_sockaddr_ip_get(&addr, address);
+      if (dconf->forward_server_ip) {
+        addr = dconf->forward_server_ip;
+      }
+      else {
+        apr_sockaddr_ip_get(&addr, address);
+      }
       DBG(r, "Client IP:[%s] vs Orig Client IP:[%s] vs Server IP:[%s]", r->connection->remote_ip, client_ip, addr);
       if (strcmp(addr, r->connection->remote_ip) == 0) {
         r->connection->remote_ip = apr_pstrdup(r->connection->pool, client_ip);
@@ -1277,6 +1287,8 @@ chxj_create_per_dir_config(apr_pool_t *p, char *arg)
   conf->memcache.host    = NULL;
   conf->memcache.port    = 0;
 #endif
+  conf->forward_url_base  = NULL;
+  conf->forward_server_ip = NULL;
 
   if (arg == NULL) {
     conf->dir                  = NULL;
@@ -1318,6 +1330,8 @@ chxj_merge_per_dir_config(apr_pool_t *p, void *basev, void *addv)
   mrg->image_cache_limit  = 0;
   mrg->emoji            = NULL;
   mrg->emoji_tail       = NULL;
+  mrg->forward_url_base = NULL;
+  mrg->forward_server_ip = NULL;
 
   mrg->dir = apr_pstrdup(p, add->dir);
 
@@ -1519,6 +1533,24 @@ chxj_merge_per_dir_config(apr_pool_t *p, void *basev, void *addv)
   }
   else {
     mrg->cookie_lazy_mode = 0;
+  }
+  if (add->forward_url_base) {
+    mrg->forward_url_base = apr_pstrdup(p, add->forward_url_base);
+  }
+  else if (base->forward_url_base) {
+    mrg->forward_url_base = apr_pstrdup(p, base->forward_url_base);
+  }
+  else {
+    mrg->forward_url_base = NULL;
+  }
+  if (add->forward_server_ip) {
+    mrg->forward_server_ip = apr_pstrdup(p, add->forward_server_ip);
+  }
+  else if (base->forward_server_ip) {
+    mrg->forward_server_ip = apr_pstrdup(p, base->forward_server_ip);
+  }
+  else {
+    mrg->forward_server_ip = NULL;
   }
   return mrg;
 }
@@ -2226,6 +2258,41 @@ cmd_set_cookie_store_type(
   return NULL;
 }
 
+static const char *
+cmd_set_forward_url_base(
+  cmd_parms   *cmd, 
+  void        *mconfig, 
+  const char  *arg)
+{
+  mod_chxj_config *dconf;
+
+  if (strlen(arg) > 255) 
+    return "mod_chxj: ChxjForwardUrlBase is too long.";
+
+  dconf = (mod_chxj_config *)mconfig;
+
+  dconf->forward_url_base = apr_pstrdup(cmd->pool, arg);
+
+  return NULL;
+}
+
+static const char *
+cmd_set_forward_server_ip(
+  cmd_parms   *cmd, 
+  void        *mconfig, 
+  const char  *arg)
+{
+  mod_chxj_config *dconf;
+
+  if (strlen(arg) > 255) 
+    return "mod_chxj: ChxjForwardServerIp is too long.";
+
+  dconf = (mod_chxj_config *)mconfig;
+
+  dconf->forward_server_ip = apr_pstrdup(cmd->pool, arg);
+
+  return NULL;
+}
 
 
 static const command_rec cmds[] = {
@@ -2359,6 +2426,18 @@ static const command_rec cmds[] = {
     OR_ALL,
     "The Memcached port used by saving Cookie"),
 #endif
+  AP_INIT_TAKE1(
+    "ChxjForwardUrlBase",
+    cmd_set_forward_url_base,
+    NULL,
+    OR_ALL,
+    "The forward url base(default: {request protocol}://{this server}:{this server port}"),
+  AP_INIT_TAKE1(
+    "ChxjForwardServerIp",
+    cmd_set_forward_server_ip,
+    NULL,
+    OR_ALL,
+    "The forward server ip(default: this server ip)"),
   {NULL}
 };
 
