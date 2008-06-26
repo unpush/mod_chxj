@@ -98,7 +98,6 @@ chxj_node_exchange(
     char* name;
 
     name = qs_get_node_name(doc,child);
-
     switch(*name) {
     case 'h':
     case 'H':

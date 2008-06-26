@@ -416,6 +416,7 @@ chxj_exchange_jhtml(
   char      *ss;
   jhtml_t   jhtml;
   Doc       doc;
+  apr_pool_t *pool;
 
   dst = NULL;
 
@@ -446,7 +447,8 @@ chxj_exchange_jhtml(
   qs_init_malloc(&doc);
   qs_init_root_node(&doc);
 
-  ss = apr_pcalloc(r->pool, srclen + 1);
+  apr_pool_create(&pool, r->pool);
+  ss = apr_pcalloc(pool, srclen + 1);
 
   memset(ss,   0, srclen + 1);
   memcpy(ss, src, srclen);
@@ -463,17 +465,17 @@ chxj_exchange_jhtml(
   /*--------------------------------------------------------------------------*/
   chxj_node_exchange(spec,r,(void*)&jhtml, &doc, qs_get_root(&doc), 0);
   jhtml.out = chxj_buffered_write_flush(jhtml.out, &doc.buf);
-  dst = apr_pstrdup(r->pool, jhtml.out);
+  dst = apr_pstrdup(pool, jhtml.out);
   chxj_buffered_write_terminate(&doc.buf);
 
 
   qs_all_free(&doc,QX_LOGMARK);
 
   if (! dst) 
-    return apr_pstrdup(r->pool,ss);
+    return apr_pstrdup(pool,ss);
 
   if (! strlen(dst)) 
-    dst = apr_psprintf(r->pool, "\n");
+    dst = apr_psprintf(pool, "\n");
 
   *dstlen = strlen(dst);
 
@@ -2501,6 +2503,7 @@ s_jhtml_text_tag(void* pdoc, Node* child)
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
   r     = doc->r;
+  DBG(r, "start s_jhtml_text_tag()");
 
   textval = qs_get_node_value(doc,child);
   if (strlen(textval) == 0) {
@@ -2548,6 +2551,7 @@ s_jhtml_text_tag(void* pdoc, Node* child)
     }
   }
   W_V(tdst);
+  DBG(r, "end s_jhtml_text_tag()");
   return jhtml->out;
 }
 

@@ -376,6 +376,7 @@ typedef struct {
 #define HTTP_USER_AGENT       "User-Agent"
 #define HTTP_HOST             "Host"
 #define CHXJ_HTTP_USER_AGENT  "CHXJ_HTTP_USER_AGENT"
+#define CHXJ_HEADER_ORIG_CLIENT_IP "X-Chxj-Orig-Client-Ip"
 
 module AP_MODULE_DECLARE_DATA chxj_module;
 
@@ -408,6 +409,7 @@ extern char* chxj_node_exchange(
 );
 
 #define IMAGE_CACHE_LIMIT_FMT_LEN  (20)
+
 
 #if HAVE_MALLOC == 0
 extern void *rpl_malloc(size_t n);
