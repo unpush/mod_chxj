@@ -256,8 +256,10 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len, device_table *s
       break;
     }
   }
+  DBG(r, "save cookie done");
 
   if (!r->header_only) {
+    DBG(r, "start do convert");
 
     tmp = NULL;
     if (convert_routine[spec->html_spec_type].encoder)
@@ -283,6 +285,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len, device_table *s
                                                               entryp, 
                                                               cookie);
     }
+    DBG(r, "end do convert");
   }
 
   if (*len == 0) {
@@ -991,6 +994,12 @@ chxj_input_handler(request_rec *r)
   response = chxj_serf_post(r, pool, url_path, post_data, post_data_len, 1, &res_len);
   DBG(r, "response:[%.*s][%d]", res_len, response, res_len);
 
+  char *chunked;
+  if ((chunked = (char *)apr_table_get(r->headers_out, "Transfer-Encoding")) != NULL) {
+    if (strcasecmp(chunked, "chunked") == 0) {
+      r->chunked = 1;  
+    }
+  }
   {
     apr_pool_t *wpool;
     apr_pool_create(&wpool, r->pool);

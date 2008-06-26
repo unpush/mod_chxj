@@ -134,7 +134,6 @@ s_handle_response(serf_request_t *UNUSED(request), serf_bucket_t *response, void
   }
   ctx->reason = sl.reason;
 
-  ctx->response_len = 0;
   while (1) {
     rv = serf_bucket_read(response, 2048, &data, &len);
     if (SERF_BUCKET_READ_ERROR(rv)) {
@@ -190,9 +189,7 @@ s_handle_response(serf_request_t *UNUSED(request), serf_bucket_t *response, void
           key = qs_trim_string(ctx->pool, key);
           val = qs_trim_string(ctx->pool, val);
           DBG(ctx->r, "key:[%s], val:[%s]", key, val);
-          if (!(strcasecmp(key, "Transfer-Encoding") == 0 && strcasecmp(val, "chunked") == 0)) {
-            apr_table_add(ctx->headers_out, key, val);
-          }
+          apr_table_add(ctx->headers_out, key, val);
         }
       }
       ctx->rv = APR_SUCCESS;
@@ -330,6 +327,8 @@ default_chxj_serf_get(request_rec *r, apr_pool_t *ppool, const char *url_path, i
   handler_ctx.handler      = s_handle_response;
   handler_ctx.pool         = pool;
   handler_ctx.r            = r;
+  handler_ctx.response_len = 0;
+  handler_ctx.response     = NULL;
 
   serf_connection_request_create(connection, s_setup_request, &handler_ctx);
 
@@ -431,6 +430,8 @@ default_chxj_serf_post(request_rec *r, apr_pool_t *ppool, const char *url_path, 
   handler_ctx.handler      = s_handle_response;
   handler_ctx.pool         = pool;
   handler_ctx.r            = r;
+  handler_ctx.response_len = 0;
+  handler_ctx.response     = NULL;
 
   serf_connection_request_create(connection, s_setup_request, &handler_ctx);
 
@@ -453,7 +454,7 @@ default_chxj_serf_post(request_rec *r, apr_pool_t *ppool, const char *url_path, 
   }
 
   DBG(r, "end of serf request");
-  DBG(r, "response:[%s]", handler_ctx.response);
+  DBG(r, "response:[%s][%d]", handler_ctx.response, handler_ctx.response_len);
   serf_connection_close(connection);
   ret = apr_pstrdup(ppool, handler_ctx.response);
   if (set_headers_flag) {
