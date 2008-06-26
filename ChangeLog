@@ -1,3 +1,12 @@
+libapache2-mod-chxj (0.11.2-1) unstable; urgency=low
+
+  * Fixed Bug.
+    - Because Input_filter of Apache is a fuck-shit, it abolishes it.
+      Proxy is made at one's own expense by using libserf instead.
+      (Reported by tiruda1600 _at_ users.sourceforge.jp. thanks!)
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Thu, 26 Jun 2008 10:32:44 +0900
+
 libapache2-mod-chxj (0.11.1-1) unstable; urgency=low
 
   * Fixed bug.

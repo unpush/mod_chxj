@@ -54,6 +54,7 @@ clean:
 	rm -fr .libs
 	rm -f *.o *.lo *.la
 	rm -f mod_chxj.so
+	(cd serf; make clean)
 
 install: make_so
 	@@APXS@ -i -n "chxj" @PACKAGE_NAME@.so
