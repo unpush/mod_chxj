@@ -50,6 +50,7 @@ static void qs_dump_node_stack(Doc *doc, NodeStack stack);
 #endif
 static void qs_free_node_stack(Doc *doc, NodeStack stack);
 static void s_error_check(Doc *doc, const char *name, int line, NodeStack node_stack, NodeStack err_stack);
+static Node *qs_new_nl_node(Doc *doc);
 
 
 Node *
@@ -188,7 +189,13 @@ qs_parse_string(Doc *doc, const char *src, int srclen)
    */
   nl_cnt = 1;
   for (ii=0; ii<srclen; ii++) {
-    if (src[ii] == '\n') nl_cnt++;
+    if (src[ii] == '\n') {
+      nl_cnt++;
+      if (doc->now_parent_node != NULL) {
+        Node *node = qs_new_nl_node(doc);
+        qs_add_child_node(doc,node);
+      }
+    }
     if (doc->parse_mode != PARSE_MODE_NO_PARSE 
         && is_white_space(src[ii])
         && (doc->now_parent_node == NULL || !STRCASEEQ('p','P',"pre",doc->now_parent_node->name))) {
@@ -718,6 +725,20 @@ qs_free_node_stack(Doc *doc, NodeStack stack)
       free(stack->head);
     free(stack);
   }
+}
+
+
+static Node *
+qs_new_nl_node(Doc *doc)
+{
+  Node *node = (Node *)qs_new_tag(doc);
+  if (! node) {
+    QX_LOGGER_DEBUG("runtime exception: qs_parse_tag(): Out of memory.");
+    return NULL;
+  }
+  node->name = apr_pstrdup(doc->pool, QS_PARSE_NL_MARK);
+  node->otext = NULL;
+  return node;
 }
 /*
  * vim:ts=2 et
