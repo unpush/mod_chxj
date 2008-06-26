@@ -48,6 +48,15 @@ chxj_buffered_write(const char *src, buf_object *buf, const char *add, int add_l
     buf->buffer[buf->use_len] = 0;
     return (char *)src;
   }
+  else if (buf->use_len < CHXJ_BUFFERED_OBJECT_SIZE - 1) {
+    int new_add_len = CHXJ_BUFFERED_OBJECT_SIZE - 1 - buf->use_len;
+    memcpy(&buf->buffer[buf->use_len], add, new_add_len);
+    buf->use_len += new_add_len;
+    buf->buffer[buf->use_len] = 0;
+    result = chxj_buffered_write_flush(src, buf);
+    result = chxj_buffered_write(result, buf, add + new_add_len, add_len - new_add_len);
+    return result;
+  }
   result = chxj_buffered_write_flush(src, buf);
   result = chxj_buffered_write(result, buf, add, add_len);
   return result;

@@ -66,10 +66,12 @@
 #if defined(USE_MYSQL_COOKIE)
 #  include "chxj_mysql.h"
 #endif
+#include "chxj_serf.h"
 
 
 #define CHXJ_VERSION_PREFIX PACKAGE_NAME "/"
 #define CHXJ_VERSION        PACKAGE_VERSION
+#define CHXJ_POST_MAX       (0x1000000)
 
 converter_t convert_routine[] = {
   {
@@ -150,16 +152,26 @@ static void s_add_cookie_id_if_has_location_header(request_rec *r, cookie_t *coo
 static apr_status_t 
 chxj_headers_fixup(request_rec *r)
 {
-  mod_chxj_config     *dconf; 
-  chxjconvrule_entry  *entryp;
-  char                *user_agent;
-  device_table        *spec;
+  mod_chxj_config*    dconf; 
+  chxjconvrule_entry* entryp;
+  char*               user_agent;
+  device_table*       spec;
+  char                *contentType;
+  char                *contentLength;
 
   DBG(r, "start chxj_headers_fixup()");
   dconf = chxj_get_module_config(r->per_dir_config, &chxj_module);
 
-  user_agent = (char *)apr_table_get(r->headers_in, HTTP_USER_AGENT);
+  user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
   spec = chxj_specified_device(r, user_agent);
+
+  contentType = (char *)apr_table_get(r->headers_in, "Content-Type");
+  if (contentType
+      && strncasecmp("multipart/form-data", contentType, 19) == 0) {
+    DBG(r, "detect multipart/form-data ==> no target");
+    DBG(r, "end chxj_headers_fixup()");
+    return DECLINED;
+  }
 
   switch(spec->html_spec_type) {
   case CHXJ_SPEC_Chtml_1_0:
@@ -167,15 +179,16 @@ chxj_headers_fixup(request_rec *r)
   case CHXJ_SPEC_Chtml_3_0:
   case CHXJ_SPEC_Chtml_4_0:
   case CHXJ_SPEC_Chtml_5_0:
-  case CHXJ_SPEC_Chtml_6_0:
-  case CHXJ_SPEC_Chtml_7_0:
   case CHXJ_SPEC_XHtml_Mobile_1_0:
   case CHXJ_SPEC_Hdml:
   case CHXJ_SPEC_Jhtml:
-  case CHXJ_SPEC_Jxhtml:
     entryp = chxj_apply_convrule(r, dconf->convrules);
     if (! entryp) {
       DBG(r, "end chxj_headers_fixup() no pattern");
+      return DECLINED;
+    }
+    if (!entryp || !(entryp->action & CONVRULE_ENGINE_ON_BIT)) {
+      DBG(r,"EngineOff");
       return DECLINED;
     }
   
@@ -193,15 +206,53 @@ chxj_headers_fixup(request_rec *r)
     break;
   
   default:
-    break;
+    return DECLINED;
 
+  }
+
+
+  if (r->method_number == M_POST) {
+    if (! apr_table_get(r->headers_in, "X-Chxj-Forward")) {
+        DBG(r, "set Input handler old:[%s] proxyreq:[%d] uri:[%s] filename:[%s]", r->handler, r->proxyreq, r->uri, r->filename);
+        r->proxyreq = PROXYREQ_NONE;
+        r->handler = apr_psprintf(r->pool, "chxj-input-handler");
+    }
+    else {
+      char *client_ip = (char *)apr_table_get(r->headers_in, CHXJ_HEADER_ORIG_CLIENT_IP);
+      if (client_ip) {
+        apr_sockaddr_t *address = NULL;
+        apr_status_t rv = apr_sockaddr_info_get(&address, ap_get_server_name(r), APR_UNSPEC, ap_get_server_port(r), 0, r->pool);
+        if (rv != APR_SUCCESS) {
+          char buf[256];
+          ERR(r, "%s:%d apr_sockaddr_info_get() failed: rv:[%d|%s]", APLOG_MARK, rv, apr_strerror(rv, buf, 256));
+          DBG(r, "end chxj_headers_fixup()");
+          return DECLINED;
+        }
+        char *addr;
+        if (dconf->forward_server_ip) {
+          addr = dconf->forward_server_ip;
+        }
+        else {
+          apr_sockaddr_ip_get(&addr, address);
+        }
+        DBG(r, "Client IP:[%s] vs Orig Client IP:[%s] vs Server IP:[%s]", r->connection->remote_ip, client_ip, addr);
+        if (strcmp(addr, r->connection->remote_ip) == 0) {
+          r->connection->remote_ip = apr_pstrdup(r->connection->pool, client_ip);
+        }
+        if (! apr_table_get(r->headers_in, "Content-Length")) {
+          contentLength = (char *)apr_table_get(r->headers_in, "X-Chxj-Content-Length");
+          if (contentLength) {
+            apr_table_set(r->headers_in, "Content-Length", contentLength);
+          }
+        }
+      }
+    }
   }
 
   DBG(r, "end chxj_headers_fixup()");
 
   return DECLINED;
 }
-
 
 /**
  * It converts it from CHTML into XXML corresponding to each model. 
@@ -305,6 +356,7 @@ chxj_convert(request_rec *r, const char **src, apr_size_t *len, device_table *sp
                                                               cookie);
     }
   }
+  ap_set_content_length(r, *len);
 
   if (*len == 0) {
     dst = apr_psprintf(r->pool, "\n");
@@ -655,24 +707,18 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
   mod_chxj_config     *dconf;
   chxjconvrule_entry  *entryp = NULL;
   device_table        *spec = NULL;
+  apr_pool_t          *pool;
 
   DBG(f->r, "start of chxj_output_filter()");
   r  = f->r;
   rv = APR_SUCCESS;
 
-  dconf      = ap_get_module_config(r->per_dir_config, &chxj_module);
-  user_agent = (char *)apr_table_get(r->headers_in, HTTP_USER_AGENT);
-  if (ctx && ctx->entryp) entryp = ctx->entryp;
-  else                    entryp = chxj_apply_convrule(r, dconf->convrules);
-  if (ctx && ctx->spec)   spec   = ctx->spec;
-  else                    spec   = chxj_specified_device(r, user_agent);
+  apr_pool_create(&pool, r->pool);
 
-  if (!f->ctx) {
-    if ((f->r->proto_num >= 1001) 
-    &&  !f->r->main 
-    &&  !f->r->prev) 
-      f->r->chunked = 1;
-  }
+  entryp = ctx->entryp;
+  spec   = ctx->spec;
+  dconf  = chxj_get_module_config(r->per_dir_config, &chxj_module);
+
   if (r->content_type) {
     if (! STRNCASEEQ('t','T',"text/html",r->content_type, sizeof("text/html")-1)
     &&  ! STRNCASEEQ('t','T',"text/xml", r->content_type, sizeof("text/xml")-1)
@@ -728,46 +774,25 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
     if (apr_bucket_read(b, &data, &len, APR_BLOCK_READ) == APR_SUCCESS) {
       DBG(r, "read data[%.*s]",(int)len, data);
 
-      if (f->ctx == NULL) {
-        /*--------------------------------------------------------------------*/
-        /* Start                                                              */
-        /*--------------------------------------------------------------------*/
-        DBG(r, "new context");
-        ctx = (mod_chxj_ctx *)apr_palloc(r->pool, sizeof(mod_chxj_ctx));
-        if (len > 0) {
-          ctx->buffer = apr_palloc(r->pool, len);
-          memcpy(ctx->buffer, data, len);
-        }
-        else {
-          ctx->buffer = apr_palloc(r->pool, 1);
-          ctx->buffer = '\0';
-        }
-        ctx->len = len;
-        f->ctx = (void *)ctx;
-        ctx->entryp = entryp;
-        ctx->spec   = spec;
+      /*--------------------------------------------------------------------*/
+      /* append data                                                        */
+      /*--------------------------------------------------------------------*/
+      char *tmp;
+      DBG(r, "append data start");
+      ctx = (mod_chxj_ctx *)f->ctx;
+
+      if (len > 0) {
+        tmp = apr_palloc(r->pool, ctx->len);
+        memcpy(tmp, ctx->buffer, ctx->len);
+
+        ctx->buffer = apr_palloc(pool, ctx->len + len);
+
+        memcpy(ctx->buffer, tmp, ctx->len);
+        memcpy(&ctx->buffer[ctx->len], data, len);
+
+        ctx->len += len;
       }
-      else {
-        /*--------------------------------------------------------------------*/
-        /* append data                                                        */
-        /*--------------------------------------------------------------------*/
-        char *tmp;
-        DBG(r, "append data start");
-        ctx = (mod_chxj_ctx *)f->ctx;
-
-        if (len > 0) {
-          tmp = apr_palloc(r->pool, ctx->len);
-          memcpy(tmp, ctx->buffer, ctx->len);
-
-          ctx->buffer = apr_palloc(r->pool, ctx->len + len);
-
-          memcpy(ctx->buffer, tmp, ctx->len);
-          memcpy(&ctx->buffer[ctx->len], data, len);
-
-          ctx->len += len;
-        }
-        DBG(r, "append data end");
-      }
+      DBG(r, "append data end");
     }
 
     if (APR_BUCKET_IS_EOS(b)) {
@@ -791,7 +816,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
           if (ctx->len) {
             char *tmp;
 
-            tmp = apr_palloc(r->pool, ctx->len + 1);
+            tmp = apr_palloc(pool, ctx->len + 1);
 
             memset(tmp, 0, ctx->len + 1);
             memcpy(tmp, ctx->buffer, ctx->len);
@@ -876,7 +901,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
           if (ctx->len) {
             char *tmp;
 
-            tmp = apr_palloc(r->pool, ctx->len + 1);
+            tmp = apr_palloc(pool, ctx->len + 1);
 
             memset(tmp, 0, ctx->len + 1);
             memcpy(tmp, ctx->buffer, ctx->len);
@@ -890,7 +915,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
           }
         }
 
-        contentLength = apr_psprintf(r->pool, "%d", (int)ctx->len);
+        contentLength = apr_psprintf(pool, "%d", (int)ctx->len);
         apr_table_setn(r->headers_out, "Content-Length", contentLength);
         
         if (ctx->len > 0) {
@@ -904,8 +929,6 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
         else {
           chxj_cookie_unlock(r);
         }
-        f->ctx = NULL;
-
         return rv;
       }
       else {
@@ -971,196 +994,108 @@ s_add_cookie_id_if_has_location_header(request_rec *r, cookie_t *cookie)
 }
 
 /**
- * It is the main loop of the input filter. 
+ * It is the main loop of the input filter handler. 
  *
- * @param f         [i/o] It is a filter.
- * @param bb        [i]   brigade
- * @param mode      [i]   mode
- * @param block     [i]   block
- * @param readbytes [i]   readbyte
  */
-static apr_status_t 
-chxj_input_filter(ap_filter_t         *f, 
-                 apr_bucket_brigade   *bb,
-                 ap_input_mode_t      mode, 
-                 apr_read_type_e      block,
-                 apr_off_t            readbytes)
+static int 
+chxj_input_handler(request_rec *r)
 {
-  request_rec         *r;
-  apr_status_t        rv;
-  conn_rec            *c;
-  apr_bucket          *b;
-  /*--------------------------------------------------------------------------*/
-  /* It is the brigade area for output                                        */
-  /*--------------------------------------------------------------------------*/
-  apr_bucket_brigade  *ibb;            
-  /*--------------------------------------------------------------------------*/
-  /* It is the brigade area for input                                         */
-  /*--------------------------------------------------------------------------*/
-  apr_bucket_brigade  *obb;
-  apr_size_t          len;
-  apr_bucket          *tmp_heap;
-  apr_bucket          *eos;
-  const char          *data;
-  char                *data_bucket;
-  char                *data_brigade;
-  char                *content_type;
-  device_table        *spec = NULL;
-  char                *user_agent = NULL;
   mod_chxj_config     *dconf;
   chxjconvrule_entry  *entryp = NULL;
-  mod_chxj_ctx        *ctx = (mod_chxj_ctx *)f->ctx;
-  int                 eos_flag = 0;
+  device_table        *spec   = NULL;
+  char                *post_data = NULL;
+  apr_size_t          post_data_len = 0;
+  char                *response;
+  char                *user_agent;
+  apr_pool_t          *pool;
+  
+  DBG(r, "start of chxj_input_handler()");
 
-  r = f->r;
-  c = r->connection;
+  if (strcasecmp(r->handler, "chxj-input-handler")) {
+    DBG(r, "end chxj_input_handler()");
+    return DECLINED;
+  }
+  apr_pool_create(&pool, r->pool);
 
-  DBG(r, "start of chxj_input_filter()");
+  dconf      = chxj_get_module_config(r->per_dir_config, &chxj_module);
+  user_agent = (char*)apr_table_get(r->headers_in, "User-Agent");
+  spec       = chxj_specified_device(r, user_agent);
+  entryp     = chxj_apply_convrule(r, dconf->convrules);
 
-  data_brigade = qs_alloc_zero_byte_string(r->pool);
-
-
-  ibb = apr_brigade_create(r->pool, c->bucket_alloc);
-  obb = apr_brigade_create(r->pool, c->bucket_alloc);
-
-  content_type = (char *)apr_table_get(r->headers_in, "Content-Type");
-  if (content_type 
-      && strncasecmp("multipart/form-data", content_type, 19) == 0) {
-
-    DBG(r, "detect multipart/form-data");
-    ap_remove_input_filter(f);
-
-    return ap_get_brigade(f->next, bb, mode, block, readbytes);
+  post_data = apr_pstrdup(pool, "");
+  if (ap_setup_client_block(r, REQUEST_CHUNKED_DECHUNK) == OK) {
+    if (ap_should_client_block(r)) {
+      while (post_data_len < CHXJ_POST_MAX) {
+#define BUFSZ (256)
+        char buffer[BUFSZ];
+        int read_bytes = ap_get_client_block(r, buffer, BUFSZ-1);
+        if (read_bytes<=0) {
+          break;
+        }
+        buffer[read_bytes] = '\0';
+        post_data = apr_pstrcat(pool, post_data, buffer, NULL);
+        post_data_len += read_bytes;
+#undef BUFSZ
+      }
+    }
   }
 
-  dconf = chxj_get_module_config(r->per_dir_config, &chxj_module);
-  user_agent = (char *)apr_table_get(r->headers_in, "User-Agent");
-
-  if (ctx && ctx->entryp) entryp = ctx->entryp;
-  else                    entryp = chxj_apply_convrule(r, dconf->convrules);
-
-  if (ctx && ctx->spec) spec = ctx->spec;
-  else                  spec = chxj_specified_device(r, user_agent);
-
-  if (!entryp || !(entryp->action & CONVRULE_ENGINE_ON_BIT)) {
-    DBG(r,"EngineOff");
-
-    ap_remove_input_filter(f);
-    return ap_get_brigade(f->next, bb, mode, block, readbytes);
+  /* 
+   * now convert.
+   */
+  if (post_data_len > 0) {
+    post_data = chxj_input_convert(r, (const char**)&post_data, (apr_size_t*)&post_data_len, entryp);
+    DBG(r, "(in:exchange)POSTDATA:[%s]", post_data);
   }
 
-
-  switch(spec->html_spec_type) {
-  case CHXJ_SPEC_Chtml_1_0:
-  case CHXJ_SPEC_Chtml_2_0:
-  case CHXJ_SPEC_Chtml_3_0:
-  case CHXJ_SPEC_Chtml_4_0:
-  case CHXJ_SPEC_Chtml_5_0:
-  case CHXJ_SPEC_Chtml_6_0:
-  case CHXJ_SPEC_Chtml_7_0:
-  case CHXJ_SPEC_XHtml_Mobile_1_0:
-  case CHXJ_SPEC_Hdml:
-  case CHXJ_SPEC_Jhtml:
-  case CHXJ_SPEC_Jxhtml:
-    break;
-
-  default:
-    ap_remove_input_filter(f);
-    return ap_get_brigade(f->next, bb, mode, block, readbytes);
+  char *url_path;
+  if (dconf->forward_url_base) {
+    url_path = apr_psprintf(pool, "%s%s", dconf->forward_url_base, r->uri);
   }
-
-
-  rv = ap_get_brigade(f->next, ibb, mode, block, readbytes);
-  if (rv != APR_SUCCESS) {
-    DBG(r, "ap_get_brigade() failed");
-    return rv;
+  else {
+    url_path = apr_psprintf(pool, "%s://%s:%d%s", chxj_apache_run_http_scheme(r), ap_get_server_name(r), ap_get_server_port(r), r->uri);
   }
-  if (!ctx) {
-    ctx = apr_palloc(f->c->pool, sizeof(*ctx));
-    memset(ctx, 0, sizeof(*ctx));
-    if ((rv = apr_pool_create(&ctx->pool, f->c->pool)) != APR_SUCCESS) {
-      ERR(r, "failed: new pool create. rv:[%d]", rv);
+  if (r->args) {
+    url_path = apr_pstrcat(pool, url_path, "?", r->args, NULL);
+  }
+  DBG(r, "==> new url_path:[%s]", url_path);
+
+  apr_size_t res_len;
+  apr_table_setn(r->headers_in, CHXJ_HEADER_ORIG_CLIENT_IP, r->connection->remote_ip);
+  apr_table_unset(r->headers_in, "Content-Length");
+  apr_table_setn(r->headers_in, "Content-Length", apr_psprintf(pool, "%d", post_data_len));
+  response = chxj_serf_post(r, pool, url_path, post_data, post_data_len, 1, &res_len);
+  DBG(r, "response:[%.*s][%d]", res_len, response, res_len);
+
+  char *chunked;
+  if ((chunked = (char *)apr_table_get(r->headers_out, "Transfer-Encoding")) != NULL) {
+    if (strcasecmp(chunked, "chunked") == 0) {
+      r->chunked = 1;  
+    }
+  }
+  {
+    apr_pool_t *wpool;
+    apr_pool_create(&wpool, r->pool);
+    apr_bucket_brigade *bb;
+    apr_bucket *e;
+    apr_status_t rv;
+    conn_rec *c = r->connection;
+    
+    bb = apr_brigade_create(wpool, c->bucket_alloc);
+    e = apr_bucket_heap_create(response, res_len, NULL, c->bucket_alloc);
+    APR_BRIGADE_INSERT_TAIL(bb, e);
+    e = apr_bucket_eos_create(c->bucket_alloc);
+    APR_BRIGADE_INSERT_TAIL(bb, e);
+    if ((rv = ap_pass_brigade(r->output_filters, bb)) != APR_SUCCESS) {
+      ERR(r, "%s:%d failed ap_pass_brigade()", APLOG_MARK);
       return rv;
     }
-    ctx->entryp = entryp;
-    ctx->spec = spec;
-    ctx->buffer = apr_palloc(ctx->pool, 1);
-    ctx->buffer[0] = 0;
-    f->ctx = ctx;
-  }
+    apr_brigade_cleanup(bb);
+  }  
 
-  for (b =  APR_BRIGADE_FIRST(ibb); 
-       b != APR_BRIGADE_SENTINEL(ibb);
-       b =  APR_BUCKET_NEXT(b)) {
-
-    rv = apr_bucket_read(b, &data, &len, APR_BLOCK_READ);
-    if (rv != APR_SUCCESS) {
-      DBG(r, "apr_bucket_read() failed");
-      return rv;
-    }
-
-    if (data != NULL) {
-      ctx->len += len;
-      data_bucket = apr_palloc(ctx->pool, len+1);
-      memset((void *)data_bucket, 0, len+1);
-      memcpy(data_bucket, data, len);
-      DBG(r, "(in)POSTDATA:[%s]", data_bucket);
-      ctx->buffer = apr_pstrcat(ctx->pool, ctx->buffer, data_bucket, NULL);
-    }
-    if (APR_BUCKET_IS_EOS(b)) {
-      DBG(r, "eos");
-      eos_flag = 1;
-      break;
-    }
-  }
-  apr_brigade_cleanup(ibb);
-
-  if (ctx->len == 0) {
-    DBG(r,"data_brigade length is 0");
-    DBG(r,"end of chxj_input_filter()");
-    ap_remove_input_filter(f);
-    return ap_get_brigade(f->next, bb, mode, block, readbytes);
-  }
-
-  if (eos_flag) {
-    len = ctx->len;
-    data_brigade = chxj_input_convert(
-      r, 
-      (const char **)&ctx->buffer, 
-      (apr_size_t *)&len,
-      entryp
-      );
-  
-    if (len > 0) {
-      DBG(r, "(in:convert)POSTDATA:[%s]", data_brigade);
-  
-      obb = apr_brigade_create(r->pool, c->bucket_alloc);
-  
-      tmp_heap = apr_bucket_heap_create(data_brigade, 
-                                        len, 
-                                        NULL, 
-                                        f->c->bucket_alloc);
-      eos = apr_bucket_eos_create(f->c->bucket_alloc);
-  
-      APR_BRIGADE_INSERT_TAIL(obb, tmp_heap);
-      APR_BRIGADE_INSERT_TAIL(obb, eos);
-      APR_BRIGADE_CONCAT(bb, obb);
-    }
-    else {
-      obb = apr_brigade_create(r->pool, c->bucket_alloc);
-      eos = apr_bucket_eos_create(f->c->bucket_alloc);
-      APR_BRIGADE_INSERT_TAIL(obb, eos);
-      APR_BRIGADE_CONCAT(bb, obb);
-    }
-    apr_pool_destroy(ctx->pool);
-    f->ctx = NULL;
-  }
-
-  DBG(r, "end of chxj_input_filter()");
-
+  DBG(r, "end of chxj_input_handler()");
   return APR_SUCCESS;
 }
-
 
 static mod_chxj_global_config *
 chxj_global_config_create(apr_pool_t *pool, server_rec *s)
@@ -1220,23 +1155,6 @@ chxj_init_module(apr_pool_t *p,
     SERR(s, "%s:%d end chxj_init_module(). mutex create failure.(%d:%s)",APLOG_MARK, rv,apr_strerror(rv,errstr,255));
     return HTTP_INTERNAL_SERVER_ERROR;
   }
-#if 0
-  conf = (mod_chxj_global_config *)ap_get_module_config(s->module_config, 
-                                                        &chxj_module);
-
-  if (apr_global_mutex_create(&(conf->cookie_db_lock), 
-                              NULL, APR_LOCK_DEFAULT, p) != APR_SUCCESS) {
-    SERR(s, "end  chxj_init_module()");
-    return HTTP_INTERNAL_SERVER_ERROR;
-  }
-
-#ifdef AP_NEED_SET_MUTEX_PERMS
-  if (unixd_set_global_mutex_perms(conf->cookie_db_lock) != APR_SUCCESS) {
-    SERR(s, "end  chxj_init_module()");
-    return HTTP_INTERNAL_SERVER_ERROR;
-  }
-#endif
-#endif
 
   SDBG(s, "end  chxj_init_module()");
 
@@ -1288,26 +1206,67 @@ chxj_insert_filter(request_rec *r)
   device_table        *spec;
   mod_chxj_config     *dconf;
   chxjconvrule_entry  *entryp;
-DBG(r, "start chxj_insert_filter()");
+  mod_chxj_ctx        *ctx;
+  apr_status_t        rv;
+  char                *contentType;
+
+  DBG(r, "start chxj_insert_filter()");
 
   dconf = chxj_get_module_config(r->per_dir_config, &chxj_module);
 
-  user_agent = (char *)apr_table_get(r->headers_in, HTTP_USER_AGENT);
-  spec = chxj_specified_device(r, user_agent);
-  entryp = NULL;
+  user_agent = (char*)apr_table_get(r->headers_in, HTTP_USER_AGENT);
 
+  contentType = (char *)apr_table_get(r->headers_in, "Content-Type");
+  if (contentType
+      && strncasecmp("multipart/form-data", contentType, 19) == 0) {
+    DBG(r, "detect multipart/form-data ==> no target");
+    return;
+  }
+
+  spec = chxj_specified_device(r, user_agent);
   entryp = chxj_apply_convrule(r, dconf->convrules);
   if (!entryp) {
     DBG(r, "end chxj_insert_filter()");
     return;
   }
+  ctx = apr_palloc(r->pool, sizeof(*ctx));
+  memset(ctx, 0, sizeof(*ctx));
+  if ((rv = apr_pool_create(&ctx->pool, r->pool)) != APR_SUCCESS) {
+    ERR(r, "failed: new pool create. rv:[%d]", rv);
+    return;
+  }
+  ctx->entryp = entryp;
+  ctx->spec   = spec;
+  ctx->buffer = apr_palloc(ctx->pool, 1);
+  ctx->buffer[0] = 0;
 
-  if (entryp->action & CONVRULE_ENGINE_ON_BIT) {
-    ap_add_input_filter("chxj_input_filter",   NULL, r, r->connection);
-    ap_add_output_filter("chxj_output_filter", NULL, r, r->connection);
+  if (!entryp || !(entryp->action & CONVRULE_ENGINE_ON_BIT)) {
+    DBG(r,"EngineOff");
+    return;
   }
 
-DBG(r, "end   chxj_insert_filter()");
+  switch(spec->html_spec_type) {
+  case CHXJ_SPEC_Chtml_1_0:
+  case CHXJ_SPEC_Chtml_2_0:
+  case CHXJ_SPEC_Chtml_3_0:
+  case CHXJ_SPEC_Chtml_4_0:
+  case CHXJ_SPEC_Chtml_5_0:
+  case CHXJ_SPEC_XHtml_Mobile_1_0:
+  case CHXJ_SPEC_Hdml:
+  case CHXJ_SPEC_Jhtml:
+    break;
+
+  default:
+    return;
+  }
+
+
+  if (! apr_table_get(r->headers_in, "X-Chxj-Forward")) {
+    ap_add_output_filter("chxj_output_filter", ctx, r, r->connection);
+    DBG(r, "added Output Filter");
+  }
+
+  DBG(r, "end   chxj_insert_filter()");
 }
 
 
@@ -1332,16 +1291,12 @@ chxj_register_hooks(apr_pool_t *UNUSED(p))
                       chxj_output_filter, 
                       NULL, 
                       AP_FTYPE_RESOURCE);
-  ap_register_input_filter(
-                      "chxj_input_filter", 
-                      chxj_input_filter, 
-                      NULL, 
-                      AP_FTYPE_RESOURCE);
   ap_hook_insert_filter(chxj_insert_filter, NULL, NULL, APR_HOOK_MIDDLE);
   ap_hook_handler(chxj_img_conv_format_handler, NULL, NULL, APR_HOOK_MIDDLE);
   ap_hook_handler(chxj_qr_code_handler, NULL, NULL, APR_HOOK_MIDDLE);
+  ap_hook_handler(chxj_input_handler, NULL, NULL, APR_HOOK_MIDDLE);
   ap_hook_translate_name(chxj_translate_name, NULL, NULL, APR_HOOK_MIDDLE);
-  ap_hook_fixups(chxj_headers_fixup, NULL, NULL, APR_HOOK_LAST);
+  ap_hook_fixups(chxj_headers_fixup, NULL, NULL, APR_HOOK_FIRST);
 }
 
 
@@ -1380,6 +1335,8 @@ chxj_create_per_dir_config(apr_pool_t *p, char *arg)
   conf->memcache.host    = NULL;
   conf->memcache.port    = 0;
 #endif
+  conf->forward_url_base = NULL;
+  conf->forward_server_ip = NULL;
 
   if (arg == NULL) {
     conf->dir                  = NULL;
@@ -1422,6 +1379,8 @@ chxj_merge_per_dir_config(apr_pool_t *p, void *basev, void *addv)
   mrg->emoji            = NULL;
   mrg->emoji_tail       = NULL;
   mrg->new_line_type    = NLTYPE_NIL;
+  mrg->forward_url_base = NULL;
+  mrg->forward_server_ip = NULL;
 
   mrg->dir = apr_pstrdup(p, add->dir);
 
@@ -2339,6 +2298,42 @@ cmd_set_cookie_store_type(
 }
 
 static const char *
+cmd_set_forward_url_base(
+  cmd_parms   *cmd,
+  void        *mconfig,
+  const char  *arg)
+{
+ mod_chxj_config *dconf;
+
+  if (strlen(arg) > 255)
+    return "mod_chxj: ChxjForwardUrlBase is too long.";
+
+  dconf = (mod_chxj_config *)mconfig;
+
+  dconf->forward_url_base = apr_pstrdup(cmd->pool, arg);
+
+  return NULL;
+}
+
+static const char *
+cmd_set_forward_server_ip(
+  cmd_parms   *cmd,
+  void        *mconfig,
+  const char  *arg)
+{
+  mod_chxj_config *dconf;
+
+  if (strlen(arg) > 255)
+    return "mod_chxj: ChxjForwardServerIp is too long.";
+
+  dconf = (mod_chxj_config *)mconfig;
+
+  dconf->forward_server_ip = apr_pstrdup(cmd->pool, arg);
+
+  return NULL;
+}
+
+static const char *
 cmd_set_new_line_type(
   cmd_parms   *UNUSED(cmd), 
   void        *mconfig, 
@@ -2506,6 +2501,18 @@ static const command_rec cmds[] = {
     NULL,
     OR_ALL,
     "HTML new line type (NONE|CRLF|LF|CR). default is CRLF"),
+  AP_INIT_TAKE1(
+    "ChxjForwardUrlBase",
+    cmd_set_forward_url_base,
+    NULL,
+    OR_ALL,
+    "The forward url base(default: {request protocol}://{this server}:{this server port}"),
+  AP_INIT_TAKE1(
+    "ChxjForwardServerIp",
+    cmd_set_forward_server_ip,
+    NULL,
+    OR_ALL,
+    "The forward server ip(default: this server ip)"),
   {NULL}
 };
 
