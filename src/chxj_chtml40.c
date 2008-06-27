@@ -1441,7 +1441,7 @@ s_chtml40_start_input_tag(void *pdoc, Node *node)
   }
   if (value && *value) {
     W_L(" value=\"");
-    W_V(value);
+    W_V(chxj_add_slash_to_doublequote(doc->pool, value));
     W_L("\"");
   }
   if (accesskey && *accesskey) {

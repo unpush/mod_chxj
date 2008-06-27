@@ -1,3 +1,11 @@
+libapache2-mod-chxj (0.12.5-1) unstable; urgency=low
+
+  * Fixed bug.
+    - The bug that was not able to be displayed correctly when a double quart
+      was included in value.
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Fri, 27 Jun 2008 16:37:26 +0900
+
 libapache2-mod-chxj (0.12.4-1) unstable; urgency=low
 
   * Fixed Bug.

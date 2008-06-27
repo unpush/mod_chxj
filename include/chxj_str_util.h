@@ -28,6 +28,7 @@ extern int chxj_atoi(
 
 extern int chxj_strcasenrcmp(apr_pool_t *p, const char *s1, const char *s2, int n);
 extern int chxj_starts_with(const char *str, const char *word);
+extern char *chxj_add_slash_to_doublequote(apr_pool_t *pool, const char *str);
 #endif
 /*
  * vim:ts=2 et
