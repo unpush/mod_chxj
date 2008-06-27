@@ -4,6 +4,8 @@ libapache2-mod-chxj (0.11.4-1) unstable; urgency=low
     - '+' has not been converted into ' '.
     - The bug that was not able to be displayed correctly when a
       double quart was included in value.
+    - Set-Cookie is not executed at CGI.
+      (Reported by R.Komoriya. thanks!)
 
  -- Atsushi Konno <konn@users.sourceforge.jp>  Fri, 27 Jun 2008 16:02:03 +0900
 

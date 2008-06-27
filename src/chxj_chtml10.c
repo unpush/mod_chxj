@@ -21,6 +21,7 @@
 #include "chxj_qr_code.h"
 #include "chxj_cookie.h"
 #include "chxj_encoding.h"
+#include "chxj_str_util.h"
 #include "chxj_buffered_write.h"
 
 #define GET_CHTML10(X) ((chtml10_t*)(X))
