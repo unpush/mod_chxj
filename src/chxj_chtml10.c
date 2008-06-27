@@ -1986,7 +1986,7 @@ s_chtml10_start_input_tag(void *pdoc, Node *node)
 
   if (value && *value != 0) {
     W10_L(" value=\"");
-    W10_V(value);
+    W10_V(chxj_add_slash_to_doublequote(doc->pool,value));
     W10_L("\"");
   }
 

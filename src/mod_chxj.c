@@ -434,20 +434,36 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp)
       if (strlen(result) != 0) 
         result = apr_pstrcat(r->pool, result, "&", NULL);
 
-      if (strcasecmp(entryp->encoding, "NONE") != 0 && value && strlen(value)) {
+      if (strcasecmp(entryp->encoding, "NONE") != 0) {
         apr_size_t dlen;
-        char* dvalue;
+        char *dvalue;
+        char *dname;
 
-        dlen   = strlen(value);
-        value = chxj_url_decode(r, value);
-        DBG(r, "************ before encoding[%s]", value);
+        if (value && *value != 0) {
+          value = chxj_url_decode(r, value);
+          dlen   = strlen(value);
+          DBG(r, "************ before encoding[%s]", value);
+  
+          dvalue = chxj_rencoding(r, value, &dlen);
+          dvalue = chxj_url_encode(r, dvalue);
+  
+          DBG(r, "************ after encoding[%s]", dvalue);
+        }
+        else {
+          dvalue = "";
+        }
 
-        dvalue = chxj_rencoding(r, value, &dlen);
-        dvalue = chxj_url_encode(r, dvalue);
+        if (name && *name != 0) {
+          name = chxj_url_decode(r, name);
+          dlen   = strlen(name);
+          dname = chxj_rencoding(r, name, &dlen);
+          dname = chxj_url_encode(r, dname);
+        }
+        else {
+          dname = "";
+        }
 
-        DBG(r, "************ after encoding[%s]", dvalue);
-
-        result = apr_pstrcat(r->pool, result, name, "=", dvalue, NULL);
+        result = apr_pstrcat(r->pool, result, dname, "=", dvalue, NULL);
       }
       else {
         if (strcmp(name, pair_sv) != 0)
@@ -557,22 +573,36 @@ chxj_input_convert(
       if (strlen(result) != 0) 
         result = apr_pstrcat(r->pool, result, "&", NULL);
 
-      if (strcasecmp(entryp->encoding, "NONE") != 0 
-      &&  value && strlen(value)) {
+      if (strcasecmp(entryp->encoding, "NONE") != 0) {
         apr_size_t dlen;
-        char*      dvalue;
+        char *dvalue;
+        char *dname;
 
-        dlen   = strlen(value);
-        value = chxj_url_decode(r, value);
-        DBG(r, "************ before encoding[%s]", value);
+        if (value && *value != 0) {
+          value = chxj_url_decode(r, value);
+          dlen   = strlen(value);
+          DBG(r, "************ before encoding[%s]", value);
+  
+          dvalue = chxj_rencoding(r, value, &dlen);
+          dvalue = chxj_url_encode(r, dvalue);
+  
+          DBG(r, "************ after encoding[%s]", dvalue);
+        }
+        else {
+          dvalue = "";
+        }
 
-        dvalue = chxj_rencoding(r, value, &dlen);
-        dvalue = chxj_url_encode(r,dvalue);
+        if (name && *name != 0) {
+          name = chxj_url_decode(r, name);
+          dlen   = strlen(name);
+          dname = chxj_rencoding(r, name, &dlen);
+          dname = chxj_url_encode(r, dname);
+        }
+        else {
+          dname = "";
+        }
 
-        DBG(r, "************ after encoding[%s]", dvalue);
-
-        result = apr_pstrcat(r->pool, result, name, "=", dvalue, NULL);
-
+        result = apr_pstrcat(r->pool, result, dname, "=", dvalue, NULL);
       }
       else {
         result = apr_pstrcat(r->pool, result, name, "=", value, NULL);
