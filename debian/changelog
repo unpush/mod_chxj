@@ -1,3 +1,12 @@
+libapache2-mod-chxj (0.11.4-1) unstable; urgency=low
+
+  * Fixed bug.
+    - '+' has not been converted into ' '.
+    - The bug that was not able to be displayed correctly when a
+      double quart was included in value.
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Fri, 27 Jun 2008 16:02:03 +0900
+
 libapache2-mod-chxj (0.11.3-1) unstable; urgency=low
 
   * Added APR 0.9 support for chxj_serf. 
