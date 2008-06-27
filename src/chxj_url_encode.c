@@ -96,6 +96,9 @@ chxj_url_decode(request_rec* r, const char* src)
         ii+=2;
       }
     }
+    else if (src[ii] == '+') {
+      dst[jj++] = ' ';
+    }
     else {
       dst[jj++] = src[ii];
     }
