@@ -31,6 +31,11 @@
  * libserf CHXJ Interface.
  */
 #include "serf.h"
+#if APR_MAJOR_VERSION == 0
+#define apr_atomic_inc32 apr_atomic_inc
+#define apr_atomic_dec32 apr_atomic_dec
+#define apr_atomic_read32 apr_atomic_read
+#endif
 
 
 extern char *default_chxj_serf_get(request_rec *r, apr_pool_t *ppool, const char *url_path, int set_headers_flag, apr_size_t *res_len);

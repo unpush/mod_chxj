@@ -1,3 +1,9 @@
+libapache2-mod-chxj (0.11.3-1) unstable; urgency=low
+
+  * Added APR 0.9 support for chxj_serf.
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Fri, 27 Jun 2008 09:44:42 +0900
+
 libapache2-mod-chxj (0.11.2-1) unstable; urgency=low
 
   * Fixed Bug.
