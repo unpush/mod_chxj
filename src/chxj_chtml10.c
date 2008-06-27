@@ -22,6 +22,7 @@
 #include "chxj_cookie.h"
 #include "chxj_encoding.h"
 #include "chxj_buffered_write.h"
+#include "chxj_str_util.h"
 
 #define GET_CHTML10(X) ((chtml10_t *)(X))
 #undef W_L
