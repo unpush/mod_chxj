@@ -1304,7 +1304,7 @@ chxj_register_hooks(apr_pool_t* UNUSED(p))
   ap_hook_handler(chxj_qr_code_handler, NULL, NULL, APR_HOOK_MIDDLE);
   ap_hook_handler(chxj_input_handler, NULL, NULL, APR_HOOK_MIDDLE);
   ap_hook_translate_name(chxj_translate_name, NULL, NULL, APR_HOOK_MIDDLE);
-  ap_hook_fixups(chxj_headers_fixup, NULL, NULL, APR_HOOK_FIRST);
+  ap_hook_fixups(chxj_headers_fixup, NULL, NULL, APR_HOOK_LAST);
 }
 
 
