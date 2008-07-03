@@ -156,9 +156,14 @@ qs_alloc_zero_byte_string(request_rec* r)
 char*
 qs_trim_string(apr_pool_t *p, char* s)
 {
-  char* ss = apr_pstrdup(p, s);
-  int len = strlen(s);
+  char *ss;
+  int len;
   int ii;
+
+  if (! s) return apr_pstrdup(p, "");
+
+  len = strlen(s);
+  ss = apr_pstrdup(p, s);
 
   ii = 0;
   for (ii = 0;is_white_space(*ss) && ii < len; ss++, ii++);
