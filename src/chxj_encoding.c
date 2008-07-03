@@ -35,9 +35,12 @@ chxj_encoding(request_rec *r, const char *src, apr_size_t *len)
   apr_size_t          olen;
   mod_chxj_config*    dconf;
   chxjconvrule_entry* entryp;
+  apr_pool_t          *pool;
 
 
   DBG(r,"start chxj_encoding()");
+
+  apr_pool_create(&pool, r->pool);
 
   dconf = chxj_get_module_config(r->per_dir_config, &chxj_module);
 
@@ -57,7 +60,7 @@ chxj_encoding(request_rec *r, const char *src, apr_size_t *len)
     return (char*)src;
   }
   ilen = *len;
-  ibuf = apr_palloc(r->pool, ilen+1);
+  ibuf = apr_palloc(pool, ilen+1);
   if (ibuf == NULL) {
     DBG(r,"end   chxj_encoding()");
     return (char*)src;
@@ -66,7 +69,7 @@ chxj_encoding(request_rec *r, const char *src, apr_size_t *len)
   memcpy(ibuf, src, ilen);
 
   olen = ilen * 4 + 1;
-  spos = obuf = apr_palloc(r->pool, olen);
+  spos = obuf = apr_palloc(pool, olen);
   if (obuf == NULL) {
     DBG(r,"end   chxj_encoding()");
     return ibuf;

@@ -466,6 +466,16 @@ default_chxj_serf_post(request_rec *r, apr_pool_t *ppool, const char *url_path, 
       chxj_set_content_type(r, apr_pstrdup(r->pool, contentType));
     }
   }
+  {
+    int ii;
+    apr_array_header_t  *headers;
+    apr_table_entry_t   *hentryp;
+    headers = (apr_array_header_t*)apr_table_elts(r->headers_out);
+    hentryp = (apr_table_entry_t*)headers->elts;
+    for (ii=0; ii<headers->nelts; ii++) {
+      DBG(r, "key:[%s] val:[%s]", hentryp[ii].key, hentryp[ii].val);
+    }
+  }
   s_term(pool);
   DBG(r, "end chxj_serf_post()");
   return ret;

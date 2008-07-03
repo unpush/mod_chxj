@@ -238,22 +238,28 @@ chxj_save_cookie(request_rec* r)
    * create val
    */
   cookie->cookie_headers = (apr_array_header_t*)apr_table_elts(new_cookie_table);
-  store_string = apr_palloc(r->pool, 1);
-  store_string[0] = 0;
   hentryp = (apr_table_entry_t*)cookie->cookie_headers->elts;
 
-  for (ii=0; ii<cookie->cookie_headers->nelts; ii++) {
-    if (ii) store_string = apr_pstrcat(r->pool,
-                               store_string, 
-                               "\n",
-                               NULL);
-
-    store_string = apr_pstrcat(r->pool, 
-                               store_string, 
-                               hentryp[ii].key, 
-                               "=",
-                               hentryp[ii].val, 
-                               NULL);
+  {
+    apr_pool_t *ppp;
+    apr_pool_create(&ppp, r->pool);
+    apr_size_t store_string_len = 0;
+    apr_size_t npos = 0;
+    for (ii=0; ii<cookie->cookie_headers->nelts; ii++) {
+      if (ii) store_string_len++;
+      store_string_len += (strlen(hentryp[ii].key) + strlen(hentryp[ii].val));
+    }
+    store_string = apr_palloc(ppp, store_string_len + 1);
+    memset(store_string, 0, store_string_len + 1);
+    
+    for (ii=0; ii<cookie->cookie_headers->nelts; ii++) {
+      if (ii) store_string[npos++] = '\n';
+      memcpy(&store_string[npos], hentryp[ii].key, strlen(hentryp[ii].key));
+      npos += strlen(hentryp[ii].key); 
+      store_string[npos++] = '=';
+      memcpy(&store_string[npos], hentryp[ii].val, strlen(hentryp[ii].val));
+      npos += strlen(hentryp[ii].val); 
+    }
   }
 
   if (old_cookie_id && IS_COOKIE_LAZY(dconf)) {
@@ -521,21 +527,21 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
     }
     if (strlen(header_cookie)) {
       DBG(r, "ADD COOKIE to REQUEST HEADER:[%s]", header_cookie);
-      apr_table_add(r->headers_in, "Cookie", header_cookie);
+      apr_table_add(r->headers_in, apr_pstrdup(r->pool, "Cookie"), header_cookie);
     }
   
     cookie->cookie_headers = (apr_array_header_t*)apr_table_elts(load_cookie_table);
 
     if (apr_table_get(r->headers_in, "referer") == NULL) {
       apr_table_setn(r->headers_in, 
-                     "referer",
-                     apr_table_get(load_cookie_table, REFERER_COOKIE_KEY));
+                     apr_pstrdup(r->pool, "referer"),
+                     apr_pstrdup(r->pool, apr_table_get(load_cookie_table, REFERER_COOKIE_KEY)));
     }
   
     /*
      * save cookie_id to request header.
      */
-    apr_table_setn(r->headers_in, "CHXJ_COOKIE_ID", cookie->cookie_id);
+    apr_table_setn(r->headers_in, apr_pstrdup(r->pool, "CHXJ_COOKIE_ID"), apr_pstrdup(r->pool, cookie->cookie_id));
   }
 
   DBG(r, "end   chxj_load_cookie()");

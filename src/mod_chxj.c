@@ -321,7 +321,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len, device_table *s
                                                           (apr_size_t*)len);
 
     if (convert_routine[spec->html_spec_type].converter) {
-      if (tmp)
+      if (tmp) {
         dst = convert_routine[spec->html_spec_type].converter(r, 
                                                               spec, 
                                                               tmp, 
@@ -329,7 +329,8 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len, device_table *s
                                                               len, 
                                                               entryp, 
                                                               cookie);
-      else
+      }
+      else {
         dst = convert_routine[spec->html_spec_type].converter(r,
                                                               spec, 
                                                               tmp, 
@@ -337,6 +338,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len, device_table *s
                                                               len, 
                                                               entryp, 
                                                               cookie);
+      }
     }
     DBG(r, "end do convert");
   }
@@ -351,7 +353,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len, device_table *s
   }
   ap_set_content_length(r, *len);
 
-  DBG(r, "end of chxj_exchange()");
+  DBG(r, "end of chxj_exchange() [%s]", dst);
 
   return dst;
 }
@@ -1003,8 +1005,13 @@ s_add_cookie_id_if_has_location_header(request_rec *r, cookie_t *cookie)
     location_header = chxj_add_cookie_parameter(r,
                                                 location_header,
                                                 cookie);
-    apr_table_setn(r->headers_out, "Location", location_header);
+    apr_table_unset(r->headers_out, "Location");
+    apr_table_add(r->headers_out, apr_pstrdup(r->pool, "Location"), location_header);
     DBG(r, "Location Header=[%s]", location_header);
+    DBG(r, "Status-Code:[%d]", r->status);
+    if (r->status == HTTP_OK) {
+      r->status = HTTP_MOVED_TEMPORARILY;
+    }
   }
 }
 
@@ -1097,7 +1104,7 @@ chxj_input_handler(request_rec *r)
     conn_rec *c = r->connection;
     
     bb = apr_brigade_create(wpool, c->bucket_alloc);
-    e = apr_bucket_heap_create(response, res_len, NULL, c->bucket_alloc);
+    e  = apr_bucket_transient_create(response, res_len, c->bucket_alloc);
     APR_BRIGADE_INSERT_TAIL(bb, e);
     e = apr_bucket_eos_create(c->bucket_alloc);
     APR_BRIGADE_INSERT_TAIL(bb, e);

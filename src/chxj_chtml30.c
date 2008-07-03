@@ -29,7 +29,6 @@
 #define W_L(X)          do { chtml30->out = BUFFERED_WRITE_LITERAL(chtml30->out, &doc->buf, (X)); } while(0)
 #define W_V(X)          do { chtml30->out = (X) ? BUFFERED_WRITE_VALUE(chtml30->out, &doc->buf, (X))  \
                                                 : BUFFERED_WRITE_LITERAL(chtml30->out, &doc->buf, ""); } while(0)
-extern tag_handler chtml20_handler[];
 
 static char *s_chtml30_start_html_tag     (void *pdoc, Node *node);
 static char *s_chtml30_end_html_tag       (void *pdoc, Node *node);
