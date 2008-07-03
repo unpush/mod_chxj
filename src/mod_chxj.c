@@ -713,7 +713,6 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
   apr_status_t        rv;
   apr_bucket*         b;
   const char*         data;
-  char*               contentLength;
   char*               user_agent = NULL;
   apr_size_t          len;
   mod_chxj_ctx*       ctx = (mod_chxj_ctx *)f->ctx;
@@ -941,9 +940,8 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
           }
         }
 
-        contentLength = apr_psprintf(pool, "%d", (int)ctx->len);
-        apr_table_setn(r->headers_out, "Content-Length", contentLength);
-        apr_table_setn(r->err_headers_out, "Content-Length", contentLength);
+        apr_table_unset(r->headers_out, "Content-Length");
+        apr_table_unset(r->err_headers_out, "Content-Length");
         ap_set_content_length(r, (apr_off_t)ctx->len);
         
         if (ctx->len > 0) {
