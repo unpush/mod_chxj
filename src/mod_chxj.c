@@ -1018,8 +1018,12 @@ s_add_cookie_id_if_has_location_header(request_rec *r, cookie_t *cookie)
     location_header = chxj_add_cookie_parameter(r,
                                                 location_header,
                                                 cookie);
+    apr_table_unset(r->headers_out, "Location");
     apr_table_setn(r->headers_out, "Location", location_header);
     DBG(r, "Location Header=[%s]", location_header);
+    if (r->status < HTTP_MULTIPLE_CHOICES || r->status > HTTP_TEMPORARY_REDIRECT) {
+      r->status = HTTP_MOVED_TEMPORARILY;
+    }
   }
 }
 

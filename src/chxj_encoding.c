@@ -35,6 +35,7 @@ chxj_encoding(request_rec *r, const char *src, apr_size_t *len)
   apr_size_t          olen;
   mod_chxj_config     *dconf;
   chxjconvrule_entry  *entryp;
+  apr_pool_t          *pool;
 
 
   DBG(r,"start chxj_encoding()");
@@ -60,8 +61,10 @@ chxj_encoding(request_rec *r, const char *src, apr_size_t *len)
     DBG(r,"none encoding.");
     return (char*)src;
   }
+
+  apr_pool_create(&pool, r->pool);
   ilen = *len;
-  ibuf = apr_palloc(r->pool, ilen+1);
+  ibuf = apr_palloc(pool, ilen+1);
   if (ibuf == NULL) {
     ERR(r, "runtime exception: chxj_encoding(): Out of memory.");
     return (char *)src;
@@ -70,7 +73,7 @@ chxj_encoding(request_rec *r, const char *src, apr_size_t *len)
   memcpy(ibuf, src, ilen);
 
   olen = ilen * 4 + 1;
-  spos = obuf = apr_palloc(r->pool, olen);
+  spos = obuf = apr_palloc(pool, olen);
   if (obuf == NULL) {
     DBG(r,"end   chxj_encoding()");
     return ibuf;

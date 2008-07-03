@@ -41,6 +41,16 @@
 #endif
 #include "chxj_dbm.h"
 
+#define DUMP_HEADERS(X) do { \
+  int __ii; \
+  apr_array_header_t  *__headers = (apr_array_header_t*)apr_table_elts((X)); \
+  apr_table_entry_t   *__hentryp = (apr_table_entry_t*)__headers->elts; \
+  for (__ii=0; __ii<__headers->nelts; __ii++) { \
+    DBG(r, "key:[%s] val:[%s]", __hentryp[__ii].key, __hentryp[__ii].val); \
+  } \
+} while (0) 
+
+
 
 static char* s_get_hostname_from_url(request_rec* r, char* value);
 static char* s_cut_until_end_hostname(request_rec*, char* value);
@@ -112,11 +122,14 @@ chxj_save_cookie(request_rec *r)
   char                *refer_string;
   apr_uri_t           parsed_uri;
   int                 has_refer;
+  apr_pool_t          *pool;
 
 
   DBG(r, "start chxj_save_cookie()");
 
-  cookie = (cookie_t*)apr_palloc(r->pool, sizeof(cookie_t));
+  apr_pool_create(&pool, r->pool);
+
+  cookie = (cookie_t*)apr_palloc(pool, sizeof(cookie_t));
   cookie->cookie_id = NULL;
 
   has_cookie = 0;
@@ -141,7 +154,7 @@ chxj_save_cookie(request_rec *r)
   err_hentryp = (apr_table_entry_t*)err_headers->elts;
 
 
-  new_cookie_table = apr_table_make(r->pool, 0);
+  new_cookie_table = apr_table_make(pool, 0);
 
   for (ii=0; ii<headers->nelts; ii++) {
     if (strcasecmp(hentryp[ii].key, "Set-Cookie") == 0) {
@@ -153,7 +166,7 @@ chxj_save_cookie(request_rec *r)
       char* buff;
 
 
-      buff = apr_pstrdup(r->pool, hentryp[ii].val);
+      buff = apr_pstrdup(pool, hentryp[ii].val);
       val = strchr(buff, '=');
       if (val) {
         key = buff;
@@ -177,7 +190,7 @@ chxj_save_cookie(request_rec *r)
       char* buff;
 
 
-      buff = apr_pstrdup(r->pool, err_hentryp[ii].val);
+      buff = apr_pstrdup(pool, err_hentryp[ii].val);
       val = strchr(buff, '=');
       if (val) {
         key = buff;
@@ -195,16 +208,16 @@ chxj_save_cookie(request_rec *r)
   apr_table_unset(r->err_headers_out, "Set-Cookie");
 
   if (! has_refer) {
-    apr_uri_parse(r->pool,r->uri, &parsed_uri);
-    refer_string = apr_psprintf(r->pool, 
+    apr_uri_parse(pool,r->uri, &parsed_uri);
+    refer_string = apr_psprintf(pool, 
                                 "%s://%s%s", 
                                 chxj_run_http_scheme(r),
                                 r->hostname,
-                                apr_uri_unparse(r->pool,
+                                apr_uri_unparse(pool,
                                                 &parsed_uri,
                                                 APR_URI_UNP_OMITSITEPART));
     if (r->args && strlen(r->args)) {
-      refer_string = apr_pstrcat(r->pool, refer_string, "?", r->args, NULL);
+      refer_string = apr_pstrcat(pool, refer_string, "?", r->args, NULL);
     }
     apr_table_setn(new_cookie_table, REFERER_COOKIE_KEY, refer_string);
     DBG(r, "ADD REFER[%s]", refer_string);
@@ -241,27 +254,28 @@ chxj_save_cookie(request_rec *r)
    * create val
    */
   cookie->cookie_headers = (apr_array_header_t*)apr_table_elts(new_cookie_table);
-  store_string = apr_palloc(r->pool, 1);
-  store_string[0] = 0;
   hentryp = (apr_table_entry_t*)cookie->cookie_headers->elts;
+  apr_size_t store_string_len = 0;
+  for (ii=0; ii<cookie->cookie_headers->nelts; ii++) {
+    if (ii) store_string_len++;
+    store_string_len += (strlen(hentryp[ii].key) + strlen(hentryp[ii].val) + 1);
+  }
+  store_string = apr_palloc(pool, store_string_len + 1);
+  memset(store_string, 0, store_string_len + 1);
+  apr_size_t npos = 0;
 
   for (ii=0; ii<cookie->cookie_headers->nelts; ii++) {
-    if (ii) store_string = apr_pstrcat(r->pool,
-                               store_string, 
-                               "\n",
-                               NULL);
-
-    store_string = apr_pstrcat(r->pool, 
-                               store_string, 
-                               hentryp[ii].key, 
-                               "=",
-                               hentryp[ii].val, 
-                               NULL);
+    if (ii) store_string[npos++] = '\n';
+    memcpy(&store_string[npos], hentryp[ii].key, strlen(hentryp[ii].key));
+    npos += strlen(hentryp[ii].key);
+    store_string[npos++] = '=';
+    memcpy(&store_string[npos], hentryp[ii].val, strlen(hentryp[ii].val));
+    npos += strlen(hentryp[ii].val);
   }
 
   if (old_cookie_id && IS_COOKIE_LAZY(dconf)) {
     DBG(r, "LAZY COOKIE save");
-    cookie->cookie_id = apr_pstrdup(r->pool, old_cookie_id);
+    cookie->cookie_id = apr_pstrdup(pool, old_cookie_id);
   }
   else {
     DBG(r, "NO LAZY COOKIE save. old_cookie_id:[%s] LAZY:[%d]", old_cookie_id,IS_COOKIE_LAZY(dconf));
