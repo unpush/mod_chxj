@@ -943,6 +943,8 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
 
         contentLength = apr_psprintf(pool, "%d", (int)ctx->len);
         apr_table_setn(r->headers_out, "Content-Length", contentLength);
+        apr_table_setn(r->err_headers_out, "Content-Length", contentLength);
+        ap_set_content_length(r, (apr_off_t)ctx->len);
         
         if (ctx->len > 0) {
           DBG(r, "call pass_data_to_filter()");
@@ -1091,9 +1093,11 @@ chxj_input_handler(request_rec *r)
 
   char *chunked;
   if ((chunked = (char *)apr_table_get(r->headers_out, "Transfer-Encoding")) != NULL) {
-    if (strcasecmp(chunked, "chunked") == 0) {
+    if (strncasecmp(chunked, "chunked", sizeof("chunked")-1) == 0) {
       r->chunked = 1;  
+      apr_table_unset(r->headers_out, "Transfer-Encoding");
     }
+    DBG(r, "TRANSFER-ENCODING:[%s]",chunked);
   }
   {
     apr_pool_t *wpool;
