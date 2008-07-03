@@ -321,7 +321,6 @@ chxj_convert(request_rec *r, const char **src, apr_size_t *len, device_table *sp
     case CHXJ_SPEC_Chtml_6_0:
     case CHXJ_SPEC_Chtml_7_0:
     case CHXJ_SPEC_Jhtml:
-    case CHXJ_SPEC_Jxhtml:
       cookie = chxj_save_cookie(r);
       break;
     default:
@@ -729,7 +728,6 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
   apr_status_t        rv;
   apr_bucket          *b;
   const char          *data;
-  char                *contentLength;
   char                *user_agent = NULL;
   apr_size_t          len;
   mod_chxj_ctx        *ctx = (mod_chxj_ctx *)f->ctx;
@@ -776,7 +774,6 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
         case CHXJ_SPEC_Chtml_6_0:
         case CHXJ_SPEC_Chtml_7_0:
         case CHXJ_SPEC_Jhtml:
-        case CHXJ_SPEC_Jxhtml:
           chxj_cookie_lock(r);
           cookie = chxj_save_cookie(r);
           s_add_cookie_id_if_has_location_header(r, cookie);
@@ -784,6 +781,11 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
           break;
         default:
           break;
+        }
+      }
+      if (apr_table_get(r->headers_out, "Location") || apr_table_get(r->err_headers_out, "Location")) {
+        if (r->status < HTTP_MULTIPLE_CHOICES || r->status > HTTP_TEMPORARY_REDIRECT) {
+          r->status = HTTP_MOVED_TEMPORARILY;
         }
       }
       ap_pass_brigade(f->next, bb);
@@ -945,8 +947,15 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
           }
         }
 
-        contentLength = apr_psprintf(pool, "%d", (int)ctx->len);
-        apr_table_setn(r->headers_out, "Content-Length", contentLength);
+        apr_table_unset(r->headers_out, "Content-Length");
+        apr_table_unset(r->err_headers_out, "Content-Length");
+        ap_set_content_length(r, (apr_off_t)ctx->len);
+
+        if (apr_table_get(r->headers_out, "Location") || apr_table_get(r->err_headers_out, "Location")) {
+          if (r->status < HTTP_MULTIPLE_CHOICES || r->status > HTTP_TEMPORARY_REDIRECT) {
+            r->status = HTTP_MOVED_TEMPORARILY;
+          }
+        }
         
         if (ctx->len > 0) {
           DBG(r, "call pass_data_to_filter()");
@@ -978,7 +987,6 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
           case CHXJ_SPEC_Chtml_6_0:
           case CHXJ_SPEC_Chtml_7_0:
           case CHXJ_SPEC_Jhtml:
-          case CHXJ_SPEC_Jxhtml:
             chxj_cookie_lock(r);
             cookie = chxj_save_cookie(r);
             /*
@@ -990,6 +998,11 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
 
           default:
             break;
+          }
+        }
+        if (apr_table_get(r->headers_out, "Location") || apr_table_get(r->err_headers_out, "Location")) {
+          if (r->status < HTTP_MULTIPLE_CHOICES || r->status > HTTP_TEMPORARY_REDIRECT) {
+            r->status = HTTP_MOVED_TEMPORARILY;
           }
         }
         apr_table_setn(r->headers_out, "Content-Length", "0");
@@ -1013,6 +1026,9 @@ static void
 s_add_cookie_id_if_has_location_header(request_rec *r, cookie_t *cookie)
 {
   char *location_header = (char *)apr_table_get(r->headers_out, "Location");
+  if (! location_header) {
+    location_header = (char *)apr_table_get(r->err_headers_out, "Location");
+  }
   if (cookie && location_header) {
     DBG(r, "Location Header=[%s]", location_header);
     location_header = chxj_add_cookie_parameter(r,
@@ -1105,6 +1121,7 @@ chxj_input_handler(request_rec *r)
   if ((chunked = (char *)apr_table_get(r->headers_out, "Transfer-Encoding")) != NULL) {
     if (strcasecmp(chunked, "chunked") == 0) {
       r->chunked = 1;  
+      apr_table_unset(r->headers_out, "Transfer-Encoding");
     }
   }
   {

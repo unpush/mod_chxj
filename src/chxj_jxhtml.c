@@ -722,7 +722,6 @@ s_jxhtml_start_meta_tag(void *pdoc, Node *node)
             sec[url-buf] = 0;
             url++;
             url = chxj_encoding_parameter(r, url);
-            url = chxj_add_cookie_parameter(r, url, jxhtml->cookie);
             W_L(" ");
             W_V(name);
             W_L("=\"");
@@ -1057,7 +1056,6 @@ s_jxhtml_start_a_tag(void *pdoc, Node *node)
       /* CHTML1.0                                                             */
       /*----------------------------------------------------------------------*/
       value = chxj_encoding_parameter(r, value);
-      value = chxj_add_cookie_parameter(r, value, jxhtml->cookie);
       W_L(" href=\"");
       W_V(value);
       W_L("\"");
@@ -1422,7 +1420,6 @@ s_jxhtml_start_form_tag(void *pdoc, Node *node)
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
-      value = chxj_add_cookie_parameter(r, value, jxhtml->cookie);
       W_L(" action=\"");
       W_V(value);
       W_L("\"");
@@ -2065,7 +2062,6 @@ s_jxhtml_start_img_tag(void *pdoc, Node *node)
       /*----------------------------------------------------------------------*/
 #ifdef IMG_NOT_CONVERT_FILENAME
       value = chxj_encoding_parameter(r, value);
-      value = chxj_add_cookie_parameter(r, value, jxhtml->cookie);
       if (value) {
         value = apr_psprintf(r->pool,
                              "%s%c%s=true",
@@ -2079,7 +2075,6 @@ s_jxhtml_start_img_tag(void *pdoc, Node *node)
 #else
       value = chxj_img_conv(r, spec, value);
       value = chxj_encoding_parameter(r, value);
-      value = chxj_add_cookie_parameter(r, value, jxhtml->cookie);
       if (value) {
         value = apr_psprintf(r->pool,
                              "%s%c%s=true",
