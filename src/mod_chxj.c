@@ -775,6 +775,11 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
           break;
         }
       }
+      if (apr_table_get(r->headers_out, "Location") || apr_table_get(r->err_headers_out, "Location")) {
+        if (r->status < HTTP_MULTIPLE_CHOICES || r->status > HTTP_TEMPORARY_REDIRECT) {
+          r->status = HTTP_MOVED_TEMPORARILY;
+        }
+      }
       ap_pass_brigade(f->next, bb);
       return APR_SUCCESS;
     }
@@ -947,6 +952,11 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
         if (ctx->len > 0) {
           DBG(r, "call pass_data_to_filter()");
           s_add_cookie_id_if_has_location_header(r, cookie);
+          if (apr_table_get(r->headers_out, "Location") || apr_table_get(r->err_headers_out, "Location")) {
+            if (r->status < HTTP_MULTIPLE_CHOICES || r->status > HTTP_TEMPORARY_REDIRECT) {
+              r->status = HTTP_MOVED_TEMPORARILY;
+            }
+          }
           rv = pass_data_to_filter(f, 
                                    (const char*)ctx->buffer, 
                                    (apr_size_t)ctx->len);
@@ -976,6 +986,11 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
             break;
 
           default:
+            if (apr_table_get(r->headers_out, "Location") || apr_table_get(r->err_headers_out, "Location")) {
+              if (r->status < HTTP_MULTIPLE_CHOICES || r->status > HTTP_TEMPORARY_REDIRECT) {
+                r->status = HTTP_MOVED_TEMPORARILY;
+              }
+            }
             break;
           }
         }
@@ -1000,6 +1015,9 @@ static void
 s_add_cookie_id_if_has_location_header(request_rec *r, cookie_t *cookie)
 {
   char *location_header = (char*)apr_table_get(r->headers_out, "Location");
+  if (! location_header) {
+    location_header = (char *)apr_table_get(r->err_headers_out, "Location");
+  }
   if (cookie && location_header) {
     DBG(r, "Location Header=[%s]", location_header);
     location_header = chxj_add_cookie_parameter(r,
@@ -1009,7 +1027,7 @@ s_add_cookie_id_if_has_location_header(request_rec *r, cookie_t *cookie)
     apr_table_add(r->headers_out, apr_pstrdup(r->pool, "Location"), location_header);
     DBG(r, "Location Header=[%s]", location_header);
     DBG(r, "Status-Code:[%d]", r->status);
-    if (r->status == HTTP_OK) {
+    if (r->status < HTTP_MULTIPLE_CHOICES || r->status > HTTP_TEMPORARY_REDIRECT) {
       r->status = HTTP_MOVED_TEMPORARILY;
     }
   }

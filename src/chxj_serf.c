@@ -70,11 +70,6 @@ s_init(apr_pool_t *ppool, apr_pool_t **pool)
 }
 
 
-void
-s_term(apr_pool_t *pool)
-{
-  apr_pool_destroy(pool);
-}
 
 
 static serf_bucket_t *
@@ -300,7 +295,6 @@ default_chxj_serf_get(request_rec *r, apr_pool_t *ppool, const char *url_path, i
   if (rv != APR_SUCCESS) {
     char buf[256];
     ERR(r, "apr_sockaddr_info_get() failed: rv:[%d|%s]", rv, apr_strerror(rv, buf, 256));
-    s_term(pool);
     return NULL;
   }
   memset(&app_ctx, 0, sizeof(app_ctx_t));
@@ -353,14 +347,13 @@ default_chxj_serf_get(request_rec *r, apr_pool_t *ppool, const char *url_path, i
   serf_connection_close(connection);
   ret = apr_pstrdup(ppool, handler_ctx.response);
   if (set_headers_flag) {
-    r->headers_out = apr_table_copy(r->pool, handler_ctx.headers_out);
+    r->headers_out = apr_table_copy(pool, handler_ctx.headers_out);
     *response_len = handler_ctx.response_len;
     char *contentType = (char *)apr_table_get(handler_ctx.headers_out, "Content-Type");
     if (contentType) {
       chxj_set_content_type(r, contentType);
     }
   }
-  s_term(pool);
   return ret;
 }
 
@@ -403,7 +396,6 @@ default_chxj_serf_post(request_rec *r, apr_pool_t *ppool, const char *url_path, 
   if (rv != APR_SUCCESS) {
     char buf[256];
     ERR(r, "apr_sockaddr_info_get() failed: rv:[%d|%s]", rv, apr_strerror(rv, buf, 256));
-    s_term(pool);
     return NULL;
   }
   memset(&app_ctx, 0, sizeof(app_ctx_t));
@@ -458,7 +450,7 @@ default_chxj_serf_post(request_rec *r, apr_pool_t *ppool, const char *url_path, 
   serf_connection_close(connection);
   ret = apr_pstrdup(ppool, handler_ctx.response);
   if (set_headers_flag) {
-    r->headers_out = apr_table_copy(r->pool, handler_ctx.headers_out);
+    r->headers_out = apr_table_copy(pool, handler_ctx.headers_out);
     *response_len = handler_ctx.response_len;
     char *contentType = (char *)apr_table_get(handler_ctx.headers_out, "Content-Type");
     if (contentType) {
@@ -476,7 +468,6 @@ default_chxj_serf_post(request_rec *r, apr_pool_t *ppool, const char *url_path, 
       DBG(r, "key:[%s] val:[%s]", hentryp[ii].key, hentryp[ii].val);
     }
   }
-  s_term(pool);
   DBG(r, "end chxj_serf_post()");
   return ret;
 }
