@@ -51,7 +51,7 @@ am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
 am__installdirs = "$(DESTDIR)$(libdir)"
 libLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(lib_LTLIBRARIES)
-libmod_chxj_la_DEPENDENCIES = serf/libserf-0.la
+libmod_chxj_la_LIBADD =
 am_libmod_chxj_la_OBJECTS = libmod_chxj_la-mod_chxj.lo \
 	libmod_chxj_la-qs_parse_string.lo libmod_chxj_la-qs_log.lo \
 	libmod_chxj_la-qs_malloc.lo libmod_chxj_la-qs_parse_tag.lo \
@@ -265,7 +265,6 @@ libmod_chxj_la_SOURCES = mod_chxj.c \
 
 libmod_chxj_la_CFLAGS = -O2 -prefer-pic @QDEFS@ @DDEFS@ -I. -I../include -I@with_apache_header@  -I./serf
 AM_CFLAGS = @CFLAGS@ -O2 -prefer-pic @QDEFS@ @DDEFS@ -I. -I../include -I@with_apache_header@
-libmod_chxj_la_LIBADD = serf/libserf-0.la
 lib_LTLIBRARIES = libmod_chxj.la
 all: all-am
 
