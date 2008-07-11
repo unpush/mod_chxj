@@ -1392,8 +1392,7 @@ s_jhtml_start_form_tag(void *pdoc, Node *node)
   /* Add cookie parameter                                                    */
   /*-------------------------------------------------------------------------*/
   if (jhtml->cookie && jhtml->cookie->cookie_id && dcflag == 1) {
-    char *vv = apr_psprintf(doc->buf.pool, "%s<input type='hidden' name='%s' value='%s'>",
-                            jhtml->out, 
+    char *vv = apr_psprintf(doc->buf.pool, "<input type='hidden' name='%s' value='%s'>",
                             CHXJ_COOKIE_PARAM,
                             chxj_url_decode(r, jhtml->cookie->cookie_id));
     W_V(vv);
