@@ -1340,6 +1340,11 @@ s_xhtml_1_0_start_form_tag(void *pdoc, Node *node)
     else if (STRCASEEQ('u','U',"utn",name)) {
       /* ignore */
     }
+    else if (STRCASEEQ('n','N',"name",name)) {
+      W_L(" name=\"");
+      W_V(value);
+      W_L("\"");
+    }
   }
   W_L(">");
   return xhtml->out;

@@ -130,7 +130,7 @@ converter_t convert_routine[] = {
     .encoder  = chxj_encoding,
   },
   {
-    /* CHXJ_SPEC_Jxtml            */
+    /* CHXJ_SPEC_Jxhtml            */
     .converter = chxj_convert_jxhtml,
     .encoder  = chxj_encoding,
   },
@@ -182,6 +182,7 @@ chxj_headers_fixup(request_rec *r)
   case CHXJ_SPEC_XHtml_Mobile_1_0:
   case CHXJ_SPEC_Hdml:
   case CHXJ_SPEC_Jhtml:
+  case CHXJ_SPEC_Jxhtml:
     entryp = chxj_apply_convrule(r, dconf->convrules);
     if (! entryp) {
       DBG(r, "end chxj_headers_fixup() no pattern");
@@ -1305,6 +1306,7 @@ chxj_insert_filter(request_rec *r)
   case CHXJ_SPEC_XHtml_Mobile_1_0:
   case CHXJ_SPEC_Hdml:
   case CHXJ_SPEC_Jhtml:
+  case CHXJ_SPEC_Jxhtml:
     break;
 
   default:

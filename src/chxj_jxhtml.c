@@ -1439,6 +1439,11 @@ s_jxhtml_start_form_tag(void *pdoc, Node *node)
       /*----------------------------------------------------------------------*/
       /* ignore */
     }
+    else if (STRCASEEQ('n','N',"name",name)) {
+      W_L(" name=\"");
+      W_V(value);
+      W_L("\"");
+    }
   }
   W_L(">");
   return jxhtml->out;

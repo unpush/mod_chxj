@@ -1286,7 +1286,8 @@ s_add_copyright(MagickWand *magick_wand, request_rec *r, device_table *spec)
 
     DBG(r, "Add COPYRIGHT [%s]", conf->image_copyright);
 
-    if (spec->html_spec_type == CHXJ_SPEC_Jhtml) {
+    if (spec->html_spec_type == CHXJ_SPEC_Jhtml
+    ||  spec->html_spec_type == CHXJ_SPEC_Jxhtml) {
       apr_table_setn(r->headers_out, "x-jphone-copyright", "no-transfer");
       if (MagickCommentImage(magick_wand, 
                              apr_psprintf(r->pool, 
