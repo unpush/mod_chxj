@@ -404,7 +404,7 @@ chxj_exchange_xhtml_mobile_1_0(
   apr_size_t         srclen,
   apr_size_t         *dstlen,
   chxjconvrule_entry *entryp,
-  cookie_t           *UNUSED(cookie)
+  cookie_t           *cookie
 )
 {
   char      *dst = NULL;
@@ -429,6 +429,7 @@ chxj_exchange_xhtml_mobile_1_0(
   s_init_xhtml(&xhtml, &doc, r, spec);
 
   xhtml.entryp = entryp;
+  xhtml.cookie = cookie;
 
   chxj_set_content_type(r, "text/html; charset=Windows-31J");
 
@@ -1016,6 +1017,7 @@ s_xhtml_1_0_start_a_tag(void *pdoc, Node *node)
     }
     else if (STRCASEEQ('h','H',"href", name) && value && *value) {
       value = chxj_encoding_parameter(r, value);
+      value = chxj_add_cookie_parameter(r, value, xhtml->cookie);
       W_L(" href=\"");
       W_V(value);
       W_L("\"");
@@ -1256,6 +1258,7 @@ s_xhtml_1_0_start_form_tag(void *pdoc, Node *node)
     char *value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('a','A',"action",name)) {
       value = chxj_encoding_parameter(r, value);
+      value = chxj_add_cookie_parameter(r, value, xhtml->cookie);
       W_L(" action=\"");
       W_V(value);
       W_L("\"");
@@ -2262,6 +2265,14 @@ s_xhtml_1_0_start_img_tag(void *pdoc, Node *node)
 
     if (STRCASEEQ('s','S',"src",name)) {
       value = chxj_encoding_parameter(r, value);
+      value = chxj_add_cookie_parameter(r, value, xhtml->cookie);
+      if (value) {
+        value = apr_psprintf(r->pool,
+                             "%s%c%s=true",
+                             value,
+                             (strchr(value, '?')) ? '&' : '?',
+                             CHXJ_COOKIE_NOUPDATE_PARAM);
+      }
 #ifdef IMG_NOT_CONVERT_FILENAME
 
       W_L(" src=\"");

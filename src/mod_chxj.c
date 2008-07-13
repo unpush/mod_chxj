@@ -302,6 +302,7 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len, device_table *s
     case CHXJ_SPEC_Chtml_3_0:
     case CHXJ_SPEC_Chtml_4_0:
     case CHXJ_SPEC_Chtml_5_0:
+    case CHXJ_SPEC_XHtml_Mobile_1_0:
     case CHXJ_SPEC_Jhtml:
       cookie = chxj_save_cookie(r);
       break;
@@ -767,6 +768,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
         case CHXJ_SPEC_Chtml_3_0:
         case CHXJ_SPEC_Chtml_4_0:
         case CHXJ_SPEC_Chtml_5_0:
+        case CHXJ_SPEC_XHtml_Mobile_1_0:
         case CHXJ_SPEC_Jhtml:
           cookie = chxj_save_cookie(r);
           s_add_cookie_id_if_has_location_header(r, cookie);
@@ -977,6 +979,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
           case CHXJ_SPEC_Chtml_3_0:
           case CHXJ_SPEC_Chtml_4_0:
           case CHXJ_SPEC_Chtml_5_0:
+          case CHXJ_SPEC_XHtml_Mobile_1_0:
           case CHXJ_SPEC_Jhtml:
             cookie = chxj_save_cookie(r);
             /*
