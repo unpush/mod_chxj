@@ -179,6 +179,8 @@ chxj_headers_fixup(request_rec *r)
   case CHXJ_SPEC_Chtml_3_0:
   case CHXJ_SPEC_Chtml_4_0:
   case CHXJ_SPEC_Chtml_5_0:
+  case CHXJ_SPEC_Chtml_6_0:
+  case CHXJ_SPEC_Chtml_7_0:
   case CHXJ_SPEC_XHtml_Mobile_1_0:
   case CHXJ_SPEC_Hdml:
   case CHXJ_SPEC_Jhtml:
@@ -321,6 +323,7 @@ chxj_convert(request_rec *r, const char **src, apr_size_t *len, device_table *sp
     case CHXJ_SPEC_Chtml_5_0:
     case CHXJ_SPEC_Chtml_6_0:
     case CHXJ_SPEC_Chtml_7_0:
+    case CHXJ_SPEC_XHtml_Mobile_1_0:
     case CHXJ_SPEC_Jhtml:
       cookie = chxj_save_cookie(r);
       break;
@@ -774,6 +777,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
         case CHXJ_SPEC_Chtml_5_0:
         case CHXJ_SPEC_Chtml_6_0:
         case CHXJ_SPEC_Chtml_7_0:
+        case CHXJ_SPEC_XHtml_Mobile_1_0:
         case CHXJ_SPEC_Jhtml:
           chxj_cookie_lock(r);
           cookie = chxj_save_cookie(r);
@@ -987,6 +991,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
           case CHXJ_SPEC_Chtml_5_0:
           case CHXJ_SPEC_Chtml_6_0:
           case CHXJ_SPEC_Chtml_7_0:
+          case CHXJ_SPEC_XHtml_Mobile_1_0:
           case CHXJ_SPEC_Jhtml:
             chxj_cookie_lock(r);
             cookie = chxj_save_cookie(r);
@@ -1303,6 +1308,8 @@ chxj_insert_filter(request_rec *r)
   case CHXJ_SPEC_Chtml_3_0:
   case CHXJ_SPEC_Chtml_4_0:
   case CHXJ_SPEC_Chtml_5_0:
+  case CHXJ_SPEC_Chtml_6_0:
+  case CHXJ_SPEC_Chtml_7_0:
   case CHXJ_SPEC_XHtml_Mobile_1_0:
   case CHXJ_SPEC_Hdml:
   case CHXJ_SPEC_Jhtml:
