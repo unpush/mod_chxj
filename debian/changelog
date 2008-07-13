@@ -1,3 +1,11 @@
+libapache2-mod-chxj (0.12.8-1) unstable; urgency=low
+
+  * Added function.
+    - The au terminal is handled as NO Cookie model. (For http -> https or https -> http exchange.) 
+      (Requested by someone. thanks!)
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Sun, 13 Jul 2008 15:20:39 +0900
+
 libapache2-mod-chxj (0.12.7-1) unstable; urgency=low
 
   * Fixed bug.
