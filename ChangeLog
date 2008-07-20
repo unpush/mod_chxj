@@ -1,3 +1,14 @@
+libapache2-mod-chxj (0.11.9-1) unstable; urgency=low
+
+  * Changed Specification.
+    - When the size after it reduces becomes 0, it compels it to 1.
+      (Reported by someone. thanks!)
+  * Emergency measure
+    - MagickQuantizeImage function doesn't return.
+      (Reported by someone. thanks!)
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Mon, 21 Jul 2008 00:30:14 +0900
+
 libapache2-mod-chxj (0.11.8-1) unstable; urgency=low
 
   * Added function.
