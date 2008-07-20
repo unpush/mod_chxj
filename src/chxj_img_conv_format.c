@@ -880,8 +880,10 @@ s_create_blob_data(request_rec          *r,
        */
       DBG(r,"call s_fixup_size()");
 
-      if ((magick_wand = s_fixup_size(magick_wand, r, spec, qsp)) == NULL)
-        return HTTP_NOT_FOUND;
+      if ((magick_wand = s_fixup_size(magick_wand, r, spec, qsp)) == NULL) {
+        EXIT_MAGICK_ERROR();
+        return NULL;
+      }
 
       done_fixup_size = 1;
     }
@@ -890,16 +892,20 @@ s_create_blob_data(request_rec          *r,
      */
     DBG(r,"call s_fixup_color()");
 
-    if ((magick_wand = s_fixup_color(magick_wand, r,spec, mode)) == NULL)
-      return HTTP_NOT_FOUND;
+    if ((magick_wand = s_fixup_color(magick_wand, r,spec, mode)) == NULL) {
+      EXIT_MAGICK_ERROR();
+      return NULL;
+    }
 
     /*
      * DEPTH of the image is changed.
      */
     DBG(r,"call s_fixup_depth()");
 
-    if ((magick_wand = s_fixup_depth(magick_wand, r, spec)) == NULL)
-      return HTTP_NOT_FOUND;
+    if ((magick_wand = s_fixup_depth(magick_wand, r, spec)) == NULL) {
+      EXIT_MAGICK_ERROR();
+      return NULL;
+    }
 
 
     if (! done_fixup_size) {
@@ -907,8 +913,10 @@ s_create_blob_data(request_rec          *r,
        * The size of the image is changed.
        */
       DBG(r,"call s_fixup_size()");
-      if ((magick_wand = s_fixup_size(magick_wand, r, spec, qsp)) == NULL)
-        return HTTP_NOT_FOUND;
+      if ((magick_wand = s_fixup_size(magick_wand, r, spec, qsp)) == NULL) {
+        EXIT_MAGICK_ERROR();
+        return NULL;
+      }
     }
   }
 
