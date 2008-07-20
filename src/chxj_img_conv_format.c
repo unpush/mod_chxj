@@ -516,16 +516,28 @@ s_create_cache_file(request_rec          *r,
     EXIT_MAGICK_ERROR();
     return HTTP_NOT_FOUND;
   }
+  if (MagickStripImage(magick_wand) == MagickFalse) {
+    ERR(r, "mod_chxj: strip image failure.");
+    EXIT_MAGICK_ERROR();
+    return HTTP_NOT_FOUND;
+  }
 
   if (spec->html_spec_type != CHXJ_SPEC_UNKNOWN) {
-    /*
-     * The size of the image is changed.
-     */
-    DBG(r,"call s_fixup_size()");
+    int oldw = MagickGetImageWidth(magick_wand);
+    int oldh = MagickGetImageHeight(magick_wand);
+    int done_fixup_size = 0;
+    if ((qsp->mode == IMG_CONV_MODE_WALLPAPER && spec->wp_width < oldw && spec->wp_heigh < oldh)
+      || (qsp->mode != IMG_CONV_MODE_WALLPAPER && spec->width < oldw && spec->heigh < oldh)) {
+      /*
+       * The size of the image is changed.
+       */
+      DBG(r,"call s_fixup_size()");
   
-    if ((magick_wand = s_fixup_size(magick_wand, r, spec, qsp)) == NULL) 
-      return HTTP_NOT_FOUND;
-  
+      if ((magick_wand = s_fixup_size(magick_wand, r, spec, qsp)) == NULL) 
+        return HTTP_NOT_FOUND;
+
+      done_fixup_size = 1;
+    }
     /*
      * The colors of the image is changed.
      */
@@ -543,7 +555,15 @@ s_create_cache_file(request_rec          *r,
       return HTTP_NOT_FOUND;
   
   
-  
+    if (! done_fixup_size) {
+      /*
+       * The size of the image is changed.
+       */
+      DBG(r,"call s_fixup_size()");
+      if ((magick_wand = s_fixup_size(magick_wand, r, spec, qsp)) == NULL) 
+        return HTTP_NOT_FOUND;
+    }
+
     DBG(r,"start convert and compression");
   
     if (spec->available_jpeg) {
@@ -843,31 +863,54 @@ s_create_blob_data(request_rec          *r,
     return NULL;
   }
 
-  /*
-   * The size of the image is changed.
-   */
-  DBG(r, "call s_fixup_size()");
-
-  if ((magick_wand = s_fixup_size(magick_wand, r, spec, qsp)) == NULL)
+  if (MagickStripImage(magick_wand) == MagickFalse) {
+    ERR(r, "mod_chxj: strip image failure.");
+    EXIT_MAGICK_ERROR();
     return NULL;
+  }
 
-  /*
-   * The colors of the image is changed.
-   */
-  DBG(r, "call s_fixup_color()");
+  {
+    int oldw = MagickGetImageWidth(magick_wand);
+    int oldh = MagickGetImageHeight(magick_wand);
+    int done_fixup_size = 0;
+    if ((qsp->mode == IMG_CONV_MODE_WALLPAPER && spec->wp_width < oldw && spec->wp_heigh < oldh)
+      || (qsp->mode != IMG_CONV_MODE_WALLPAPER && spec->width < oldw && spec->heigh < oldh)) {
+      /*
+       * The size of the image is changed.
+       */
+      DBG(r,"call s_fixup_size()");
 
-  if ((magick_wand = s_fixup_color(magick_wand, r,spec, mode)) == NULL)
-    return NULL;
+      if ((magick_wand = s_fixup_size(magick_wand, r, spec, qsp)) == NULL)
+        return HTTP_NOT_FOUND;
 
-  /*
-   * DEPTH of the image is changed.
-   */
+      done_fixup_size = 1;
+    }
+    /*
+     * The colors of the image is changed.
+     */
+    DBG(r,"call s_fixup_color()");
 
-  DBG(r,"call s_fixup_depth()");
+    if ((magick_wand = s_fixup_color(magick_wand, r,spec, mode)) == NULL)
+      return HTTP_NOT_FOUND;
 
-  if ((magick_wand = s_fixup_depth(magick_wand, r, spec)) == NULL)
-    return NULL;
+    /*
+     * DEPTH of the image is changed.
+     */
+    DBG(r,"call s_fixup_depth()");
 
+    if ((magick_wand = s_fixup_depth(magick_wand, r, spec)) == NULL)
+      return HTTP_NOT_FOUND;
+
+
+    if (! done_fixup_size) {
+      /*
+       * The size of the image is changed.
+       */
+      DBG(r,"call s_fixup_size()");
+      if ((magick_wand = s_fixup_size(magick_wand, r, spec, qsp)) == NULL)
+        return HTTP_NOT_FOUND;
+    }
+  }
 
 
   DBG(r,"start convert and compression");
@@ -1092,6 +1135,9 @@ s_fixup_size(MagickWand           *magick_wand,
     break;
   }
 
+  if (neww == 0) neww = 1;
+  if (newh == 0) newh = 1;
+
   if (spec->html_spec_type != CHXJ_SPEC_UNKNOWN) {
     DBG(r,"convert width=[%d --> %d]", oldw, neww);
     DBG(r,"convert heigh=[%d --> %d]", oldh, newh);
@@ -1167,6 +1213,13 @@ s_fixup_color(MagickWand *magick_wand, request_rec *r, device_table *spec, img_c
 
   if (spec->html_spec_type == CHXJ_SPEC_UNKNOWN) {
     DBG(r, "Pass s_fixup_color proc");
+    return magick_wand;
+  }
+
+  unsigned long colors = MagickGetImageColors(magick_wand);
+  DBG(r, "now color:[%ld] spec->color:[%ld]", colors, (unsigned long)spec->color);
+  if (colors < (unsigned long)spec->color) {
+    DBG(r, "Pass s_fixup_color proc. color:[%ld] spec->color:[%d]", colors, spec->color);
     return magick_wand;
   }
 
