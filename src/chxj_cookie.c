@@ -755,6 +755,7 @@ chxj_add_cookie_parameter(request_rec *r, char *value, cookie_t *cookie)
 {
   char *qs;
   char *dst;
+  char *name = "";
 
   DBG(r, "start chxj_add_cookie_parameter() cookie_id=[%s]", (cookie) ? cookie->cookie_id : NULL);
 
@@ -771,12 +772,18 @@ chxj_add_cookie_parameter(request_rec *r, char *value, cookie_t *cookie)
     goto on_error;
   }
 
+  qs = strchr(dst, '#');
+  if (qs) {
+    name = apr_pstrdup(r->pool, qs);
+    *qs = 0;
+  }
+
   qs = strchr(dst, '?');
   if (qs) {
-    dst = apr_psprintf(r->pool, "%s&%s=%s", dst, CHXJ_COOKIE_PARAM, cookie->cookie_id);
+    dst = apr_psprintf(r->pool, "%s&%s=%s%s", dst, CHXJ_COOKIE_PARAM, cookie->cookie_id, name);
   }
   else {
-    dst = apr_psprintf(r->pool, "%s?%s=%s", dst, CHXJ_COOKIE_PARAM, cookie->cookie_id);
+    dst = apr_psprintf(r->pool, "%s?%s=%s%s", dst, CHXJ_COOKIE_PARAM, cookie->cookie_id, name);
   }
 
   DBG(r, "end   chxj_add_cookie_parameter() dst=[%s]", dst);
