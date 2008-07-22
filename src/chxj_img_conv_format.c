@@ -1535,7 +1535,7 @@ s_img_down_sizing(MagickWand* magick_wand, request_rec* r, device_table* spec)
 }
 
 static apr_status_t 
-s_send_cache_file(device_table* spec, query_string_param_t* query_string, request_rec* r, const char* tmpfile)
+s_send_cache_file(device_table *UNUSED(spec), query_string_param_t* query_string, request_rec* r, const char* tmpfile)
 {
   apr_status_t rv;
   apr_finfo_t  st;
@@ -1662,7 +1662,7 @@ s_send_original_file(request_rec* r, const char* originalfile)
 }
 
 static apr_status_t 
-s_header_only_cache_file(device_table* spec, query_string_param_t* query_string, request_rec* r, const char* tmpfile)
+s_header_only_cache_file(device_table *UNUSED(spec), query_string_param_t* query_string, request_rec* r, const char* tmpfile)
 {
   apr_status_t rv;
   apr_finfo_t  st;
