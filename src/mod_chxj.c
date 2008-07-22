@@ -756,6 +756,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
     &&  ! STRNCASEEQ('t','T',"text/xml", r->content_type, sizeof("text/xml")-1)
     &&  ! STRNCASEEQ('a','A',"application/xhtml+xml", r->content_type, sizeof("application/xhtml+xml")-1)
     &&  ! (dconf->image == CHXJ_IMG_ON
+          && ! apr_table_get(r->headers_in, "CHXJ_IMG_CONV")
           && STRNCASEEQ('i','I',"image/",  r->content_type, sizeof("image/") -1)
           && ( STRCASEEQ('j','J',"jpeg",            &r->content_type[6])         /* JPEG */
             || STRCASEEQ('j','J',"jp2",             &r->content_type[6])         /* JPEG2000 */
@@ -766,7 +767,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
             || STRCASEEQ('x','X',"x-png",           &r->content_type[6])         /* PNG */
             || STRCASEEQ('g','G',"gif",             &r->content_type[6])))) {     /* GIF */
       
-      DBG(r, "not convert content-type:[%s]", r->content_type);
+      DBG(r, "not convert content-type:[%s] dconf->image:[%d]", r->content_type, dconf->image);
       if (entryp->action & CONVRULE_COOKIE_ON_BIT) {
         DBG(r, "entryp->action == COOKIE_ON_BIT");
         switch(spec->html_spec_type) {
