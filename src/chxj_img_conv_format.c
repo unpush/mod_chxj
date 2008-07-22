@@ -1677,22 +1677,6 @@ s_header_only_cache_file(device_table* spec, query_string_param_t* query_string,
   DBG(r, "offset:[%ld]", query_string->offset);
   DBG(r, "count:[%ld]",  query_string->count);
 
-  if (spec->available_jpeg) {
-    r->content_type = apr_psprintf(r->pool, "image/jpeg");
-  }
-  else
-  if (spec->available_png) {
-    r->content_type = apr_psprintf(r->pool, "image/png");
-  }
-  else
-  if (spec->available_gif) {
-    r->content_type = apr_psprintf(r->pool, "image/gif");
-  }
-  else
-  if (spec->available_bmp2 || spec->available_bmp4) {
-    r->content_type = apr_psprintf(r->pool, "image/bmp");
-  }
-
   if (query_string->mode != IMG_CONV_MODE_EZGET && query_string->name == NULL) {
     contentLength = apr_psprintf(r->pool, "%d", (int)st.size);
     apr_table_setn(r->headers_out, "Content-Length", (const char*)contentLength);
