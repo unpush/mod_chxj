@@ -648,22 +648,23 @@ s_create_cache_file(request_rec*       r,
       }
   
       r->content_type = apr_psprintf(r->pool, "image/jpeg");
+      ap_set_content_type(r, "image/jpeg");
     }
     else {
       if (strcasecmp(fmt, "jpg") == 0) {
-        r->content_type = apr_psprintf(r->pool, "image/jpeg");
+        ap_set_content_type(r, "image/jpeg");
       }
       else
       if (strcasecmp(fmt, "jpeg") == 0) {
-        r->content_type = apr_psprintf(r->pool, "image/jpeg");
+        ap_set_content_type(r, "image/jpeg");
       }
       else
       if (strcasecmp(fmt, "gif") == 0) {
-        r->content_type = apr_psprintf(r->pool, "image/gif");
+        ap_set_content_type(r, "image/gif");
       }
       else
       if (strcasecmp(fmt, "png") == 0) {
-        r->content_type = apr_psprintf(r->pool, "image/png");
+        ap_set_content_type(r, "image/png");
       }
     }
   }
@@ -829,7 +830,8 @@ s_convert_to_jpeg(MagickWand *magick_wand, request_rec *r, device_table *spec)
   if ((magick_wand = s_img_down_sizing(magick_wand, r, spec)) == NULL)
     return -1;
   
-  r->content_type = apr_psprintf(r->pool, "image/jpeg");
+  r->content_type = apr_pstrdup(r->pool, "image/jpeg");
+  ap_set_content_type(r, "image/jpeg");
   DBG(r,"convert to jpg");
   return 0;
 }
@@ -856,7 +858,8 @@ s_convert_to_png(MagickWand *magick_wand, request_rec *r, device_table *spec)
   if ((magick_wand = s_img_down_sizing(magick_wand, r, spec)) == NULL) 
     return -1;
   
-  r->content_type = apr_psprintf(r->pool, "image/png");
+  r->content_type = apr_pstrdup(r->pool, "image/png");
+  ap_set_content_type(r, "image/png");
   DBG(r, "convert to png");
   return 0;
 }
@@ -883,7 +886,8 @@ s_convert_to_gif(MagickWand *magick_wand, request_rec *r, device_table *spec)
   if ((magick_wand = s_img_down_sizing(magick_wand, r, spec)) == NULL) 
     return -1;
   
-  r->content_type = apr_psprintf(r->pool, "image/gif");
+  r->content_type = apr_pstrdup(r->pool, "image/gif");
+  ap_set_content_type(r, "image/gif");
   
   DBG(r,"convert to gif");
   return 0;
@@ -911,7 +915,8 @@ s_convert_to_bmp(MagickWand *magick_wand, request_rec *r, device_table *spec)
   if ((magick_wand = s_img_down_sizing(magick_wand, r, spec)) == NULL) 
     return -1;
   
-  r->content_type = apr_psprintf(r->pool, "image/bmp");
+  r->content_type = apr_pstrdup(r->pool, "image/bmp");
+  ap_set_content_type(r, "image/bmp");
   
   DBG(r, "convert to bmp(unsupported)");
   return 0;
@@ -1546,22 +1551,6 @@ s_send_cache_file(device_table* spec, query_string_param_t* query_string, reques
   DBG(r, "name:[%s]",    query_string->name);
   DBG(r, "offset:[%ld]", query_string->offset);
   DBG(r, "count:[%ld]",  query_string->count);
-
-  if (spec->available_jpeg) {
-    r->content_type = apr_psprintf(r->pool, "image/jpeg");
-  }
-  else
-  if (spec->available_png) {
-    r->content_type = apr_psprintf(r->pool, "image/png");
-  }
-  else
-  if (spec->available_gif) {
-    r->content_type = apr_psprintf(r->pool, "image/gif");
-  }
-  else
-  if (spec->available_bmp2 || spec->available_bmp4) {
-    r->content_type = apr_psprintf(r->pool, "image/bmp");
-  }
 
   if (query_string->mode != IMG_CONV_MODE_EZGET && query_string->name == NULL) {
     contentLength = apr_psprintf(r->pool, "%d", (int)st.size);
