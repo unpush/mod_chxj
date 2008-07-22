@@ -4,6 +4,8 @@ libapache2-mod-chxj (0.12.11-1) unstable; urgency=low
     - After it had converted it by a former image,
       the priority of the image type was selected.
       (Requested by someone. thanks!)
+  * Fixed Bug.
+    - Dynamic image converter is not available.
 
  -- Atsushi Konno <konn@users.sourceforge.jp>  Tue, 22 Jul 2008 12:52:13 +0900
 
