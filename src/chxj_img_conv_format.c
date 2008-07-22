@@ -1565,34 +1565,8 @@ s_send_cache_file(device_table *UNUSED(spec), query_string_param_t *query_string
     apr_table_setn(r->headers_out, "Content-Length", (const char*)contentLength);
   
     DBG(r,"Content-Length:[%d]", (int)st.size);
-
-    rv = apr_file_open(&fout, tmpfile, 
-      APR_READ | APR_BINARY, APR_OS_DEFAULT, r->pool);
-    if (rv != APR_SUCCESS) {
-      DBG(r, "cache file open failed[%s]", tmpfile);
-      return HTTP_NOT_FOUND;
-    }
-    apr_size_t read_len = st.size;
-    apr_size_t now_pos = 0;
-    readData = apr_palloc(r->pool, st.size);
-    memset(readData, 0, st.size);
-    while(read_len > 0) {
-      char buf[4096];
-      apr_size_t now_read_len = 4096;
-      rv = apr_file_read(fout, buf, &now_read_len);
-      if (rv != APR_SUCCESS) {
-        ERR(r, "cache file read failed[%s]", tmpfile);
-        return HTTP_NOT_FOUND;
-      }
-      memcpy(&readData[now_pos], buf, now_read_len);
-      now_pos += now_read_len;
-      read_len -= now_read_len;
-    }
-    read_len = st.size;
-    apr_file_close(fout);
-    
     MagickWand *magick_wand = NewMagickWand();
-    if (MagickReadImageBlob(magick_wand,readData, read_len) == MagickFalse) {
+    if (MagickReadImage(magick_wand,tmpfile) == MagickFalse) {
       EXIT_MAGICK_ERROR();
       return HTTP_NOT_FOUND;
     }
@@ -1625,7 +1599,6 @@ s_send_cache_file(device_table *UNUSED(spec), query_string_param_t *query_string
         return HTTP_NOT_FOUND;
       }
     }
-
     rv = apr_file_open(&fout, tmpfile, 
       APR_READ | APR_BINARY, APR_OS_DEFAULT, r->pool);
     if (rv != APR_SUCCESS) {
@@ -1748,6 +1721,41 @@ s_header_only_cache_file(device_table *UNUSED(spec), query_string_param_t *query
   if (query_string->mode != IMG_CONV_MODE_EZGET && query_string->name == NULL) {
     contentLength = apr_psprintf(r->pool, "%d", (int)st.size);
     apr_table_setn(r->headers_out, "Content-Length", (const char*)contentLength);
+
+    MagickWand *magick_wand = NewMagickWand();
+    if (MagickReadImage(magick_wand,tmpfile) == MagickFalse) {
+      EXIT_MAGICK_ERROR();
+      return HTTP_NOT_FOUND;
+    }
+    if (MagickStripImage(magick_wand) == MagickFalse) {
+      ERR(r, "mod_chxj: strip image failure.");
+      EXIT_MAGICK_ERROR();
+      return HTTP_NOT_FOUND;
+    }
+    char *nowFormat = MagickGetImageFormat(magick_wand);
+    DestroyMagickWand(magick_wand);
+    if (nowFormat) {
+      if (STRCASEEQ('j','J',"jpeg",nowFormat) || STRCASEEQ('j','J',"jpg",nowFormat)) {
+        DBG(r, "detect cache file => jpg.");
+        ap_set_content_type(r, "image/jpeg");
+      }
+      else if (STRCASEEQ('p','P',"png", nowFormat)) {
+        DBG(r, "detect cache file => png.");
+        ap_set_content_type(r, "image/png");
+      }
+      else if (STRCASEEQ('g','G',"gif", nowFormat)) {
+        DBG(r, "detect cache file => gif.");
+        ap_set_content_type(r, "image/gif");
+      }
+      else if (STRCASEEQ('b','B',"bmp", nowFormat)) {
+        DBG(r, "detect cache file => bmp.");
+        ap_set_content_type(r, "image/bmp");
+      }
+      else {
+        ERR(r, "detect unknown file");
+        return HTTP_NOT_FOUND;
+      }
+    }
   
     DBG(r,"Content-Length:[%d]", (int)st.size);
   }
