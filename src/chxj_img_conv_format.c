@@ -400,6 +400,7 @@ s_img_conv_format_from_file(
   if (rv != APR_SUCCESS)
     return HTTP_NOT_FOUND;
 
+  apr_table_setn(r->headers_in, "CHXJ_IMG_CONV", "done");
   try_count = CACHE_RETRY_COUNT;
   do {
     rv = apr_stat(&cache_st, tmpfile, APR_FINFO_MIN, r->pool);
@@ -431,7 +432,6 @@ s_img_conv_format_from_file(
     WRN(r, "cache retry failure....");
     WRN(r, "cache file was deleted...");
   }
-  apr_table_setn(r->headers_in, "CHXJ_IMG_CONV", "done");
 
   DBG(r,"end chxj_img_conv_format");
 

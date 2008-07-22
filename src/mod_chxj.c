@@ -749,6 +749,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
     &&  ! STRNCASEEQ('t','T',"text/xml", r->content_type, sizeof("text/xml")-1)
     &&  ! STRNCASEEQ('a','A',"application/xhtml+xml", r->content_type, sizeof("application/xhtml+xml")-1)
     &&  ! (dconf->image == CHXJ_IMG_ON
+          && ! apr_table_get(r->headers_in, "CHXJ_IMG_CONV")
           && STRNCASEEQ('i','I',"image/",  r->content_type, sizeof("image/") -1)
           && ( STRCASEEQ('j','J',"jpeg",            &r->content_type[6])         /* JPEG */
             || STRCASEEQ('j','J',"jp2",             &r->content_type[6])         /* JPEG2000 */
