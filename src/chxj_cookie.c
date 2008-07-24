@@ -454,7 +454,8 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
   apr_pool_create(&pool, r->pool);
   cookie = (cookie_t*)apr_palloc(pool, sizeof(cookie_t));
   cookie->cookie_headers = NULL;
-  cookie->cookie_id = apr_pstrdup(pool, cookie_id);
+  cookie->cookie_id = chxj_url_decode(pool, apr_pstrdup(pool, cookie_id));
+  cookie->cookie_id = chxj_url_encode(pool, cookie->cookie_id);
 
   dconf = chxj_get_module_config(r->per_dir_config, &chxj_module);
   entryp = chxj_apply_convrule(r, dconf->convrules);
