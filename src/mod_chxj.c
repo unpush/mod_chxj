@@ -143,6 +143,7 @@ converter_t convert_routine[] = {
 
 static int chxj_convert_input_header(request_rec *r,chxjconvrule_entry *entryp);
 static void s_add_cookie_id_if_has_location_header(request_rec *r, cookie_t *cookie);
+static void s_clear_cookie_header(request_rec *r, device_table *spec);
 
 /**
  * Only when User-Agent is specified, the User-Agent header is camouflaged. 
@@ -171,6 +172,14 @@ chxj_headers_fixup(request_rec *r)
     DBG(r, "detect multipart/form-data ==> no target");
     DBG(r, "end chxj_headers_fixup()");
     return DECLINED;
+  }
+  if (r->method_number == M_POST) {
+    if (!apr_table_get(r->headers_in, "X-Chxj-Forward")) {
+      s_clear_cookie_header(r, spec);
+    }
+  }
+  else {
+    s_clear_cookie_header(r, spec);
   }
 
   switch(spec->html_spec_type) {
@@ -256,6 +265,28 @@ chxj_headers_fixup(request_rec *r)
 
   return DECLINED;
 }
+
+
+static void
+s_clear_cookie_header(request_rec *r, device_table *spec)
+{
+  switch(spec->html_spec_type) {
+  case CHXJ_SPEC_Chtml_1_0:
+  case CHXJ_SPEC_Chtml_2_0:
+  case CHXJ_SPEC_Chtml_3_0:
+  case CHXJ_SPEC_Chtml_4_0:
+  case CHXJ_SPEC_Chtml_5_0:
+  case CHXJ_SPEC_Chtml_6_0:
+  case CHXJ_SPEC_Chtml_7_0:
+  case CHXJ_SPEC_XHtml_Mobile_1_0:
+  case CHXJ_SPEC_Jhtml:
+    apr_table_unset(r->headers_in, "Cookie");
+    break;
+  default:
+    break;
+  }
+}
+
 
 /**
  * It converts it from CHTML into XXML corresponding to each model. 
