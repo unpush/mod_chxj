@@ -407,7 +407,7 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp)
 
     name  = apr_strtok(pair, "=", &vstate);
     value = apr_strtok(NULL, "=", &vstate);
-    if (strcasecmp(name, CHXJ_COOKIE_NOUPDATE_PARAM) == 0) {
+    if (strcasecmp(name, CHXJ_COOKIE_NOUPDATE_PARAM) == 0 || strcasecmp(name, chxj_url_encode(r->pool, CHXJ_COOKIE_NOUPDATE_PARAM)) == 0) {
       DBG(r, "found cookie no update parameter");
       no_update_flag++;
     }
@@ -433,7 +433,7 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp)
 
     name  = apr_strtok(pair, "=", &vstate);
     value = apr_strtok(NULL, "=", &vstate);
-    if (strncasecmp(name, "_chxj", 5) != 0) {
+    if (strncasecmp(name, "_chxj", 5) != 0 && strncasecmp(name, "%5Fchxj", sizeof("%5Fchxj")-1) != 0) {
       if (strlen(result) != 0) 
         result = apr_pstrcat(r->pool, result, "&", NULL);
 
@@ -443,12 +443,12 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp)
         char *dname;
 
         if (value && *value != 0) {
-          value = chxj_url_decode(r, value);
+          value = chxj_url_decode(r->pool, value);
           dlen   = strlen(value);
           DBG(r, "************ before encoding[%s]", value);
   
           dvalue = chxj_rencoding(r, value, &dlen);
-          dvalue = chxj_url_encode(r, dvalue);
+          dvalue = chxj_url_encode(r->pool, dvalue);
   
           DBG(r, "************ after encoding[%s]", dvalue);
         }
@@ -457,10 +457,10 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp)
         }
 
         if (name && *name != 0) {
-          name = chxj_url_decode(r, name);
+          name = chxj_url_decode(r->pool, name);
           dlen   = strlen(name);
           dname = chxj_rencoding(r, name, &dlen);
-          dname = chxj_url_encode(r, dname);
+          dname = chxj_url_encode(r->pool, dname);
         }
         else {
           dname = "";
@@ -476,9 +476,9 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp)
       }
     }
     else
-    if (strncasecmp(name, "_chxj_c_", 8) == 0 
-    ||  strncasecmp(name, "_chxj_r_", 8) == 0
-    ||  strncasecmp(name, "_chxj_s_", 8) == 0) {
+    if ( (strncasecmp(name, "_chxj_c_", 8) == 0 || strncasecmp(name, "%5Fchxj%5Fc%5F", sizeof("%5Fchxj%5Fc%5F")-1) == 0)
+      || (strncasecmp(name, "_chxj_r_", 8) == 0 || strncasecmp(name, "%5Fchxj%5Fr%5F", sizeof("%5Fchxj%5Fr%5F")-1) == 0)
+      || (strncasecmp(name, "_chxj_s_", 8) == 0 || strncasecmp(name, "%5Fchxj%5Fs%5F", sizeof("%5Fchxj%5Fs%5F")-1) == 0)) {
       if (value == NULL)
         continue;
 
@@ -491,7 +491,8 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp)
       result = apr_pstrcat(r->pool, result, &name[8], "=", value, NULL);
     }
     else
-    if (strcasecmp(name, CHXJ_COOKIE_PARAM) == 0) {
+    if (strcasecmp(name, CHXJ_COOKIE_PARAM) == 0 || strcasecmp(name, "%5Fchxj%5Fcc") == 0) {
+      apr_table_unset(r->headers_in, "Cookie");
       DBG(r, "found cookie parameter[%s]", value);
       DBG(r, "call start chxj_load_cookie()");
       cookie = chxj_load_cookie(r, value);
@@ -500,6 +501,7 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp)
         chxj_update_cookie(r, cookie);
       }
     }
+    DBG(r, "************************ name:[%s]", name);
   }
   r->args = result;
 
@@ -533,6 +535,8 @@ chxj_input_convert(
   cookie_t* cookie;
   char* buff_pre;
   int   no_update_flag = 0;
+
+  DBG(r, "start chxj_input_convert()");
 
   s        = apr_pstrdup(r->pool, *src);
   buff_pre = apr_pstrdup(r->pool, *src);
@@ -572,7 +576,7 @@ chxj_input_convert(
 
     name  = apr_strtok(pair, "=", &vstate);
     value = apr_strtok(NULL, "=", &vstate);
-    if (strncasecmp(name, "_chxj", 5) != 0) {
+    if (strncasecmp(name, "_chxj", 5) != 0 && strncasecmp(name, "%5Fchxj", sizeof("%5Fchxj")-1) != 0) {
       if (strlen(result) != 0) 
         result = apr_pstrcat(r->pool, result, "&", NULL);
 
@@ -582,12 +586,12 @@ chxj_input_convert(
         char *dname;
 
         if (value && *value != 0) {
-          value = chxj_url_decode(r, value);
+          value = chxj_url_decode(r->pool, value);
           dlen   = strlen(value);
           DBG(r, "************ before encoding[%s]", value);
   
           dvalue = chxj_rencoding(r, value, &dlen);
-          dvalue = chxj_url_encode(r, dvalue);
+          dvalue = chxj_url_encode(r->pool, dvalue);
   
           DBG(r, "************ after encoding[%s]", dvalue);
         }
@@ -596,10 +600,10 @@ chxj_input_convert(
         }
 
         if (name && *name != 0) {
-          name = chxj_url_decode(r, name);
+          name = chxj_url_decode(r->pool, name);
           dlen   = strlen(name);
           dname = chxj_rencoding(r, name, &dlen);
-          dname = chxj_url_encode(r, dname);
+          dname = chxj_url_encode(r->pool, dname);
         }
         else {
           dname = "";
@@ -611,10 +615,9 @@ chxj_input_convert(
         result = apr_pstrcat(r->pool, result, name, "=", value, NULL);
       }
     }
-    else
-    if (strncasecmp(name, "_chxj_c_", 8) == 0 
-    ||  strncasecmp(name, "_chxj_r_", 8) == 0
-    ||  strncasecmp(name, "_chxj_s_", 8) == 0) {
+    else if ((strncasecmp(name, "_chxj_c_", 8) == 0  || strncasecmp(name, "%5Fchxj%5Fc%5F", sizeof("%5Fchxj%5Fc%5F")-1) == 0)
+        ||   (strncasecmp(name, "_chxj_r_", 8) == 0  || strncasecmp(name, "%5Fchxj%5Fr%5F", sizeof("%5Fchxj%5Fr%5F")-1) == 0)
+        ||   (strncasecmp(name, "_chxj_s_", 8) == 0  || strncasecmp(name, "%5Fchxj%5Fs%5F", sizeof("%5Fchxj%5Fs%5F")-1) == 0)) {
       if (value == NULL)
         continue;
 
@@ -629,11 +632,11 @@ chxj_input_convert(
         char*      dvalue;
 
         dlen   = strlen(value);
-        value = chxj_url_decode(r, value);
+        value = chxj_url_decode(r->pool, value);
         DBG(r, "************ before encoding[%s]", value);
 
         dvalue = chxj_rencoding(r, value, &dlen);
-        dvalue = chxj_url_encode(r,dvalue);
+        dvalue = chxj_url_encode(r->pool,dvalue);
 
         DBG(r, "************ after encoding[%s]", dvalue);
 
@@ -645,7 +648,8 @@ chxj_input_convert(
       }
     }
     else
-    if (strcasecmp(name, CHXJ_COOKIE_PARAM) == 0) {
+    if (strcasecmp(name, CHXJ_COOKIE_PARAM) == 0 || strcasecmp(name, "%5Fchxj%5Fcc") == 0) {
+      apr_table_unset(r->headers_in, "Cookie");
       DBG(r, "found cookie parameter[%s]", value);
       DBG(r, "call start chxj_load_cookie()");
       cookie = chxj_load_cookie(r, value);
@@ -654,10 +658,12 @@ chxj_input_convert(
         chxj_update_cookie(r, cookie);
       }
     }
+    DBG(r, "************************ name:[%s]", name);
   }
   *len = strlen(result);
 
   DBG(r, "AFTER input convert result = [%s]", result);
+  DBG(r, "end chxj_input_convert()");
 
   return result;
 }
@@ -773,6 +779,8 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
         case CHXJ_SPEC_Jhtml:
           cookie = chxj_save_cookie(r);
           s_add_cookie_id_if_has_location_header(r, cookie);
+          apr_table_unset(r->headers_out, "Set-Cookie");
+          apr_table_unset(r->err_headers_out, "Set-Cookie");
           break;
         default:
           break;

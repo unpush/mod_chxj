@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 #include "chxj_tag_util.h"
+#include "chxj_url_encode.h"
 
 /**
  * The value of the VALUE attribute that the object tag node maintains is
@@ -598,6 +599,39 @@ qs_get_parse_attr(Doc* doc, Node* tag, request_rec* r)
   /* not found                                                                */
   /*--------------------------------------------------------------------------*/
   return NULL;
+}
+
+
+char *
+chxj_form_action_to_hidden_tag(apr_pool_t *pool, const char *str, int xmlFlag)
+{
+  char *s = apr_pstrdup(pool, str);
+  s = strchr(s, '?');
+  if (!s) return (char *)str;
+  s++;
+  char *result = NULL;
+
+  char *pstat;
+  char *pstat2;
+  for (;;) {
+    char *pair = apr_strtok(s, "&", &pstat);
+    if (! pair) break;
+    s = NULL;
+    char *key = apr_strtok(pair, "=",  &pstat2);
+    char *val = "";
+    if (key) {
+      val = apr_strtok(NULL, "=", &pstat2);
+      if (!val) val = "";
+    }
+    char *tmp = apr_psprintf(pool, "<input type=\"hidden\" name=\"%s\" value=\"%s\"%s>", key, chxj_url_decode(pool, val), (xmlFlag == 1) ? " /" : "");
+    if (result) {
+      result = apr_pstrcat(pool, result, tmp, NULL);
+    }
+    else {
+      result = tmp;
+    }
+  }
+  return result;
 }
 
 /*

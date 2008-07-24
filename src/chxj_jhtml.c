@@ -1337,8 +1337,8 @@ s_jhtml_start_form_tag(void *pdoc, Node *node)
   Doc          *doc;
   request_rec  *r;
   Attr         *attr;
-  int          dcflag = 0;
   char         *dc = NULL;
+  char         *new_hidden_tag = NULL;
 
   jhtml = GET_JHTML(pdoc);
   doc   = jhtml->doc;
@@ -1357,13 +1357,15 @@ s_jhtml_start_form_tag(void *pdoc, Node *node)
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
+      value = chxj_add_cookie_parameter(r, value, jhtml->cookie);
+      dc = strchr(value, '?');
+      if (dc) {
+        new_hidden_tag = chxj_form_action_to_hidden_tag(doc->pool, value, 0); 
+        *dc = 0;
+      }
       W_L(" action=\"");
       W_V(value);
       W_L("\"");
-      dc = chxj_add_cookie_parameter(r, value, jhtml->cookie);
-      if (strcmp(dc, value)) {
-        dcflag = 1;
-      } 
     }
     else if (STRCASEEQ('m','M',"method",name)) {
       /*----------------------------------------------------------------------*/
@@ -1388,19 +1390,10 @@ s_jhtml_start_form_tag(void *pdoc, Node *node)
   }
   W_L(">");
   /*-------------------------------------------------------------------------*/
-  /* ``action=""''                                                           */
-  /*-------------------------------------------------------------------------*/
-  if (! dc) {
-    dcflag = 1;
-  }
-  /*-------------------------------------------------------------------------*/
   /* Add cookie parameter                                                    */
   /*-------------------------------------------------------------------------*/
-  if (jhtml->cookie && jhtml->cookie->cookie_id && dcflag == 1) {
-    char *vv = apr_psprintf(doc->buf.pool, "<input type='hidden' name='%s' value='%s'>",
-                            CHXJ_COOKIE_PARAM,
-                            chxj_url_decode(r, jhtml->cookie->cookie_id));
-    W_V(vv);
+  if (new_hidden_tag) {
+    W_V(new_hidden_tag);
   }
   return jhtml->out;
 }

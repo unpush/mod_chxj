@@ -97,6 +97,7 @@ extern char* qs_get_parse_attr(
   Node*        tag, 
   request_rec* r);
 
+extern char * chxj_form_action_to_hidden_tag(apr_pool_t *pool, const char *str, int xmlFlag);
 #endif
 /*
  * vim:ts=2 et

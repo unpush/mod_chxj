@@ -1246,6 +1246,7 @@ s_xhtml_1_0_start_form_tag(void *pdoc, Node *node)
   Doc         *doc   = xhtml->doc;
   request_rec *r     = doc->r;
   Attr        *attr;
+  char        *new_hidden_tag = NULL;
 
   W_L("<form");
   /*--------------------------------------------------------------------------*/
@@ -1259,6 +1260,11 @@ s_xhtml_1_0_start_form_tag(void *pdoc, Node *node)
     if (STRCASEEQ('a','A',"action",name)) {
       value = chxj_encoding_parameter(r, value);
       value = chxj_add_cookie_parameter(r, value, xhtml->cookie);
+      char *q = strchr(value, '?');
+      if (q) {
+        new_hidden_tag = chxj_form_action_to_hidden_tag(doc->pool, value, 1);
+        *q = 0;
+      }
       W_L(" action=\"");
       W_V(value);
       W_L("\"");
@@ -1278,6 +1284,9 @@ s_xhtml_1_0_start_form_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
+  if (new_hidden_tag) {
+    W_V(new_hidden_tag);
+  }
   return xhtml->out;
 }
 
