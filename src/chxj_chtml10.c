@@ -1799,6 +1799,7 @@ s_chtml10_start_form_tag(void *pdoc, Node *node)
   Doc          *doc;
   request_rec  *r;
   Attr         *attr;
+  char         *new_hidden_tag = NULL;
 
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
@@ -1823,7 +1824,12 @@ s_chtml10_start_form_tag(void *pdoc, Node *node)
         /*--------------------------------------------------------------------*/
         value = chxj_encoding_parameter(r, value);
         value = chxj_add_cookie_parameter(r, value, chtml10->cookie);
-  
+        char *q;
+        q = strchr(value, '?');
+        if (q) {
+          new_hidden_tag = chxj_form_action_to_hidden_tag(doc->pool, value, 0);
+          *q = 0;
+        }
         W_L(" action=\"");
         W_V(value);
         W_L("\"");
@@ -1858,6 +1864,9 @@ s_chtml10_start_form_tag(void *pdoc, Node *node)
   }
 
   W_L(">");
+  if (new_hidden_tag) {
+    W_V(new_hidden_tag);
+  }
 
   return chtml10->out;
 }

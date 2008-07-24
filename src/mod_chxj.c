@@ -423,7 +423,7 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry *entryp)
 
     name  = apr_strtok(pair, "=", &vstate);
     value = apr_strtok(NULL, "=", &vstate);
-    if (strcasecmp(name, CHXJ_COOKIE_NOUPDATE_PARAM) == 0) {
+    if (strcasecmp(name, CHXJ_COOKIE_NOUPDATE_PARAM) == 0 || strcasecmp(name, chxj_url_encode(r->pool, CHXJ_COOKIE_NOUPDATE_PARAM)) == 0) {
       DBG(r, "found cookie no update parameter");
       no_update_flag++;
     }
@@ -449,7 +449,7 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry *entryp)
 
     name  = apr_strtok(pair, "=", &vstate);
     value = apr_strtok(NULL, "=", &vstate);
-    if (strncasecmp(name, "_chxj", 5) != 0) {
+    if (strncasecmp(name, "_chxj", 5) != 0 && strncasecmp(name, "%5Fchxj", sizeof("%5Fchxj")-1) != 0) {
       if (strlen(result) != 0) 
         result = apr_pstrcat(r->pool, result, "&", NULL);
 
@@ -492,9 +492,9 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry *entryp)
       }
     }
     else
-    if (strncasecmp(name, "_chxj_c_", 8) == 0 
-    ||  strncasecmp(name, "_chxj_r_", 8) == 0
-    ||  strncasecmp(name, "_chxj_s_", 8) == 0) {
+    if ( (strncasecmp(name, "_chxj_c_", 8) == 0 || strncasecmp(name, "%5Fchxj%5Fc%5F", sizeof("%5Fchxj%5Fc%5F")-1) == 0)
+      || (strncasecmp(name, "_chxj_r_", 8) == 0 || strncasecmp(name, "%5Fchxj%5Fr%5F", sizeof("%5Fchxj%5Fr%5F")-1) == 0)
+      || (strncasecmp(name, "_chxj_s_", 8) == 0 || strncasecmp(name, "%5Fchxj%5Fs%5F", sizeof("%5Fchxj%5Fs%5F")-1) == 0)) {
       if (value == NULL)
         continue;
 
@@ -507,7 +507,8 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry *entryp)
       result = apr_pstrcat(r->pool, result, &name[8], "=", value, NULL);
     }
     else
-    if (strcasecmp(name, CHXJ_COOKIE_PARAM) == 0) {
+    if (strcasecmp(name, CHXJ_COOKIE_PARAM) == 0 || strcasecmp(name, "%5Fchxj%5Fcc") == 0) {
+      apr_table_unset(r->headers_in, "Cookie");
       DBG(r, "found cookie parameter[%s]", value);
       DBG(r, "call start chxj_load_cookie()");
       chxj_cookie_lock(r);
@@ -572,7 +573,7 @@ chxj_input_convert(
 
     name  = apr_strtok(pair, "=", &vstate);
     value = apr_strtok(NULL, "=", &vstate);
-    if (strcasecmp(name, CHXJ_COOKIE_NOUPDATE_PARAM) == 0) {
+    if (strcasecmp(name, CHXJ_COOKIE_NOUPDATE_PARAM) == 0 || strcasecmp(name, chxj_url_encode(r->pool, CHXJ_COOKIE_NOUPDATE_PARAM)) == 0) {
       DBG(r, "found cookie no update parameter");
       no_update_flag++;
     }
@@ -590,7 +591,7 @@ chxj_input_convert(
 
     name  = apr_strtok(pair, "=", &vstate);
     value = apr_strtok(NULL, "=", &vstate);
-    if (strncasecmp(name, "_chxj", 5) != 0) {
+    if (strncasecmp(name, "_chxj", 5) != 0 && strncasecmp(name, "%5Fchxj", sizeof("%5Fchxj")-1) != 0) {
       if (strlen(result) != 0) 
         result = apr_pstrcat(r->pool, result, "&", NULL);
 
@@ -630,9 +631,9 @@ chxj_input_convert(
       }
     }
     else
-    if (strncasecmp(name, "_chxj_c_", 8) == 0 
-    ||  strncasecmp(name, "_chxj_r_", 8) == 0
-    ||  strncasecmp(name, "_chxj_s_", 8) == 0) {
+    if ( (strncasecmp(name, "_chxj_c_", 8) == 0 || strncasecmp(name, "%5Fchxj%5Fc%5F", sizeof("%5Fchxj%5Fc%5F")-1) == 0)
+      || (strncasecmp(name, "_chxj_r_", 8) == 0 || strncasecmp(name, "%5Fchxj%5Fr%5F", sizeof("%5Fchxj%5Fr%5F")-1) == 0)
+      || (strncasecmp(name, "_chxj_s_", 8) == 0 || strncasecmp(name, "%5Fchxj%5Fs%5F", sizeof("%5Fchxj%5Fs%5F")-1) == 0)) {
       if (value == NULL)
         continue;
 
@@ -663,7 +664,8 @@ chxj_input_convert(
       }
     }
     else
-    if (strcasecmp(name, CHXJ_COOKIE_PARAM) == 0) {
+    if (strcasecmp(name, CHXJ_COOKIE_PARAM) == 0 || strcasecmp(name, "%5Fchxj%5Fcc") == 0) {
+      apr_table_unset(r->headers_in, "Cookie");
       DBG(r, "found cookie parameter[%s]", value);
       DBG(r, "call start chxj_load_cookie()");
       cookie = chxj_load_cookie(r, value);
@@ -1001,6 +1003,8 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
              */
             s_add_cookie_id_if_has_location_header(r, cookie);
             chxj_cookie_unlock(r);
+            apr_table_unset(r->headers_out, "Set-Cookie");
+            apr_table_unset(r->err_headers_out, "Set-Cookie");
             break;
 
           default:

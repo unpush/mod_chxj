@@ -312,6 +312,8 @@ chxj_save_cookie(request_rec *r)
       }
     }
   }
+  apr_table_unset(r->headers_out, "Set-Cookie");
+  apr_table_unset(r->err_headers_out, "Set-Cookie");
 
   if (cookie) {
     chxj_save_cookie_expire(r, cookie);

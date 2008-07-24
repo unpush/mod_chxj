@@ -1303,10 +1303,11 @@ s_chtml40_end_font_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml40_start_form_tag(void *pdoc, Node *node) 
 {
-  chtml40_t     *chtml40;
-  Doc           *doc;
-  request_rec   *r;
-  Attr          *attr;
+  chtml40_t   *chtml40;
+  Doc         *doc;
+  request_rec *r;
+  Attr        *attr;
+  char        *new_hidden_tag = NULL;
 
   chtml40 = GET_CHTML40(pdoc);
   doc     = chtml40->doc;
@@ -1327,6 +1328,12 @@ s_chtml40_start_form_tag(void *pdoc, Node *node)
       /*----------------------------------------------------------------------*/
       value = chxj_encoding_parameter(r, value);
       value = chxj_add_cookie_parameter(r, value, chtml40->cookie);
+      char *q;
+      q = strchr(value, '?');
+      if (q) {
+        new_hidden_tag = chxj_form_action_to_hidden_tag(doc->pool, value, 0);
+        *q = 0;
+      }
       W_L(" action=\"");
       W_V(value);
       W_L("\"");
@@ -1348,6 +1355,9 @@ s_chtml40_start_form_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
+  if (new_hidden_tag) {
+    W_V(new_hidden_tag);
+  }
 
   return chtml40->out;
 }

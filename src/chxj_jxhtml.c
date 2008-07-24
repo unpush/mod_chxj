@@ -1398,10 +1398,11 @@ s_jxhtml_end_font_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_jxhtml_start_form_tag(void *pdoc, Node *node) 
 {
-  jxhtml_t      *jxhtml;
-  Doc          *doc;
-  request_rec  *r;
-  Attr         *attr;
+  jxhtml_t    *jxhtml;
+  Doc         *doc;
+  request_rec *r;
+  Attr        *attr;
+  char        *new_hidden_tag = NULL;
 
   jxhtml = GET_JXHTML(pdoc);
   doc   = jxhtml->doc;
@@ -1420,6 +1421,12 @@ s_jxhtml_start_form_tag(void *pdoc, Node *node)
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
+      char *q;
+      q = strchr(value, '?');
+      if (q) {
+        new_hidden_tag = chxj_form_action_to_hidden_tag(doc->pool, value, 1);
+        *q = 0;
+      }
       W_L(" action=\"");
       W_V(value);
       W_L("\"");
@@ -1446,6 +1453,9 @@ s_jxhtml_start_form_tag(void *pdoc, Node *node)
     }
   }
   W_L(">");
+  if (new_hidden_tag) {
+    W_V(new_hidden_tag);
+  }
   return jxhtml->out;
 }
 
