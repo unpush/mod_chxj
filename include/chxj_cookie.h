@@ -39,6 +39,8 @@
  */
 #define DEFAULT_COOKIE_TIMEOUT          (1800)
 
+extern apr_proc_mutex_t *global_cookie_mutex;
+
 
 typedef struct cookie_t cookie_t;
 
@@ -48,6 +50,12 @@ struct cookie_t {
   apr_array_header_t* cookie_headers;
 };
 
+
+typedef struct cookie_lock_t cookie_lock_t;
+
+struct cookie_lock_t {
+  apr_file_t *file;
+};
 
 extern cookie_t* chxj_save_cookie(
   request_rec*            r);
@@ -113,6 +121,12 @@ extern cookie_t* chxj_update_cookie(
   cookie_t*    old_cookie);
 
 extern apr_time_t chxj_parse_cookie_expires(const char *s);
+
+extern cookie_lock_t *__chxj_cookie_lock(request_rec *r, const char *filename, int line);
+extern int __chxj_cookie_unlock(request_rec *r, cookie_lock_t *lock, const char *filename, int line);
+
+#define chxj_cookie_lock(X) __chxj_cookie_lock((X),__FILE__,__LINE__)
+#define chxj_cookie_unlock(X,L) __chxj_cookie_unlock((X),(L),__FILE__,__LINE__)
 #endif
 /*
  * vim:ts=2 et

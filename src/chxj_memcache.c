@@ -43,6 +43,10 @@
 #define MEMCACHE_MAX_SERVER (10)
 #define MEMCACHE_FLAGS (0)
 
+#define MEMCACHE_LOCK_KEY "chxj::lock"
+#define MEMCACHE_WAIT_MICRO_SECOND (5000)
+#define MEMCACHE_LOCK_RETRY_COUNT (100)
+
 #define DEFAULT_MEMCACHE_TIMEOUT (1000)
 #define DEFAULT_DELETE_TIMEOUT (0)
 
@@ -324,6 +328,71 @@ chxj_cookie_expire_gc_memcache(request_rec *r, mod_chxj_config *UNUSED(m))
   DBG(r, "end   chxj_cookie_expire_gc_memcache()");
   return CHXJ_TRUE;
 }
+
+
+int
+chxj_cookie_lock_memcache(request_rec *r, mod_chxj_config *m)
+{
+  char baton[256];
+  int retry_count = 0;
+  apr_uint32_t timeout = (apr_uint32_t) ((m->cookie_timeout) ? m->cookie_timeout : DEFAULT_COOKIE_TIMEOUT);
+  apr_interval_time_t wait_time = MEMCACHE_WAIT_MICRO_SECOND;
+
+  DBG(r, "start chxj_cookie_lock_memcache()");
+  if (! chxj_memcache_init(r, m)) {
+    ERR(r, "Cannot create memcache server");
+    DBG(r, "end chxj_cookie_lock_memcache()");
+    return CHXJ_FALSE;
+  }
+
+  apr_snprintf(baton, sizeof(baton)-1, "dummy");
+  while(1) {
+    apr_status_t rv = apr_memcache_add(mc, MEMCACHE_LOCK_KEY, baton, strlen(baton), timeout, 0);
+    if (APR_SUCCESS == rv) {
+      /* got lock */
+      DBG(r, "got lock");
+      break;
+    }
+    if (rv == APR_EAGAIN) {
+      continue;
+    }
+    retry_count++;
+    if (retry_count >= MEMCACHE_LOCK_RETRY_COUNT) {
+      DBG(r, "couldn't get lock");
+      return CHXJ_FALSE;
+    }
+    apr_sleep(wait_time);
+  }
+
+  DBG(r, "end chxj_cookie_lock_memcache()");
+  return CHXJ_TRUE;
+}
+
+
+int
+chxj_cookie_unlock_memcache(request_rec *r, mod_chxj_config *m)
+{
+  apr_status_t ret;
+  DBG(r, "start chxj_cookie_unlock_memcache()");
+  if (! chxj_memcache_init(r, m)) {
+    ERR(r, "Cannot create memcache server");
+    DBG(r, "end chxj_cookie_unlock_memcache()");
+    return CHXJ_FALSE;
+  }
+  while(1) {
+    if ((ret = apr_memcache_delete(mc, MEMCACHE_LOCK_KEY, 0)) != APR_SUCCESS) {
+      if (ret == APR_EAGAIN) {
+        continue;
+      }
+      ERR(r, "failed: apr_memcache_delete() (lock data) ret:[%d]", ret);
+      return CHXJ_FALSE;
+    }
+    break;
+  }
+  DBG(r, "end chxj_cookie_unlock_memcache()");
+  return CHXJ_TRUE;
+}
+
 
 #endif
 /*

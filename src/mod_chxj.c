@@ -314,7 +314,11 @@ chxj_exchange(request_rec *r, const char** src, apr_size_t* len, device_table *s
     case CHXJ_SPEC_Chtml_5_0:
     case CHXJ_SPEC_XHtml_Mobile_1_0:
     case CHXJ_SPEC_Jhtml:
+      {
+      cookie_lock_t *lock = chxj_cookie_lock(r);
       cookie = chxj_save_cookie(r);
+      chxj_cookie_unlock(r, lock);
+      }
       break;
     default:
       break;
@@ -526,7 +530,9 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp)
       cookie = chxj_load_cookie(r, value);
       DBG(r, "call end   chxj_load_cookie()");
       if (! no_update_flag && cookie) {
+        cookie_lock_t *lock = chxj_cookie_lock(r);
         chxj_update_cookie(r, cookie);
+        chxj_cookie_unlock(r, lock);
       }
     }
     DBG(r, "************************ name:[%s]", name);
@@ -686,7 +692,9 @@ chxj_input_convert(
       cookie = chxj_load_cookie(r, value);
       DBG(r, "call end   chxj_load_cookie()");
       if (! no_update_flag && cookie) {
+        cookie_lock_t *lock = chxj_cookie_lock(r);
         chxj_update_cookie(r, cookie);
+        chxj_cookie_unlock(r, lock);
       }
     }
     DBG(r, "************************ name:[%s]", name);
@@ -811,7 +819,11 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
         case CHXJ_SPEC_Chtml_5_0:
         case CHXJ_SPEC_XHtml_Mobile_1_0:
         case CHXJ_SPEC_Jhtml:
+          {
+          cookie_lock_t *lock = chxj_cookie_lock(r);
           cookie = chxj_save_cookie(r);
+          chxj_cookie_unlock(r,lock);
+          }
           s_add_cookie_id_if_has_location_header(r, cookie);
           apr_table_unset(r->headers_out, "Set-Cookie");
           apr_table_unset(r->err_headers_out, "Set-Cookie");
@@ -1024,7 +1036,11 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
           case CHXJ_SPEC_Chtml_5_0:
           case CHXJ_SPEC_XHtml_Mobile_1_0:
           case CHXJ_SPEC_Jhtml:
+            {
+            cookie_lock_t *lock = chxj_cookie_lock(r);
             cookie = chxj_save_cookie(r);
+            chxj_cookie_unlock(r, lock);
+            }
             /*
              * Location Header Check to add cookie parameter.
              */
@@ -1216,6 +1232,7 @@ chxj_init_module(apr_pool_t *p,
                   server_rec *s)
 {
   void *user_data;
+  apr_status_t rv;
 
   SDBG(s, "start chxj_init_module()");
 
@@ -1237,6 +1254,12 @@ chxj_init_module(apr_pool_t *p,
 
   ap_add_version_component(p, CHXJ_VERSION_PREFIX CHXJ_VERSION);
 
+  if ((rv = apr_proc_mutex_create(&global_cookie_mutex, NULL,  APR_LOCK_FCNTL, s->process->pool)) != APR_SUCCESS) {
+    char errstr[255];
+    SERR(s, "%s:%d end chxj_init_module(). mutex create failure.(%d:%s)",APLOG_MARK, rv,apr_strerror(rv,errstr,255));
+    return HTTP_INTERNAL_SERVER_ERROR;
+  }
+
   SDBG(s, "end  chxj_init_module()");
 
   return OK;
@@ -1244,8 +1267,15 @@ chxj_init_module(apr_pool_t *p,
 
 
 static void 
-chxj_child_init(apr_pool_t* UNUSED(p), server_rec *UNUSED(s))
+chxj_child_init(apr_pool_t* UNUSED(p), server_rec *s)
 {
+  apr_status_t rv;
+  SDBG(s, "start chxj_child_init()");
+  if ((rv = apr_proc_mutex_child_init(&global_cookie_mutex, NULL, s->process->pool)) != APR_SUCCESS) {
+    char errstr[255];
+    SERR(s, "%s:%d ERROR end chxj_init_module(). mutex create failure.(%d:%s)", APLOG_MARK, rv,apr_strerror(rv,errstr,255));
+  }
+  SDBG(s, "end   chxj_child_init()");
 }
 
 

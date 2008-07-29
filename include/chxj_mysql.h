@@ -67,5 +67,9 @@ extern int chxj_delete_cookie_mysql(request_rec *r, mod_chxj_config *m, const ch
 extern int chxj_save_cookie_expire_mysql(request_rec *r, mod_chxj_config *m, const char *cookie_id);
 extern int chxj_delete_cookie_expire_mysql(request_rec *r, mod_chxj_config *m, const char *cookie_id);
 extern int chxj_cookie_expire_gc_mysql(request_rec *r, mod_chxj_config *m);
+
+/* lock for cookie */
+extern int chxj_cookie_lock_mysql(request_rec *r, mod_chxj_config *m);
+extern int chxj_cookie_unlock_mysql(request_rec *r, mod_chxj_config *UNUSED(m));
 #endif
 #endif

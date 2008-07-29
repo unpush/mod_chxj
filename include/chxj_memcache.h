@@ -46,5 +46,8 @@ extern int chxj_delete_cookie_memcache(request_rec *r, mod_chxj_config *m, const
 extern int chxj_save_cookie_expire_memcache(request_rec *r, mod_chxj_config *m, const char *cookie_id);
 extern int chxj_delete_cookie_expire_memcache(request_rec *r, mod_chxj_config *m, const char *cookie_id);
 extern int chxj_cookie_expire_gc_memcache(request_rec *r, mod_chxj_config *m);
+
+extern int chxj_cookie_lock_memcache(request_rec *r, mod_chxj_config *m);
+extern int chxj_cookie_unlock_memcache(request_rec *r, mod_chxj_config *UNUSED(m));
 #endif
 #endif

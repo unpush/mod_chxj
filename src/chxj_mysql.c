@@ -1081,6 +1081,61 @@ chxj_cookie_expire_gc_mysql(request_rec *r, mod_chxj_config *m)
   DBG(r, "end   chxj_cookie_expire_gc_mysql()");
   return CHXJ_TRUE;
 }
+
+int
+chxj_cookie_lock_mysql(request_rec *r, mod_chxj_config *m)
+{
+  MYSQL_RES *result;
+  char query[MAX_STRING_LEN];
+  DBG(r, "start chxj_cookie_lock_mysql()");
+  if (! chxj_open_mysql_handle(r, m)) {
+    ERR(r, "Cannot open mysql connection");
+    DBG(r, "end   chxj_save_cookie_expire_mysql()");
+    return CHXJ_FALSE;
+  }
+  if (!chxj_mysql_exist_cookie_table_expire(r, m)) {
+    DBG(r, "not found cookie table:[%s_expire]", m->mysql.tablename);
+    if (!chxj_mysql_create_cookie_expire_table(r, m)) {
+      ERR(r, "cannot create cookie table:[%s_expire]", m->mysql.tablename);
+      DBG(r, "end chxj_cookie_expire_gc_mysql()");
+      return CHXJ_FALSE;
+    }
+  }
+  apr_snprintf(query, sizeof(query)-1, "LOCK TABLES %s WRITE", m->mysql.tablename);
+  DBG(r, "query:[%s]", query);
+  if (mysql_query(connection.handle, query) != 0) {
+    chxj_mysql_rollback(r, m);
+    ERR(r, "MySQL WARN: %s: %s", mysql_error(connection.handle), r->uri);
+    return CHXJ_FALSE;
+  }
+
+  result = mysql_store_result(connection.handle);
+  if (result) mysql_free_result(result);
+
+  DBG(r, "end chxj_cookie_lock_mysql()");
+  return CHXJ_TRUE;
+}
+
+
+int
+chxj_cookie_unlock_mysql(request_rec *r, mod_chxj_config *m)
+{
+  char query[MAX_STRING_LEN];
+  DBG(r, "start chxj_cookie_unlock_mysql()[%x]", (unsigned long)r);
+  if (! chxj_open_mysql_handle(r, m)) {
+    ERR(r, "Cannot open mysql connection");
+    DBG(r, "end   chxj_save_cookie_expire_mysql()");
+    return CHXJ_FALSE;
+  }
+  apr_snprintf(query, sizeof(query)-1, "UNLOCK TABLES");
+  if (mysql_query(connection.handle, query) != 0) {
+    ERR(r, "MySQL WARN: %s: %s", mysql_error(connection.handle), r->uri);
+    DBG(r, "end chxj_cookie_unlock_mysql()");
+    return CHXJ_FALSE;
+  }
+  DBG(r, "end chxj_cookie_unlock_mysql()");
+  return CHXJ_TRUE;
+}
 #endif
 /*
  * vim:ts=2 et
