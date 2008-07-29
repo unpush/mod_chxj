@@ -532,6 +532,9 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp)
     DBG(r, "************************ name:[%s]", name);
   }
   r->args = result;
+  if (no_update_flag) {
+    apr_table_setn(r->headers_in, "X-Chxj-Cookie-No-Update", "true");
+  }
 
   DBG(r, "result r->args=[%s]", r->args);
   DBG(r, "end   chxj_convert_input_header()");
@@ -689,6 +692,9 @@ chxj_input_convert(
     DBG(r, "************************ name:[%s]", name);
   }
   *len = strlen(result);
+  if (no_update_flag) {
+    apr_table_setn(r->headers_in, "X-Chxj-Cookie-No-Update", "true");
+  }
 
   DBG(r, "AFTER input convert result = [%s]", result);
   DBG(r, "end chxj_input_convert()");

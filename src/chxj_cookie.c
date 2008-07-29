@@ -268,6 +268,10 @@ chxj_save_cookie(request_rec* r)
     DBG(r, "LAZY COOKIE save");
     cookie->cookie_id = apr_pstrdup(r->pool, old_cookie_id);
   }
+  else if (old_cookie_id && apr_table_get(r->headers_in, "X-Chxj-Cookie-No-Update")) {
+    DBG(r, "NO UPDATE MODE");
+    cookie->cookie_id = apr_pstrdup(r->pool, old_cookie_id);
+  }
   else {
     DBG(r, "NO LAZY COOKIE save");
     cookie->cookie_id = alloc_cookie_id(r);
