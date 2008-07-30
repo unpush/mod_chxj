@@ -1,3 +1,11 @@
+libapache2-mod-chxj (0.11.1-2) unstable; urgency=low
+
+  * Original Version.
+    - The correction of 0.11.10 is applied to 0.11.1-1.
+      (Requested by someone. thanks!)
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Thu, 31 Jul 2008 02:16:55 +0900
+
 libapache2-mod-chxj (0.11.1-1) unstable; urgency=low
 
   * Fixed bug.
