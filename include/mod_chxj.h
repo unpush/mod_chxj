@@ -389,6 +389,7 @@ module AP_MODULE_DECLARE_DATA chxj_module;
 
 #define DBG(X,args...)  chxj_log_rerror(APLOG_MARK,APLOG_DEBUG,0,(request_rec*)(X),##args)
 #define SDBG(X,Y)       chxj_log_error(APLOG_MARK,APLOG_DEBUG,0,(X),(Y))
+#define PDBG(X,args...)       ap_log_perror(APLOG_MARK,APLOG_DEBUG,0,(X),##args)
 #define ERR(X,args...)  chxj_log_rerror(APLOG_MARK,APLOG_ERR,0,(X), ##args)
 #define SERR(X,args...) chxj_log_error(APLOG_MARK,APLOG_ERR,0,(X),##args)
 #define WRN(rec,format,args...)  chxj_log_rerror(APLOG_MARK,APLOG_WARNING,0,(rec),(format), ##args)

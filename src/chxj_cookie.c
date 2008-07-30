@@ -115,7 +115,7 @@ chxj_save_cookie(request_rec* r)
   apr_pool_t          *pool;
 
 
-  DBG(r, "start chxj_save_cookie()");
+  DBG(r, "REQ[%X] start chxj_save_cookie()", (apr_size_t)r);
 
   apr_pool_create(&pool, r->pool);
   cookie = (cookie_t*)apr_palloc(pool, sizeof(cookie_t));
@@ -127,11 +127,11 @@ chxj_save_cookie(request_rec* r)
   dconf = chxj_get_module_config(r->per_dir_config, &chxj_module);
   entryp = chxj_apply_convrule(r, dconf->convrules);
   if (! entryp) {
-    DBG(r, "end chxj_save_cookie() no pattern");
+    DBG(r, "REQ[%X] end chxj_save_cookie() no pattern", (apr_size_t)r);
     return NULL;
   }
   if (! (entryp->action & CONVRULE_COOKIE_ON_BIT)) {
-    DBG(r, "end chxj_save_cookie() CookieOff");
+    DBG(r, "REQ[%X] end chxj_save_cookie() CookieOff", (apr_size_t)r);
     return NULL;
   }
 
@@ -144,8 +144,7 @@ chxj_save_cookie(request_rec* r)
 
   for (ii=0; ii<headers->nelts; ii++) {
     if (strcasecmp(hentryp[ii].key, "Set-Cookie") == 0) {
-      DBG(r, "=====================================");
-      DBG(r, "cookie=[%s:%s]", hentryp[ii].key, hentryp[ii].val);
+      DBG(r, "REQ[%X] cookie=[%s:%s]", (apr_size_t)r, hentryp[ii].key, hentryp[ii].val);
 
       char* key;
       char* val;
@@ -161,15 +160,12 @@ chxj_save_cookie(request_rec* r)
         if (strcasecmp(REFERER_COOKIE_KEY, key) == 0) has_refer++;
 
       }
-
       has_cookie = 1;
-      DBG(r, "=====================================");
     }
   }
   for (ii=0; ii<err_headers->nelts; ii++) {
     if (strcasecmp(err_hentryp[ii].key, "Set-Cookie") == 0) {
-      DBG(r, "=====================================");
-      DBG(r, "cookie=[%s:%s]", err_hentryp[ii].key, err_hentryp[ii].val);
+      DBG(r, "REQ[%X] err_cookie=[%s:%s]", (apr_size_t)r, err_hentryp[ii].key, err_hentryp[ii].val);
 
       char* key;
       char* val;
@@ -187,7 +183,6 @@ chxj_save_cookie(request_rec* r)
       }
 
       has_cookie = 1;
-      DBG(r, "=====================================");
     }
   }
   apr_table_unset(r->headers_out, "Set-Cookie");
@@ -207,7 +202,7 @@ chxj_save_cookie(request_rec* r)
       refer_string = apr_pstrcat(pool, refer_string, "?", r->args, NULL);
     }
     apr_table_setn(new_cookie_table, REFERER_COOKIE_KEY, apr_pstrdup(pool, refer_string));
-    DBG(r, "ADD REFER[%s]", refer_string);
+    DBG(r, "REQ[%X] ADD REFER[%s]", (apr_size_t)r, refer_string);
     has_cookie++;
   }
 
@@ -223,18 +218,18 @@ chxj_save_cookie(request_rec* r)
       for (ii=0; ii<old_cookie->cookie_headers->nelts; ii++) {
         if (hentryp && apr_table_get(new_cookie_table, hentryp[ii].key) == NULL) {
           apr_table_add(new_cookie_table, apr_pstrdup(pool, hentryp[ii].key), apr_pstrdup(pool, hentryp[ii].val));
-          has_cookie = 1;
         }
       }
-      chxj_delete_cookie(r,        old_cookie_id);
-      chxj_delete_cookie_expire(r, old_cookie_id);
+      if (has_cookie) {
+        chxj_delete_cookie(r,        old_cookie_id);
+        chxj_delete_cookie_expire(r, old_cookie_id);
+      }
     }
   }
 
   if (! has_cookie) {
-    DBG(r, "no cookie");
-    DBG(r, "end chxj_save_cookie()");
-    return NULL;
+    DBG(r, "REQ[%X] end chxj_save_cookie() (no cookie)",(apr_size_t)r);
+    return old_cookie;
   }
 
   /*
@@ -266,25 +261,25 @@ chxj_save_cookie(request_rec* r)
   }
 
   if (old_cookie_id && IS_COOKIE_LAZY(dconf)) {
-    DBG(r, "LAZY COOKIE save");
+    DBG(r, "REQ[%X] LAZY COOKIE save",(apr_size_t)r);
     cookie->cookie_id = apr_pstrdup(r->pool, old_cookie_id);
   }
   else if (old_cookie_id && apr_table_get(r->headers_in, "X-Chxj-Cookie-No-Update")) {
-    DBG(r, "NO UPDATE MODE");
+    DBG(r, "REQ[%X] NO UPDATE MODE",(apr_size_t)r);
     cookie->cookie_id = apr_pstrdup(r->pool, old_cookie_id);
   }
   else {
-    DBG(r, "NO LAZY COOKIE save");
+    DBG(r, "REQ[%X] NO LAZY COOKIE save",(apr_size_t)r);
     cookie->cookie_id = alloc_cookie_id(r);
   }
 
-DBG(r, "TYPE:[%d]", dconf->cookie_store_type);
+DBG(r, "REQ[%X] TYPE:[%d]", (apr_size_t)r, dconf->cookie_store_type);
   {
     int done_proc = 0;
 #if defined(USE_MYSQL_COOKIE)
     if (IS_COOKIE_STORE_MYSQL(dconf->cookie_store_type)) {
       if (! chxj_save_cookie_mysql(r, dconf, cookie->cookie_id, store_string)) {
-        ERR(r, "faild: chxj_save_cookie_mysql() cookie_id:[%s]", cookie->cookie_id);
+        ERR(r, "REQ[%X] faild: chxj_save_cookie_mysql() cookie_id:[%s]", (apr_size_t)r, cookie->cookie_id);
         goto on_error;
       }
       done_proc = 1;
@@ -293,7 +288,7 @@ DBG(r, "TYPE:[%d]", dconf->cookie_store_type);
 #if defined(USE_MEMCACHE_COOKIE)
     if (IS_COOKIE_STORE_MEMCACHE(dconf->cookie_store_type)) {
       if (! chxj_save_cookie_memcache(r, dconf, cookie->cookie_id, store_string)) {
-        ERR(r, "failed: chxj_save_cookie_memcache() cookie_id:[%s]", cookie->cookie_id);
+        ERR(r, "REQ[%X] failed: chxj_save_cookie_memcache() cookie_id:[%s]", (apr_size_t)r, cookie->cookie_id);
         goto on_error;
       }
       done_proc = 1;
@@ -301,7 +296,7 @@ DBG(r, "TYPE:[%d]", dconf->cookie_store_type);
 #endif
     if (IS_COOKIE_STORE_DBM(dconf->cookie_store_type) || ! done_proc) {
       if (! chxj_save_cookie_dbm(r, dconf, cookie->cookie_id, store_string)) {
-        ERR(r, "failed: chxj_save_cookie_dbm() cookie_id:[%s]", cookie->cookie_id);
+        ERR(r, "REQ[%X] failed: chxj_save_cookie_dbm() cookie_id:[%s]", (apr_size_t)r, cookie->cookie_id);
         goto on_error;
       }
     }
@@ -332,9 +327,9 @@ chxj_update_cookie(request_rec* r, cookie_t* old_cookie)
   cookie_t*           cookie;
 
 
-  DBG(r, "start chxj_update_cookie()");
+  DBG(r, "REQ[%X] start chxj_update_cookie()",(apr_size_t)r);
   if (!old_cookie || ! old_cookie->cookie_headers || ! old_cookie->cookie_id) {
-    DBG(r, "end chxj_update_cookie() (old_cookie is null)");
+    DBG(r, "REQ[%X] end chxj_update_cookie() (old_cookie is null)", (apr_size_t)r);
     return  NULL;
   }
 
@@ -345,11 +340,11 @@ chxj_update_cookie(request_rec* r, cookie_t* old_cookie)
   dconf = chxj_get_module_config(r->per_dir_config, &chxj_module);
   entryp = chxj_apply_convrule(r, dconf->convrules);
   if (! entryp) {
-    DBG(r, "end chxj_update_cookie() no pattern");
+    DBG(r, "REQ[%X] end chxj_update_cookie() no pattern", (apr_size_t)r);
     return NULL;
   }
   if (! (entryp->action & CONVRULE_COOKIE_ON_BIT)) {
-    DBG(r, "end chxj_update_cookie() CookieOff");
+    DBG(r, "REQ[%X] end chxj_update_cookie() CookieOff", (apr_size_t)r);
     return NULL;
   }
 
@@ -362,11 +357,11 @@ chxj_update_cookie(request_rec* r, cookie_t* old_cookie)
   chxj_delete_cookie_expire(r, old_cookie->cookie_id);
 
   if (IS_COOKIE_LAZY(dconf)) {
-    DBG(r, "LAZY MODE");
+    DBG(r, "REQ[%X] LAZY MODE",(apr_size_t)r);
     cookie->cookie_id = apr_pstrdup(r->pool, old_cookie->cookie_id);
   }
   else {
-    DBG(r, "NO LAZY MODE");
+    DBG(r, "REQ[%X] NO LAZY MODE",(apr_size_t)r);
     cookie->cookie_id = alloc_cookie_id(r);
   }
 
@@ -381,7 +376,7 @@ chxj_update_cookie(request_rec* r, cookie_t* old_cookie)
                                "\n",
                                NULL);
 
-    DBG(r, "OLD COOKIE VALUE=[%s][%s]", hentryp[ii].key, hentryp[ii].val);
+    DBG(r, "REQ[%X] OLD COOKIE VALUE=[%s][%s]", (apr_size_t)r, hentryp[ii].key, hentryp[ii].val);
     store_string = apr_pstrcat(r->pool, 
                                store_string, 
                                hentryp[ii].key, 
@@ -395,7 +390,7 @@ chxj_update_cookie(request_rec* r, cookie_t* old_cookie)
 #if defined(USE_MYSQL_COOKIE)
     if (IS_COOKIE_STORE_MYSQL(dconf->cookie_store_type)) {
       if (!chxj_update_cookie_mysql(r, dconf, cookie->cookie_id, store_string)) {
-        ERR(r, "failed: chxj_update_cookie_mysql() cookie_id:[%s]", cookie->cookie_id);
+        ERR(r, "REQ[%X] failed: chxj_update_cookie_mysql() cookie_id:[%s]", (apr_size_t)r, cookie->cookie_id);
         goto on_error;
       }
       done_proc = 1;
@@ -405,7 +400,7 @@ chxj_update_cookie(request_rec* r, cookie_t* old_cookie)
 #if defined(USE_MEMCACHE_COOKIE)
     if (IS_COOKIE_STORE_MEMCACHE(dconf->cookie_store_type)) {
       if (! chxj_update_cookie_memcache(r, dconf, cookie->cookie_id, store_string)) {
-        ERR(r, "failed: chxj_update_cookie_memcache() cookie_id:[%s]", cookie->cookie_id);
+        ERR(r, "REQ[%X] failed: chxj_update_cookie_memcache() cookie_id:[%s]", (apr_size_t)r, cookie->cookie_id);
         goto on_error;
       }
       done_proc = 1;
@@ -413,7 +408,7 @@ chxj_update_cookie(request_rec* r, cookie_t* old_cookie)
 #endif
     if (!done_proc || IS_COOKIE_STORE_DBM(dconf->cookie_store_type)) {
       if (! chxj_update_cookie_dbm(r, dconf, cookie->cookie_id, store_string)) {
-        ERR(r, "failed: chxj_update_cookie_dbm() cookie_id:[%s]", cookie->cookie_id);
+        ERR(r, "REQ[%X] failed: chxj_update_cookie_dbm() cookie_id:[%s]", (apr_size_t)r, cookie->cookie_id);
         goto on_error;
       }
     }
@@ -425,7 +420,7 @@ chxj_update_cookie(request_rec* r, cookie_t* old_cookie)
 
 
 on_error:
-  DBG(r, "end   chxj_update_cookie()");
+  DBG(r, "REQ[%X] end   chxj_update_cookie()", (apr_size_t)r);
   return cookie;
 }
 
@@ -449,11 +444,7 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
   char                    *header_cookie;
   apr_pool_t              *pool;
 
-  DBG(r, "========================================================");
-  DBG(r, "========================================================");
-  DBG(r, "========================================================");
-  DBG(r, "========================================================");
-  DBG(r, "start chxj_load_cookie() cookie_id=[%s]", cookie_id);
+  DBG(r, "REQ[%X] start chxj_load_cookie() cookie_id=[%s]", (apr_size_t)r, cookie_id);
   chxj_cookie_expire_gc(r);
 
   apr_pool_create(&pool, r->pool);
@@ -465,11 +456,11 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
   dconf = chxj_get_module_config(r->per_dir_config, &chxj_module);
   entryp = chxj_apply_convrule(r, dconf->convrules);
   if (! entryp) {
-    DBG(r, "end chxj_load_cookie() no pattern");
+    DBG(r, "REQ[%X] end chxj_load_cookie() no pattern",(apr_size_t)r);
     goto on_error0;
   }
   if (! (entryp->action & CONVRULE_COOKIE_ON_BIT)) {
-    DBG(r, "end chxj_load_cookie() CookieOff");
+    DBG(r, "REQ[%X] end chxj_load_cookie() CookieOff",(apr_size_t)r);
     goto on_error0;
   }
   load_cookie_table = apr_table_make(pool, 1);
@@ -479,7 +470,7 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
 #if defined(USE_MYSQL_COOKIE)
     if (IS_COOKIE_STORE_MYSQL(dconf->cookie_store_type)) {
       if (! (load_string = chxj_load_cookie_mysql(r, dconf, cookie->cookie_id))) {
-        ERR(r, "failed: chxj_load_cookie_mysql() cookie_id:[%s]", cookie_id);
+        ERR(r, "REQ[%X] failed: chxj_load_cookie_mysql() cookie_id:[%s]", (apr_size_t)r, cookie_id);
         goto on_error0;
       }
       done_proc = 1;
@@ -488,7 +479,7 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
 #if defined(USE_MEMCACHE_COOKIE)
     if (IS_COOKIE_STORE_MEMCACHE(dconf->cookie_store_type)) {
       if (! (load_string = chxj_load_cookie_memcache(r, dconf, cookie->cookie_id))) {
-        ERR(r, "failed: chxj_load_cookie_memcache() cookie_id:[%s]", cookie_id);
+        ERR(r, "REQ[%X] failed: chxj_load_cookie_memcache() cookie_id:[%s]", (apr_size_t)r, cookie_id);
         goto on_error0;
       }
       done_proc = 1;
@@ -496,14 +487,14 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
 #endif
     if (!done_proc || IS_COOKIE_STORE_DBM(dconf->cookie_store_type)) {
       if (! (load_string = chxj_load_cookie_dbm(r, dconf, cookie->cookie_id))) {
-        ERR(r, "failed: chxj_load_cookie_dbm() cookie_id:[%s]", cookie_id);
+        ERR(r, "REQ[%X] failed: chxj_load_cookie_dbm() cookie_id:[%s]", (apr_size_t)r, cookie_id);
         goto on_error0;
       }
     }
   }
 
   if (load_string) {
-    DBG(r, "load_string=[%s]", load_string);
+    DBG(r, "REQ[%X] load_string=[%s]", (apr_size_t)r, load_string);
     header_cookie = apr_palloc(pool, 1);
     header_cookie[0] = 0;
     for (;;) {
@@ -512,7 +503,7 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
       load_string = NULL;
       if (!pair) break;
 
-      DBG(r, "Cookie:[%s]", pair);
+      DBG(r, "REQ[%X] Cookie:[%s]", (apr_size_t)r, pair);
       char* tmp_pair;
 
       tmp_pair = apr_pstrdup(pool, pair);
@@ -521,7 +512,7 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
         key = tmp_pair;
         *val++ = 0;
         apr_table_add(load_cookie_table, apr_pstrdup(pool, key), apr_pstrdup(pool, val));
-        DBG(r, "ADD key:[%s] val:[%s]", key, val);
+        DBG(r, "REQ[%X] ADD key:[%s] val:[%s]", (apr_size_t)r, key, val);
       }
       tmp_pair = apr_pstrdup(pool, pair);
       tmp_sem = strchr(tmp_pair, ';'); 
@@ -536,7 +527,7 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
       }
     }
     if (strlen(header_cookie)) {
-      DBG(r, "ADD COOKIE to REQUEST HEADER:[%s]", header_cookie);
+      DBG(r, "REQ[%X] ADD COOKIE to REQUEST HEADER:[%s]", (apr_size_t)r, header_cookie);
       apr_table_add(r->headers_in, apr_pstrdup(pool, "Cookie"), apr_pstrdup(pool, header_cookie));
     }
   
@@ -554,22 +545,14 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
     apr_table_setn(r->headers_in, apr_pstrdup(pool, "CHXJ_COOKIE_ID"), apr_pstrdup(pool, cookie->cookie_id));
   }
 
-  DBG(r, "end   chxj_load_cookie()");
-  DBG(r, "========================================================");
-  DBG(r, "========================================================");
-  DBG(r, "========================================================");
-  DBG(r, "========================================================");
+  DBG(r, "REQ[%X] end   chxj_load_cookie()",(apr_size_t)r);
 
   return cookie;
 
 
 on_error0:
 
-  DBG(r, "end   chxj_load_cookie()");
-  DBG(r, "========================================================");
-  DBG(r, "========================================================");
-  DBG(r, "========================================================");
-  DBG(r, "========================================================");
+  DBG(r, "REQ[%X] end   chxj_load_cookie()",(apr_size_t)r);
   return NULL;
 }
 
@@ -863,19 +846,19 @@ s_cut_until_end_hostname(request_rec* r, char* value)
 
 
 void
-chxj_delete_cookie(request_rec *r, const char *cookie_id)
+__chxj_delete_cookie(request_rec *r, const char *cookie_id, const char *__filename__, int __line__)
 {
   int done_proc = 0;
   mod_chxj_config *dconf;
 
-  DBG(r, "start chxj_delete_cookie()");
+  DBG(r, "REQ[%X] start chxj_delete_cookie() call from %s:%d", (apr_size_t)r, __filename__,__line__);
   dconf = chxj_get_module_config(r->per_dir_config, &chxj_module);
 
 #if defined(USE_MYSQL_COOKIE)
   if (IS_COOKIE_STORE_MYSQL(dconf->cookie_store_type)) {
     if (! chxj_delete_cookie_mysql(r, dconf, cookie_id)) {
-      ERR(r, "failed: chxj_delete_cookie_mysql() cookie_id:[%s]", cookie_id);
-      DBG(r, "end   chxj_delete_cookie()");
+      ERR(r, "REQ[%X] failed: chxj_delete_cookie_mysql() cookie_id:[%s]", (apr_size_t)r, cookie_id);
+      DBG(r, "REQ[%X] end   chxj_delete_cookie() call from %s:%d ",(apr_size_t)r, __filename__,__line__);
       return;
     }
     done_proc = 1;
@@ -885,8 +868,8 @@ chxj_delete_cookie(request_rec *r, const char *cookie_id)
 #if defined(USE_MEMCACHE_COOKIE)
   if (IS_COOKIE_STORE_MEMCACHE(dconf->cookie_store_type)) {
     if (! chxj_delete_cookie_memcache(r, dconf, cookie_id)) {
-      ERR(r, "failed: chxj_delete_cookie_memcache() cookie_id:[%s]", cookie_id);
-      DBG(r, "end   chxj_delete_cookie()");
+      ERR(r, "REQ[%X] failed: chxj_delete_cookie_memcache() cookie_id:[%s]", (apr_size_t)r, cookie_id);
+      DBG(r, "REQ[%X] end   chxj_delete_cookie() call from %s:%d",(apr_size_t)r,__filename__,__line__);
       return;
     }
     done_proc = 1;
@@ -894,13 +877,13 @@ chxj_delete_cookie(request_rec *r, const char *cookie_id)
 #endif
   if (!done_proc || IS_COOKIE_STORE_DBM(dconf->cookie_store_type)) {
     if (! chxj_delete_cookie_dbm(r, dconf, cookie_id)) {
-      ERR(r, "failed: chxj_delete_cookie_dbm() cookie_id:[%s]", cookie_id);
-      DBG(r, "end   chxj_delete_cookie()");
+      ERR(r, "REQ[%X] failed: chxj_delete_cookie_dbm() cookie_id:[%s]", (apr_size_t)r, cookie_id);
+      DBG(r, "REQ[%X] end   chxj_delete_cookie() call from %s:%d",(apr_size_t)r,__filename__,__line__);
       return;
     }
   }
 
-  DBG(r, "end   chxj_delete_cookie()");
+  DBG(r, "REQ[%X] end   chxj_delete_cookie() call from %s:%d",(apr_size_t)r, __filename__,__line__);
 }
 
 

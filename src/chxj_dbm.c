@@ -355,11 +355,11 @@ chxj_load_cookie_dbm(request_rec *r, mod_chxj_config *m, const char *cookie_id)
   apr_datum_t             dbmval;
   apr_datum_t             dbmkey;
 
-  DBG(r, "start chxj_load_cookie_dbm() cookie_id:[%s]", cookie_id);
+  DBG(r, "REQ[%X] start chxj_load_cookie_dbm() cookie_id:[%s]", (apr_size_t)r, cookie_id);
   file = chxj_cookie_db_lock(r);
   if (! file) {
     ERR(r, "mod_chxj: Can't lock cookie db");
-    DBG(r, "end   chxj_load_cookie_dbm() cookie_id:[%s]", cookie_id);
+    DBG(r, "REQ[%X] end   chxj_load_cookie_dbm() cookie_id:[%s]", (apr_size_t)r, cookie_id);
     return NULL;
   }
 
@@ -371,11 +371,13 @@ chxj_load_cookie_dbm(request_rec *r, mod_chxj_config *m, const char *cookie_id)
                            r->pool);
   if (retval != APR_SUCCESS) {
     ERR(r,
+         "%s:%d"
          "could not open dbm (type %s) auth file: %s",
          "default",
+         __FILE__,__LINE__,
          chxj_cookie_db_name_create(r, m->cookie_db_dir));
     chxj_cookie_db_unlock(r, file);
-    DBG(r, "end   chxj_load_cookie_dbm() cookie_id:[%s]", cookie_id);
+    DBG(r, "REQ[%X] end   chxj_load_cookie_dbm() cookie_id:[%s]", (apr_size_t)r, cookie_id);
     return NULL;
   }
 
@@ -389,11 +391,13 @@ chxj_load_cookie_dbm(request_rec *r, mod_chxj_config *m, const char *cookie_id)
     retval = apr_dbm_fetch(f, dbmkey, &dbmval);
     if (retval != APR_SUCCESS) {
       ERR(r,
+           "%s:%d"
            "could not fetch dbm (type %s) auth file: %s", "default",
+           __FILE__,__LINE__,
            chxj_cookie_db_name_create(r, m->cookie_db_dir));
       apr_dbm_close(f);
       chxj_cookie_db_unlock(r, file);
-      DBG(r, "end   chxj_load_cookie_dbm() cookie_id:[%s]", cookie_id);
+      DBG(r, "REQ[%X] end   chxj_load_cookie_dbm() cookie_id:[%s]", (apr_size_t)r, cookie_id);
       return NULL;
     }
     load_string = apr_palloc(r->pool, dbmval.dsize+1);
@@ -403,7 +407,7 @@ chxj_load_cookie_dbm(request_rec *r, mod_chxj_config *m, const char *cookie_id)
   }
   apr_dbm_close(f);
   chxj_cookie_db_unlock(r, file);
-  DBG(r, "end   chxj_load_cookie_dbm() cookie_id:[%s]", cookie_id);
+  DBG(r, "REQ[%X] end   chxj_load_cookie_dbm() cookie_id:[%s] load_string:[%s]", (apr_size_t)r, cookie_id, load_string);
   return load_string;
 }
 

@@ -80,7 +80,8 @@ extern void chxj_cookie_db_unlock(
   request_rec*            r, 
   apr_file_t*             file);
 
-extern void chxj_delete_cookie(request_rec *r, const char *cookie_id);
+#define chxj_delete_cookie(X,Y) __chxj_delete_cookie(X,Y,__FILE__,__LINE__)
+extern void __chxj_delete_cookie(request_rec *r, const char *cookie_id, const char *__filename__, int __line__);
 
 extern char* chxj_cookie_db_name_create(
   request_rec*            r, 
