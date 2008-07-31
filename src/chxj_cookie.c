@@ -150,15 +150,16 @@ chxj_save_cookie(request_rec* r)
       char* val;
       char* buff;
 
-
-      buff = apr_pstrdup(pool, hentryp[ii].val);
-      val = strchr(buff, '=');
-      if (val) {
-        key = buff;
-        *val++ = 0;
-        apr_table_add(new_cookie_table, apr_pstrdup(pool, key), apr_pstrdup(pool, val));
-        if (strcasecmp(REFERER_COOKIE_KEY, key) == 0) has_refer++;
-
+      char *pair = apr_psprintf(pool, "%s:%s", hentryp[ii].key, hentryp[ii].val);
+      if (check_valid_cookie_attribute(r, pair)) {
+        buff = apr_pstrdup(pool, hentryp[ii].val);
+        val = strchr(buff, '=');
+        if (val) {
+          key = buff;
+          *val++ = 0;
+          apr_table_set(new_cookie_table, apr_pstrdup(pool, key), apr_pstrdup(pool, val));
+          if (strcasecmp(REFERER_COOKIE_KEY, key) == 0) has_refer++;
+        }
       }
       has_cookie = 1;
     }
@@ -177,7 +178,7 @@ chxj_save_cookie(request_rec* r)
       if (val) {
         key = buff;
         *val++ = 0;
-        apr_table_add(new_cookie_table, apr_pstrdup(pool, key), apr_pstrdup(pool, val));
+        apr_table_set(new_cookie_table, apr_pstrdup(pool, key), apr_pstrdup(pool, val));
         if (strcasecmp(REFERER_COOKIE_KEY, key) == 0) has_refer++;
 
       }
@@ -511,8 +512,13 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
       if (val) {
         key = tmp_pair;
         *val++ = 0;
-        apr_table_add(load_cookie_table, apr_pstrdup(pool, key), apr_pstrdup(pool, val));
-        DBG(r, "REQ[%X] ADD key:[%s] val:[%s]", (apr_size_t)r, key, val);
+        if (! apr_table_get(load_cookie_table, key)) {
+          apr_table_add(load_cookie_table, apr_pstrdup(pool, key), apr_pstrdup(pool, val));
+          DBG(r, "REQ[%X] ADD key:[%s] val:[%s]", (apr_size_t)r, key, val);
+        }
+        else {
+          continue;
+        }
       }
       tmp_pair = apr_pstrdup(pool, pair);
       tmp_sem = strchr(tmp_pair, ';'); 

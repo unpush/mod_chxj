@@ -228,13 +228,13 @@ s_setup_request(serf_request_t           *request,
   apr_table_entry_t  *hentryp = (apr_table_entry_t*)headers->elts;
   for (ii=headers->nelts-1; ii>=0; ii--) {
     serf_bucket_headers_setc(hdrs_bkt, hentryp[ii].key, hentryp[ii].val);
-    DBG(ctx->r, "key:[%s], val:[%s]", hentryp[ii].key, hentryp[ii].val);
+    DBG(ctx->r, "REQ[%X] key:[%s], val:[%s]", (apr_size_t)ctx->r, hentryp[ii].key, hentryp[ii].val);
   }
   if (ctx->post_data) {
     serf_bucket_headers_setc(hdrs_bkt, "X-Chxj-Forward", "Done");
     serf_bucket_headers_setc(hdrs_bkt, "X-Chxj-Content-Length", apr_psprintf(r->pool, "%d", ctx->post_data_len));
   }
-  DBG(ctx->r, "Content-Length:[%s]", serf_bucket_headers_get(hdrs_bkt, "Content-Length"));
+  DBG(ctx->r, "REQ[%X] Content-Length:[%s]", (apr_size_t)r, serf_bucket_headers_get(hdrs_bkt, "Content-Length"));
 
   apr_atomic_inc32(&(ctx->requests_outstanding));
   if (ctx->acceptor_ctx->ssl_flag) {

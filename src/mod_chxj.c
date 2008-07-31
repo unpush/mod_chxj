@@ -446,7 +446,7 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp)
   }
 
   buff = apr_pstrdup(r->pool, r->args);
-  DBG(r, "r->args=[%s]", buff);
+  DBG(r, "REQ[%X] r->args=[%s]", (apr_size_t)r, buff);
 
   /* _chxj_dmy */
   /* _chxj_c_ */
@@ -531,16 +531,26 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp)
       cookie = chxj_load_cookie(r, value);
       DBG(r, "REQ[%X] call end   chxj_load_cookie()",(apr_size_t)r);
       if (! no_update_flag && cookie) {
-        chxj_update_cookie(r, cookie);
+        cookie = chxj_update_cookie(r, cookie);
       }
       chxj_cookie_unlock(r, lock);
+      if (cookie && cookie->cookie_id) {
+        if (strlen(result) != 0)
+          result = apr_pstrcat(r->pool, result, "&", NULL);
+        result = apr_pstrcat(r->pool, result, name, "=", cookie->cookie_id, NULL);
+      }
+    }
+    else
+    if (strcasecmp(name, CHXJ_COOKIE_NOUPDATE_PARAM) == 0) {
+      if (strlen(result) != 0)
+        result = apr_pstrcat(r->pool, result, "&", NULL);
+      result = apr_pstrcat(r->pool, result, name, "=", value, NULL);
     }
     DBG(r, "************************ name:[%s]", name);
   }
+  apr_table_setn(r->headers_in, "X-Chxj-Cookie-No-Update", "true");
+  result = apr_pstrcat(r->pool, result, "&_chxj_nc=true", NULL);
   r->args = result;
-  if (no_update_flag) {
-    apr_table_setn(r->headers_in, "X-Chxj-Cookie-No-Update", "true");
-  }
 
   DBG(r, "REQ[%X] result r->args=[%s]", (apr_size_t)r, r->args);
   DBG(r, "REQ[%X] end   chxj_convert_input_header()",(apr_size_t)r);
@@ -693,16 +703,26 @@ chxj_input_convert(
       cookie = chxj_load_cookie(r, value);
       DBG(r, "REQ[%X] call end   chxj_load_cookie()",(apr_size_t)r);
       if (! no_update_flag && cookie) {
-        chxj_update_cookie(r, cookie);
+        cookie = chxj_update_cookie(r, cookie);
       }
       chxj_cookie_unlock(r, lock);
+      if (cookie && cookie->cookie_id) {
+        if (strlen(result) != 0)
+          result = apr_pstrcat(r->pool, result, "&", NULL);
+        result = apr_pstrcat(r->pool, result, name, "=", cookie->cookie_id, NULL);
+      }
+    }
+    else
+    if (strcasecmp(name, CHXJ_COOKIE_NOUPDATE_PARAM) == 0) {
+      if (strlen(result) != 0)
+        result = apr_pstrcat(r->pool, result, "&", NULL);
+      result = apr_pstrcat(r->pool, result, name, "=", value, NULL);
     }
     DBG(r, "REQ[%X] ************************ name:[%s]", (apr_size_t)r, name);
   }
   *len = strlen(result);
-  if (no_update_flag) {
-    apr_table_setn(r->headers_in, "X-Chxj-Cookie-No-Update", "true");
-  }
+  apr_table_setn(r->headers_in, "X-Chxj-Cookie-No-Update", "true");
+  result = apr_pstrcat(r->pool, result, "&_chxj_nc=true", NULL);
 
   DBG(r, "REQ[%X] AFTER input convert result = [%s]", (apr_size_t)r, result);
   DBG(r, "REQ[%X] end chxj_input_convert()", (apr_size_t)r);
@@ -1085,6 +1105,7 @@ s_add_cookie_id_if_has_location_header(request_rec *r, cookie_t *cookie)
     location_header = chxj_add_cookie_parameter(r,
                                                 location_header,
                                                 cookie);
+    location_header = apr_pstrcat(r->pool, location_header, "&_chxj_nc=true");
     apr_table_unset(r->headers_out, "Location");
     apr_table_add(r->headers_out, apr_pstrdup(r->pool, "Location"), location_header);
     DBG(r, "Location Header=[%s]", location_header);
@@ -1147,6 +1168,7 @@ chxj_input_handler(request_rec *r)
    */
   if (post_data_len > 0) {
     post_data = chxj_input_convert(r, (const char**)&post_data, (apr_size_t*)&post_data_len, entryp);
+    post_data = apr_pstrcat(r->pool, post_data, "&_chxj_nc=true", NULL);
     DBG(r, "REQ[%X] (in:exchange)POSTDATA:[%s]", (apr_size_t)r, post_data);
   }
 
@@ -1301,7 +1323,7 @@ chxj_translate_name(request_rec *r)
 {
   DBG(r, " /*===========================================");
   DBG(r, " ");
-  DBG(r, " REQ[%X] START REQUEST", (apr_size_t)r);
+  DBG(r, " REQ[%X] START REQUEST(uri:[%s])", (apr_size_t)r, r->unparsed_uri);
   DBG(r, " ");
   DBG(r, " *===========================================*/");
   return chxj_trans_name(r);
