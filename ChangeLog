@@ -1,3 +1,17 @@
+libapache2-mod-chxj (0.11.14-1) unstable; urgency=low
+
+  * Bug Fix.
+    - The cookie might be cleared when there is no ChxjCookieLazyMode in true.
+    - Used lock(merge from 0.12.x).
+    - Removed the port number of the host header.
+    - Load and save are locked by a set.
+    - operation is abnormal when redirecting it with .htacess.
+  * Added Features.
+    - QUERY_STRING of the action attribute changes to return at POST.
+    - It is made to succeed the session even if it INTERNAL redirects it.
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Fri,  1 Aug 2008 20:07:23 +0900
+
 libapache2-mod-chxj (0.11.13-1) unstable; urgency=low
 
   * Fixed Bug.

@@ -96,19 +96,19 @@
 #define PACKAGE_NAME "mod_chxj"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "mod_chxj 0.11.13-1"
+#define PACKAGE_STRING "mod_chxj 0.11.14-1"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "mod_chxj"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "0.11.13-1"
+#define PACKAGE_VERSION "0.11.14-1"
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
 
 /* Version number of package */
-#define VERSION "0.11.13-1"
+#define VERSION "0.11.14-1"
 
 /* Define to empty if `const' does not conform to ANSI C. */
 /* #undef const */
