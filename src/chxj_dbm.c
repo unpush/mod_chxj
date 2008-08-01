@@ -373,8 +373,8 @@ chxj_load_cookie_dbm(request_rec *r, mod_chxj_config *m, const char *cookie_id)
     ERR(r,
          "%s:%d"
          "could not open dbm (type %s) auth file: %s",
-         "default",
          __FILE__,__LINE__,
+         "default",
          chxj_cookie_db_name_create(r, m->cookie_db_dir));
     chxj_cookie_db_unlock(r, file);
     DBG(r, "REQ[%X] end   chxj_load_cookie_dbm() cookie_id:[%s]", (apr_size_t)r, cookie_id);
@@ -392,8 +392,9 @@ chxj_load_cookie_dbm(request_rec *r, mod_chxj_config *m, const char *cookie_id)
     if (retval != APR_SUCCESS) {
       ERR(r,
            "%s:%d"
-           "could not fetch dbm (type %s) auth file: %s", "default",
+           "could not fetch dbm (type %s) auth file: %s",
            __FILE__,__LINE__,
+           "default",
            chxj_cookie_db_name_create(r, m->cookie_db_dir));
       apr_dbm_close(f);
       chxj_cookie_db_unlock(r, file);

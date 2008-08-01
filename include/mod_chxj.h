@@ -413,6 +413,9 @@ extern char* chxj_node_exchange(
 
 #define IMAGE_CACHE_LIMIT_FMT_LEN  (20)
 
+#define CHXJ_QUERY_STRING_PARAM_PREFIX "_chxj_qs_"
+#define CHXJ_QUERY_STRING_PARAM_PREFIX_ENC "%5Fchxj%5Fqs%5F"
+
 
 #if HAVE_MALLOC == 0
 extern void *rpl_malloc(size_t n);

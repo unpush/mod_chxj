@@ -603,7 +603,7 @@ qs_get_parse_attr(Doc* doc, Node* tag, request_rec* r)
 
 
 char *
-chxj_form_action_to_hidden_tag(apr_pool_t *pool, const char *str, int xmlFlag)
+chxj_form_action_to_hidden_tag(apr_pool_t *pool, const char *str, int xmlFlag, int post)
 {
   char *s = apr_pstrdup(pool, str);
   s = strchr(s, '?');
@@ -623,7 +623,13 @@ chxj_form_action_to_hidden_tag(apr_pool_t *pool, const char *str, int xmlFlag)
       val = apr_strtok(NULL, "=", &pstat2);
       if (!val) val = "";
     }
-    char *tmp = apr_psprintf(pool, "<input type=\"hidden\" name=\"%s\" value=\"%s\"%s>", key, chxj_url_decode(pool, val), (xmlFlag == 1) ? " /" : "");
+    char *tmp = NULL;
+    if (! post || strcasecmp(key, "_chxj_cc") == 0 || strcasecmp(key, "_chxj_nc") == 0) {
+      tmp = apr_psprintf(pool, "<input type=\"hidden\" name=\"%s\" value=\"%s\"%s>", key, chxj_url_decode(pool, val), (xmlFlag == 1) ? " /" : "");
+    }
+    else {
+      tmp = apr_psprintf(pool, "<input type=\"hidden\" name=\"_chxj_qs_%s\" value=\"%s\"%s>", key, chxj_url_decode(pool, val), (xmlFlag == 1) ? " /" : "");
+    }
     if (result) {
       result = apr_pstrcat(pool, result, tmp, NULL);
     }

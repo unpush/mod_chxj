@@ -1247,8 +1247,10 @@ s_xhtml_1_0_start_form_tag(void *pdoc, Node *node)
   request_rec *r     = doc->r;
   Attr        *attr;
   char        *new_hidden_tag = NULL;
+  char        *attr_action = NULL;
+  char        *attr_method = NULL;
+  char        *attr_name = NULL;
 
-  W_L("<form");
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
   /*--------------------------------------------------------------------------*/
@@ -1258,30 +1260,43 @@ s_xhtml_1_0_start_form_tag(void *pdoc, Node *node)
     char *name = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
     if (STRCASEEQ('a','A',"action",name)) {
-      value = chxj_encoding_parameter(r, value);
-      value = chxj_add_cookie_parameter(r, value, xhtml->cookie);
-      char *q = strchr(value, '?');
-      if (q) {
-        new_hidden_tag = chxj_form_action_to_hidden_tag(doc->pool, value, 1);
-        *q = 0;
-      }
-      W_L(" action=\"");
-      W_V(value);
-      W_L("\"");
+      attr_action = chxj_encoding_parameter(r, value);
+      attr_action = chxj_add_cookie_parameter(r, attr_action, xhtml->cookie);
     }
     else if (STRCASEEQ('m','M',"method",name)) {
-      W_L(" method=\"");
-      W_V(value);
-      W_L("\"");
+      attr_method = apr_pstrdup(doc->pool, value);
     }
     else if (STRCASEEQ('u','U',"utn",name)) {
       /* ignore */
     }
     else if (STRCASEEQ('n','N',"name",name)) {
-      W_L(" name=\"");
-      W_V(value);
-      W_L("\"");
+      attr_name = apr_pstrdup(doc->pool, value);
     }
+  }
+
+  int post_flag = (attr_method && strcasecmp(attr_method, "post") == 0) ? 1 : 0;
+
+  W_L("<form");
+  if (attr_action) {
+    char *q;
+    q = strchr(attr_action, '?');
+    if (q) {
+      new_hidden_tag = chxj_form_action_to_hidden_tag(doc->pool, attr_action, 1, post_flag);
+      *q = 0;
+    }
+    W_L(" action=\"");
+    W_V(attr_action);
+    W_L("\"");
+  }
+  if (attr_method) {
+    W_L(" method=\"");
+    W_V(attr_method);
+    W_L("\"");
+  }
+  if (attr_name) {
+    W_L(" name=\"");
+    W_V(attr_name);
+    W_L("\"");
   }
   W_L(">");
   if (new_hidden_tag) {

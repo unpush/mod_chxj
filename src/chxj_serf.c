@@ -183,18 +183,18 @@ s_handle_response(serf_request_t *UNUSED(request), serf_bucket_t *response, void
           val++;
           key = qs_trim_string(ctx->pool, key);
           val = qs_trim_string(ctx->pool, val);
-          DBG(ctx->r, "key:[%s], val:[%s]", key, val);
+          DBG(ctx->r, "REQ[%X] RESPONSE key:[%s], val:[%s]", (apr_size_t)ctx->r, key, val);
           apr_table_add(ctx->headers_out, key, val);
         }
       }
       ctx->rv = APR_SUCCESS;
       apr_atomic_dec32(&ctx->requests_outstanding);
-      DBG(ctx->r, "end of s_handle_response()(NORMAL)");
+      DBG(ctx->r, "REQ[%X] end of s_handle_response()(NORMAL)",(apr_size_t)ctx->r);
       return APR_EOF;
     }
 
     if (APR_STATUS_IS_EAGAIN(rv)) {
-      DBG(ctx->r, "end of s_handle_response() (EAGAIN)");
+      DBG(ctx->r, "REQ[%X] end of s_handle_response() (EAGAIN)", (apr_size_t)ctx->r);
       return rv;
     }
   }
@@ -228,13 +228,15 @@ s_setup_request(serf_request_t           *request,
   apr_table_entry_t  *hentryp = (apr_table_entry_t*)headers->elts;
   for (ii=headers->nelts-1; ii>=0; ii--) {
     serf_bucket_headers_setc(hdrs_bkt, hentryp[ii].key, hentryp[ii].val);
-    DBG(ctx->r, "REQ[%X] key:[%s], val:[%s]", (apr_size_t)ctx->r, hentryp[ii].key, hentryp[ii].val);
+    DBG(ctx->r, "REQ[%X] REQUEST key:[%s], val:[%s]", (apr_size_t)ctx->r, hentryp[ii].key, hentryp[ii].val);
   }
   if (ctx->post_data) {
     serf_bucket_headers_setc(hdrs_bkt, "X-Chxj-Forward", "Done");
     serf_bucket_headers_setc(hdrs_bkt, "X-Chxj-Content-Length", apr_psprintf(r->pool, "%d", ctx->post_data_len));
+    DBG(ctx->r, "REQ[%X] REQUEST key:[%s], val:[%s]", (apr_size_t)ctx->r, "X-Chxj-Forward", "Done");
+    DBG(ctx->r, "REQ[%X] REQUEST key:[%s], val:[%s]", (apr_size_t)ctx->r, "X-Chxj-Content-Length", apr_psprintf(r->pool, "%d", ctx->post_data_len));
   }
-  DBG(ctx->r, "REQ[%X] Content-Length:[%s]", (apr_size_t)r, serf_bucket_headers_get(hdrs_bkt, "Content-Length"));
+  DBG(ctx->r, "REQ[%X] REQUEST Content-Length:[%s]", (apr_size_t)r, serf_bucket_headers_get(hdrs_bkt, "Content-Length"));
 
   apr_atomic_inc32(&(ctx->requests_outstanding));
   if (ctx->acceptor_ctx->ssl_flag) {
@@ -390,6 +392,9 @@ default_chxj_serf_post(request_rec *r, apr_pool_t *ppool, const char *url_path, 
   }
   if (!url.hostname) {
     url.hostname = "localhost";
+  }
+  if (url.query) {
+    url.path = apr_psprintf(pool, "%s?%s", url.path, url.query);
   }
 
   rv = apr_sockaddr_info_get(&address, url.hostname, APR_UNSPEC, url.port, 0, pool);

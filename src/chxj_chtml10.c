@@ -1819,12 +1819,13 @@ s_chtml10_start_form_tag(void *pdoc, Node *node)
   request_rec  *r;
   Attr         *attr;
   char         *new_hidden_tag = NULL;
+  char         *attr_value = NULL;
+  char         *attr_method = NULL;
 
   chtml10 = GET_CHTML10(pdoc);
   doc     = chtml10->doc;
   r       = doc->r;
 
-  W10_L("<form");
 
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
@@ -1841,18 +1842,8 @@ s_chtml10_start_form_tag(void *pdoc, Node *node)
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
-        value = chxj_encoding_parameter(r, value);
-        value = chxj_add_cookie_parameter(r, value, chtml10->cookie);
-        char *q;
-        q = strchr(value, '?');
-        if (q) {
-          new_hidden_tag = chxj_form_action_to_hidden_tag(doc->pool, value, 0);
-          *q = 0;
-        }
-  
-        W10_L(" action=\"");
-        W10_V(value);
-        W10_L("\"");
+        attr_value = chxj_encoding_parameter(r, value);
+        attr_value = chxj_add_cookie_parameter(r, attr_value, chtml10->cookie);
       }
       break;
 
@@ -1862,9 +1853,7 @@ s_chtml10_start_form_tag(void *pdoc, Node *node)
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
-        W10_L(" method=\"");
-        W10_V(value);
-        W10_L("\"");
+        attr_method = apr_pstrdup(doc->pool, value);
       }
       break;
 
@@ -1883,6 +1872,25 @@ s_chtml10_start_form_tag(void *pdoc, Node *node)
     }
   }
 
+  int post_flag = (attr_method && strcasecmp(attr_method, "post") == 0) ? 1 : 0;
+
+  W10_L("<form");
+  if (attr_value) {
+    char *q;
+    q = strchr(attr_value, '?');
+    if (q) {
+      new_hidden_tag = chxj_form_action_to_hidden_tag(doc->pool, attr_value, 0, post_flag);
+      *q = 0;
+    }
+    W10_L(" action=\"");
+    W10_V(attr_value);
+    W10_L("\"");
+  }
+  if (attr_method) {
+    W10_L(" method=\"");
+    W10_V(attr_method);
+    W10_L("\"");
+  }
   W10_L(">");
   if (new_hidden_tag) {
     W10_V(new_hidden_tag);
