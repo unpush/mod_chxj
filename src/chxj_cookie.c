@@ -885,7 +885,7 @@ s_cut_until_end_hostname(request_rec* r, char* value)
 
   hostnm = sp = apr_pstrdup(r->pool, value);
   for (;*sp; sp++) {
-    if (*sp == '/'|| *sp == '?') {
+    if (*sp == '/'|| *sp == '?' || *sp == ':') {
       *sp = '\0';
       break;
     }
