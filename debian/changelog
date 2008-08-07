@@ -6,6 +6,8 @@ libapache2-mod-chxj (0.11.14-1) unstable; urgency=low
     - Removed the port number of the host header.
     - Load and save are locked by a set.
     - operation is abnormal when redirecting it with .htacess.
+    - cookie hostname check failure.(case with port number)
+    - parameter name is null.
   * Added Features.
     - QUERY_STRING of the action attribute changes to return at POST.
     - It is made to succeed the session even if it INTERNAL redirects it.
