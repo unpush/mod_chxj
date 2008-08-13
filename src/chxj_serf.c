@@ -137,20 +137,23 @@ s_handle_response(serf_request_t *UNUSED(request), serf_bucket_t *response, void
       return rv;
     }
 
-    if (! ctx->response) {
-      ctx->response = apr_palloc(pool, len);
-      ctx->response[0] = 0;
-      ctx->response_len = 0;
-    }
-    else {
-      char *tmp = apr_palloc(pool, ctx->response_len);
-      memcpy(tmp, ctx->response, ctx->response_len);
-      ctx->response = apr_palloc(pool, ctx->response_len + len);
-      memcpy(ctx->response, tmp, ctx->response_len);
-    }
+    if (len > 0) {
+      if (! ctx->response) {
+        ctx->response = apr_palloc(pool, len + 1);
+        ctx->response[0] = 0;
+        ctx->response_len = 0;
+      }
+      else {
+        char *tmp = apr_palloc(pool, ctx->response_len);
+        memcpy(tmp, ctx->response, ctx->response_len);
+        ctx->response = apr_palloc(pool, ctx->response_len + len + 1);
+        memcpy(ctx->response, tmp, ctx->response_len);
+      }
     
-    memcpy(&ctx->response[ctx->response_len], data, len);
-    ctx->response_len += len;
+      memcpy(&ctx->response[ctx->response_len], data, len);
+      ctx->response_len += len;
+      ctx->response[ctx->response_len] = 0;
+    }
     if (APR_STATUS_IS_EOF(rv)) {
       serf_bucket_t *hdrs;
       char *tmp_headers = "";
@@ -192,8 +195,8 @@ s_handle_response(serf_request_t *UNUSED(request), serf_bucket_t *response, void
       DBG(ctx->r, "REQ[%X] end of s_handle_response()(NORMAL)",(apr_size_t)ctx->r);
       return APR_EOF;
     }
-
     if (APR_STATUS_IS_EAGAIN(rv)) {
+      /* 0 byte return if EAGAIN returned. */
       DBG(ctx->r, "REQ[%X] end of s_handle_response() (EAGAIN)", (apr_size_t)ctx->r);
       return rv;
     }

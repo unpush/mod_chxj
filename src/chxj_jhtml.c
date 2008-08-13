@@ -2517,6 +2517,7 @@ s_jhtml_text_tag(void* pdoc, Node* child)
 
   textval = qs_get_node_value(doc,child);
   if (strlen(textval) == 0) {
+    DBG(r, "end s_jhtml_text_tag()");
     return jhtml->out;
   }
 
