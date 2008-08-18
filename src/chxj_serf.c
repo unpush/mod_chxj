@@ -130,10 +130,16 @@ s_handle_response(serf_request_t *UNUSED(request), serf_bucket_t *response, void
   ctx->reason = sl.reason;
 
   while (1) {
+    len = 0;
     rv = serf_bucket_read(response, 2048, &data, &len);
     if (SERF_BUCKET_READ_ERROR(rv)) {
       ctx->rv = rv;
       apr_atomic_dec32(&ctx->requests_outstanding);
+      return rv;
+    }
+    if (APR_STATUS_IS_EAGAIN(rv)) {
+      /* 0 byte return if EAGAIN returned. */
+      DBG(ctx->r, "REQ[%X] end of s_handle_response() (EAGAIN) len:[%d]", (apr_size_t)ctx->r, (int)len);
       return rv;
     }
 
@@ -194,11 +200,6 @@ s_handle_response(serf_request_t *UNUSED(request), serf_bucket_t *response, void
       apr_atomic_dec32(&ctx->requests_outstanding);
       DBG(ctx->r, "REQ[%X] end of s_handle_response()(NORMAL)",(apr_size_t)ctx->r);
       return APR_EOF;
-    }
-    if (APR_STATUS_IS_EAGAIN(rv)) {
-      /* 0 byte return if EAGAIN returned. */
-      DBG(ctx->r, "REQ[%X] end of s_handle_response() (EAGAIN)", (apr_size_t)ctx->r);
-      return rv;
     }
   }
 }
