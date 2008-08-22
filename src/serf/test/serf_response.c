@@ -23,8 +23,6 @@
 
 #include "serf.h"
 
-#define SERF_VERSION_STRING "0.01"
-
 typedef struct {
     const char *resp_file;
     serf_bucket_t *bkt;
@@ -127,6 +125,7 @@ int main(int argc, const char **argv)
         exit(-1);
     }
     accept_ctx.resp_file = argv[1];
+    accept_ctx.bkt = NULL;
 
     apr_initialize();
     atexit(apr_terminate);
