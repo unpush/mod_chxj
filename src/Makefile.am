@@ -48,7 +48,8 @@ make_so:
 	@if test ! -L mod_chxj.so ; then ln -s .libs/libmod_chxj.so mod_chxj.so ; fi
 
 serf/libserf-0.la:
-	(cd serf; ./configure --with-apr=`dirname @APR_CONFIG@` --with-apr-util=`dirname @APU_CONFIG@`; make)
+#	(cd serf; ./configure --with-apr=`dirname @APR_CONFIG@` --with-apr-util=`dirname @APU_CONFIG@`; make)
+	(cd serf; ./serfmake )
 
 clean:
 	rm -fr .libs

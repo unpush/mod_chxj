@@ -25,6 +25,7 @@ struct __app_ctx_t {
   int                 ssl_flag;
   serf_ssl_context_t  *ssl_ctx;
   serf_bucket_alloc_t *bkt_alloc;
+  request_rec *r;
 };
 
 struct __handler_ctx_t {
@@ -83,8 +84,8 @@ s_connection_setup(apr_socket_t *skt, void *setup_ctx, apr_pool_t *UNUSED(pool))
     c = serf_bucket_ssl_decrypt_create(c, ctx->ssl_ctx, ctx->bkt_alloc);
     if (!ctx->ssl_ctx) {
       ctx->ssl_ctx = serf_bucket_ssl_decrypt_context_get(c);
+      serf_ssl_use_default_certificates(ctx->ssl_ctx);
     }
-    return c;
   }
   return c;
 }
@@ -98,14 +99,18 @@ s_connection_closed(serf_connection_t *UNUSED(conn), void *UNUSED(closed_baton),
 
 
 static serf_bucket_t *
-s_accept_response(serf_request_t *request, serf_bucket_t *stream, void *UNUSED(acceptor_baton), apr_pool_t *UNUSED(pool))
+s_accept_response(serf_request_t *request, serf_bucket_t *stream, void *acceptor_baton, apr_pool_t *UNUSED(pool))
 {
     serf_bucket_alloc_t *bkt_alloc;
     serf_bucket_t       *c;
-
+    app_ctx_t           *ctx = acceptor_baton;
+    serf_bucket_t       *ret;
+    DBG(ctx->r, "REQ:[%x] start s_accept_response()", (apr_size_t)ctx->r);
     bkt_alloc = serf_request_get_alloc(request);
     c = serf_bucket_barrier_create(stream, bkt_alloc);
-    return serf_bucket_response_create(c, bkt_alloc);
+    ret = serf_bucket_response_create(c, bkt_alloc);
+    DBG(ctx->r, "REQ:[%x] end s_accept_response()", (apr_size_t)ctx->r);
+    return ret;
 }
 
 
@@ -118,13 +123,21 @@ s_handle_response(serf_request_t *UNUSED(request), serf_bucket_t *response, void
   apr_status_t     rv;
   handler_ctx_t  *ctx = handler_ctx;
 
+  DBG(ctx->r, "REQ[%x] start s_handle_response()", (apr_size_t)ctx->r);
+
   rv = serf_bucket_response_status(response, &sl);
   if (rv != APR_SUCCESS) {
     if (APR_STATUS_IS_EAGAIN(rv)) {
+      DBG(ctx->r, "REQ[%x] end s_handle_response()", (apr_size_t)ctx->r);
       return rv;
     }
     ctx->rv = rv;
+    {
+      char buf[200];
+      ERR(ctx->r, "%s:%d Error running context: (%d) %s\n", __FILE__,__LINE__,rv, apr_strerror(rv, buf, sizeof(buf)));
+    }
     apr_atomic_dec32(&ctx->requests_outstanding); 
+    DBG(ctx->r, "REQ[%x] end s_handle_response()", (apr_size_t)ctx->r);
     return rv;
   }
   ctx->reason = sl.reason;
@@ -134,7 +147,12 @@ s_handle_response(serf_request_t *UNUSED(request), serf_bucket_t *response, void
     rv = serf_bucket_read(response, 2048, &data, &len);
     if (SERF_BUCKET_READ_ERROR(rv)) {
       ctx->rv = rv;
+      {
+        char buf[200];
+        ERR(ctx->r, "%s:%d Error running context: (%d) %s\n", __FILE__,__LINE__,rv, apr_strerror(rv, buf, sizeof(buf)));
+      }
       apr_atomic_dec32(&ctx->requests_outstanding);
+      DBG(ctx->r, "REQ[%x] end s_handle_response()", (apr_size_t)ctx->r);
       return rv;
     }
     if (APR_STATUS_IS_EAGAIN(rv)) {
@@ -166,8 +184,10 @@ s_handle_response(serf_request_t *UNUSED(request), serf_bucket_t *response, void
       hdrs = serf_bucket_response_get_headers(response);
       while (1) {
         rv = serf_bucket_read(hdrs, 2048, &data, &len);
-        if (SERF_BUCKET_READ_ERROR(rv))
+        if (SERF_BUCKET_READ_ERROR(rv)) {
+          DBG(ctx->r, "REQ[%x] end s_handle_response()", (apr_size_t)ctx->r);
           return rv;
+        }
         tmp_headers = apr_pstrcat(ctx->pool, tmp_headers, apr_psprintf(ctx->pool , "%.*s", len, data), NULL);
         if (APR_STATUS_IS_EOF(rv)) {
           break;
@@ -309,6 +329,8 @@ default_chxj_serf_get(request_rec *r, apr_pool_t *ppool, const char *url_path, i
   if (strcasecmp(url.scheme, "https") == 0) {
     app_ctx.ssl_flag = 1;
   }
+  app_ctx.r = r;
+  app_ctx.ssl_ctx = NULL;
 
   context = serf_context_create(pool);
   connection = serf_connection_create(context, address, s_connection_setup, &app_ctx, s_connection_closed, &app_ctx, pool);
@@ -413,6 +435,8 @@ default_chxj_serf_post(request_rec *r, apr_pool_t *ppool, const char *url_path, 
   if (strcasecmp(url.scheme, "https") == 0) {
     app_ctx.ssl_flag = 1;
   }
+  app_ctx.r = r;
+  app_ctx.ssl_ctx = NULL;
 
   context = serf_context_create(pool);
   connection = serf_connection_create(context, address, s_connection_setup, &app_ctx, s_connection_closed, &app_ctx, pool);
@@ -442,13 +466,13 @@ default_chxj_serf_post(request_rec *r, apr_pool_t *ppool, const char *url_path, 
       continue;
     if (rv) {
       char buf[200];
-      ERR(r, "Error running context: (%d) %s\n", rv, apr_strerror(rv, buf, sizeof(buf)));
+      ERR(r, "%s:%d Error running context: (%d) %s", __FILE__,__LINE__,rv, apr_strerror(rv, buf, sizeof(buf)));
       break;
     }
     if (!apr_atomic_read32(&handler_ctx.requests_outstanding)) {
       if (handler_ctx.rv != APR_SUCCESS) {
         char buf[200];
-        ERR(r, "Error running context: (%d) %s\n", handler_ctx.rv, apr_strerror(handler_ctx.rv, buf, sizeof(buf)));
+        ERR(r, "%s:%d Error running context: (%d) %s", __FILE__,__LINE__,handler_ctx.rv, apr_strerror(handler_ctx.rv, buf, sizeof(buf)));
       }
       break;
     }
@@ -457,7 +481,12 @@ default_chxj_serf_post(request_rec *r, apr_pool_t *ppool, const char *url_path, 
   DBG(r, "end of serf request");
   DBG(r, "response:[%s][%d]", handler_ctx.response, handler_ctx.response_len);
   serf_connection_close(connection);
-  ret = apr_pstrdup(ppool, handler_ctx.response);
+  if (handler_ctx.response_len == 0) {
+    ret = apr_pstrdup(ppool, "");
+  }
+  else {
+    ret = apr_pstrdup(ppool, handler_ctx.response);
+  }
   if (set_headers_flag) {
     r->headers_out = apr_table_copy(pool, handler_ctx.headers_out);
     *response_len = handler_ctx.response_len;
