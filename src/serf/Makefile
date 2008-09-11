@@ -36,7 +36,7 @@ includedir=${prefix}/include/serf-${SERF_MAJOR_VERSION}
 
 LIBTOOL = /usr/share/apr-1.0/build/libtool --silent
 CC = i486-linux-gnu-gcc
-CFLAGS =  -pipe -Wall -g -O2 -pthread
+CFLAGS = -fPIC -pipe -Wall -g -O2 -pthread
 CPPFLAGS =  -DLINUX=2 -D_REENTRANT -D_GNU_SOURCE -D_LARGEFILE64_SOURCE
 INCLUDES = -I$(srcdir) -I/usr/include/apr-1.0 -I/usr/include/apr-1.0 $(EXTRA_INCLUDES)
 MKDIR = mkdir -p

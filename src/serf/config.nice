@@ -2,7 +2,10 @@
 #
 # Created by configure
 
+CFLAGS="-fPIC"; export CFLAGS
 "./configure" \
+"--enable-shared" \
 "--with-apr=/usr/bin" \
 "--with-apr-util=/usr/bin" \
+"CFLAGS=-fPIC" \
 "$@"
