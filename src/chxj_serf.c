@@ -85,6 +85,7 @@ s_connection_setup(apr_socket_t *skt, void *setup_ctx, apr_pool_t *UNUSED(pool))
     if (!ctx->ssl_ctx) {
       ctx->ssl_ctx = serf_bucket_ssl_decrypt_context_get(c);
       serf_ssl_use_default_certificates(ctx->ssl_ctx);
+      serf_ssl_server_cert_callback_set(ctx->ssl_ctx, NULL, NULL);
     }
   }
   return c;
