@@ -1121,7 +1121,7 @@ int
 chxj_cookie_unlock_mysql(request_rec *r, mod_chxj_config *m)
 {
   char query[MAX_STRING_LEN];
-  DBG(r, "REQ[%X] start chxj_cookie_unlock_mysql()", (apr_size_t)r);
+  DBG(r, "REQ[%X] start chxj_cookie_unlock_mysql()", (unsigned int)(apr_size_t)r);
   if (! chxj_open_mysql_handle(r, m)) {
     ERR(r, "Cannot open mysql connection");
     DBG(r, "end   chxj_save_cookie_expire_mysql()");
