@@ -1199,6 +1199,7 @@ chxj_input_handler(request_rec *r)
   char                *response;
   char                *user_agent;
   apr_pool_t          *pool;
+  apr_size_t          ii;
   
   DBG(r, "REQ[%X] start of chxj_input_handler()", (unsigned int)(apr_size_t)r);
 
@@ -1257,7 +1258,12 @@ chxj_input_handler(request_rec *r)
   apr_table_unset(r->headers_in, "Content-Length");
   apr_table_setn(r->headers_in, "Content-Length", apr_psprintf(pool, "%" APR_SIZE_T_FMT, post_data_len));
   response = chxj_serf_post(r, pool, url_path, post_data, post_data_len, 1, &res_len);
-  DBG(r, "REQ[%X] response:[%.*s][%" APR_SIZE_T_FMT "]", (unsigned int)(apr_size_t)r, res_len, response, res_len);
+  DBG(r, "REQ[%X] -------------------------------------------------------", (unsigned int)(apr_size_t)r);
+  DBG(r, "REQ[%X] response length:[%" APR_SIZE_T_FMT "]", (unsigned int)(apr_size_t)r, res_len);
+  for (ii=0; ii<res_len/64; ii++) {
+    DBG(r, "REQ[%X] response:[%.*s]", (unsigned int)(apr_size_t)r, 64, &response[ii*64]);
+  }
+  DBG(r, "REQ[%X] -------------------------------------------------------", (unsigned int)(apr_size_t)r);
 
   char *chunked;
   if ((chunked = (char *)apr_table_get(r->headers_out, "Transfer-Encoding")) != NULL) {
