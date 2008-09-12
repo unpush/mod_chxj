@@ -1255,7 +1255,7 @@ chxj_input_handler(request_rec *r)
   apr_size_t res_len;
   apr_table_setn(r->headers_in, CHXJ_HEADER_ORIG_CLIENT_IP, r->connection->remote_ip);
   apr_table_unset(r->headers_in, "Content-Length");
-  apr_table_setn(r->headers_in, "Content-Length", apr_psprintf(pool, "%d", post_data_len));
+  apr_table_setn(r->headers_in, "Content-Length", apr_psprintf(pool, "%" APR_SIZE_T_FMT, post_data_len));
   response = chxj_serf_post(r, pool, url_path, post_data, post_data_len, 1, &res_len);
   DBG(r, "REQ[%X] response:[%.*s][%d]", (unsigned int)(apr_size_t)r, res_len, response, res_len);
 
