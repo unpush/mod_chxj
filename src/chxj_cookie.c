@@ -282,7 +282,7 @@ DBG(r, "REQ[%X] TYPE:[%d]", (unsigned int)(apr_size_t)r, dconf->cookie_store_typ
 #if defined(USE_MYSQL_COOKIE)
     if (IS_COOKIE_STORE_MYSQL(dconf->cookie_store_type)) {
       if (! chxj_save_cookie_mysql(r, dconf, cookie->cookie_id, store_string)) {
-        ERR(r, "REQ[%X] faild: chxj_save_cookie_mysql() cookie_id:[%s]", (apr_size_t)r, cookie->cookie_id);
+        ERR(r, "REQ[%X] faild: chxj_save_cookie_mysql() cookie_id:[%s]", (unsigned int)(apr_size_t)r, cookie->cookie_id);
         goto on_error;
       }
       done_proc = 1;
@@ -291,7 +291,7 @@ DBG(r, "REQ[%X] TYPE:[%d]", (unsigned int)(apr_size_t)r, dconf->cookie_store_typ
 #if defined(USE_MEMCACHE_COOKIE)
     if (IS_COOKIE_STORE_MEMCACHE(dconf->cookie_store_type)) {
       if (! chxj_save_cookie_memcache(r, dconf, cookie->cookie_id, store_string)) {
-        ERR(r, "REQ[%X] failed: chxj_save_cookie_memcache() cookie_id:[%s]", (apr_size_t)r, cookie->cookie_id);
+        ERR(r, "REQ[%X] failed: chxj_save_cookie_memcache() cookie_id:[%s]", (unsigned int)(apr_size_t)r, cookie->cookie_id);
         goto on_error;
       }
       done_proc = 1;
@@ -299,7 +299,7 @@ DBG(r, "REQ[%X] TYPE:[%d]", (unsigned int)(apr_size_t)r, dconf->cookie_store_typ
 #endif
     if (IS_COOKIE_STORE_DBM(dconf->cookie_store_type) || ! done_proc) {
       if (! chxj_save_cookie_dbm(r, dconf, cookie->cookie_id, store_string)) {
-        ERR(r, "REQ[%X] failed: chxj_save_cookie_dbm() cookie_id:[%s]", (apr_size_t)r, cookie->cookie_id);
+        ERR(r, "REQ[%X] failed: chxj_save_cookie_dbm() cookie_id:[%s]", (unsigned int)(apr_size_t)r, cookie->cookie_id);
         goto on_error;
       }
     }
@@ -393,7 +393,7 @@ chxj_update_cookie(request_rec* r, cookie_t* old_cookie)
 #if defined(USE_MYSQL_COOKIE)
     if (IS_COOKIE_STORE_MYSQL(dconf->cookie_store_type)) {
       if (!chxj_update_cookie_mysql(r, dconf, cookie->cookie_id, store_string)) {
-        ERR(r, "REQ[%X] failed: chxj_update_cookie_mysql() cookie_id:[%s]", (apr_size_t)r, cookie->cookie_id);
+        ERR(r, "REQ[%X] failed: chxj_update_cookie_mysql() cookie_id:[%s]", (unsigned int)(apr_size_t)r, cookie->cookie_id);
         goto on_error;
       }
       done_proc = 1;
@@ -403,7 +403,7 @@ chxj_update_cookie(request_rec* r, cookie_t* old_cookie)
 #if defined(USE_MEMCACHE_COOKIE)
     if (IS_COOKIE_STORE_MEMCACHE(dconf->cookie_store_type)) {
       if (! chxj_update_cookie_memcache(r, dconf, cookie->cookie_id, store_string)) {
-        ERR(r, "REQ[%X] failed: chxj_update_cookie_memcache() cookie_id:[%s]", (apr_size_t)r, cookie->cookie_id);
+        ERR(r, "REQ[%X] failed: chxj_update_cookie_memcache() cookie_id:[%s]", (unsigned int)(apr_size_t)r, cookie->cookie_id);
         goto on_error;
       }
       done_proc = 1;
@@ -411,7 +411,7 @@ chxj_update_cookie(request_rec* r, cookie_t* old_cookie)
 #endif
     if (!done_proc || IS_COOKIE_STORE_DBM(dconf->cookie_store_type)) {
       if (! chxj_update_cookie_dbm(r, dconf, cookie->cookie_id, store_string)) {
-        ERR(r, "REQ[%X] failed: chxj_update_cookie_dbm() cookie_id:[%s]", (apr_size_t)r, cookie->cookie_id);
+        ERR(r, "REQ[%X] failed: chxj_update_cookie_dbm() cookie_id:[%s]", (unsigned int)(apr_size_t)r, cookie->cookie_id);
         goto on_error;
       }
     }
@@ -473,7 +473,7 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
 #if defined(USE_MYSQL_COOKIE)
     if (IS_COOKIE_STORE_MYSQL(dconf->cookie_store_type)) {
       if (! (load_string = chxj_load_cookie_mysql(r, dconf, cookie->cookie_id))) {
-        ERR(r, "REQ[%X] failed: chxj_load_cookie_mysql() cookie_id:[%s]", (apr_size_t)r, cookie_id);
+        ERR(r, "REQ[%X] failed: chxj_load_cookie_mysql() cookie_id:[%s]", (unsigned int)(apr_size_t)r, cookie_id);
         goto on_error0;
       }
       done_proc = 1;
@@ -482,7 +482,7 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
 #if defined(USE_MEMCACHE_COOKIE)
     if (IS_COOKIE_STORE_MEMCACHE(dconf->cookie_store_type)) {
       if (! (load_string = chxj_load_cookie_memcache(r, dconf, cookie->cookie_id))) {
-        ERR(r, "REQ[%X] failed: chxj_load_cookie_memcache() cookie_id:[%s]", (apr_size_t)r, cookie_id);
+        ERR(r, "REQ[%X] failed: chxj_load_cookie_memcache() cookie_id:[%s]", (unsigned int)(apr_size_t)r, cookie_id);
         goto on_error0;
       }
       done_proc = 1;
@@ -490,7 +490,7 @@ chxj_load_cookie(request_rec* r, char* cookie_id)
 #endif
     if (!done_proc || IS_COOKIE_STORE_DBM(dconf->cookie_store_type)) {
       if (! (load_string = chxj_load_cookie_dbm(r, dconf, cookie->cookie_id))) {
-        ERR(r, "REQ[%X] failed: chxj_load_cookie_dbm() cookie_id:[%s]", (apr_size_t)r, cookie_id);
+        ERR(r, "REQ[%X] failed: chxj_load_cookie_dbm() cookie_id:[%s]", (unsigned int)(apr_size_t)r, cookie_id);
         goto on_error0;
       }
     }
