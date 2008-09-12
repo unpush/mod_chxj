@@ -189,7 +189,7 @@ s_handle_response(serf_request_t *UNUSED(request), serf_bucket_t *response, void
           DBG(ctx->r, "REQ[%x] end s_handle_response()", (unsigned int)(apr_size_t)ctx->r);
           return rv;
         }
-        tmp_headers = apr_pstrcat(ctx->pool, tmp_headers, apr_psprintf(ctx->pool , "%.*s", len, data), NULL);
+        tmp_headers = apr_pstrcat(ctx->pool, tmp_headers, apr_psprintf(ctx->pool , "%.*s", (int)len, data), NULL);
         if (APR_STATUS_IS_EOF(rv)) {
           break;
         }
@@ -257,9 +257,9 @@ s_setup_request(serf_request_t           *request,
   }
   if (ctx->post_data) {
     serf_bucket_headers_setc(hdrs_bkt, "X-Chxj-Forward", "Done");
-    serf_bucket_headers_setc(hdrs_bkt, "X-Chxj-Content-Length", apr_psprintf(r->pool, "%d", ctx->post_data_len));
+    serf_bucket_headers_setc(hdrs_bkt, "X-Chxj-Content-Length", apr_psprintf(r->pool, "%" APR_SIZE_T_FMT , ctx->post_data_len));
     DBG(ctx->r, "REQ[%X] REQUEST key:[%s], val:[%s]", (unsigned int)(apr_size_t)ctx->r, "X-Chxj-Forward", "Done");
-    DBG(ctx->r, "REQ[%X] REQUEST key:[%s], val:[%s]", (unsigned int)(apr_size_t)ctx->r, "X-Chxj-Content-Length", apr_psprintf(r->pool, "%d", ctx->post_data_len));
+    DBG(ctx->r, "REQ[%X] REQUEST key:[%s], val:[%s]", (unsigned int)(apr_size_t)ctx->r, "X-Chxj-Content-Length", apr_psprintf(r->pool, "%" APR_SIZE_T_FMT, ctx->post_data_len));
   }
   DBG(ctx->r, "REQ[%X] REQUEST Content-Length:[%s]", (unsigned int)(apr_size_t)r, serf_bucket_headers_get(hdrs_bkt, "Content-Length"));
 
@@ -480,7 +480,7 @@ default_chxj_serf_post(request_rec *r, apr_pool_t *ppool, const char *url_path, 
   }
 
   DBG(r, "end of serf request");
-  DBG(r, "response:[%s][%d]", handler_ctx.response, handler_ctx.response_len);
+  DBG(r, "response:[%s][%" APR_SIZE_T_FMT "]", handler_ctx.response, handler_ctx.response_len);
   serf_connection_close(connection);
   if (handler_ctx.response_len == 0) {
     ret = apr_pstrdup(ppool, "");
