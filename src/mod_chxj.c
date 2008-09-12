@@ -143,10 +143,10 @@ chxj_headers_fixup(request_rec *r)
   char                *contentType;
   char                *contentLength;
 
-  DBG(r, "REQ[%X] start chxj_headers_fixup()", (apr_size_t)r);
+  DBG(r, "REQ[%X] start chxj_headers_fixup()", (unsigned int)(apr_size_t)r);
   if (r->main) {
-    DBG(r, "REQ[%X] detect internal redirect.", (apr_size_t)r);
-    DBG(r, "REQ[%X] end chxj_headers_fixup()", (apr_size_t)r);
+    DBG(r, "REQ[%X] detect internal redirect.", (unsigned int)(apr_size_t)r);
+    DBG(r, "REQ[%X] end chxj_headers_fixup()", (unsigned int)(apr_size_t)r);
     return DECLINED;
   }
   dconf = chxj_get_module_config(r->per_dir_config, &chxj_module);
@@ -157,8 +157,8 @@ chxj_headers_fixup(request_rec *r)
   contentType = (char *)apr_table_get(r->headers_in, "Content-Type");
   if (contentType
       && strncasecmp("multipart/form-data", contentType, 19) == 0) {
-    DBG(r, "REQ[%X] detect multipart/form-data ==> no target", (apr_size_t)r);
-    DBG(r, "REQ[%X] end chxj_headers_fixup()", (apr_size_t)r);
+    DBG(r, "REQ[%X] detect multipart/form-data ==> no target", (unsigned int)(apr_size_t)r);
+    DBG(r, "REQ[%X] end chxj_headers_fixup()", (unsigned int)(apr_size_t)r);
     return DECLINED;
   }
 
@@ -182,7 +182,7 @@ chxj_headers_fixup(request_rec *r)
   case CHXJ_SPEC_Jhtml:
     entryp = chxj_apply_convrule(r, dconf->convrules);
     if (! entryp) {
-      DBG(r, "REQ[%X] end chxj_headers_fixup() no pattern User-Agent:[%s]", (apr_size_t)r, user_agent);
+      DBG(r, "REQ[%X] end chxj_headers_fixup() no pattern User-Agent:[%s]", (unsigned int)(apr_size_t)r, user_agent);
       return DECLINED;
     }
     if (!entryp || !(entryp->action & CONVRULE_ENGINE_ON_BIT)) {
@@ -417,10 +417,10 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry* entryp)
   cookie_t   *cookie = NULL;
   int        no_update_flag = 0;
 
-  DBG(r, "REQ[%X] start chxj_convert_input_header()", (apr_size_t)r);
+  DBG(r, "REQ[%X] start chxj_convert_input_header()", (unsigned int)(apr_size_t)r);
   if (! r->args) {
-    DBG(r, "REQ[%X] r->args=[null]", (apr_size_t)r);
-    DBG(r, "REQ[%X] end   chxj_convert_input_header()", (apr_size_t)r);
+    DBG(r, "REQ[%X] r->args=[null]", (unsigned int)(apr_size_t)r);
+    DBG(r, "REQ[%X] end   chxj_convert_input_header()", (unsigned int)(apr_size_t)r);
     return 0;
   }
   urilen = strlen(r->args);
