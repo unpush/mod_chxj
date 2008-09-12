@@ -106,11 +106,11 @@ s_accept_response(serf_request_t *request, serf_bucket_t *stream, void *acceptor
     serf_bucket_t       *c;
     app_ctx_t           *ctx = acceptor_baton;
     serf_bucket_t       *ret;
-    DBG(ctx->r, "REQ:[%x] start s_accept_response()", (apr_size_t)ctx->r);
+    DBG(ctx->r, "REQ:[%x] start s_accept_response()", (unsigned int)(apr_size_t)ctx->r);
     bkt_alloc = serf_request_get_alloc(request);
     c = serf_bucket_barrier_create(stream, bkt_alloc);
     ret = serf_bucket_response_create(c, bkt_alloc);
-    DBG(ctx->r, "REQ:[%x] end s_accept_response()", (apr_size_t)ctx->r);
+    DBG(ctx->r, "REQ:[%x] end s_accept_response()", (unsigned int)(apr_size_t)ctx->r);
     return ret;
 }
 
@@ -124,12 +124,12 @@ s_handle_response(serf_request_t *UNUSED(request), serf_bucket_t *response, void
   apr_status_t     rv;
   handler_ctx_t  *ctx = handler_ctx;
 
-  DBG(ctx->r, "REQ[%x] start s_handle_response()", (apr_size_t)ctx->r);
+  DBG(ctx->r, "REQ[%x] start s_handle_response()", (unsigned int)(apr_size_t)ctx->r);
 
   rv = serf_bucket_response_status(response, &sl);
   if (rv != APR_SUCCESS) {
     if (APR_STATUS_IS_EAGAIN(rv)) {
-      DBG(ctx->r, "REQ[%x] end s_handle_response()", (apr_size_t)ctx->r);
+      DBG(ctx->r, "REQ[%x] end s_handle_response()", (unsigned int)(apr_size_t)ctx->r);
       return rv;
     }
     ctx->rv = rv;
@@ -138,7 +138,7 @@ s_handle_response(serf_request_t *UNUSED(request), serf_bucket_t *response, void
       ERR(ctx->r, "%s:%d Error running context: (%d) %s\n", __FILE__,__LINE__,rv, apr_strerror(rv, buf, sizeof(buf)));
     }
     apr_atomic_dec32(&ctx->requests_outstanding); 
-    DBG(ctx->r, "REQ[%x] end s_handle_response()", (apr_size_t)ctx->r);
+    DBG(ctx->r, "REQ[%x] end s_handle_response()", (unsigned int)(apr_size_t)ctx->r);
     return rv;
   }
   ctx->reason = sl.reason;
@@ -153,12 +153,12 @@ s_handle_response(serf_request_t *UNUSED(request), serf_bucket_t *response, void
         ERR(ctx->r, "%s:%d Error running context: (%d) %s\n", __FILE__,__LINE__,rv, apr_strerror(rv, buf, sizeof(buf)));
       }
       apr_atomic_dec32(&ctx->requests_outstanding);
-      DBG(ctx->r, "REQ[%x] end s_handle_response()", (apr_size_t)ctx->r);
+      DBG(ctx->r, "REQ[%x] end s_handle_response()", (unsigned int)(apr_size_t)ctx->r);
       return rv;
     }
     if (APR_STATUS_IS_EAGAIN(rv)) {
       /* 0 byte return if EAGAIN returned. */
-      DBG(ctx->r, "REQ[%X] end of s_handle_response() (EAGAIN) len:[%d]", (apr_size_t)ctx->r, (int)len);
+      DBG(ctx->r, "REQ[%X] end of s_handle_response() (EAGAIN) len:[%d]", (unsigned int)(apr_size_t)ctx->r, (int)len);
       return rv;
     }
 
@@ -186,7 +186,7 @@ s_handle_response(serf_request_t *UNUSED(request), serf_bucket_t *response, void
       while (1) {
         rv = serf_bucket_read(hdrs, 2048, &data, &len);
         if (SERF_BUCKET_READ_ERROR(rv)) {
-          DBG(ctx->r, "REQ[%x] end s_handle_response()", (apr_size_t)ctx->r);
+          DBG(ctx->r, "REQ[%x] end s_handle_response()", (unsigned int)(apr_size_t)ctx->r);
           return rv;
         }
         tmp_headers = apr_pstrcat(ctx->pool, tmp_headers, apr_psprintf(ctx->pool , "%.*s", len, data), NULL);
@@ -213,13 +213,13 @@ s_handle_response(serf_request_t *UNUSED(request), serf_bucket_t *response, void
           val++;
           key = qs_trim_string(ctx->pool, key);
           val = qs_trim_string(ctx->pool, val);
-          DBG(ctx->r, "REQ[%X] RESPONSE key:[%s], val:[%s]", (apr_size_t)ctx->r, key, val);
+          DBG(ctx->r, "REQ[%X] RESPONSE key:[%s], val:[%s]", (unsigned int)(apr_size_t)ctx->r, key, val);
           apr_table_add(ctx->headers_out, key, val);
         }
       }
       ctx->rv = APR_SUCCESS;
       apr_atomic_dec32(&ctx->requests_outstanding);
-      DBG(ctx->r, "REQ[%X] end of s_handle_response()(NORMAL)",(apr_size_t)ctx->r);
+      DBG(ctx->r, "REQ[%X] end of s_handle_response()(NORMAL)",(unsigned int)(apr_size_t)ctx->r);
       return APR_EOF;
     }
   }
@@ -253,15 +253,15 @@ s_setup_request(serf_request_t           *request,
   apr_table_entry_t  *hentryp = (apr_table_entry_t*)headers->elts;
   for (ii=headers->nelts-1; ii>=0; ii--) {
     serf_bucket_headers_setc(hdrs_bkt, hentryp[ii].key, hentryp[ii].val);
-    DBG(ctx->r, "REQ[%X] REQUEST key:[%s], val:[%s]", (apr_size_t)ctx->r, hentryp[ii].key, hentryp[ii].val);
+    DBG(ctx->r, "REQ[%X] REQUEST key:[%s], val:[%s]", (unsigned int)(apr_size_t)ctx->r, hentryp[ii].key, hentryp[ii].val);
   }
   if (ctx->post_data) {
     serf_bucket_headers_setc(hdrs_bkt, "X-Chxj-Forward", "Done");
     serf_bucket_headers_setc(hdrs_bkt, "X-Chxj-Content-Length", apr_psprintf(r->pool, "%d", ctx->post_data_len));
-    DBG(ctx->r, "REQ[%X] REQUEST key:[%s], val:[%s]", (apr_size_t)ctx->r, "X-Chxj-Forward", "Done");
-    DBG(ctx->r, "REQ[%X] REQUEST key:[%s], val:[%s]", (apr_size_t)ctx->r, "X-Chxj-Content-Length", apr_psprintf(r->pool, "%d", ctx->post_data_len));
+    DBG(ctx->r, "REQ[%X] REQUEST key:[%s], val:[%s]", (unsigned int)(apr_size_t)ctx->r, "X-Chxj-Forward", "Done");
+    DBG(ctx->r, "REQ[%X] REQUEST key:[%s], val:[%s]", (unsigned int)(apr_size_t)ctx->r, "X-Chxj-Content-Length", apr_psprintf(r->pool, "%d", ctx->post_data_len));
   }
-  DBG(ctx->r, "REQ[%X] REQUEST Content-Length:[%s]", (apr_size_t)r, serf_bucket_headers_get(hdrs_bkt, "Content-Length"));
+  DBG(ctx->r, "REQ[%X] REQUEST Content-Length:[%s]", (unsigned int)(apr_size_t)r, serf_bucket_headers_get(hdrs_bkt, "Content-Length"));
 
   apr_atomic_inc32(&(ctx->requests_outstanding));
   if (ctx->acceptor_ctx->ssl_flag) {
