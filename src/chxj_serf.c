@@ -116,7 +116,7 @@ s_accept_response(serf_request_t *request, serf_bucket_t *stream, void *acceptor
 
 
 static apr_status_t 
-s_handle_response(serf_request_t *UNUSED(request), serf_bucket_t *response, void *handler_ctx, apr_pool_t *pool)
+s_handle_response(serf_request_t *UNUSED(request), serf_bucket_t *response, void *handler_ctx, apr_pool_t *UNUSED(pool))
 {
   const char      *data;
   apr_size_t      len;
@@ -164,14 +164,14 @@ s_handle_response(serf_request_t *UNUSED(request), serf_bucket_t *response, void
 
     if (len > 0) {
       if (! ctx->response) {
-        ctx->response = apr_palloc(pool, len + 1);
+        ctx->response = apr_palloc(ctx->pool, len + 1);
         ctx->response[0] = 0;
         ctx->response_len = 0;
       }
       else {
-        char *tmp = apr_palloc(pool, ctx->response_len);
+        char *tmp = apr_palloc(ctx->pool, ctx->response_len);
         memcpy(tmp, ctx->response, ctx->response_len);
-        ctx->response = apr_palloc(pool, ctx->response_len + len + 1);
+        ctx->response = apr_palloc(ctx->pool, ctx->response_len + len + 1);
         memcpy(ctx->response, tmp, ctx->response_len);
       }
     

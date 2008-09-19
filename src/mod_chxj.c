@@ -186,7 +186,7 @@ chxj_headers_fixup(request_rec *r)
       return DECLINED;
     }
     if (!entryp || !(entryp->action & CONVRULE_ENGINE_ON_BIT)) {
-      DBG(r,"EngineOff");
+      DBG(r,"REQ[%X] EngineOff", (unsigned int)(apr_size_t)r);
       return DECLINED;
     }
   
@@ -211,7 +211,7 @@ chxj_headers_fixup(request_rec *r)
 
   if (r->method_number == M_POST) {
     if (! apr_table_get(r->headers_in, "X-Chxj-Forward")) {
-        DBG(r, "set Input handler old:[%s] proxyreq:[%d] uri:[%s] filename:[%s]", r->handler, r->proxyreq, r->uri, r->filename);
+        DBG(r, "REQ[%X] set Input handler old:[%s] proxyreq:[%d] uri:[%s] filename:[%s]", (unsigned int)(apr_size_t)r, r->handler, r->proxyreq, r->uri, r->filename);
         r->proxyreq = PROXYREQ_NONE;
         r->handler = apr_psprintf(r->pool, "chxj-input-handler");
     }
@@ -222,8 +222,8 @@ chxj_headers_fixup(request_rec *r)
         apr_status_t rv = apr_sockaddr_info_get(&address, ap_get_server_name(r), APR_UNSPEC, ap_get_server_port(r), 0, r->pool);
         if (rv != APR_SUCCESS) {
           char buf[256];
-          ERR(r, "%s:%d apr_sockaddr_info_get() failed: rv:[%d|%s]", APLOG_MARK, rv, apr_strerror(rv, buf, 256));
-          DBG(r, "end chxj_headers_fixup()");
+          ERR(r, "REQ[%X] %s:%d apr_sockaddr_info_get() failed: rv:[%d|%s]", (unsigned int)(apr_size_t)r, APLOG_MARK, rv, apr_strerror(rv, buf, 256));
+          DBG(r, "REQ[%X] end chxj_headers_fixup()", (unsigned int)(apr_size_t)r);
           return DECLINED;
         }
         char *addr;
@@ -1468,10 +1468,10 @@ chxj_insert_filter(request_rec *r)
 
   if (! apr_table_get(r->headers_in, "X-Chxj-Forward")) {
     ap_add_output_filter("chxj_output_filter", ctx, r, r->connection);
-    DBG(r, "added Output Filter");
+    DBG(r, "REQ[%X] added Output Filter", (unsigned int)(apr_size_t)r);
   }
 
-  DBG(r, "end   chxj_insert_filter()");
+  DBG(r, "REQ[%X] end   chxj_insert_filter()", (unsigned int)(apr_size_t)r);
 }
 
 
