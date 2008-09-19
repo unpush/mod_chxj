@@ -16,6 +16,7 @@
  */
 #include "chxj_tag_util.h"
 #include "chxj_url_encode.h"
+#include "chxj_str_util.h"
 
 /**
  * The value of the VALUE attribute that the object tag node maintains is
@@ -603,11 +604,19 @@ qs_get_parse_attr(Doc* doc, Node* tag, request_rec* r)
 
 
 char *
-chxj_form_action_to_hidden_tag(apr_pool_t *pool, const char *str, int xmlFlag, int post)
+chxj_form_action_to_hidden_tag(request_rec *r, apr_pool_t *pool, const char *str, int xmlFlag, int post)
 {
   char *s = apr_pstrdup(pool, str);
+  if (!s) return NULL;
+  if (chxj_starts_with(s, "http://") || chxj_starts_with(s, "https://")) {
+    apr_uri_t url;
+    apr_uri_parse(pool, s, &url);
+    if (url.hostname && strcasecmp(url.hostname, r->hostname) != 0) {
+      return NULL;
+    }
+  }
   s = strchr(s, '?');
-  if (!s) return (char *)str;
+  if (!s) return NULL;
   s++;
   char *result = NULL;
 
