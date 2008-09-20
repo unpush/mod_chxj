@@ -74,6 +74,7 @@ SERF_DECLARE(void) serf_bucket_headers_setx(
     header_list_t *found = ctx->list;
     header_list_t *hdr;
 
+#if 0 /* It is not on business of libserf for mod_chxj. A.Konno */
     /* Check to see if this header is already present. */
     while (found) {
       if (strncasecmp(found->header, header, header_size) == 0)
@@ -102,6 +103,7 @@ SERF_DECLARE(void) serf_bucket_headers_setx(
         found->alloc_flags |= ALLOC_VALUE;
         return;
     }
+#endif
 
     /* Else the header is not already present.  Add it to the bucket. */
 
