@@ -168,7 +168,7 @@ s_handle_response(serf_request_t *UNUSED(request), serf_bucket_t *response, void
         rv = serf_bucket_read(hdrs, 2048, &data, &len);
         if (SERF_BUCKET_READ_ERROR(rv))
           return rv;
-        tmp_headers = apr_pstrcat(ctx->pool, tmp_headers, apr_psprintf(ctx->pool , "%.*s", len, data), NULL);
+        tmp_headers = apr_pstrcat(ctx->pool, tmp_headers, apr_psprintf(ctx->pool , "%.*s", (unsigned int)len, data), NULL);
         if (APR_STATUS_IS_EOF(rv)) {
           break;
         }
