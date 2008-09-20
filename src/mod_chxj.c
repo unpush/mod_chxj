@@ -1157,7 +1157,7 @@ chxj_input_handler(request_rec *r)
   apr_table_unset(r->headers_in, "Content-Length");
   apr_table_setn(r->headers_in, "Content-Length", apr_psprintf(pool, "%" APR_SIZE_T_FMT, post_data_len));
   response = chxj_serf_post(r, pool, url_path, post_data, post_data_len, 1, &res_len);
-  DBG(r, "response:[%.*s][%d]", res_len, response, res_len);
+  DBG(r, "REQ[%X] response:[%.*s][%" APR_SIZE_T_FMT  "]", (unsigned int)(apr_size_t)r, res_len, response, res_len);
 
   char *chunked;
   if ((chunked = (char *)apr_table_get(r->headers_out, "Transfer-Encoding")) != NULL) {
