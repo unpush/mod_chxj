@@ -27,6 +27,8 @@
 #include <apr_pools.h>
 #include <apr_network_io.h>
 #include <apr_time.h>
+#include <apr_poll.h>
+#include <apr_uri.h>
 
 #include "serf_declare.h"
 
@@ -77,6 +79,51 @@ typedef struct serf_request_t serf_request_t;
  */
 SERF_DECLARE(serf_context_t *) serf_context_create(apr_pool_t *pool);
 
+/**
+ * Callback function. Add a socket to the externally managed poll set.
+ *
+ * Both @a pfd and @a serf_baton should be used when calling serf_event_trigger
+ * later.
+ */
+typedef apr_status_t (*serf_socket_add_t)(void *user_baton,
+                                          apr_pollfd_t *pfd,
+                                          void *serf_baton);
+/**
+ * Callback function. Remove the socket, identified by both @a pfd and
+ * @a serf_baton from the externally managed poll set.
+ */
+typedef apr_status_t (*serf_socket_remove_t)(void *user_baton,
+                                             apr_pollfd_t *pfd,
+                                             void *serf_baton);
+
+/* Create a new context for serf operations.
+ *
+ * Use this function to make serf not use its internal control loop, but
+ * instead rely on an external event loop. Serf will use the @a addf and @a rmf
+ * callbacks to notify of any event on a connection. The @a user_baton will be
+ * passed through the addf and rmf callbacks.
+ *
+ * The context will be allocated within @a pool.
+ */
+SERF_DECLARE(serf_context_t *) serf_context_create_ex(void *user_baton,
+                                                      serf_socket_add_t addf,
+                                                      serf_socket_remove_t rmf,
+                                                      apr_pool_t *pool);
+
+/**
+ * Make serf process events on a connection, identified by both @a pfd and
+ * @a serf_baton.
+ *
+ * Any outbound data is delivered, and incoming data is made available to
+ * the associated response handlers and their buckets.
+ *
+ * If any data is processed (incoming or outgoing), then this function will
+ * return with APR_SUCCESS.
+ */
+SERF_DECLARE(apr_status_t) serf_event_trigger(serf_context_t *s,
+                                              void *serf_baton,
+                                              const apr_pollfd_t *pfd);
+
 /** @see serf_context_run should not block at all. */
 #define SERF_DURATION_NOBLOCK 0
 /** @see serf_context_run should run for (nearly) "forever". */
@@ -103,6 +150,25 @@ SERF_DECLARE(apr_status_t) serf_context_run(serf_context_t *ctx,
                                             apr_short_interval_time_t duration,
                                             apr_pool_t *pool);
 
+
+SERF_DECLARE(apr_status_t) serf_context_prerun(serf_context_t *ctx);
+
+/**
+ * Callback function for progress information. @a progress indicates cumulative
+ * number of bytes read or written, for the whole context.
+ */
+typedef void (*serf_progress_t)(void *progress_baton,
+                                apr_off_t read,
+                                apr_off_t write);
+
+/**
+ * Sets the progress callback function. @a progress_func will be called every
+ * time bytes are read of or written on a socket.
+ */
+SERF_DECLARE(void) serf_context_set_progress_cb(
+    serf_context_t *ctx,
+    const serf_progress_t progress_func,
+    void *progress_baton);
 
 /** @} */
 
@@ -255,6 +321,39 @@ SERF_DECLARE(serf_connection_t *) serf_connection_create(
     apr_pool_t *pool);
 
 /**
+ * Create a new connection associated with the @a ctx serf context.
+ *
+ * A connection will be created to (eventually) connect to the address
+ * specified by @a address. The address must live at least as long as
+ * @a pool (thus, as long as the connection object).
+ *
+ * The host address will be looked up based on the hostname in @a host_info.
+ *
+ * The connection object will be allocated within @a pool. Clearing or
+ * destroying this pool will close the connection, and terminate any
+ * outstanding requests or responses.
+ *
+ * When the connection is closed (upon request or because of an error),
+ * then the @a closed callback is invoked, and @a closed_baton is passed.
+ *
+ * ### doc on setup(_baton). tweak below comment re: acceptor.
+ * NULL may be passed for @a acceptor and @a closed; default implementations
+ * will be used.
+ *
+ * Note: the connection is not made immediately. It will be opened on
+ * the next call to @see serf_context_run.
+ */
+SERF_DECLARE(apr_status_t) serf_connection_create2(
+    serf_connection_t **conn,
+    serf_context_t *ctx,
+    apr_uri_t host_info,
+    serf_connection_setup_t setup,
+    void *setup_baton,
+    serf_connection_closed_t closed,
+    void *closed_baton,
+    apr_pool_t *pool);
+
+/**
  * Reset the connection, but re-open the socket again.
  */
 SERF_DECLARE(apr_status_t) serf_connection_reset(
@@ -268,6 +367,16 @@ SERF_DECLARE(apr_status_t) serf_connection_reset(
  */
 SERF_DECLARE(apr_status_t) serf_connection_close(
     serf_connection_t *conn);
+
+/**
+ * Sets the maximum number of outstanding requests @a max_requests on the
+ * connection @a conn. Setting max_requests to 0 means unlimited (the default).
+ * Ex.: setting max_requests to 1 means a request is sent when a response on the
+ * previous request was received and handled.
+ */
+SERF_DECLARE(void)
+serf_connection_set_max_outstanding_requests(serf_connection_t *conn,
+                                             unsigned int max_requests);
 
 /**
  * Setup the @a request for delivery on its connection.
@@ -309,6 +418,25 @@ typedef apr_status_t (*serf_request_setup_t)(serf_request_t *request,
  * callback executes is not supported.
  */
 SERF_DECLARE(serf_request_t *) serf_connection_request_create(
+    serf_connection_t *conn,
+    serf_request_setup_t setup,
+    void *setup_baton);
+
+/**
+ * Construct a request object for the @a conn connection, add it in the
+ * list as the next to-be-written request before all unwritten requests.
+ *
+ * When it is time to deliver the request, the @a setup callback will
+ * be invoked with the @a setup_baton passed into it to complete the
+ * construction of the request object.
+ *
+ * If the request has not (yet) been delivered, then it may be canceled
+ * with @see serf_request_cancel.
+ *
+ * Invoking any calls other than @see serf_request_cancel before the setup
+ * callback executes is not supported.
+ */
+SERF_DECLARE(serf_request_t *) serf_connection_priority_request_create(
     serf_connection_t *conn,
     serf_request_setup_t setup,
     void *setup_baton);
@@ -359,7 +487,47 @@ SERF_DECLARE(void) serf_request_set_handler(
     const serf_response_handler_t handler,
     const void **handler_baton);
 
+/**
+ * Configure proxy server settings, to be used by all connections associated
+ * with the @a ctx serf context.
+ *
+ * The next connection will be created to connect to the proxy server
+ * specified by @a address. The address must live at least as long as the
+ * serf context.
+ */
+SERF_DECLARE(void) serf_config_proxy(
+    serf_context_t *ctx,
+    apr_sockaddr_t *address);
+
 /* ### maybe some connection control functions for flood? */
+
+/*** Special bucket creation functions ***/
+
+/**
+ * Create a bucket of type 'socket bucket'.
+ * This is basically a wrapper around @a serf_bucket_socket_create, which
+ * initializes the bucket using connection and/or context specific settings.
+ */
+SERF_DECLARE(serf_bucket_t *) serf_context_bucket_socket_create(
+    serf_context_t *ctx,
+    apr_socket_t *skt,
+    serf_bucket_alloc_t *allocator);
+
+/**
+ * Create a bucket of type 'request bucket'.
+ * This is basically a wrapper around @a serf_bucket_request_create, which
+ * initializes the bucket using request, connection and/or context specific
+ * settings.
+ *
+ * If the host_url and/or user_agent options are set on the connection,
+ * headers 'Host' and/or 'User-Agent' will be set on the request message.
+ */
+SERF_DECLARE(serf_bucket_t *) serf_request_bucket_request_create(
+    serf_request_t *request,
+    const char *method,
+    const char *uri,
+    serf_bucket_t *body,
+    serf_bucket_alloc_t *allocator);
 
 /** @} */
 
@@ -717,8 +885,13 @@ SERF_DECLARE(void) serf_debug__bucket_alloc_check(serf_bucket_alloc_t *allocator
 
 /* Version info */
 #define SERF_MAJOR_VERSION 0
-#define SERF_MINOR_VERSION 1
-#define SERF_PATCH_VERSION 2
+#define SERF_MINOR_VERSION 2
+#define SERF_PATCH_VERSION 0
+
+/* Version number string */
+#define SERF_VERSION_STRING APR_STRINGIFY(SERF_MAJOR_VERSION) "." \
+                            APR_STRINGIFY(SERF_MINOR_VERSION) "." \
+                            APR_STRINGIFY(SERF_PATCH_VERSION)
 
 /**
  * Check at compile time if the Serf version is at least a certain

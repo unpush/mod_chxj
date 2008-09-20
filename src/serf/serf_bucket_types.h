@@ -17,6 +17,7 @@
 #define SERF_BUCKET_TYPES_H
 
 #include <apr_mmap.h>
+#include <apr_hash.h>
 
 /* this header and serf.h refer to each other, so take a little extra care */
 #ifndef SERF_H
@@ -55,6 +56,15 @@ SERF_DECLARE(void) serf_bucket_request_become(serf_bucket_t *bucket,
                                               const char *method,
                                               const char *uri,
                                               serf_bucket_t *body);
+
+/**
+ * Sets the root url of the remote host. If this request contains a relative
+ * url, it will be prefixed with the root url to form an absolute url.
+ * @a bucket is the request bucket. @a root_url is the absolute url of the
+ * root of the remote host, without the closing '/'.
+ */
+SERF_DECLARE(void) serf_bucket_request_set_root(serf_bucket_t *bucket,
+                                                const char *root_url);
 
 /* ==================================================================== */
 
@@ -163,6 +173,18 @@ SERF_DECLARE(serf_bucket_t *) serf_bucket_socket_create(
     apr_socket_t *skt,
     serf_bucket_alloc_t *allocator);
 
+/**
+ * Call @a progress_func every time bytes are read from the socket, pass
+ * the number of bytes read.
+ *
+ * When using serf's bytes read & written progress indicator, pass
+ * @a serf_context_progress_delta for progress_func and the serf_context for
+ * progress_baton.
+ */
+SERF_DECLARE(void) serf_bucket_socket_set_read_progress_cb(
+    serf_bucket_t *bucket,
+    const serf_progress_t progress_func,
+    void *progress_baton);
 
 /* ==================================================================== */
 
@@ -244,6 +266,9 @@ SERF_DECLARE(void) serf_bucket_headers_setc(
  * Set the specified @a header and @a value into the bucket, without
  * copying either attribute. Both attributes should remain in scope at
  * least as long as the bucket.
+ *
+ * @note In the case where a header already exists this will result
+ *       in a reallocation and copy, @see serf_bucket_headers_setn.
  */
 SERF_DECLARE(void) serf_bucket_headers_setn(
     serf_bucket_t *headers_bucket,
@@ -258,6 +283,12 @@ SERF_DECLARE(void) serf_bucket_headers_setn(
  * be copied if @a header_copy is set, and the value is copied if
  * @a value_copy is set. If the values are not copied, then they should
  * remain in scope at least as long as the bucket.
+ *
+ * If @a headers_bucket already contains a header with the same name
+ * as @a header, then append @a value to the existing value,
+ * separating with a comma (as per RFC 2616, section 4.2).  In this
+ * case, the new value must be allocated and the header re-used, so
+ * behave as if @a value_copy were true and @a header_copy false.
  */
 SERF_DECLARE(void) serf_bucket_headers_setx(
     serf_bucket_t *headers_bucket,
@@ -275,7 +306,7 @@ SERF_DECLARE(const char *) serf_bucket_headers_get(
  */
 typedef int (serf_bucket_headers_do_callback_fn_t)(
     void *baton,
-    const char *key, 
+    const char *key,
     const char *value);
 
 /**
@@ -339,12 +370,17 @@ SERF_DECLARE(serf_bucket_t *) serf_bucket_limit_create(
 
 
 /* ==================================================================== */
-
+#define SERF_SSL_CERT_NOTYETVALID       1
+#define SERF_SSL_CERT_EXPIRED           2
+#define SERF_SSL_CERT_UNKNOWNCA         4
+#define SERF_SSL_CERT_SELF_SIGNED       8
+#define SERF_SSL_CERT_UNKNOWN_FAILURE  16
 
 SERF_DECLARE_DATA extern const serf_bucket_type_t serf_bucket_type_ssl_encrypt;
 #define SERF_BUCKET_IS_SSL_ENCRYPT(b) SERF_BUCKET_CHECK((b), ssl_encrypt)
 
 typedef struct serf_ssl_context_t serf_ssl_context_t;
+typedef struct serf_ssl_certificate_t serf_ssl_certificate_t;
 
 typedef apr_status_t (*serf_ssl_need_client_cert_t)(void *data,
                                                     const char **cert_path);
@@ -352,6 +388,11 @@ typedef apr_status_t (*serf_ssl_need_client_cert_t)(void *data,
 typedef apr_status_t (*serf_ssl_need_cert_password_t)(void *data,
                                                       const char *cert_path,
                                                       const char **password);
+
+typedef apr_status_t
+(*serf_ssl_need_server_cert_t)(void *data,
+                               int failures,
+                               const serf_ssl_certificate_t *cert);
 
 SERF_DECLARE(void)
 serf_ssl_client_cert_provider_set(serf_ssl_context_t *context,
@@ -364,6 +405,58 @@ serf_ssl_client_cert_password_set(serf_ssl_context_t *context,
                                   serf_ssl_need_cert_password_t callback,
                                   void *data,
                                   void *cache_pool);
+/**
+ * Set a callback to override the default SSL server certificate validation
+ * algorithm.
+ */
+SERF_DECLARE(void)
+serf_ssl_server_cert_callback_set(serf_ssl_context_t *context,
+                                  serf_ssl_need_server_cert_t callback,
+                                  void *data);
+
+/**
+ * Use the default root CA certificates as included with the OpenSSL library.
+ */
+SERF_DECLARE(apr_status_t)
+serf_ssl_use_default_certificates(serf_ssl_context_t *context);
+
+/**
+ * Extract the fields of the issuer in a table with keys (E, CN, OU, O, L,
+ * ST and C). The returned table will be allocated in @a pool.
+ */
+SERF_DECLARE(apr_hash_t *)
+serf_ssl_cert_issuer(const serf_ssl_certificate_t *cert, apr_pool_t *pool);
+
+/**
+ * Extract the fields of the subject in a table with keys (E, CN, OU, O, L,
+ * ST and C). The returned table will be allocated in @a pool.
+ */
+SERF_DECLARE(apr_hash_t *)
+serf_ssl_cert_subject(const serf_ssl_certificate_t *cert, apr_pool_t *pool);
+
+/**
+ * Extract the fields of the certificate in a table with keys (sha1, notBefore,
+ * notAfter). The returned table will be allocated in @a pool.
+ */
+SERF_DECLARE(apr_hash_t *)
+serf_ssl_cert_certificate(const serf_ssl_certificate_t *cert, apr_pool_t *pool);
+
+/**
+ * Load a CA certificate file from a path @a file_path. If the file was loaded
+ * and parsed correctly, a certificate @a cert will be created and returned.
+ * This certificate object will be alloced in @a pool.
+ */
+SERF_DECLARE(apr_status_t)
+serf_ssl_load_cert_file(serf_ssl_certificate_t **cert, const char *file_path,
+                        apr_pool_t *pool);
+
+/**
+ * Adds the certificate @a cert to the list of trusted certificates in
+ * @a ssl_ctx that will be used for verification.
+ * See also @a serf_ssl_load_cert_file.
+ */
+SERF_DECLARE(apr_status_t)
+serf_ssl_trust_cert(serf_ssl_context_t *ssl_ctx, serf_ssl_certificate_t *cert);
 
 SERF_DECLARE(serf_bucket_t *) serf_bucket_ssl_encrypt_create(
     serf_bucket_t *stream,

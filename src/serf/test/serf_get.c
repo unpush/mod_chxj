@@ -25,8 +25,6 @@
 
 #include "serf.h"
 
-#define SERF_VERSION_STRING "0.01"
-
 typedef struct {
     int using_ssl;
     serf_ssl_context_t *ssl_ctx;
@@ -165,7 +163,8 @@ static apr_status_t handle_response(serf_request_t *request,
 static apr_status_t setup_request(serf_request_t *request,
                                   void *setup_baton,
                                   serf_bucket_t **req_bkt,
-                                  serf_response_acceptor_t *acceptor,                                             void **acceptor_baton,
+                                  serf_response_acceptor_t *acceptor,
+                                  void **acceptor_baton,
                                   serf_response_handler_t *handler,
                                   void **handler_baton,
                                   apr_pool_t *pool)
@@ -239,7 +238,7 @@ static apr_status_t setup_request(serf_request_t *request,
     return APR_SUCCESS;
 }
 
-void print_usage(apr_pool_t *pool)
+static void print_usage(apr_pool_t *pool)
 {
     puts("serf_get [options] URL");
     puts("-h\tDisplay this help");

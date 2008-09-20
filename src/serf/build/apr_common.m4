@@ -161,8 +161,8 @@ changequote([, ])dnl
   # autoconf doesn't add --silent to ac_configure_args; explicitly pass it
   test "x$silent" = "xyes" && apr_configure_args="$apr_configure_args --silent"
 
-  dnl The eval makes quoting arguments work - specifically $2 where the
-  dnl quoting mechanisms used is "" rather than [].
+  dnl The eval makes quoting arguments work - specifically the second argument
+  dnl where the quoting mechanisms used is "" rather than [].
   dnl
   dnl We need to execute another shell because some autoconf/shell combinations
   dnl will choke after doing repeated APR_SUBDIR_CONFIG()s.  (Namely Solaris
@@ -958,4 +958,19 @@ EOF
 fi
 
 AC_SUBST(MKDEP)
+])
+
+dnl
+dnl APR_CHECK_TYPES_COMPATIBLE(TYPE-1, TYPE-2, [ACTION-IF-TRUE])
+dnl
+dnl Try to determine whether two types are the same. Only works
+dnl for gcc and icc.
+dnl
+AC_DEFUN([APR_CHECK_TYPES_COMPATIBLE], [
+define([apr_cvname], apr_cv_typematch_[]translit([$1], [ ], [_])_[]translit([$2], [ ], [_]))
+AC_CACHE_CHECK([whether $1 and $2 are the same], apr_cvname, [
+AC_TRY_COMPILE(AC_INCLUDES_DEFAULT, [
+    int foo[0 - !__builtin_types_compatible_p($1, $2)];
+], [apr_cvname=yes
+$3], [apr_cvname=no])])
 ])

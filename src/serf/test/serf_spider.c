@@ -30,7 +30,6 @@
 #include "serf.h"
 #include "serf_bucket_util.h"
 
-#define SERF_VERSION_STRING "0.01"
 /*#define SERF_VERBOSE*/
 
 #if !APR_HAS_THREADS
@@ -123,8 +122,8 @@ typedef struct {
     apr_thread_cond_t *doc_queue_condvar;
 
     const char *hostinfo;
-  
-    /* includes: path, query, fragment. */ 
+
+    /* includes: path, query, fragment. */
     char *full_path;
     apr_size_t full_path_len;
 
@@ -564,9 +563,9 @@ static void * APR_THREAD_FUNC parser_thread(apr_thread_t *thread, void *data)
     apr_pool_create(&subpool, pool);
 
     while (1) {
-        apr_pool_clear(subpool);
-
         doc_path_t *dup;
+
+        apr_pool_clear(subpool);
 
         /* Grab it. */
         apr_thread_mutex_lock(ctx->mutex);

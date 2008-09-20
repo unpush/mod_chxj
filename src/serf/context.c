@@ -13,8 +13,6 @@
  * limitations under the License.
  */
 
-#include <stdlib.h>  /* ### for abort() */
-
 #include <apr_pools.h>
 #include <apr_poll.h>
 #include <apr_version.h>
@@ -59,12 +57,18 @@ struct serf_request_t {
     struct serf_request_t *next;
 };
 
+typedef struct serf_pollset_t {
+    /* the set of connections to poll */
+    apr_pollset_t *pollset;
+} serf_pollset_t;
+
 struct serf_context_t {
     /* the pool used for self and for other allocations */
     apr_pool_t *pool;
 
-    /* the set of connections to poll */
-    apr_pollset_t *pollset;
+    void *pollset_baton;
+    serf_socket_add_t pollset_add;
+    serf_socket_remove_t pollset_rm;
 
     /* one of our connections has a dirty pollset state. */
     int dirty_pollset;
@@ -72,6 +76,15 @@ struct serf_context_t {
     /* the list of active connections */
     apr_array_header_t *conns;
 #define GET_CONN(ctx, i) (((serf_connection_t **)(ctx)->conns->elts)[i])
+
+    /* Proxy server address */
+    apr_sockaddr_t *proxy_address;
+
+    /* Progress callback */
+    serf_progress_t progress_func;
+    void *progress_baton;
+    apr_off_t progress_read;
+    apr_off_t progress_written;
 };
 
 struct serf_connection_t {
@@ -128,6 +141,13 @@ struct serf_connection_t {
     void *setup_baton;
     serf_connection_closed_t closed;
     void *closed_baton;
+
+    /* Max. number of outstanding requests. */
+    unsigned int max_outstanding_requests;
+
+    /* Host info. */
+    const char *host_url;
+    apr_uri_t host_info;
 };
 
 /* cleanup for sockets */
@@ -167,12 +187,17 @@ static apr_status_t update_pollset(serf_connection_t *conn)
     apr_status_t status;
     apr_pollfd_t desc = { 0 };
 
+    if (!conn->skt) {
+        return APR_SUCCESS;
+    }
+
     /* Remove the socket from the poll set. */
     desc.desc_type = APR_POLL_SOCKET;
     desc.desc.s = conn->skt;
     desc.reqevents = conn->reqevents;
 
-    status = apr_pollset_remove(ctx->pollset, &desc);
+    status = ctx->pollset_rm(ctx->pollset_baton,
+                              &desc, conn);
     if (status && !APR_STATUS_IS_NOTFOUND(status))
         return status;
 
@@ -191,8 +216,11 @@ static apr_status_t update_pollset(serf_connection_t *conn)
         else {
             serf_request_t *request = conn->requests;
 
-            if (conn->probable_keepalive_limit &&
-                conn->completed_requests > conn->probable_keepalive_limit) {
+            if ((conn->probable_keepalive_limit &&
+                 conn->completed_requests > conn->probable_keepalive_limit) ||
+                (conn->max_outstanding_requests &&
+                 conn->completed_requests - conn->completed_responses >=
+                     conn->max_outstanding_requests)) {
                 /* we wouldn't try to write any way right now. */
             }
             else {
@@ -205,15 +233,14 @@ static apr_status_t update_pollset(serf_connection_t *conn)
         }
     }
 
-    desc.client_data = conn;
-
     /* save our reqevents, so we can pass it in to remove later. */
     conn->reqevents = desc.reqevents;
 
     /* Note: even if we don't want to read/write this socket, we still
      * want to poll it for hangups and errors.
      */
-    return apr_pollset_add(ctx->pollset, &desc);
+    return ctx->pollset_add(ctx->pollset_baton,
+                            &desc, conn);
 }
 
 #ifdef SERF_DEBUG_BUCKET_USE
@@ -248,6 +275,7 @@ static apr_status_t open_connections(serf_context_t *ctx)
         serf_connection_t *conn = GET_CONN(ctx, i);
         apr_status_t status;
         apr_socket_t *skt;
+        apr_sockaddr_t *serv_addr;
 
         conn->seen_in_pollset = 0;
 
@@ -286,11 +314,17 @@ static apr_status_t open_connections(serf_context_t *ctx)
         /* Configured. Store it into the connection now. */
         conn->skt = skt;
 
+        /* Do we have to connect to a proxy server? */
+        if (ctx->proxy_address)
+            serv_addr = ctx->proxy_address;
+        else
+            serv_addr = conn->address;
+
         /* Now that the socket is set up, let's connect it. This should
          * return immediately.
          */
         if ((status = apr_socket_connect(skt,
-                                         conn->address)) != APR_SUCCESS) {
+                                         serv_addr)) != APR_SUCCESS) {
             if (!APR_STATUS_IS_EINPROGRESS(status))
                 return status;
         }
@@ -325,6 +359,26 @@ static apr_status_t no_more_writes(serf_connection_t *conn,
    */
   conn->dirty_conn = 1;
   conn->ctx->dirty_pollset = 1;
+  return APR_SUCCESS;
+}
+
+/* Read the 'Connection' header from the response. Return SERF_ERROR_CLOSING if
+ * the header contains value 'close' indicating the server is closing the
+ * connection right after this response.
+ * Otherwise returns APR_SUCCESS.
+ */
+static apr_status_t is_conn_closing(serf_bucket_t *response)
+{
+  serf_bucket_t *hdrs;
+  const char *val;
+
+  hdrs = serf_bucket_response_get_headers(response);
+  val = serf_bucket_headers_get(hdrs, "Connection");
+  if (val && strcasecmp("close", val) == 0)
+    {
+      return SERF_ERROR_CLOSING;
+    }
+
   return APR_SUCCESS;
 }
 
@@ -395,7 +449,8 @@ static apr_status_t remove_connection(serf_context_t *ctx,
     desc.desc.s = conn->skt;
     desc.reqevents = conn->reqevents;
 
-    return apr_pollset_remove(ctx->pollset, &desc);
+    return ctx->pollset_rm(ctx->pollset_baton,
+                           &desc, conn);
 }
 
 static apr_status_t reset_connection(serf_connection_t *conn,
@@ -412,7 +467,7 @@ static apr_status_t reset_connection(serf_connection_t *conn,
     old_reqs = conn->requests;
     held_reqs = conn->hold_requests;
     held_reqs_tail = conn->hold_requests_tail;
- 
+
     if (conn->closing) {
         conn->hold_requests = NULL;
         conn->hold_requests_tail = NULL;
@@ -475,6 +530,27 @@ static apr_status_t reset_connection(serf_connection_t *conn,
     return APR_SUCCESS;
 }
 
+/**
+ * Callback function (implements serf_progress_t). Takes a number of bytes
+ * read @a read and bytes written @a written, adds those to the total for this
+ * context and notifies an interested party (if any).
+ */
+static void serf_context_progress_delta(
+    void *progress_baton,
+    apr_off_t read,
+    apr_off_t written)
+{
+    serf_context_t *ctx = progress_baton;
+
+    ctx->progress_read += read;
+    ctx->progress_written += written;
+
+    if (ctx->progress_func)
+        ctx->progress_func(ctx->progress_baton,
+                           ctx->progress_read,
+                           ctx->progress_written);
+}
+
 static apr_status_t socket_writev(serf_connection_t *conn)
 {
     apr_size_t written;
@@ -504,6 +580,9 @@ static apr_status_t socket_writev(serf_connection_t *conn)
         if (len == written) {
             conn->vec_len = 0;
         }
+
+        /* Log progress information */
+        serf_context_progress_delta(conn->ctx, 0, written);
     }
 
     return status;
@@ -534,6 +613,13 @@ static apr_status_t write_to_connection(serf_connection_t *conn)
         int stop_reading = 0;
         apr_status_t status;
         apr_status_t read_status;
+
+        if (conn->max_outstanding_requests &&
+            conn->completed_requests -
+                conn->completed_responses >= conn->max_outstanding_requests) {
+            /* backoff for now. */
+            return APR_SUCCESS;
+        }
 
         /* If we have unwritten data, then write what we can. */
         while (conn->vec_len) {
@@ -673,6 +759,7 @@ static apr_status_t read_from_connection(serf_connection_t *conn)
 {
     apr_status_t status;
     apr_pool_t *tmppool;
+    int close_connection = FALSE;
 
     /* Whatever is coming in on the socket corresponds to the first request
      * on our chain.
@@ -772,7 +859,10 @@ static apr_status_t read_from_connection(serf_connection_t *conn)
             continue;
         }
 
-        if (!APR_STATUS_IS_EOF(status) && status != SERF_ERROR_CLOSING) {
+        close_connection = is_conn_closing(request->resp_bkt);
+
+        if (!APR_STATUS_IS_EOF(status) &&
+            close_connection != SERF_ERROR_CLOSING) {
             /* Whether success, or an error, there is no more to do unless
              * this request has been completed.
              */
@@ -802,14 +892,15 @@ static apr_status_t read_from_connection(serf_connection_t *conn)
             conn->requests_tail = NULL;
         }
 
+        conn->completed_responses++;
+
         /* This means that we're being advised that the connection is done. */
-        if (status == SERF_ERROR_CLOSING) {
+        if (close_connection == SERF_ERROR_CLOSING) {
             reset_connection(conn, 1);
-            status = APR_SUCCESS;
+            if (APR_STATUS_IS_EOF(status))
+                status = APR_SUCCESS;
             goto error;
         }
-
-        conn->completed_responses++;
 
         /* The server is suddenly deciding to serve more responses than we've
          * seen before.
@@ -914,19 +1005,103 @@ static apr_status_t check_dirty_pollsets(serf_context_t *ctx)
     return APR_SUCCESS;
 }
 
-SERF_DECLARE(serf_context_t *) serf_context_create(apr_pool_t *pool)
+
+static apr_status_t pollset_add(void *user_baton,
+                                apr_pollfd_t *pfd,
+                                void *serf_baton)
+{
+    serf_pollset_t *s = (serf_pollset_t*)user_baton;
+    pfd->client_data = serf_baton;
+    return apr_pollset_add(s->pollset, pfd);
+}
+
+static apr_status_t pollset_rm(void *user_baton,
+                               apr_pollfd_t *pfd,
+                               void *serf_baton)
+{
+    serf_pollset_t *s = (serf_pollset_t*)user_baton;
+    pfd->client_data = serf_baton;
+    return apr_pollset_remove(s->pollset, pfd);
+}
+
+
+SERF_DECLARE(void) serf_config_proxy(serf_context_t *ctx,
+                                     apr_sockaddr_t *address)
+{
+    ctx->proxy_address = address;
+}
+
+SERF_DECLARE(serf_context_t *) serf_context_create_ex(void *user_baton,
+                                                      serf_socket_add_t addf,
+                                                      serf_socket_remove_t rmf,
+                                                      apr_pool_t *pool)
 {
     serf_context_t *ctx = apr_pcalloc(pool, sizeof(*ctx));
 
     ctx->pool = pool;
 
-    /* build the pollset with a (default) number of connections */
-    (void) apr_pollset_create(&ctx->pollset, MAX_CONN, pool, 0);
+    if (user_baton != NULL) {
+        ctx->pollset_baton = user_baton;
+        ctx->pollset_add = addf;
+        ctx->pollset_rm = rmf;
+    }
+    else {
+        /* build the pollset with a (default) number of connections */
+        serf_pollset_t *ps = apr_pcalloc(pool, sizeof(*ps));
+        (void) apr_pollset_create(&ps->pollset, MAX_CONN, pool, 0);
+        ctx->pollset_baton = ps;
+        ctx->pollset_add = pollset_add;
+        ctx->pollset_rm = pollset_rm;
+    }
 
     /* default to a single connection since that is the typical case */
     ctx->conns = apr_array_make(pool, 1, sizeof(serf_connection_t *));
 
+    /* Initialize progress status */
+    ctx->progress_read = 0;
+    ctx->progress_written = 0;
+
     return ctx;
+}
+
+SERF_DECLARE(serf_context_t *) serf_context_create(apr_pool_t *pool)
+{
+    return serf_context_create_ex(NULL, NULL, NULL, pool);
+}
+
+SERF_DECLARE(apr_status_t) serf_context_prerun(serf_context_t *ctx)
+{
+    apr_status_t status = APR_SUCCESS;
+    if ((status = open_connections(ctx)) != APR_SUCCESS)
+        return status;
+
+    if ((status = check_dirty_pollsets(ctx)) != APR_SUCCESS)
+        return status;
+    return status;
+}
+
+SERF_DECLARE(apr_status_t) serf_event_trigger(serf_context_t *s,
+                                              void *serf_baton,
+                                              const apr_pollfd_t *desc)
+{
+    apr_status_t status = APR_SUCCESS;
+
+    serf_connection_t *conn = serf_baton;
+
+    /* apr_pollset_poll() can return a conn multiple times... */
+    if ((conn->seen_in_pollset & desc->rtnevents) != 0 ||
+        (conn->seen_in_pollset & APR_POLLHUP) != 0) {
+        return APR_SUCCESS;
+    }
+
+    conn->seen_in_pollset |= desc->rtnevents;
+
+    if ((status = process_connection(conn,
+                                     desc->rtnevents)) != APR_SUCCESS) {
+        return status;
+    }
+
+    return status;
 }
 
 SERF_DECLARE(apr_status_t) serf_context_run(serf_context_t *ctx,
@@ -936,14 +1111,13 @@ SERF_DECLARE(apr_status_t) serf_context_run(serf_context_t *ctx,
     apr_status_t status;
     apr_int32_t num;
     const apr_pollfd_t *desc;
+    serf_pollset_t *ps = (serf_pollset_t*)ctx->pollset_baton;
 
-    if ((status = open_connections(ctx)) != APR_SUCCESS)
+    if ((status = serf_context_prerun(ctx)) != APR_SUCCESS) {
         return status;
+    }
 
-    if ((status = check_dirty_pollsets(ctx)) != APR_SUCCESS)
-        return status;
-
-    if ((status = apr_pollset_poll(ctx->pollset, duration, &num,
+    if ((status = apr_pollset_poll(ps->pollset, duration, &num,
                                    &desc)) != APR_SUCCESS) {
         /* ### do we still need to dispatch stuff here?
            ### look at the potential return codes. map to our defined
@@ -955,23 +1129,25 @@ SERF_DECLARE(apr_status_t) serf_context_run(serf_context_t *ctx,
     while (num--) {
         serf_connection_t *conn = desc->client_data;
 
-        /* apr_pollset_poll() can return a conn multiple times... */
-        if ((conn->seen_in_pollset & desc->rtnevents) != 0 ||
-            (conn->seen_in_pollset & APR_POLLHUP) != 0) {
-            continue;
-        }
-        conn->seen_in_pollset |= desc->rtnevents;
-
-        if ((status = process_connection(conn,
-                                         desc++->rtnevents)) != APR_SUCCESS) {
-            /* ### what else to do? */
+        status = serf_event_trigger(ctx, conn, desc);
+        if (status) {
             return status;
         }
+
+        desc++;
     }
 
     return APR_SUCCESS;
 }
 
+SERF_DECLARE(void) serf_context_set_progress_cb(
+    serf_context_t *ctx,
+    const serf_progress_t progress_func,
+    void *progress_baton)
+{
+    ctx->progress_func = progress_func;
+    ctx->progress_baton = progress_baton;
+}
 
 SERF_DECLARE(serf_connection_t *) serf_connection_create(
     serf_context_t *ctx,
@@ -992,6 +1168,7 @@ SERF_DECLARE(serf_connection_t *) serf_connection_create(
     conn->closed_baton = closed_baton;
     conn->pool = pool;
     conn->allocator = serf_bucket_allocator_create(pool, NULL, NULL);
+    conn->stream = NULL;
 
     /* Create a subpool for our connection. */
     apr_pool_create(&conn->skt_pool, conn->pool);
@@ -1002,6 +1179,41 @@ SERF_DECLARE(serf_connection_t *) serf_connection_create(
     *(serf_connection_t **)apr_array_push(ctx->conns) = conn;
 
     return conn;
+}
+
+SERF_DECLARE(apr_status_t) serf_connection_create2(
+    serf_connection_t **conn,
+    serf_context_t *ctx,
+    apr_uri_t host_info,
+    serf_connection_setup_t setup,
+    void *setup_baton,
+    serf_connection_closed_t closed,
+    void *closed_baton,
+    apr_pool_t *pool)
+{
+    apr_status_t status;
+    serf_connection_t *c;
+    apr_sockaddr_t *host_address;
+
+    /* Parse the url, store the address of the server. */
+    status = apr_sockaddr_info_get(&host_address,
+                                   host_info.hostname,
+                                   APR_UNSPEC, host_info.port, 0, pool);
+    if (status)
+        return status;
+
+    c = serf_connection_create(ctx, host_address, setup, setup_baton,
+                               closed, closed_baton, pool);
+
+    /* We're not interested in the path following the hostname. */
+    c->host_url = apr_uri_unparse(c->pool,
+                                  &host_info,
+                                  APR_URI_UNP_OMITPATHINFO);
+    c->host_info = host_info;
+
+    *conn = c;
+
+    return status;
 }
 
 SERF_DECLARE(apr_status_t) serf_connection_reset(
@@ -1031,6 +1243,7 @@ SERF_DECLARE(apr_status_t) serf_connection_close(
                     (*conn->closed)(conn, conn->closed_baton, status,
                                     conn->pool);
                 }
+                conn->skt = NULL;
             }
             if (conn->stream != NULL) {
                 serf_bucket_destroy(conn->stream);
@@ -1057,6 +1270,13 @@ SERF_DECLARE(apr_status_t) serf_connection_close(
     /* We didn't find the specified connection. */
     /* ### doc talks about this w.r.t poll structures. use something else? */
     return APR_NOTFOUND;
+}
+
+SERF_DECLARE(void)
+serf_connection_set_max_outstanding_requests(serf_connection_t *conn,
+                                             unsigned int max_requests)
+{
+    conn->max_outstanding_requests = max_requests;
 }
 
 SERF_DECLARE(serf_request_t *) serf_connection_request_create(
@@ -1091,6 +1311,61 @@ SERF_DECLARE(serf_request_t *) serf_connection_request_create(
     return request;
 }
 
+SERF_DECLARE(serf_request_t *) serf_connection_priority_request_create(
+    serf_connection_t *conn,
+    serf_request_setup_t setup,
+    void *setup_baton)
+{
+    serf_request_t *request;
+    serf_request_t *iter, *prev;
+
+    request = serf_bucket_mem_alloc(conn->allocator, sizeof(*request));
+    request->conn = conn;
+    request->setup = setup;
+    request->setup_baton = setup_baton;
+    request->handler = NULL;
+    request->respool = NULL;
+    request->req_bkt = NULL;
+    request->resp_bkt = NULL;
+    request->next = NULL;
+
+    /* Link the new request after the last written request, but before all
+       upcoming requests. */
+    if (conn->closing) {
+        iter = conn->hold_requests;
+    }
+    else {
+        iter = conn->requests;
+    }
+    prev = NULL;
+
+    /* Find a request that has data which needs to be delivered. */
+    while (iter != NULL && iter->req_bkt == NULL && iter->setup == NULL) {
+        prev = iter;
+        iter = iter->next;
+    }
+
+    if (prev) {
+        request->next = iter;
+        prev->next = request;
+    } else {
+        request->next = iter;
+        if (conn->closing) {
+            conn->hold_requests = request;
+        }
+        else {
+            conn->requests = request;
+        }
+    }
+
+    if (! conn->closing) {
+        /* Ensure our pollset becomes writable in context run */
+        conn->ctx->dirty_pollset = 1;
+        conn->dirty_conn = 1;
+    }
+
+    return request;
+}
 
 SERF_DECLARE(apr_status_t) serf_request_cancel(serf_request_t *request)
 {
@@ -1121,4 +1396,42 @@ SERF_DECLARE(void) serf_request_set_handler(
 {
     request->handler = handler;
     request->handler_baton = handler_baton;
+}
+
+SERF_DECLARE(serf_bucket_t *) serf_context_bucket_socket_create(
+    serf_context_t *ctx,
+    apr_socket_t *skt,
+    serf_bucket_alloc_t *allocator)
+{
+    serf_bucket_t *bucket = serf_bucket_socket_create(skt, allocator);
+
+    /* Use serf's default bytes read/written callback */
+    serf_bucket_socket_set_read_progress_cb(bucket,
+                                            serf_context_progress_delta,
+                                            ctx);
+
+    return bucket;
+}
+
+SERF_DECLARE(serf_bucket_t *) serf_request_bucket_request_create(
+    serf_request_t *request,
+    const char *method,
+    const char *uri,
+    serf_bucket_t *body,
+    serf_bucket_alloc_t *allocator)
+{
+    serf_bucket_t *req_bkt, *hdrs_bkt;
+
+    req_bkt = serf_bucket_request_create(method, uri, body, allocator);
+    hdrs_bkt = serf_bucket_request_get_headers(req_bkt);
+
+    /* Proxy? */
+    if (request->conn->ctx->proxy_address && request->conn->host_url)
+      serf_bucket_request_set_root(req_bkt, request->conn->host_url);
+
+    if (request->conn->host_info.hostname)
+      serf_bucket_headers_setn(hdrs_bkt, "Host",
+                               request->conn->host_info.hostname);
+
+    return req_bkt;
 }
