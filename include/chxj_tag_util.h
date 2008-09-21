@@ -38,7 +38,7 @@ extern int   qs_is_checked_checkbox_attr(Doc *doc, Node *tag, apr_pool_t *pool);
 extern int   chxj_chxjif_is_mine(device_table *spec, Doc *doc, Node *tag);
 extern char *qs_get_destlang_attr(Doc *doc, Node *tag, apr_pool_t *pool);
 extern char *qs_get_parse_attr(Doc *doc, Node *tag, apr_pool_t *pool);
-extern char *chxj_form_action_to_hidden_tag(apr_pool_t *pool, const char *str, int xmlFlag);
+extern char *chxj_form_action_to_hidden_tag(request_rec *r, apr_pool_t *pool, const char *str, int xmlFlag, int post);
 
 #endif
 /*

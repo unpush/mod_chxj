@@ -1346,17 +1346,19 @@ s_jhtml_end_font_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_jhtml_start_form_tag(void *pdoc, Node *node) 
 {
-  jhtml_t      *jhtml;
-  Doc          *doc;
-  request_rec  *r;
-  Attr         *attr;
-  char         *new_hidden_tag = NULL;
+  jhtml_t     *jhtml;
+  Doc           *doc;
+  request_rec   *r;
+  Attr          *attr;
+  char          *new_hidden_tag = NULL;
+  char          *attr_method = NULL;
+  char          *attr_action = NULL;
+  char          *attr_utn    = NULL;
 
   jhtml = GET_JHTML(pdoc);
-  doc   = jhtml->doc;
-  r     = doc->r;
+  doc     = jhtml->doc;
+  r       = doc->r;
 
-  W_L("<form");
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
   /*--------------------------------------------------------------------------*/
@@ -1365,36 +1367,51 @@ s_jhtml_start_form_tag(void *pdoc, Node *node)
        attr = qs_get_next_attr(doc,attr)) {
     char *name  = qs_get_attr_name(doc,attr);
     char *value = qs_get_attr_value(doc,attr);
-    if (STRCASEEQ('a','A',"action",name)) {
+    if (STRCASEEQ('a','A',"action", name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
-      value = chxj_add_cookie_parameter(r, value, jhtml->cookie);
-      char *q;
-      q = strchr(value, '?');
-      if (q) {
-        new_hidden_tag = chxj_form_action_to_hidden_tag(doc->pool, value, 0);
-        *q = 0;
-      }
-      W_L(" action=\"");
-      W_V(value);
-      W_L("\"");
+      attr_action = chxj_encoding_parameter(r, value);
+      attr_action = chxj_add_cookie_parameter(r, attr_action, jhtml->cookie);
     }
-    else if (STRCASEEQ('m','M',"method",name)) {
+    else if (STRCASEEQ('m','M',"method", name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 1.0                                                            */
       /*----------------------------------------------------------------------*/
-      W_L(" method=\"");
-      W_V(value);
-      W_L("\"");
+      attr_method = apr_pstrdup(doc->pool, value);
     }
-    else if (STRCASEEQ('u','U',"utn",name)) {
+    else if (STRCASEEQ('u','U',"utn", name)) {
       /*----------------------------------------------------------------------*/
       /* CHTML 3.0                                                            */
       /* It is special only for CHTML.                                        */
       /*----------------------------------------------------------------------*/
-      /* ignore */
+      attr_utn = value;
     }
+  }
+
+  int post_flag = (attr_method && strcasecmp(attr_method, "post") == 0) ? 1 : 0;
+
+  W_L("<form");
+  if (attr_action) {
+    char *q;
+    q = strchr(attr_action, '?');
+    if (q) {
+      new_hidden_tag = chxj_form_action_to_hidden_tag(r, doc->pool, attr_action, 0, post_flag);
+      if (new_hidden_tag) {
+        *q = 0;
+      }
+    }
+    W_L(" action=\"");
+    W_V(attr_action);
+    W_L("\"");
+  }
+  if (attr_method) {
+    W_L(" method=\"");
+    W_V(attr_method);
+    W_L("\"");
+  }
+  if (attr_utn) {
+    W_L(" utn");
   }
   W_L(">");
   if (new_hidden_tag) {

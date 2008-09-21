@@ -1426,25 +1426,29 @@ s_chtml20_end_font_tag(void *pdoc, Node *UNUSED(child))
 static char *
 s_chtml20_start_form_tag(void *pdoc, Node *node) 
 {
-  chtml20_t   *chtml20;
-  Doc         *doc;
+  chtml20_t *chtml20;
+  Doc *doc;
   request_rec *r;
-  Attr        *attr;
-  char        *new_hidden_tag = NULL;
+  Attr *attr;
+  char *new_hidden_tag = NULL;
+  char *attr_method = NULL;
+  char *attr_action = NULL;
 
   chtml20 = GET_CHTML20(pdoc);
   doc     = chtml20->doc;
   r       = doc->r;
 
-  W_L("<form");
   /*--------------------------------------------------------------------------*/
   /* Get Attributes                                                           */
   /*--------------------------------------------------------------------------*/
   for (attr = qs_get_attr(doc,node);
        attr;
        attr = qs_get_next_attr(doc,attr)) {
-    char *name  = qs_get_attr_name(doc,attr);
-    char *value = qs_get_attr_value(doc,attr);
+    char *name;
+    char *value;
+    name  = qs_get_attr_name(doc,attr);
+    value = qs_get_attr_value(doc,attr);
+
     switch(*name) {
     case 'a':
     case 'A':
@@ -1452,17 +1456,8 @@ s_chtml20_start_form_tag(void *pdoc, Node *node)
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
-        value = chxj_encoding_parameter(r, value);
-        value = chxj_add_cookie_parameter(r, value, chtml20->cookie);
-        char *q;
-        q = strchr(value, '?');
-        if (q) {
-          new_hidden_tag = chxj_form_action_to_hidden_tag(doc->pool, value, 0);
-          *q = 0;
-        }
-        W_L(" action=\"");
-        W_V(value);
-        W_L("\"");
+        attr_action = chxj_encoding_parameter(r, value);
+        attr_action= chxj_add_cookie_parameter(r, attr_action, chtml20->cookie);
       }
       break;
 
@@ -1472,9 +1467,7 @@ s_chtml20_start_form_tag(void *pdoc, Node *node)
         /*--------------------------------------------------------------------*/
         /* CHTML 1.0                                                          */
         /*--------------------------------------------------------------------*/
-        W_L(" method=\"");
-        W_V(value);
-        W_L("\"");
+        attr_method = apr_pstrdup(doc->pool, value);
       }
       break;
 
@@ -1492,11 +1485,32 @@ s_chtml20_start_form_tag(void *pdoc, Node *node)
       break;
     }
   }
+
+  int post_flag = (attr_method && strcasecmp(attr_method, "post") == 0) ? 1 : 0;
+
+  W_L("<form");
+  if (attr_action) {
+    char *q;
+    q = strchr(attr_action, '?');
+    if (q) {
+      new_hidden_tag = chxj_form_action_to_hidden_tag(r, doc->pool, attr_action, 0, post_flag);
+      if (new_hidden_tag) {
+        *q = 0;
+      }
+    }
+    W_L(" action=\"");
+    W_V(attr_action);
+    W_L("\"");
+  }
+  if (attr_method) {
+    W_L(" method=\"");
+    W_V(attr_method);
+    W_L("\"");
+  }
   W_L(">");
   if (new_hidden_tag) {
     W_V(new_hidden_tag);
   }
-
   return chtml20->out;
 }
 
