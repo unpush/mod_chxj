@@ -454,6 +454,7 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry *entryp)
 
     name  = apr_strtok(pair, "=", &vstate);
     value = apr_strtok(NULL, "=", &vstate);
+    if (! name) continue;
     if (strcasecmp(name, CHXJ_COOKIE_NOUPDATE_PARAM) == 0 || strcasecmp(name, chxj_url_encode(r->pool, CHXJ_COOKIE_NOUPDATE_PARAM)) == 0) {
       DBG(r, "found cookie no update parameter");
       no_update_flag++;
@@ -480,6 +481,7 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry *entryp)
 
     name  = apr_strtok(pair, "=", &vstate);
     value = apr_strtok(NULL, "=", &vstate);
+    if (! name) continue;
     if (strncasecmp(name, "_chxj", 5) != 0 && strncasecmp(name, "%5Fchxj", sizeof("%5Fchxj")-1) != 0) {
       if (strlen(result) != 0) 
         result = apr_pstrcat(r->pool, result, "&", NULL);
@@ -604,6 +606,7 @@ chxj_input_convert(
 
     name  = apr_strtok(pair, "=", &vstate);
     value = apr_strtok(NULL, "=", &vstate);
+    if (! name) continue;
     if (strcasecmp(name, CHXJ_COOKIE_NOUPDATE_PARAM) == 0 || strcasecmp(name, chxj_url_encode(r->pool, CHXJ_COOKIE_NOUPDATE_PARAM)) == 0) {
       DBG(r, "found cookie no update parameter");
       no_update_flag++;
@@ -622,6 +625,7 @@ chxj_input_convert(
 
     name  = apr_strtok(pair, "=", &vstate);
     value = apr_strtok(NULL, "=", &vstate);
+    if (! name) continue;
     if (strncasecmp(name, "_chxj", 5) != 0 && strncasecmp(name, "%5Fchxj", sizeof("%5Fchxj")-1) != 0) {
       if (strlen(result) != 0) 
         result = apr_pstrcat(r->pool, result, "&", NULL);
