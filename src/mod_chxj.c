@@ -542,13 +542,13 @@ chxj_convert_input_header(request_rec *r,chxjconvrule_entry *entryp)
       apr_table_unset(r->headers_in, "Cookie");
       DBG(r, "found cookie parameter[%s]", value);
       DBG(r, "call start chxj_load_cookie()");
-      chxj_cookie_lock(r);
+      cookie_lock_t *lock = chxj_cookie_lock(r);
       cookie = chxj_load_cookie(r, value);
       DBG(r, "call end   chxj_load_cookie()");
       if (! no_update_flag && cookie) {
         chxj_update_cookie(r, cookie);
       }
-      chxj_cookie_unlock(r);
+      chxj_cookie_unlock(r, lock);
     }
   }
   r->args = result;
@@ -802,6 +802,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
       
       DBG(r, "not convert content-type:[%s] dconf->image:[%d]", r->content_type, dconf->image);
       if (entryp->action & CONVRULE_COOKIE_ON_BIT) {
+        cookie_lock_t *lock = NULL;
         DBG(r, "entryp->action == COOKIE_ON_BIT");
         switch(spec->html_spec_type) {
         case CHXJ_SPEC_Chtml_1_0:
@@ -813,10 +814,10 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
         case CHXJ_SPEC_Chtml_7_0:
         case CHXJ_SPEC_XHtml_Mobile_1_0:
         case CHXJ_SPEC_Jhtml:
-          chxj_cookie_lock(r);
+          lock = chxj_cookie_lock(r);
           cookie = chxj_save_cookie(r);
           s_add_cookie_id_if_has_location_header(r, cookie);
-          chxj_cookie_unlock(r);
+          chxj_cookie_unlock(r, lock);
           break;
         default:
           break;
@@ -873,10 +874,11 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
       /* End Of File                                                          */
       /*----------------------------------------------------------------------*/
       if (ctx) {
+        cookie_lock_t *lock = NULL;
         ctx = (mod_chxj_ctx *)f->ctx;
 
         DBG(r, "content_type=[%s]", r->content_type);
-        chxj_cookie_lock(r);
+        lock = chxj_cookie_lock(r);
 
         if (spec->html_spec_type != CHXJ_SPEC_UNKNOWN 
             && r->content_type 
@@ -949,7 +951,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
             sts = chxj_qrcode_create_image_data(&qrcode, &ctx->buffer, &ctx->len);
             if (sts != OK) {
               ERR(r, "qrcode create failed.");
-              chxj_cookie_unlock(r);
+              chxj_cookie_unlock(r, lock);
               return sts;
             }
             r->content_type = apr_psprintf(r->pool, "image/jpeg");
@@ -999,13 +1001,14 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
         if (ctx->len > 0) {
           DBG(r, "call pass_data_to_filter()");
           s_add_cookie_id_if_has_location_header(r, cookie);
-          chxj_cookie_unlock(r);
+          chxj_cookie_unlock(r,lock);
           rv = pass_data_to_filter(f, 
                                    (const char *)ctx->buffer, 
                                    (apr_size_t)ctx->len);
         }
         else {
-          chxj_cookie_unlock(r);
+          chxj_cookie_unlock(r, lock);
+
         }
         return rv;
       }
@@ -1016,6 +1019,7 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
          * save cookie.
          */
         if (entryp->action & CONVRULE_COOKIE_ON_BIT) {
+          cookie_lock_t *lock = NULL;
           DBG(r, "entryp->action == COOKIE_ON_BIT");
           switch(spec->html_spec_type) {
           case CHXJ_SPEC_Chtml_1_0:
@@ -1027,13 +1031,13 @@ chxj_output_filter(ap_filter_t *f, apr_bucket_brigade *bb)
           case CHXJ_SPEC_Chtml_7_0:
           case CHXJ_SPEC_XHtml_Mobile_1_0:
           case CHXJ_SPEC_Jhtml:
-            chxj_cookie_lock(r);
+            lock = chxj_cookie_lock(r);
             cookie = chxj_save_cookie(r);
             /*
              * Location Header Check to add cookie parameter.
              */
             s_add_cookie_id_if_has_location_header(r, cookie);
-            chxj_cookie_unlock(r);
+            chxj_cookie_unlock(r, lock);
             apr_table_unset(r->headers_out, "Set-Cookie");
             apr_table_unset(r->err_headers_out, "Set-Cookie");
             break;

@@ -662,16 +662,19 @@ chxj_cookie_expire_gc_dbm(request_rec *r, mod_chxj_config *m)
 }
 
 
-int
-chxj_cookie_lock_dbm(request_rec *UNUSED(r), mod_chxj_config *UNUSED(m))
+cookie_lock_t *
+chxj_cookie_lock_dbm(request_rec *r, mod_chxj_config *UNUSED(m))
 {
-  return 1;  /* allways true */
+  cookie_lock_t *ret = apr_palloc(r->pool, sizeof(*ret));
+  ret->file = chxj_cookie_db_lock(r);
+  return ret;
 }
 
 
 int
-chxj_cookie_unlock_dbm(request_rec *UNUSED(r), mod_chxj_config *UNUSED(m))
+chxj_cookie_unlock_dbm(request_rec *r, cookie_lock_t *lock, mod_chxj_config *UNUSED(m))
 {
+  chxj_cookie_expire_db_unlock(r, lock->file);
   return 1; /* allways true */
 }
 /*
