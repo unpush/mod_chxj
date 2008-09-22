@@ -803,17 +803,23 @@ on_error:
 int
 chxj_cookie_check_host(request_rec *r, char *value) 
 {
-  char *hostnm;
+  char* hostnm;
 
-  DBG(r, "hostname=[%s]", r->hostname);
+  DBG(r, "REQ[%X] start chxj_cookie_check_host()", (unsigned int)(apr_size_t)r);
+  DBG(r, "hostname=[%s] vs Location:[%s]", r->hostname, value);
 
   hostnm = s_get_hostname_from_url(r, value);
   if (hostnm) {
-    if (strcasecmp(hostnm, r->hostname) == 0)
+    if (strcasecmp(hostnm, r->hostname) == 0) {
+      DBG(r, "REQ[%X] end chxj_cookie_check_host() (true)", (unsigned int)(apr_size_t)r);
       return 0;
-    else
+    }
+    else {
+      DBG(r, "REQ[%X] end chxj_cookie_check_host() (false)", (unsigned int)(apr_size_t)r);
       return 1;
+    }
   }
+  DBG(r, "REQ[%X] end chxj_cookie_check_host() (true)", (unsigned int)(apr_size_t)r);
   return 0;
 }
 
