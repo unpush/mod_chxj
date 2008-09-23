@@ -312,7 +312,7 @@ chxj_convert(request_rec *r, const char **src, apr_size_t *len, device_table *sp
   mod_chxj_config     *dconf; 
   chxjconvrule_entry  *entryp;
 
-  DBG(r,"start of chxj_convert() input:[%.*s]", (int)*len, *src);
+  DBG(r,"REQ[%X] start of chxj_convert() input:[%.*s]", (unsigned int)r, (int)*len, *src);
   dst  = apr_pstrcat(r->pool, (char *)*src, NULL);
 
   dconf = chxj_get_module_config(r->per_dir_config, &chxj_module);
@@ -320,8 +320,10 @@ chxj_convert(request_rec *r, const char **src, apr_size_t *len, device_table *sp
 
   entryp = chxj_apply_convrule(r, dconf->convrules);
 
-  if (!entryp || !(entryp->action & CONVRULE_ENGINE_ON_BIT))
+  if (!entryp || !(entryp->action & CONVRULE_ENGINE_ON_BIT)) {
+    DBG(r,"REQ[%X] end of chxj_convert()", (unsigned int)r);
     return (char *)*src;
+  }
 
 
   /*------------------------------------------------------------------------*/
@@ -332,14 +334,14 @@ chxj_convert(request_rec *r, const char **src, apr_size_t *len, device_table *sp
   else
     user_agent = (char *)apr_table_get(r->headers_in, HTTP_USER_AGENT);
 
-  DBG(r,"User-Agent:[%s]", user_agent);
-  DBG(r,"content type is %s", r->content_type);
+  DBG(r,"REQ[%X] User-Agent:[%s]", (unsigned int)r, user_agent);
+  DBG(r,"REQ[%X] content type is %s", (unsigned int)r, r->content_type);
 
 
-  if (! STRNCASEEQ('t','T', "text/html", r->content_type, sizeof("text/html")-1)
-  &&  ! STRNCASEEQ('a','A', "application/xhtml+xml", r->content_type, sizeof("application/xhtml+xml")-1)) {
-    DBG(r,"no convert. content type is %s", r->content_type);
-    DBG(r,"end of chxj_convert()");
+  if (  ! STRNCASEEQ('t','T', "text/html", r->content_type, sizeof("text/html")-1)
+    &&  ! STRNCASEEQ('a','A', "application/xhtml+xml", r->content_type, sizeof("application/xhtml+xml")-1)) {
+    DBG(r,"REQ[%X] no convert. content type is %s", (unsigned int)r, r->content_type);
+    DBG(r,"REQ[%X] end of chxj_convert()", (unsigned int)r);
     return (char *)*src;
   }
 
@@ -408,7 +410,7 @@ chxj_convert(request_rec *r, const char **src, apr_size_t *len, device_table *sp
     *cookiep = cookie;
   }
 
-  DBG(r, "end of chxj_convert()");
+  DBG(r, "REQ[%X] end of chxj_convert()", (unsigned int)r);
 
   return dst;
 }

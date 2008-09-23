@@ -135,6 +135,7 @@ s_handle_response(serf_request_t *UNUSED(request), serf_bucket_t *response, void
     if (SERF_BUCKET_READ_ERROR(rv)) {
       ctx->rv = rv;
       apr_atomic_dec32(&ctx->requests_outstanding);
+      DBG(ctx->r, "REQ[%X] end of s_handle_response() (ERROR)", (unsigned int)ctx->r);
       return rv;
     }
     if (APR_STATUS_IS_EAGAIN(rv)) {
@@ -198,12 +199,12 @@ s_handle_response(serf_request_t *UNUSED(request), serf_bucket_t *response, void
       }
       ctx->rv = APR_SUCCESS;
       apr_atomic_dec32(&ctx->requests_outstanding);
-      DBG(ctx->r, "end of s_handle_response()(NORMAL)");
+      DBG(ctx->r, "REQ[%X] end of s_handle_response()(NORMAL)", (unsigned int)ctx->r);
       return APR_EOF;
     }
 
     if (APR_STATUS_IS_EAGAIN(rv)) {
-      DBG(ctx->r, "end of s_handle_response() (EAGAIN)");
+      DBG(ctx->r, "REQ[%X] end of s_handle_response() (EAGAIN)", (unsigned int)ctx->r);
       return rv;
     }
   }
