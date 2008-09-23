@@ -224,6 +224,7 @@ chxj_headers_fixup(request_rec *r)
     break;
   
   default:
+    DBG(r, "REQ[%X] end chxj_headers_fixup() (not mobile)", (unsigned int) r);
     return DECLINED;
 
   }
@@ -231,7 +232,7 @@ chxj_headers_fixup(request_rec *r)
 
   if (r->method_number == M_POST) {
     if (! apr_table_get(r->headers_in, "X-Chxj-Forward")) {
-        DBG(r, "set Input handler old:[%s] proxyreq:[%d] uri:[%s] filename:[%s]", r->handler, r->proxyreq, r->uri, r->filename);
+        DBG(r, "REQ[%X] set Input handler old:[%s] proxyreq:[%d] uri:[%s] filename:[%s]", (unsigned int)r, r->handler, r->proxyreq, r->uri, r->filename);
         r->proxyreq = PROXYREQ_NONE;
         r->handler = apr_psprintf(r->pool, "chxj-input-handler");
     }
@@ -242,8 +243,8 @@ chxj_headers_fixup(request_rec *r)
         apr_status_t rv = apr_sockaddr_info_get(&address, ap_get_server_name(r), APR_UNSPEC, ap_get_server_port(r), 0, r->pool);
         if (rv != APR_SUCCESS) {
           char buf[256];
-          ERR(r, "%s:%d apr_sockaddr_info_get() failed: rv:[%d|%s]", APLOG_MARK, rv, apr_strerror(rv, buf, 256));
-          DBG(r, "end chxj_headers_fixup()");
+          ERR(r, "REQ[%X] %s:%d apr_sockaddr_info_get() failed: rv:[%d|%s]", (unsigned int)r, APLOG_MARK, rv, apr_strerror(rv, buf, 256));
+          DBG(r, "REQ[%X] end chxj_headers_fixup()", (unsigned int)r);
           return DECLINED;
         }
         char *addr;
@@ -253,7 +254,7 @@ chxj_headers_fixup(request_rec *r)
         else {
           apr_sockaddr_ip_get(&addr, address);
         }
-        DBG(r, "Client IP:[%s] vs Orig Client IP:[%s] vs Server IP:[%s]", r->connection->remote_ip, client_ip, addr);
+        DBG(r, "REQ[%X] Client IP:[%s] vs Orig Client IP:[%s] vs Server IP:[%s]", (unsigned int)r, r->connection->remote_ip, client_ip, addr);
         if (strcmp(addr, r->connection->remote_ip) == 0) {
           r->connection->remote_ip = apr_pstrdup(r->connection->pool, client_ip);
         }
@@ -267,7 +268,7 @@ chxj_headers_fixup(request_rec *r)
     }
   }
 
-  DBG(r, "end chxj_headers_fixup()");
+  DBG(r, "REQ[%X] end chxj_headers_fixup()", (unsigned int)r);
 
   return DECLINED;
 }
