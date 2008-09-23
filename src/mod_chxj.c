@@ -611,13 +611,33 @@ chxj_input_convert(
   cookie_t *cookie = NULL;
   char     *buff_pre;
   int      no_update_flag = 0;
+  apr_size_t ii;
+  apr_size_t ilen = 0;
+  apr_pool_t *pool;
 
-  s        = apr_pstrdup(r->pool, *src);
-  buff_pre = apr_pstrdup(r->pool, *src);
+  DBG(r, "REQ[%X] start of chxj_input_convert()", (unsigned int)r);
 
-  result = qs_alloc_zero_byte_string(r->pool);
+  if (! *src) {
+    DBG(r, "REQ[%X] end of chxj_input_convert() (input is null)", (unsigned int)r);
+    return apr_pstrdup(r->pool, "");
+  }
 
-  DBG(r, "BEFORE input convert source = [%s]", s);
+  apr_pool_create(&pool, r->pool);
+
+  s        = apr_pstrdup(pool, *src);
+  ilen     = strlen(s);
+  buff_pre = apr_pstrdup(pool, *src);
+
+  result   = qs_alloc_zero_byte_string(pool);
+
+  DBG(r, "REQ[%X] +-------------------------------------------------------------------+", (unsigned int)r);
+  DBG(r, "REQ[%X] | BEFORE input convert source                                       |", (unsigned int)r);
+  DBG(r, "REQ[%X] +-------------------------------------------------------------------+", (unsigned int)r);
+  for (ii=0; ii<ilen-64; ii+=64) {
+    DBG(r, "REQ[%X] | [%-*.*s] |", (unsigned int)r, 64, 64, &s[ii]);
+  }
+  DBG(r, "REQ[%X] | [%-*.*s] |", (unsigned int)r, 64, 64, &s[ii]);
+  DBG(r, "REQ[%X] +--------------------------------------------------------------------+", (unsigned int)r);
 
   for (;;) {
     char *pair_sv;
@@ -628,7 +648,7 @@ chxj_input_convert(
 
     buff_pre = NULL;
 
-    pair_sv = apr_pstrdup(r->pool, pair);
+    pair_sv = apr_pstrdup(pool, pair);
 
     name  = apr_strtok(pair, "=", &vstate);
     value = apr_strtok(NULL, "=", &vstate);
@@ -654,7 +674,7 @@ chxj_input_convert(
     if (! name) continue;
     if (strncasecmp(name, "_chxj", 5) != 0 && strncasecmp(name, "%5Fchxj", sizeof("%5Fchxj")-1) != 0) {
       if (strlen(result) != 0) 
-        result = apr_pstrcat(r->pool, result, "&", NULL);
+        result = apr_pstrcat(pool, result, "&", NULL);
 
       if (strcasecmp(entryp->encoding, "NONE") != 0) {
         apr_size_t dlen;
@@ -662,12 +682,12 @@ chxj_input_convert(
         char *dname;
 
         if (value && *value != 0) {
-          value = chxj_url_decode(r->pool, value);
+          value = chxj_url_decode(pool, value);
           dlen   = strlen(value);
           DBG(r, "************ before encoding[%s]", value);
 
           dvalue = chxj_rencoding(r, value, &dlen);
-          dvalue = chxj_url_encode(r->pool, dvalue);
+          dvalue = chxj_url_encode(pool, dvalue);
 
           DBG(r, "************ after encoding[%s]", dvalue);
         }
@@ -676,19 +696,19 @@ chxj_input_convert(
         }
 
         if (name && *name != 0) {
-          name = chxj_url_decode(r->pool, name);
+          name = chxj_url_decode(pool, name);
           dlen = strlen(name);
           dname = chxj_rencoding(r, name, &dlen);
-          dname = chxj_url_encode(r->pool, dname);
+          dname = chxj_url_encode(pool, dname);
         }
         else {
           dname = "";
         }
 
-        result = apr_pstrcat(r->pool, result, dname, "=", dvalue, NULL);
+        result = apr_pstrcat(pool, result, dname, "=", dvalue, NULL);
       }
       else {
-        result = apr_pstrcat(r->pool, result, name, "=", value, NULL);
+        result = apr_pstrcat(pool, result, name, "=", value, NULL);
       }
     }
     else
@@ -702,26 +722,26 @@ chxj_input_convert(
         continue;
 
       if (strlen(result) != 0)
-        result = apr_pstrcat(r->pool, result, "&", NULL);
+        result = apr_pstrcat(pool, result, "&", NULL);
 
       if (strcasecmp(entryp->encoding, "NONE") != 0 && value && strlen(value)) {
         apr_size_t dlen;
         char       *dvalue;
 
         dlen   = strlen(value);
-        value = chxj_url_decode(r->pool, value);
+        value = chxj_url_decode(pool, value);
         DBG(r, "************ before encoding[%s]", value);
 
         dvalue = chxj_rencoding(r, value, &dlen);
-        dvalue = chxj_url_encode(r->pool,dvalue);
+        dvalue = chxj_url_encode(pool,dvalue);
 
         DBG(r, "************ after encoding[%s]", dvalue);
 
-        result = apr_pstrcat(r->pool, result, &name[8], "=", dvalue, NULL);
+        result = apr_pstrcat(pool, result, &name[8], "=", dvalue, NULL);
 
       }
       else {
-        result = apr_pstrcat(r->pool, result, &name[8], "=", value, NULL);
+        result = apr_pstrcat(pool, result, &name[8], "=", value, NULL);
       }
     }
     else
@@ -740,15 +760,15 @@ chxj_input_convert(
       }
       if (cookie && cookie->cookie_id) {
         if (strlen(result) != 0)
-          result = apr_pstrcat(r->pool, result, "&", NULL);
-        result = apr_pstrcat(r->pool, result, name, "=", cookie->cookie_id, NULL);
+          result = apr_pstrcat(pool, result, "&", NULL);
+        result = apr_pstrcat(pool, result, name, "=", cookie->cookie_id, NULL);
       }
     }
     else
     if (strcasecmp(name, CHXJ_COOKIE_NOUPDATE_PARAM) == 0) {
       if (strlen(result) != 0)
-        result = apr_pstrcat(r->pool, result, "&", NULL);
-      result = apr_pstrcat(r->pool, result, name, "=", value, NULL);
+        result = apr_pstrcat(pool, result, "&", NULL);
+      result = apr_pstrcat(pool, result, name, "=", value, NULL);
     }
     else
     if ( strncasecmp(name, CHXJ_QUERY_STRING_PARAM_PREFIX,     sizeof(CHXJ_QUERY_STRING_PARAM_PREFIX)-1) == 0) {
@@ -756,14 +776,14 @@ chxj_input_convert(
       char*      dvalue;
       dlen   = strlen(value);
       if (dlen && value) {
-        value = chxj_url_decode(r->pool, value);
+        value = chxj_url_decode(pool, value);
         dvalue = chxj_rencoding(r, value, &dlen);
-        dvalue = chxj_url_encode(r->pool,dvalue);
+        dvalue = chxj_url_encode(pool,dvalue);
         if (r->args && strlen(r->args) > 0) {
-          r->args = apr_pstrcat(r->pool, r->args, "&", &name[sizeof(CHXJ_QUERY_STRING_PARAM_PREFIX)-1], "=", dvalue, NULL);
+          r->args = apr_pstrcat(pool, r->args, "&", &name[sizeof(CHXJ_QUERY_STRING_PARAM_PREFIX)-1], "=", dvalue, NULL);
         }
         else {
-          r->args = apr_pstrcat(r->pool, &name[sizeof(CHXJ_QUERY_STRING_PARAM_PREFIX)-1], "=", dvalue, NULL);
+          r->args = apr_pstrcat(pool, &name[sizeof(CHXJ_QUERY_STRING_PARAM_PREFIX)-1], "=", dvalue, NULL);
         }
       }
     }
@@ -773,14 +793,14 @@ chxj_input_convert(
       char*      dvalue;
       dlen   = strlen(value);
       if (dlen && value) {
-        value = chxj_url_decode(r->pool, value);
+        value = chxj_url_decode(pool, value);
         dvalue = chxj_rencoding(r, value, &dlen);
-        dvalue = chxj_url_encode(r->pool,dvalue);
+        dvalue = chxj_url_encode(pool,dvalue);
         if (r->args && strlen(r->args) > 0) {
-          r->args = apr_pstrcat(r->pool, r->args, "&", &name[sizeof(CHXJ_QUERY_STRING_PARAM_PREFIX_ENC)-1], "=", dvalue, NULL);
+          r->args = apr_pstrcat(pool, r->args, "&", &name[sizeof(CHXJ_QUERY_STRING_PARAM_PREFIX_ENC)-1], "=", dvalue, NULL);
         }
         else {
-          r->args = apr_pstrcat(r->pool, &name[sizeof(CHXJ_QUERY_STRING_PARAM_PREFIX_ENC)-1], "=", dvalue, NULL);
+          r->args = apr_pstrcat(pool, &name[sizeof(CHXJ_QUERY_STRING_PARAM_PREFIX_ENC)-1], "=", dvalue, NULL);
         }
       }
     }
@@ -789,7 +809,7 @@ chxj_input_convert(
   *len = strlen(result);
   apr_table_setn(r->headers_in, "X-Chxj-Cookie-No-Update", "true");
   if (! no_update_flag) {
-    result = apr_pstrcat(r->pool, result, "&_chxj_nc=true", NULL);
+    result = apr_pstrcat(pool, result, "&_chxj_nc=true", NULL);
   }
 
   DBG(r, "REQ[%X] AFTER input convert result = [%s]", (unsigned int)(apr_size_t)r, result);
