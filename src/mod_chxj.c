@@ -160,10 +160,10 @@ chxj_headers_fixup(request_rec *r)
   char                *contentType;
   char                *contentLength;
 
-  DBG(r, "REQ[%X] start chxj_headers_fixup()", (unsigned int)(apr_size_t)r);
+  DBG(r, "REQ[%X] start chxj_headers_fixup()", (unsigned int)r);
   if (r->main) {
-    DBG(r, "REQ[%X] detect internal redirect.", (apr_size_t)r);
-    DBG(r, "REQ[%X] end chxj_headers_fixup()",  (apr_size_t)r);
+    DBG(r, "REQ[%X] detect internal redirect.", (unsigned int)r);
+    DBG(r, "REQ[%X] end chxj_headers_fixup()",  (unsigned int)r);
     return DECLINED;
   }
 
