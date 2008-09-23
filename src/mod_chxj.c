@@ -175,8 +175,8 @@ chxj_headers_fixup(request_rec *r)
   contentType = (char *)apr_table_get(r->headers_in, "Content-Type");
   if (contentType
       && strncasecmp("multipart/form-data", contentType, 19) == 0) {
-    DBG(r, "detect multipart/form-data ==> no target");
-    DBG(r, "end chxj_headers_fixup()");
+    DBG(r, "REQ[%X] detect multipart/form-data ==> no target", (unsigned int)r);
+    DBG(r, "REQ[%X] end chxj_headers_fixup()", (unsigned int)r);
     return DECLINED;
   }
   if (r->method_number == M_POST) {
