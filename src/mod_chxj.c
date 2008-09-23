@@ -654,7 +654,7 @@ chxj_input_convert(
     value = apr_strtok(NULL, "=", &vstate);
     if (! name) continue;
     if (strcasecmp(name, CHXJ_COOKIE_NOUPDATE_PARAM) == 0 || strcasecmp(name, chxj_url_encode(r->pool, CHXJ_COOKIE_NOUPDATE_PARAM)) == 0) {
-      DBG(r, "found cookie no update parameter");
+      DBG(r, "REQ[%X] found cookie no update parameter", (unsigned int)r);
       no_update_flag++;
     }
   }
@@ -684,12 +684,8 @@ chxj_input_convert(
         if (value && *value != 0) {
           value = chxj_url_decode(pool, value);
           dlen   = strlen(value);
-          DBG(r, "************ before encoding[%s]", value);
-
           dvalue = chxj_rencoding(r, value, &dlen);
           dvalue = chxj_url_encode(pool, dvalue);
-
-          DBG(r, "************ after encoding[%s]", dvalue);
         }
         else {
           dvalue = "";
@@ -730,13 +726,8 @@ chxj_input_convert(
 
         dlen   = strlen(value);
         value = chxj_url_decode(pool, value);
-        DBG(r, "************ before encoding[%s]", value);
-
         dvalue = chxj_rencoding(r, value, &dlen);
         dvalue = chxj_url_encode(pool,dvalue);
-
-        DBG(r, "************ after encoding[%s]", dvalue);
-
         result = apr_pstrcat(pool, result, &name[8], "=", dvalue, NULL);
 
       }
@@ -748,11 +739,11 @@ chxj_input_convert(
     if (strcasecmp(name, CHXJ_COOKIE_PARAM) == 0 || strcasecmp(name, "%5Fchxj%5Fcc") == 0) {
       if (! cookie) {
         apr_table_unset(r->headers_in, "Cookie");
-        DBG(r, "found cookie parameter[%s]", value);
-        DBG(r, "call start chxj_load_cookie()");
+        DBG(r, "REQ[%X] found cookie parameter[%s]",    (unsigned int)r, value);
+        DBG(r, "REQ[%X] call start chxj_load_cookie()", (unsigned int)r);
         cookie_lock_t *lock = chxj_cookie_lock(r);
         cookie = chxj_load_cookie(r, value);
-        DBG(r, "call end   chxj_load_cookie()");
+        DBG(r, "REQ[%X] call end   chxj_load_cookie()", (unsigned int)r);
         if (! no_update_flag && cookie) {
           chxj_update_cookie(r, cookie);
         }
