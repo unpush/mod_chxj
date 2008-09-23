@@ -160,10 +160,10 @@ chxj_headers_fixup(request_rec *r)
   char                *contentType;
   char                *contentLength;
 
-  DBG(r, "REQ[%X] start chxj_headers_fixup()", (unsigned int)r);
+  DBG(r, "REQ[%X] start chxj_headers_fixup()", (unsigned int)(apr_size_t)r);
   if (r->main) {
-    DBG(r, "REQ[%X] detect internal redirect.", (unsigned int)r);
-    DBG(r, "REQ[%X] end chxj_headers_fixup()",  (unsigned int)r);
+    DBG(r, "REQ[%X] detect internal redirect.", (unsigned int)(apr_size_t)r);
+    DBG(r, "REQ[%X] end chxj_headers_fixup()",  (unsigned int)(apr_size_t)r);
     return DECLINED;
   }
 
@@ -175,8 +175,8 @@ chxj_headers_fixup(request_rec *r)
   contentType = (char *)apr_table_get(r->headers_in, "Content-Type");
   if (contentType
       && strncasecmp("multipart/form-data", contentType, 19) == 0) {
-    DBG(r, "REQ[%X] detect multipart/form-data ==> no target", (unsigned int)r);
-    DBG(r, "REQ[%X] end chxj_headers_fixup()", (unsigned int)r);
+    DBG(r, "REQ[%X] detect multipart/form-data ==> no target", (unsigned int)(apr_size_t)r);
+    DBG(r, "REQ[%X] end chxj_headers_fixup()", (unsigned int)(apr_size_t)r);
     return DECLINED;
   }
   if (r->method_number == M_POST) {
@@ -202,7 +202,7 @@ chxj_headers_fixup(request_rec *r)
   case CHXJ_SPEC_Jxhtml:
     entryp = chxj_apply_convrule(r, dconf->convrules);
     if (! entryp) {
-      DBG(r, "REQ[%X] end chxj_headers_fixup() (no pattern)", (unsigned int) r);
+      DBG(r, "REQ[%X] end chxj_headers_fixup() (no pattern)", (unsigned int)(apr_size_t)r);
       return DECLINED;
     }
     if (!entryp || !(entryp->action & CONVRULE_ENGINE_ON_BIT)) {
