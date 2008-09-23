@@ -1189,7 +1189,7 @@ s_add_cookie_id_if_has_location_header(request_rec *r, cookie_t *cookie)
  * It is the main loop of the input filter handler. 
  *
  */
-static int 
+static apr_status_t
 chxj_input_handler(request_rec *r)
 {
   mod_chxj_config     *dconf;
