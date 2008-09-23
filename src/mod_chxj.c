@@ -206,7 +206,7 @@ chxj_headers_fixup(request_rec *r)
       return DECLINED;
     }
     if (!entryp || !(entryp->action & CONVRULE_ENGINE_ON_BIT)) {
-      DBG(r, "REQ[%X] end chxj_headers_fixup() (engine off)", (unsigned int) r);
+      DBG(r, "REQ[%X] end chxj_headers_fixup() (engine off)", (unsigned int)(apr_size_t)r);
       return DECLINED;
     }
   
@@ -224,7 +224,7 @@ chxj_headers_fixup(request_rec *r)
     break;
   
   default:
-    DBG(r, "REQ[%X] end chxj_headers_fixup() (not mobile)", (unsigned int) r);
+    DBG(r, "REQ[%X] end chxj_headers_fixup() (not mobile)", (unsigned int)(apr_size_t)r);
     return DECLINED;
 
   }
