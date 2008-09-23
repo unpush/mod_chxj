@@ -202,11 +202,11 @@ chxj_headers_fixup(request_rec *r)
   case CHXJ_SPEC_Jxhtml:
     entryp = chxj_apply_convrule(r, dconf->convrules);
     if (! entryp) {
-      DBG(r, "end chxj_headers_fixup() no pattern");
+      DBG(r, "REQ[%X] end chxj_headers_fixup() (no pattern)", (unsigned int) r);
       return DECLINED;
     }
     if (!entryp || !(entryp->action & CONVRULE_ENGINE_ON_BIT)) {
-      DBG(r,"EngineOff");
+      DBG(r, "REQ[%X] end chxj_headers_fixup() (engine off)", (unsigned int) r);
       return DECLINED;
     }
   
