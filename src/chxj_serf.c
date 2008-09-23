@@ -302,6 +302,9 @@ default_chxj_serf_get(request_rec *r, apr_pool_t *ppool, const char *url_path, i
   if (!url.hostname) {
     url.hostname = "localhost";
   }
+  if (url.query) {
+    url.path = apr_psprintf(pool, "%s?%s", url.path, url.query);
+  }
 
   rv = apr_sockaddr_info_get(&address, url.hostname, APR_UNSPEC, url.port, 0, pool);
   if (rv != APR_SUCCESS) {
@@ -385,7 +388,7 @@ default_chxj_serf_post(request_rec *r, apr_pool_t *ppool, const char *url_path, 
   handler_ctx_t handler_ctx;
   char *ret;
 
-  DBG(r, "start chxj_serf_post()");
+  DBG(r, "REQ:[%X] start chxj_serf_post()", (unsigned int)r);
 
 
   s_init(ppool, &pool);
@@ -402,6 +405,9 @@ default_chxj_serf_post(request_rec *r, apr_pool_t *ppool, const char *url_path, 
   }
   if (!url.hostname) {
     url.hostname = "localhost";
+  }
+  if (url.query) {
+    url.path = apr_psprintf(pool, "%s?%s", url.path, url.query);
   }
 
   rv = apr_sockaddr_info_get(&address, url.hostname, APR_UNSPEC, url.port, 0, pool);

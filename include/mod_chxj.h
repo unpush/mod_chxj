@@ -58,6 +58,10 @@
 #define STRNCASEEQ(a,b,c,d,e) \
   ((((a) == *(d))|| ((b) == *(d))) && strncasecmp((c),(d),(e)) == 0)
 
+#define CHXJ_QUERY_STRING_PARAM_PREFIX "_chxj_qs_"
+#define CHXJ_QUERY_STRING_PARAM_PREFIX_ENC "%5Fchxj%5Fqs%5F"
+
+
 #include "qs_ignore_sp.h"
 #include "qs_log.h"
 #include "qs_malloc.h"
