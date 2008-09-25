@@ -1,3 +1,15 @@
+libapache2-mod-chxj (0.11.15-1) unstable; urgency=low
+
+  * Bug Fix.
+    - The screen might become pure-white. [#13176]
+    - Upgraded from 0.1.2 to 0.2.0. [#18176]
+    - The POST form to another site is illegal. [ #13543]
+      (Reported by anyone. Thanks!)
+    - libserf link failure because of x86_64 environment[#13499]
+      (Reported by anyone. Thanks!)
+
+ -- Atsushi Konno <konn@users.sourceforge.jp>  Fri, 26 Sep 2008 01:36:48 +0900
+
 libapache2-mod-chxj (0.11.14-1) unstable; urgency=low
 
   * Bug Fix.
