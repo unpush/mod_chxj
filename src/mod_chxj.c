@@ -1394,11 +1394,11 @@ chxj_config_server_create(apr_pool_t *p, server_rec *s)
 static int
 chxj_translate_name(request_rec *r)
 {
-  DBG(r, "REQ[%X] =======================================================================", (unsigned int)r);
-  DBG(r, "REQ[%X] ", (unsigned int)r);
+  DBG(r, "REQ[%X] =======================================================================", (unsigned int)(apr_size_t)r);
+  DBG(r, "REQ[%X] ", (unsigned int)(apr_size_t)r);
   DBG(r, "REQ[%X] START REQUEST (uri:[%s] args:[%s])", (unsigned int)(apr_size_t)r, r->unparsed_uri, r->args ? r->args : "");
-  DBG(r, "REQ[%X] ", (unsigned int)r);
-  DBG(r, "REQ[%X] =======================================================================", (unsigned int)r);
+  DBG(r, "REQ[%X] ", (unsigned int)(apr_size_t)r);
+  DBG(r, "REQ[%X] =======================================================================", (unsigned int)(apr_size_t)r);
   return chxj_trans_name(r);
 }
 
