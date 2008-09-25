@@ -634,9 +634,9 @@ chxj_input_convert(
   DBG(r, "REQ[%X] | BEFORE input convert source                                       |", (unsigned int)(apr_size_t)r);
   DBG(r, "REQ[%X] +-------------------------------------------------------------------+", (unsigned int)(apr_size_t)r);
   for (ii=0; ii<ilen-64; ii+=64) {
-    DBG(r, "REQ[%X] | [%-*.*s] |", (unsigned int)r, 64, 64, &s[ii]);
+    DBG(r, "REQ[%X] | [%-*.*s] |", (unsigned int)(apr_size_t)r, 64, 64, &s[ii]);
   }
-  DBG(r, "REQ[%X] | [%-*.*s] |", (unsigned int)r, 64, 64, &s[ii]);
+  DBG(r, "REQ[%X] | [%-*.*s] |", (unsigned int)(apr_size_t)r, 64, 64, &s[ii]);
   DBG(r, "REQ[%X] +--------------------------------------------------------------------+", (unsigned int)(apr_size_t)r);
 
   for (;;) {
