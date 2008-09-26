@@ -159,7 +159,7 @@ chxj_save_cookie(request_rec *r)
 
   for (ii=0; ii<headers->nelts; ii++) {
     if (strcasecmp(hentryp[ii].key, "Set-Cookie") == 0) {
-      DBG(r, "REQ[%X] cookie=[%s:%s]", (unsigned int)r, hentryp[ii].key, hentryp[ii].val);
+      DBG(r, "REQ[%X] cookie=[%s:%s]", (unsigned int)(apr_size_t)r, hentryp[ii].key, hentryp[ii].val);
 
       char* key;
       char* val;
@@ -181,7 +181,7 @@ chxj_save_cookie(request_rec *r)
   }
   for (ii=0; ii<err_headers->nelts; ii++) {
     if (strcasecmp(err_hentryp[ii].key, "Set-Cookie") == 0) {
-      DBG(r, "REQ[%X] cookie=[%s:%s]", (unsigned int)r, err_hentryp[ii].key, err_hentryp[ii].val);
+      DBG(r, "REQ[%X] cookie=[%s:%s]", (unsigned int)(apr_size_t)r, err_hentryp[ii].key, err_hentryp[ii].val);
 
       char* key;
       char* val;
@@ -245,7 +245,7 @@ chxj_save_cookie(request_rec *r)
 
 
   if (! has_cookie) {
-    DBG(r, "REQ[%X] end chxj_save_cookie() (no cookie)", (unsigned int)r);
+    DBG(r, "REQ[%X] end chxj_save_cookie() (no cookie)", (unsigned int)(apr_size_t)r);
     return NULL;
   }
 
