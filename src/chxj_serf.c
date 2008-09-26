@@ -135,7 +135,7 @@ s_handle_response(serf_request_t *UNUSED(request), serf_bucket_t *response, void
     if (SERF_BUCKET_READ_ERROR(rv)) {
       ctx->rv = rv;
       apr_atomic_dec32(&ctx->requests_outstanding);
-      DBG(ctx->r, "REQ[%X] end of s_handle_response() (ERROR)", (unsigned int)ctx->r);
+      DBG(ctx->r, "REQ[%X] end of s_handle_response() (ERROR)", (unsigned int)(apr_size_t)ctx->r);
       return rv;
     }
     if (APR_STATUS_IS_EAGAIN(rv)) {
@@ -199,12 +199,12 @@ s_handle_response(serf_request_t *UNUSED(request), serf_bucket_t *response, void
       }
       ctx->rv = APR_SUCCESS;
       apr_atomic_dec32(&ctx->requests_outstanding);
-      DBG(ctx->r, "REQ[%X] end of s_handle_response()(NORMAL)", (unsigned int)ctx->r);
+      DBG(ctx->r, "REQ[%X] end of s_handle_response()(NORMAL)", (unsigned int)(apr_size_t)ctx->r);
       return APR_EOF;
     }
 
     if (APR_STATUS_IS_EAGAIN(rv)) {
-      DBG(ctx->r, "REQ[%X] end of s_handle_response() (EAGAIN)", (unsigned int)ctx->r);
+      DBG(ctx->r, "REQ[%X] end of s_handle_response() (EAGAIN)", (unsigned int)(apr_size_t)ctx->r);
       return rv;
     }
   }
@@ -389,7 +389,7 @@ default_chxj_serf_post(request_rec *r, apr_pool_t *ppool, const char *url_path, 
   handler_ctx_t handler_ctx;
   char *ret;
 
-  DBG(r, "REQ:[%X] start chxj_serf_post()", (unsigned int)r);
+  DBG(r, "REQ:[%X] start chxj_serf_post()", (unsigned int)(apr_size_t)r);
 
 
   s_init(ppool, &pool);
@@ -477,7 +477,7 @@ default_chxj_serf_post(request_rec *r, apr_pool_t *ppool, const char *url_path, 
       chxj_set_content_type(r, apr_pstrdup(r->pool, contentType));
     }
   }
-  DBG(r, "end chxj_serf_post()");
+  DBG(r, "REQ:[%X] end chxj_serf_post()", (unsigned int)(apr_size_t)r);
   return ret;
 }
 /*
